@@ -4,3 +4,4 @@
 /storage/logs/*
 /storage/sessions/*
 !.gitkeep
+.idea/

@@ -1,0 +1,26 @@
+{
+  "name": "zoosper/cms-skeleton",
+  "description": "Zoosper CMS initial skeleton - modern, fast, secure and API-first PHP CMS foundation.",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zoosper\\Core\\": "app/zoosper-core/src/",
+      "Zoosper\\Api\\": "app/zoosper-api/src/",
+      "Zoosper\\Admin\\": "app/zoosper-admin/src/",
+      "Zoosper\\Auth\\": "app/zoosper-auth/src/",
+      "Zoosper\\Site\\": "app/zoosper-site/src/",
+      "Zoosper\\Page\\": "app/zoosper-page/src/"
+    }
+  },
+  "scripts": {
+    "serve": "php -S 127.0.0.1:8080 -t public",
+    "test": "php tests/run.php"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
