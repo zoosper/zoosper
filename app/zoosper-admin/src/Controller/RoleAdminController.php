@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Controller;
 
 use RuntimeException;
+use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Auth\Access\Permission;
+use Zoosper\Auth\Acl\AclTreeBuilder;
 use Zoosper\Auth\Model\AdminUser;
+use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
@@ -21,6 +24,8 @@ final readonly class RoleAdminController
         private CsrfTokenManager $csrf,
         private RoleRepository $roles,
         private AdminLayout $layout,
+        private ?AdminUserRepository $users = null,
+        private ?AuditLogger $auditLogger = null,
     ) {
     }
 
@@ -29,39 +34,31 @@ final readonly class RoleAdminController
         if ($this->requireRoleManager() === null) {
             return Response::redirect('/admin/login');
         }
-
         $rows = '';
         foreach ($this->roles->allRoles() as $role) {
             $id = (int) $role['id'];
             $rows .= '<tr><td>' . $id . '</td><td>' . $this->e((string) $role['label']) . '</td><td><code>' . $this->e((string) $role['code']) . '</code></td><td><a href="/admin/roles/edit?id=' . $id . '">Edit</a></td></tr>';
         }
-
         return $this->html('Roles & Permissions', '<div class="toolbar"><a class="button" href="/admin/roles/create">Create role</a></div><table><thead><tr><th>ID</th><th>Label</th><th>Code</th><th>Actions</th></tr></thead><tbody>' . $rows . '</tbody></table>');
     }
 
     public function createForm(Request $request): Response
     {
-        if ($this->requireRoleManager() === null) {
-            return Response::redirect('/admin/login');
-        }
+        if ($this->requireRoleManager() === null) { return Response::redirect('/admin/login'); }
         return $this->html('Create Role', $this->form('/admin/roles/create'));
     }
 
     public function create(Request $request): Response
     {
-        if ($this->requireRoleManager() === null) {
-            return Response::redirect('/admin/login');
-        }
+        $actor = $this->requireRoleManager();
+        if ($actor === null) { return Response::redirect('/admin/login'); }
         $form = $request->form();
         if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
             return $this->html('Create Role', $this->form('/admin/roles/create', null, 'Invalid security token.', $form), 419);
         }
         try {
-            $id = $this->roles->createRole(
-                code: (string) ($form['code'] ?? ''),
-                label: trim((string) ($form['label'] ?? '')),
-                permissionIds: $this->permissionIdsFromForm($form),
-            );
+            $id = $this->roles->createRole((string) ($form['code'] ?? ''), trim((string) ($form['label'] ?? '')), $this->idsFromForm($form, 'permission_ids'));
+            $this->auditLogger?->record($actor, 'role.created', 'admin_role', (string) $id, 'Created admin role', ['code' => (string) ($form['code'] ?? '')], $request);
             return Response::redirect('/admin/roles/edit?id=' . $id);
         } catch (RuntimeException $exception) {
             return $this->html('Create Role', $this->form('/admin/roles/create', null, $exception->getMessage(), $form), 422);
@@ -70,36 +67,27 @@ final readonly class RoleAdminController
 
     public function editForm(Request $request): Response
     {
-        if ($this->requireRoleManager() === null) {
-            return Response::redirect('/admin/login');
-        }
+        if ($this->requireRoleManager() === null) { return Response::redirect('/admin/login'); }
         $role = $this->roleFromRequest($request);
-        if ($role === null) {
-            return $this->html('Role Not Found', '<p>Role not found.</p>', 404);
-        }
+        if ($role === null) { return $this->html('Role Not Found', '<p>Role not found.</p>', 404); }
         return $this->html('Edit Role', $this->form('/admin/roles/edit?id=' . (int) $role['id'], $role));
     }
 
     public function update(Request $request): Response
     {
-        if ($this->requireRoleManager() === null) {
-            return Response::redirect('/admin/login');
-        }
+        $actor = $this->requireRoleManager();
+        if ($actor === null) { return Response::redirect('/admin/login'); }
         $role = $this->roleFromRequest($request);
-        if ($role === null) {
-            return $this->html('Role Not Found', '<p>Role not found.</p>', 404);
-        }
+        if ($role === null) { return $this->html('Role Not Found', '<p>Role not found.</p>', 404); }
         $form = $request->form();
         if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
             return $this->html('Edit Role', $this->form('/admin/roles/edit?id=' . (int) $role['id'], $role, 'Invalid security token.', $form), 419);
         }
         try {
-            $this->roles->updateRole(
-                id: (int) $role['id'],
-                code: (string) ($form['code'] ?? ''),
-                label: trim((string) ($form['label'] ?? '')),
-                permissionIds: $this->permissionIdsFromForm($form),
-            );
+            $permissionIds = $this->idsFromForm($form, 'permission_ids');
+            $userIds = $this->idsFromForm($form, 'user_ids');
+            $this->roles->updateRole((int) $role['id'], (string) ($form['code'] ?? ''), trim((string) ($form['label'] ?? '')), $permissionIds, $userIds);
+            $this->auditLogger?->record($actor, 'role.updated', 'admin_role', (string) $role['id'], 'Updated role permissions and users', ['permission_ids' => $permissionIds, 'user_ids' => $userIds], $request);
             return Response::redirect('/admin/roles/edit?id=' . (int) $role['id']);
         } catch (RuntimeException $exception) {
             return $this->html('Edit Role', $this->form('/admin/roles/edit?id=' . (int) $role['id'], $role, $exception->getMessage(), $form), 422);
@@ -124,9 +112,12 @@ final readonly class RoleAdminController
         $token = $this->e($this->csrf->token());
         $code = $this->e((string) ($submitted['code'] ?? $role['code'] ?? ''));
         $label = $this->e((string) ($submitted['label'] ?? $role['label'] ?? ''));
-        $selected = $submitted !== [] ? $this->permissionIdsFromForm($submitted) : ($role !== null ? $this->roles->permissionIdsForRole((int) $role['id']) : []);
-        $permissions = $this->permissionCheckboxes($selected);
+        $roleId = $role !== null ? (int) $role['id'] : null;
+        $selectedPermissions = $submitted !== [] ? $this->idsFromForm($submitted, 'permission_ids') : ($roleId !== null ? $this->roles->permissionIdsForRole($roleId) : []);
+        $selectedUsers = $submitted !== [] ? $this->idsFromForm($submitted, 'user_ids') : ($roleId !== null ? $this->roles->userIdsForRole($roleId) : []);
         $errorHtml = $error !== null ? '<p class="error">' . $this->e($error) . '</p>' : '';
+        $permissionTree = $this->permissionTree($selectedPermissions);
+        $userAssignment = $this->userAssignment($selectedUsers);
 
         return <<<HTML
 {$errorHtml}
@@ -134,32 +125,48 @@ final readonly class RoleAdminController
     <input type="hidden" name="_csrf_token" value="{$token}">
     <label>Role label <input type="text" name="label" value="{$label}" required></label>
     <label>Role code <input type="text" name="code" value="{$code}" required></label>
-    <fieldset class="card"><legend>Permissions</legend>{$permissions}</fieldset>
+    <section class="card"><h2>Permission Tree</h2>{$permissionTree}</section>
+    <section class="card"><h2>Assigned Users</h2><p class="muted">Search and tick admin users to assign them directly to this role.</p><input type="search" id="role-user-filter" placeholder="Search users by name or email" oninput="document.querySelectorAll('[data-role-user]').forEach(function(row){row.style.display=row.textContent.toLowerCase().includes(event.target.value.toLowerCase())?'flex':'none';})">{$userAssignment}</section>
     <div class="toolbar"><button type="submit">Save role</button><a class="button secondary" href="/admin/roles">Back</a></div>
 </form>
 HTML;
     }
 
     /** @param list<int> $selected */
-    private function permissionCheckboxes(array $selected): string
+    private function permissionTree(array $selected): string
     {
+        $groups = require dirname(__DIR__, 3) . '/zoosper-auth/config/acl.php';
+        $tree = (new AclTreeBuilder())->build($this->roles->allPermissions(), is_array($groups) ? $groups : []);
         $html = '';
-        foreach ($this->roles->allPermissions() as $permission) {
-            $id = (int) $permission['id'];
-            $checked = in_array($id, $selected, true) ? ' checked' : '';
-            $label = $this->e((string) $permission['code']) . ' — ' . $this->e((string) $permission['label']);
-            $html .= '<label class="checkbox"><input type="checkbox" name="permission_ids[]" value="' . $id . '"' . $checked . '> ' . $label . '</label>';
+        foreach ($tree as $group) {
+            $html .= '<fieldset><legend>' . $this->e($group->label) . '</legend>';
+            foreach ($group->permissions as $permission) {
+                $id = (int) $permission['id'];
+                $checked = in_array($id, $selected, true) ? ' checked' : '';
+                $html .= '<label class="checkbox"><input type="checkbox" name="permission_ids[]" value="' . $id . '"' . $checked . '> <strong>' . $this->e((string) $permission['code']) . '</strong> <span class="muted">' . $this->e((string) $permission['label']) . '</span></label>';
+            }
+            $html .= '</fieldset>';
         }
         return $html;
     }
 
-    /** @param array<string, mixed> $form @return list<int> */
-    private function permissionIdsFromForm(array $form): array
+    /** @param list<int> $selected */
+    private function userAssignment(array $selected): string
     {
-        $ids = $form['permission_ids'] ?? [];
-        if (!is_array($ids)) {
-            return [];
+        if ($this->users === null) { return '<p class="muted">User assignment requires AdminUserRepository injection.</p>'; }
+        $html = '';
+        foreach ($this->users->allForAssignment() as $user) {
+            $checked = in_array($user->id, $selected, true) ? ' checked' : '';
+            $html .= '<label class="checkbox" data-role-user><input type="checkbox" name="user_ids[]" value="' . $user->id . '"' . $checked . '> ' . $this->e($user->name) . ' <span class="muted">' . $this->e($user->email) . '</span></label>';
         }
+        return $html !== '' ? $html : '<p class="muted">No admin users found.</p>';
+    }
+
+    /** @param array<string, mixed> $form @return list<int> */
+    private function idsFromForm(array $form, string $field): array
+    {
+        $ids = $form[$field] ?? [];
+        if (!is_array($ids)) { return []; }
         return array_values(array_map(static fn (mixed $id): int => (int) $id, $ids));
     }
 

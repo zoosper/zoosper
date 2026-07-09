@@ -1,4 +1,4 @@
-# Zoosper CMS - Phase 0.4
+# Zoosper CMS - Phase 0.10
 
 This phase adds the first real CMS capability:
 

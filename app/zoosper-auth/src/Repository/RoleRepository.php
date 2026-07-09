@@ -22,7 +22,7 @@ final readonly class RoleRepository
     /** @return list<array<string, mixed>> */
     public function allPermissions(): array
     {
-        return $this->pdo->query('SELECT * FROM admin_permissions ORDER BY code ASC')->fetchAll();
+        return $this->pdo->query('SELECT * FROM admin_permissions ORDER BY parent_code ASC, sort_order ASC, code ASC')->fetchAll();
     }
 
     /** @return array<string, mixed>|null */
@@ -42,66 +42,6 @@ final readonly class RoleRepository
         return array_map(static fn (array $row): int => (int) $row['permission_id'], $statement->fetchAll());
     }
 
-    /** @param list<int> $permissionIds */
-    public function createRole(string $code, string $label, array $permissionIds): int
-    {
-        $now = gmdate('Y-m-d H:i:s');
-        $statement = $this->pdo->prepare(
-            'INSERT INTO admin_roles (code, label, created_at, updated_at)
-             VALUES (:code, :label, :created_at, :updated_at)'
-        );
-        $statement->execute([
-            'code' => $this->normaliseCode($code),
-            'label' => $label,
-            'created_at' => $now,
-            'updated_at' => $now,
-        ]);
-
-        $roleId = (int) $this->pdo->lastInsertId();
-        $this->syncPermissions($roleId, $permissionIds);
-        return $roleId;
-    }
-
-    /** @param list<int> $permissionIds */
-    public function updateRole(int $id, string $code, string $label, array $permissionIds): void
-    {
-        if ($this->findRoleById($id) === null) {
-            throw new RuntimeException('Role does not exist: ' . $id);
-        }
-
-        $statement = $this->pdo->prepare(
-            'UPDATE admin_roles SET code = :code, label = :label, updated_at = :updated_at WHERE id = :id'
-        );
-        $statement->execute([
-            'id' => $id,
-            'code' => $this->normaliseCode($code),
-            'label' => $label,
-            'updated_at' => gmdate('Y-m-d H:i:s'),
-        ]);
-
-        $this->syncPermissions($id, $permissionIds);
-    }
-
-    /** @param list<int> $permissionIds */
-    private function syncPermissions(int $roleId, array $permissionIds): void
-    {
-        $permissionIds = array_values(array_unique(array_filter($permissionIds, static fn (int $id): bool => $id > 0)));
-        $this->pdo->prepare('DELETE FROM admin_role_permissions WHERE role_id = :role_id')->execute(['role_id' => $roleId]);
-        $statement = $this->pdo->prepare('INSERT INTO admin_role_permissions (role_id, permission_id) VALUES (:role_id, :permission_id)');
-
-        foreach ($permissionIds as $permissionId) {
-            $statement->execute(['role_id' => $roleId, 'permission_id' => $permissionId]);
-        }
-    }
-
-    private function normaliseCode(string $code): string
-    {
-        $code = strtolower(trim($code));
-        $code = preg_replace('/[^a-z0-9_]+/', '_', $code) ?: '';
-        return trim($code, '_');
-    }
-
-
     /** @return list<int> */
     public function userIdsForRole(int $roleId): array
     {
@@ -110,13 +50,57 @@ final readonly class RoleRepository
         return array_map(static fn (array $row): int => (int) $row['user_id'], $statement->fetchAll());
     }
 
-    /** @param list<int> $userIds */
-    public function syncUsersForRole(int $roleId, array $userIds): void
+    /** @param list<int> $permissionIds */
+    public function createRole(string $code, string $label, array $permissionIds): int
     {
+        $now = gmdate('Y-m-d H:i:s');
+        $statement = $this->pdo->prepare('INSERT INTO admin_roles (code, label, created_at, updated_at) VALUES (:code, :label, :created_at, :updated_at)');
+        $statement->execute(['code' => $this->normaliseCode($code), 'label' => $label, 'created_at' => $now, 'updated_at' => $now]);
+        $roleId = (int) $this->pdo->lastInsertId();
+        $this->syncPermissions($roleId, $permissionIds);
+        return $roleId;
+    }
+
+    /** @param list<int> $permissionIds @param list<int>|null $userIds */
+    public function updateRole(int $id, string $code, string $label, array $permissionIds, ?array $userIds = null): void
+    {
+        if ($this->findRoleById($id) === null) {
+            throw new RuntimeException('Role does not exist: ' . $id);
+        }
+        $statement = $this->pdo->prepare('UPDATE admin_roles SET code = :code, label = :label, updated_at = :updated_at WHERE id = :id');
+        $statement->execute(['id' => $id, 'code' => $this->normaliseCode($code), 'label' => $label, 'updated_at' => gmdate('Y-m-d H:i:s')]);
+        $this->syncPermissions($id, $permissionIds);
+        if ($userIds !== null) {
+            $this->syncUsersForRole($id, $userIds);
+        }
+    }
+
+    /** @param list<int> $permissionIds */
+    private function syncPermissions(int $roleId, array $permissionIds): void
+    {
+        $permissionIds = array_values(array_unique(array_filter($permissionIds, static fn (int $id): bool => $id > 0)));
+        $this->pdo->prepare('DELETE FROM admin_role_permissions WHERE role_id = :role_id')->execute(['role_id' => $roleId]);
+        $statement = $this->pdo->prepare('INSERT INTO admin_role_permissions (role_id, permission_id) VALUES (:role_id, :permission_id)');
+        foreach ($permissionIds as $permissionId) {
+            $statement->execute(['role_id' => $roleId, 'permission_id' => $permissionId]);
+        }
+    }
+
+    /** @param list<int> $userIds */
+    private function syncUsersForRole(int $roleId, array $userIds): void
+    {
+        $userIds = array_values(array_unique(array_filter($userIds, static fn (int $id): bool => $id > 0)));
         $this->pdo->prepare('DELETE FROM admin_user_roles WHERE role_id = :role_id')->execute(['role_id' => $roleId]);
         $statement = $this->pdo->prepare('INSERT INTO admin_user_roles (user_id, role_id) VALUES (:user_id, :role_id)');
-        foreach (array_values(array_unique(array_filter($userIds, static fn (int $id): bool => $id > 0))) as $userId) {
+        foreach ($userIds as $userId) {
             $statement->execute(['user_id' => $userId, 'role_id' => $roleId]);
         }
+    }
+
+    private function normaliseCode(string $code): string
+    {
+        $code = strtolower(trim($code));
+        $code = preg_replace('/[^a-z0-9_]+/', '_', $code) ?: '';
+        return trim($code, '_');
     }
 }

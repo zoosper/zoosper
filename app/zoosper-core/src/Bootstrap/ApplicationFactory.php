@@ -78,7 +78,14 @@ final class ApplicationFactory
         $dashboardController = new DashboardController($guard, $csrf, $adminLayout);
         $pageAdminController = new PageAdminController($guard, $csrf, $pageRepository, $siteRepository, $pageRenderer, $adminLayout);
         $userAdminController = new UserAdminController($guard, $csrf, $userRepository, $roleRepository, $passwordHasher, $adminLayout);
-        $roleAdminController = new RoleAdminController($guard, $csrf, $roleRepository, $adminLayout);
+        $roleAdminController = new RoleAdminController(
+            $guard,
+            $csrf,
+            $roleRepository,
+            $adminLayout,
+            $userRepository,
+            $auditLogger,
+        );
         $apiAuthController = new ApiAuthController($json, $auth, $guard);
         $pageController = new PageController($siteResolver, $pageRepository, $pageRenderer);
         $contentPageController = new ContentPageController($json, $siteResolver, $pageRepository);
