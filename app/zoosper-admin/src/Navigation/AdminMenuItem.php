@@ -11,6 +11,14 @@ final readonly class AdminMenuItem
         public string $label,
         public string $url,
         public ?string $permission = null,
+        public ?string $parent = null,
+        public int $sortOrder = 100,
+        public string $group = 'main',
     ) {
+    }
+
+    public function isAllowed(callable $permissionChecker): bool
+    {
+        return $this->permission === null || $permissionChecker($this->permission);
     }
 }
