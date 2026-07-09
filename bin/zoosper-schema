@@ -1,0 +1,44 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Zoosper\Core\Bootstrap\EnvLoader;
+use Zoosper\Core\Config\ConfigRepository;
+use Zoosper\Core\Database\ConnectionFactory;
+use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\Schema\SchemaLoader;
+use Zoosper\Core\Schema\SchemaMigrator;
+
+$basePath = dirname(__DIR__);
+require $basePath . '/vendor/autoload.php';
+
+if (class_exists(EnvLoader::class)) {
+    EnvLoader::load($basePath . '/.env');
+}
+
+$command = $argv[1] ?? 'diff';
+$config = ConfigRepository::fromPath($basePath . '/config');
+$pdo = (new ConnectionFactory($config, $basePath))->create();
+$driver = (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+$modules = new ModuleRegistry($basePath);
+$schema = (new SchemaLoader($modules))->load();
+$migrator = new SchemaMigrator($pdo, $driver);
+
+if ($command === 'diff') {
+    $statements = $migrator->diff($schema);
+} elseif ($command === 'apply') {
+    $statements = $migrator->apply($schema);
+} else {
+    fwrite(STDERR, "Usage: php bin/zoosper-schema [diff|apply]\n");
+    exit(1);
+}
+
+if ($statements === []) {
+    echo "Declarative schema is up to date.\n";
+    exit(0);
+}
+
+foreach ($statements as $statement) {
+    echo $statement . ";\n";
+}
