@@ -6,6 +6,7 @@ namespace Zoosper\Theme\Template;
 
 use RuntimeException;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Theme\Layout\LayoutUpdateRepository;
 use Zoosper\Theme\Theme\Theme;
 use Zoosper\Theme\Theme\ThemeResolver;
 
@@ -14,35 +15,46 @@ final readonly class TemplateRenderer
     public function __construct(
         private ThemeResolver $themes,
         private ?ModuleRegistry $modules = null,
+        private ?LayoutUpdateRepository $layoutUpdates = null,
     ) {
     }
 
     /** @param array<string, mixed> $data */
-    public function render(string $template, array $data = [], ?string $themeCode = null): string
+    public function render(string $template, array $data = [], ?string $themeCode = null, string $handle = 'default'): string
     {
         $theme = $this->themes->resolve($themeCode);
-        return $this->renderFromTheme($theme, $template, $data);
+        return $this->renderFromTheme($theme, $template, $data, $handle);
     }
 
     /** @param array<string, mixed> $data */
-    public function renderLayout(string $layout, string $content, array $data = [], ?string $themeCode = null): string
+    public function renderLayout(string $layout, string $content, array $data = [], ?string $themeCode = null, string $handle = 'default'): string
     {
         $data['content'] = $content;
-        return $this->render($layout, $data, $themeCode);
+        return $this->render($layout, $data, $themeCode, $handle);
     }
 
     /** @param array<string, mixed> $data */
-    public function partial(string $template, array $data = [], ?string $themeCode = null): string
+    public function partial(string $template, array $data = [], ?string $themeCode = null, string $handle = 'default'): string
     {
-        return $this->render('partials/' . ltrim($template, '/'), $data, $themeCode);
+        return $this->render('partials/' . ltrim($template, '/'), $data, $themeCode, $handle);
     }
 
     /** @param array<string, mixed> $data */
-    private function renderFromTheme(Theme $theme, string $template, array $data): string
+    private function renderFromTheme(Theme $theme, string $template, array $data, string $handle): string
     {
+        $update = $this->layoutUpdates?->forTheme($theme, $handle);
+        $template = ltrim($template, '/');
+
+        if ($update?->isRemoved($template)) {
+            return '';
+        }
+
+        $template = $update?->replacementFor($template) ?? $template;
         $path = $this->resolveTemplatePath($theme, $template);
+
         $e = static fn (mixed $value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-        $partial = fn (string $name, array $partialData = []): string => $this->partial($name, array_merge($data, $partialData), $theme->code);
+        $partial = fn (string $name, array $partialData = []): string => $this->partial($name, array_merge($data, $partialData), $theme->code, $handle);
+        $slot = fn (string $slotName, array $slotData = []): string => $this->renderSlot($theme, $handle, $slotName, array_merge($data, $slotData));
         extract($data, EXTR_SKIP);
 
         ob_start();
@@ -50,10 +62,23 @@ final readonly class TemplateRenderer
         return (string) ob_get_clean();
     }
 
+    /** @param array<string, mixed> $data */
+    private function renderSlot(Theme $theme, string $handle, string $slotName, array $data): string
+    {
+        $update = $this->layoutUpdates?->forTheme($theme, $handle);
+        if ($update === null) {
+            return '';
+        }
+
+        $html = '';
+        foreach ($update->injectionsFor($slotName) as $template) {
+            $html .= $this->renderFromTheme($theme, $template, $data, $handle);
+        }
+        return $html;
+    }
+
     private function resolveTemplatePath(Theme $theme, string $template): string
     {
-        $template = ltrim($template, '/');
-
         if (str_contains($template, '::')) {
             return $this->resolveModuleTemplatePath($theme, $template);
         }
@@ -101,7 +126,6 @@ final readonly class TemplateRenderer
         if ($this->modules === null) {
             return [];
         }
-
         $candidates = [];
         foreach ($this->modules->enabledModules() as $module) {
             if ($module->name !== $moduleName) {

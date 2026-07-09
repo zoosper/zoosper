@@ -9,10 +9,13 @@ use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
 use Zoosper\Admin\Controller\LoginHistoryController;
 use Zoosper\Admin\Layout\AdminLayout;
+use Zoosper\Admin\UI\AdminComponentRenderer;
+use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\AuthService;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Theme\Template\TemplateRenderer;
 
 return [
     LoginController::class => static fn (ServiceContainer $services): LoginController => new LoginController(

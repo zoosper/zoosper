@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Bootstrap;
 
-use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\AuditLogger;
+use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Navigation\AdminMenu;
@@ -34,6 +34,7 @@ use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
 use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Site\Service\SiteResolver;
+use Zoosper\Theme\Layout\LayoutUpdateRepository;
 use Zoosper\Theme\Template\TemplateRenderer;
 use Zoosper\Theme\Theme\ThemeRepository;
 use Zoosper\Theme\Theme\ThemeResolver;
@@ -71,6 +72,10 @@ final class ApplicationFactory
         $pageRenderer = new PageRenderer($templateRenderer, $cmsVersion, $modules);
         $pageController = new PageController($siteResolver, $pageRepository, $pageRenderer);
 
+        $layoutUpdates = new LayoutUpdateRepository();
+        $templateRenderer = new TemplateRenderer(new ThemeResolver($basePath . '/themes', 'default'), $modules, $layoutUpdates);
+        $adminTemplateRenderer = new TemplateRenderer(new ThemeResolver($basePath . '/themes/admin', 'default'), $modules, $layoutUpdates);
+
         $services = new ServiceContainer();
         $services->set(ConfigRepository::class, $config);
         $services->set(ModuleRegistry::class, $modules);
@@ -94,6 +99,8 @@ final class ApplicationFactory
         $services->set(TemplateRenderer::class, $templateRenderer);
         $services->set(PageRenderer::class, $pageRenderer);
         $services->set(PageController::class, $pageController);
+        $services->set(AdminViewRenderer::class, new AdminViewRenderer($adminTemplateRenderer, $adminLayout));
+        $services->set(AdminComponentRenderer::class, new AdminComponentRenderer($adminTemplateRenderer));
 
         $controllers = (new ControllerProviderLoader($modules, $services))->load();
 
