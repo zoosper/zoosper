@@ -6,6 +6,7 @@ namespace Zoosper\Core\Bootstrap;
 
 use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
+use Zoosper\Admin\Controller\PageAdminController;
 use Zoosper\Api\Controller\AuthController as ApiAuthController;
 use Zoosper\Api\Controller\ContentPageController;
 use Zoosper\Api\Controller\HealthController;
@@ -52,6 +53,13 @@ final class ApplicationFactory
 
         $loginController = new LoginController($auth, $guard, $csrf);
         $dashboardController = new DashboardController($guard, $csrf);
+        $pageAdminController = new PageAdminController(
+            guard: $guard,
+            csrf: $csrf,
+            pages: $pageRepository,
+            sites: $siteRepository,
+            renderer: $pageRenderer,
+        );
         $apiAuthController = new ApiAuthController($json, $auth, $guard);
         $pageController = new PageController($siteResolver, $pageRepository, $pageRenderer);
         $contentPageController = new ContentPageController($json, $siteResolver, $pageRepository);
@@ -62,6 +70,15 @@ final class ApplicationFactory
         $router->post('/admin/login', [$loginController, 'login']);
         $router->post('/admin/logout', [$loginController, 'logout']);
         $router->get('/admin', [$dashboardController, 'index']);
+
+        $router->get('/admin/pages', [$pageAdminController, 'index']);
+        $router->get('/admin/pages/create', [$pageAdminController, 'createForm']);
+        $router->post('/admin/pages/create', [$pageAdminController, 'create']);
+        $router->get('/admin/pages/edit', [$pageAdminController, 'editForm']);
+        $router->post('/admin/pages/edit', [$pageAdminController, 'update']);
+        $router->get('/admin/pages/preview', [$pageAdminController, 'preview']);
+        $router->post('/admin/pages/publish', [$pageAdminController, 'publish']);
+        $router->post('/admin/pages/unpublish', [$pageAdminController, 'unpublish']);
 
         $router->get('/api/v1/health', [new HealthController($json), 'show']);
         $router->get('/api/v1/hello', [new HelloController($json), 'show']);

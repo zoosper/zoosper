@@ -42,6 +42,31 @@ final readonly class SiteRepository
         return is_array($row) ? $this->hydrate($row) : null;
     }
 
+    public function findById(int $id): ?Site
+    {
+        $statement = $this->pdo->prepare('SELECT * FROM sites WHERE id = :id LIMIT 1');
+        $statement->execute(['id' => $id]);
+        $row = $statement->fetch();
+
+        return is_array($row) ? $this->hydrate($row) : null;
+    }
+
+    /**
+     * @return list<Site>
+     */
+    public function allActive(): array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT * FROM sites WHERE status = :status ORDER BY name ASC'
+        );
+        $statement->execute(['status' => 'active']);
+
+        return array_map(
+            fn (array $row): Site => $this->hydrate($row),
+            $statement->fetchAll(),
+        );
+    }
+
     public function create(string $code, string $name, string $host, string $homepageSlug = 'home'): int
     {
         if ($this->findByCode($code) !== null) {
