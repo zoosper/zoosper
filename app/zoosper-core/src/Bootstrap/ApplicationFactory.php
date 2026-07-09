@@ -27,6 +27,7 @@ use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\Routing\ModuleRouteLoader;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
 use Zoosper\Page\Controller\PageController;
@@ -51,6 +52,7 @@ final class ApplicationFactory
         $guard = new SessionGuard($userRepository);
         $csrf = new CsrfTokenManager();
         $json = new JsonResponder();
+
         $adminMenu = new AdminMenu(new AdminMenuLoader($modules));
         $adminLayout = new AdminLayout($adminMenu);
 
@@ -71,27 +73,25 @@ final class ApplicationFactory
         $pageController = new PageController($siteResolver, $pageRepository, $pageRenderer);
         $contentPageController = new ContentPageController($json, $siteResolver, $pageRepository);
 
+        $healthController = new HealthController($json);
+        $helloController = new HelloController($json);
+        $meController = new MeController($json, $guard);
+
+        $controllers = [
+            LoginController::class => $loginController,
+            DashboardController::class => $dashboardController,
+            PageAdminController::class => $pageAdminController,
+            ApiAuthController::class => $apiAuthController,
+            HealthController::class => $healthController,
+            HelloController::class => $helloController,
+            MeController::class => $meController,
+            ContentPageController::class => $contentPageController,
+        ];
+
         $router = new Router();
-
-        $router->get('/admin/login', [$loginController, 'show']);
-        $router->post('/admin/login', [$loginController, 'login']);
-        $router->post('/admin/logout', [$loginController, 'logout']);
-        $router->get('/admin', [$dashboardController, 'index']);
-        $router->get('/admin/pages', [$pageAdminController, 'index']);
-        $router->get('/admin/pages/create', [$pageAdminController, 'createForm']);
-        $router->post('/admin/pages/create', [$pageAdminController, 'create']);
-        $router->get('/admin/pages/edit', [$pageAdminController, 'editForm']);
-        $router->post('/admin/pages/edit', [$pageAdminController, 'update']);
-        $router->get('/admin/pages/preview', [$pageAdminController, 'preview']);
-        $router->post('/admin/pages/publish', [$pageAdminController, 'publish']);
-        $router->post('/admin/pages/unpublish', [$pageAdminController, 'unpublish']);
-
-        $router->get('/api/v1/health', [new HealthController($json), 'show']);
-        $router->get('/api/v1/hello', [new HelloController($json), 'show']);
-        $router->post('/api/v1/auth/login', [$apiAuthController, 'login']);
-        $router->post('/api/v1/auth/logout', [$apiAuthController, 'logout']);
-        $router->get('/api/v1/me', [new MeController($json, $guard), 'show']);
-        $router->get('/api/v1/content/page', [$contentPageController, 'show']);
+        $routeLoader = new ModuleRouteLoader($modules, $controllers);
+        $routeLoader->registerAdminRoutes($router);
+        $routeLoader->registerApiRoutes($router);
 
         $router->fallback(static function (Request $request) use ($pageController): Response {
             if (str_starts_with($request->path(), '/api/')) {
