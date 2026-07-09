@@ -9,6 +9,8 @@ use Zoosper\Core\Database\ConnectionFactory;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Schema\SchemaLoader;
 use Zoosper\Core\Schema\SchemaMigrator;
+use Zoosper\Core\Schema\SchemaSnapshotRepository;
+use Zoosper\Core\Schema\SchemaValidator;
 
 $basePath = dirname(__DIR__);
 require $basePath . '/vendor/autoload.php';
@@ -23,14 +25,32 @@ $pdo = (new ConnectionFactory($config, $basePath))->create();
 $driver = (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
 $modules = new ModuleRegistry($basePath);
 $schema = (new SchemaLoader($modules))->load();
-$migrator = new SchemaMigrator($pdo, $driver);
+$snapshots = new SchemaSnapshotRepository($pdo);
+$migrator = new SchemaMigrator($pdo, $driver, $snapshots);
+
+if ($command === 'validate') {
+    $result = (new SchemaValidator())->validate($schema);
+    if ($result->isValid()) {
+        echo "Declarative schema is valid.\n";
+        exit(0);
+    }
+    foreach ($result->errors as $error) {
+        echo "ERROR: " . $error . "\n";
+    }
+    exit(1);
+}
 
 if ($command === 'diff') {
     $statements = $migrator->diff($schema);
 } elseif ($command === 'apply') {
     $statements = $migrator->apply($schema);
+} elseif ($command === 'snapshots') {
+    foreach ($snapshots->latest() as $snapshot) {
+        echo '#' . $snapshot['id'] . ' ' . $snapshot['created_at'] . ' ' . $snapshot['schema_hash'] . "\n";
+    }
+    exit(0);
 } else {
-    fwrite(STDERR, "Usage: php bin/zoosper-schema [diff|apply]\n");
+    fwrite(STDERR, "Usage: php bin/zoosper-schema [validate|diff|apply|snapshots]\n");
     exit(1);
 }
 

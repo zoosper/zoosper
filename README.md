@@ -4,7 +4,7 @@ Zoosper is a modern, lightweight, modular PHP 8.5+ CMS inspired by Magento-style
 
 ## Current phase
 
-Phase 0.11 — Declarative Schema Engine.
+Phase 0.12 — Declarative Schema Hardening.
 
 ## What is included
 
@@ -21,8 +21,9 @@ Phase 0.11 — Declarative Schema Engine.
 - CMS page CRUD, preview, publish and unpublish
 - Frontend rendering for `/` and page slugs like `/home`
 - Per-module translation drop files under `config/translations/`
-- Admin footer showing configured CMS version
-- Declarative schema MVP using module `config/db_schema.php`
+- Central CMS version service used by admin and page rendering
+- Declarative schema engine using module `config/db_schema.php`
+- Declarative schema validation and schema snapshots
 
 ## Quick start
 
@@ -52,6 +53,16 @@ php -S 127.0.0.1:8080 -t public
 /api/v1/content/page?slug=home
 ```
 
+## CMS version
+
+Set the displayed CMS version in `.env`:
+
+```env
+CMS_VERSION=0.12.0-dev
+```
+
+The version is read through `Zoosper\Core\App\CmsVersion` and displayed in the admin footer and frontend page footer.
+
 ## Declarative schema
 
 Modules can declare database tables in:
@@ -59,6 +70,12 @@ Modules can declare database tables in:
 ```text
 app/<module>/config/db_schema.php
 modules/<vendor-module>/config/db_schema.php
+```
+
+Validate declarations:
+
+```bash
+php bin/zoosper-schema validate
 ```
 
 Check schema changes:
@@ -71,6 +88,12 @@ Apply safe additive schema changes:
 
 ```bash
 php bin/zoosper-schema apply
+```
+
+View applied schema snapshots:
+
+```bash
+php bin/zoosper-schema snapshots
 ```
 
 The current engine supports safe additive operations only: create missing table, add missing column and add missing indexes.
