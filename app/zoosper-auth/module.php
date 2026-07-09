@@ -1,3 +1,8 @@
 <?php
+
 declare(strict_types=1);
-return ['name' => 'zoosper-auth', 'enabled' => true];
+
+return [
+    'name' => 'zoosper-auth',
+    'enabled' => true,
+];

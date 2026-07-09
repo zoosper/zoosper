@@ -1,29 +1,34 @@
 {
-  "name": "zoosper/cms-skeleton",
-  "description": "Zoosper CMS phase 0.2 skeleton with Marko requirements, migrations and persistent admin auth.",
-  "type": "project",
-  "license": "MIT",
-  "require": {
-    "php": "^8.5",
-    "ext-pdo": "*",
-    "marko/framework": "^0.8",
-    "marko/database": "^0.8",
-    "marko/database-mysql": "^0.8"
-  },
-  "autoload": {
-    "psr-4": {
-      "Zoosper\\Core\\": "app/zoosper-core/src/",
-      "Zoosper\\Api\\": "app/zoosper-api/src/",
-      "Zoosper\\Admin\\": "app/zoosper-admin/src/",
-      "Zoosper\\Auth\\": "app/zoosper-auth/src/",
-      "Zoosper\\Site\\": "app/zoosper-site/src/",
-      "Zoosper\\Page\\": "app/zoosper-page/src/"
+    "name": "zoosper/zoosper",
+    "description": "Zoosper CMS - modern, fast, easy, secure and API-first CMS foundation.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "ext-pdo": "*",
+        "marko/framework": "^0.8",
+        "marko/database": "^0.8",
+        "marko/database-mysql": "^0.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\Core\\": "app/zoosper-core/src/",
+            "Zoosper\\Api\\": "app/zoosper-api/src/",
+            "Zoosper\\Admin\\": "app/zoosper-admin/src/",
+            "Zoosper\\Auth\\": "app/zoosper-auth/src/",
+            "Zoosper\\Site\\": "app/zoosper-site/src/",
+            "Zoosper\\Page\\": "app/zoosper-page/src/"
+        }
+    },
+    "scripts": {
+        "serve": "php -S 127.0.0.1:8080 -t public",
+        "migrate": "php bin/zoosper migrate",
+        "admin:create": "php bin/zoosper admin:create",
+        "site:create": "php bin/zoosper site:create",
+        "page:create": "php bin/zoosper page:create",
+        "test": "php tests/run.php"
+    },
+    "config": {
+        "sort-packages": true
     }
-  },
-  "scripts": {
-    "serve": "php -S 127.0.0.1:8080 -t public",
-    "migrate": "php bin/zoosper migrate",
-    "admin:create": "php bin/zoosper admin:create",
-    "test": "php tests/run.php"
-  }
 }

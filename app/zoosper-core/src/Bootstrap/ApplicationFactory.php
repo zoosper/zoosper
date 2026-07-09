@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Zoosper\Core\Bootstrap;
@@ -6,6 +7,7 @@ namespace Zoosper\Core\Bootstrap;
 use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
 use Zoosper\Api\Controller\AuthController as ApiAuthController;
+use Zoosper\Api\Controller\ContentPageController;
 use Zoosper\Api\Controller\HealthController;
 use Zoosper\Api\Controller\HelloController;
 use Zoosper\Api\Controller\MeController;
@@ -22,7 +24,11 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
-use Zoosper\Page\Controller\HomeController;
+use Zoosper\Page\Controller\PageController;
+use Zoosper\Page\Repository\PageRepository;
+use Zoosper\Page\Service\PageRenderer;
+use Zoosper\Site\Repository\SiteRepository;
+use Zoosper\Site\Service\SiteResolver;
 
 final class ApplicationFactory
 {
@@ -30,27 +36,57 @@ final class ApplicationFactory
     {
         $config = ConfigRepository::fromPath($basePath . '/config');
         $pdo = (new ConnectionFactory($config, $basePath))->create();
-        $users = new AdminUserRepository($pdo);
-        $hasher = new PasswordHasher();
-        $auth = new AuthService($users, $hasher);
-        $guard = new SessionGuard($users);
+
+        $userRepository = new AdminUserRepository($pdo);
+        $siteRepository = new SiteRepository($pdo);
+        $pageRepository = new PageRepository($pdo);
+
+        $passwordHasher = new PasswordHasher();
+        $auth = new AuthService($userRepository, $passwordHasher);
+        $guard = new SessionGuard($userRepository);
         $csrf = new CsrfTokenManager();
         $json = new JsonResponder();
+
+        $siteResolver = new SiteResolver($siteRepository);
+        $pageRenderer = new PageRenderer();
+
+        $loginController = new LoginController($auth, $guard, $csrf);
+        $dashboardController = new DashboardController($guard, $csrf);
+        $apiAuthController = new ApiAuthController($json, $auth, $guard);
+        $pageController = new PageController($siteResolver, $pageRepository, $pageRenderer);
+        $contentPageController = new ContentPageController($json, $siteResolver, $pageRepository);
+
         $router = new Router();
-        $login = new LoginController($auth, $guard, $csrf);
-        $dashboard = new DashboardController($guard, $csrf);
-        $apiAuth = new ApiAuthController($json, $auth, $guard);
-        $router->get('/', [new HomeController(), 'index']);
-        $router->get('/admin/login', [$login, 'show']);
-        $router->post('/admin/login', [$login, 'login']);
-        $router->post('/admin/logout', [$login, 'logout']);
-        $router->get('/admin', [$dashboard, 'index']);
+
+        $router->get('/admin/login', [$loginController, 'show']);
+        $router->post('/admin/login', [$loginController, 'login']);
+        $router->post('/admin/logout', [$loginController, 'logout']);
+        $router->get('/admin', [$dashboardController, 'index']);
+
         $router->get('/api/v1/health', [new HealthController($json), 'show']);
         $router->get('/api/v1/hello', [new HelloController($json), 'show']);
-        $router->post('/api/v1/auth/login', [$apiAuth, 'login']);
-        $router->post('/api/v1/auth/logout', [$apiAuth, 'logout']);
+        $router->post('/api/v1/auth/login', [$apiAuthController, 'login']);
+        $router->post('/api/v1/auth/logout', [$apiAuthController, 'logout']);
         $router->get('/api/v1/me', [new MeController($json, $guard), 'show']);
-        $router->fallback(static fn(Request $r): Response => str_starts_with($r->path(), '/api/') ? Response::json(['success' => false, 'error' => ['code' => 'route_not_found', 'message' => 'API route not found.']], 404) : Response::html('<h1>404</h1><p>Zoosper route not found.</p>', 404));
-        return new Application($router, new SecurityHeaders($config->array('security.headers')));
+        $router->get('/api/v1/content/page', [$contentPageController, 'show']);
+
+        $router->fallback(static function (Request $request) use ($pageController): Response {
+            if (str_starts_with($request->path(), '/api/')) {
+                return Response::json([
+                    'success' => false,
+                    'error' => [
+                        'code' => 'route_not_found',
+                        'message' => 'API route not found.',
+                    ],
+                ], 404);
+            }
+
+            return $pageController->view($request);
+        });
+
+        return new Application(
+            router: $router,
+            securityHeaders: new SecurityHeaders($config->array('security.headers')),
+        );
     }
 }

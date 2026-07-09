@@ -1,0 +1,16 @@
+{
+    "extraKnownMarketplaces": {
+        "marko": {
+            "source": {
+                "type": "github",
+                "repo": "marko-php/marko",
+                "path": ".claude-plugin/marketplace.json"
+            }
+        }
+    },
+    "enabledPlugins": {
+        "marko-skills@marko": true,
+        "marko-lsp@marko": true,
+        "marko-mcp@marko": true
+    }
+}

@@ -1,7 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Zoosper\Auth\Access;
+
 enum Permission: string
 {
     case AdminAccess = 'admin.access';

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Zoosper\Api\Controller;
@@ -13,8 +14,12 @@ final readonly class HealthController
     {
     }
 
-    public function show(Request $r): Response
+    public function show(Request $request): Response
     {
-        return $this->json->success(['service' => 'zoosper', 'status' => 'ok', 'version' => '0.2.0-dev']);
+        return $this->json->success([
+            'service' => 'zoosper',
+            'status' => 'ok',
+            'version' => '0.3.0-dev',
+        ]);
     }
 }

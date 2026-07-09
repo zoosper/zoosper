@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Zoosper\Api\Controller;
@@ -13,8 +14,11 @@ final readonly class HelloController
     {
     }
 
-    public function show(Request $r): Response
+    public function show(Request $request): Response
     {
-        return $this->json->success(['message' => 'Hello from Zoosper API.', 'phase' => '0.2-auth-database']);
+        return $this->json->success([
+            'message' => 'Hello from Zoosper API.',
+            'phase' => '0.3-site-page-rendering',
+        ]);
     }
 }

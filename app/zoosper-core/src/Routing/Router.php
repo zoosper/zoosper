@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Zoosper\Core\Routing;
@@ -8,38 +9,52 @@ use Zoosper\Core\Http\Response;
 
 final class Router
 {
+    /**
+     * @var array<string, callable(Request): Response>
+     */
     private array $routes = [];
+
+    /**
+     * @var callable(Request): Response|null
+     */
     private $fallback = null;
 
-    public function get(string $p, callable $h): void
+    public function get(string $path, callable $handler): void
     {
-        $this->map('GET', $p, $h);
+        $this->map('GET', $path, $handler);
     }
 
-    public function map(string $m, string $p, callable $h): void
+    public function post(string $path, callable $handler): void
     {
-        $this->routes[strtoupper($m) . ' ' . $this->norm($p)] = $h;
+        $this->map('POST', $path, $handler);
     }
 
-    private function norm(string $p): string
+    public function map(string $method, string $path, callable $handler): void
     {
-        $n = '/' . trim($p, '/');
-        return $n === '//' ? '/' : $n;
+        $this->routes[strtoupper($method) . ' ' . $this->normalise($path)] = $handler;
     }
 
-    public function post(string $p, callable $h): void
+    public function fallback(callable $handler): void
     {
-        $this->map('POST', $p, $h);
+        $this->fallback = $handler;
     }
 
-    public function fallback(callable $h): void
+    public function dispatch(Request $request): Response
     {
-        $this->fallback = $h;
+        $key = $request->method() . ' ' . $this->normalise($request->path());
+        $handler = $this->routes[$key] ?? $this->fallback;
+
+        if ($handler === null) {
+            return Response::html('<h1>404</h1>', 404);
+        }
+
+        return $handler($request);
     }
 
-    public function dispatch(Request $r): Response
+    private function normalise(string $path): string
     {
-        $h = $this->routes[$r->method() . ' ' . $this->norm($r->path())] ?? $this->fallback;
-        return $h ? $h($r) : Response::html('<h1>404</h1>', 404);
+        $normalised = '/' . trim($path, '/');
+
+        return $normalised === '//' ? '/' : $normalised;
     }
 }

@@ -1,46 +1,52 @@
-# Zoosper CMS - Phase 0.2
+# Zoosper CMS - Phase 0.3
 
-Zoosper is a brand-new, modern, fast, easy, secure and API-first CMS.
+This phase adds the first real CMS capability:
 
-## What is included
+- site/domain resolver
+- persistent sites and domains
+- persistent pages
+- page revisions
+- frontend page rendering by slug
+- API endpoint for page lookup
+- CLI commands for creating sites and pages
+- Marko/Claude docs and `.claude` configuration
 
-- Marko packages in `composer.json`
-- SQLite/MySQL-ready PDO connection layer
-- Migration runner
-- `admin_users`, `admin_roles`, `admin_permissions`, `admin_user_roles`, `admin_role_permissions`
-- Admin login/logout with server-side sessions
-- CSRF protection for HTML login/logout forms
-- API login/logout/me endpoints
-- Persistent roles and permissions
-- Secure password hashing
-- No hardcoded admin user
+The code is intentionally readable and not compressed. Classes are small and explicit so Claude, Copilot and PHPStorm can work with it easily.
 
-## Start
+## Install locally
 
 ```bash
 cp .env.example .env
 composer install
 php bin/zoosper migrate
 php bin/zoosper admin:create --email=admin@example.com --password='ChangeMe123!' --name='Admin User'
+php bin/zoosper site:create --code=main --name='Main Website' --host=127.0.0.1
+php bin/zoosper page:create --site=main --title='Home' --slug=home --content='Welcome to Zoosper.'
 php -S 127.0.0.1:8080 -t public
 ```
 
-Routes:
+Open:
 
 - `/`
+- `/home`
 - `/admin/login`
-- `/admin`
-- `GET /api/v1/health`
-- `POST /api/v1/auth/login`
-- `POST /api/v1/auth/logout`
-- `GET /api/v1/me`
+- `/api/v1/health`
+- `/api/v1/content/page?slug=home`
 
-API login body:
+## What is intentionally still simple
 
-```json
-{"email":"admin@example.com","password":"ChangeMe123!"}
-```
+This phase does not yet include a rich admin page editor. Pages can be created from CLI and read via frontend/API. The next phase should add admin page CRUD.
 
-## Next phase
+## Claude / Marko files
 
-Add site resolver and content tables: `sites`, `site_domains`, `pages`, `page_revisions`.
+This phase adds:
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `.claude/settings.json`
+- `.claude/commands/zoosper-next-phase.md`
+- `.claude/commands/zoosper-review.md`
+- `docs/architecture/site-and-page-rendering.md`
+- `docs/roadmap/phase-0.4-admin-page-crud.md`
+
+These are modelled on the Marko devai guidance: shared instructions in `AGENTS.md`, Claude-specific entrypoint in `CLAUDE.md`, and Claude Code settings in `.claude/settings.json`.

@@ -1,3 +1,8 @@
 <?php
+
 declare(strict_types=1);
-return ['name' => 'zoosper-page', 'enabled' => true];
+
+return [
+    'name' => 'zoosper-page',
+    'enabled' => true,
+];
