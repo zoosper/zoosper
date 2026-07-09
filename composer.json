@@ -17,7 +17,8 @@
             "Zoosper\\Admin\\": "app/zoosper-admin/src/",
             "Zoosper\\Auth\\": "app/zoosper-auth/src/",
             "Zoosper\\Site\\": "app/zoosper-site/src/",
-            "Zoosper\\Page\\": "app/zoosper-page/src/"
+            "Zoosper\\Page\\": "app/zoosper-page/src/",
+            "Zoosper\\Theme\\": "app/zoosper-theme/src/"
         }
     },
     "scripts": {
