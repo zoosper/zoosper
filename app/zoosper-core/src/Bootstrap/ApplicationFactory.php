@@ -46,6 +46,8 @@ use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Site\Service\SiteResolver;
 use Zoosper\Theme\Template\TemplateRenderer;
 use Zoosper\Theme\Theme\ThemeResolver;
+use Zoosper\Admin\Controller\ThemeAdminController;
+use Zoosper\Theme\Theme\ThemeRepository;
 
 final class ApplicationFactory
 {
@@ -98,6 +100,15 @@ final class ApplicationFactory
         $healthController = new HealthController($json);
         $helloController = new HelloController($json);
         $meController = new MeController($json, $guard);
+        $themeRepository = new ThemeRepository($basePath . '/themes');
+        $themeAdminController = new ThemeAdminController(
+            $guard,
+            $csrf,
+            $adminLayout,
+            $themeRepository,
+            $siteRepository,
+            $auditLogger,
+        );
 
         $controllers = [
             LoginController::class => $loginController,
@@ -112,6 +123,7 @@ final class ApplicationFactory
             ContentPageController::class => $contentPageController,
             AuditLogController::class => $auditLogController,
             LoginHistoryController::class => $loginHistoryController,
+            ThemeAdminController::class => $themeAdminController,
         ];
 
         $router = new Router();

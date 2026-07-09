@@ -4,7 +4,7 @@ Zoosper is a modern, lightweight, modular PHP 8.5+ CMS inspired by Magento-style
 
 ## Current phase
 
-Phase 0.14 — Site Theme Selection and Layouts.
+Phase 0.15 — Theme Admin and Template Overrides.
 
 ## What is included
 
@@ -19,6 +19,8 @@ Phase 0.14 — Site Theme Selection and Layouts.
 - Audit log and login history foundations
 - Multisite/domain-based site resolution
 - Per-site `theme_code` field
+- Theme admin screen at `/admin/themes`
+- Theme template override lookup
 - CMS page CRUD, preview, publish and unpublish
 - Theme and layout rendering through `zoosper-theme`
 - Default frontend theme under `themes/default`
@@ -33,6 +35,8 @@ Phase 0.14 — Site Theme Selection and Layouts.
 ```bash
 cp .env.example .env
 composer install
+php tools/phase015-fix-composer-autoload.php
+composer dump-autoload
 php bin/zoosper migrate
 php bin/zoosper admin:create --email=admin@example.com --password='ChangeMe123!' --name='Admin User'
 php bin/zoosper site:create --code=main --name='Main Website' --host=localhost
@@ -50,36 +54,28 @@ php -S 127.0.0.1:8080 -t public
 /admin/pages
 /admin/users
 /admin/roles
+/admin/themes
 /admin/audit-log
 /admin/login-history
 /api/v1/health
 /api/v1/content/page?slug=home
 ```
 
-## CMS version
-
-Set the displayed CMS version in `.env`:
-
-```env
-CMS_VERSION=0.14.0-dev
-```
-
 ## Themes
 
-Each site has a `theme_code` value. The default is:
+Installed themes are discovered from:
 
 ```text
-default
+themes/*/theme.php
 ```
 
-Default theme structure:
+Theme override order:
 
 ```text
-themes/default/theme.php
-themes/default/templates/layout.php
-themes/default/templates/page.php
-themes/default/templates/partials/header.php
-themes/default/templates/partials/footer.php
+themes/<theme>/templates/overrides/<template>
+themes/<theme>/templates/<template>
+themes/default/templates/overrides/<template>
+themes/default/templates/<template>
 ```
 
 ## Declarative schema
@@ -94,7 +90,3 @@ php bin/zoosper-schema snapshots
 ## Documentation
 
 Detailed architecture notes live in `docs/architecture/` and phase plans live in `docs/roadmap/`.
-
-## Development principle
-
-Keep core small, explicit and AI-friendly. Optional capabilities should live in modules with their own config, routes, menu entries, translations, schema declarations and templates.
