@@ -7,6 +7,8 @@ namespace Zoosper\Core\Bootstrap;
 use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
 use Zoosper\Admin\Controller\PageAdminController;
+use Zoosper\Admin\Layout\AdminLayout;
+use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Api\Controller\AuthController as ApiAuthController;
 use Zoosper\Api\Controller\ContentPageController;
 use Zoosper\Api\Controller\HealthController;
@@ -42,35 +44,27 @@ final class ApplicationFactory
         $siteRepository = new SiteRepository($pdo);
         $pageRepository = new PageRepository($pdo);
 
-        $passwordHasher = new PasswordHasher();
-        $auth = new AuthService($userRepository, $passwordHasher);
+        $auth = new AuthService($userRepository, new PasswordHasher());
         $guard = new SessionGuard($userRepository);
         $csrf = new CsrfTokenManager();
         $json = new JsonResponder();
+        $adminLayout = new AdminLayout(new AdminMenu());
 
         $siteResolver = new SiteResolver($siteRepository);
         $pageRenderer = new PageRenderer();
 
         $loginController = new LoginController($auth, $guard, $csrf);
-        $dashboardController = new DashboardController($guard, $csrf);
-        $pageAdminController = new PageAdminController(
-            guard: $guard,
-            csrf: $csrf,
-            pages: $pageRepository,
-            sites: $siteRepository,
-            renderer: $pageRenderer,
-        );
+        $dashboardController = new DashboardController($guard, $csrf, $adminLayout);
+        $pageAdminController = new PageAdminController($guard, $csrf, $pageRepository, $siteRepository, $pageRenderer, $adminLayout);
         $apiAuthController = new ApiAuthController($json, $auth, $guard);
         $pageController = new PageController($siteResolver, $pageRepository, $pageRenderer);
         $contentPageController = new ContentPageController($json, $siteResolver, $pageRepository);
 
         $router = new Router();
-
         $router->get('/admin/login', [$loginController, 'show']);
         $router->post('/admin/login', [$loginController, 'login']);
         $router->post('/admin/logout', [$loginController, 'logout']);
         $router->get('/admin', [$dashboardController, 'index']);
-
         $router->get('/admin/pages', [$pageAdminController, 'index']);
         $router->get('/admin/pages/create', [$pageAdminController, 'createForm']);
         $router->post('/admin/pages/create', [$pageAdminController, 'create']);
@@ -79,31 +73,19 @@ final class ApplicationFactory
         $router->get('/admin/pages/preview', [$pageAdminController, 'preview']);
         $router->post('/admin/pages/publish', [$pageAdminController, 'publish']);
         $router->post('/admin/pages/unpublish', [$pageAdminController, 'unpublish']);
-
         $router->get('/api/v1/health', [new HealthController($json), 'show']);
         $router->get('/api/v1/hello', [new HelloController($json), 'show']);
         $router->post('/api/v1/auth/login', [$apiAuthController, 'login']);
         $router->post('/api/v1/auth/logout', [$apiAuthController, 'logout']);
         $router->get('/api/v1/me', [new MeController($json, $guard), 'show']);
         $router->get('/api/v1/content/page', [$contentPageController, 'show']);
-
         $router->fallback(static function (Request $request) use ($pageController): Response {
             if (str_starts_with($request->path(), '/api/')) {
-                return Response::json([
-                    'success' => false,
-                    'error' => [
-                        'code' => 'route_not_found',
-                        'message' => 'API route not found.',
-                    ],
-                ], 404);
+                return Response::json(['success' => false, 'error' => ['code' => 'route_not_found', 'message' => 'API route not found.']], 404);
             }
-
             return $pageController->view($request);
         });
 
-        return new Application(
-            router: $router,
-            securityHeaders: new SecurityHeaders($config->array('security.headers')),
-        );
+        return new Application($router, new SecurityHeaders($config->array('security.headers')));
     }
 }
