@@ -10,6 +10,8 @@ use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuLoader;
+use Zoosper\Admin\UI\AdminComponentRenderer;
+use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\AuthService;
