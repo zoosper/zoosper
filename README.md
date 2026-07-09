@@ -4,7 +4,7 @@ Zoosper is a modern, lightweight, modular PHP 8.5+ CMS inspired by Magento-style
 
 ## Current phase
 
-Phase 0.15 — Theme Admin and Template Overrides.
+Phase 0.16 — Module Template Overrides and Admin Theme Foundation.
 
 ## What is included
 
@@ -12,6 +12,7 @@ Phase 0.15 — Theme Admin and Template Overrides.
 - Dynamic module discovery through `module.php`
 - Dynamic admin menu discovery through module `config/admin_menu.php`
 - Dynamic admin/API route discovery through module route config files
+- Module-owned controller providers through `config/controllers.php`
 - Admin login/logout with CSRF protection and secure password hashing
 - Admin users, roles and permission matrix
 - Magento-style grouped ACL tree for permissions
@@ -20,29 +21,11 @@ Phase 0.15 — Theme Admin and Template Overrides.
 - Multisite/domain-based site resolution
 - Per-site `theme_code` field
 - Theme admin screen at `/admin/themes`
-- Theme template override lookup
+- Frontend theme template override lookup
+- Module template rendering using `module::path`
+- Admin theme foundation under `themes/admin/default`
 - CMS page CRUD, preview, publish and unpublish
-- Theme and layout rendering through `zoosper-theme`
-- Default frontend theme under `themes/default`
-- Layouts and partial templates for header/footer
-- Per-module translation drop files under `config/translations/`
-- Central CMS version service used by admin and page rendering
 - Declarative schema engine using module `config/db_schema.php`
-- Declarative schema validation and schema snapshots
-
-## Quick start
-
-```bash
-cp .env.example .env
-composer install
-php tools/phase015-fix-composer-autoload.php
-composer dump-autoload
-php bin/zoosper migrate
-php bin/zoosper admin:create --email=admin@example.com --password='ChangeMe123!' --name='Admin User'
-php bin/zoosper site:create --code=main --name='Main Website' --host=localhost
-php bin/zoosper page:create --site=main --title='Home' --slug=home --content='Welcome to Zoosper.'
-php -S 127.0.0.1:8080 -t public
-```
 
 ## Useful routes
 
@@ -61,31 +44,35 @@ php -S 127.0.0.1:8080 -t public
 /api/v1/content/page?slug=home
 ```
 
-## Themes
+## Module templates
 
-Installed themes are discovered from:
-
-```text
-themes/*/theme.php
-```
-
-Theme override order:
+Modules can provide default views:
 
 ```text
-themes/<theme>/templates/overrides/<template>
-themes/<theme>/templates/<template>
-themes/default/templates/overrides/<template>
-themes/default/templates/<template>
+app/zoosper-page/resources/views/page/view.php
 ```
 
-## Declarative schema
+Themes can override module views:
 
-```bash
-php bin/zoosper-schema validate
-php bin/zoosper-schema diff
-php bin/zoosper-schema apply
-php bin/zoosper-schema snapshots
+```text
+themes/default/templates/modules/zoosper-page/page/view.php
 ```
+
+Render using:
+
+```text
+zoosper-page::page/view
+```
+
+## Plug-and-play controllers
+
+Modules can provide controller factories:
+
+```text
+app/<module>/config/controllers.php
+```
+
+This reduces the need to keep editing `ApplicationFactory` for every new controller.
 
 ## Documentation
 
