@@ -1,18 +1,18 @@
 <?php
-
 declare(strict_types=1);
-
 require dirname(__DIR__) . '/bootstrap/autoload.php';
 
-use Zoosper\Auth\Access\InMemoryRoleProvider;
 use Zoosper\Auth\Access\Permission;
+use Zoosper\Auth\Service\PasswordHasher;
 
-$roles = InMemoryRoleProvider::createDefault();
-$superAdmin = $roles->get('super_admin');
-
-if ($superAdmin === null || !$superAdmin->allows(Permission::AdminAccess)) {
-    fwrite(STDERR, "Role permission smoke test failed.\n");
+$h = new PasswordHasher();
+$hash = $h->hash('secret');
+if (!$h->verify('secret', $hash)) {
+    fwrite(STDERR, "Password hashing failed\n");
     exit(1);
 }
-
-fwrite(STDOUT, "Zoosper smoke tests passed.\n");
+if (Permission::AdminAccess->value !== 'admin.access') {
+    fwrite(STDERR, "Permission enum failed\n");
+    exit(1);
+}
+echo "Zoosper phase 0.2 smoke tests passed.\n";

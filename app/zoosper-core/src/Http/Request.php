@@ -1,29 +1,18 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Zoosper\Core\Http;
-
 final readonly class Request
 {
-    /** @param array<string, string> $headers */
-    public function __construct(
-        private string $method,
-        private string $path,
-        private array $headers = [],
-    ) {
+    public function __construct(private string $method, private string $path, private array $headers = [], private string $body = '')
+    {
     }
 
     public static function fromGlobals(): self
     {
         $uri = $_SERVER['REQUEST_URI'] ?? '/';
-        $path = parse_url($uri, PHP_URL_PATH) ?: '/';
-
-        return new self(
-            method: strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')),
-            path: '/' . trim($path, '/'),
-            headers: function_exists('getallheaders') ? array_change_key_case(getallheaders(), CASE_LOWER) : [],
-        );
+        $p = parse_url($uri, PHP_URL_PATH) ?: '/';
+        return new self(strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET')), '/' . trim($p, '/'), function_exists('getallheaders') ? array_change_key_case(getallheaders(), CASE_LOWER) : [], file_get_contents('php://input') ?: '');
     }
 
     public function method(): string
@@ -36,8 +25,14 @@ final readonly class Request
         return $this->path === '//' ? '/' : $this->path;
     }
 
-    public function header(string $name, ?string $default = null): ?string
+    public function json(): array
     {
-        return $this->headers[strtolower($name)] ?? $default;
+        $d = json_decode($this->body, true);
+        return is_array($d) ? $d : [];
+    }
+
+    public function form(): array
+    {
+        return $_POST;
     }
 }

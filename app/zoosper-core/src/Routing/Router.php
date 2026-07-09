@@ -1,48 +1,45 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Zoosper\Core\Routing;
 
-use Closure;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 
 final class Router
 {
-    /** @var array<string, callable(Request): Response> */
     private array $routes = [];
-
-    /** @var callable(Request): Response|null */
     private $fallback = null;
 
-    /** @param callable(Request): Response $handler */
-    public function get(string $path, callable $handler): void
+    public function get(string $p, callable $h): void
     {
-        $this->routes['GET ' . $this->normalise($path)] = $handler;
+        $this->map('GET', $p, $h);
     }
 
-    /** @param callable(Request): Response $handler */
-    public function fallback(callable $handler): void
+    public function map(string $m, string $p, callable $h): void
     {
-        $this->fallback = $handler;
+        $this->routes[strtoupper($m) . ' ' . $this->norm($p)] = $h;
     }
 
-    public function dispatch(Request $request): Response
+    private function norm(string $p): string
     {
-        $key = $request->method() . ' ' . $this->normalise($request->path());
-        $handler = $this->routes[$key] ?? $this->fallback;
-
-        if ($handler === null) {
-            return Response::html('<h1>404</h1>', 404);
-        }
-
-        return $handler($request);
+        $n = '/' . trim($p, '/');
+        return $n === '//' ? '/' : $n;
     }
 
-    private function normalise(string $path): string
+    public function post(string $p, callable $h): void
     {
-        $normalised = '/' . trim($path, '/');
-        return $normalised === '//' ? '/' : $normalised;
+        $this->map('POST', $p, $h);
+    }
+
+    public function fallback(callable $h): void
+    {
+        $this->fallback = $h;
+    }
+
+    public function dispatch(Request $r): Response
+    {
+        $h = $this->routes[$r->method() . ' ' . $this->norm($r->path())] ?? $this->fallback;
+        return $h ? $h($r) : Response::html('<h1>404</h1>', 404);
     }
 }

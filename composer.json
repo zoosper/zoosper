@@ -1,10 +1,14 @@
 {
   "name": "zoosper/cms-skeleton",
-  "description": "Zoosper CMS initial skeleton - modern, fast, secure and API-first PHP CMS foundation.",
+  "description": "Zoosper CMS phase 0.2 skeleton with Marko requirements, migrations and persistent admin auth.",
   "type": "project",
   "license": "MIT",
   "require": {
-    "php": "^8.5"
+    "php": "^8.5",
+    "ext-pdo": "*",
+    "marko/framework": "^0.8",
+    "marko/database": "^0.8",
+    "marko/database-mysql": "^0.8"
   },
   "autoload": {
     "psr-4": {
@@ -18,9 +22,8 @@
   },
   "scripts": {
     "serve": "php -S 127.0.0.1:8080 -t public",
+    "migrate": "php bin/zoosper migrate",
+    "admin:create": "php bin/zoosper admin:create",
     "test": "php tests/run.php"
-  },
-  "config": {
-    "sort-packages": true
   }
 }

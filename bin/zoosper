@@ -1,0 +1,7 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+use Zoosper\Auth\Repository\AdminUserRepository; use Zoosper\Auth\Service\PasswordHasher; use Zoosper\Core\Config\ConfigRepository; use Zoosper\Core\Database\ConnectionFactory; use Zoosper\Core\Database\Migrator;
+require dirname(__DIR__).'/bootstrap/autoload.php';
+$base=dirname(__DIR__);$config=ConfigRepository::fromPath($base.'/config');$pdo=(new ConnectionFactory($config,$base))->create();$cmd=$argv[1]??'help';$opt=[];foreach(array_slice($argv,2) as $a){if(str_starts_with($a,'--')&&str_contains($a,'=')){[$k,$v]=explode('=',substr($a,2),2);$opt[$k]=$v;}}
+if($cmd==='migrate'){(new Migrator($pdo,$base.'/database/migrations'))->migrate();echo "Zoosper migrations completed.\n";exit(0);} if($cmd==='admin:create'){$email=(string)($opt['email']??'');$password=(string)($opt['password']??'');$name=(string)($opt['name']??'Admin User');if($email===''||$password===''){fwrite(STDERR,"Usage: php bin/zoosper admin:create --email=admin@example.com --password='ChangeMe123!' --name='Admin User'\n");exit(1);} $repo=new AdminUserRepository($pdo);if($repo->findByEmail($email)){fwrite(STDERR,"Admin user already exists: $email\n");exit(1);} $id=$repo->create($email,$name,(new PasswordHasher())->hash($password),'super_admin');echo "Created super admin user #$id: $email\n";exit(0);} echo "Zoosper CLI\nCommands: migrate, admin:create\n";

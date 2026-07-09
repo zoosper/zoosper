@@ -1,36 +1,23 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Zoosper\Api\Controller;
 
-use Zoosper\Auth\Access\RoleProviderInterface;
+use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 
 final readonly class MeController
 {
-    public function __construct(
-        private JsonResponder $json,
-        private RoleProviderInterface $roles,
-    ) {
+    public function __construct(private JsonResponder $json, private SessionGuard $guard)
+    {
     }
 
-    public function show(Request $request): Response
+    public function show(Request $r): Response
     {
-        $role = $this->roles->get('super_admin');
-
-        return $this->json->success([
-            'user' => [
-                'id' => 'placeholder-admin',
-                'name' => 'Zoosper Admin',
-                'role' => $role?->code,
-                'permissions' => array_map(
-                    static fn ($permission): string => $permission->value,
-                    $role?->permissions ?? [],
-                ),
-            ],
-        ]);
+        $u = $this->guard->user();
+        if ($u === null) return $this->json->error('unauthenticated', 'You are not logged in.', 401);
+        return $this->json->success(['user' => ['id' => $u->id, 'email' => $u->email, 'name' => $u->name, 'permissions' => $u->permissions]]);
     }
 }

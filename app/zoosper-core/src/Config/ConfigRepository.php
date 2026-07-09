@@ -1,48 +1,33 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Zoosper\Core\Config;
-
 final readonly class ConfigRepository
 {
-    /** @param array<string, mixed> $items */
     private function __construct(private array $items)
     {
     }
 
-    public static function fromPath(string $configPath): self
+    public static function fromPath(string $path): self
     {
         $items = [];
-        foreach (glob($configPath . '/*.php') ?: [] as $file) {
-            $key = basename($file, '.php');
-            /** @var array<string, mixed> $value */
-            $value = require $file;
-            $items[$key] = $value;
-        }
-
+        foreach (glob($path . '/*.php') ?: [] as $f) $items[basename($f, '.php')] = require $f;
         return new self($items);
+    }
+
+    public function array(string $key): array
+    {
+        $v = $this->get($key, []);
+        return is_array($v) ? $v : [];
     }
 
     public function get(string $key, mixed $default = null): mixed
     {
-        $segments = explode('.', $key);
-        $value = $this->items;
-
-        foreach ($segments as $segment) {
-            if (!is_array($value) || !array_key_exists($segment, $value)) {
-                return $default;
-            }
-            $value = $value[$segment];
+        $v = $this->items;
+        foreach (explode('.', $key) as $s) {
+            if (!is_array($v) || !array_key_exists($s, $v)) return $default;
+            $v = $v[$s];
         }
-
-        return $value;
-    }
-
-    /** @return array<string, string> */
-    public function array(string $key): array
-    {
-        $value = $this->get($key, []);
-        return is_array($value) ? $value : [];
+        return $v;
     }
 }
