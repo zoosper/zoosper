@@ -100,4 +100,23 @@ final readonly class RoleRepository
         $code = preg_replace('/[^a-z0-9_]+/', '_', $code) ?: '';
         return trim($code, '_');
     }
+
+
+    /** @return list<int> */
+    public function userIdsForRole(int $roleId): array
+    {
+        $statement = $this->pdo->prepare('SELECT user_id FROM admin_user_roles WHERE role_id = :role_id ORDER BY user_id');
+        $statement->execute(['role_id' => $roleId]);
+        return array_map(static fn (array $row): int => (int) $row['user_id'], $statement->fetchAll());
+    }
+
+    /** @param list<int> $userIds */
+    public function syncUsersForRole(int $roleId, array $userIds): void
+    {
+        $this->pdo->prepare('DELETE FROM admin_user_roles WHERE role_id = :role_id')->execute(['role_id' => $roleId]);
+        $statement = $this->pdo->prepare('INSERT INTO admin_user_roles (user_id, role_id) VALUES (:user_id, :role_id)');
+        foreach (array_values(array_unique(array_filter($userIds, static fn (int $id): bool => $id > 0))) as $userId) {
+            $statement->execute(['user_id' => $userId, 'role_id' => $roleId]);
+        }
+    }
 }

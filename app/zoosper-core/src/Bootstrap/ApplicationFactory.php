@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Bootstrap;
 
+use Zoosper\Admin\Audit\AuditLogger;
+use Zoosper\Admin\Audit\AuditLogRepository;
+use Zoosper\Admin\Audit\LoginHistoryRepository;
+use Zoosper\Admin\Controller\AuditLogController;
 use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
+use Zoosper\Admin\Controller\LoginHistoryController;
 use Zoosper\Admin\Controller\PageAdminController;
 use Zoosper\Admin\Controller\RoleAdminController;
 use Zoosper\Admin\Controller\UserAdminController;
@@ -57,6 +62,9 @@ final class ApplicationFactory
         $guard = new SessionGuard($userRepository);
         $csrf = new CsrfTokenManager();
         $json = new JsonResponder();
+        $loginHistoryRepository = new LoginHistoryRepository($pdo);
+        $auditLogRepository = new AuditLogRepository($pdo);
+        $auditLogger = new AuditLogger($auditLogRepository);
 
         $adminMenu = new AdminMenu(new AdminMenuLoader($modules));
         $adminLayout = new AdminLayout($adminMenu, $config);
@@ -64,7 +72,9 @@ final class ApplicationFactory
         $siteResolver = new SiteResolver($siteRepository);
         $pageRenderer = new PageRenderer();
 
-        $loginController = new LoginController($auth, $guard, $csrf);
+        $loginController = new LoginController($auth, $guard, $csrf, $loginHistoryRepository);
+        $auditLogController = new AuditLogController($guard, $auditLogRepository, $adminLayout);
+        $loginHistoryController = new LoginHistoryController($guard, $loginHistoryRepository, $adminLayout);
         $dashboardController = new DashboardController($guard, $csrf, $adminLayout);
         $pageAdminController = new PageAdminController($guard, $csrf, $pageRepository, $siteRepository, $pageRenderer, $adminLayout);
         $userAdminController = new UserAdminController($guard, $csrf, $userRepository, $roleRepository, $passwordHasher, $adminLayout);
@@ -87,6 +97,8 @@ final class ApplicationFactory
             HelloController::class => $helloController,
             MeController::class => $meController,
             ContentPageController::class => $contentPageController,
+            AuditLogController::class => $auditLogController,
+            LoginHistoryController::class => $loginHistoryController,
         ];
 
         $router = new Router();

@@ -184,4 +184,23 @@ final readonly class AdminUserRepository
         $statement->execute(['user_id' => $userId]);
         return array_map(static fn (array $row): string => (string) $row['code'], $statement->fetchAll());
     }
+
+    /** @return list<AdminUser> */
+    public function search(string $term, int $limit = 50): array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT * FROM admin_users WHERE email LIKE :term OR name LIKE :term ORDER BY name ASC LIMIT :limit'
+        );
+        $statement->bindValue('term', '%' . $term . '%');
+        $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
+        $statement->execute();
+        return array_map(fn (array $row): AdminUser => $this->hydrate($row), $statement->fetchAll());
+    }
+
+    /** @return list<AdminUser> */
+    public function allForAssignment(): array
+    {
+        $statement = $this->pdo->query('SELECT * FROM admin_users ORDER BY name ASC, email ASC');
+        return array_map(fn (array $row): AdminUser => $this->hydrate($row), $statement->fetchAll());
+    }
 }
