@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use PDO;
 use Zoosper\Core\Database\MigrationInterface;
 
 return new class implements MigrationInterface {
