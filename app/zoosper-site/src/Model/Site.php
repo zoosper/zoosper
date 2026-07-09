@@ -11,12 +11,8 @@ final readonly class Site
         public string $code,
         public string $name,
         public string $status,
-        public ?string $homepageSlug,
+        public ?string $homepageSlug = null,
+        public string $themeCode = 'default',
     ) {
-    }
-
-    public function isActive(): bool
-    {
-        return $this->status === 'active';
     }
 }

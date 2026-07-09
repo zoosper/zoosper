@@ -15,20 +15,16 @@ final readonly class PageRenderer
     public function __construct(
         private ?TemplateRenderer $templates = null,
         private ?CmsVersion $version = null,
-        private ?string $themeCode = null,
     ) {
     }
 
     public function render(Page $page, Site $site): string
     {
-        $templates = $this->templates ?? new TemplateRenderer(
-            new ThemeResolver(dirname(__DIR__, 4) . '/themes', 'default'),
-        );
+        $templates = $this->templates ?? new TemplateRenderer(new ThemeResolver(dirname(__DIR__, 4) . '/themes', 'default'));
+        $themeCode = $site->themeCode;
+        $versionLabel = ($this->version ?? new CmsVersion())->label();
+        $content = $templates->render('page.php', ['page' => $page, 'site' => $site, 'versionLabel' => $versionLabel], $themeCode);
 
-        return $templates->render('page.php', [
-            'page' => $page,
-            'site' => $site,
-            'versionLabel' => ($this->version ?? new CmsVersion())->label(),
-        ], $this->themeCode);
+        return $templates->renderLayout('layout.php', $content, ['page' => $page, 'site' => $site, 'versionLabel' => $versionLabel], $themeCode);
     }
 }

@@ -44,17 +44,23 @@ final readonly class SiteRepository
         return array_map(fn (array $row): Site => $this->hydrate($row), $statement->fetchAll());
     }
 
-    public function create(string $code, string $name, string $host, string $homepageSlug = 'home'): int
+    public function create(string $code, string $name, string $host, string $homepageSlug = 'home', string $themeCode = 'default'): int
     {
         if ($this->findByCode($code) !== null) {
             throw new RuntimeException('Site already exists: ' . $code);
         }
         $now = gmdate('Y-m-d H:i:s');
-        $statement = $this->pdo->prepare('INSERT INTO sites (code, name, status, homepage_slug, created_at, updated_at) VALUES (:code, :name, :status, :homepage_slug, :created_at, :updated_at)');
-        $statement->execute(['code' => $code, 'name' => $name, 'status' => 'active', 'homepage_slug' => $homepageSlug, 'created_at' => $now, 'updated_at' => $now]);
+        $statement = $this->pdo->prepare('INSERT INTO sites (code, name, status, homepage_slug, theme_code, created_at, updated_at) VALUES (:code, :name, :status, :homepage_slug, :theme_code, :created_at, :updated_at)');
+        $statement->execute(['code' => $code, 'name' => $name, 'status' => 'active', 'homepage_slug' => $homepageSlug, 'theme_code' => $themeCode, 'created_at' => $now, 'updated_at' => $now]);
         $siteId = (int) $this->pdo->lastInsertId();
         $this->addDomain($siteId, $host, true);
         return $siteId;
+    }
+
+    public function updateTheme(int $siteId, string $themeCode): void
+    {
+        $statement = $this->pdo->prepare('UPDATE sites SET theme_code = :theme_code, updated_at = :updated_at WHERE id = :id');
+        $statement->execute(['id' => $siteId, 'theme_code' => $themeCode, 'updated_at' => gmdate('Y-m-d H:i:s')]);
     }
 
     public function addDomain(int $siteId, string $host, bool $isPrimary = false): void
@@ -67,6 +73,13 @@ final readonly class SiteRepository
     /** @param array<string, mixed> $row */
     private function hydrate(array $row): Site
     {
-        return new Site((int) $row['id'], (string) $row['code'], (string) $row['name'], (string) $row['status'], $row['homepage_slug'] !== null ? (string) $row['homepage_slug'] : null);
+        return new Site(
+            id: (int) $row['id'],
+            code: (string) $row['code'],
+            name: (string) $row['name'],
+            status: (string) $row['status'],
+            homepageSlug: $row['homepage_slug'] !== null ? (string) $row['homepage_slug'] : null,
+            themeCode: (string) ($row['theme_code'] ?? 'default'),
+        );
     }
 }
