@@ -14,12 +14,18 @@ final readonly class AdminUserRepository
     {
     }
 
+    /** @return list<AdminUser> */
+    public function all(): array
+    {
+        $statement = $this->pdo->query('SELECT * FROM admin_users ORDER BY id DESC');
+        return array_map(fn (array $row): AdminUser => $this->hydrate($row), $statement->fetchAll());
+    }
+
     public function findByEmail(string $email): ?AdminUser
     {
         $statement = $this->pdo->prepare('SELECT * FROM admin_users WHERE email = :email LIMIT 1');
         $statement->execute(['email' => mb_strtolower($email)]);
         $row = $statement->fetch();
-
         return is_array($row) ? $this->hydrate($row) : null;
     }
 
@@ -28,14 +34,23 @@ final readonly class AdminUserRepository
         $statement = $this->pdo->prepare('SELECT * FROM admin_users WHERE id = :id LIMIT 1');
         $statement->execute(['id' => $id]);
         $row = $statement->fetch();
-
         return is_array($row) ? $this->hydrate($row) : null;
     }
 
     public function create(string $email, string $name, string $hash, string $roleCode = 'super_admin'): int
     {
-        $now = gmdate('Y-m-d H:i:s');
+        $roleId = $this->roleId($roleCode);
+        return $this->createWithRoleIds($email, $name, $hash, 'active', [$roleId]);
+    }
 
+    /** @param list<int> $roleIds */
+    public function createWithRoleIds(string $email, string $name, string $hash, string $status, array $roleIds): int
+    {
+        if ($this->findByEmail($email) !== null) {
+            throw new RuntimeException('Admin user already exists for email: ' . $email);
+        }
+
+        $now = gmdate('Y-m-d H:i:s');
         $statement = $this->pdo->prepare(
             'INSERT INTO admin_users (email, name, password_hash, status, created_at, updated_at)
              VALUES (:email, :name, :password_hash, :status, :created_at, :updated_at)'
@@ -44,50 +59,105 @@ final readonly class AdminUserRepository
             'email' => mb_strtolower($email),
             'name' => $name,
             'password_hash' => $hash,
-            'status' => 'active',
+            'status' => $status,
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
         $userId = (int) $this->pdo->lastInsertId();
-        $this->assignRole($userId, $roleCode);
-
+        $this->syncRoles($userId, $roleIds);
         return $userId;
     }
 
-    public function updateLastLogin(int $id): void
+    /** @param list<int> $roleIds */
+    public function updateUser(int $id, string $email, string $name, string $status, array $roleIds): void
     {
-        $now = gmdate('Y-m-d H:i:s');
+        $existing = $this->findById($id);
+        if ($existing === null) {
+            throw new RuntimeException('Admin user does not exist: ' . $id);
+        }
+
+        $byEmail = $this->findByEmail($email);
+        if ($byEmail !== null && $byEmail->id !== $id) {
+            throw new RuntimeException('Another admin user already uses email: ' . $email);
+        }
 
         $statement = $this->pdo->prepare(
             'UPDATE admin_users
-             SET last_login_at = :last_login_at,
+             SET email = :email,
+                 name = :name,
+                 status = :status,
                  updated_at = :updated_at
              WHERE id = :id'
         );
         $statement->execute([
             'id' => $id,
-            'last_login_at' => $now,
-            'updated_at' => $now,
+            'email' => mb_strtolower($email),
+            'name' => $name,
+            'status' => $status,
+            'updated_at' => gmdate('Y-m-d H:i:s'),
         ]);
+
+        $this->syncRoles($id, $roleIds);
     }
 
-    private function assignRole(int $userId, string $roleCode): void
+    public function updatePassword(int $id, string $hash): void
     {
-        $roleId = $this->roleId($roleCode);
-
         $statement = $this->pdo->prepare(
-            'INSERT INTO admin_user_roles (user_id, role_id) VALUES (:user_id, :role_id)'
+            'UPDATE admin_users SET password_hash = :password_hash, updated_at = :updated_at WHERE id = :id'
         );
         $statement->execute([
-            'user_id' => $userId,
-            'role_id' => $roleId,
+            'id' => $id,
+            'password_hash' => $hash,
+            'updated_at' => gmdate('Y-m-d H:i:s'),
         ]);
     }
 
-    /**
-     * @param array<string, mixed> $row
-     */
+    public function updateLastLogin(int $id): void
+    {
+        $now = gmdate('Y-m-d H:i:s');
+        $statement = $this->pdo->prepare(
+            'UPDATE admin_users SET last_login_at = :last_login_at, updated_at = :updated_at WHERE id = :id'
+        );
+        $statement->execute(['id' => $id, 'last_login_at' => $now, 'updated_at' => $now]);
+    }
+
+    /** @return list<int> */
+    public function roleIdsForUser(int $userId): array
+    {
+        $statement = $this->pdo->prepare('SELECT role_id FROM admin_user_roles WHERE user_id = :user_id ORDER BY role_id');
+        $statement->execute(['user_id' => $userId]);
+        return array_map(static fn (array $row): int => (int) $row['role_id'], $statement->fetchAll());
+    }
+
+    /** @param list<int> $roleIds */
+    private function syncRoles(int $userId, array $roleIds): void
+    {
+        $roleIds = array_values(array_unique(array_filter($roleIds, static fn (int $id): bool => $id > 0)));
+        if ($roleIds === []) {
+            throw new RuntimeException('At least one role must be selected.');
+        }
+
+        $this->pdo->prepare('DELETE FROM admin_user_roles WHERE user_id = :user_id')->execute(['user_id' => $userId]);
+        $statement = $this->pdo->prepare('INSERT INTO admin_user_roles (user_id, role_id) VALUES (:user_id, :role_id)');
+
+        foreach ($roleIds as $roleId) {
+            $statement->execute(['user_id' => $userId, 'role_id' => $roleId]);
+        }
+    }
+
+    private function roleId(string $roleCode): int
+    {
+        $statement = $this->pdo->prepare('SELECT id FROM admin_roles WHERE code = :code');
+        $statement->execute(['code' => $roleCode]);
+        $id = $statement->fetchColumn();
+        if ($id === false) {
+            throw new RuntimeException('Role does not exist: ' . $roleCode);
+        }
+        return (int) $id;
+    }
+
+    /** @param array<string, mixed> $row */
     private function hydrate(array $row): AdminUser
     {
         return new AdminUser(
@@ -100,9 +170,7 @@ final readonly class AdminUserRepository
         );
     }
 
-    /**
-     * @return list<string>
-     */
+    /** @return list<string> */
     private function permissionsForUser(int $userId): array
     {
         $statement = $this->pdo->prepare(
@@ -114,23 +182,6 @@ final readonly class AdminUserRepository
              ORDER BY p.code'
         );
         $statement->execute(['user_id' => $userId]);
-
-        return array_map(
-            static fn (array $row): string => (string) $row['code'],
-            $statement->fetchAll(),
-        );
-    }
-
-    private function roleId(string $roleCode): int
-    {
-        $statement = $this->pdo->prepare('SELECT id FROM admin_roles WHERE code = :code');
-        $statement->execute(['code' => $roleCode]);
-        $id = $statement->fetchColumn();
-
-        if ($id === false) {
-            throw new RuntimeException('Role does not exist: ' . $roleCode);
-        }
-
-        return (int) $id;
+        return array_map(static fn (array $row): string => (string) $row['code'], $statement->fetchAll());
     }
 }
