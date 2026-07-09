@@ -28,6 +28,7 @@ use Zoosper\Auth\Service\AuthService;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Database\ConnectionFactory;
 use Zoosper\Core\Http\Application;
@@ -43,13 +44,18 @@ use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
 use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Site\Service\SiteResolver;
+use Zoosper\Theme\Template\TemplateRenderer;
+use Zoosper\Theme\Theme\ThemeResolver;
 
 final class ApplicationFactory
 {
     public static function create(string $basePath): Application
     {
         $config = ConfigRepository::fromPath($basePath . '/config');
-        $pdo = (new ConnectionFactory($config, $basePath))->create();
+        $cmsVersion = new CmsVersion($config);
+        $templateRenderer = new TemplateRenderer(new ThemeResolver($basePath . '/themes', 'default'));
+        $pageRenderer = new PageRenderer($templateRenderer, $cmsVersion);
+        $pdo = new ConnectionFactory($config, $basePath)->create();
         $modules = new ModuleRegistry($basePath);
 
         $userRepository = new AdminUserRepository($pdo);

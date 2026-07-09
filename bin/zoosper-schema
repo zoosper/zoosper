@@ -15,6 +15,18 @@ use Zoosper\Core\Schema\SchemaValidator;
 $basePath = dirname(__DIR__);
 require $basePath . '/vendor/autoload.php';
 
+if (!function_exists('env')) {
+    function env(string $key, mixed $default = null): mixed
+    {
+        if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
+            return $_ENV[$key];
+        }
+
+        $value = getenv($key);
+        return $value !== false && $value !== '' ? $value : $default;
+    }
+}
+
 if (class_exists(EnvLoader::class)) {
     EnvLoader::load($basePath . '/.env');
 }

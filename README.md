@@ -4,7 +4,7 @@ Zoosper is a modern, lightweight, modular PHP 8.5+ CMS inspired by Magento-style
 
 ## Current phase
 
-Phase 0.12 — Declarative Schema Hardening.
+Phase 0.13 — Theme and Template Rendering.
 
 ## What is included
 
@@ -20,6 +20,8 @@ Phase 0.12 — Declarative Schema Hardening.
 - Multisite/domain-based site resolution
 - CMS page CRUD, preview, publish and unpublish
 - Frontend rendering for `/` and page slugs like `/home`
+- Theme and template rendering through `zoosper-theme`
+- Default frontend theme under `themes/default`
 - Per-module translation drop files under `config/translations/`
 - Central CMS version service used by admin and page rendering
 - Declarative schema engine using module `config/db_schema.php`
@@ -58,19 +60,32 @@ php -S 127.0.0.1:8080 -t public
 Set the displayed CMS version in `.env`:
 
 ```env
-CMS_VERSION=0.12.0-dev
+CMS_VERSION=0.13.0-dev
 ```
 
 The version is read through `Zoosper\Core\App\CmsVersion` and displayed in the admin footer and frontend page footer.
 
-## Declarative schema
+## Themes
 
-Modules can declare database tables in:
+The default theme lives in:
 
 ```text
-app/<module>/config/db_schema.php
-modules/<vendor-module>/config/db_schema.php
+themes/default/
 ```
+
+The first frontend template is:
+
+```text
+themes/default/templates/page.php
+```
+
+Public theme assets are served from:
+
+```text
+public/themes/default/assets/
+```
+
+## Declarative schema
 
 Validate declarations:
 
@@ -96,12 +111,10 @@ View applied schema snapshots:
 php bin/zoosper-schema snapshots
 ```
 
-The current engine supports safe additive operations only: create missing table, add missing column and add missing indexes.
-
 ## Documentation
 
 Detailed architecture notes live in `docs/architecture/` and phase plans live in `docs/roadmap/`.
 
 ## Development principle
 
-Keep core small, explicit and AI-friendly. Optional capabilities should live in modules with their own config, routes, menu entries, translations and schema declarations.
+Keep core small, explicit and AI-friendly. Optional capabilities should live in modules with their own config, routes, menu entries, translations, schema declarations and templates.
