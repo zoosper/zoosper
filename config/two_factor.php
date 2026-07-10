@@ -12,11 +12,17 @@ $env = static function (string $key, mixed $default = null): mixed {
 };
 
 return [
-    'enabled' => filter_var($env('ADMIN_2FA_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
-    'issuer' => (string) $env('ADMIN_2FA_ISSUER', 'Zoosper'),
-    'totp_digits' => 6,
-    'totp_period' => 30,
-    'totp_algorithm' => 'SHA1',
-    'recovery_code_count' => 10,
-    'recovery_code_bytes' => 10,
+    /*
+     * Admin 2FA configuration.
+     *
+     * TWO_FACTOR_ENCRYPTION_KEY should be a strong random secret in production.
+     * Never commit production keys, TOTP secrets, OTP values, QR payloads or
+     * recovery-code plaintext to source control or logs.
+     */
+    'issuer' => (string) $env('TWO_FACTOR_ISSUER', 'Zoosper'),
+    'period' => (int) $env('TWO_FACTOR_PERIOD', 30),
+    'digits' => (int) $env('TWO_FACTOR_DIGITS', 6),
+    'window' => (int) $env('TWO_FACTOR_WINDOW', 1),
+    'recovery_codes' => (int) $env('TWO_FACTOR_RECOVERY_CODES', 8),
+    'encryption_key' => (string) $env('TWO_FACTOR_ENCRYPTION_KEY', (string) $env('APP_KEY', 'change-me-before-production')),
 ];
