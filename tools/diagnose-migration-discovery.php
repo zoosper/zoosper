@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 /**
- * Diagnose why module-owned db_schema.php files are not being applied.
+ * Diagnose module schema discovery and expected table availability.
  *
- * This script is read-only. It defines a minimal env() helper because direct
- * tool execution does not always load the normal Zoosper bootstrap before
- * config/database.php is required.
+ * This script is read-only. It uses information_schema for MySQL/MariaDB table
+ * checks because some PDO drivers do not reliably bind placeholders in
+ * `SHOW TABLES LIKE` statements.
  */
 
 $basePath = dirname(__DIR__);
@@ -42,12 +42,17 @@ function zoosperDiagnosticTableExists(\PDO $pdo, string $table): bool
         return (bool) $statement->fetchColumn();
     }
 
-    $statement = $pdo->prepare('SHOW TABLES LIKE :table');
+    $statement = $pdo->prepare(
+        'SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table LIMIT 1'
+    );
     $statement->execute(['table' => $table]);
+
     return (bool) $statement->fetchColumn();
 }
 
 /**
+ * Return all module-owned db_schema.php files found directly on disk.
+ *
  * @return list<string>
  */
 function zoosperDiagnosticDirectSchemaFiles(string $basePath): array
@@ -69,7 +74,7 @@ $expectedTables = [
     'admin_two_factor_challenges',
 ];
 
-print "Zoosper migration discovery diagnostics v3\n";
+print "Zoosper migration discovery diagnostics v4\n";
 print "========================================\n\n";
 
 print "Discoverable modules and schema files:\n";
@@ -102,7 +107,7 @@ if ($missingFromRegistry !== []) {
         print "  * Not discovered: {$file}" . PHP_EOL;
     }
 } elseif ($directSchemaFiles !== []) {
-    print "- Schema files are visible through module discovery. If expected tables are missing, fix the migrator/applier." . PHP_EOL;
+    print "- Schema files are visible through module discovery. If expected tables are missing, inspect Migrator and DeclarativeSchemaApplier." . PHP_EOL;
 } else {
-    print "- No app/*/config/db_schema.php files were found. Confirm Phase 0.25 files were copied into the repository." . PHP_EOL;
+    print "- No app/*/config/db_schema.php files were found. Confirm module files were copied into the repository." . PHP_EOL;
 }
