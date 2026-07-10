@@ -4,7 +4,7 @@ Zoosper is a modern, lightweight, modular PHP 8.5+ CMS inspired by Magento-style
 
 ## Current phase
 
-Phase 0.17 — Admin Components and Module UI.
+Phase 0.18 — Admin Controller View Refactor.
 
 ## What is included
 
@@ -18,34 +18,21 @@ Phase 0.17 — Admin Components and Module UI.
 - Layout updates with remove, replace and inject operations
 - Per-site `theme_code`
 - Admin users, roles, permission tree, audit log and login history
+- Refactored dashboard, audit log, login history and theme admin screens using module-owned views
 - Declarative schema engine using module `config/db_schema.php`
 
-## Layout updates
+## Admin views
 
-Themes can hide, replace or inject templates through `layout.php`:
-
-```php
-return [
-    'admin.layout' => [
-        'remove' => ['partials/footer.php'],
-        'replace' => ['partials/header.php' => 'partials/custom-header.php'],
-        'inject' => ['before.content' => ['partials/notice.php']],
-    ],
-];
-```
-
-## Module UI
-
-Modules can own their views:
+Admin controllers should prepare data and render module-owned views:
 
 ```text
-app/zoosper-admin/resources/views/dashboard/index.php
+app/<module>/resources/views/...
 ```
 
-Themes can override module views:
+Admin themes can override those views:
 
 ```text
-themes/admin/default/templates/modules/zoosper-admin/dashboard/index.php
+themes/admin/default/templates/modules/<module>/...
 ```
 
 ## Documentation

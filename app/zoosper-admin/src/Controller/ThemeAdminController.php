@@ -7,6 +7,7 @@ namespace Zoosper\Admin\Controller;
 use RuntimeException;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Layout\AdminLayout;
+use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
@@ -23,6 +24,7 @@ final readonly class ThemeAdminController
         private ThemeRepository $themes,
         private SiteRepository $sites,
         private ?AuditLogger $auditLogger = null,
+        private ?AdminViewRenderer $views = null,
     ) {
     }
 
@@ -33,23 +35,21 @@ final readonly class ThemeAdminController
             return Response::redirect('/admin/login');
         }
 
-        $rows = '';
-        foreach ($this->themes->all() as $theme) {
-            $rows .= '<tr><td><code>' . $this->e($theme['code']) . '</code></td><td>' . $this->e($theme['name']) . '</td><td>' . $this->e($theme['version']) . '</td><td>' . $this->e($theme['path']) . '</td></tr>';
-        }
-        if ($rows === '') {
-            $rows = '<tr><td colspan="4">No installed themes found.</td></tr>';
+        if ($this->views !== null) {
+            return Response::html($this->views->render(
+                title: 'Themes',
+                template: 'zoosper-theme::admin/themes/index',
+                data: [
+                    'themes' => $this->themes->all(),
+                    'sites' => $this->sites->allActive(),
+                    'csrfToken' => $this->csrf->token(),
+                ],
+                user: $user,
+                active: 'themes',
+            ));
         }
 
-        $siteForms = '';
-        foreach ($this->sites->allActive() as $site) {
-            $siteForms .= $this->siteThemeForm($site->id, $site->name, $site->themeCode);
-        }
-
-        $content = '<h2>Installed Themes</h2><table><thead><tr><th>Code</th><th>Name</th><th>Version</th><th>Path</th></tr></thead><tbody>' . $rows . '</tbody></table>';
-        $content .= '<h2>Assign Theme to Site</h2>' . ($siteForms ?: '<p>No active sites found.</p>');
-
-        return Response::html($this->layout->render('Themes', $content, $user, 'themes'));
+        return Response::html($this->layout->render('Themes', '<p>Theme admin view renderer is not configured.</p>', $user, 'themes'));
     }
 
     public function assign(Request $request): Response
@@ -74,36 +74,18 @@ final readonly class ThemeAdminController
             if (!$this->themes->exists($themeCode)) {
                 throw new RuntimeException('Theme does not exist: ' . $themeCode);
             }
+
             $this->sites->updateTheme($siteId, $themeCode);
             $this->auditLogger?->record($user, 'site.theme.updated', 'site', (string) $siteId, 'Updated site theme', ['theme_code' => $themeCode], $request);
+
             return Response::redirect('/admin/themes');
         } catch (RuntimeException $exception) {
-            return Response::html($this->layout->render('Theme Error', '<p class="error">' . $this->e($exception->getMessage()) . '</p><p><a href="/admin/themes">Back to themes</a></p>', $user, 'themes'), 422);
+            return Response::html($this->layout->render(
+                'Theme Error',
+                '<p class="error">' . htmlspecialchars($exception->getMessage(), ENT_QUOTES, 'UTF-8') . '</p><p><a href="/admin/themes">Back to themes</a></p>',
+                $user,
+                'themes',
+            ), 422);
         }
-    }
-
-    private function siteThemeForm(int $siteId, string $siteName, string $currentTheme): string
-    {
-        $token = $this->e($this->csrf->token());
-        $options = '';
-        foreach ($this->themes->all() as $theme) {
-            $selected = $theme['code'] === $currentTheme ? ' selected' : '';
-            $options .= '<option value="' . $this->e($theme['code']) . '"' . $selected . '>' . $this->e($theme['name']) . ' (' . $this->e($theme['code']) . ')</option>';
-        }
-
-        return <<<HTML
-<form method="post" action="/admin/themes/assign" class="card">
-    <input type="hidden" name="_csrf_token" value="{$token}">
-    <input type="hidden" name="site_id" value="{$siteId}">
-    <h3>{$this->e($siteName)}</h3>
-    <label>Theme <select name="theme_code">{$options}</select></label>
-    <button type="submit">Save theme</button>
-</form>
-HTML;
-    }
-
-    private function e(string $value): string
-    {
-        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 }
