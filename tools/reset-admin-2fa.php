@@ -10,23 +10,10 @@ declare(strict_types=1);
  *
  * This tool deletes protected 2FA state only. It never reads, prints or logs
  * OTPs, TOTP secrets, recovery-code plaintext, provisioning URIs or QR data.
+ * It uses the shared CLI bootstrap so `.env` is loaded consistently.
  */
 
-$basePath = dirname(__DIR__);
-
-if (!function_exists('env')) {
-    function env(string $key, mixed $default = null): mixed
-    {
-        if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
-            return $_ENV[$key];
-        }
-
-        $value = getenv($key);
-        return $value !== false && $value !== '' ? $value : $default;
-    }
-}
-
-require $basePath . '/vendor/autoload.php';
+$basePath = require __DIR__ . '/bootstrap.php';
 
 $options = getopt('', ['admin-user-id:', 'performed-by:', 'yes']);
 $targetId = (int) ($options['admin-user-id'] ?? 0);

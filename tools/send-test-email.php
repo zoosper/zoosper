@@ -10,24 +10,10 @@ declare(strict_types=1);
  *
  * The command prints only non-sensitive outcome metadata. It must never print
  * SMTP passwords, reset tokens, OTPs, TOTP secrets, recovery-code plaintext or
- * provisioning URIs.
+ * provisioning URIs. It uses the shared CLI bootstrap so `.env` is loaded.
  */
 
-$basePath = dirname(__DIR__);
-
-if (!function_exists('env')) {
-    function env(string $key, mixed $default = null): mixed
-    {
-        if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
-            return $_ENV[$key];
-        }
-
-        $value = getenv($key);
-        return $value !== false && $value !== '' ? $value : $default;
-    }
-}
-
-require $basePath . '/vendor/autoload.php';
+$basePath = require __DIR__ . '/bootstrap.php';
 
 $options = getopt('', ['to:', 'subject::']);
 $to = (string) ($options['to'] ?? '');

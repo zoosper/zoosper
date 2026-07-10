@@ -7,24 +7,11 @@ declare(strict_types=1);
  *
  * This tool is read-only and prints table presence/counts only. It never reads
  * or prints TOTP secrets, OTP values, recovery-code plaintext, provisioning
- * URIs, QR data, SMTP passwords or reset tokens.
+ * URIs, QR data, SMTP passwords or reset tokens. It uses the shared CLI
+ * bootstrap so `.env` is loaded consistently.
  */
 
-$basePath = dirname(__DIR__);
-
-if (!function_exists('env')) {
-    function env(string $key, mixed $default = null): mixed
-    {
-        if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
-            return $_ENV[$key];
-        }
-
-        $value = getenv($key);
-        return $value !== false && $value !== '' ? $value : $default;
-    }
-}
-
-require $basePath . '/vendor/autoload.php';
+$basePath = require __DIR__ . '/bootstrap.php';
 
 $config = \Zoosper\Core\Config\ConfigRepository::fromPath($basePath . '/config');
 $pdo = (new \Zoosper\Core\Database\ConnectionFactory($config, $basePath))->create();
@@ -40,18 +27,18 @@ print "=============================\n\n";
 print "driver: {$driver}\n\n";
 
 foreach ($tables as $table) {
-    $exists = zoosperPhase036TableExists($pdo, $table);
+    $exists = zoosperPhase039TableExists($pdo, $table);
     print '- ' . $table . ': ' . ($exists ? 'exists' : 'missing');
 
     if ($exists) {
-        $count = (int) $pdo->query('SELECT COUNT(*) FROM ' . zoosperPhase036QuoteIdentifier($pdo, $table))->fetchColumn();
+        $count = (int) $pdo->query('SELECT COUNT(*) FROM ' . zoosperPhase039QuoteIdentifier($pdo, $table))->fetchColumn();
         print ' (' . $count . ' rows)';
     }
 
     print PHP_EOL;
 }
 
-$missing = array_values(array_filter($tables, static fn (string $table): bool => !zoosperPhase036TableExists($pdo, $table)));
+$missing = array_values(array_filter($tables, static fn (string $table): bool => !zoosperPhase039TableExists($pdo, $table)));
 print "\nRecommendation:\n";
 if ($missing === []) {
     print "- 2FA schema is available in the active CLI database.\n";
@@ -59,7 +46,7 @@ if ($missing === []) {
     print "- Missing 2FA tables detected. Run `php bin/zoosper migrate` for the active CLI database, then re-run this tool.\n";
 }
 
-function zoosperPhase036TableExists(PDO $pdo, string $table): bool
+function zoosperPhase039TableExists(PDO $pdo, string $table): bool
 {
     $driver = (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
 
@@ -74,7 +61,7 @@ function zoosperPhase036TableExists(PDO $pdo, string $table): bool
     return (bool) $statement->fetchColumn();
 }
 
-function zoosperPhase036QuoteIdentifier(PDO $pdo, string $identifier): string
+function zoosperPhase039QuoteIdentifier(PDO $pdo, string $identifier): string
 {
     if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $identifier)) {
         throw new RuntimeException('Unsafe SQL identifier: ' . $identifier);

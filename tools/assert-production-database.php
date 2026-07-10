@@ -6,25 +6,11 @@ declare(strict_types=1);
  * Assert that the active database driver is acceptable for the current runtime.
  *
  * This tool is read-only. It prints only non-secret connection metadata and
- * never prints passwords, DSNs, SMTP secrets, OTPs, TOTP secrets, recovery-code
- * plaintext, reset tokens, provisioning URIs or QR data.
+ * never prints passwords, DSNs, SMTP secrets, OTPs, TOTP secrets,
+ * recovery-code plaintext, reset tokens, provisioning URIs or QR data.
  */
 
-$basePath = dirname(__DIR__);
-
-if (!function_exists('env')) {
-    function env(string $key, mixed $default = null): mixed
-    {
-        if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
-            return $_ENV[$key];
-        }
-
-        $value = getenv($key);
-        return $value !== false && $value !== '' ? $value : $default;
-    }
-}
-
-require $basePath . '/vendor/autoload.php';
+$basePath = require __DIR__ . '/bootstrap.php';
 
 $config = \Zoosper\Core\Config\ConfigRepository::fromPath($basePath . '/config');
 $policy = require $basePath . '/config/database_policy.php';
