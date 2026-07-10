@@ -1,0 +1,80 @@
+/**
+ * Zoosper admin tag selector styles.
+ *
+ * These styles support a safer editor experience for multi-value fields by
+ * avoiding native multi-select Ctrl/Cmd behaviour. The checkbox fallback works
+ * without this stylesheet.
+ */
+.zoosper-tag-selector__fieldset {
+    border: 1px solid #d6dbe1;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.zoosper-tag-selector__selected {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: .5rem 0 .75rem;
+}
+
+.zoosper-tag-selector__tag {
+    align-items: center;
+    background: #eef4ff;
+    border: 1px solid #b8cdf8;
+    border-radius: 999px;
+    color: #15366f;
+    cursor: pointer;
+    display: inline-flex;
+    gap: .4rem;
+    padding: .35rem .65rem;
+}
+
+.zoosper-tag-selector__tag strong {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.zoosper-tag-selector__search input {
+    box-sizing: border-box;
+    margin-bottom: .75rem;
+    width: 100%;
+}
+
+.zoosper-tag-selector__options {
+    display: grid;
+    gap: .4rem;
+    max-height: 18rem;
+    overflow: auto;
+}
+
+.zoosper-tag-selector__option {
+    align-items: flex-start;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    gap: .55rem;
+    padding: .55rem .65rem;
+}
+
+.zoosper-tag-selector__option:hover {
+    background: #f8fafc;
+}
+
+.zoosper-tag-selector__option small {
+    color: #64748b;
+    display: block;
+}
+
+.sr-only {
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
