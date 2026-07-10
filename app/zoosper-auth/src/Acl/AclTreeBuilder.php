@@ -41,10 +41,12 @@ final readonly class AclTreeBuilder
         }
 
         $groups = array_values(array_filter($groupMap, static fn (array $group): bool => $group['permissions'] !== []));
-        usort($groups, static fn (array $a, array $b): int => [$a['sort_order'], $a['label']] <=> [$b['sort_order'], $b['label']]);
+
+        // Phase 0.22: sort permission tree groups alphabetically by parent label.
+        usort($groups, static fn (array $a, array $b): int => strcasecmp((string) $a['label'], (string) $b['label']));
 
         return array_map(static function (array $group): AclGroup {
-            usort($group['permissions'], static fn (array $a, array $b): int => [(int) ($a['sort_order'] ?? 100), (string) $a['code']] <=> [(int) ($b['sort_order'] ?? 100), (string) $b['code']]);
+            usort($group['permissions'], static fn (array $a, array $b): int => strcasecmp((string) ($a['label'] ?? $a['code']), (string) ($b['label'] ?? $b['code'])));
             return new AclGroup(
                 code: (string) $group['code'],
                 label: (string) $group['label'],

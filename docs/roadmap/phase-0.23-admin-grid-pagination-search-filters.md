@@ -1,15 +1,13 @@
 # Phase 0.23 - Admin Grid Pagination, Search and Filters
 
-Future goal: add scalable admin grids for large datasets.
+Recommended next phase:
 
-Needed pieces:
-
-- `Pager`
-- `PaginationResult`
-- repository `paginate()` methods
-- page size config
-- search/filter query handling
-- reusable admin pagination component
+- introduce `Pager`
+- introduce `PaginationResult`
+- add repository `paginate()` methods
+- add reusable admin pagination component
+- add search and filter query objects
+- apply first to `/admin/pages`
 
 Example route shape:
 

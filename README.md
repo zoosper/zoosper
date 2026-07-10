@@ -4,39 +4,44 @@ Zoosper is a modern, lightweight, modular PHP 8.5+ CMS inspired by Magento-style
 
 ## Current phase
 
-Phase 0.21 — Local Error Handling and Module Logging.
+Phase 0.22 — Admin Form Field Injection.
 
 ## What is included
 
-- Modular application structure under `app/` and `modules/`
 - Module-owned controller providers through `config/controllers.php`
 - Module-owned admin/API routes, menus, ACL/resource config and views
+- Module-owned log filenames through `config/logging.php`
+- Admin form UI metadata through `config/admin_ui.php`
+- Field remove, replace and inject foundations
 - Frontend and admin theme foundations
-- Admin component templates and reusable form field components
 - Layout updates with remove, replace and inject operations
-- Per-site `theme_code`
+- Permission tree groups sorted alphabetically by parent label
 - Local error handling and local log files
-- Module-specific log filenames under `var/log`
 - Declarative schema engine using module `config/db_schema.php`
 
-## Logging
+## Admin form UI metadata
 
-Logging is configured in:
-
-```text
-config/logging.php
-```
-
-Default logs are written to:
+Modules can define form fields in:
 
 ```text
-var/log/system.log
-var/log/exception.log
-var/log/theme.log
-var/log/page.log
-var/log/admin.log
+app/<module>/config/admin_ui.php
 ```
 
-## Development principle
+Supported operations:
 
-Controllers should prepare data and delegate rendering to module-owned views/components. Routes, APIs, ACLs, menus, schemas and controllers should remain inside their respective modules so modules can be added or removed more easily.
+```text
+fields
+remove
+replace
+inject
+```
+
+## Module-owned logging
+
+Modules can define their own log filenames in:
+
+```text
+app/<module>/config/logging.php
+```
+
+This keeps `ApplicationFactory` marketplace-module friendly.

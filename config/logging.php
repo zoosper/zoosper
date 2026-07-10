@@ -16,13 +16,4 @@ return [
     'path' => $env('LOG_PATH', 'var/log'),
     'default_file' => $env('LOG_FILE', 'system.log'),
     'error_file' => $env('ERROR_LOG_FILE', 'exception.log'),
-    'modules' => [
-        'zoosper-admin' => 'admin.log',
-        'zoosper-api' => 'api.log',
-        'zoosper-auth' => 'auth.log',
-        'zoosper-core' => 'core.log',
-        'zoosper-page' => 'page.log',
-        'zoosper-site' => 'site.log',
-        'zoosper-theme' => 'theme.log',
-    ],
 ];

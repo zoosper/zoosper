@@ -7,6 +7,7 @@ namespace Zoosper\Core\Bootstrap;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
+use Zoosper\Admin\Form\AdminFormUiConfigLoader;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuLoader;
@@ -28,6 +29,7 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Core\Log\LogManager;
+use Zoosper\Core\Log\ModuleLoggerProviderLoader;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Routing\ControllerProviderLoader;
 use Zoosper\Core\Routing\ModuleRouteLoader;
@@ -80,6 +82,7 @@ final class ApplicationFactory
         $json = new JsonResponder();
         $cmsVersion = new CmsVersion($config);
         $auditLogger = new AuditLogger($auditLogRepository);
+        $adminFormUi = new AdminFormUiConfigLoader($modules);
 
         /*
          * Theme/layout services.
@@ -90,18 +93,8 @@ final class ApplicationFactory
          * layout updates.
          */
         $layoutUpdates = new LayoutUpdateRepository();
-
-        $frontendTemplateRenderer = new TemplateRenderer(
-            new ThemeResolver($basePath . '/themes', 'default'),
-            $modules,
-            $layoutUpdates,
-        );
-
-        $adminTemplateRenderer = new TemplateRenderer(
-            new ThemeResolver($basePath . '/themes/admin', 'default'),
-            $modules,
-            $layoutUpdates,
-        );
+        $frontendTemplateRenderer = new TemplateRenderer(new ThemeResolver($basePath . '/themes', 'default'), $modules, $layoutUpdates);
+        $adminTemplateRenderer = new TemplateRenderer(new ThemeResolver($basePath . '/themes/admin', 'default'), $modules, $layoutUpdates);
 
         /*
          * Admin shell services.
@@ -133,11 +126,11 @@ final class ApplicationFactory
          * ApplicationFactory should only register shared infrastructure here.
          */
         $services = new ServiceContainer();
-
         $services->set(ConfigRepository::class, $config);
         $services->set(ModuleRegistry::class, $modules);
         $services->set(LogManager::class, $logManager);
         $services->set(ErrorHandler::class, $errorHandler);
+        $services->set(AdminFormUiConfigLoader::class, $adminFormUi);
 
         $services->set(AdminUserRepository::class, $userRepository);
         $services->set(RoleRepository::class, $roleRepository);
@@ -167,13 +160,7 @@ final class ApplicationFactory
 
         $services->set('logger.default', $logManager->default());
         $services->set('logger.exception', $logManager->exceptions());
-        $services->set('logger.zoosper-admin', $logManager->module('zoosper-admin'));
-        $services->set('logger.zoosper-api', $logManager->module('zoosper-api'));
-        $services->set('logger.zoosper-auth', $logManager->module('zoosper-auth'));
-        $services->set('logger.zoosper-core', $logManager->module('zoosper-core'));
-        $services->set('logger.zoosper-page', $logManager->module('zoosper-page'));
-        $services->set('logger.zoosper-site', $logManager->module('zoosper-site'));
-        $services->set('logger.zoosper-theme', $logManager->module('zoosper-theme'));
+        (new ModuleLoggerProviderLoader($modules, $logManager, $services))->register();
 
         /**
          * Load controllers from module-owned provider files.
@@ -195,10 +182,7 @@ final class ApplicationFactory
             if (str_starts_with($request->path(), '/api/')) {
                 return Response::json([
                     'success' => false,
-                    'error' => [
-                        'code' => 'route_not_found',
-                        'message' => 'API route not found.',
-                    ],
+                    'error' => ['code' => 'route_not_found', 'message' => 'API route not found.'],
                 ], 404);
             }
 
