@@ -20,10 +20,16 @@ final class LogManager
         return $this->forFile((string) ($this->config->get('logging.default_file', 'system.log') ?? 'system.log'));
     }
 
+    public function exceptions(): LocalLogger
+    {
+        return $this->forFile((string) ($this->config->get('logging.error_file', 'exception.log') ?? 'exception.log'));
+    }
+
     public function module(string $moduleName): LocalLogger
     {
         $configured = $this->config->get('logging.modules.' . $moduleName, null);
         $file = is_string($configured) && $configured !== '' ? $configured : $moduleName . '.log';
+
         return $this->forFile($file);
     }
 
@@ -31,8 +37,9 @@ final class LogManager
     {
         $file = ltrim($file, '/');
         $path = (string) ($this->config->get('logging.path', 'var/log') ?? 'var/log');
+        $enabled = (bool) ($this->config->get('logging.enabled', true) ?? true);
         $fullPath = $this->basePath . '/' . trim($path, '/') . '/' . $file;
 
-        return $this->loggers[$fullPath] ??= new LocalLogger($fullPath);
+        return $this->loggers[$fullPath] ??= new LocalLogger($fullPath, $enabled);
     }
 }

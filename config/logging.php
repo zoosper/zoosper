@@ -6,18 +6,23 @@ $env = static function (string $key, mixed $default = null): mixed {
     if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
         return $_ENV[$key];
     }
+
     $value = getenv($key);
     return $value !== false && $value !== '' ? $value : $default;
 };
 
 return [
+    'enabled' => filter_var($env('LOG_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
     'path' => $env('LOG_PATH', 'var/log'),
     'default_file' => $env('LOG_FILE', 'system.log'),
+    'error_file' => $env('ERROR_LOG_FILE', 'exception.log'),
     'modules' => [
         'zoosper-admin' => 'admin.log',
-        'zoosper-auth' => 'auth.log',
-        'zoosper-page' => 'page.log',
-        'zoosper-theme' => 'theme.log',
         'zoosper-api' => 'api.log',
+        'zoosper-auth' => 'auth.log',
+        'zoosper-core' => 'core.log',
+        'zoosper-page' => 'page.log',
+        'zoosper-site' => 'site.log',
+        'zoosper-theme' => 'theme.log',
     ],
 ];

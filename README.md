@@ -4,7 +4,7 @@ Zoosper is a modern, lightweight, modular PHP 8.5+ CMS inspired by Magento-style
 
 ## Current phase
 
-Phase 0.20 — Controller Thinning and Form Components.
+Phase 0.21 — Local Error Handling and Module Logging.
 
 ## What is included
 
@@ -15,22 +15,26 @@ Phase 0.20 — Controller Thinning and Form Components.
 - Admin component templates and reusable form field components
 - Layout updates with remove, replace and inject operations
 - Per-site `theme_code`
-- Admin users, roles, permission tree, audit log and login history
-- Local logging foundation with module-specific log filenames
+- Local error handling and local log files
+- Module-specific log filenames under `var/log`
 - Declarative schema engine using module `config/db_schema.php`
 
-## Local logging foundation
+## Logging
 
-Configure local log files in:
+Logging is configured in:
 
 ```text
 config/logging.php
 ```
 
-Module log files can be named individually, for example:
+Default logs are written to:
 
-```php
-'zoosper-theme' => 'theme.log'
+```text
+var/log/system.log
+var/log/exception.log
+var/log/theme.log
+var/log/page.log
+var/log/admin.log
 ```
 
 ## Development principle

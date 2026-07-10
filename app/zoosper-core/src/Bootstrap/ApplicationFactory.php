@@ -26,6 +26,8 @@ use Zoosper\Core\Http\Application;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Log\LogManager;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Routing\ControllerProviderLoader;
 use Zoosper\Core\Routing\ModuleRouteLoader;
@@ -46,6 +48,11 @@ final class ApplicationFactory
     public static function create(string $basePath): Application
     {
         $config = ConfigRepository::fromPath($basePath . '/config');
+
+        $logManager = new LogManager($config, $basePath);
+        $errorHandler = new ErrorHandler($logManager->exceptions());
+        $errorHandler->register();
+
         $pdo = (new ConnectionFactory($config, $basePath))->create();
         $modules = new ModuleRegistry($basePath);
 
@@ -108,26 +115,15 @@ final class ApplicationFactory
          * Site/page rendering services.
          */
         $siteResolver = new SiteResolver($siteRepository);
-
-        $pageRenderer = new PageRenderer(
-            $frontendTemplateRenderer,
-            $cmsVersion,
-            $modules,
-        );
-
-        /*
+        $pageRenderer = new PageRenderer($frontendTemplateRenderer, $cmsVersion, $modules);
+        /**
          * Frontend fallback controller.
          *
          * This remains in ApplicationFactory because it is the final non-admin,
          * non-API fallback route for public page rendering.
          */
-        $pageController = new PageController(
-            $siteResolver,
-            $pageRepository,
-            $pageRenderer,
-        );
-
-        /*
+        $pageController = new PageController($siteResolver, $pageRepository, $pageRenderer);
+        /**
          * Shared service container for module-owned controller providers.
          *
          * Modules should create controllers in:
@@ -140,6 +136,8 @@ final class ApplicationFactory
 
         $services->set(ConfigRepository::class, $config);
         $services->set(ModuleRegistry::class, $modules);
+        $services->set(LogManager::class, $logManager);
+        $services->set(ErrorHandler::class, $errorHandler);
 
         $services->set(AdminUserRepository::class, $userRepository);
         $services->set(RoleRepository::class, $roleRepository);
@@ -167,7 +165,17 @@ final class ApplicationFactory
         $services->set(PageRenderer::class, $pageRenderer);
         $services->set(PageController::class, $pageController);
 
-        /*
+        $services->set('logger.default', $logManager->default());
+        $services->set('logger.exception', $logManager->exceptions());
+        $services->set('logger.zoosper-admin', $logManager->module('zoosper-admin'));
+        $services->set('logger.zoosper-api', $logManager->module('zoosper-api'));
+        $services->set('logger.zoosper-auth', $logManager->module('zoosper-auth'));
+        $services->set('logger.zoosper-core', $logManager->module('zoosper-core'));
+        $services->set('logger.zoosper-page', $logManager->module('zoosper-page'));
+        $services->set('logger.zoosper-site', $logManager->module('zoosper-site'));
+        $services->set('logger.zoosper-theme', $logManager->module('zoosper-theme'));
+
+        /**
          * Load controllers from module-owned provider files.
          *
          * This keeps ApplicationFactory from growing every time a module adds
@@ -176,7 +184,6 @@ final class ApplicationFactory
         $controllers = (new ControllerProviderLoader($modules, $services))->load();
 
         $router = new Router();
-
         $routeLoader = new ModuleRouteLoader($modules, $controllers);
         $routeLoader->registerAdminRoutes($router);
         $routeLoader->registerApiRoutes($router);
@@ -198,9 +205,6 @@ final class ApplicationFactory
             return $pageController->view($request);
         });
 
-        return new Application(
-            $router,
-            new SecurityHeaders($config->array('security.headers')),
-        );
+        return new Application($router, new SecurityHeaders($config->array('security.headers')));
     }
 }
