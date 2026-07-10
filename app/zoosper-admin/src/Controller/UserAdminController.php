@@ -91,14 +91,14 @@ final readonly class UserAdminController
                 roleIds: $this->roleIdsFromForm($form),
             );
 
-            return Response::redirect('/admin/users/edit?id=' . $id);
+            return Response::redirect('/admin/users/edit?id=' . $id . '&notice=created');
         } catch (RuntimeException $exception) {
             return $this->html('Create Admin User', $this->form('/admin/users/create', null, $exception->getMessage(), $form), 422);
         }
     }
 
     /**
-     * Show the edit-admin-user form.
+     * Show the edit-admin-user form with optional status messaging.
      */
     public function editForm(Request $request): Response
     {
@@ -111,16 +111,18 @@ final readonly class UserAdminController
             return $this->html('Admin User Not Found', '<p>Admin user not found.</p>', 404);
         }
 
-        return $this->html('Edit Admin User', $this->form('/admin/users/edit?id=' . $user->id, $user));
+        return $this->html(
+            'Edit Admin User',
+            $this->noticeFromRequest($request) . $this->form('/admin/users/edit?id=' . $user->id, $user),
+        );
     }
 
     /**
      * Update an admin user or reset their 2FA state from the same edit route.
      *
-     * The 2FA reset path intentionally uses the existing edit POST route rather
-     * than adding a new route while the routing contract is still evolving. This
-     * keeps the change safe for the current module-route setup and only performs
-     * the reset after CSRF and permission checks have passed.
+     * The reset action is CSRF-protected and permission-protected. It never
+     * reads, displays or logs OTPs, TOTP secrets, recovery-code plaintext,
+     * provisioning URIs, QR data, SMTP passwords or reset tokens.
      */
     public function update(Request $request): Response
     {
@@ -157,7 +159,7 @@ final readonly class UserAdminController
                 $this->users->updatePassword($user->id, $this->passwordHasher->hash($password));
             }
 
-            return Response::redirect('/admin/users/edit?id=' . $user->id);
+            return Response::redirect('/admin/users/edit?id=' . $user->id . '&notice=saved');
         } catch (RuntimeException $exception) {
             return $this->html('Edit Admin User', $this->form('/admin/users/edit?id=' . $user->id, $user, $exception->getMessage(), $form), 422);
         }
@@ -165,20 +167,20 @@ final readonly class UserAdminController
 
     /**
      * Reset a user's 2FA state so they can enrol again.
-     *
-     * This action never reads, displays or logs OTPs, TOTP secrets,
-     * recovery-code plaintext, provisioning URIs or QR data. It only delegates
-     * to the reset service, which removes protected 2FA records.
      */
     private function resetTwoFactor(AdminUser $targetUser, AdminUser $actor): Response
     {
         if ($this->twoFactorReset === null) {
-            return $this->html('Edit Admin User', $this->form('/admin/users/edit?id=' . $targetUser->id, $targetUser, '2FA reset service is not available.'), 500);
+            return Response::redirect('/admin/users/edit?id=' . $targetUser->id . '&notice=2fa_unavailable');
         }
 
-        $this->twoFactorReset->reset($targetUser->id, $actor->id);
+        try {
+            $this->twoFactorReset->reset($targetUser->id, $actor->id);
+        } catch (\Throwable) {
+            return Response::redirect('/admin/users/edit?id=' . $targetUser->id . '&notice=2fa_failed');
+        }
 
-        return Response::redirect('/admin/users/edit?id=' . $targetUser->id);
+        return Response::redirect('/admin/users/edit?id=' . $targetUser->id . '&notice=2fa_reset');
     }
 
     /**
@@ -199,6 +201,29 @@ final readonly class UserAdminController
     }
 
     /**
+     * Render an escaped notice based on a query-string code.
+     */
+    private function noticeFromRequest(Request $request): string
+    {
+        return match ($request->query('notice')) {
+            'created' => $this->notice('success', 'Admin user created.'),
+            'saved' => $this->notice('success', 'Admin user saved.'),
+            '2fa_reset' => $this->notice('success', '2FA reset completed. The admin user can enrol again on their next login.'),
+            '2fa_unavailable' => $this->notice('error', '2FA reset service is not available.'),
+            '2fa_failed' => $this->notice('error', '2FA reset failed. Check application logs for non-sensitive error details.'),
+            default => '',
+        };
+    }
+
+    /**
+     * Render a status notice block.
+     */
+    private function notice(string $type, string $message): string
+    {
+        return '<div class="notice notice-' . $this->e($type) . '">' . $this->e($message) . '</div>';
+    }
+
+    /**
      * Render the create/edit form.
      *
      * @param array<string, mixed> $submitted
@@ -211,7 +236,7 @@ final readonly class UserAdminController
         $email = $this->e((string) ($submitted['email'] ?? $user?->email ?? ''));
         $status = (string) ($submitted['status'] ?? $user?->status ?? 'active');
         $selectedRoles = $submitted !== [] ? $this->roleIdsFromForm($submitted) : ($user !== null ? $this->users->roleIdsForUser($user->id) : []);
-        $errorHtml = $error !== null ? '<p class="error">' . $this->e($error) . '</p>' : '';
+        $errorHtml = $error !== null ? $this->notice('error', $error) : '';
         $roleOptions = $this->roleCheckboxes($selectedRoles);
         $activeSelected = $status === 'active' ? ' selected' : '';
         $disabledSelected = $status === 'disabled' ? ' selected' : '';
@@ -234,9 +259,6 @@ HTML;
 
     /**
      * Render the 2FA reset panel for existing users.
-     *
-     * The reset is submitted through the same edit form and protected by the
-     * existing CSRF token and user-management permission check.
      */
     private function resetTwoFactorPanel(?AdminUser $user): string
     {
