@@ -14,8 +14,22 @@ return [
                 'from_name' => ['type' => 'string', 'length' => 255, 'nullable' => true],
                 'to_emails' => ['type' => 'text', 'nullable' => false],
                 'subject' => ['type' => 'string', 'length' => 255, 'nullable' => false],
-                'text_body' => ['type' => 'longtext', 'nullable' => true],
-                'html_body' => ['type' => 'longtext', 'nullable' => true],
+
+                /*
+                 * The current declarative schema engine supports `text` but not
+                 * `longtext`. Keep bodies as text for now so migrations run
+                 * cleanly. A future schema-engine phase can add native longtext
+                 * support if larger message retention becomes necessary.
+                 *
+                 * PCI-aware rule: message bodies must not contain OTPs, TOTP
+                 * secrets, recovery-code plaintext, provisioning URIs, reset
+                 * tokens, SMTP passwords, payment data or other sensitive
+                 * values unless a future masking policy protects them before
+                 * storage.
+                 */
+                'text_body' => ['type' => 'text', 'nullable' => true],
+                'html_body' => ['type' => 'text', 'nullable' => true],
+
                 'error_class' => ['type' => 'string', 'length' => 255, 'nullable' => true],
                 'error_message' => ['type' => 'text', 'nullable' => true],
                 'created_at' => ['type' => 'datetime', 'nullable' => false, 'default' => 'CURRENT_TIMESTAMP'],
