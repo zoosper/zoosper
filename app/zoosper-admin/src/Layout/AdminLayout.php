@@ -32,6 +32,10 @@ final readonly class AdminLayout
      * hard-coding paths here. Asset data must remain static and must never carry
      * OTPs, TOTP secrets, recovery codes, payment data, session IDs or other
      * runtime-sensitive values.
+     *
+     * The rendered navigation includes a POST-based logout form when an admin
+     * user is authenticated. Logout remains POST-only so it is not accidentally
+     * triggered by crawlers, previews or copied GET links.
      */
     public function render(string $title, string $content, ?AdminUser $user, string $active = 'dashboard'): string
     {
@@ -59,6 +63,11 @@ final readonly class AdminLayout
 
     /**
      * Build the admin navigation HTML for the current user.
+     *
+     * The logout action is appended inside the navigation as a form that submits
+     * to the configured admin base path. It deliberately does not include any
+     * runtime-sensitive values such as OTPs, TOTP secrets, recovery codes,
+     * payment data, session IDs or SMTP credentials.
      */
     private function navigation(AdminUser $user, string $active): string
     {
@@ -71,6 +80,8 @@ final readonly class AdminLayout
             }
             $html .= $this->navigationLink($item, $active);
         }
+
+        $html .= $this->logoutForm();
 
         return $html . '</nav>';
     }
@@ -85,5 +96,29 @@ final readonly class AdminLayout
         $class = $item->code === $active ? ' class="active"' : '';
 
         return '<a href="' . $url . '"' . $class . '>' . $label . '</a>';
+    }
+
+    /**
+     * Render the POST-only logout form for the admin navigation.
+     */
+    private function logoutForm(): string
+    {
+        $action = htmlspecialchars($this->adminUrl('/logout'), ENT_QUOTES, 'UTF-8');
+
+        return '<div class="menu-group">Account</div>'
+            . '<form method="post" action="' . $action . '" class="admin-nav-logout-form">'
+            . '<button type="submit" class="admin-nav-logout-button">Logout</button>'
+            . '</form>';
+    }
+
+    /**
+     * Build an admin URL from config/admin.php instead of hard-coding /admin.
+     */
+    private function adminUrl(string $path): string
+    {
+        $adminConfig = $this->config?->array('admin') ?? [];
+        $basePath = (string) ($adminConfig['base_path'] ?? '/admin');
+
+        return rtrim($basePath, '/') . '/' . ltrim($path, '/');
     }
 }
