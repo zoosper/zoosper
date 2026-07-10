@@ -11,13 +11,15 @@ $env = static function (string $key, mixed $default = null): mixed {
     return $value !== false && $value !== '' ? $value : $default;
 };
 
+$basePath = '/' . trim((string) $env('ADMIN_BASE_PATH', '/admin'), '/');
+
 return [
     /*
-     * Configurable admin front name.
+     * Admin base path.
      *
-     * This is intentionally not treated as a primary security control. It can
-     * reduce automated noise, but Zoosper must still rely on authentication,
-     * ACL, CSRF, session hardening, audit logging and 2FA.
+     * New admin controllers should avoid hard-coding /admin and should build
+     * internal admin URLs from this value instead. Route declarations still use
+     * current route-loader paths until the broader route layer is made dynamic.
      */
-    'path' => trim((string) $env('ADMIN_PATH', 'admin'), '/'),
+    'base_path' => $basePath === '/' ? '/admin' : $basePath,
 ];
