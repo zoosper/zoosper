@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Bootstrap;
 
+use PDO;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
@@ -47,10 +48,23 @@ use Zoosper\Theme\Theme\ThemeResolver;
 
 final class ApplicationFactory
 {
+    /**
+     * Build the HTTP application and register shared infrastructure services.
+     *
+     * ApplicationFactory intentionally avoids creating feature/module controllers
+     * directly. Modules should register controllers through their own
+     * `config/controllers.php` files so they can be added or removed without
+     * editing the core bootstrap.
+     */
     public static function create(string $basePath): Application
     {
         $config = ConfigRepository::fromPath($basePath . '/config');
 
+        /*
+         * Local logging and error handling are core infrastructure services.
+         * Module-specific loggers are discovered from module-owned logging.php
+         * files by ModuleLoggerProviderLoader below.
+         */
         $logManager = new LogManager($config, $basePath);
         $errorHandler = new ErrorHandler($logManager->exceptions());
         $errorHandler->register();
@@ -61,8 +75,8 @@ final class ApplicationFactory
         /*
          * Core repositories.
          *
-         * These are still central infrastructure services. Feature-specific
-         * controller creation now lives in each module's config/controllers.php.
+         * These are shared infrastructure repositories. Feature-specific
+         * controller creation lives in each module's config/controllers.php.
          */
         $userRepository = new AdminUserRepository($pdo);
         $roleRepository = new RoleRepository($pdo);
@@ -87,14 +101,23 @@ final class ApplicationFactory
         /*
          * Theme/layout services.
          *
-         * Important:
          * LayoutUpdateRepository must be created before TemplateRenderer so
          * frontend and admin renderers both support remove/replace/inject
          * layout updates.
          */
         $layoutUpdates = new LayoutUpdateRepository();
-        $frontendTemplateRenderer = new TemplateRenderer(new ThemeResolver($basePath . '/themes', 'default'), $modules, $layoutUpdates);
-        $adminTemplateRenderer = new TemplateRenderer(new ThemeResolver($basePath . '/themes/admin', 'default'), $modules, $layoutUpdates);
+
+        $frontendTemplateRenderer = new TemplateRenderer(
+            new ThemeResolver($basePath . '/themes', 'default'),
+            $modules,
+            $layoutUpdates,
+        );
+
+        $adminTemplateRenderer = new TemplateRenderer(
+            new ThemeResolver($basePath . '/themes/admin', 'default'),
+            $modules,
+            $layoutUpdates,
+        );
 
         /*
          * Admin shell services.
@@ -109,14 +132,16 @@ final class ApplicationFactory
          */
         $siteResolver = new SiteResolver($siteRepository);
         $pageRenderer = new PageRenderer($frontendTemplateRenderer, $cmsVersion, $modules);
-        /**
+
+        /*
          * Frontend fallback controller.
          *
          * This remains in ApplicationFactory because it is the final non-admin,
          * non-API fallback route for public page rendering.
          */
         $pageController = new PageController($siteResolver, $pageRepository, $pageRenderer);
-        /**
+
+        /*
          * Shared service container for module-owned controller providers.
          *
          * Modules should create controllers in:
@@ -126,8 +151,17 @@ final class ApplicationFactory
          * ApplicationFactory should only register shared infrastructure here.
          */
         $services = new ServiceContainer();
+
         $services->set(ConfigRepository::class, $config);
         $services->set(ModuleRegistry::class, $modules);
+
+        /*
+         * PDO is registered once as shared infrastructure so module providers
+         * can build query services such as PageGridRepository without requiring
+         * ApplicationFactory to know about those module-specific services.
+         */
+        $services->set(PDO::class, $pdo);
+
         $services->set(LogManager::class, $logManager);
         $services->set(ErrorHandler::class, $errorHandler);
         $services->set(AdminFormUiConfigLoader::class, $adminFormUi);
@@ -160,9 +194,15 @@ final class ApplicationFactory
 
         $services->set('logger.default', $logManager->default());
         $services->set('logger.exception', $logManager->exceptions());
+
+        /*
+         * Module loggers are registered from module-owned config/logging.php
+         * files. This prevents ApplicationFactory from hard-coding loggers for
+         * every installed module.
+         */
         (new ModuleLoggerProviderLoader($modules, $logManager, $services))->register();
 
-        /**
+        /*
          * Load controllers from module-owned provider files.
          *
          * This keeps ApplicationFactory from growing every time a module adds
@@ -171,6 +211,7 @@ final class ApplicationFactory
         $controllers = (new ControllerProviderLoader($modules, $services))->load();
 
         $router = new Router();
+
         $routeLoader = new ModuleRouteLoader($modules, $controllers);
         $routeLoader->registerAdminRoutes($router);
         $routeLoader->registerApiRoutes($router);
@@ -182,13 +223,19 @@ final class ApplicationFactory
             if (str_starts_with($request->path(), '/api/')) {
                 return Response::json([
                     'success' => false,
-                    'error' => ['code' => 'route_not_found', 'message' => 'API route not found.'],
+                    'error' => [
+                        'code' => 'route_not_found',
+                        'message' => 'API route not found.',
+                    ],
                 ], 404);
             }
 
             return $pageController->view($request);
         });
 
-        return new Application($router, new SecurityHeaders($config->array('security.headers')));
+        return new Application(
+            $router,
+            new SecurityHeaders($config->array('security.headers')),
+        );
     }
 }

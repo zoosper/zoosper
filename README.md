@@ -4,7 +4,7 @@ Zoosper is a modern, lightweight, modular PHP 8.5+ CMS inspired by Magento-style
 
 ## Current phase
 
-Phase 0.22 — Admin Form Field Injection.
+Phase 0.23 — Admin Grid Pagination, Search and Filters.
 
 ## What is included
 
@@ -12,36 +12,26 @@ Phase 0.22 — Admin Form Field Injection.
 - Module-owned admin/API routes, menus, ACL/resource config and views
 - Module-owned log filenames through `config/logging.php`
 - Admin form UI metadata through `config/admin_ui.php`
-- Field remove, replace and inject foundations
+- Admin grid pagination/search/filter foundation
+- Pages admin grid query service
 - Frontend and admin theme foundations
 - Layout updates with remove, replace and inject operations
-- Permission tree groups sorted alphabetically by parent label
-- Local error handling and local log files
-- Declarative schema engine using module `config/db_schema.php`
+- PCI-aware roadmap notes
 
-## Admin form UI metadata
+## Pages grid filters
 
-Modules can define form fields in:
+`/admin/pages` supports the foundation for:
 
 ```text
-app/<module>/config/admin_ui.php
+q
+status
+site_id
+page
+page_size
 ```
 
-Supported operations:
+The controller integration remains module-owned in `zoosper-page`.
 
-```text
-fields
-remove
-replace
-inject
-```
+## Roadmap
 
-## Module-owned logging
-
-Modules can define their own log filenames in:
-
-```text
-app/<module>/config/logging.php
-```
-
-This keeps `ApplicationFactory` marketplace-module friendly.
+Next planned phases include admin 2FA foundation and fuller form field injection implementation.
