@@ -11,21 +11,7 @@ declare(strict_types=1);
  * exported, or config/database.php defaults to sqlite.
  */
 
-$basePath = dirname(__DIR__);
-
-if (!function_exists('env')) {
-    function env(string $key, mixed $default = null): mixed
-    {
-        if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
-            return $_ENV[$key];
-        }
-
-        $value = getenv($key);
-        return $value !== false && $value !== '' ? $value : $default;
-    }
-}
-
-require $basePath . '/vendor/autoload.php';
+$basePath = require __DIR__ . '/bootstrap.php';
 
 $config = \Zoosper\Core\Config\ConfigRepository::fromPath($basePath . '/config');
 $envFile = $basePath . '/.env';
@@ -39,7 +25,7 @@ print "Files:\n";
 print '- .env exists          : ' . (is_file($envFile) ? 'yes' : 'no') . PHP_EOL;
 print '- config/database.php : ' . (is_file($basePath . '/config/database.php') ? 'yes' : 'no') . PHP_EOL;
 
-print "\nEnvironment values visible to CLI:\n";
+print "\nEnvironment values visible to CLI after bootstrap:\n";
 foreach (['APP_ENV', 'DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME'] as $key) {
     $value = env($key, '(not set)');
     print '- ' . str_pad($key, 14) . ': ' . (string) $value . PHP_EOL;
@@ -69,12 +55,6 @@ if ($driver === 'sqlite') {
 }
 
 print "\nDiagnosis:\n";
-if ($driver === 'mysql') {
-    print '- OK: CLI is using MySQL/MariaDB.\n';
-    exit(0);
-}
-
-print '- CLI is not using MySQL/MariaDB. It is using ' . $driver . '.\n';
-print '- If the browser uses MySQL but CLI shows sqlite, PHP-FPM and CLI are loading different environment/config values.\n';
-print '- Check `.env`, exported shell variables, and config/database.php default connection.\n';
-print '- Run `DB_CONNECTION=mysql php tools/diagnose-env-database.php` to test whether an exported DB_CONNECTION changes the active connection.\n';
+print $driver === 'mysql'
+    ? "- OK: CLI is using MySQL/MariaDB.\n"
+    : "- CLI is not using MySQL/MariaDB. It is using {$driver}. Check `.env` and config/database.php defaults.\n";

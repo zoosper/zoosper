@@ -10,21 +10,7 @@ declare(strict_types=1);
  * using SQLite, MySQL, or another configured PDO driver.
  */
 
-$basePath = dirname(__DIR__);
-
-if (!function_exists('env')) {
-    function env(string $key, mixed $default = null): mixed
-    {
-        if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
-            return $_ENV[$key];
-        }
-
-        $value = getenv($key);
-        return $value !== false && $value !== '' ? $value : $default;
-    }
-}
-
-require $basePath . '/vendor/autoload.php';
+$basePath = require __DIR__ . '/bootstrap.php';
 
 $config = \Zoosper\Core\Config\ConfigRepository::fromPath($basePath . '/config');
 $policyFile = $basePath . '/config/database_policy.php';
@@ -42,8 +28,7 @@ print "configured_connection: " . (string) ($config->get('database.default', '(n
 print "app_env              : {$appEnv}\n";
 
 if ($driver === 'sqlite') {
-    $database = (string) ($config->get('database.connections.sqlite.database', '(unknown)') ?? '(unknown)');
-    print "sqlite_database      : {$database}\n";
+    print "sqlite_database      : " . (string) ($config->get('database.connections.sqlite.database', '(unknown)') ?? '(unknown)') . "\n";
 } else {
     print "database_name        : " . (string) $pdo->query('SELECT DATABASE()')->fetchColumn() . "\n";
 }
