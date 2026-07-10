@@ -9,8 +9,8 @@ use InvalidArgumentException;
 /**
  * Immutable validated email address value object.
  *
- * A display name can be stored for normal mail headers. Do not use this class to
- * carry passwords, reset tokens, OTPs, recovery codes, or other secrets.
+ * This object may carry a display name for normal email headers. It must not be
+ * used to transport credentials, reset tokens, OTPs or recovery-code plaintext.
  */
 final readonly class EmailAddress
 {
@@ -22,7 +22,7 @@ final readonly class EmailAddress
     }
 
     /**
-     * Render a safe RFC-style header value.
+     * Render a safe header value without CR/LF injection.
      */
     public function headerValue(): string
     {

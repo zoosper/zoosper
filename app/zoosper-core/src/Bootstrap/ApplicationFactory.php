@@ -40,6 +40,9 @@ use Zoosper\Core\Routing\ControllerProviderLoader;
 use Zoosper\Core\Routing\ModuleRouteLoader;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
+use Zoosper\Mail\Config\SmtpConfig;
+use Zoosper\Mail\Transport\MailerInterface;
+use Zoosper\Mail\Transport\SmtpMailer;
 use Zoosper\Page\Controller\PageController;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
@@ -49,6 +52,8 @@ use Zoosper\Theme\Layout\LayoutUpdateRepository;
 use Zoosper\Theme\Template\TemplateRenderer;
 use Zoosper\Theme\Theme\ThemeRepository;
 use Zoosper\Theme\Theme\ThemeResolver;
+use Zoosper\TwoFactor\Repository\AdminTwoFactorResetRepository;
+use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
 
 final class ApplicationFactory
 {
@@ -59,8 +64,9 @@ final class ApplicationFactory
      * directly. Modules should register controllers through their own
      * `config/controllers.php` files so they can be added or removed without
      * editing the core bootstrap. Shared cross-cutting infrastructure, such as
-     * admin layout asset discovery, is registered here once and consumed by
-     * modules through the service container.
+     * admin layout asset discovery, mail transport configuration and 2FA reset
+     * services, is registered here once and consumed by modules through the
+     * service container.
      */
     public static function create(string $basePath): Application
     {
@@ -116,6 +122,27 @@ final class ApplicationFactory
         $adminAssetViewData = new AdminAssetViewDataProvider($adminAssetRegistry);
         $adminAssetTemplateRenderer = new AdminAssetTemplateRenderer($adminAssetRegistry);
         $assetPathResolver = new AssetPathResolver($config);
+
+        /*
+         * Mail services.
+         *
+         * SMTP credentials are loaded from config/environment by SmtpConfig and
+         * are only provided to the transport. Do not log SMTP passwords, message
+         * bodies, OTPs, recovery codes, password reset tokens or provisioning
+         * URLs/QR data.
+         */
+        $smtpConfig = new SmtpConfig($config);
+        $mailer = new SmtpMailer($smtpConfig);
+
+        /*
+         * Admin 2FA reset services.
+         *
+         * Reset services delete protected 2FA state so an admin user can enrol
+         * again. They must not read, return or log TOTP secrets, OTP values,
+         * recovery-code plaintext, provisioning URIs or QR data.
+         */
+        $twoFactorResetRepository = new AdminTwoFactorResetRepository($pdo);
+        $twoFactorResetService = new AdminTwoFactorResetService($twoFactorResetRepository, $auditLogger);
 
         /*
          * Theme/layout services.
@@ -211,6 +238,13 @@ final class ApplicationFactory
         $services->set(AdminAssetViewDataProvider::class, $adminAssetViewData);
         $services->set(AdminAssetTemplateRenderer::class, $adminAssetTemplateRenderer);
         $services->set(AssetPathResolver::class, $assetPathResolver);
+
+        $services->set(SmtpConfig::class, $smtpConfig);
+        $services->set(MailerInterface::class, $mailer);
+        $services->set(SmtpMailer::class, $mailer);
+
+        $services->set(AdminTwoFactorResetRepository::class, $twoFactorResetRepository);
+        $services->set(AdminTwoFactorResetService::class, $twoFactorResetService);
 
         $services->set(AdminMenu::class, $adminMenu);
         $services->set(AdminLayout::class, $adminLayout);

@@ -9,8 +9,9 @@ use Zoosper\Core\Config\ConfigRepository;
 /**
  * Reads SMTP configuration without exposing secrets to logs or templates.
  *
- * The password is available only to the SMTP transport. Do not include it in
- * exceptions, audit events, debug output, mail logs, or rendered diagnostics.
+ * The SMTP password is available only to the mail transport. It must never be
+ * written to exceptions, audit events, debug output, mail logs or rendered
+ * diagnostics.
  */
 final readonly class SmtpConfig
 {

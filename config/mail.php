@@ -25,7 +25,7 @@ return [
         'port' => (int) $env('SMTP_PORT', 1025),
         'username' => (string) $env('SMTP_USERNAME', ''),
         'password' => (string) $env('SMTP_PASSWORD', ''),
-        'encryption' => (string) $env('SMTP_ENCRYPTION', ''), // '', 'tls', or 'ssl'
+        'encryption' => (string) $env('SMTP_ENCRYPTION', ''),
         'timeout_seconds' => (int) $env('SMTP_TIMEOUT_SECONDS', 15),
     ],
 ];

@@ -9,9 +9,8 @@ use InvalidArgumentException;
 /**
  * Immutable outbound email message.
  *
- * Message bodies may contain sensitive user-specific links later, such as
- * password-reset links. Callers must avoid logging bodies, reset tokens, OTPs,
- * recovery codes, or other secret content.
+ * Message bodies may later contain sensitive user-specific links. Callers must
+ * avoid logging bodies, reset tokens, OTPs, recovery codes or credentials.
  */
 final readonly class EmailMessage
 {

@@ -15,6 +15,7 @@ use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
 
 final readonly class UserAdminController
 {
@@ -25,9 +26,13 @@ final readonly class UserAdminController
         private RoleRepository $roles,
         private PasswordHasher $passwordHasher,
         private AdminLayout $layout,
+        private ?AdminTwoFactorResetService $twoFactorReset = null,
     ) {
     }
 
+    /**
+     * Show the admin user listing.
+     */
     public function index(Request $request): Response
     {
         if ($this->requireUserManager() === null) {
@@ -46,6 +51,9 @@ final readonly class UserAdminController
         return $this->html('Admin Users', '<div class="toolbar"><a class="button" href="/admin/users/create">Create admin user</a></div><table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody>' . $rows . '</tbody></table>');
     }
 
+    /**
+     * Show the create-admin-user form.
+     */
     public function createForm(Request $request): Response
     {
         if ($this->requireUserManager() === null) {
@@ -55,6 +63,9 @@ final readonly class UserAdminController
         return $this->html('Create Admin User', $this->form('/admin/users/create'));
     }
 
+    /**
+     * Persist a new admin user.
+     */
     public function create(Request $request): Response
     {
         if ($this->requireUserManager() === null) {
@@ -86,6 +97,9 @@ final readonly class UserAdminController
         }
     }
 
+    /**
+     * Show the edit-admin-user form.
+     */
     public function editForm(Request $request): Response
     {
         if ($this->requireUserManager() === null) {
@@ -100,9 +114,18 @@ final readonly class UserAdminController
         return $this->html('Edit Admin User', $this->form('/admin/users/edit?id=' . $user->id, $user));
     }
 
+    /**
+     * Update an admin user or reset their 2FA state from the same edit route.
+     *
+     * The 2FA reset path intentionally uses the existing edit POST route rather
+     * than adding a new route while the routing contract is still evolving. This
+     * keeps the change safe for the current module-route setup and only performs
+     * the reset after CSRF and permission checks have passed.
+     */
     public function update(Request $request): Response
     {
-        if ($this->requireUserManager() === null) {
+        $actor = $this->requireUserManager();
+        if ($actor === null) {
             return Response::redirect('/admin/login');
         }
 
@@ -114,6 +137,10 @@ final readonly class UserAdminController
         $form = $request->form();
         if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
             return $this->html('Edit Admin User', $this->form('/admin/users/edit?id=' . $user->id, $user, 'Invalid security token.', $form), 419);
+        }
+
+        if (($form['_action'] ?? '') === 'reset_2fa') {
+            return $this->resetTwoFactor($user, $actor);
         }
 
         try {
@@ -136,21 +163,50 @@ final readonly class UserAdminController
         }
     }
 
+    /**
+     * Reset a user's 2FA state so they can enrol again.
+     *
+     * This action never reads, displays or logs OTPs, TOTP secrets,
+     * recovery-code plaintext, provisioning URIs or QR data. It only delegates
+     * to the reset service, which removes protected 2FA records.
+     */
+    private function resetTwoFactor(AdminUser $targetUser, AdminUser $actor): Response
+    {
+        if ($this->twoFactorReset === null) {
+            return $this->html('Edit Admin User', $this->form('/admin/users/edit?id=' . $targetUser->id, $targetUser, '2FA reset service is not available.'), 500);
+        }
+
+        $this->twoFactorReset->reset($targetUser->id, $actor->id);
+
+        return Response::redirect('/admin/users/edit?id=' . $targetUser->id);
+    }
+
+    /**
+     * Require an admin user with user/role management permission.
+     */
     private function requireUserManager(): ?AdminUser
     {
         return $this->guard->requirePermission(Permission::RoleManage->value) ?? $this->guard->requirePermission('user.manage');
     }
 
+    /**
+     * Resolve the target admin user from the `id` query parameter.
+     */
     private function userFromRequest(Request $request): ?AdminUser
     {
         $id = $request->query('id');
         return $id !== null && ctype_digit($id) ? $this->users->findById((int) $id) : null;
     }
 
-    /** @param array<string, mixed> $submitted */
+    /**
+     * Render the create/edit form.
+     *
+     * @param array<string, mixed> $submitted
+     */
     private function form(string $action, ?AdminUser $user = null, ?string $error = null, array $submitted = []): string
     {
         $token = $this->e($this->csrf->token());
+        $escapedAction = $this->e($action);
         $name = $this->e((string) ($submitted['name'] ?? $user?->name ?? ''));
         $email = $this->e((string) ($submitted['email'] ?? $user?->email ?? ''));
         $status = (string) ($submitted['status'] ?? $user?->status ?? 'active');
@@ -159,22 +215,49 @@ final readonly class UserAdminController
         $roleOptions = $this->roleCheckboxes($selectedRoles);
         $activeSelected = $status === 'active' ? ' selected' : '';
         $disabledSelected = $status === 'disabled' ? ' selected' : '';
+        $resetTwoFactorHtml = $this->resetTwoFactorPanel($user);
 
         return <<<HTML
 {$errorHtml}
-<form method="post" action="{$action}" class="page-form">
+<form method="post" action="{$escapedAction}" class="page-form">
     <input type="hidden" name="_csrf_token" value="{$token}">
     <label>Name <input type="text" name="name" value="{$name}" required></label>
     <label>Email <input type="email" name="email" value="{$email}" required></label>
     <label>Password <input type="password" name="password" autocomplete="new-password"><span class="muted">Leave blank to keep existing password.</span></label>
     <label>Status <select name="status"><option value="active"{$activeSelected}>Active</option><option value="disabled"{$disabledSelected}>Disabled</option></select></label>
     <fieldset class="card"><legend>Roles</legend>{$roleOptions}</fieldset>
+    {$resetTwoFactorHtml}
     <div class="toolbar"><button type="submit">Save user</button><a class="button secondary" href="/admin/users">Back</a></div>
 </form>
 HTML;
     }
 
-    /** @param list<int> $selected */
+    /**
+     * Render the 2FA reset panel for existing users.
+     *
+     * The reset is submitted through the same edit form and protected by the
+     * existing CSRF token and user-management permission check.
+     */
+    private function resetTwoFactorPanel(?AdminUser $user): string
+    {
+        if ($user === null) {
+            return '';
+        }
+
+        return <<<HTML
+<fieldset class="card danger-zone">
+    <legend>Two-factor authentication</legend>
+    <p class="muted">Reset this user's 2FA enrolment so they can set it up again on their next login. This does not display or log OTPs, TOTP secrets, recovery codes or QR data.</p>
+    <button type="submit" name="_action" value="reset_2fa" class="button secondary" onclick="return confirm('Reset 2FA for this admin user? They will need to enrol again.');">Reset 2FA</button>
+</fieldset>
+HTML;
+    }
+
+    /**
+     * Render role assignment checkboxes.
+     *
+     * @param list<int> $selected
+     */
     private function roleCheckboxes(array $selected): string
     {
         $html = '';
@@ -187,7 +270,12 @@ HTML;
         return $html;
     }
 
-    /** @param array<string, mixed> $form */
+    /**
+     * Extract selected role IDs from submitted form data.
+     *
+     * @param array<string, mixed> $form
+     * @return list<int>
+     */
     private function roleIdsFromForm(array $form): array
     {
         $ids = $form['role_ids'] ?? [];
@@ -197,11 +285,17 @@ HTML;
         return array_values(array_map(static fn (mixed $id): int => (int) $id, $ids));
     }
 
+    /**
+     * Render a full admin HTML response.
+     */
     private function html(string $title, string $content, int $statusCode = 200): Response
     {
         return Response::html($this->layout->render($title, $content, $this->guard->user(), 'admin-users'), $statusCode);
     }
 
+    /**
+     * Escape text for safe HTML output.
+     */
     private function e(string $value): string
     {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');

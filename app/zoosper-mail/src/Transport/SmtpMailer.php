@@ -10,12 +10,10 @@ use Zoosper\Mail\Message\EmailAddress;
 use Zoosper\Mail\Message\EmailMessage;
 
 /**
- * Minimal SMTP transport for Zoosper system emails.
+ * Minimal dependency-light SMTP transport for Zoosper system emails.
  *
- * This implementation is intentionally dependency-light for the early CMS
- * foundation. It supports plain SMTP, SSL and STARTTLS. It must never log SMTP
- * passwords, email bodies, OTPs, recovery codes, reset tokens or provisioning
- * URI/QR data.
+ * Supports plain SMTP, SSL and STARTTLS. This class must never log SMTP
+ * passwords, message bodies, OTPs, recovery codes, reset tokens or QR data.
  */
 final class SmtpMailer implements MailerInterface
 {
@@ -93,8 +91,6 @@ final class SmtpMailer implements MailerInterface
     }
 
     /**
-     * Send an SMTP command and verify the expected status code.
-     *
      * @param list<int> $expectedCodes
      */
     private function command(string $command, array $expectedCodes): void
@@ -103,9 +99,6 @@ final class SmtpMailer implements MailerInterface
         $this->expect($expectedCodes);
     }
 
-    /**
-     * Write one SMTP line.
-     */
     private function write(string $line): void
     {
         if (!is_resource($this->socket)) {
@@ -116,8 +109,6 @@ final class SmtpMailer implements MailerInterface
     }
 
     /**
-     * Read and validate an SMTP response.
-     *
      * @param list<int> $expectedCodes
      */
     private function expect(array $expectedCodes): void
@@ -126,7 +117,6 @@ final class SmtpMailer implements MailerInterface
             throw new RuntimeException('SMTP socket is not connected.');
         }
 
-        $line = '';
         do {
             $line = fgets($this->socket) ?: '';
             if ($line === '') {
@@ -140,9 +130,6 @@ final class SmtpMailer implements MailerInterface
         }
     }
 
-    /**
-     * Build an RFC-style message payload.
-     */
     private function buildPayload(EmailMessage $message): string
     {
         $headers = [
@@ -179,17 +166,11 @@ final class SmtpMailer implements MailerInterface
         return implode("\r\n", $headerLines) . "\r\n\r\n" . $body;
     }
 
-    /**
-     * Sanitise a header value against CRLF injection.
-     */
     private function headerValue(string $value): string
     {
         return str_replace(["\r", "\n"], '', $value);
     }
 
-    /**
-     * Normalise body line endings and dot-stuff SMTP body lines.
-     */
     private function normaliseBody(string $body): string
     {
         $body = str_replace(["\r\n", "\r"], "\n", $body);

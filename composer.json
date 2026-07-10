@@ -12,13 +12,15 @@
     },
     "autoload": {
         "psr-4": {
-            "Zoosper\\Core\\": "app/zoosper-core/src/",
-            "Zoosper\\Api\\": "app/zoosper-api/src/",
             "Zoosper\\Admin\\": "app/zoosper-admin/src/",
+            "Zoosper\\Api\\": "app/zoosper-api/src/",
             "Zoosper\\Auth\\": "app/zoosper-auth/src/",
-            "Zoosper\\Site\\": "app/zoosper-site/src/",
+            "Zoosper\\Core\\": "app/zoosper-core/src/",
+            "Zoosper\\Mail\\": "app/zoosper-mail/src/",
             "Zoosper\\Page\\": "app/zoosper-page/src/",
-            "Zoosper\\Theme\\": "app/zoosper-theme/src/"
+            "Zoosper\\Site\\": "app/zoosper-site/src/",
+            "Zoosper\\Theme\\": "app/zoosper-theme/src/",
+            "Zoosper\\TwoFactor\\": "app/zoosper-two-factor/src/"
         }
     },
     "scripts": {

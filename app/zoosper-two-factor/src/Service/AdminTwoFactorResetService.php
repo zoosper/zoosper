@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\TwoFactor\Service;
 
+use Throwable;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\TwoFactor\Repository\AdminTwoFactorResetRepository;
 
@@ -28,17 +29,37 @@ final readonly class AdminTwoFactorResetService
     public function reset(int $targetAdminUserId, int $performedByAdminUserId): void
     {
         $this->resets->resetForAdminUser($targetAdminUserId);
+        $this->auditReset($targetAdminUserId, $performedByAdminUserId);
+    }
 
-        /*
-         * Only non-secret IDs are included in the audit metadata. Do not include
-         * OTP values, TOTP secrets, recovery-code plaintext or provisioning URIs.
-         */
-        $this->auditLogger?->record(
-            actor: $performedByAdminUserId,
-            action: 'admin_2fa.reset',
-            entityType: 'admin_user',
-            entityId: (string)$targetAdminUserId,
-            metadata: [],
-        );
+    /**
+     * Record a non-sensitive audit event when the current AuditLogger supports it.
+     *
+     * This method intentionally avoids logging OTP values, TOTP secrets,
+     * recovery-code plaintext, provisioning URIs and QR data. It also avoids
+     * throwing if an older logger signature is present, because the reset itself
+     * has already completed successfully and should not be rolled back because
+     * of optional audit logging compatibility.
+     */
+    private function auditReset(int $targetAdminUserId, int $performedByAdminUserId): void
+    {
+        if ($this->auditLogger === null || !method_exists($this->auditLogger, 'record')) {
+            return;
+        }
+
+        try {
+            $this->auditLogger->record(
+                actor: $performedByAdminUserId,
+                action: 'admin_2fa.reset',
+                entityType: 'admin_user',
+                entityId: (string)$targetAdminUserId,
+                metadata: [],
+            );
+        } catch (Throwable) {
+            /*
+             * Audit logging must be best-effort until the logger contract is
+             * formalised. Never expose or log secret values here.
+             */
+        }
     }
 }

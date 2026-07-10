@@ -12,6 +12,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
 
 return [
     UserAdminController::class => static fn (ServiceContainer $services): UserAdminController => new UserAdminController(
@@ -21,6 +22,7 @@ return [
         $services->get(RoleRepository::class),
         $services->get(PasswordHasher::class),
         $services->get(AdminLayout::class),
+        $services->has(AdminTwoFactorResetService::class) ? $services->get(AdminTwoFactorResetService::class) : null,
     ),
 
     RoleAdminController::class => static fn (ServiceContainer $services): RoleAdminController => new RoleAdminController(
