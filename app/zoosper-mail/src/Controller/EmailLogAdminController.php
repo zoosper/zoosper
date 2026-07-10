@@ -13,9 +13,11 @@ use Zoosper\Mail\Log\EmailLogRepository;
 /**
  * Admin controller for searchable outbound SMTP email logs.
  *
- * The grid can show message content for diagnostics. It must not be used to
- * expose OTPs, TOTP secrets, recovery-code plaintext, provisioning URIs, reset
- * tokens, SMTP passwords or payment data.
+ * The grid can show message content for diagnostics. The `sent` status means the
+ * configured SMTP endpoint accepted the message. It does not guarantee the
+ * recipient saw the email. This log must not be used to expose OTPs, TOTP
+ * secrets, recovery-code plaintext, provisioning URIs, reset tokens, SMTP
+ * passwords or payment data.
  */
 final readonly class EmailLogAdminController
 {
@@ -23,9 +25,6 @@ final readonly class EmailLogAdminController
     {
     }
 
-    /**
-     * Render the searchable email log grid.
-     */
     public function index(Request $request): Response
     {
         $user = $this->guard->requirePermission('role.manage') ?? $this->guard->requirePermission('settings.manage');
@@ -40,7 +39,8 @@ final readonly class EmailLogAdminController
         ];
         $rows = $this->logs->search($filters, 100);
 
-        $html = $this->filters($filters) . '<table><thead><tr><th>ID</th><th>Status</th><th>To</th><th>Subject</th><th>Created</th><th>Actions</th></tr></thead><tbody>';
+        $html = '<div class="notice notice-info">Status <strong>sent</strong> means Zoosper handed the message to the configured SMTP endpoint. It does not guarantee recipient inbox delivery. If SMTP is Mailpit/MailHog, view the message in the local catcher.</div>';
+        $html .= $this->filters($filters) . '<table><thead><tr><th>ID</th><th>Status</th><th>To</th><th>Subject</th><th>Created</th><th>Actions</th></tr></thead><tbody>';
         foreach ($rows as $row) {
             $html .= '<tr><td>' . (int) $row['id'] . '</td><td>' . $this->badge((string) $row['status']) . '</td><td>' . $this->e((string) $row['to_emails']) . '</td><td>' . $this->e((string) $row['subject']) . '</td><td>' . $this->e((string) $row['created_at']) . '</td><td><a href="/admin/mail-logs/view?id=' . (int) $row['id'] . '">View</a></td></tr>';
         }
@@ -52,9 +52,6 @@ final readonly class EmailLogAdminController
         return Response::html($this->layout->render('SMTP Email Logs', $html, $user, 'mail-logs'));
     }
 
-    /**
-     * Render one email log detail view including content and status.
-     */
     public function view(Request $request): Response
     {
         $user = $this->guard->requirePermission('role.manage') ?? $this->guard->requirePermission('settings.manage');
@@ -69,12 +66,13 @@ final readonly class EmailLogAdminController
         }
 
         $html = '<div class="toolbar"><a class="button secondary" href="/admin/mail-logs">Back</a></div>'
+            . '<div class="notice notice-info">This log proves the configured SMTP endpoint accepted or rejected the message. It does not prove recipient inbox delivery.</div>'
             . '<div class="card"><h2>' . $this->e((string) $row['subject']) . '</h2>'
             . '<p><strong>Status:</strong> ' . $this->badge((string) $row['status']) . '</p>'
             . '<p><strong>From:</strong> ' . $this->e((string) $row['from_email']) . '</p>'
             . '<p><strong>To:</strong> ' . $this->e((string) $row['to_emails']) . '</p>'
             . '<p><strong>Created:</strong> ' . $this->e((string) $row['created_at']) . '</p>'
-            . '<p><strong>Sent:</strong> ' . $this->e((string) ($row['sent_at'] ?? '')) . '</p>'
+            . '<p><strong>Accepted by SMTP:</strong> ' . $this->e((string) ($row['sent_at'] ?? '')) . '</p>'
             . '<p><strong>Failed:</strong> ' . $this->e((string) ($row['failed_at'] ?? '')) . '</p>'
             . '<p><strong>Error:</strong> ' . $this->e(trim((string) ($row['error_class'] ?? '') . ' ' . (string) ($row['error_message'] ?? ''))) . '</p>'
             . '<h3>Text body</h3><pre>' . $this->e((string) ($row['text_body'] ?? '')) . '</pre>'
