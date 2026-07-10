@@ -8,6 +8,10 @@
  * @var string $content
  * @var string $userName
  * @var string $version
+ * @var list<\Zoosper\Admin\Asset\AdminAsset> $stylesheets
+ * @var list<\Zoosper\Admin\Asset\AdminAsset> $scripts
+ * @var string $assetStylesHtml
+ * @var string $assetScriptsHtml
  */
 ?>
 <!doctype html>
@@ -17,6 +21,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $e($title) ?> - Zoosper Admin</title>
     <link rel="stylesheet" href="/themes/admin/default/assets/css/admin.css">
+    <?php if (($assetStylesHtml ?? '') !== ''): ?>
+        <?= $assetStylesHtml ?>
+    <?php else: ?>
+        <?= $partial('components/layout/admin-assets.php', [
+            'stylesheets' => $stylesheets ?? [],
+            'scripts' => [],
+        ]) ?>
+    <?php endif; ?>
 </head>
 <body>
 <?= $slot('body.start') ?>
@@ -30,6 +42,14 @@
     </section>
 </div>
 <?= $partial('footer.php') ?>
+<?php if (($assetScriptsHtml ?? '') !== ''): ?>
+    <?= $assetScriptsHtml ?>
+<?php else: ?>
+    <?= $partial('components/layout/admin-assets.php', [
+        'stylesheets' => [],
+        'scripts' => $scripts ?? [],
+    ]) ?>
+<?php endif; ?>
 <?= $slot('body.end') ?>
 </body>
 </html>

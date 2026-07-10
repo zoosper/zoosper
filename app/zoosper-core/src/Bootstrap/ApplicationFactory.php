@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Zoosper\Core\Bootstrap;
 
 use PDO;
+use Zoosper\Admin\Asset\AdminAssetRegistry;
+use Zoosper\Admin\Asset\AdminAssetTemplateRenderer;
+use Zoosper\Admin\Asset\AdminAssetViewDataProvider;
+use Zoosper\Admin\Asset\AssetPathResolver;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
@@ -54,7 +58,9 @@ final class ApplicationFactory
      * ApplicationFactory intentionally avoids creating feature/module controllers
      * directly. Modules should register controllers through their own
      * `config/controllers.php` files so they can be added or removed without
-     * editing the core bootstrap.
+     * editing the core bootstrap. Shared cross-cutting infrastructure, such as
+     * admin layout asset discovery, is registered here once and consumed by
+     * modules through the service container.
      */
     public static function create(string $basePath): Application
     {
@@ -99,6 +105,19 @@ final class ApplicationFactory
         $adminFormUi = new AdminFormUiConfigLoader($modules);
 
         /*
+         * Admin asset services.
+         *
+         * Admin assets are discovered from module-owned config/admin_assets.php
+         * files. Asset config must remain static and must never include runtime
+         * secrets such as OTPs, TOTP secrets, recovery codes, payment data,
+         * session IDs or customer-private values.
+         */
+        $adminAssetRegistry = new AdminAssetRegistry($modules);
+        $adminAssetViewData = new AdminAssetViewDataProvider($adminAssetRegistry);
+        $adminAssetTemplateRenderer = new AdminAssetTemplateRenderer($adminAssetRegistry);
+        $assetPathResolver = new AssetPathResolver($config);
+
+        /*
          * Theme/layout services.
          *
          * LayoutUpdateRepository must be created before TemplateRenderer so
@@ -123,7 +142,13 @@ final class ApplicationFactory
          * Admin shell services.
          */
         $adminMenu = new AdminMenu(new AdminMenuLoader($modules));
-        $adminLayout = new AdminLayout($adminMenu, $config, $adminTemplateRenderer);
+        $adminLayout = new AdminLayout(
+            $adminMenu,
+            $config,
+            $adminTemplateRenderer,
+            $adminAssetTemplateRenderer,
+            $adminAssetViewData,
+        );
         $adminViewRenderer = new AdminViewRenderer($adminTemplateRenderer, $adminLayout);
         $adminComponentRenderer = new AdminComponentRenderer($adminTemplateRenderer);
 
@@ -181,6 +206,11 @@ final class ApplicationFactory
         $services->set(JsonResponder::class, $json);
         $services->set(CmsVersion::class, $cmsVersion);
         $services->set(AuditLogger::class, $auditLogger);
+
+        $services->set(AdminAssetRegistry::class, $adminAssetRegistry);
+        $services->set(AdminAssetViewDataProvider::class, $adminAssetViewData);
+        $services->set(AdminAssetTemplateRenderer::class, $adminAssetTemplateRenderer);
+        $services->set(AssetPathResolver::class, $assetPathResolver);
 
         $services->set(AdminMenu::class, $adminMenu);
         $services->set(AdminLayout::class, $adminLayout);

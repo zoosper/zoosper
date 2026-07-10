@@ -14,10 +14,19 @@ final readonly class AdminViewRenderer
     {
     }
 
-    /** @param array<string, mixed> $data */
+    /**
+     * Render an admin view template inside the shared admin layout.
+     *
+     * The inner template is rendered into the `admin.content` layout handle and
+     * then wrapped by AdminLayout, which is responsible for navigation, shell
+     * markup and module-owned admin asset injection.
+     *
+     * @param array<string, mixed> $data
+     */
     public function render(string $title, string $template, array $data, ?AdminUser $user, string $active = 'dashboard'): string
     {
         $content = $this->templates->render($template, $data, 'default', 'admin.content');
+
         return $this->layout->render($title, $content, $user, $active);
     }
 }
