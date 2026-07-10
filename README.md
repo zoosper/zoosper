@@ -4,7 +4,7 @@ Zoosper is a modern, lightweight, modular PHP 8.5+ CMS inspired by Magento-style
 
 ## Current phase
 
-Phase 0.18 — Admin Controller View Refactor.
+Phase 0.19 — Pages, Users and Roles View Refactor.
 
 ## What is included
 
@@ -15,26 +15,30 @@ Phase 0.18 — Admin Controller View Refactor.
 - Module template rendering using `module::path`
 - Frontend and admin theme foundations
 - Admin component templates under `themes/admin/default/templates/components`
+- Module-owned admin views for pages, users and roles
 - Layout updates with remove, replace and inject operations
 - Per-site `theme_code`
 - Admin users, roles, permission tree, audit log and login history
-- Refactored dashboard, audit log, login history and theme admin screens using module-owned views
 - Declarative schema engine using module `config/db_schema.php`
 
-## Admin views
+## Admin module views
 
-Admin controllers should prepare data and render module-owned views:
-
-```text
-app/<module>/resources/views/...
-```
-
-Admin themes can override those views:
+Pages:
 
 ```text
-themes/admin/default/templates/modules/<module>/...
+app/zoosper-page/resources/views/admin/pages/index.php
+app/zoosper-page/resources/views/admin/pages/form.php
 ```
 
-## Documentation
+Users and roles:
 
-Detailed architecture notes live in `docs/architecture/` and phase plans live in `docs/roadmap/`.
+```text
+app/zoosper-auth/resources/views/admin/users/index.php
+app/zoosper-auth/resources/views/admin/users/form.php
+app/zoosper-auth/resources/views/admin/roles/index.php
+app/zoosper-auth/resources/views/admin/roles/form.php
+```
+
+## Development principle
+
+Controllers should prepare data and delegate rendering to module-owned views. Routes, APIs, ACLs, menus, schemas and controllers should remain inside their respective modules so modules can be added or removed more easily.

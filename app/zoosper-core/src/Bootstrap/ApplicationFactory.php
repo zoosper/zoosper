@@ -49,79 +49,158 @@ final class ApplicationFactory
         $pdo = (new ConnectionFactory($config, $basePath))->create();
         $modules = new ModuleRegistry($basePath);
 
+        /*
+         * Core repositories.
+         *
+         * These are still central infrastructure services. Feature-specific
+         * controller creation now lives in each module's config/controllers.php.
+         */
         $userRepository = new AdminUserRepository($pdo);
         $roleRepository = new RoleRepository($pdo);
         $siteRepository = new SiteRepository($pdo);
         $pageRepository = new PageRepository($pdo);
         $loginHistoryRepository = new LoginHistoryRepository($pdo);
         $auditLogRepository = new AuditLogRepository($pdo);
-        $auditLogger = new AuditLogger($auditLogRepository);
         $themeRepository = new ThemeRepository($basePath . '/themes');
 
+        /*
+         * Core services.
+         */
         $passwordHasher = new PasswordHasher();
         $auth = new AuthService($userRepository, $passwordHasher);
         $guard = new SessionGuard($userRepository);
         $csrf = new CsrfTokenManager();
         $json = new JsonResponder();
         $cmsVersion = new CmsVersion($config);
+        $auditLogger = new AuditLogger($auditLogRepository);
 
-        $adminMenu = new AdminMenu(new AdminMenuLoader($modules));
-        $adminTemplateRenderer = new TemplateRenderer(new ThemeResolver($basePath . '/themes/admin', 'default'), $modules);
-        $adminLayout = new AdminLayout($adminMenu, $config, $adminTemplateRenderer);
-
-        $siteResolver = new SiteResolver($siteRepository);
-        $templateRenderer = new TemplateRenderer(new ThemeResolver($basePath . '/themes', 'default'), $modules);
-        $pageRenderer = new PageRenderer($templateRenderer, $cmsVersion, $modules);
-        $pageController = new PageController($siteResolver, $pageRepository, $pageRenderer);
-
+        /*
+         * Theme/layout services.
+         *
+         * Important:
+         * LayoutUpdateRepository must be created before TemplateRenderer so
+         * frontend and admin renderers both support remove/replace/inject
+         * layout updates.
+         */
         $layoutUpdates = new LayoutUpdateRepository();
-        $templateRenderer = new TemplateRenderer(new ThemeResolver($basePath . '/themes', 'default'), $modules, $layoutUpdates);
-        $adminTemplateRenderer = new TemplateRenderer(new ThemeResolver($basePath . '/themes/admin', 'default'), $modules, $layoutUpdates);
 
+        $frontendTemplateRenderer = new TemplateRenderer(
+            new ThemeResolver($basePath . '/themes', 'default'),
+            $modules,
+            $layoutUpdates,
+        );
+
+        $adminTemplateRenderer = new TemplateRenderer(
+            new ThemeResolver($basePath . '/themes/admin', 'default'),
+            $modules,
+            $layoutUpdates,
+        );
+
+        /*
+         * Admin shell services.
+         */
+        $adminMenu = new AdminMenu(new AdminMenuLoader($modules));
+        $adminLayout = new AdminLayout($adminMenu, $config, $adminTemplateRenderer);
+        $adminViewRenderer = new AdminViewRenderer($adminTemplateRenderer, $adminLayout);
+        $adminComponentRenderer = new AdminComponentRenderer($adminTemplateRenderer);
+
+        /*
+         * Site/page rendering services.
+         */
+        $siteResolver = new SiteResolver($siteRepository);
+
+        $pageRenderer = new PageRenderer(
+            $frontendTemplateRenderer,
+            $cmsVersion,
+            $modules,
+        );
+
+        /*
+         * Frontend fallback controller.
+         *
+         * This remains in ApplicationFactory because it is the final non-admin,
+         * non-API fallback route for public page rendering.
+         */
+        $pageController = new PageController(
+            $siteResolver,
+            $pageRepository,
+            $pageRenderer,
+        );
+
+        /*
+         * Shared service container for module-owned controller providers.
+         *
+         * Modules should create controllers in:
+         *
+         * app/<module>/config/controllers.php
+         *
+         * ApplicationFactory should only register shared infrastructure here.
+         */
         $services = new ServiceContainer();
+
         $services->set(ConfigRepository::class, $config);
         $services->set(ModuleRegistry::class, $modules);
+
         $services->set(AdminUserRepository::class, $userRepository);
         $services->set(RoleRepository::class, $roleRepository);
         $services->set(SiteRepository::class, $siteRepository);
         $services->set(PageRepository::class, $pageRepository);
         $services->set(LoginHistoryRepository::class, $loginHistoryRepository);
         $services->set(AuditLogRepository::class, $auditLogRepository);
-        $services->set(AuditLogger::class, $auditLogger);
         $services->set(ThemeRepository::class, $themeRepository);
+
         $services->set(PasswordHasher::class, $passwordHasher);
         $services->set(AuthService::class, $auth);
         $services->set(SessionGuard::class, $guard);
         $services->set(CsrfTokenManager::class, $csrf);
         $services->set(JsonResponder::class, $json);
         $services->set(CmsVersion::class, $cmsVersion);
+        $services->set(AuditLogger::class, $auditLogger);
+
         $services->set(AdminMenu::class, $adminMenu);
         $services->set(AdminLayout::class, $adminLayout);
+        $services->set(AdminViewRenderer::class, $adminViewRenderer);
+        $services->set(AdminComponentRenderer::class, $adminComponentRenderer);
+
         $services->set(SiteResolver::class, $siteResolver);
-        $services->set(TemplateRenderer::class, $templateRenderer);
+        $services->set(TemplateRenderer::class, $frontendTemplateRenderer);
         $services->set(PageRenderer::class, $pageRenderer);
         $services->set(PageController::class, $pageController);
-        $services->set(AdminViewRenderer::class, new AdminViewRenderer($adminTemplateRenderer, $adminLayout));
-        $services->set(AdminComponentRenderer::class, new AdminComponentRenderer($adminTemplateRenderer));
 
+        /*
+         * Load controllers from module-owned provider files.
+         *
+         * This keeps ApplicationFactory from growing every time a module adds
+         * a controller.
+         */
         $controllers = (new ControllerProviderLoader($modules, $services))->load();
 
         $router = new Router();
+
         $routeLoader = new ModuleRouteLoader($modules, $controllers);
         $routeLoader->registerAdminRoutes($router);
         $routeLoader->registerApiRoutes($router);
 
+        /*
+         * Public frontend fallback.
+         */
         $router->fallback(static function (Request $request) use ($pageController): Response {
             if (str_starts_with($request->path(), '/api/')) {
                 return Response::json([
                     'success' => false,
-                    'error' => ['code' => 'route_not_found', 'message' => 'API route not found.'],
+                    'error' => [
+                        'code' => 'route_not_found',
+                        'message' => 'API route not found.',
+                    ],
                 ], 404);
             }
 
             return $pageController->view($request);
         });
 
-        return new Application($router, new SecurityHeaders($config->array('security.headers')));
+        return new Application(
+            $router,
+            new SecurityHeaders($config->array('security.headers')),
+        );
     }
 }
