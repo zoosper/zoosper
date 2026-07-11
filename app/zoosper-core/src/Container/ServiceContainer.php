@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Container;
 
-use RuntimeException;
+use Throwable;
+use Zoosper\Core\Exception\ZoosperException;
 
 /**
  * Lightweight application service container with lazy factory support.
@@ -22,24 +23,13 @@ final class ServiceContainer
     /** @var array<string, callable(self): object> */
     private array $factories = [];
 
-    /**
-     * Register an already-created shared service instance.
-     */
     public function set(string $id, object $service): void
     {
         $this->services[$id] = $service;
         unset($this->factories[$id]);
     }
 
-    /**
-     * Register a lazy shared service factory.
-     *
-     * The factory is called the first time get() is used and the returned object
-     * is stored as the shared service instance. Providers may use this to keep
-     * bootstrapping small and avoid constructing unused optional module services.
-     *
-     * @param callable(self): object $factory
-     */
+    /** @param callable(self): object $factory */
     public function factory(string $id, callable $factory): void
     {
         if (isset($this->services[$id])) {
@@ -49,17 +39,12 @@ final class ServiceContainer
         $this->factories[$id] = $factory;
     }
 
-    /**
-     * Register an alias so one service ID resolves to another.
-     */
     public function alias(string $id, string $targetId): void
     {
         $this->factory($id, static fn (self $services): object => $services->get($targetId));
     }
 
     /**
-     * Resolve a registered service by ID.
-     *
      * @template T of object
      * @param class-string<T>|string $id
      * @return T|object
@@ -71,9 +56,30 @@ final class ServiceContainer
         }
 
         if (isset($this->factories[$id])) {
-            $service = ($this->factories[$id])($this);
+            try {
+                $service = ($this->factories[$id])($this);
+            } catch (Throwable $exception) {
+                throw new ZoosperException(
+                    message: 'Service factory failed while creating: ' . $id,
+                    context: 'A lazy service factory was registered, but it threw an exception during construction.',
+                    suggestion: 'Check the module config/services.php file that registers this service. Then run `php tools/verify-service-providers.php` for the detailed failing service.',
+                    docsUrl: 'docs/operations/troubleshooting-helpful-errors.md',
+                    details: [
+                        'service_id' => $id,
+                        'registered_service_ids' => $this->ids(),
+                    ],
+                    previous: $exception,
+                );
+            }
+
             if (!is_object($service)) {
-                throw new RuntimeException('Service factory did not return an object for: ' . $id);
+                throw new ZoosperException(
+                    message: 'Service factory did not return an object for: ' . $id,
+                    context: 'Factories in config/services.php must return an object instance. Scalars, arrays and null are invalid service definitions.',
+                    suggestion: 'Update the factory to return a class instance, for example: `SomeService::class => static fn (ServiceContainer $services): SomeService => new SomeService()`.',
+                    docsUrl: 'docs/operations/module-development.md',
+                    details: ['service_id' => $id],
+                );
             }
 
             $this->services[$id] = $service;
@@ -81,32 +87,30 @@ final class ServiceContainer
             return $service;
         }
 
-        throw new RuntimeException('Service is not registered: ' . $id);
+        throw new ZoosperException(
+            message: 'Service is not registered: ' . $id,
+            context: 'A service was requested from the container, but no enabled module registered an instance or factory for this ID.',
+            suggestion: 'Add a service definition to your module config/services.php, enable the module that provides this service, or check for a typo in the service ID. Then run `php tools/verify-service-providers.php`.',
+            docsUrl: 'docs/operations/module-development.md',
+            details: [
+                'service_id' => $id,
+                'registered_service_ids' => $this->ids(),
+            ],
+        );
     }
 
-    /**
-     * Check whether a service instance or factory is registered.
-     */
     public function has(string $id): bool
     {
         return isset($this->services[$id]) || isset($this->factories[$id]);
     }
 
-    /**
-     * Return already-instantiated shared services.
-     *
-     * @return array<string, object>
-     */
+    /** @return array<string, object> */
     public function all(): array
     {
         return $this->services;
     }
 
-    /**
-     * Return all registered service IDs, including lazy factories.
-     *
-     * @return list<string>
-     */
+    /** @return list<string> */
     public function ids(): array
     {
         return array_values(array_unique(array_merge(array_keys($this->services), array_keys($this->factories))));

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Zoosper\Core\Log;
 
 use Throwable;
+use Zoosper\Core\Exception\SensitiveValueRedactor;
+use Zoosper\Core\Exception\ZoosperException;
 
 final readonly class ErrorHandler
 {
@@ -45,6 +47,18 @@ final readonly class ErrorHandler
     /** @param array<string, mixed> $context */
     public function logException(Throwable $exception, array $context = []): void
     {
+        $redactor = new SensitiveValueRedactor();
+        $context = $redactor->redactArray($context);
+
+        if ($exception instanceof ZoosperException) {
+            $context = array_merge($context, $redactor->redactArray([
+                'zoosper_context' => $exception->context(),
+                'zoosper_suggestion' => $exception->suggestion(),
+                'zoosper_docs_url' => $exception->docsUrl(),
+                'zoosper_details' => $exception->details(),
+            ]));
+        }
+
         $this->logger->exception($exception, $context);
     }
 }

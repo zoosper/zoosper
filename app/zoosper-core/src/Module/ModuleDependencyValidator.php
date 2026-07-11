@@ -4,27 +4,14 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Module;
 
-use RuntimeException;
+use Zoosper\Core\Exception\ZoosperException;
 
 /**
  * Validates enabled module dependencies declared through module.php metadata.
- *
- * Modules may declare:
- *
- * ```php
- * 'depends' => ['zoosper-core', 'zoosper-page']
- * ```
- *
- * Dependency validation is intentionally module-name based for the foundation
- * phase. Future phases may add version constraints and conflict declarations.
  */
 final readonly class ModuleDependencyValidator
 {
-    /**
-     * Validate dependencies for enabled modules.
-     *
-     * @param list<ModuleDefinition> $modules
-     */
+    /** @param list<ModuleDefinition> $modules */
     public function validate(array $modules): void
     {
         $enabledByName = [];
@@ -41,19 +28,24 @@ final readonly class ModuleDependencyValidator
 
             foreach ($this->depends($module) as $dependency) {
                 if (!isset($enabledByName[$dependency])) {
-                    throw new RuntimeException(sprintf(
-                        'Enabled module "%s" depends on missing or disabled module "%s".',
-                        $module->name,
-                        $dependency,
-                    ));
+                    throw new ZoosperException(
+                        message: sprintf('Enabled module "%s" depends on missing or disabled module "%s".', $module->name, $dependency),
+                        context: 'The module dependency graph is invalid. Zoosper validates dependencies before loading service providers, routes and schemas.',
+                        suggestion: 'Install/enable the missing module or remove it from the depends list in `' . $module->path . '/module.php`. Then run `php tools/verify-module-dependencies.php`.',
+                        docsUrl: 'docs/operations/composer-marketplace-module-development.md',
+                        details: [
+                            'module' => $module->name,
+                            'module_path' => $module->path,
+                            'missing_dependency' => $dependency,
+                            'enabled_modules' => array_keys($enabledByName),
+                        ],
+                    );
                 }
             }
         }
     }
 
-    /**
-     * @return list<string>
-     */
+    /** @return list<string> */
     public function depends(ModuleDefinition $module): array
     {
         $depends = $module->metadata['depends'] ?? [];

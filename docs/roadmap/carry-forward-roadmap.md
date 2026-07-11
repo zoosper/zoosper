@@ -8,6 +8,7 @@
 - Render context wiring foundation.
 - Module service provider / DI foundation.
 - Composer marketplace module discovery foundation.
+- Developer-friendly error diagnostics foundation.
 
 ## Recommended next phases
 
@@ -18,3 +19,4 @@
 5. CDN provider/purge adapter.
 6. Index Manager.
 7. Documentation website build pipeline.
+8. Rich development error page with code frame and AI-debug export.

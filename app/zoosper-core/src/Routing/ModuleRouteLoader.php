@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Core\Routing;
 
 use ReflectionClass;
-use RuntimeException;
+use Zoosper\Core\Exception\ZoosperException;
 use Zoosper\Core\Module\ModuleRegistry;
 
 final readonly class ModuleRouteLoader
@@ -47,7 +47,13 @@ final readonly class ModuleRouteLoader
 
             $config = require $file;
             if (!is_array($config)) {
-                throw new RuntimeException('Route config must return an array: ' . $file);
+                throw new ZoosperException(
+                    message: 'Route config must return an array: ' . $file,
+                    context: 'Module `' . $module->name . '` has a route config file that did not return an array.',
+                    suggestion: 'Return a list of route arrays with method, path, controller and action keys.',
+                    docsUrl: 'docs/operations/troubleshooting-helpful-errors.md',
+                    details: ['module' => $module->name, 'file' => $file, 'returned_type' => get_debug_type($config)],
+                );
             }
 
             foreach ($config as $route) {
@@ -75,36 +81,48 @@ final readonly class ModuleRouteLoader
     /** @return callable */
     private function handlerFor(ModuleRouteDefinition $route): callable
     {
-        $controller = $this->controllerFor($route->controller);
+        $controller = $this->controllerFor($route->controller, $route);
 
         if (!method_exists($controller, $route->action)) {
-            throw new RuntimeException(sprintf(
-                'Route action does not exist: %s::%s for %s %s',
-                $route->controller,
-                $route->action,
-                $route->method,
-                $route->path,
-            ));
+            throw new ZoosperException(
+                message: sprintf('Route action does not exist: %s::%s', $route->controller, $route->action),
+                context: sprintf('Route: %s %s', $route->method, $route->path),
+                suggestion: 'Create the action method on the controller or update the route config action value. Then run the relevant route diagnostics.',
+                docsUrl: 'docs/operations/troubleshooting-helpful-errors.md',
+                details: ['controller' => $route->controller, 'action' => $route->action, 'method' => $route->method, 'path' => $route->path],
+            );
         }
 
         return [$controller, $route->action];
     }
 
-    private function controllerFor(string $class): object
+    private function controllerFor(string $class, ModuleRouteDefinition $route): object
     {
         if (isset($this->controllers[$class])) {
             return $this->controllers[$class];
         }
 
         if (!class_exists($class)) {
-            throw new RuntimeException('Route controller class does not exist: ' . $class);
+            throw new ZoosperException(
+                message: 'Route controller class does not exist: ' . $class,
+                context: sprintf('Route: %s %s', $route->method, $route->path),
+                suggestion: 'Check the controller namespace, Composer autoload mapping, and module config/controllers.php registration. Then run `composer dump-autoload`.',
+                docsUrl: 'docs/operations/troubleshooting-helpful-errors.md',
+                details: ['controller' => $class, 'method' => $route->method, 'path' => $route->path],
+            );
         }
 
         $reflection = new ReflectionClass($class);
         $constructor = $reflection->getConstructor();
 
         if ($constructor !== null && $constructor->getNumberOfRequiredParameters() > 0) {
-            throw new RuntimeException('Route controller requires dependencies and was not provided to ModuleRouteLoader: ' . $class);
+            throw new ZoosperException(
+                message: 'Route controller requires dependencies and was not provided to ModuleRouteLoader: ' . $class,
+                context: sprintf('Route: %s %s. Controller has required constructor parameters but was not registered in config/controllers.php.', $route->method, $route->path),
+                suggestion: 'Add the controller factory to your module config/controllers.php so dependencies can be injected from ServiceContainer.',
+                docsUrl: 'docs/operations/troubleshooting-helpful-errors.md',
+                details: ['controller' => $class, 'method' => $route->method, 'path' => $route->path],
+            );
         }
 
         return $reflection->newInstance();
@@ -113,16 +131,22 @@ final readonly class ModuleRouteLoader
     private function assertValid(ModuleRouteDefinition $route): void
     {
         if ($route->path === '' || !str_starts_with($route->path, '/')) {
-            throw new RuntimeException('Route path must start with / for controller: ' . $route->controller);
+            throw new ZoosperException(
+                message: 'Route path must start with / for controller: ' . $route->controller,
+                context: 'Invalid route definition found while loading module routes.',
+                suggestion: 'Update the route path to start with `/`, for example `/admin/example` or `/api/example`.',
+                docsUrl: 'docs/operations/troubleshooting-helpful-errors.md',
+                details: ['controller' => $route->controller, 'path' => $route->path],
+            );
         }
         if ($route->controller === '') {
-            throw new RuntimeException('Route controller is required for path: ' . $route->path);
+            throw new ZoosperException('Route controller is required for path: ' . $route->path, 'Invalid route definition found while loading module routes.', 'Add a controller class to the route config.', 'docs/operations/troubleshooting-helpful-errors.md', ['path' => $route->path]);
         }
         if ($route->action === '') {
-            throw new RuntimeException('Route action is required for path: ' . $route->path);
+            throw new ZoosperException('Route action is required for path: ' . $route->path, 'Invalid route definition found while loading module routes.', 'Add an action method name to the route config.', 'docs/operations/troubleshooting-helpful-errors.md', ['path' => $route->path, 'controller' => $route->controller]);
         }
         if (!in_array($route->method, ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], true)) {
-            throw new RuntimeException('Unsupported route method: ' . $route->method);
+            throw new ZoosperException('Unsupported route method: ' . $route->method, 'Invalid route definition found while loading module routes.', 'Use one of GET, POST, PUT, PATCH or DELETE.', 'docs/operations/troubleshooting-helpful-errors.md', ['method' => $route->method, 'path' => $route->path]);
         }
     }
 }
