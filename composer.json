@@ -4,12 +4,13 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "bacon/bacon-qr-code": "^3.0",
+        "php": "^8.5",
         "ext-pdo": "*",
+        "bacon/bacon-qr-code": "^3.0",
+        "latte/latte": "^3.1",
         "marko/database": "^0.8",
         "marko/database-mysql": "^0.8",
-        "marko/framework": "^0.8",
-        "php": "^8.5"
+        "marko/framework": "^0.8"
     },
     "autoload": {
         "psr-4": {
