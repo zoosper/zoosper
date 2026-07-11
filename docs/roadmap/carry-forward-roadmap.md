@@ -2,12 +2,12 @@
 
 ## Completed foundations
 
-- Build pipeline and repository structure hygiene.
 - Public theme asset cleanup and admin asset consolidation.
+- Editor.js initialisation with safe textarea sync.
 
 ## Future TODOs
 
-- Initialise Editor.js with safe textarea sync.
+- Add Editor.js header/list tools.
 - Add block_json storage and validation.
 - Add server-side block renderer.
 - Media library with uploads stored outside public first.
