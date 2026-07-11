@@ -8,6 +8,8 @@ use RuntimeException;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\View\TemplateViewContextProvider;
 use Zoosper\Theme\Layout\LayoutUpdateRepository;
+use Zoosper\Theme\Template\Engine\PhpTemplateEngine;
+use Zoosper\Theme\Template\Engine\TemplateEngineRegistry;
 use Zoosper\Theme\Theme\Theme;
 use Zoosper\Theme\Theme\ThemeResolver;
 
@@ -18,6 +20,7 @@ final readonly class TemplateRenderer
         private ?ModuleRegistry $modules = null,
         private ?LayoutUpdateRepository $layoutUpdates = null,
         private ?TemplateViewContextProvider $viewContext = null,
+        private ?TemplateEngineRegistry $engines = null,
     ) {
     }
 
@@ -59,14 +62,11 @@ final readonly class TemplateRenderer
             $data,
         );
 
-        $e = static fn (mixed $value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-        $partial = fn (string $name, array $partialData = []): string => $this->partial($name, array_merge($data, $partialData), $theme->code, $handle);
-        $slot = fn (string $slotName, array $slotData = []): string => $this->renderSlot($theme, $handle, $slotName, array_merge($data, $slotData));
-        extract($data, EXTR_SKIP);
+        $data['e'] ??= static fn (mixed $value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+        $data['partial'] ??= fn (string $name, array $partialData = []): string => $this->partial($name, array_merge($data, $partialData), $theme->code, $handle);
+        $data['slot'] ??= fn (string $slotName, array $slotData = []): string => $this->renderSlot($theme, $handle, $slotName, array_merge($data, $slotData));
 
-        ob_start();
-        require $path;
-        return (string) ob_get_clean();
+        return $this->engines()->forPath($path)->renderFile($path, $data);
     }
 
     /** @param array<string, mixed> $data */
@@ -90,15 +90,18 @@ final readonly class TemplateRenderer
             return $this->resolveModuleTemplatePath($theme, $template);
         }
 
-        $candidates = [
-            rtrim($theme->path, '/') . '/templates/overrides/' . $template,
-            rtrim($theme->path, '/') . '/templates/' . $template,
-        ];
+        $candidates = [];
+        foreach ($this->templateVariants($template) as $variant) {
+            $candidates[] = rtrim($theme->path, '/') . '/templates/overrides/' . $variant;
+            $candidates[] = rtrim($theme->path, '/') . '/templates/' . $variant;
+        }
 
         if ($theme->code !== 'default') {
             $defaultPath = dirname($theme->path) . '/default';
-            $candidates[] = $defaultPath . '/templates/overrides/' . $template;
-            $candidates[] = $defaultPath . '/templates/' . $template;
+            foreach ($this->templateVariants($template) as $variant) {
+                $candidates[] = $defaultPath . '/templates/overrides/' . $variant;
+                $candidates[] = $defaultPath . '/templates/' . $variant;
+            }
         }
 
         return $this->firstExisting($candidates, 'Template does not exist: ' . $template . ' in theme ' . $theme->code);
@@ -109,15 +112,16 @@ final readonly class TemplateRenderer
         [$moduleName, $templatePath] = explode('::', $template, 2);
         $templatePath = ltrim($templatePath, '/');
 
-        $candidates = [
-            rtrim($theme->path, '/') . '/templates/modules/' . $moduleName . '/' . $templatePath,
-            rtrim($theme->path, '/') . '/templates/modules/' . $moduleName . '/' . $templatePath . '.php',
-        ];
+        $candidates = [];
+        foreach ($this->templateVariants($templatePath) as $variant) {
+            $candidates[] = rtrim($theme->path, '/') . '/templates/modules/' . $moduleName . '/' . $variant;
+        }
 
         if ($theme->code !== 'default') {
             $defaultPath = dirname($theme->path) . '/default';
-            $candidates[] = $defaultPath . '/templates/modules/' . $moduleName . '/' . $templatePath;
-            $candidates[] = $defaultPath . '/templates/modules/' . $moduleName . '/' . $templatePath . '.php';
+            foreach ($this->templateVariants($templatePath) as $variant) {
+                $candidates[] = $defaultPath . '/templates/modules/' . $moduleName . '/' . $variant;
+            }
         }
 
         foreach ($this->moduleTemplateCandidates($moduleName, $templatePath) as $candidate) {
@@ -138,11 +142,33 @@ final readonly class TemplateRenderer
             if ($module->name !== $moduleName) {
                 continue;
             }
-            $base = rtrim($module->path, '/') . '/resources/views/' . $templatePath;
-            $candidates[] = $base;
-            $candidates[] = $base . '.php';
+            foreach ($this->templateVariants($templatePath) as $variant) {
+                $candidates[] = rtrim($module->path, '/') . '/resources/views/' . $variant;
+            }
         }
         return $candidates;
+    }
+
+    /** @return list<string> */
+    private function templateVariants(string $template): array
+    {
+        $template = ltrim($template, '/');
+        $extension = pathinfo($template, PATHINFO_EXTENSION);
+        if ($extension !== '') {
+            return [$template];
+        }
+
+        $variants = [];
+        foreach ($this->engines()->extensions() as $engineExtension) {
+            $variants[] = $template . '.' . $engineExtension;
+        }
+
+        return $variants === [] ? [$template . '.php'] : $variants;
+    }
+
+    private function engines(): TemplateEngineRegistry
+    {
+        return $this->engines ?? new TemplateEngineRegistry(new PhpTemplateEngine());
     }
 
     /** @param list<string> $candidates */
