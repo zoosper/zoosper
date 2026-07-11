@@ -1,0 +1,14 @@
+{
+  "name": "zoosper-cms",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:admin-editor": "vite build --config vite.admin-editor.config.js"
+  },
+  "dependencies": {
+    "@editorjs/editorjs": "^2.30.8"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

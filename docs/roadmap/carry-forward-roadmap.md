@@ -2,13 +2,14 @@
 
 ## Completed foundations
 
-- Admin flash/toast message foundation.
 - Content editor adapter foundation.
+- Local Editor.js asset bundling foundation.
 
 ## Future TODOs
 
-- Bundle Editor.js locally and migrate to block_json storage.
-- WYSIWYG/Block editor save message improvements.
+- Initialise Editor.js with safe block tools.
+- Add block_json storage and validation.
+- Add server-side block renderer.
 - Media library with uploads stored outside public first.
 - CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
 - Static asset command: `php bin/zoosper static:publish`.

@@ -25,6 +25,12 @@ return [
             'sort_order' => 20,
             'attributes' => ['defer' => true],
         ],
+        'zoosper-admin-editorjs-bundle' => [
+            'type' => 'script',
+            'path' => '/assets/admin/js/editorjs.bundle.js',
+            'sort_order' => 25,
+            'attributes' => ['defer' => true],
+        ],
         'zoosper-admin-editor-script' => [
             'type' => 'script',
             'path' => '/assets/admin/js/zoosper-content-editor.js',
