@@ -21,6 +21,7 @@ return [
         '/app/',
         '/config/',
         '/modules/',
+        '/themes/',
         '/tools/',
         '/logs/',
         '/log/',

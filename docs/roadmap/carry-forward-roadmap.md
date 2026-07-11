@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Local Editor.js asset bundling foundation.
 - Build pipeline and repository structure hygiene.
+- Public theme asset cleanup and admin asset consolidation.
 
 ## Future TODOs
 
