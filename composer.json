@@ -7,6 +7,7 @@
         "php": "^8.5",
         "ext-pdo": "*",
         "bacon/bacon-qr-code": "^3.0",
+        "ezyang/htmlpurifier": "^4.19",
         "latte/latte": "^3.1",
         "marko/database": "^0.8",
         "marko/database-mysql": "^0.8",
