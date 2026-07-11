@@ -9,5 +9,16 @@ return [
             'path' => '/assets/admin/css/admin.css',
             'sort_order' => 10,
         ],
+        'zoosper-admin-messages-style' => [
+            'type' => 'style',
+            'path' => '/assets/admin/css/zoosper-admin-messages.css',
+            'sort_order' => 20,
+        ],
+        'zoosper-admin-messages-script' => [
+            'type' => 'script',
+            'path' => '/assets/admin/js/zoosper-admin-messages.js',
+            'sort_order' => 20,
+            'attributes' => ['defer' => true],
+        ],
     ],
 ];

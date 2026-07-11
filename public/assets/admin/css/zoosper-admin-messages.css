@@ -1,0 +1,54 @@
+.admin-flash-messages {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1rem 1.5rem 0;
+}
+
+.admin-flash-message {
+    align-items: flex-start;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.admin-flash-message--success {
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+    color: #065f46;
+}
+
+.admin-flash-message--error {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.admin-flash-message--warning {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+}
+
+.admin-flash-message--info {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1e40af;
+}
+
+.admin-flash-message__text {
+    line-height: 1.45;
+}
+
+.admin-flash-message__dismiss {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    font-size: 1.25rem;
+    line-height: 1;
+    padding: 0;
+}

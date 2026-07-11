@@ -12,6 +12,7 @@
  * @var list<\Zoosper\Admin\Asset\AdminAsset> $scripts
  * @var string $assetStylesHtml
  * @var string $assetScriptsHtml
+ * @var string $flashMessagesHtml
  */
 ?>
 <!doctype html>
@@ -37,6 +38,7 @@
     <section class="admin-main">
         <header class="admin-topbar"><strong><?= $e($title) ?></strong><span class="muted"><?= $e($userName) ?></span></header>
         <?= $slot('before.content') ?>
+        <?= $flashMessagesHtml ?? '' ?>
         <main class="admin-content"><?= $content ?></main>
         <?= $slot('after.content') ?>
     </section>

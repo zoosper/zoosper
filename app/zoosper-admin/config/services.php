@@ -11,6 +11,9 @@ use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Admin\Form\AdminFormUiConfigLoader;
 use Zoosper\Admin\Layout\AdminLayout;
+use Zoosper\Admin\Message\FlashMessageRenderer;
+use Zoosper\Admin\Message\FlashMessageStoreInterface;
+use Zoosper\Admin\Message\SessionFlashMessageStore;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuLoader;
 use Zoosper\Admin\UI\AdminComponentRenderer;
@@ -18,7 +21,6 @@ use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Module\ModuleRegistry;
-use Zoosper\Theme\Template\TemplateRenderer;
 
 return [
     LoginHistoryRepository::class => static fn (ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
@@ -29,6 +31,8 @@ return [
     AdminAssetViewDataProvider::class => static fn (ServiceContainer $services): AdminAssetViewDataProvider => new AdminAssetViewDataProvider($services->get(AdminAssetRegistry::class)),
     AdminAssetTemplateRenderer::class => static fn (ServiceContainer $services): AdminAssetTemplateRenderer => new AdminAssetTemplateRenderer($services->get(AdminAssetRegistry::class)),
     AssetPathResolver::class => static fn (ServiceContainer $services): AssetPathResolver => new AssetPathResolver($services->get(ConfigRepository::class)),
+    FlashMessageStoreInterface::class => static fn (ServiceContainer $services): FlashMessageStoreInterface => new SessionFlashMessageStore(),
+    FlashMessageRenderer::class => static fn (ServiceContainer $services): FlashMessageRenderer => new FlashMessageRenderer(),
     AdminMenu::class => static fn (ServiceContainer $services): AdminMenu => new AdminMenu(new AdminMenuLoader($services->get(ModuleRegistry::class))),
     AdminLayout::class => static fn (ServiceContainer $services): AdminLayout => new AdminLayout(
         $services->get(AdminMenu::class),
@@ -36,6 +40,8 @@ return [
         $services->get('theme.admin_template_renderer'),
         $services->get(AdminAssetTemplateRenderer::class),
         $services->get(AdminAssetViewDataProvider::class),
+        $services->get(FlashMessageStoreInterface::class),
+        $services->get(FlashMessageRenderer::class),
     ),
     AdminViewRenderer::class => static fn (ServiceContainer $services): AdminViewRenderer => new AdminViewRenderer(
         $services->get('theme.admin_template_renderer'),

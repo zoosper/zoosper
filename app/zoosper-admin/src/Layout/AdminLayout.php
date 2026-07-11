@@ -6,6 +6,8 @@ namespace Zoosper\Admin\Layout;
 
 use Zoosper\Admin\Asset\AdminAssetTemplateRenderer;
 use Zoosper\Admin\Asset\AdminAssetViewDataProvider;
+use Zoosper\Admin\Message\FlashMessageRenderer;
+use Zoosper\Admin\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuItem;
 use Zoosper\Auth\Model\AdminUser;
@@ -21,21 +23,17 @@ final readonly class AdminLayout
         private ?TemplateRenderer $templates = null,
         private ?AdminAssetTemplateRenderer $assetRenderer = null,
         private ?AdminAssetViewDataProvider $assetViewData = null,
+        private ?FlashMessageStoreInterface $flashMessages = null,
+        private ?FlashMessageRenderer $flashRenderer = null,
     ) {
     }
 
     /**
      * Render the admin shell around a trusted admin content fragment.
      *
-     * Module-owned admin assets are injected into the layout data so features
-     * such as tag selectors and future editors can contribute CSS/JS without
-     * hard-coding paths here. Asset data must remain static and must never carry
-     * OTPs, TOTP secrets, recovery codes, payment data, session IDs or other
-     * runtime-sensitive values.
-     *
-     * The rendered navigation includes a POST-based logout form when an admin
-     * user is authenticated. Logout remains POST-only so it is not accidentally
-     * triggered by crawlers, previews or copied GET links.
+     * Flash messages are pulled exactly once per rendered layout. They are short
+     * admin UI notices only and must never include secrets, OTPs, reset tokens,
+     * payment data, raw exception traces, session IDs or SMTP passwords.
      */
     public function render(string $title, string $content, ?AdminUser $user, string $active = 'dashboard'): string
     {
@@ -47,6 +45,7 @@ final readonly class AdminLayout
             'stylesheets' => [],
             'scripts' => [],
         ];
+        $flashMessagesHtml = $this->flashRenderer?->render($this->flashMessages?->pull() ?? []) ?? '';
 
         return $templates->render('layout.php', [
             'title' => $title,
@@ -58,16 +57,12 @@ final readonly class AdminLayout
             'scripts' => $assetData['scripts'],
             'assetStylesHtml' => $this->assetRenderer?->stylesHtml() ?? '',
             'assetScriptsHtml' => $this->assetRenderer?->scriptsHtml() ?? '',
+            'flashMessagesHtml' => $flashMessagesHtml,
         ]);
     }
 
     /**
      * Build the admin navigation HTML for the current user.
-     *
-     * The logout action is appended inside the navigation as a form that submits
-     * to the configured admin base path. It deliberately does not include any
-     * runtime-sensitive values such as OTPs, TOTP secrets, recovery codes,
-     * payment data, session IDs or SMTP credentials.
      */
     private function navigation(AdminUser $user, string $active): string
     {
