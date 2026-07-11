@@ -2,13 +2,13 @@
 
 ## Completed foundations
 
-- Runtime path safety and HTMLPurifier cache outside public.
 - Block JSON content model planning foundation.
+- Page content format schema foundation.
 
 ## Future TODOs
 
-- Add database migration for `content_format` and `content_json`/block storage.
-- Add page repository support for block_json content.
+- Update page repository for dual html/block_json content.
+- Add Editor.js JSON hidden field and server-side block_json validation on save.
 - Add server-side block renderer integration.
 - Add media library with uploads stored outside public first.
 - Add quote, delimiter, table and button blocks after renderer contracts are ready.
