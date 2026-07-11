@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Page content format schema foundation.
 - Frontend sanitised HTML rendering fix.
+- Theme module page view noescape fix.
 
 ## Future TODOs
 
