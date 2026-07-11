@@ -25,10 +25,9 @@ final readonly class PageRenderer
     /**
      * Render a CMS page through the selected frontend theme.
      *
-     * The renderer now passes the request-scoped site context to templates when
-     * available, so templates and future WYSIWYG/media helpers can build dynamic
-     * URLs without hard-coding store codes. It does not enable page caching by
-     * itself; cache context is only exposed through the shared template context.
+     * Phase 0.62 intentionally renders extensionless template names so the
+     * TemplateEngineRegistry can prefer `.latte` templates while keeping `.php`
+     * fallback templates available during the migration.
      */
     public function render(Page $page, Site $site): string
     {
@@ -49,6 +48,6 @@ final readonly class PageRenderer
 
         $content = $templates->render('zoosper-page::page/view', $data, $themeCode);
 
-        return $templates->renderLayout('layout.php', $content, $data, $themeCode);
+        return $templates->renderLayout('layout', $content, $data, $themeCode);
     }
 }

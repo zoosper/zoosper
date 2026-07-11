@@ -13,10 +13,11 @@
 - Template engine adapter foundation.
 - Latte template engine integration foundation.
 - Static asset publishing foundation.
+- Default frontend theme converted to Latte.
 
 ## Future TODOs
 
-- Convert default frontend theme to Latte.
+- HTML sanitiser / safe content rendering foundation before WYSIWYG.
 - CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
 - Static asset command: `php bin/zoosper static:publish`.
 - Vite/Tailwind asset pipeline.

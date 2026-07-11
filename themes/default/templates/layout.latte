@@ -1,0 +1,38 @@
+{* Default Zoosper frontend layout, converted to Latte in Phase 0.62. *}
+{var $title = isset($site) && isset($site->name) ? $site->name : 'Zoosper'}
+{if isset($page) && isset($page->title) && $page->title !== ''}
+    {var $title = $page->title}
+{/if}
+{if isset($page) && isset($page->metaTitle) && $page->metaTitle !== ''}
+    {var $title = $page->metaTitle}
+{/if}
+{var $siteName = isset($site) && isset($site->name) ? $site->name : 'Zoosper'}
+{var $locale = isset($siteContext) && isset($siteContext->locale) ? $siteContext->locale : 'en_AU'}
+{var $homeUrl = isset($cdn) && isset($siteContext) ? $cdn->dynamicForContext('/', $siteContext) : '/'}
+{var $stylesheetUrl = isset($cdn) ? $cdn->staticAsset('/themes/default/assets/css/app.css') : '/themes/default/assets/css/app.css'}
+{var $currentYear = date('Y')}
+<!doctype html>
+<html lang="{$locale}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{$title}</title>
+    <link rel="stylesheet" href="{$stylesheetUrl}">
+</head>
+<body class="zoosper-frontend">
+<header class="site-header">
+    <div class="site-header__inner">
+        <a class="site-header__brand" href="{$homeUrl}">{$siteName}</a>
+        <span n:if="isset($versionLabel) && $versionLabel !== ''" class="site-header__version">{$versionLabel}</span>
+    </div>
+</header>
+
+<main class="site-main" id="main-content">
+    {$content|noescape}
+</main>
+
+<footer class="site-footer">
+    <small>&copy; {$currentYear} {$siteName}</small>
+</footer>
+</body>
+</html>
