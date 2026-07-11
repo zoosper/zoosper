@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace Zoosper\Core\Module;
 
 /**
- * Discovers Zoosper modules from core app modules and custom/community modules.
+ * Discovers Zoosper modules from core, local/project and Composer packages.
  *
- * Core modules live under `app/zoosper-*`. Project-specific or marketplace-style
- * modules should live under `modules/<module>/module.php` or
- * `modules/<vendor>/<module>/module.php`. Custom modules can override core
- * service IDs by using a higher module `sort_order` in module.php and declaring
- * matching service IDs in config/services.php.
+ * Discovery locations:
+ *
+ * - app/<module>/module.php for product-owned Zoosper modules.
+ * - modules/<module>/module.php for simple local modules.
+ * - modules/<vendor>/<module>/module.php for project/community modules.
+ * - vendor packages with composer type "zoosper-module" or extra.zoosper.module.
+ *
+ * Custom and marketplace modules should not edit core files. They can contribute
+ * routes, services, schemas, templates and assets through their own config files.
  */
 final readonly class ModuleRegistry
 {
@@ -24,10 +28,14 @@ final readonly class ModuleRegistry
      */
     public function enabledModules(): array
     {
-        return array_values(array_filter(
+        $modules = array_values(array_filter(
             $this->allModules(),
             static fn (ModuleDefinition $module): bool => $module->enabled,
         ));
+
+        (new ModuleDependencyValidator())->validate($modules);
+
+        return $modules;
     }
 
     /**
@@ -78,6 +86,10 @@ final readonly class ModuleRegistry
             foreach (glob($root . '/*/*/module.php') ?: [] as $moduleFile) {
                 $files[] = $moduleFile;
             }
+        }
+
+        foreach ((new ComposerModuleDiscovery($this->basePath))->moduleFiles() as $moduleFile) {
+            $files[] = $moduleFile;
         }
 
         $files = array_values(array_unique($files));

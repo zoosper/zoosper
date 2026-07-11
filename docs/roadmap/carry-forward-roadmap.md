@@ -7,6 +7,7 @@
 - Cache context and AJAX fragment strategy foundation.
 - Render context wiring foundation.
 - Module service provider / DI foundation.
+- Composer marketplace module discovery foundation.
 
 ## Recommended next phases
 
@@ -16,10 +17,4 @@
 4. Cache Manager Design.
 5. CDN provider/purge adapter.
 6. Index Manager.
-
-## Service provider roadmap
-
-- Add module dependency validation.
-- Add config cache / compiled services.
-- Add preferences/decorators/interceptors if truly needed.
-- Add marketplace module packaging conventions.
+7. Documentation website build pipeline.
