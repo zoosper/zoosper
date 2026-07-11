@@ -2,13 +2,13 @@
 
 ## Completed foundations
 
-- Public webroot hardening and upload surface audit.
 - Admin flash/toast message foundation.
+- Content editor adapter foundation.
 
 ## Future TODOs
 
-- AJAX/non-reload save message contract.
-- WYSIWYG Editor Integration for CMS pages.
+- Bundle Editor.js locally and migrate to block_json storage.
+- WYSIWYG/Block editor save message improvements.
 - Media library with uploads stored outside public first.
 - CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
 - Static asset command: `php bin/zoosper static:publish`.

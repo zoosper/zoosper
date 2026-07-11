@@ -2,25 +2,32 @@
 
 declare(strict_types=1);
 
-$env = static function (string $key, mixed $default = null): mixed {
-    if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
-        return $_ENV[$key];
-    }
-
-    $value = getenv($key);
-    return $value !== false && $value !== '' ? $value : $default;
-};
+$env = static fn (string $key, mixed $default = null): mixed => $_ENV[$key] ?? getenv($key) ?: $default;
 
 return [
     /*
-     * Default editor strategy for large admin content fields.
-     *
-     * Keep this configurable so deployments can choose textarea-only mode,
-     * Editor.js block JSON, or a future Tiptap rich text adapter without
-     * changing controller code.
+     * Default admin content editor code. Editor.js is the preferred modern
+     * direction, but textarea fallback remains available and is used whenever
+     * the JavaScript editor library is unavailable.
      */
-    'enabled' => filter_var($env('ADMIN_WYSIWYG_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
-    'provider' => (string) $env('ADMIN_WYSIWYG_PROVIDER', 'editorjs'),
-    'allow_toggle' => true,
-    'store_format' => (string) $env('ADMIN_WYSIWYG_STORE_FORMAT', 'json'),
+    'default_editor' => (string) $env('CONTENT_EDITOR', 'editorjs'),
+    'fallback_editor' => 'textarea',
+    'allow_custom_editors' => true,
+
+    /*
+     * Current persistence format remains sanitised HTML. A later content-model
+     * phase should add block_json storage and block rendering.
+     */
+    'current_content_format' => 'html',
+    'future_content_format' => 'block_json',
+
+    /*
+     * Editor.js itself is not bundled in this phase. The adapter renders safe
+     * hooks and keeps textarea as source of truth until local npm/Vite asset
+     * packaging is added.
+     */
+    'editorjs' => [
+        'enabled' => filter_var($env('EDITORJS_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+        'library_loaded_by_theme' => filter_var($env('EDITORJS_LIBRARY_LOADED_BY_THEME', false), FILTER_VALIDATE_BOOLEAN),
+    ],
 ];

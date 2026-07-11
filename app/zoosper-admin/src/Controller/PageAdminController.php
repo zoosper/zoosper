@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Controller;
 
 use RuntimeException;
+use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\UI\AdminViewRenderer;
@@ -37,12 +38,10 @@ final readonly class PageAdminController
         private ?HtmlSanitizerInterface $htmlSanitizer = null,
         private ?FlashMessageStoreInterface $flashMessages = null,
         private ?ConfigRepository $config = null,
+        private ?ContentEditorInterface $contentEditor = null,
     ) {
     }
 
-    /**
-     * Render the admin pages grid.
-     */
     public function index(Request $request): Response
     {
         $user = $this->requirePageManager();
@@ -115,9 +114,6 @@ HTML;
 HTML);
     }
 
-    /**
-     * Render the create page form.
-     */
     public function createForm(Request $request): Response
     {
         if ($this->requirePageManager() === null) {
@@ -127,12 +123,6 @@ HTML);
         return $this->html('Create page', $this->form($this->adminUrl('/pages/create')));
     }
 
-    /**
-     * Create a CMS page from submitted admin form data.
-     *
-     * Rich HTML content is sanitised before persistence so frontend Latte
-     * templates can render existing CMS HTML intentionally using `|noescape`.
-     */
     public function create(Request $request): Response
     {
         $user = $this->requirePageManager();
@@ -175,9 +165,6 @@ HTML);
         }
     }
 
-    /**
-     * Render the edit page form.
-     */
     public function editForm(Request $request): Response
     {
         if ($this->requirePageManager() === null) {
@@ -192,9 +179,6 @@ HTML);
         return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page));
     }
 
-    /**
-     * Update an existing CMS page from submitted admin form data.
-     */
     public function update(Request $request): Response
     {
         $user = $this->requirePageManager();
@@ -246,9 +230,6 @@ HTML);
         }
     }
 
-    /**
-     * Render a preview of the selected page using the frontend renderer.
-     */
     public function preview(Request $request): Response
     {
         if ($this->requirePageManager() === null) {
@@ -268,19 +249,16 @@ HTML);
         return Response::html($this->renderer->render($page, $site));
     }
 
-    /** Publish the selected page. */
     public function publish(Request $request): Response
     {
         return $this->changeStatus($request, true);
     }
 
-    /** Unpublish the selected page. */
     public function unpublish(Request $request): Response
     {
         return $this->changeStatus($request, false);
     }
 
-    /** Change the selected page publication status. */
     private function changeStatus(Request $request, bool $publish): Response
     {
         $user = $this->requirePageManager();
@@ -311,13 +289,11 @@ HTML);
         return Response::redirect($this->adminUrl('/pages'));
     }
 
-    /** Require the current admin user to have page management permission. */
     private function requirePageManager(): ?AdminUser
     {
         return $this->guard->requirePermission(Permission::PageManage->value);
     }
 
-    /** Resolve a page entity from the request id query parameter. */
     private function pageFromRequest(Request $request): ?Page
     {
         $id = $request->query('id');
@@ -327,17 +303,12 @@ HTML);
             : null;
     }
 
-    /** Sanitise submitted CMS body HTML using the configured HTML sanitizer. */
     private function sanitiseContent(string $content): string
     {
         return $this->htmlSanitizer?->sanitise($content)->toString() ?? $content;
     }
 
-    /**
-     * Render the legacy page form.
-     *
-     * @param array<string, mixed> $submitted Previously submitted form values.
-     */
+    /** @param array<string, mixed> $submitted */
     private function form(string $action, ?Page $page = null, ?string $error = null, array $submitted = []): string
     {
         $token = $this->e($this->csrf->token());
@@ -350,6 +321,7 @@ HTML);
         $errorHtml = $error !== null ? '<p class="error">' . $this->e($error) . '</p>' : '';
         $backUrl = $this->e($this->adminUrl('/pages'));
         $safeAction = $this->e($action);
+        $editorHtml = $this->renderContentEditor($content, $page);
 
         return <<<HTML
 {$errorHtml}
@@ -358,14 +330,30 @@ HTML);
     <label>Site <select name="site_id" required>{$siteOptions}</select></label>
     <label>Title <input type="text" name="title" value="{$title}" required></label>
     <label>Slug <input type="text" name="slug" value="{$slug}" required></label>
-    <label>Content <textarea name="content" rows="14" required>{$content}</textarea></label>
+    <label>Content</label>
+    {$editorHtml}
     <label class="checkbox"><input type="checkbox" name="publish" value="1"{$publishChecked}> Publish page</label>
     <div class="toolbar"><button type="submit">Save page</button><a class="button secondary" href="{$backUrl}">Back</a></div>
 </form>
 HTML;
     }
 
-    /** Build site select options for the legacy page form. */
+    private function renderContentEditor(string $escapedContent, ?Page $page = null): string
+    {
+        $content = html_entity_decode($escapedContent, ENT_QUOTES, 'UTF-8');
+
+        if ($this->contentEditor === null) {
+            return '<textarea name="content" rows="14" required>' . $escapedContent . '</textarea>';
+        }
+
+        return $this->contentEditor->render('content', $content, [
+            'label' => 'Content',
+            'rows' => 14,
+            'required' => true,
+            'page' => $page,
+        ]);
+    }
+
     private function siteOptions(int $selectedSiteId): string
     {
         $html = '';
@@ -438,7 +426,6 @@ HTML;
         return (string) $this->pageValue($page, 'status') === 'published';
     }
 
-    /** Normalise submitted page slugs into URL-safe lowercase slugs. */
     private function normaliseSlug(string $slug): string
     {
         $slug = strtolower(trim($slug));
@@ -447,7 +434,6 @@ HTML;
         return trim($slug, '-');
     }
 
-    /** Render admin HTML using the admin layout. */
     private function html(string $title, string $content, int $statusCode = 200): Response
     {
         return Response::html(
@@ -456,7 +442,6 @@ HTML;
         );
     }
 
-    /** Build an admin URL from config/admin.php rather than hard-coding /admin. */
     private function adminUrl(string $path): string
     {
         $adminConfig = $this->config?->array('admin') ?? [];
@@ -465,7 +450,6 @@ HTML;
         return rtrim($basePath, '/') . '/' . ltrim($path, '/');
     }
 
-    /** Escape HTML output. */
     private function e(string $value): string
     {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');

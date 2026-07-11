@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Admin\Controller\PageAdminController;
+use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\UI\AdminViewRenderer;
@@ -29,5 +30,6 @@ return [
         $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,
         $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
+        $services->has(ContentEditorInterface::class) ? $services->get(ContentEditorInterface::class) : null,
     ),
 ];

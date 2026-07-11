@@ -1,0 +1,37 @@
+.zoosper-content-editor {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.zoosper-content-editor__toolbar {
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.65rem 0.8rem;
+}
+
+.zoosper-content-editor__status {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.zoosper-content-editor__holder {
+    display: none;
+}
+
+.zoosper-content-editor.is-editorjs-active .zoosper-content-editor__holder {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    display: block;
+    min-height: 12rem;
+    padding: 1rem;
+}
+
+.admin-content-editor--textarea {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    width: 100%;
+}

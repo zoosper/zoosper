@@ -9,6 +9,10 @@ use Zoosper\Admin\Asset\AssetPathResolver;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
+use Zoosper\Admin\Editor\ContentEditorInterface;
+use Zoosper\Admin\Editor\ContentEditorRegistry;
+use Zoosper\Admin\Editor\EditorJsContentEditor;
+use Zoosper\Admin\Editor\TextareaContentEditor;
 use Zoosper\Admin\Form\AdminFormUiConfigLoader;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Message\FlashMessageRenderer;
@@ -33,6 +37,19 @@ return [
     AssetPathResolver::class => static fn (ServiceContainer $services): AssetPathResolver => new AssetPathResolver($services->get(ConfigRepository::class)),
     FlashMessageStoreInterface::class => static fn (ServiceContainer $services): FlashMessageStoreInterface => new SessionFlashMessageStore(),
     FlashMessageRenderer::class => static fn (ServiceContainer $services): FlashMessageRenderer => new FlashMessageRenderer(),
+    TextareaContentEditor::class => static fn (ServiceContainer $services): TextareaContentEditor => new TextareaContentEditor(),
+    EditorJsContentEditor::class => static fn (ServiceContainer $services): EditorJsContentEditor => new EditorJsContentEditor($services->get(TextareaContentEditor::class)),
+    ContentEditorRegistry::class => static fn (ServiceContainer $services): ContentEditorRegistry => new ContentEditorRegistry(
+        $services->get(EditorJsContentEditor::class),
+        $services->get(TextareaContentEditor::class),
+    ),
+    ContentEditorInterface::class => static function (ServiceContainer $services): ContentEditorInterface {
+        $config = $services->get(ConfigRepository::class)->array('editor');
+        $preferred = (string) ($config['default_editor'] ?? 'editorjs');
+        $fallback = (string) ($config['fallback_editor'] ?? 'textarea');
+
+        return $services->get(ContentEditorRegistry::class)->preferred($preferred, $fallback);
+    },
     AdminMenu::class => static fn (ServiceContainer $services): AdminMenu => new AdminMenu(new AdminMenuLoader($services->get(ModuleRegistry::class))),
     AdminLayout::class => static fn (ServiceContainer $services): AdminLayout => new AdminLayout(
         $services->get(AdminMenu::class),
