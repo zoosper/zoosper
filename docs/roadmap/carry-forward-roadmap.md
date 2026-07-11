@@ -16,11 +16,12 @@
 - Default frontend theme converted to Latte.
 - HTML sanitiser foundation.
 - Page content sanitisation on save.
+- Existing page content sanitisation audit/repair tools.
 
 ## Future TODOs
 
+- Modern flash/toast message system for admin forms. It should show success/failure without piling messages and should support AJAX/non-reload saves later.
 - WYSIWYG Editor Integration for CMS pages.
-- HTML sanitisation change notices for editors.
 - CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
 - Static asset command: `php bin/zoosper static:publish`.
 - Vite/Tailwind asset pipeline.
