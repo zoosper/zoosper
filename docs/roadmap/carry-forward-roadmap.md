@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Block JSON content model planning foundation.
 - Page content format schema foundation.
+- Frontend sanitised HTML rendering fix.
 
 ## Future TODOs
 
