@@ -15,38 +15,36 @@
         root.innerHTML = html || '';
         var blocks = [];
 
-        Array.prototype.slice.call(root.children).forEach(function (element) {
+        Array.prototype.slice.call(root.childNodes).forEach(function (node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                var plainText = node.textContent.trim();
+                if (plainText !== '') {
+                    blocks.push({ type: 'paragraph', data: { text: textToSafeInlineHtml(plainText) } });
+                }
+                return;
+            }
+
+            if (node.nodeType !== Node.ELEMENT_NODE) {
+                return;
+            }
+
+            var element = node;
             var tag = element.tagName.toLowerCase();
-            var text = element.innerHTML.trim();
-
-            if (text === '') {
+            if (tag === 'script' || tag === 'style' || tag === 'iframe' || tag === 'object' || tag === 'embed') {
                 return;
             }
 
-            // Phase 0.72 intentionally uses paragraph blocks only. Header/list
-            // tools and true block_json storage are deferred to later phases.
-            if (tag === 'script' || tag === 'style' || tag === 'iframe') {
-                return;
+            var htmlText = element.innerHTML.trim();
+            if (htmlText !== '') {
+                blocks.push({ type: 'paragraph', data: { text: htmlText } });
             }
-
-            blocks.push({
-                type: 'paragraph',
-                data: { text: text }
-            });
         });
 
-        if (blocks.length === 0 && root.textContent.trim() !== '') {
-            blocks.push({
-                type: 'paragraph',
-                data: { text: textToSafeInlineHtml(root.textContent.trim()) }
-            });
+        if (blocks.length === 0) {
+            blocks.push({ type: 'paragraph', data: { text: '' } });
         }
 
-        return {
-            time: Date.now(),
-            blocks: blocks,
-            version: '2.x'
-        };
+        return { time: Date.now(), blocks: blocks, version: '2.x' };
     }
 
     function editorDataToHtml(data) {
@@ -58,7 +56,6 @@
             if (!block || block.type !== 'paragraph') {
                 return '';
             }
-
             var text = block.data && typeof block.data.text === 'string' ? block.data.text : '';
             return text.trim() === '' ? '' : '<p>' + text + '</p>';
         }).filter(Boolean).join('\n');
@@ -69,10 +66,30 @@
         return function () {
             var args = arguments;
             clearTimeout(timer);
-            timer = setTimeout(function () {
-                callback.apply(null, args);
-            }, delay);
+            timer = setTimeout(function () { callback.apply(null, args); }, delay);
         };
+    }
+
+    function setStatus(status, text) {
+        if (status) {
+            status.textContent = text;
+        }
+    }
+
+    function activateEditor(wrapper, holder, textarea, status) {
+        holder.setAttribute('aria-hidden', 'false');
+        wrapper.classList.add('is-editorjs-ready');
+        wrapper.classList.add('is-editorjs-active');
+        textarea.setAttribute('data-zoosper-editor-source', 'html');
+        setStatus(status, 'Editor.js ready. Saves still pass through server-side HTML sanitisation.');
+    }
+
+    function fallbackToTextarea(wrapper, holder, textarea, status, message) {
+        wrapper.classList.remove('is-editorjs-ready');
+        wrapper.classList.remove('is-editorjs-active');
+        holder.setAttribute('aria-hidden', 'true');
+        textarea.removeAttribute('data-zoosper-editor-source');
+        setStatus(status, message || 'Textarea fallback active.');
     }
 
     function initialiseEditor(wrapper) {
@@ -85,16 +102,11 @@
             return;
         }
 
-        if (typeof window.EditorJS !== 'function') {
-            if (status) {
-                status.textContent = 'Textarea fallback active. Run npm build to enable local Editor.js.';
-            }
-            return;
-        }
+        fallbackToTextarea(wrapper, holder, textarea, status, 'Textarea fallback active while Editor.js loads.');
 
-        wrapper.classList.add('is-editorjs-active');
-        if (status) {
-            status.textContent = 'Editor.js active. Saving still uses sanitised HTML.';
+        if (typeof window.EditorJS !== 'function') {
+            fallbackToTextarea(wrapper, holder, textarea, status, 'Textarea fallback active. Local Editor.js bundle was not loaded.');
+            return;
         }
 
         var editor = new window.EditorJS({
@@ -105,17 +117,23 @@
                 editor.save().then(function (data) {
                     textarea.value = editorDataToHtml(data);
                 }).catch(function () {
-                    if (status) {
-                        status.textContent = 'Editor sync failed. Textarea fallback remains available.';
-                    }
-                    wrapper.classList.remove('is-editorjs-active');
+                    fallbackToTextarea(wrapper, holder, textarea, status, 'Editor sync failed. Textarea fallback remains available.');
                 });
             }, 250)
         });
 
+        editor.isReady.then(function () {
+            activateEditor(wrapper, holder, textarea, status);
+            return editor.save();
+        }).then(function (data) {
+            textarea.value = editorDataToHtml(data);
+        }).catch(function () {
+            fallbackToTextarea(wrapper, holder, textarea, status, 'Editor.js failed to initialise. Textarea fallback remains available.');
+        });
+
         if (form) {
             form.addEventListener('submit', function (event) {
-                if (!wrapper.classList.contains('is-editorjs-active')) {
+                if (!wrapper.classList.contains('is-editorjs-ready')) {
                     return;
                 }
 
@@ -124,7 +142,7 @@
                     textarea.value = editorDataToHtml(data);
                     form.submit();
                 }).catch(function () {
-                    wrapper.classList.remove('is-editorjs-active');
+                    fallbackToTextarea(wrapper, holder, textarea, status, 'Editor submit sync failed. Submitting textarea fallback.');
                     form.submit();
                 });
             });

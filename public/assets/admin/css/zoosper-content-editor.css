@@ -22,16 +22,21 @@
     display: none;
 }
 
-.zoosper-content-editor.is-editorjs-active .zoosper-content-editor__holder {
+.zoosper-content-editor.is-editorjs-ready .zoosper-content-editor__holder {
     background: #ffffff;
     border: 1px solid #cbd5e1;
     border-radius: 0.5rem;
     display: block;
-    min-height: 14rem;
+    min-height: 16rem;
     padding: 1rem;
 }
 
-.zoosper-content-editor.is-editorjs-active .admin-content-editor--textarea {
+.zoosper-content-editor.is-editorjs-ready .zoosper-content-editor__holder:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.zoosper-content-editor.is-editorjs-ready .admin-content-editor--textarea {
     height: 1px;
     left: -10000px;
     opacity: 0;
@@ -41,9 +46,14 @@
 
 .admin-content-editor--textarea {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    min-height: 14rem;
     width: 100%;
 }
 
 .codex-editor {
     color: #0f172a;
+}
+
+.codex-editor__redactor {
+    padding-bottom: 2rem !important;
 }

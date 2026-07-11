@@ -2,12 +2,12 @@
 
 ## Completed foundations
 
-- Public theme asset cleanup and admin asset consolidation.
 - Editor.js initialisation with safe textarea sync.
+- Editor.js runtime hardening and admin asset cache busting.
 
 ## Future TODOs
 
-- Add Editor.js header/list tools.
+- Add Editor.js header/list tools with safe HTML bridge.
 - Add block_json storage and validation.
 - Add server-side block renderer.
 - Media library with uploads stored outside public first.
@@ -20,3 +20,4 @@
 - CDN provider/purge adapter.
 - Index Manager.
 - Documentation website build pipeline.
+- Add pagination to all search result grids. e.g. CMS page, audit logs, login history etc.
