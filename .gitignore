@@ -7,3 +7,4 @@
 !.gitkeep
 .idea/
 /var/
+/node_modules/
