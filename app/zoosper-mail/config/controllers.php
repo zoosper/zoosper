@@ -12,6 +12,6 @@ return [
     EmailLogAdminController::class => static fn (ServiceContainer $services): EmailLogAdminController => new EmailLogAdminController(
         $services->get(SessionGuard::class),
         $services->get(AdminLayout::class),
-        $services->has(EmailLogRepository::class) ? $services->get(EmailLogRepository::class) : new EmailLogRepository($services->get(PDO::class)),
+        $services->get(EmailLogRepository::class),
     ),
 ];
