@@ -1,9 +1,13 @@
 import EditorJS from '@editorjs/editorjs';
+import Header from '@editorjs/header';
+import EditorjsList from '@editorjs/list';
 
-// Expose Editor.js for Zoosper's small admin adapter.
+// Expose Editor.js and approved first-party tools for Zoosper's admin adapter.
 // The textarea remains the submitted source of truth until the block_json phase.
 window.EditorJS = EditorJS;
 window.ZoosperEditorJsBundle = {
   EditorJS,
-  version: 'phase-0.69'
+  Header,
+  EditorjsList,
+  version: 'phase-0.74'
 };

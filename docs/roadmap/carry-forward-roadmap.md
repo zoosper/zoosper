@@ -2,15 +2,15 @@
 
 ## Completed foundations
 
-- Editor.js initialisation with safe textarea sync.
 - Editor.js runtime hardening and admin asset cache busting.
+- Editor.js header/list tools with safe HTML bridge.
 
 ## Future TODOs
 
-- Add Editor.js header/list tools with safe HTML bridge.
 - Add block_json storage and validation.
 - Add server-side block renderer.
 - Media library with uploads stored outside public first.
+- Add quote, delimiter, table and button blocks after renderer contracts are ready.
 - CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
 - Static asset command: `php bin/zoosper static:publish`.
 - Consolidate developer tools into stable CLI commands.

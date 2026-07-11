@@ -6,7 +6,9 @@
     "build:admin-editor": "vite build --config vite.admin-editor.config.js"
   },
   "dependencies": {
-    "@editorjs/editorjs": "^2.30.8"
+    "@editorjs/editorjs": "^2.30.8",
+    "@editorjs/header": "^2.8.9",
+    "@editorjs/list": "^2.0.9"
   },
   "devDependencies": {
     "vite": "^6.0.0"
