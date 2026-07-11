@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Zoosper\Core\Url;
 
 use InvalidArgumentException;
+use Zoosper\Core\Site\SiteContext;
 
 /**
  * Resolves public URLs through separate dynamic, media and static CDN channels.
  *
- * Dynamic URLs can be scoped by store view. Media URLs are intended for uploaded
+ * Dynamic URLs can now be driven by a resolved SiteContext, so application code
+ * does not need to hard-code store codes. Media URLs are intended for uploaded
  * assets such as images/videos. Static URLs are intended for CSS, JavaScript,
  * JSON and immutable theme/module assets. This service must never receive or
  * embed credentials, OTPs, TOTP secrets, recovery-code plaintext, reset tokens,
@@ -25,11 +27,24 @@ final readonly class CdnUrlResolver
     }
 
     /**
-     * Resolve a store-view aware dynamic URL.
+     * Resolve a store-view aware dynamic URL by optional legacy store-view code.
+     *
+     * New request-aware consumers should prefer dynamicForContext() so store view
+     * resolution comes from SiteContext rather than hard-coded store codes.
      */
     public function dynamic(string $path = '/', ?string $storeCode = null): string
     {
         $baseUrl = $this->dynamicBaseUrl($storeCode);
+
+        return $this->join($baseUrl, $path);
+    }
+
+    /**
+     * Resolve a dynamic URL from the current site/store/store-view context.
+     */
+    public function dynamicForContext(string $path, SiteContext $context): string
+    {
+        $baseUrl = $context->baseUrl !== '' ? $context->baseUrl : $this->dynamicBaseUrl($context->storeViewCode);
 
         return $this->join($baseUrl, $path);
     }
@@ -103,17 +118,11 @@ final readonly class CdnUrlResolver
         return $this->join($baseUrl, $path);
     }
 
-    /**
-     * Normalise a configured base URL without adding secrets or query strings.
-     */
     private function baseUrl(string $baseUrl): string
     {
         return rtrim(trim($baseUrl), '/');
     }
 
-    /**
-     * Join a base URL and path safely.
-     */
     private function join(string $baseUrl, string $path): string
     {
         $path = $this->normalisePath($path);
@@ -125,9 +134,6 @@ final readonly class CdnUrlResolver
         return $baseUrl . '/' . ltrim($path, '/');
     }
 
-    /**
-     * Normalise a relative URL path.
-     */
     private function normalisePath(string $path): string
     {
         $path = trim($path);

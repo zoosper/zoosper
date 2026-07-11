@@ -1,20 +1,24 @@
 # Carry-forward roadmap
 
-## Completed in this phase
+## Completed foundation items
 
-- CDN Integration foundation: separate base URLs for dynamic links, media assets and static assets.
+- CDN URL foundation.
+- Site/store-view context foundation to avoid hard-coded store codes.
 
-## Remaining roadmap items
+## Recommended next phases
 
-1. WYSIWYG Editor Integration for CMS pages.
-2. Admin Role Page Refactor.
+1. Wire site context and CDN resolver into service container and renderers.
+2. WYSIWYG Editor Integration for CMS pages.
+3. Admin Role Page Refactor.
    - Improve organisation of large sections.
    - Add collapsible/toggle UI sections.
-3. Cache Manager Design.
-4. Index Manager.
+4. Cache Manager Design.
+5. Index Manager.
 
-## CDN follow-up work
+## Future site/store-view work
 
-- Wire `CdnUrlResolver` into renderers and asset path services.
-- Add admin UI for CDN settings if configuration should move beyond `.env`.
-- Add media-library integration once media module exists.
+- Database-backed websites, stores and store views.
+- Admin UI for site/store-view management.
+- Store-view scoped config cascade.
+- SEO hreflang/canonical integration.
+- Store-view aware media/static CDN overrides if required.
