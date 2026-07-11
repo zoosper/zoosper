@@ -9,14 +9,15 @@
 - Module service provider / DI foundation.
 - Composer marketplace module discovery foundation.
 - Developer-friendly error diagnostics foundation.
+- Frontend template CDN/static/media URL usage foundation.
 
-## Recommended next phases
+## Future TODOs
 
-1. Frontend template CDN/static/media URL usage.
-2. WYSIWYG Editor Integration for CMS pages.
-3. Admin Role Page Refactor.
-4. Cache Manager Design.
-5. CDN provider/purge adapter.
-6. Index Manager.
-7. Documentation website build pipeline.
-8. Rich development error page with code frame and AI-debug export.
+- CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
+- WYSIWYG Editor Integration for CMS pages.
+- Admin Role Page Refactor.
+- Cache Manager Design.
+- CDN provider/purge adapter.
+- Index Manager.
+- Documentation website build pipeline.
+- Rich developer browser error page with code frame and AI-debug export.
