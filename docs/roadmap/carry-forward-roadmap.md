@@ -12,11 +12,14 @@
 - Frontend template CDN/static/media URL usage foundation.
 - Template engine adapter foundation.
 - Latte template engine integration foundation.
+- Static asset publishing foundation.
 
 ## Future TODOs
 
 - Convert default frontend theme to Latte.
 - CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
+- Static asset command: `php bin/zoosper static:publish`.
+- Vite/Tailwind asset pipeline.
 - WYSIWYG Editor Integration for CMS pages.
 - Admin Role Page Refactor.
 - Cache Manager Design.
