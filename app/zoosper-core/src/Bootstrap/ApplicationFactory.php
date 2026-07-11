@@ -25,6 +25,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\App\CmsVersion;
+use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Database\ConnectionFactory;
@@ -40,6 +41,12 @@ use Zoosper\Core\Routing\ControllerProviderLoader;
 use Zoosper\Core\Routing\ModuleRouteLoader;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
+use Zoosper\Core\Site\CurrentSiteContext;
+use Zoosper\Core\Site\SiteContextResolver;
+use Zoosper\Core\Site\SiteContextResolverFactory;
+use Zoosper\Core\Url\CdnUrlResolver;
+use Zoosper\Core\Url\CdnUrlResolverFactory;
+use Zoosper\Core\View\TemplateViewContextProvider;
 use Zoosper\Mail\Config\SmtpConfig;
 use Zoosper\Mail\Transport\MailerInterface;
 use Zoosper\Mail\Transport\SmtpMailer;
@@ -64,9 +71,9 @@ final class ApplicationFactory
      * directly. Modules should register controllers through their own
      * `config/controllers.php` files so they can be added or removed without
      * editing the core bootstrap. Shared cross-cutting infrastructure, such as
-     * admin layout asset discovery, mail transport configuration and 2FA reset
-     * services, is registered here once and consumed by modules through the
-     * service container.
+     * site context, CDN URL resolution, cache-key helpers, admin layout asset
+     * discovery, mail transport configuration and 2FA reset services, is
+     * registered here once and consumed by modules through the service container.
      */
     public static function create(string $basePath): Application
     {
@@ -83,6 +90,23 @@ final class ApplicationFactory
 
         $pdo = (new ConnectionFactory($config, $basePath))->create();
         $modules = new ModuleRegistry($basePath);
+
+        /*
+         * Request/site context and URL/cache helpers.
+         *
+         * These services let renderers and templates build context-aware dynamic,
+         * media and static URLs without hard-coding store codes. They also expose
+         * cache-key helpers but do not enable shared page caching by themselves.
+         */
+        $siteContextResolver = (new SiteContextResolverFactory($config))->create();
+        $currentSiteContext = new CurrentSiteContext($siteContextResolver);
+        $cdnUrlResolver = (new CdnUrlResolverFactory($config))->create();
+        $cacheKeyBuilder = new CacheKeyBuilder();
+        $templateViewContext = new TemplateViewContextProvider(
+            $currentSiteContext,
+            $cdnUrlResolver,
+            $cacheKeyBuilder,
+        );
 
         /*
          * Core repositories.
@@ -157,12 +181,14 @@ final class ApplicationFactory
             new ThemeResolver($basePath . '/themes', 'default'),
             $modules,
             $layoutUpdates,
+            $templateViewContext,
         );
 
         $adminTemplateRenderer = new TemplateRenderer(
             new ThemeResolver($basePath . '/themes/admin', 'default'),
             $modules,
             $layoutUpdates,
+            $templateViewContext,
         );
 
         /*
@@ -183,7 +209,7 @@ final class ApplicationFactory
          * Site/page rendering services.
          */
         $siteResolver = new SiteResolver($siteRepository);
-        $pageRenderer = new PageRenderer($frontendTemplateRenderer, $cmsVersion, $modules);
+        $pageRenderer = new PageRenderer($frontendTemplateRenderer, $cmsVersion, $modules, $currentSiteContext);
 
         /*
          * Frontend fallback controller.
@@ -217,6 +243,12 @@ final class ApplicationFactory
         $services->set(LogManager::class, $logManager);
         $services->set(ErrorHandler::class, $errorHandler);
         $services->set(AdminFormUiConfigLoader::class, $adminFormUi);
+
+        $services->set(SiteContextResolver::class, $siteContextResolver);
+        $services->set(CurrentSiteContext::class, $currentSiteContext);
+        $services->set(CdnUrlResolver::class, $cdnUrlResolver);
+        $services->set(CacheKeyBuilder::class, $cacheKeyBuilder);
+        $services->set(TemplateViewContextProvider::class, $templateViewContext);
 
         $services->set(AdminUserRepository::class, $userRepository);
         $services->set(RoleRepository::class, $roleRepository);

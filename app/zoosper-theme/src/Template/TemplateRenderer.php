@@ -6,6 +6,7 @@ namespace Zoosper\Theme\Template;
 
 use RuntimeException;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\View\TemplateViewContextProvider;
 use Zoosper\Theme\Layout\LayoutUpdateRepository;
 use Zoosper\Theme\Theme\Theme;
 use Zoosper\Theme\Theme\ThemeResolver;
@@ -16,6 +17,7 @@ final readonly class TemplateRenderer
         private ThemeResolver $themes,
         private ?ModuleRegistry $modules = null,
         private ?LayoutUpdateRepository $layoutUpdates = null,
+        private ?TemplateViewContextProvider $viewContext = null,
     ) {
     }
 
@@ -51,6 +53,11 @@ final readonly class TemplateRenderer
 
         $template = $update?->replacementFor($template) ?? $template;
         $path = $this->resolveTemplatePath($theme, $template);
+
+        $data = array_replace(
+            $this->viewContext?->data(themeCode: $theme->code, routeName: $handle) ?? [],
+            $data,
+        );
 
         $e = static fn (mixed $value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
         $partial = fn (string $name, array $partialData = []): string => $this->partial($name, array_merge($data, $partialData), $theme->code, $handle);

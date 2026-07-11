@@ -6,6 +6,7 @@ namespace Zoosper\Page\Service;
 
 use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\Site\CurrentSiteContext;
 use Zoosper\Page\Model\Page;
 use Zoosper\Site\Model\Site;
 use Zoosper\Theme\Template\TemplateRenderer;
@@ -17,9 +18,18 @@ final readonly class PageRenderer
         private ?TemplateRenderer $templates = null,
         private ?CmsVersion $version = null,
         private ?ModuleRegistry $modules = null,
+        private ?CurrentSiteContext $currentSiteContext = null,
     ) {
     }
 
+    /**
+     * Render a CMS page through the selected frontend theme.
+     *
+     * The renderer now passes the request-scoped site context to templates when
+     * available, so templates and future WYSIWYG/media helpers can build dynamic
+     * URLs without hard-coding store codes. It does not enable page caching by
+     * itself; cache context is only exposed through the shared template context.
+     */
     public function render(Page $page, Site $site): string
     {
         $templates = $this->templates ?? new TemplateRenderer(
@@ -28,8 +38,17 @@ final readonly class PageRenderer
         );
         $themeCode = $site->themeCode;
         $versionLabel = ($this->version ?? new CmsVersion())->label();
-        $content = $templates->render('zoosper-page::page/view', ['page' => $page, 'site' => $site, 'versionLabel' => $versionLabel], $themeCode);
+        $siteContext = $this->currentSiteContext?->get();
 
-        return $templates->renderLayout('layout.php', $content, ['page' => $page, 'site' => $site, 'versionLabel' => $versionLabel], $themeCode);
+        $data = [
+            'page' => $page,
+            'site' => $site,
+            'siteContext' => $siteContext,
+            'versionLabel' => $versionLabel,
+        ];
+
+        $content = $templates->render('zoosper-page::page/view', $data, $themeCode);
+
+        return $templates->renderLayout('layout.php', $content, $data, $themeCode);
     }
 }
