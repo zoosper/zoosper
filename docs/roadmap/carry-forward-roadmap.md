@@ -3,11 +3,12 @@
 ## Completed foundation items
 
 - CDN URL foundation.
-- Site/store-view context foundation to avoid hard-coded store codes.
+- Site/store-view context foundation.
+- Cache context and AJAX fragment strategy foundation.
 
 ## Recommended next phases
 
-1. Wire site context and CDN resolver into service container and renderers.
+1. Wire site context, CDN resolver and cache context into service container/renderers.
 2. WYSIWYG Editor Integration for CMS pages.
 3. Admin Role Page Refactor.
    - Improve organisation of large sections.
@@ -15,10 +16,11 @@
 4. Cache Manager Design.
 5. Index Manager.
 
-## Future site/store-view work
+## Future cache work
 
-- Database-backed websites, stores and store views.
-- Admin UI for site/store-view management.
-- Store-view scoped config cascade.
-- SEO hreflang/canonical integration.
-- Store-view aware media/static CDN overrides if required.
+- Cache storage adapters.
+- Cache tags and invalidation.
+- Full-page cache middleware.
+- Block cache manager.
+- Fragment route registry.
+- CDN purge integration for Fastly/Cloudflare/other providers.
