@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Editor.js runtime hardening and admin asset cache busting.
 - Editor.js header/list tools with safe HTML bridge.
+- Runtime path safety and HTMLPurifier cache outside public.
 
 ## Future TODOs
 

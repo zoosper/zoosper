@@ -6,6 +6,7 @@ use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Filesystem\ProjectPathResolver;
 use Zoosper\Core\Html\HtmlSanitizerFactory;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Http\JsonResponder;
@@ -17,6 +18,7 @@ use Zoosper\Core\Url\CdnUrlResolverFactory;
 use Zoosper\Core\View\TemplateViewContextProvider;
 
 return [
+    ProjectPathResolver::class => static fn (ServiceContainer $services): ProjectPathResolver => ProjectPathResolver::fromCoreModule(),
     JsonResponder::class => static fn (ServiceContainer $services): JsonResponder => new JsonResponder(),
     CmsVersion::class => static fn (ServiceContainer $services): CmsVersion => new CmsVersion($services->get(ConfigRepository::class)),
     SiteContextResolver::class => static fn (ServiceContainer $services): SiteContextResolver => (new SiteContextResolverFactory($services->get(ConfigRepository::class)))->create(),
@@ -31,6 +33,11 @@ return [
     HtmlSanitizerFactory::class => static function (ServiceContainer $services): HtmlSanitizerFactory {
         /** @var array<string, mixed> $config */
         $config = $services->get(ConfigRepository::class)->array('html_sanitizer');
+        $paths = $services->get(ProjectPathResolver::class);
+        $cachePath = (string) ($config['cache_path'] ?? 'var/cache/htmlpurifier');
+        $config['cache_path'] = str_starts_with($cachePath, '/')
+            ? $cachePath
+            : $paths->varPath(str_starts_with($cachePath, 'var/') ? substr($cachePath, 4) : $cachePath);
 
         return new HtmlSanitizerFactory($config);
     },

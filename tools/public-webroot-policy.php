@@ -61,11 +61,19 @@ function zoosper_public_scan(string $basePath, array $policy): array
 
     $findings = [];
     if (!is_dir($publicPath)) {
-        return [[
-            'severity' => 'error',
-            'path' => 'public',
-            'reason' => 'public directory is missing',
-        ]];
+        return [['severity' => 'error', 'path' => 'public', 'reason' => 'public directory is missing']];
+    }
+
+    foreach ($blockedRoots as $root) {
+        $relativeRoot = '/' . trim((string) $root, '/') . '/';
+        $absoluteRoot = $publicPath . $relativeRoot;
+        if (file_exists($absoluteRoot)) {
+            $findings[] = [
+                'severity' => 'high',
+                'path' => rtrim($relativeRoot, '/'),
+                'reason' => 'blocked public root exists',
+            ];
+        }
     }
 
     $iterator = new RecursiveIteratorIterator(
@@ -75,8 +83,7 @@ function zoosper_public_scan(string $basePath, array $policy): array
 
     /** @var SplFileInfo $item */
     foreach ($iterator as $item) {
-        $relative = zoosper_public_relative_path($basePath, $item->getPathname());
-        $relative = '/' . ltrim($relative, '/');
+        $relative = '/' . ltrim(zoosper_public_relative_path($basePath, $item->getPathname()), '/');
         $blockedRoot = zoosper_public_is_under_blocked_root($relative, $blockedRoots);
 
         if ($blockedRoot !== null) {
