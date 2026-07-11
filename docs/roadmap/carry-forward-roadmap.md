@@ -11,10 +11,10 @@
 - Developer-friendly error diagnostics foundation.
 - Frontend template CDN/static/media URL usage foundation.
 - Template engine adapter foundation.
+- Latte template engine integration foundation.
 
 ## Future TODOs
 
-- Add Latte integration and sample `.latte` templates.
 - Convert default frontend theme to Latte.
 - CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
 - WYSIWYG Editor Integration for CMS pages.
