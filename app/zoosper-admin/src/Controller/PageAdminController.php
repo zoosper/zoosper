@@ -11,6 +11,7 @@ use Zoosper\Auth\Access\Permission;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Page\Admin\PageGridCriteria;
@@ -31,15 +32,16 @@ final readonly class PageAdminController
         private AdminLayout $layout,
         private ?AdminViewRenderer $views = null,
         private ?PageGridRepository $pageGrid = null,
+        private ?HtmlSanitizerInterface $htmlSanitizer = null,
     ) {
     }
 
     /**
      * Render the admin pages grid.
      *
-     * Uses the Phase 0.23 grid repository when available so /admin/pages can
-     * support pagination, search and filters. The legacy inline table remains
-     * as a fallback for safer incremental deployment.
+     * Uses the grid repository when available so /admin/pages can support
+     * pagination, search and filters. The legacy inline table remains as a
+     * fallback for safer incremental deployment.
      */
     public function index(Request $request): Response
     {
@@ -124,6 +126,12 @@ HTML);
 
     /**
      * Create a CMS page from submitted admin form data.
+     *
+     * Rich HTML content is sanitised before persistence so frontend Latte
+     * templates can render existing CMS HTML intentionally using `|noescape`.
+     * The sanitizer is strictly for CMS body HTML and must never be used for
+     * OTPs, TOTP secrets, recovery-code plaintext, reset tokens, SMTP passwords
+     * or payment data.
      */
     public function create(Request $request): Response
     {
@@ -146,7 +154,7 @@ HTML);
                 siteId: (int) ($form['site_id'] ?? 0),
                 title: trim((string) ($form['title'] ?? '')),
                 slug: $this->normaliseSlug((string) ($form['slug'] ?? '')),
-                content: (string) ($form['content'] ?? ''),
+                content: $this->sanitiseContent((string) ($form['content'] ?? '')),
                 status: isset($form['publish']) ? 'published' : 'draft',
                 userId: $user->id,
             );
@@ -180,6 +188,10 @@ HTML);
 
     /**
      * Update an existing CMS page from submitted admin form data.
+     *
+     * Submitted rich HTML is sanitised before it is stored. This preserves the
+     * existing content workflow while creating the safety boundary required for
+     * future WYSIWYG editor support.
      */
     public function update(Request $request): Response
     {
@@ -208,7 +220,7 @@ HTML);
                 siteId: (int) ($form['site_id'] ?? 0),
                 title: trim((string) ($form['title'] ?? '')),
                 slug: $this->normaliseSlug((string) ($form['slug'] ?? '')),
-                content: (string) ($form['content'] ?? ''),
+                content: $this->sanitiseContent((string) ($form['content'] ?? '')),
                 userId: $user->id,
             );
 
@@ -308,6 +320,14 @@ HTML);
         return $id !== null && ctype_digit($id)
             ? $this->pages->findById((int) $id)
             : null;
+    }
+
+    /**
+     * Sanitise submitted CMS body HTML using the configured HTML sanitizer.
+     */
+    private function sanitiseContent(string $content): string
+    {
+        return $this->htmlSanitizer?->sanitise($content)->toString() ?? $content;
     }
 
     /**

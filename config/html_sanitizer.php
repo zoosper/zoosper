@@ -19,12 +19,14 @@ return [
     'cache_path' => (string) $env('HTML_SANITIZER_CACHE_PATH', 'var/cache/htmlpurifier'),
 
     /*
-     * A restrictive baseline suitable for CMS body content. This is not meant
-     * for admin forms, OTP values, payment data, secrets, or token-bearing HTML.
+     * Restrictive baseline for CMS body content. Unsupported HTML Purifier tags
+     * such as figure/figcaption are intentionally omitted until explicit custom
+     * definitions are added. This config is not for OTPs, payment data, reset
+     * tokens, SMTP passwords or other secrets.
      */
     'allowed_elements' => (string) $env(
         'HTML_SANITIZER_ALLOWED_ELEMENTS',
-        'p,br,strong,b,em,i,u,ul,ol,li,a[href|title|target|rel],h2,h3,h4,h5,h6,blockquote,pre,code,img[src|alt|title|width|height],figure,figcaption,table,thead,tbody,tr,th,td'
+        'p,br,strong,b,em,i,u,ul,ol,li,a[href|title|target|rel],h2,h3,h4,h5,h6,blockquote,pre,code,img[src|alt|title|width|height],table,thead,tbody,tr,th,td'
     ),
 
     'allowed_schemes' => (string) $env('HTML_SANITIZER_ALLOWED_SCHEMES', 'http,https,mailto,tel'),

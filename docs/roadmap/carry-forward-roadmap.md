@@ -14,12 +14,13 @@
 - Latte template engine integration foundation.
 - Static asset publishing foundation.
 - Default frontend theme converted to Latte.
-- HTML sanitiser / safe content rendering foundation.
+- HTML sanitiser foundation.
+- Page content sanitisation on save.
 
 ## Future TODOs
 
-- Wire HTML sanitiser into page save/render flow.
 - WYSIWYG Editor Integration for CMS pages.
+- HTML sanitisation change notices for editors.
 - CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
 - Static asset command: `php bin/zoosper static:publish`.
 - Vite/Tailwind asset pipeline.

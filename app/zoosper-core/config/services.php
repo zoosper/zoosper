@@ -6,6 +6,8 @@ use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Html\HtmlSanitizerFactory;
+use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Site\CurrentSiteContext;
 use Zoosper\Core\Site\SiteContextResolver;
@@ -26,4 +28,11 @@ return [
         $services->get(CdnUrlResolver::class),
         $services->get(CacheKeyBuilder::class),
     ),
+    HtmlSanitizerFactory::class => static function (ServiceContainer $services): HtmlSanitizerFactory {
+        /** @var array<string, mixed> $config */
+        $config = $services->get(ConfigRepository::class)->array('html_sanitizer');
+
+        return new HtmlSanitizerFactory($config);
+    },
+    HtmlSanitizerInterface::class => static fn (ServiceContainer $services): HtmlSanitizerInterface => $services->get(HtmlSanitizerFactory::class)->create(),
 ];

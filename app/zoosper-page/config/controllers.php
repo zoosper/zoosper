@@ -8,6 +8,7 @@ use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Page\Admin\PageGridRepository;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
@@ -23,5 +24,6 @@ return [
         $services->get(AdminLayout::class),
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
         new PageGridRepository($services->get(\PDO::class)),
+        $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,
     ),
 ];
