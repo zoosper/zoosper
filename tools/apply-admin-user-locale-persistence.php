@@ -6,8 +6,8 @@ $basePath = require __DIR__ . '/bootstrap.php';
 $controllerPath = $basePath . '/app/zoosper-admin/src/Controller/UserAdminController.php';
 $repositoryPath = find_file_containing($basePath, 'class AdminUserRepository');
 
-print "Zoosper admin user locale persistence apply\n";
-print "===========================================\n\n";
+print "Zoosper admin user locale persistence hotfix\n";
+print "============================================\n\n";
 
 if (!is_file($controllerPath)) {
     fwrite(STDERR, "Missing UserAdminController: {$controllerPath}\n");
@@ -35,11 +35,7 @@ function patch_user_admin_controller(string $path): bool
         $source = add_normalise_locale_method($source);
     }
 
-    if (!str_contains($source, "'locale' =>")) {
-        $source = add_locale_to_submitted_array($source);
-    }
-
-    if (!str_contains($source, 'locale: $submitted[\'locale\']')) {
+    if (!str_contains($source, "locale: \$this->normaliseAdminLocale(\$_POST['locale'] ?? null)")) {
         $source = add_locale_to_admin_user_construction($source);
     }
 
@@ -47,7 +43,7 @@ function patch_user_admin_controller(string $path): bool
         return false;
     }
 
-    backup_once($path, '.phase-1.11.bak');
+    backup_once($path, '.phase-1.11.1.bak');
     file_put_contents($path, $source);
 
     return true;
@@ -60,9 +56,9 @@ function add_normalise_locale_method(string $source): string
     /**
      * Normalises the submitted admin interface locale.
      *
-     * Empty values intentionally become null, which means the admin user falls
-     * back to the configured admin locale. Only strict xx_YY locale codes are
-     * accepted so locale values cannot influence translation file paths.
+     * An empty locale intentionally becomes null so the admin user falls back
+     * to the configured admin locale. Only strict xx_YY locale codes are
+     * accepted, preventing unsafe values from influencing translation paths.
      */
     private function normaliseAdminLocale(mixed $locale): ?string
     {
@@ -88,51 +84,35 @@ PHP_METHOD;
     return substr($source, 0, $position) . $method . substr($source, $position);
 }
 
-function add_locale_to_submitted_array(string $source): string
-{
-    $patterns = [
-        "/('status'\s*=>\s*[^,\n]+,?)/",
-        "/(\"status\"\s*=>\s*[^,\n]+,?)/",
-        "/('email'\s*=>\s*[^,\n]+,?)/",
-        "/(\"email\"\s*=>\s*[^,\n]+,?)/",
-    ];
-
-    foreach ($patterns as $pattern) {
-        if (preg_match($pattern, $source, $matches, PREG_OFFSET_CAPTURE) === 1) {
-            $position = $matches[0][1] + strlen($matches[0][0]);
-            $indent = detect_line_indent($source, $matches[0][1]);
-            $insert = PHP_EOL . $indent . "'locale' => \$this->normaliseAdminLocale(\$_POST['locale'] ?? null),";
-
-            return substr($source, 0, $position) . $insert . substr($source, $position);
-        }
-    }
-
-    fwrite(STDERR, "Unable to find submitted array insertion point for locale.\n");
-    exit(2);
-}
-
 function add_locale_to_admin_user_construction(string $source): string
 {
-    if (!str_contains($source, 'new AdminUser(')) {
-        return $source;
+    $offset = 0;
+    while (($start = strpos($source, 'new AdminUser(', $offset)) !== false) {
+        $call = find_call_at($source, $start);
+        if ($call === null) {
+            $offset = $start + 1;
+            continue;
+        }
+
+        [$callStart, $end, $body] = $call;
+        if (str_contains($body, 'locale:')) {
+            return $source;
+        }
+
+        // Prefer constructor calls which look like save/create/update payloads.
+        if (str_contains($body, '$_POST') || str_contains($body, '$submitted') || str_contains($body, 'email') || str_contains($body, 'name')) {
+            $trimmed = rtrim($body);
+            $comma = str_ends_with(trim($trimmed), ',') ? '' : ',';
+            $replacement = 'new AdminUser(' . $trimmed . $comma . "\n            locale: \$this->normaliseAdminLocale(\$_POST['locale'] ?? null)\n        )";
+
+            return substr($source, 0, $callStart) . $replacement . substr($source, $end + 1);
+        }
+
+        $offset = $end + 1;
     }
 
-    $call = find_call($source, 'new AdminUser(');
-    if ($call === null) {
-        fwrite(STDERR, "Unable to parse AdminUser constructor call in UserAdminController.\n");
-        exit(2);
-    }
-
-    [$start, $end, $body] = $call;
-    if (str_contains($body, 'locale:')) {
-        return $source;
-    }
-
-    $trimmed = rtrim($body);
-    $comma = str_ends_with(trim($trimmed), ',') ? '' : ',';
-    $replacement = 'new AdminUser(' . $trimmed . $comma . "\n            locale: \$submitted['locale'] ?? null\n        )";
-
-    return substr($source, 0, $start) . $replacement . substr($source, $end + 1);
+    fwrite(STDERR, "Unable to find a suitable AdminUser constructor call for locale persistence.\n");
+    exit(2);
 }
 
 function patch_admin_user_repository(string $path): bool
@@ -142,13 +122,13 @@ function patch_admin_user_repository(string $path): bool
 
     $source = patch_insert_locale($source);
     $source = patch_update_locale($source);
-    $source = patch_params_locale($source);
+    $source = patch_parameter_arrays($source);
 
     if ($source === $original) {
         return false;
     }
 
-    backup_once($path, '.phase-1.11.bak');
+    backup_once($path, '.phase-1.11.1.bak');
     file_put_contents($path, $source);
 
     return true;
@@ -156,51 +136,60 @@ function patch_admin_user_repository(string $path): bool
 
 function patch_insert_locale(string $source): string
 {
-    if (preg_match('/INSERT\s+INTO\s+`?admin_users`?\s*\((?<columns>[^)]*)\)\s*VALUES\s*\((?<values>[^)]*)\)/is', $source, $matches, PREG_OFFSET_CAPTURE) !== 1) {
+    if (str_contains($source, ':locale') && preg_match('/INSERT\s+INTO\s+`?admin_users`?/i', $source) === 1) {
         return $source;
     }
 
-    if (str_contains($matches['columns'][0], 'locale')) {
-        return $source;
-    }
+    return preg_replace_callback(
+        '/INSERT\s+INTO\s+`?admin_users`?\s*\((?<columns>[^)]*)\)\s*VALUES\s*\((?<values>[^)]*)\)/is',
+        static function (array $matches): string {
+            if (str_contains($matches['columns'], 'locale')) {
+                return $matches[0];
+            }
 
-    $columnsStart = $matches['columns'][1];
-    $columnsEnd = $columnsStart + strlen($matches['columns'][0]);
-    $valuesStart = $matches['values'][1];
-    $valuesEnd = $valuesStart + strlen($matches['values'][0]);
-
-    $source = substr($source, 0, $columnsEnd) . ', locale' . substr($source, $columnsEnd);
-    $valuesStart += strlen(', locale');
-    $valuesEnd += strlen(', locale');
-
-    return substr($source, 0, $valuesEnd) . ', :locale' . substr($source, $valuesEnd);
+            return str_replace(
+                [$matches['columns'], $matches['values']],
+                [rtrim($matches['columns']) . ', locale', rtrim($matches['values']) . ', :locale'],
+                $matches[0]
+            );
+        },
+        $source,
+        1
+    ) ?? $source;
 }
 
 function patch_update_locale(string $source): string
 {
-    if (preg_match('/UPDATE\s+`?admin_users`?\s+SET\s+(?<set>.*?)\s+WHERE\s+/is', $source, $matches, PREG_OFFSET_CAPTURE) !== 1) {
+    if (str_contains($source, 'locale = :locale')) {
         return $source;
     }
 
-    if (str_contains($matches['set'][0], 'locale')) {
-        return $source;
-    }
+    return preg_replace_callback(
+        '/UPDATE\s+`?admin_users`?\s+SET\s+(?<set>.*?)\s+WHERE\s+/is',
+        static function (array $matches): string {
+            if (str_contains($matches['set'], 'locale')) {
+                return $matches[0];
+            }
 
-    $setEnd = $matches['set'][1] + strlen($matches['set'][0]);
-
-    return substr($source, 0, $setEnd) . ', locale = :locale' . substr($source, $setEnd);
+            return str_replace($matches['set'], rtrim($matches['set']) . ', locale = :locale', $matches[0]);
+        },
+        $source,
+        1
+    ) ?? $source;
 }
 
-function patch_params_locale(string $source): string
+function patch_parameter_arrays(string $source): string
 {
-    if (str_contains($source, "'locale' =>")) {
+    if (str_contains($source, "'locale' => \$user->locale") || str_contains($source, '"locale" => $user->locale')) {
         return $source;
     }
 
     $patterns = [
+        "/('updated_at'\s*=>\s*[^,\n]+,?)/",
         "/('status'\s*=>\s*[^,\n]+,?)/",
-        "/(\"status\"\s*=>\s*[^,\n]+,?)/",
         "/('email'\s*=>\s*[^,\n]+,?)/",
+        "/(\"updated_at\"\s*=>\s*[^,\n]+,?)/",
+        "/(\"status\"\s*=>\s*[^,\n]+,?)/",
         "/(\"email\"\s*=>\s*[^,\n]+,?)/",
     ];
 
@@ -218,13 +207,9 @@ function patch_params_locale(string $source): string
 }
 
 /** @return array{int,int,string}|null */
-function find_call(string $source, string $needle): ?array
+function find_call_at(string $source, int $start): ?array
 {
-    $start = strpos($source, $needle);
-    if ($start === false) {
-        return null;
-    }
-
+    $needle = 'new AdminUser(';
     $open = $start + strlen($needle) - 1;
     $depth = 0;
     $length = strlen($source);

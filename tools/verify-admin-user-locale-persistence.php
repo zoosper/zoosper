@@ -17,8 +17,7 @@ $checks = [
     'AdminUserRepository exists' => $repositoryPath !== null,
     'locale field is rendered in user admin form' => str_contains($controller, 'name="locale"') && str_contains($controller, 'admin-user-locale'),
     'submitted locale is normalised' => str_contains($controller, 'normaliseAdminLocale('),
-    'submitted locale is included in submitted/user payload' => str_contains($controller, "'locale' =>") || str_contains($controller, 'locale:'),
-    'AdminUser constructor receives locale when saving' => str_contains($controller, "locale: \$submitted['locale']") || str_contains($controller, 'locale: $submitted["locale"]'),
+    'AdminUser constructor receives normalised submitted locale when saving' => str_contains($controller, "locale: \$this->normaliseAdminLocale(\$_POST['locale'] ?? null)"),
     'repository writes locale on insert or update' => str_contains($repository, ':locale') && (str_contains($repository, 'locale = :locale') || str_contains($repository, ', locale')),
     'repository binds locale from AdminUser model' => str_contains($repository, "'locale' => \$user->locale") || str_contains($repository, '"locale" => $user->locale'),
 ];
