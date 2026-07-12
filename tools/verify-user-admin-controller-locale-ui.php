@@ -15,16 +15,18 @@ $config = is_file($basePath . '/config/i18n.php') ? require $basePath . '/config
 $provider = new \Zoosper\Core\I18n\SupportedLocaleProvider(is_array($config) ? $config : []);
 $renderer = new \Zoosper\Admin\I18n\AdminUserLocalePreferenceFieldRenderer($provider);
 $html = $renderer->render('en_AU');
-$hasLocaleField = str_contains($userAdminSource, 'name="locale"') || str_contains($userAdminSource, "name='locale'");
+$hasRawUserAdminLocaleField = str_contains($userAdminSource, 'name="locale"') || str_contains($userAdminSource, "name='locale'");
+$hasEmbeddedPhpOpenTag = str_contains($userAdminSource, '<?=' ) || str_contains($userAdminSource, '<?php');
 
 $checks = [
     'UserAdminController exists' => is_file($userAdminController),
+    'UserAdminController has no raw injected locale field' => !$hasRawUserAdminLocaleField,
+    'UserAdminController contains no embedded PHP open tag in source string' => !$hasEmbeddedPhpOpenTag,
     'LoginController has no locale field' => !str_contains($loginSource, 'name="locale"') && !str_contains($loginSource, "name='locale'"),
     'SupportedLocaleProvider exists' => class_exists(\Zoosper\Core\I18n\SupportedLocaleProvider::class),
     'AdminUserLocalePreferenceFieldRenderer exists' => class_exists(\Zoosper\Admin\I18n\AdminUserLocalePreferenceFieldRenderer::class),
-    'renderer outputs locale select' => str_contains($html, 'name="locale"') && str_contains($html, '<select'),
+    'renderer outputs locale select safely' => str_contains($html, 'name="locale"') && str_contains($html, '<select'),
     'renderer outputs supported en_AU option' => str_contains($html, 'en_AU') && str_contains($html, 'English (Australia)'),
-    'UserAdminController locale field is absent or present in correct controller only' => !$hasLocaleField || str_contains($userAdminSource, 'name="locale"') || str_contains($userAdminSource, "name='locale'"),
 ];
 
 $failed = false;
@@ -33,6 +35,6 @@ foreach ($checks as $name => $ok) {
     $failed = $failed || !$ok;
 }
 
-print "\nUserAdminController locale field: " . ($hasLocaleField ? 'yes' : 'no') . PHP_EOL;
+print "\nUserAdminController raw locale field: " . ($hasRawUserAdminLocaleField ? 'yes' : 'no') . PHP_EOL;
 print "Result: " . ($failed ? 'FAIL' : 'OK') . PHP_EOL;
 exit($failed ? 2 : 0);

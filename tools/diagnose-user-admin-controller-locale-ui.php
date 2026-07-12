@@ -21,6 +21,6 @@ foreach ($paths as $relativePath) {
     $source = (string) file_get_contents($path);
     print "- {$relativePath}:\n";
     print "  locale_field: " . ((str_contains($source, 'name="locale"') || str_contains($source, "name='locale'")) ? 'yes' : 'no') . PHP_EOL;
+    print "  php_open_tag: " . ((str_contains($source, '<?=') || str_contains($source, '<?php')) ? 'yes' : 'no') . PHP_EOL;
     print "  email_field: " . ((str_contains($source, 'name="email"') || str_contains($source, "name='email'")) ? 'yes' : 'no') . PHP_EOL;
-    print "  form_marker: " . ((str_contains($source, '<form') || str_contains($source, 'form')) ? 'yes' : 'no') . PHP_EOL;
 }

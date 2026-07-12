@@ -2,23 +2,24 @@
 
 ## Completed foundations
 
-- Locale UI login controller hotfix.
 - Explicit UserAdminController locale UI integration foundation.
+- UserAdminController locale UI parse hotfix.
 
 ## Coding guidelines
 
 - Always produce clean, well-formatted code like PHPStorm Ctrl+Alt+L.
 - Always include meaningful PHPDoc and helpful comments.
+- Do not insert raw PHP template tags into PHP controller strings/heredocs.
+- UI apply tools must be aware of the target rendering style before modifying source.
 - Do not patch UI into login/auth controllers unless the phase explicitly targets login/auth UI.
-- UI apply tools must target exact controller/form names, not broad text matches.
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
 - Locale codes used for translation lookup must be validated strictly before they affect file paths.
 - Every future phase should include or update one verification runner file.
 
 ## Future TODOs
 
-- Persist admin-user locale preference from the UI if the current admin-user save flow does not already include it.
-- Replace hard-coded fallback option in UserAdminController patch with direct renderer integration if the controller/template pattern supports service injection cleanly.
+- Integrate AdminUserLocalePreferenceFieldRenderer into UserAdminController using the controller's actual rendering pattern.
+- Persist admin-user locale preference from the UI after safe integration.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Add server-side block renderer integration.
 - Add safe content_format=block_json switch.
