@@ -17,11 +17,12 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
-    ['Syntax: AdminContextTranslatorResolver.php', [$php, '-l', 'app/zoosper-core/src/I18n/AdminContextTranslatorResolver.php']],
-    ['Syntax: I18nServiceProvider.php', [$php, '-l', 'app/zoosper-core/src/I18n/I18nServiceProvider.php']],
-    ['Syntax: verify-admin-translator-injected-runtime.php', [$php, '-l', 'tools/verify-admin-translator-injected-runtime.php']],
-    ['Syntax: verify-admin-context-translator-resolution.php', [$php, '-l', 'tools/verify-admin-context-translator-resolution.php']],
+    ['Syntax: SupportedLocaleProvider.php', [$php, '-l', 'app/zoosper-core/src/I18n/SupportedLocaleProvider.php']],
+    ['Syntax: apply-supported-admin-locales-config.php', [$php, '-l', 'tools/apply-supported-admin-locales-config.php']],
+    ['Syntax: apply-supported-locale-provider-registration.php', [$php, '-l', 'tools/apply-supported-locale-provider-registration.php']],
+    ['Syntax: verify-supported-admin-locales.php', [$php, '-l', 'tools/verify-supported-admin-locales.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
+    ['Verify: supported admin locales', [$php, 'tools/verify-supported-admin-locales.php']],
     ['Verify: admin context translator resolution', [$php, 'tools/verify-admin-context-translator-resolution.php']],
     ['Verify: admin translator injected runtime', [$php, 'tools/verify-admin-translator-injected-runtime.php']],
     ['Verify: admin user locale hydration', [$php, 'tools/verify-admin-user-locale-hydration.php']],

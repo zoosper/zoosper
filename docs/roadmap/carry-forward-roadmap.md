@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Admin context translator resolution foundation.
 - Admin translator injected runtime verifier hotfix.
+- Supported admin locales foundation.
 
 ## Coding guidelines
 
@@ -17,7 +17,7 @@
 
 ## Future TODOs
 
-- Add admin-user locale preference UI.
+- Add admin-user locale preference UI using SupportedLocaleProvider.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Add server-side block renderer integration.
 - Add safe content_format=block_json switch.
