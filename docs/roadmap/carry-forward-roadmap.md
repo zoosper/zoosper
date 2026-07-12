@@ -2,11 +2,10 @@
 
 ## Completed foundations
 
-- Translatable admin system messages foundation.
-- Verifier string interpolation hotfix.
 - Module-owned translation file aggregation foundation.
 - Translation file aggregator comment hotfix.
 - Translation aggregator verifier scope hotfix.
+- Admin translator resolution foundation.
 
 ## Coding guidelines
 
@@ -27,8 +26,8 @@
 
 ## Future TODOs
 
-- Wire `ArrayTranslator`/catalogue into the container once admin/site locale resolution is formalised.
 - Add admin/site locale resolution and fallback locale policy.
+- Register the resolved translator through the DI/container once the service-provider wiring is ready.
 - Add persistence helpers/payload consumers for processor-produced values.
 - Add replacement/remove/disable rules for section providers via config.
 - Add progressive enhancement for collapsible admin form sections or tabs if the page form becomes much longer.

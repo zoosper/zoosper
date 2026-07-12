@@ -21,7 +21,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
-use Zoosper\Core\I18n\IdentityTranslator;
+use Zoosper\Core\I18n\TranslationResolver;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -563,7 +563,17 @@ HTML);
      */
     private function t(string $message, array $parameters = []): string
     {
-        return ($this->translator ?? new IdentityTranslator())->translate($message, $parameters);
+        return ($this->translator ?? $this->defaultTranslator())->translate($message, $parameters);
+    }
+
+    private function defaultTranslator(): TranslatorInterface
+    {
+        $i18nConfig = $this->config?->array('i18n') ?? [];
+        $defaultLocale = (string) ($i18nConfig['default_locale'] ?? 'en_AU');
+        $adminLocale = (string) ($i18nConfig['admin_locale'] ?? $defaultLocale);
+        $fallbackLocale = (string) ($i18nConfig['fallback_locale'] ?? $defaultLocale);
+
+        return (new TranslationResolver($this->projectRootPath()))->forLocale($adminLocale, $fallbackLocale);
     }
 
     private function e(string $value): string
