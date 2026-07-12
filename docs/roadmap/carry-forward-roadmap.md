@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Admin translator injection verifier hotfix.
 - Reduced manual admin translator fallback.
+- Admin user locale preference schema/resolver foundation.
 
 ## Coding guidelines
 
@@ -15,33 +15,20 @@
 - Keep controllers clean; admin UI sections and processors should be contributed through providers/registries/config where practical.
 - Third-party developers must be able to extend/override core behaviour without editing core code.
 - Prefer behaviour/contract/rendered-output verification over brittle source-string matching.
-- Source-scanning verifiers must target specific runtime patterns, not broad import/use strings.
-- Preserve empty config handles when they intentionally document extension points.
-- All admin/system-facing messages should pass through a translation contract/helper instead of being emitted as final hard-coded strings.
-- Source-scanning verifier strings must avoid accidental PHP variable interpolation.
-- Translation files should be module-owned where possible and project-overridable through config-level dictionaries.
-- Locale resolution should be delegated to resolver services instead of being hard-coded in controllers.
+- Locale codes used for translation lookup must be validated strictly before they affect file paths.
 - Every future phase should include or update one verification runner file so all syntax/check commands can be run with one command and the full output is written to a report file.
 
 ## Future TODOs
 
-- Add admin-user locale preference support.
+- Hydrate `admin_users.locale` into the AdminUser model/session flow.
+- Wire `AdminUserLocaleResolver` into admin translator resolution when an admin-user context is available.
+- Add admin-user locale preference UI.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Add persistence helpers/payload consumers for processor-produced values.
 - Add replacement/remove/disable rules for section providers via config.
-- Add progressive enhancement for collapsible admin form sections or tabs if the page form becomes much longer.
 - Add server-side block renderer integration.
 - Add a safe feature flag or migration path to switch selected pages to `content_format=block_json`.
 - Add media library with uploads stored outside public first.
-- Add quote, delimiter, table and button blocks after renderer contracts are ready.
 - Add pagination to all search result grids, e.g. CMS pages, audit logs and login history.
 - Add customer login and customer account management.
 - CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
-- Static asset command: `php bin/zoosper static:publish`.
-- Consolidate developer tools into stable CLI commands.
-- Vite/Tailwind asset pipeline.
-- Admin Role Page Refactor.
-- Cache Manager Design.
-- CDN provider/purge adapter.
-- Index Manager.
-- Documentation website build pipeline.
