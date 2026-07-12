@@ -6,8 +6,8 @@ $basePath = require __DIR__ . '/bootstrap.php';
 $controllerPath = $basePath . '/app/zoosper-admin/src/Controller/UserAdminController.php';
 $repositoryPath = find_file_containing($basePath, 'class AdminUserRepository');
 
-print "Zoosper admin user locale persistence hotfix\n";
-print "============================================\n\n";
+print "Zoosper admin user locale post-save persistence hotfix\n";
+print "======================================================\n\n";
 
 if (!is_file($controllerPath)) {
     fwrite(STDERR, "Missing UserAdminController: {$controllerPath}\n");
@@ -19,34 +19,65 @@ if ($repositoryPath === null || !is_file($repositoryPath)) {
     exit(2);
 }
 
-$controllerChanged = patch_user_admin_controller($controllerPath);
-$repositoryChanged = patch_admin_user_repository($repositoryPath);
+$repositoryChanged = patch_repository($repositoryPath);
+$controllerChanged = patch_controller($controllerPath);
 
 print '- controller: ' . relative_path($basePath, $controllerPath) . ($controllerChanged ? ' updated' : ' already ok') . PHP_EOL;
 print '- repository: ' . relative_path($basePath, $repositoryPath) . ($repositoryChanged ? ' updated' : ' already ok') . PHP_EOL;
 print "Result: OK\n";
 
-function patch_user_admin_controller(string $path): bool
+function patch_controller(string $path): bool
 {
     $source = (string) file_get_contents($path);
     $original = $source;
+    $repositoryProperty = detect_repository_property($source);
+
+    if ($repositoryProperty === null) {
+        fwrite(STDERR, "Unable to detect AdminUserRepository property in UserAdminController.\n");
+        exit(2);
+    }
 
     if (!str_contains($source, 'function normaliseAdminLocale(')) {
         $source = add_normalise_locale_method($source);
     }
 
-    if (!str_contains($source, "locale: \$this->normaliseAdminLocale(\$_POST['locale'] ?? null)")) {
-        $source = add_locale_to_admin_user_construction($source);
+    if (!str_contains($source, 'function persistAdminUserLocalePreference(')) {
+        $source = add_persist_locale_method($source, $repositoryProperty);
+    }
+
+    if (!str_contains($source, 'persistAdminUserLocalePreference(')) {
+        $source = add_post_save_call($source, $repositoryProperty);
+    } elseif (substr_count($source, 'persistAdminUserLocalePreference(') < 2) {
+        // One occurrence means method declaration only; add usage.
+        $source = add_post_save_call($source, $repositoryProperty);
     }
 
     if ($source === $original) {
         return false;
     }
 
-    backup_once($path, '.phase-1.11.1.bak');
+    backup_once($path, '.phase-1.11.2.bak');
     file_put_contents($path, $source);
 
     return true;
+}
+
+function detect_repository_property(string $source): ?string
+{
+    $patterns = [
+        '/private\s+(?:readonly\s+)?AdminUserRepository\s+\$([A-Za-z_][A-Za-z0-9_]*)/',
+        '/public\s+function\s+__construct\s*\([^)]*AdminUserRepository\s+\$([A-Za-z_][A-Za-z0-9_]*)/s',
+        '/\$this->([A-Za-z_][A-Za-z0-9_]*)->(?:save|update|create)\s*\(/',
+        '/\$this->([A-Za-z_][A-Za-z0-9_]*)->find(?:ById)?\s*\(/',
+    ];
+
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $source, $matches) === 1) {
+            return $matches[1];
+        }
+    }
+
+    return null;
 }
 
 function add_normalise_locale_method(string $source): string
@@ -56,9 +87,8 @@ function add_normalise_locale_method(string $source): string
     /**
      * Normalises the submitted admin interface locale.
      *
-     * An empty locale intentionally becomes null so the admin user falls back
-     * to the configured admin locale. Only strict xx_YY locale codes are
-     * accepted, preventing unsafe values from influencing translation paths.
+     * Empty values become null so the user falls back to the configured admin
+     * locale. Only safe xx_YY locale codes are persisted.
      */
     private function normaliseAdminLocale(mixed $locale): ?string
     {
@@ -75,157 +105,121 @@ function add_normalise_locale_method(string $source): string
     }
 PHP_METHOD;
 
-    $position = strrpos($source, "\n}");
-    if ($position === false) {
-        fwrite(STDERR, "Unable to insert normaliseAdminLocale(): class closing brace not found.\n");
-        exit(2);
-    }
-
-    return substr($source, 0, $position) . $method . substr($source, $position);
+    return insert_method_before_class_end($source, $method);
 }
 
-function add_locale_to_admin_user_construction(string $source): string
+function add_persist_locale_method(string $source, string $repositoryProperty): string
 {
-    $offset = 0;
-    while (($start = strpos($source, 'new AdminUser(', $offset)) !== false) {
-        $call = find_call_at($source, $start);
-        if ($call === null) {
-            $offset = $start + 1;
-            continue;
+    $method = <<<PHP_METHOD
+
+    /**
+     * Persists the admin interface locale after the main user save succeeds.
+     *
+     * The existing user save flow remains untouched; this performs a small,
+     * targeted locale update for edit screens where the user id is available.
+     */
+    private function persistAdminUserLocalePreference(object \$user): void
+    {
+        if (!property_exists(\$user, 'id') || \$user->id === null) {
+            return;
         }
 
-        [$callStart, $end, $body] = $call;
-        if (str_contains($body, 'locale:')) {
-            return $source;
+        \$this->{$repositoryProperty}->updateLocale((int) \$user->id, \$this->normaliseAdminLocale(\$_POST['locale'] ?? null));
+    }
+PHP_METHOD;
+
+    return insert_method_before_class_end($source, $method);
+}
+
+function add_post_save_call(string $source, string $repositoryProperty): string
+{
+    $patterns = [
+        '/(\$this->' . preg_quote($repositoryProperty, '/') . '->(?:save|update)\s*\(\s*\$user\s*\)\s*;)/',
+        '/(\$this->' . preg_quote($repositoryProperty, '/') . '->(?:save|update)\s*\([^;]*\)\s*;)/',
+    ];
+
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $source, $matches, PREG_OFFSET_CAPTURE) === 1) {
+            $insert = $matches[1][0] . PHP_EOL . detect_line_indent($source, $matches[1][1]) . '$this->persistAdminUserLocalePreference($user);';
+            return substr($source, 0, $matches[1][1]) . $insert . substr($source, $matches[1][1] + strlen($matches[1][0]));
         }
-
-        // Prefer constructor calls which look like save/create/update payloads.
-        if (str_contains($body, '$_POST') || str_contains($body, '$submitted') || str_contains($body, 'email') || str_contains($body, 'name')) {
-            $trimmed = rtrim($body);
-            $comma = str_ends_with(trim($trimmed), ',') ? '' : ',';
-            $replacement = 'new AdminUser(' . $trimmed . $comma . "\n            locale: \$this->normaliseAdminLocale(\$_POST['locale'] ?? null)\n        )";
-
-            return substr($source, 0, $callStart) . $replacement . substr($source, $end + 1);
-        }
-
-        $offset = $end + 1;
     }
 
-    fwrite(STDERR, "Unable to find a suitable AdminUser constructor call for locale persistence.\n");
+    fwrite(STDERR, "Unable to locate the repository save/update call for post-save locale persistence.\n");
     exit(2);
 }
 
-function patch_admin_user_repository(string $path): bool
+function patch_repository(string $path): bool
 {
     $source = (string) file_get_contents($path);
     $original = $source;
 
-    $source = patch_insert_locale($source);
-    $source = patch_update_locale($source);
-    $source = patch_parameter_arrays($source);
+    if (str_contains($source, 'function updateLocale(')) {
+        return false;
+    }
+
+    $pdoProperty = detect_pdo_property($source);
+    if ($pdoProperty === null) {
+        fwrite(STDERR, "Unable to detect PDO property in AdminUserRepository.\n");
+        exit(2);
+    }
+
+    $method = <<<PHP_METHOD
+
+    /**
+     * Updates only the admin interface locale for an existing admin user.
+     *
+     * A null locale intentionally means the configured admin locale should be
+     * used. The caller is responsible for validating the locale format.
+     */
+    public function updateLocale(int \$id, ?string \$locale): void
+    {
+        \$statement = \$this->{$pdoProperty}->prepare('UPDATE admin_users SET locale = :locale WHERE id = :id');
+        \$statement->execute([
+            'locale' => \$locale,
+            'id' => \$id,
+        ]);
+    }
+PHP_METHOD;
+
+    $source = insert_method_before_class_end($source, $method);
 
     if ($source === $original) {
         return false;
     }
 
-    backup_once($path, '.phase-1.11.1.bak');
+    backup_once($path, '.phase-1.11.2.bak');
     file_put_contents($path, $source);
 
     return true;
 }
 
-function patch_insert_locale(string $source): string
+function detect_pdo_property(string $source): ?string
 {
-    if (str_contains($source, ':locale') && preg_match('/INSERT\s+INTO\s+`?admin_users`?/i', $source) === 1) {
-        return $source;
-    }
-
-    return preg_replace_callback(
-        '/INSERT\s+INTO\s+`?admin_users`?\s*\((?<columns>[^)]*)\)\s*VALUES\s*\((?<values>[^)]*)\)/is',
-        static function (array $matches): string {
-            if (str_contains($matches['columns'], 'locale')) {
-                return $matches[0];
-            }
-
-            return str_replace(
-                [$matches['columns'], $matches['values']],
-                [rtrim($matches['columns']) . ', locale', rtrim($matches['values']) . ', :locale'],
-                $matches[0]
-            );
-        },
-        $source,
-        1
-    ) ?? $source;
-}
-
-function patch_update_locale(string $source): string
-{
-    if (str_contains($source, 'locale = :locale')) {
-        return $source;
-    }
-
-    return preg_replace_callback(
-        '/UPDATE\s+`?admin_users`?\s+SET\s+(?<set>.*?)\s+WHERE\s+/is',
-        static function (array $matches): string {
-            if (str_contains($matches['set'], 'locale')) {
-                return $matches[0];
-            }
-
-            return str_replace($matches['set'], rtrim($matches['set']) . ', locale = :locale', $matches[0]);
-        },
-        $source,
-        1
-    ) ?? $source;
-}
-
-function patch_parameter_arrays(string $source): string
-{
-    if (str_contains($source, "'locale' => \$user->locale") || str_contains($source, '"locale" => $user->locale')) {
-        return $source;
-    }
-
     $patterns = [
-        "/('updated_at'\s*=>\s*[^,\n]+,?)/",
-        "/('status'\s*=>\s*[^,\n]+,?)/",
-        "/('email'\s*=>\s*[^,\n]+,?)/",
-        "/(\"updated_at\"\s*=>\s*[^,\n]+,?)/",
-        "/(\"status\"\s*=>\s*[^,\n]+,?)/",
-        "/(\"email\"\s*=>\s*[^,\n]+,?)/",
+        '/\$this->([A-Za-z_][A-Za-z0-9_]*)->prepare\s*\(/',
+        '/private\s+(?:readonly\s+)?PDO\s+\$([A-Za-z_][A-Za-z0-9_]*)/',
+        '/public\s+function\s+__construct\s*\([^)]*PDO\s+\$([A-Za-z_][A-Za-z0-9_]*)/s',
     ];
 
     foreach ($patterns as $pattern) {
-        if (preg_match($pattern, $source, $matches, PREG_OFFSET_CAPTURE) === 1) {
-            $position = $matches[0][1] + strlen($matches[0][0]);
-            $indent = detect_line_indent($source, $matches[0][1]);
-            $insert = PHP_EOL . $indent . "'locale' => \$user->locale,";
-
-            return substr($source, 0, $position) . $insert . substr($source, $position);
-        }
-    }
-
-    return $source;
-}
-
-/** @return array{int,int,string}|null */
-function find_call_at(string $source, int $start): ?array
-{
-    $needle = 'new AdminUser(';
-    $open = $start + strlen($needle) - 1;
-    $depth = 0;
-    $length = strlen($source);
-    for ($i = $open; $i < $length; $i++) {
-        $char = $source[$i];
-        if ($char === '(') {
-            $depth++;
-        } elseif ($char === ')') {
-            $depth--;
-            if ($depth === 0) {
-                return [$start, $i, substr($source, $open + 1, $i - $open - 1)];
-            }
+        if (preg_match($pattern, $source, $matches) === 1) {
+            return $matches[1];
         }
     }
 
     return null;
+}
+
+function insert_method_before_class_end(string $source, string $method): string
+{
+    $position = strrpos($source, "\n}");
+    if ($position === false) {
+        fwrite(STDERR, "Unable to find final class closing brace.\n");
+        exit(2);
+    }
+
+    return substr($source, 0, $position) . $method . substr($source, $position);
 }
 
 function detect_line_indent(string $source, int $offset): string
@@ -233,7 +227,6 @@ function detect_line_indent(string $source, int $offset): string
     $lineStart = strrpos(substr($source, 0, $offset), "\n");
     $lineStart = $lineStart === false ? 0 : $lineStart + 1;
     $line = substr($source, $lineStart, $offset - $lineStart);
-
     return preg_match('/^(\s*)/', $line, $matches) === 1 ? $matches[1] : '        ';
 }
 

@@ -6,8 +6,8 @@ $basePath = require __DIR__ . '/bootstrap.php';
 $controllerPath = $basePath . '/app/zoosper-admin/src/Controller/UserAdminController.php';
 $repositoryPath = find_file_containing($basePath, 'class AdminUserRepository');
 
-print "Zoosper admin user locale persistence verification\n";
-print "==================================================\n\n";
+print "Zoosper admin user locale post-save persistence verification\n";
+print "============================================================\n\n";
 
 $controller = is_file($controllerPath) ? (string) file_get_contents($controllerPath) : '';
 $repository = $repositoryPath !== null ? (string) file_get_contents($repositoryPath) : '';
@@ -16,10 +16,12 @@ $checks = [
     'UserAdminController exists' => is_file($controllerPath),
     'AdminUserRepository exists' => $repositoryPath !== null,
     'locale field is rendered in user admin form' => str_contains($controller, 'name="locale"') && str_contains($controller, 'admin-user-locale'),
-    'submitted locale is normalised' => str_contains($controller, 'normaliseAdminLocale('),
-    'AdminUser constructor receives normalised submitted locale when saving' => str_contains($controller, "locale: \$this->normaliseAdminLocale(\$_POST['locale'] ?? null)"),
-    'repository writes locale on insert or update' => str_contains($repository, ':locale') && (str_contains($repository, 'locale = :locale') || str_contains($repository, ', locale')),
-    'repository binds locale from AdminUser model' => str_contains($repository, "'locale' => \$user->locale") || str_contains($repository, '"locale" => $user->locale'),
+    'submitted locale is normalised' => str_contains($controller, 'function normaliseAdminLocale('),
+    'controller has post-save locale persistence helper' => str_contains($controller, 'function persistAdminUserLocalePreference('),
+    'controller calls post-save locale persistence helper' => substr_count($controller, 'persistAdminUserLocalePreference(') >= 2,
+    'repository exposes updateLocale method' => str_contains($repository, 'function updateLocale('),
+    'repository updateLocale writes admin_users.locale' => str_contains($repository, 'UPDATE admin_users SET locale = :locale WHERE id = :id'),
+    'repository binds locale and id' => str_contains($repository, "'locale' => \$locale") && str_contains($repository, "'id' => \$id"),
 ];
 
 $failed = false;

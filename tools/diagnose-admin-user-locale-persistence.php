@@ -6,20 +6,19 @@ $basePath = require __DIR__ . '/bootstrap.php';
 $controllerPath = $basePath . '/app/zoosper-admin/src/Controller/UserAdminController.php';
 $repositoryPath = find_file_containing($basePath, 'class AdminUserRepository');
 
-print "Zoosper admin user locale persistence diagnostics\n";
-print "=================================================\n\n";
+print "Zoosper admin user locale post-save persistence diagnostics\n";
+print "===========================================================\n\n";
 
 foreach ([$controllerPath, $repositoryPath] as $path) {
     if ($path === null || !is_file($path)) {
         continue;
     }
-
     $source = (string) file_get_contents($path);
     print relative_path($basePath, $path) . PHP_EOL;
-    print '- has locale field/rendering: ' . ((str_contains($source, 'name="locale"') || str_contains($source, 'renderAdminLocaleField(')) ? 'yes' : 'no') . PHP_EOL;
-    print '- has submitted locale: ' . ((str_contains($source, "\$submitted['locale']") || str_contains($source, '$submitted["locale"]')) ? 'yes' : 'no') . PHP_EOL;
-    print '- has normaliseAdminLocale: ' . (str_contains($source, 'normaliseAdminLocale(') ? 'yes' : 'no') . PHP_EOL;
-    print '- has SQL locale write: ' . ((str_contains($source, 'locale = :locale') || str_contains($source, ', locale')) ? 'yes' : 'no') . PHP_EOL;
+    print '- normaliseAdminLocale: ' . (str_contains($source, 'normaliseAdminLocale(') ? 'yes' : 'no') . PHP_EOL;
+    print '- persistAdminUserLocalePreference: ' . (str_contains($source, 'persistAdminUserLocalePreference(') ? 'yes' : 'no') . PHP_EOL;
+    print '- updateLocale: ' . (str_contains($source, 'function updateLocale(') ? 'yes' : 'no') . PHP_EOL;
+    print '- locale field: ' . ((str_contains($source, 'name="locale"') || str_contains($source, "name='locale'")) ? 'yes' : 'no') . PHP_EOL;
     print PHP_EOL;
 }
 

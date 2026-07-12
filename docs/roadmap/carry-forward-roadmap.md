@@ -2,7 +2,7 @@
 
 ## Completed foundations
 
-- Admin user locale persistence hotfix.
+- Post-save admin user locale persistence hotfix.
 
 ## Coding guidelines
 
@@ -11,6 +11,7 @@
 - Admin locale values must be normalised and strictly validated before persistence.
 - Empty admin locale values should persist as null to preserve configured admin-locale fallback.
 - Avoid brittle assumptions about submitted form payload array names in apply tools.
+- Prefer targeted post-save persistence methods when existing save SQL is difficult to patch safely.
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
 
 ## Future TODOs
