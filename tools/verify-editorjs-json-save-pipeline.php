@@ -13,6 +13,7 @@ $editorHtml = $editor->render('content', '<p>Hello</p>', [
     'required' => true,
     'content_json' => '{"blocks":[]}',
 ]);
+$pageFormHtml = zoosper_phase0841_render_page_form();
 
 print "Zoosper Editor.js JSON save pipeline verification\n";
 print "=================================================\n\n";
@@ -31,7 +32,8 @@ $checks = [
     'Controller validates content_json' => str_contains($controller, 'normaliseContentJson'),
     'Repository accepts contentFormat' => str_contains($repository, 'string $contentFormat'),
     'Repository persists content_json' => str_contains($repository, 'content_json'),
-    'SEO section preserved' => str_contains($controller, 'Search engine optimisation'),
+    'Rendered page form preserves SEO section' => str_contains($pageFormHtml, 'Search engine optimisation'),
+    'Rendered page form preserves content_json field' => str_contains($pageFormHtml, 'name="content_json"'),
 ];
 
 $failed = false;
@@ -42,3 +44,27 @@ foreach ($checks as $name => $ok) {
 
 print "\nResult: " . ($failed ? 'FAIL' : 'OK') . PHP_EOL;
 exit($failed ? 2 : 0);
+
+function zoosper_phase0841_render_page_form(): string
+{
+    $sections = (new \Zoosper\Admin\Form\AdminFormProviderRegistry())
+        ->add(new \Zoosper\Page\Admin\Form\PageDetailsSectionProvider())
+        ->add(new \Zoosper\Page\Admin\Form\PageContentSectionProvider())
+        ->add(new \Zoosper\Page\Admin\Form\PageSeoSectionProvider())
+        ->add(new \Zoosper\Page\Admin\Form\PagePublishingSectionProvider())
+        ->sectionsFor('page.form', [
+            'siteOptions' => '<option value="1" selected>Main Website</option>',
+            'title' => 'Home',
+            'slug' => 'home',
+            'editorHtml' => '<input type="hidden" name="content_json" value="{&quot;blocks&quot;:[]}"><textarea name="content"></textarea>',
+            'contentJson' => '{&quot;blocks&quot;:[]}',
+            'metaTitle' => 'Home',
+            'metaDescription' => '',
+            'metaKeywords' => '',
+            'canonicalUrl' => '',
+            'publishChecked' => ' checked',
+            'backUrl' => '/admin/pages',
+        ]);
+
+    return (new \Zoosper\Admin\Form\AdminFormRenderer())->render('/admin/pages/edit?id=1', 'csrf-token', $sections);
+}
