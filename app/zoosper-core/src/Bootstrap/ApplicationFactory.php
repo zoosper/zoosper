@@ -54,6 +54,9 @@ final class ApplicationFactory
 
         (new ModuleLoggerProviderLoader($modules, $logManager, $services))->register();
         (new ServiceProviderLoader($modules, $services))->register();
+        // Phase 1.00: load root service providers before controller providers are created.
+        (new \Zoosper\Core\Bootstrap\ServiceProviderManifestLoader($basePath))->load($services);
+
 
         $controllers = (new ControllerProviderLoader($modules, $services))->load();
 
