@@ -34,6 +34,7 @@ $checks = [
     'AdminFormConfigAggregator exists' => class_exists(\Zoosper\Admin\Form\AdminFormConfigAggregator::class),
     'aggregated config has forms key' => isset($config['forms']) && is_array($config['forms']),
     'aggregated config has page.form' => isset($config['forms']['page.form']),
+    'aggregated config has processors key' => isset($config['processors']) && is_array($config['processors']),
     'aggregated page.form has providers' => isset($config['forms']['page.form']) && count($config['forms']['page.form']) >= 4,
     'aggregated providers instantiate through factory' => $registry instanceof \Zoosper\Admin\Form\AdminFormProviderRegistry,
     'aggregated sections sort predictably' => $keys === ['page.details', 'page.content', 'page.seo', 'page.publishing'],

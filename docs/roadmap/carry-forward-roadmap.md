@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Module-contributed admin form section registration foundation.
 - Module admin form config aggregation foundation.
+- Admin form processors foundation.
 
 ## Coding guidelines
 
@@ -12,13 +12,13 @@
 - Always include meaningful PHPDoc and helpful comments for models, repositories, services, tools and security-sensitive code.
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
 - Preserve page SEO metadata fields and the “Search engine optimisation” admin section during page-related refactors.
-- Keep controllers clean; admin UI sections should be contributed through providers/registries/config where practical.
+- Keep controllers clean; admin UI sections and processors should be contributed through providers/registries/config where practical.
 - Third-party developers must be able to extend/override core behaviour without editing core code.
 - Prefer behaviour/contract/rendered-output verification over brittle source-string matching.
 
 ## Future TODOs
 
-- Add admin form processors so third-party sections can validate and persist their own fields.
+- Wire admin form processors into page create/update flows with clear validation error handling.
 - Add replacement/remove/disable rules for section providers via config.
 - Add progressive enhancement for collapsible admin form sections or tabs if the page form becomes much longer.
 - Add server-side block renderer integration.

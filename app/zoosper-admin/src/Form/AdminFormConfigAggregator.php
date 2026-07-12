@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Form;
 
 /**
- * Aggregates admin form provider configuration from app and third-party modules.
- *
- * This allows a module to ship `config/admin_forms.php` and contribute sections
- * to a stable form handle without editing a core controller or root config file.
+ * Aggregates admin form provider and processor configuration from modules.
  */
 final readonly class AdminFormConfigAggregator
 {
@@ -20,19 +17,29 @@ final readonly class AdminFormConfigAggregator
      * @param array<string, mixed> $rootConfig Runtime/root config already loaded
      *                                         by ConfigRepository, if available.
      *
-     * @return array{forms: array<string, list<class-string<AdminFormSectionProviderInterface>>>}
+     * @return array{
+     *     forms: array<string, list<class-string<AdminFormSectionProviderInterface>>>,
+     *     processors: array<string, list<class-string<AdminFormProcessorInterface>>>
+     * }
      */
     public function aggregate(array $rootConfig = []): array
     {
         $forms = [];
+        $processors = [];
 
         foreach ($this->configFiles() as $configFile) {
-            $forms = $this->mergeForms($forms, $this->readConfigFile($configFile));
+            $config = $this->readConfigFile($configFile);
+            $forms = $this->mergeGroupedClasses($forms, $config['forms'] ?? []);
+            $processors = $this->mergeGroupedClasses($processors, $config['processors'] ?? []);
         }
 
-        $forms = $this->mergeForms($forms, $rootConfig);
+        $forms = $this->mergeGroupedClasses($forms, $rootConfig['forms'] ?? []);
+        $processors = $this->mergeGroupedClasses($processors, $rootConfig['processors'] ?? []);
 
-        return ['forms' => $forms];
+        return [
+            'forms' => $forms,
+            'processors' => $processors,
+        ];
     }
 
     /** @return list<string> */
@@ -70,35 +77,37 @@ final readonly class AdminFormConfigAggregator
     }
 
     /**
-     * @param array<string, list<class-string<AdminFormSectionProviderInterface>>> $forms
-     * @param array<string, mixed> $config
+     * @param array<string, list<class-string>> $current
+     * @param mixed $incoming
      *
-     * @return array<string, list<class-string<AdminFormSectionProviderInterface>>>
+     * @return array<string, list<class-string>>
      */
-    private function mergeForms(array $forms, array $config): array
+    private function mergeGroupedClasses(array $current, mixed $incoming): array
     {
-        $incoming = isset($config['forms']) && is_array($config['forms']) ? $config['forms'] : $config;
+        if (!is_array($incoming)) {
+            return $current;
+        }
 
-        foreach ($incoming as $formHandle => $providerClasses) {
-            if (!is_string($formHandle) || !is_array($providerClasses)) {
+        foreach ($incoming as $formHandle => $classes) {
+            if (!is_string($formHandle) || !is_array($classes)) {
                 continue;
             }
 
-            foreach ($providerClasses as $providerClass) {
-                if (!is_string($providerClass) || $providerClass === '') {
+            foreach ($classes as $class) {
+                if (!is_string($class) || $class === '') {
                     continue;
                 }
 
-                if (!isset($forms[$formHandle])) {
-                    $forms[$formHandle] = [];
+                if (!isset($current[$formHandle])) {
+                    $current[$formHandle] = [];
                 }
 
-                if (!in_array($providerClass, $forms[$formHandle], true)) {
-                    $forms[$formHandle][] = $providerClass;
+                if (!in_array($class, $current[$formHandle], true)) {
+                    $current[$formHandle][] = $class;
                 }
             }
         }
 
-        return $forms;
+        return $current;
     }
 }

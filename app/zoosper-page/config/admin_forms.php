@@ -16,4 +16,12 @@ return [
             PagePublishingSectionProvider::class,
         ],
     ],
+
+    /**
+     * Page form processors will be added in a later phase when module-owned
+     * fields need validation/persistence hooks during create/update flows.
+     */
+    'processors' => [
+        'page.form' => [],
+    ],
 ];
