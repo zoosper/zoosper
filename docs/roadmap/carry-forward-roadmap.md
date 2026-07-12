@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Admin translator runtime wiring foundation.
 - I18n service provider registration foundation.
+- I18n service provider discovery registration foundation.
 
 ## Coding guidelines
 
@@ -24,7 +24,7 @@
 
 ## Future TODOs
 
-- Wire `I18nServiceProvider` into the actual core/module service-provider registration list once the concrete provider discovery point is confirmed.
+- Wire `config/service_providers.php` into the concrete bootstrap provider loader if it is not already loaded by the framework.
 - Replace manual resolver construction in controllers with injected `TranslatorInterface` once container wiring is complete.
 - Add admin-user locale preference support.
 - Add per-site locale settings from SiteContext/SiteRepository.
