@@ -52,3 +52,17 @@
     line-height: 1;
     padding: 0;
 }
+
+/* Phase 1.10: restore visible admin notice styling. */
+.notice {
+    border-radius: 8px;
+    margin: 0 0 16px;
+    padding: 12px 14px;
+}
+
+.notice.notice-success,
+.notice-success {
+    background: #ecfdf3;
+    border: 1px solid #abefc6;
+    color: #067647;
+}

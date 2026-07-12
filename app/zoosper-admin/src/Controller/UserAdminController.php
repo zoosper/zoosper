@@ -248,7 +248,8 @@ final readonly class UserAdminController
 <form method="post" action="{$escapedAction}" class="page-form">
     <input type="hidden" name="_csrf_token" value="{$token}">
     <label>Name <input type="text" name="name" value
-        {$localeFieldHtml}="{$name}" required></label>
+        ="{$name}" required></label>
+    {$localeFieldHtml}
     <label>Email <input type="email" name="email" value="{$email}" required></label>
     <label>Password <input type="password" name="password" autocomplete="new-password"><span class="muted">Leave blank to keep existing password.</span></label>
     <label>Status <select name="status"><option value="active"{$activeSelected}>Active</option><option value="disabled"{$disabledSelected}>Disabled</option></select></label>
