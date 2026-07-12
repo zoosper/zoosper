@@ -4,6 +4,7 @@
 
 - Editor.js JSON hidden field and server-side block JSON validation on save.
 - Editor.js ContentEditorInterface contract hotfix.
+- Editor.js JSON save verifier alignment.
 
 ## Coding guidelines
 
@@ -13,9 +14,11 @@
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
 - Preserve page SEO metadata fields and the “Search engine optimisation” admin section during page-related refactors.
 - Add contract-level verification when implementing or replacing interfaces; syntax checks are not enough.
+- Prefer behaviour/contract verification over brittle source-string matching.
 
 ## Future TODOs
 
+- Organise long admin page edit forms into clear sections/cards, with progressive enhancement for collapsible sections or tabs.
 - Add server-side block renderer integration.
 - Add a safe feature flag or migration path to switch selected pages to `content_format=block_json`.
 - Add media library with uploads stored outside public first.
