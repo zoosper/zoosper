@@ -2,12 +2,11 @@
 
 ## Completed foundations
 
-- Frontend sanitised HTML rendering fix.
-- Theme module page view noescape fix.
+- Page content format schema foundation.
+- Page repository dual content hydration foundation.
 
 ## Future TODOs
 
-- Update page repository for dual html/block_json content.
 - Add Editor.js JSON hidden field and server-side block_json validation on save.
 - Add server-side block renderer integration.
 - Add media library with uploads stored outside public first.
