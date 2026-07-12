@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Admin translator container injection foundation.
 - Admin translator injection verifier hotfix.
+- Reduced manual admin translator fallback.
 
 ## Coding guidelines
 
@@ -25,7 +25,6 @@
 
 ## Future TODOs
 
-- Reduce manual translator fallback from controllers after container injection remains stable.
 - Add admin-user locale preference support.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Add persistence helpers/payload consumers for processor-produced values.

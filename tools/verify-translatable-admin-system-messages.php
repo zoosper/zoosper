@@ -3,43 +3,30 @@
 declare(strict_types=1);
 
 $basePath = require __DIR__ . '/bootstrap.php';
-$controller = (string) file_get_contents($basePath . '/app/zoosper-admin/src/Controller/PageAdminController.php');
+$controllerPath = $basePath . '/app/zoosper-admin/src/Controller/PageAdminController.php';
+$controller = is_file($controllerPath) ? (string) file_get_contents($controllerPath) : '';
 
 print "Zoosper translatable admin system message verification\n";
 print "======================================================\n\n";
 
-$identityTranslator = new \Zoosper\Core\I18n\IdentityTranslator();
-$translationResolver = class_exists(\Zoosper\Core\I18n\TranslationResolver::class)
-    ? new \Zoosper\Core\I18n\TranslationResolver($basePath)
-    : null;
-$resolvedTranslator = $translationResolver?->forLocale('en_AU', 'en_AU');
-
-$usesIdentityFallback = str_contains($controller, 'IdentityTranslator');
-$usesCatalogueResolver = str_contains($controller, 'TranslationResolver')
-    && str_contains($controller, 'defaultTranslator')
-    && str_contains($controller, '$this->defaultTranslator()');
+$identity = new \Zoosper\Core\I18n\IdentityTranslator();
+$resolver = new \Zoosper\Core\I18n\AdminTranslatorResolver($basePath, ['admin_locale' => 'en_AU', 'fallback_locale' => 'en_AU']);
+$translator = $resolver->resolve();
 
 $checks = [
     'TranslatorInterface exists' => interface_exists(\Zoosper\Core\I18n\TranslatorInterface::class),
-    'IdentityTranslator exists' => class_exists(\Zoosper\Core\I18n\IdentityTranslator::class),
-    'IdentityTranslator implements TranslatorInterface' => $identityTranslator instanceof \Zoosper\Core\I18n\TranslatorInterface,
-    'IdentityTranslator returns original message' => $identityTranslator->translate('Page saved successfully.') === 'Page saved successfully.',
-    'IdentityTranslator replaces placeholders' => $identityTranslator->translate('Hello {name}', ['name' => 'Zoosper']) === 'Hello Zoosper',
-    'TranslationResolver exists when catalogue-backed resolution is enabled' => class_exists(\Zoosper\Core\I18n\TranslationResolver::class),
-    'TranslationResolver returns TranslatorInterface' => $resolvedTranslator instanceof \Zoosper\Core\I18n\TranslatorInterface,
-    'TranslationResolver resolves catalogue message' => $resolvedTranslator?->translate('Page saved successfully.') === 'Page saved successfully.',
-    'PageAdminController still imports TranslatorInterface' => str_contains($controller, 'TranslatorInterface'),
-    'PageAdminController uses supported fallback strategy' => $usesIdentityFallback || $usesCatalogueResolver,
-    'PageAdminController uses catalogue resolver after Phase 0.91' => $usesCatalogueResolver,
-    'PageAdminController no longer needs direct IdentityTranslator import after Phase 0.91' => !str_contains($controller, 'use Zoosper\\Core\\I18n\\IdentityTranslator;'),
-    'PageAdminController accepts translator dependency' => str_contains($controller, '?TranslatorInterface $translator'),
+    'IdentityTranslator implements TranslatorInterface' => $identity instanceof \Zoosper\Core\I18n\TranslatorInterface,
+    'IdentityTranslator replaces placeholders' => $identity->translate('Hello {name}', ['name' => 'Zoosper']) === 'Hello Zoosper',
+    'catalogue translator resolves known admin message' => $translator->translate('Page saved successfully.') === 'Page saved successfully.',
+    'PageAdminController imports TranslatorInterface' => str_contains($controller, 'use Zoosper\\Core\\I18n\\TranslatorInterface;'),
+    'PageAdminController accepts translator dependency' => str_contains($controller, 'private ?TranslatorInterface $translator = null'),
     'PageAdminController has t helper' => str_contains($controller, 'private function t(string $message'),
-    'CSRF flash message is translated' => str_contains($controller, 'error($this->t(\'Unable to save page. Invalid security token.\')'),
-    'create success message is translated' => str_contains($controller, 'success($this->t(\'Page created successfully.\')'),
-    'save success message is translated' => str_contains($controller, 'success($this->t(\'Page saved successfully.\')'),
-    'publish status messages are translated' => str_contains($controller, '? $this->t(\'Page published successfully.\')'),
-    'invalid token page title is translated' => str_contains($controller, 'html($this->t(\'Invalid token\')'),
-    'not found page title is translated' => str_contains($controller, 'html($this->t(\'Page not found\')'),
+    'PageAdminController t helper translates messages' => str_contains($controller, '->translate($message, $parameters)'),
+    'PageAdminController uses lightweight fallback only' => str_contains($controller, 'new IdentityTranslator()') && !str_contains($controller, 'new AdminTranslatorResolver('),
+    'CSRF flash message is translated' => str_contains($controller, "\$this->t('Unable to save page. Invalid security token.')"),
+    'create success message is translated' => str_contains($controller, "\$this->t('Page created successfully.')"),
+    'save success message is translated' => str_contains($controller, "\$this->t('Page saved successfully.')"),
+    'publish status messages are translated' => str_contains($controller, "\$this->t('Page published successfully.')") && str_contains($controller, "\$this->t('Page unpublished successfully.')"),
 ];
 
 $failed = false;

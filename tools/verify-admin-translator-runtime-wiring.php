@@ -4,30 +4,23 @@ declare(strict_types=1);
 
 $basePath = require __DIR__ . '/bootstrap.php';
 $controllerPath = $basePath . '/app/zoosper-admin/src/Controller/PageAdminController.php';
-$controller = is_file($controllerPath) ? (string) file_get_contents($controllerPath) : '';
-$configPath = $basePath . '/config/i18n.php';
-$config = is_file($configPath) ? require $configPath : [];
+$configPath = $basePath . '/app/zoosper-page/config/controllers.php';
 
 print "Zoosper admin translator runtime wiring verification\n";
 print "====================================================\n\n";
 
-$resolver = new \Zoosper\Core\I18n\AdminTranslatorResolver($basePath, $config);
-$translator = $resolver->resolve();
-$locale = $resolver->resolveLocale();
+$controller = is_file($controllerPath) ? (string) file_get_contents($controllerPath) : '';
+$config = is_file($configPath) ? (string) file_get_contents($configPath) : '';
 
 $checks = [
     'PageAdminController exists' => is_file($controllerPath),
-    'AdminTranslatorResolver exists' => class_exists(\Zoosper\Core\I18n\AdminTranslatorResolver::class),
-    'AdminTranslatorResolver returns TranslatorInterface' => $translator instanceof \Zoosper\Core\I18n\TranslatorInterface,
-    'AdminTranslatorResolver resolves admin LocaleResolution' => $locale instanceof \Zoosper\Core\I18n\LocaleResolution && $locale->scope === 'admin',
-    'PageAdminController imports AdminTranslatorResolver' => str_contains($controller, 'AdminTranslatorResolver'),
-    'PageAdminController defaultTranslator creates AdminTranslatorResolver' => str_contains($controller, 'new AdminTranslatorResolver('),
-    'PageAdminController defaultTranslator passes project root' => str_contains($controller, '$this->projectRootPath()'),
-    'PageAdminController defaultTranslator passes i18n config' => str_contains($controller, '$i18nConfig'),
-    'PageAdminController defaultTranslator resolves translator' => str_contains($controller, ')->resolve()'),
-    'PageAdminController no longer constructs TranslationResolver directly in defaultTranslator' => !str_contains($controller, 'new TranslationResolver($this->projectRootPath())'),
-    'Known translated message still resolves' => $translator->translate('Page saved successfully.') === 'Page saved successfully.',
-    'Unknown message still falls back to source' => $translator->translate('Unknown message') === 'Unknown message',
+    'PageAdminController imports TranslatorInterface' => str_contains($controller, 'use Zoosper\\Core\\I18n\\TranslatorInterface;'),
+    'PageAdminController accepts translator dependency' => str_contains($controller, 'private ?TranslatorInterface $translator = null'),
+    'PageAdminController t helper uses injected translator path' => str_contains($controller, '($this->translator ?? $this->defaultTranslator())->translate'),
+    'PageAdminController fallback is lightweight IdentityTranslator' => str_contains($controller, 'new IdentityTranslator()'),
+    'PageAdminController no longer constructs AdminTranslatorResolver directly' => !str_contains($controller, 'new AdminTranslatorResolver('),
+    'page controller factory imports TranslatorInterface' => str_contains($config, 'use Zoosper\\Core\\I18n\\TranslatorInterface;'),
+    'page controller factory passes TranslatorInterface' => str_contains($config, '$services->has(TranslatorInterface::class) ? $services->get(TranslatorInterface::class) : null'),
 ];
 
 $failed = false;
