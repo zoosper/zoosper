@@ -2,10 +2,8 @@
 
 ## Completed foundations
 
-- Admin/site locale resolution foundation.
-- Verification runner / report writer foundation.
-- Admin translator locale resolver integration foundation.
 - Admin translator runtime wiring foundation.
+- I18n service provider registration foundation.
 
 ## Coding guidelines
 
@@ -26,7 +24,8 @@
 
 ## Future TODOs
 
-- Register the resolved translator through the DI/container once the service-provider wiring is ready.
+- Wire `I18nServiceProvider` into the actual core/module service-provider registration list once the concrete provider discovery point is confirmed.
+- Replace manual resolver construction in controllers with injected `TranslatorInterface` once container wiring is complete.
 - Add admin-user locale preference support.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Add persistence helpers/payload consumers for processor-produced values.
