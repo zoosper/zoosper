@@ -5,6 +5,7 @@
 - Editor.js JSON hidden field and server-side block JSON validation on save.
 - Editor.js ContentEditorInterface contract hotfix.
 - Editor.js JSON save verifier alignment.
+- Admin page form section organisation foundation.
 
 ## Coding guidelines
 
@@ -18,7 +19,7 @@
 
 ## Future TODOs
 
-- Organise long admin page edit forms into clear sections/cards, with progressive enhancement for collapsible sections or tabs.
+- Add progressive enhancement for collapsible admin form sections or tabs if the page form becomes much longer.
 - Add server-side block renderer integration.
 - Add a safe feature flag or migration path to switch selected pages to `content_format=block_json`.
 - Add media library with uploads stored outside public first.

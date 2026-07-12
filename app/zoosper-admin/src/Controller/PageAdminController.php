@@ -330,22 +330,46 @@ HTML);
 
         return <<<HTML
 {$errorHtml}
-<form method="post" action="{$safeAction}" class="page-form">
+<form method="post" action="{$safeAction}" class="page-form page-form--sectioned">
     <input type="hidden" name="_csrf_token" value="{$token}">
-    <label>Site <select name="site_id" required>{$siteOptions}</select></label>
-    <label>Title <input type="text" name="title" value="{$title}" required></label>
-    <label>Slug <input type="text" name="slug" value="{$slug}" required></label>
-    <label>Content</label>
-    {$editorHtml}
-    <fieldset class="card page-form__section page-form__seo">
-        <legend>Search engine optimisation</legend>
+
+    <section class="card page-form__section page-form__section--details" aria-labelledby="page-details-heading">
+        <header class="page-form__section-header">
+            <h2 id="page-details-heading">Page details</h2>
+            <p class="muted">Choose the site and define the public page identity.</p>
+        </header>
+        <label>Site <select name="site_id" required>{$siteOptions}</select></label>
+        <label>Title <input type="text" name="title" value="{$title}" required></label>
+        <label>Slug <input type="text" name="slug" value="{$slug}" required></label>
+    </section>
+
+    <section class="card page-form__section page-form__section--content" aria-labelledby="page-content-heading">
+        <header class="page-form__section-header">
+            <h2 id="page-content-heading">Content</h2>
+            <p class="muted">Edit the page body. The HTML fallback is sanitised and Editor.js JSON is validated on save.</p>
+        </header>
+        {$editorHtml}
+    </section>
+
+    <section class="card page-form__section page-form__section--seo" aria-labelledby="page-seo-heading">
+        <header class="page-form__section-header">
+            <h2 id="page-seo-heading">Search engine optimisation</h2>
+            <p class="muted">Optional search metadata kept separate from the page body.</p>
+        </header>
         <label>Meta title <input type="text" name="meta_title" value="{$metaTitle}" maxlength="255"></label>
         <label>Meta description <textarea name="meta_description" rows="3" maxlength="500">{$metaDescription}</textarea></label>
         <label>Meta keywords <input type="text" name="meta_keywords" value="{$metaKeywords}" maxlength="500"></label>
         <label>Canonical URL <input type="url" name="canonical_url" value="{$canonicalUrl}" maxlength="500"></label>
-    </fieldset>
-    <label class="checkbox"><input type="checkbox" name="publish" value="1"{$publishChecked}> Publish page</label>
-    <div class="toolbar"><button type="submit">Save page</button><a class="button secondary" href="{$backUrl}">Back</a></div>
+    </section>
+
+    <section class="card page-form__section page-form__section--publishing" aria-labelledby="page-publishing-heading">
+        <header class="page-form__section-header">
+            <h2 id="page-publishing-heading">Publishing</h2>
+            <p class="muted">Control publication state and save your changes.</p>
+        </header>
+        <label class="checkbox"><input type="checkbox" name="publish" value="1"{$publishChecked}> Publish page</label>
+        <div class="toolbar"><button type="submit">Save page</button><a class="button secondary" href="{$backUrl}">Back</a></div>
+    </section>
 </form>
 HTML;
     }
