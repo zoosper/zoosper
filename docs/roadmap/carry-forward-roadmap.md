@@ -4,6 +4,7 @@
 
 - Admin/site locale resolution foundation.
 - Verification runner / report writer foundation.
+- Admin translator locale resolver integration foundation.
 
 ## Coding guidelines
 
@@ -24,7 +25,7 @@
 
 ## Future TODOs
 
-- Wire `ConfiguredLocaleResolver` into admin translator resolution/runtime services.
+- Wire `AdminTranslatorResolver` into controller/container runtime creation.
 - Add admin-user locale preference support.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Register the resolved translator through the DI/container once the service-provider wiring is ready.

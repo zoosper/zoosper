@@ -7,10 +7,9 @@ namespace Zoosper\Core\I18n;
 /**
  * Resolves catalogue-backed translators for a locale.
  *
- * This service is intentionally small while locale selection is still being
- * formalised. It wires the existing translation file aggregator into the
- * translator contract so controllers/services can use module-owned dictionaries
- * instead of always falling back to `IdentityTranslator`.
+ * This service wires the translation file aggregator into the translator
+ * contract so controllers and runtime services can use module-owned
+ * dictionaries instead of falling back to source strings only.
  */
 final readonly class TranslationResolver
 {
@@ -25,6 +24,11 @@ final readonly class TranslationResolver
         $catalogue = (new TranslationFileAggregator($this->basePath))->catalogue($locale, $fallbackLocale);
 
         return new ArrayTranslator($catalogue);
+    }
+
+    public function forResolution(LocaleResolution $locale): TranslatorInterface
+    {
+        return $this->forLocale($locale->activeLocale, $locale->fallbackLocale);
     }
 
     private function normaliseLocale(string $locale, string $fallback): string
