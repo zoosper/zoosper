@@ -19,46 +19,90 @@ if ($source === false) {
     exit(2);
 }
 
-if (str_contains($source, 'ServiceProviderManifestLoader') && str_contains($source, '->load($container')) {
+if (str_contains($source, 'ServiceProviderManifestLoader') && preg_match('/->load\s*\(\s*\$[A-Za-z_][A-Za-z0-9_]*/', $source) === 1) {
     print "ApplicationFactory already loads config/service_providers.php.\n";
     exit(0);
 }
 
-if (!preg_match('/\$container\b/', $source)) {
-    fwrite(STDERR, "Unable to find a $container variable in ApplicationFactory. Manual wiring is required.\n");
+$containerVariable = detect_container_variable($source);
+if ($containerVariable === null) {
+    fwrite(STDERR, "Unable to identify the service container variable in ApplicationFactory.\n");
+    fwrite(STDERR, "Looked for assignments to ServiceContainer and existing service-provider loader calls.\n");
     exit(2);
 }
 
-$basePathExpression = 'dirname(__DIR__, 4)';
-if (str_contains($source, '$this->basePath')) {
-    $basePathExpression = '$this->basePath';
-} elseif (preg_match('/\$basePath\b/', $source)) {
-    $basePathExpression = '$basePath';
-}
+$basePathExpression = detect_base_path_expression($source);
+$snippet = "\n        // Phase 0.99.1: load root service providers declared in config/service_providers.php.\n"
+    . "        (new \\Zoosper\\Core\\Bootstrap\\ServiceProviderManifestLoader({$basePathExpression}))->load({$containerVariable});\n";
 
-$snippet = "\n        // Phase 0.99: load root service providers declared in config/service_providers.php.\n"
-    . "        (new \\Zoosper\\Core\\Bootstrap\\ServiceProviderManifestLoader({$basePathExpression}))->load(\$container);\n";
-
-$updated = null;
-if (preg_match('/\n\s*return\s+\$container\s*;/', $source, $match, PREG_OFFSET_CAPTURE)) {
-    $position = $match[0][1];
-    $updated = substr($source, 0, $position) . $snippet . substr($source, $position);
-} elseif (preg_match('/\n\s*return\s+new\s+[A-Za-z0-9_\\\\]+\s*\(/', $source, $match, PREG_OFFSET_CAPTURE)) {
-    $position = $match[0][1];
-    $updated = substr($source, 0, $position) . $snippet . substr($source, $position);
-}
-
+$updated = insert_before_return($source, $snippet);
 if ($updated === null) {
-    fwrite(STDERR, "Unable to find a safe insertion point in ApplicationFactory. Manual wiring is required.\n");
+    fwrite(STDERR, "Unable to find a safe insertion point in ApplicationFactory.\n");
     exit(2);
 }
 
-$backupPath = $factoryPath . '.phase-0.99.bak';
+$backupPath = $factoryPath . '.phase-0.99.1.bak';
 if (!is_file($backupPath)) {
     copy($factoryPath, $backupPath);
-    print "Backup: app/zoosper-core/src/Bootstrap/ApplicationFactory.php.phase-0.99.bak\n";
+    print "Backup: app/zoosper-core/src/Bootstrap/ApplicationFactory.php.phase-0.99.1.bak\n";
 }
 
 file_put_contents($factoryPath, $updated);
 print "Updated: app/zoosper-core/src/Bootstrap/ApplicationFactory.php\n";
-print "Manifest loader call inserted before the container/application return path.\n";
+print "Container variable: {$containerVariable}\n";
+print "Manifest loader call inserted before the return path.\n";
+
+function detect_container_variable(string $source): ?string
+{
+    $patterns = [
+        '/\$(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*new\s+\\?Zoosper\\Core\\Container\\ServiceContainer\s*\(/',
+        '/\$(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*new\s+ServiceContainer\s*\(/',
+        '/ServiceProviderLoader::[^;]*\(\s*\$(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*[,\)]/',
+        '/->register\s*\(\s*\$(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*\)/',
+    ];
+
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $source, $matches) === 1) {
+            return '$' . $matches['name'];
+        }
+    }
+
+    foreach (['$container', '$serviceContainer', '$services'] as $candidate) {
+        if (str_contains($source, $candidate)) {
+            return $candidate;
+        }
+    }
+
+    return null;
+}
+
+function detect_base_path_expression(string $source): string
+{
+    if (str_contains($source, '$this->basePath')) {
+        return '$this->basePath';
+    }
+
+    if (preg_match('/\$basePath\b/', $source) === 1) {
+        return '$basePath';
+    }
+
+    return 'dirname(__DIR__, 4)';
+}
+
+function insert_before_return(string $source, string $snippet): ?string
+{
+    $patterns = [
+        '/\n\s*return\s+\$[A-Za-z_][A-Za-z0-9_]*\s*;/',
+        '/\n\s*return\s+new\s+[A-Za-z0-9_\\\\]+\s*\(/',
+    ];
+
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $source, $match, PREG_OFFSET_CAPTURE) === 1) {
+            $position = $match[0][1];
+
+            return substr($source, 0, $position) . $snippet . substr($source, $position);
+        }
+    }
+
+    return null;
+}

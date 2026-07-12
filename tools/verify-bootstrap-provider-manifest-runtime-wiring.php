@@ -21,8 +21,8 @@ $checks = [
     'service provider manifest exists' => is_file($manifestPath),
     'manifest contains I18nServiceProvider' => in_array(\Zoosper\Core\I18n\I18nServiceProvider::class, $providers, true),
     'ApplicationFactory references ServiceProviderManifestLoader' => str_contains($factory, 'ServiceProviderManifestLoader'),
-    'ApplicationFactory loads manifest into $container' => str_contains($factory, '->load($container'),
-    'ApplicationFactory keeps container variable' => str_contains($factory, '$container'),
+    'ApplicationFactory loads manifest into a container variable' => preg_match('/->load\s*\(\s*\$[A-Za-z_][A-Za-z0-9_]*/', $factory) === 1,
+    'ApplicationFactory references config/service_providers.php loader comment or class' => str_contains($factory, 'config/service_providers.php') || str_contains($factory, 'ServiceProviderManifestLoader'),
 ];
 
 $failed = false;

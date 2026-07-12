@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Service provider manifest file hotfix.
 - Bootstrap provider manifest runtime wiring foundation.
+- Bootstrap provider runtime wiring hotfix.
 
 ## Coding guidelines
 
@@ -22,6 +22,7 @@
 - Locale resolution should be delegated to resolver services instead of being hard-coded in controllers.
 - Every future phase should include or update one verification runner file so all syntax/check commands can be run with one command and the full output is written to a report file.
 - If a phase introduces a loader/verifier for a config file, include the baseline config file directly unless it is intentionally generated.
+- Apply tools should not assume local variable names such as `$container`; detect the concrete structure or fail with an actionable diagnostic.
 
 ## Future TODOs
 
