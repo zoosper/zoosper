@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Page repository dual content hydration foundation.
 - Page SEO metadata restoration and admin SEO section recovery.
+- Editor.js JSON hidden field and server-side block JSON validation on save.
 
 ## Coding guidelines
 
@@ -15,10 +15,11 @@
 
 ## Future TODOs
 
-- Add Editor.js JSON hidden field and server-side block_json validation on save.
 - Add server-side block renderer integration.
+- Add a safe feature flag or migration path to switch selected pages to `content_format=block_json`.
 - Add media library with uploads stored outside public first.
 - Add quote, delimiter, table and button blocks after renderer contracts are ready.
+- Add pagination to all search result grids.
 - CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
 - Static asset command: `php bin/zoosper static:publish`.
 - Consolidate developer tools into stable CLI commands.

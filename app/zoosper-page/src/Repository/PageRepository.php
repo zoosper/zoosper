@@ -41,6 +41,8 @@ final readonly class PageRepository
         string $content,
         string $status = 'draft',
         ?int $userId = null,
+        string $contentFormat = 'html',
+        ?string $contentJson = null,
         ?string $metaTitle = null,
         ?string $metaDescription = null,
         ?string $metaKeywords = null,
@@ -60,8 +62,8 @@ final readonly class PageRepository
             'updated_at' => gmdate('Y-m-d H:i:s'),
         ];
 
-        $this->addOptionalCreateColumn($columns, $values, $params, 'content_format', 'html', $this->hasContentFormat);
-        $this->addOptionalCreateColumn($columns, $values, $params, 'content_json', null, $this->hasContentJson);
+        $this->addOptionalCreateColumn($columns, $values, $params, 'content_format', $contentFormat, $this->hasContentFormat);
+        $this->addOptionalCreateColumn($columns, $values, $params, 'content_json', $contentJson, $this->hasContentJson);
         $this->addOptionalCreateColumn($columns, $values, $params, 'meta_title', $this->normaliseNullable($metaTitle), $this->hasMetaTitle);
         $this->addOptionalCreateColumn($columns, $values, $params, 'meta_description', $this->normaliseNullable($metaDescription), $this->hasMetaDescription);
         $this->addOptionalCreateColumn($columns, $values, $params, 'meta_keywords', $this->normaliseNullable($metaKeywords), $this->hasMetaKeywords);
@@ -82,6 +84,8 @@ final readonly class PageRepository
         string $slug,
         string $content,
         ?int $userId = null,
+        string $contentFormat = 'html',
+        ?string $contentJson = null,
         ?string $metaTitle = null,
         ?string $metaDescription = null,
         ?string $metaKeywords = null,
@@ -94,6 +98,8 @@ final readonly class PageRepository
             content: $content,
             status: 'published',
             userId: $userId,
+            contentFormat: $contentFormat,
+            contentJson: $contentJson,
             metaTitle: $metaTitle,
             metaDescription: $metaDescription,
             metaKeywords: $metaKeywords,
@@ -108,6 +114,8 @@ final readonly class PageRepository
         string $slug,
         string $content,
         ?int $userId = null,
+        string $contentFormat = 'html',
+        ?string $contentJson = null,
         ?string $metaTitle = null,
         ?string $metaDescription = null,
         ?string $metaKeywords = null,
@@ -131,8 +139,8 @@ final readonly class PageRepository
             'updated_at' => gmdate('Y-m-d H:i:s'),
         ];
 
-        $this->addOptionalUpdateColumn($sets, $params, 'content_format', 'html', $this->hasContentFormat);
-        $this->addOptionalUpdateColumn($sets, $params, 'content_json', null, $this->hasContentJson);
+        $this->addOptionalUpdateColumn($sets, $params, 'content_format', $contentFormat, $this->hasContentFormat);
+        $this->addOptionalUpdateColumn($sets, $params, 'content_json', $contentJson, $this->hasContentJson);
         $this->addOptionalUpdateColumn($sets, $params, 'meta_title', $this->normaliseNullable($metaTitle), $this->hasMetaTitle);
         $this->addOptionalUpdateColumn($sets, $params, 'meta_description', $this->normaliseNullable($metaDescription), $this->hasMetaDescription);
         $this->addOptionalUpdateColumn($sets, $params, 'meta_keywords', $this->normaliseNullable($metaKeywords), $this->hasMetaKeywords);

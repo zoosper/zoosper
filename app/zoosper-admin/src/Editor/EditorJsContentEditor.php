@@ -5,35 +5,38 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Editor;
 
 /**
- * Editor.js-oriented adapter with graceful textarea fallback.
+ * Editor.js-backed content editor adapter.
  *
- * Phase 0.68 does not bundle the Editor.js library yet. This adapter provides a
- * stable server-side rendering hook and keeps the textarea as source of truth so
- * ordinary POST/save and HTML sanitisation continue to work. A future npm/Vite
- * phase can load Editor.js locally and enhance the same markup.
+ * The textarea remains the submitted HTML fallback. The hidden content_json
+ * field stores the structured Editor.js document for future block_json
+ * rendering after server-side validation.
  */
 final readonly class EditorJsContentEditor implements ContentEditorInterface
 {
-    public function __construct(private TextareaContentEditor $fallback = new TextareaContentEditor())
-    {
-    }
-
-    public function code(): string
-    {
-        return 'editorjs';
-    }
-
+    /**
+     * @param array<string, mixed> $context
+     */
     public function render(string $fieldName, string $value, array $context = []): string
     {
-        $textarea = $this->fallback->render($fieldName, $value, $context);
-        $id = 'zoosper-editor-' . preg_replace('/[^a-z0-9_\-]+/i', '-', $fieldName);
-        $id = htmlspecialchars($id, ENT_QUOTES, 'UTF-8');
+        $id = 'zoosper-editorjs-' . bin2hex(random_bytes(6));
+        $safeId = htmlspecialchars($id, ENT_QUOTES, 'UTF-8');
+        $name = htmlspecialchars($fieldName, ENT_QUOTES, 'UTF-8');
         $label = htmlspecialchars((string) ($context['label'] ?? 'Content'), ENT_QUOTES, 'UTF-8');
+        $rows = max(6, (int) ($context['rows'] ?? 14));
+        $required = (bool) ($context['required'] ?? false) ? ' required' : '';
+        $content = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        $contentJson = htmlspecialchars((string) ($context['content_json'] ?? ''), ENT_QUOTES, 'UTF-8');
 
-        return '<div class="zoosper-content-editor" data-zoosper-editor="editorjs" data-editor-holder="' . $id . '">'
-            . '<div class="zoosper-content-editor__toolbar"><span>' . $label . '</span><span class="zoosper-content-editor__status">Textarea fallback active</span></div>'
-            . '<div id="' . $id . '" class="zoosper-content-editor__holder" aria-hidden="true"></div>'
-            . $textarea
-            . '</div>';
+        return <<<HTML
+<div class="zoosper-content-editor" data-zoosper-editor="editorjs">
+    <div class="zoosper-content-editor__toolbar">
+        <strong>{$label}</strong>
+        <span class="zoosper-content-editor__status">Editor.js adapter ready.</span>
+    </div>
+    <input type="hidden" name="content_json" value="{$contentJson}" data-zoosper-editor-json>
+    <div id="{$safeId}" class="zoosper-content-editor__holder" aria-hidden="true"></div>
+    <textarea name="{$name}" rows="{$rows}" class="admin-content-editor admin-content-editor--textarea"{$required}>{$content}</textarea>
+</div>
+HTML;
     }
 }

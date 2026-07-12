@@ -91,6 +91,19 @@
         return { time: Date.now(), blocks: blocks, version: '2.x' };
     }
 
+    function parseInitialJson(jsonInput) {
+        if (!jsonInput || String(jsonInput.value || '').trim() === '') {
+            return null;
+        }
+
+        try {
+            var decoded = JSON.parse(jsonInput.value);
+            return decoded && Array.isArray(decoded.blocks) ? decoded : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
     function renderListItems(items) {
         if (!Array.isArray(items)) {
             return '';
@@ -143,13 +156,22 @@
         return function () {
             var args = arguments;
             clearTimeout(timer);
-            timer = setTimeout(function () { callback.apply(null, args); }, delay);
+            timer = setTimeout(function () {
+                callback.apply(null, args);
+            }, delay);
         };
     }
 
     function setStatus(status, text) {
         if (status) {
             status.textContent = text;
+        }
+    }
+
+    function syncEditorData(data, textarea, jsonInput) {
+        textarea.value = editorDataToHtml(data);
+        if (jsonInput) {
+            jsonInput.value = JSON.stringify(data);
         }
     }
 
@@ -189,7 +211,7 @@
         wrapper.classList.add('is-editorjs-ready');
         wrapper.classList.add('is-editorjs-active');
         textarea.setAttribute('data-zoosper-editor-source', 'html');
-        setStatus(status, 'Editor.js ready with heading/list tools. Saves still pass through server-side HTML sanitisation.');
+        setStatus(status, 'Editor.js ready with JSON capture. Saves still pass through server-side HTML sanitisation.');
     }
 
     function fallbackToTextarea(wrapper, holder, textarea, status, message) {
@@ -204,6 +226,7 @@
         var status = wrapper.querySelector('.zoosper-content-editor__status');
         var holder = wrapper.querySelector('.zoosper-content-editor__holder');
         var textarea = wrapper.querySelector('textarea[name="content"]');
+        var jsonInput = wrapper.querySelector('input[name="content_json"], [data-zoosper-editor-json]');
         var form = textarea ? textarea.closest('form') : null;
 
         if (!holder || !textarea) {
@@ -219,12 +242,12 @@
 
         var editor = new window.EditorJS({
             holder: holder.id,
-            data: htmlToEditorData(textarea.value),
+            data: parseInitialJson(jsonInput) || htmlToEditorData(textarea.value),
             tools: buildToolsConfig(),
             placeholder: 'Start writing page content...',
             onChange: debounce(function () {
                 editor.save().then(function (data) {
-                    textarea.value = editorDataToHtml(data);
+                    syncEditorData(data, textarea, jsonInput);
                 }).catch(function () {
                     fallbackToTextarea(wrapper, holder, textarea, status, 'Editor sync failed. Textarea fallback remains available.');
                 });
@@ -235,7 +258,7 @@
             activateEditor(wrapper, holder, textarea, status);
             return editor.save();
         }).then(function (data) {
-            textarea.value = editorDataToHtml(data);
+            syncEditorData(data, textarea, jsonInput);
         }).catch(function () {
             fallbackToTextarea(wrapper, holder, textarea, status, 'Editor.js failed to initialise. Textarea fallback remains available.');
         });
@@ -248,7 +271,7 @@
 
                 event.preventDefault();
                 editor.save().then(function (data) {
-                    textarea.value = editorDataToHtml(data);
+                    syncEditorData(data, textarea, jsonInput);
                     form.submit();
                 }).catch(function () {
                     fallbackToTextarea(wrapper, holder, textarea, status, 'Editor submit sync failed. Submitting textarea fallback.');

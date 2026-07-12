@@ -19,6 +19,7 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Page\Admin\PageGridCriteria;
 use Zoosper\Page\Admin\PageGridRepository;
+use Zoosper\Page\Content\BlockJsonValidator;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
@@ -27,9 +28,9 @@ use Zoosper\Site\Repository\SiteRepository;
 /**
  * Admin CRUD controller for CMS pages.
  *
- * Page body content is sanitised on save. SEO metadata is escaped in form
- * rendering and persisted separately from the content body so future block_json
- * work does not remove the search engine optimisation editing section.
+ * Page body content is sanitised on save. Editor.js JSON is captured in
+ * `content_json`, validated server-side, and stored for the future block_json
+ * renderer while `content` remains the active sanitised HTML fallback.
  */
 final readonly class PageAdminController
 {
@@ -152,6 +153,8 @@ HTML);
                 content: $this->sanitiseContent((string) ($form['content'] ?? '')),
                 status: isset($form['publish']) ? 'published' : 'draft',
                 userId: $user->id,
+                contentFormat: 'html',
+                contentJson: $this->normaliseContentJson($form['content_json'] ?? null),
                 metaTitle: $this->normaliseOptionalString($form['meta_title'] ?? null),
                 metaDescription: $this->normaliseOptionalString($form['meta_description'] ?? null),
                 metaKeywords: $this->normaliseOptionalString($form['meta_keywords'] ?? null),
@@ -209,6 +212,8 @@ HTML);
                 slug: $this->normaliseSlug((string) ($form['slug'] ?? '')),
                 content: $this->sanitiseContent((string) ($form['content'] ?? '')),
                 userId: $user->id,
+                contentFormat: 'html',
+                contentJson: $this->normaliseContentJson($form['content_json'] ?? null),
                 metaTitle: $this->normaliseOptionalString($form['meta_title'] ?? null),
                 metaDescription: $this->normaliseOptionalString($form['meta_description'] ?? null),
                 metaKeywords: $this->normaliseOptionalString($form['meta_keywords'] ?? null),
@@ -311,6 +316,7 @@ HTML);
         $title = $this->e((string) ($submitted['title'] ?? $page?->title ?? ''));
         $slug = $this->e((string) ($submitted['slug'] ?? $page?->slug ?? ''));
         $content = $this->e((string) ($submitted['content'] ?? $page?->content ?? ''));
+        $contentJson = $this->e((string) ($submitted['content_json'] ?? $page?->contentJson ?? ''));
         $metaTitle = $this->e((string) ($submitted['meta_title'] ?? $page?->metaTitle ?? ''));
         $metaDescription = $this->e((string) ($submitted['meta_description'] ?? $page?->metaDescription ?? ''));
         $metaKeywords = $this->e((string) ($submitted['meta_keywords'] ?? $page?->metaKeywords ?? ''));
@@ -320,7 +326,7 @@ HTML);
         $errorHtml = $error !== null ? '<p class="error">' . $this->e($error) . '</p>' : '';
         $backUrl = $this->e($this->adminUrl('/pages'));
         $safeAction = $this->e($action);
-        $editorHtml = $this->renderContentEditor($content, $page);
+        $editorHtml = $this->renderContentEditor($content, $page, $contentJson);
 
         return <<<HTML
 {$errorHtml}
@@ -344,12 +350,14 @@ HTML);
 HTML;
     }
 
-    private function renderContentEditor(string $escapedContent, ?Page $page = null): string
+    private function renderContentEditor(string $escapedContent, ?Page $page = null, string $escapedContentJson = ''): string
     {
         $content = html_entity_decode($escapedContent, ENT_QUOTES, 'UTF-8');
+        $contentJson = html_entity_decode($escapedContentJson, ENT_QUOTES, 'UTF-8');
 
         if ($this->contentEditor === null) {
-            return '<textarea name="content" rows="14" required>' . $escapedContent . '</textarea>';
+            return '<input type="hidden" name="content_json" value="' . $escapedContentJson . '">'
+                . '<textarea name="content" rows="14" required>' . $escapedContent . '</textarea>';
         }
 
         return $this->contentEditor->render('content', $content, [
@@ -357,6 +365,7 @@ HTML;
             'rows' => 14,
             'required' => true,
             'page' => $page,
+            'content_json' => $contentJson,
         ]);
     }
 
@@ -422,6 +431,31 @@ HTML;
     private function isPublishedRow(Page|array $page): bool
     {
         return $page instanceof Page ? $page->isPublished() : (string) $this->pageValue($page, 'status') === 'published';
+    }
+
+    /**
+     * Validate and normalise the optional Editor.js JSON document.
+     */
+    private function normaliseContentJson(mixed $value): ?string
+    {
+        $json = trim((string) ($value ?? ''));
+        if ($json === '') {
+            return null;
+        }
+
+        $decoded = json_decode($json, true);
+        if (!is_array($decoded)) {
+            throw new RuntimeException('Invalid Editor.js JSON payload.');
+        }
+
+        $contentModelConfig = $this->config?->array('content_model') ?? [];
+        $validator = new BlockJsonValidator($contentModelConfig['block_json'] ?? []);
+        $result = $validator->validate($decoded);
+        if (!$result->valid) {
+            throw new RuntimeException('Invalid Editor.js JSON payload: ' . implode(' ', $result->errors));
+        }
+
+        return json_encode($decoded, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: null;
     }
 
     private function normaliseSlug(string $slug): string
