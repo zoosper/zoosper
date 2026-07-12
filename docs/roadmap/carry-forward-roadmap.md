@@ -4,6 +4,7 @@
 
 - Admin form processors wired into page save flow.
 - Translatable admin system messages foundation.
+- Verifier string interpolation hotfix.
 
 ## Coding guidelines
 
@@ -17,6 +18,7 @@
 - Prefer behaviour/contract/rendered-output verification over brittle source-string matching.
 - Preserve empty config handles when they intentionally document extension points.
 - All admin/system-facing messages should pass through a translation contract/helper instead of being emitted as final hard-coded strings.
+- Source-scanning verifier strings must avoid accidental PHP variable interpolation.
 
 ## Future TODOs
 

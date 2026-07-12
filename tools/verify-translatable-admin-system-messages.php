@@ -20,12 +20,12 @@ $checks = [
     'PageAdminController imports IdentityTranslator' => str_contains($controller, 'IdentityTranslator'),
     'PageAdminController accepts translator dependency' => str_contains($controller, '?TranslatorInterface $translator'),
     'PageAdminController has t helper' => str_contains($controller, 'private function t(string $message'),
-    'CSRF flash message is translated' => str_contains($controller, "error($this->t('Unable to save page. Invalid security token.')"),
-    'create success message is translated' => str_contains($controller, "success($this->t('Page created successfully.')"),
-    'save success message is translated' => str_contains($controller, "success($this->t('Page saved successfully.')"),
-    'publish status messages are translated' => str_contains($controller, "? $this->t('Page published successfully.')"),
-    'invalid token page title is translated' => str_contains($controller, "html($this->t('Invalid token')"),
-    'not found page title is translated' => str_contains($controller, "html($this->t('Page not found')"),
+    'CSRF flash message is translated' => str_contains($controller, 'error($this->t(\'Unable to save page. Invalid security token.\')'),
+    'create success message is translated' => str_contains($controller, 'success($this->t(\'Page created successfully.\')'),
+    'save success message is translated' => str_contains($controller, 'success($this->t(\'Page saved successfully.\')'),
+    'publish status messages are translated' => str_contains($controller, '? $this->t(\'Page published successfully.\')'),
+    'invalid token page title is translated' => str_contains($controller, 'html($this->t(\'Invalid token\')'),
+    'not found page title is translated' => str_contains($controller, 'html($this->t(\'Page not found\')'),
 ];
 
 $failed = false;
