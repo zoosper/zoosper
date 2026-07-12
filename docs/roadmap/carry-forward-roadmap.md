@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Bootstrap provider runtime wiring hotfix.
 - Admin translator container injection foundation.
+- Admin translator injection verifier hotfix.
 
 ## Coding guidelines
 
@@ -15,14 +15,13 @@
 - Keep controllers clean; admin UI sections and processors should be contributed through providers/registries/config where practical.
 - Third-party developers must be able to extend/override core behaviour without editing core code.
 - Prefer behaviour/contract/rendered-output verification over brittle source-string matching.
+- Source-scanning verifiers must target specific runtime patterns, not broad import/use strings.
 - Preserve empty config handles when they intentionally document extension points.
 - All admin/system-facing messages should pass through a translation contract/helper instead of being emitted as final hard-coded strings.
 - Source-scanning verifier strings must avoid accidental PHP variable interpolation.
 - Translation files should be module-owned where possible and project-overridable through config-level dictionaries.
 - Locale resolution should be delegated to resolver services instead of being hard-coded in controllers.
 - Every future phase should include or update one verification runner file so all syntax/check commands can be run with one command and the full output is written to a report file.
-- If a phase introduces a loader/verifier for a config file, include the baseline config file directly unless it is intentionally generated.
-- Apply tools should not assume local variable names such as `$container`; detect the concrete structure or fail with an actionable diagnostic.
 
 ## Future TODOs
 

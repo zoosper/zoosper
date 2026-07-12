@@ -83,7 +83,6 @@ function zoosper_verification_commands(string $php): array
         ['label' => 'Syntax: I18nServiceProvider.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/I18nServiceProvider.php']],
         ['label' => 'Syntax: page controllers config', 'command' => [$php, '-l', 'app/zoosper-page/config/controllers.php']],
         ['label' => 'Syntax: verify-admin-translator-container-injection.php', 'command' => [$php, '-l', 'tools/verify-admin-translator-container-injection.php']],
-        ['label' => 'Syntax: apply-bootstrap-provider-manifest-loader-to-application-factory.php', 'command' => [$php, '-l', 'tools/apply-bootstrap-provider-manifest-loader-to-application-factory.php']],
         ['label' => 'Syntax: verify-bootstrap-provider-manifest-runtime-wiring.php', 'command' => [$php, '-l', 'tools/verify-bootstrap-provider-manifest-runtime-wiring.php']],
         ['label' => 'Syntax: run-verification-suite.php', 'command' => [$php, '-l', 'tools/run-verification-suite.php']],
         ['label' => 'Verify: admin translator container injection', 'command' => [$php, 'tools/verify-admin-translator-container-injection.php']],
