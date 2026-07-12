@@ -17,18 +17,16 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
-    ['Syntax: SupportedLocaleProvider.php', [$php, '-l', 'app/zoosper-core/src/I18n/SupportedLocaleProvider.php']],
-    ['Syntax: apply-supported-admin-locales-config.php', [$php, '-l', 'tools/apply-supported-admin-locales-config.php']],
-    ['Syntax: apply-supported-locale-provider-registration.php', [$php, '-l', 'tools/apply-supported-locale-provider-registration.php']],
-    ['Syntax: verify-supported-admin-locales.php', [$php, '-l', 'tools/verify-supported-admin-locales.php']],
+    ['Syntax: AdminUserLocalePreferenceFieldRenderer.php', [$php, '-l', 'app/zoosper-admin/src/I18n/AdminUserLocalePreferenceFieldRenderer.php']],
+    ['Syntax: apply-admin-user-locale-preference-ui.php', [$php, '-l', 'tools/apply-admin-user-locale-preference-ui.php']],
+    ['Syntax: diagnose-admin-user-locale-preference-ui.php', [$php, '-l', 'tools/diagnose-admin-user-locale-preference-ui.php']],
+    ['Syntax: verify-admin-user-locale-preference-ui.php', [$php, '-l', 'tools/verify-admin-user-locale-preference-ui.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
+    ['Verify: admin user locale preference UI', [$php, 'tools/verify-admin-user-locale-preference-ui.php']],
     ['Verify: supported admin locales', [$php, 'tools/verify-supported-admin-locales.php']],
     ['Verify: admin context translator resolution', [$php, 'tools/verify-admin-context-translator-resolution.php']],
     ['Verify: admin translator injected runtime', [$php, 'tools/verify-admin-translator-injected-runtime.php']],
     ['Verify: admin user locale hydration', [$php, 'tools/verify-admin-user-locale-hydration.php']],
-    ['Verify: admin user locale preference', [$php, 'tools/verify-admin-user-locale-preference.php']],
-    ['Verify: i18n service provider registration', [$php, 'tools/verify-i18n-service-provider-registration.php']],
-    ['Verify: Editor.js JSON save pipeline', [$php, 'tools/verify-editorjs-json-save-pipeline.php']],
     ['Verify: page SEO metadata', [$php, 'tools/verify-page-seo-metadata.php']],
     ['Verify: service providers', [$php, 'tools/verify-service-providers.php']],
 ];

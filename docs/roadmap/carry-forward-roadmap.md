@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Admin translator injected runtime verifier hotfix.
 - Supported admin locales foundation.
+- Admin user locale preference UI foundation.
 
 ## Coding guidelines
 
@@ -12,12 +12,11 @@
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
 - Keep controllers clean; services and extension points should be provider/config driven where practical.
 - Locale codes used for translation lookup must be validated strictly before they affect file paths.
-- Verification tools must be updated when the intended priority/order of runtime fallbacks changes.
 - Every future phase should include or update one verification runner file.
 
 ## Future TODOs
 
-- Add admin-user locale preference UI using SupportedLocaleProvider.
+- Persist admin-user locale preference from the UI if the current admin-user save flow does not already include it.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Add server-side block renderer integration.
 - Add safe content_format=block_json switch.
