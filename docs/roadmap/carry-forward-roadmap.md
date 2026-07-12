@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Page SEO metadata restoration and admin SEO section recovery.
 - Editor.js JSON hidden field and server-side block JSON validation on save.
+- Editor.js ContentEditorInterface contract hotfix.
 
 ## Coding guidelines
 
@@ -12,6 +12,7 @@
 - Always include meaningful PHPDoc and helpful comments for models, repositories, services, tools and security-sensitive code.
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
 - Preserve page SEO metadata fields and the “Search engine optimisation” admin section during page-related refactors.
+- Add contract-level verification when implementing or replacing interfaces; syntax checks are not enough.
 
 ## Future TODOs
 
