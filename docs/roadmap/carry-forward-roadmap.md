@@ -2,9 +2,9 @@
 
 ## Completed foundations
 
-- Admin form processors wired into page save flow.
 - Translatable admin system messages foundation.
 - Verifier string interpolation hotfix.
+- Module-owned translation file aggregation foundation.
 
 ## Coding guidelines
 
@@ -19,11 +19,12 @@
 - Preserve empty config handles when they intentionally document extension points.
 - All admin/system-facing messages should pass through a translation contract/helper instead of being emitted as final hard-coded strings.
 - Source-scanning verifier strings must avoid accidental PHP variable interpolation.
+- Translation files should be module-owned where possible and project-overridable through config-level dictionaries.
 
 ## Future TODOs
 
-- Add module-owned translation file aggregation.
-- Replace `IdentityTranslator` with a locale-aware translator.
+- Wire `ArrayTranslator`/catalogue into the container once admin/site locale resolution is formalised.
+- Add admin/site locale resolution and fallback locale policy.
 - Add persistence helpers/payload consumers for processor-produced values.
 - Add replacement/remove/disable rules for section providers via config.
 - Add progressive enhancement for collapsible admin form sections or tabs if the page form becomes much longer.
@@ -41,4 +42,4 @@
 - CDN provider/purge adapter.
 - Index Manager.
 - Documentation website build pipeline.
-- Make sure all messages from system are translatable.e.g $this->flashMessages?->error('this message');
+- Customer login and manage their account
