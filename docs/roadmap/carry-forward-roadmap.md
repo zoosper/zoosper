@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Bootstrap provider manifest runtime wiring foundation.
 - Bootstrap provider runtime wiring hotfix.
+- Admin translator container injection foundation.
 
 ## Coding guidelines
 
@@ -26,7 +26,7 @@
 
 ## Future TODOs
 
-- Replace manual resolver construction in controllers with injected `TranslatorInterface` once container wiring is confirmed stable.
+- Reduce manual translator fallback from controllers after container injection remains stable.
 - Add admin-user locale preference support.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Add persistence helpers/payload consumers for processor-produced values.

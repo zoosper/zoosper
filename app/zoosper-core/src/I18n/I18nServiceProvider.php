@@ -7,12 +7,13 @@ namespace Zoosper\Core\I18n;
 use InvalidArgumentException;
 
 /**
- * Registers Zoosper i18n/translation services with a container-like object.
+ * Registers Zoosper i18n/translation services with the application container.
  *
- * The provider intentionally supports a small set of common container methods
- * (`set`, `singleton`, `bind`, `instance`) so it can bridge the current Marko
- * container implementation without coupling the i18n module to a concrete
- * container class too early.
+ * The current Zoosper container exposes `factory()` for lazy services, so this
+ * provider prefers that method when available. It still supports common
+ * container methods used by third-party integrations (`singleton`, `bind`,
+ * `set`, `instance`) without coupling the i18n package to one concrete
+ * container implementation too early.
  */
 final readonly class I18nServiceProvider
 {
@@ -35,8 +36,8 @@ final readonly class I18nServiceProvider
 
     private function registerService(object $container, string $id, callable $factory): void
     {
-        if (method_exists($container, 'set')) {
-            $container->set($id, $factory);
+        if (method_exists($container, 'factory')) {
+            $container->factory($id, $factory);
 
             return;
         }
@@ -53,12 +54,18 @@ final readonly class I18nServiceProvider
             return;
         }
 
+        if (method_exists($container, 'set')) {
+            $container->set($id, $factory());
+
+            return;
+        }
+
         if (method_exists($container, 'instance')) {
             $container->instance($id, $factory());
 
             return;
         }
 
-        throw new InvalidArgumentException('Unsupported container. Expected set(), singleton(), bind() or instance().');
+        throw new InvalidArgumentException('Unsupported container. Expected factory(), singleton(), bind(), set() or instance().');
     }
 }

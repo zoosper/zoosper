@@ -12,6 +12,7 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
+use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Page\Admin\PageGridRepository;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
@@ -31,5 +32,6 @@ return [
         $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
         $services->has(ContentEditorInterface::class) ? $services->get(ContentEditorInterface::class) : null,
+        $services->has(TranslatorInterface::class) ? $services->get(TranslatorInterface::class) : null,
     ),
 ];

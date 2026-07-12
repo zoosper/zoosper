@@ -48,7 +48,7 @@ foreach ($commands as $index => $command) {
     $overallOk = $overallOk && $ok;
     $summary[] = '- ' . $label . ': ' . ($ok ? 'ok' : 'FAIL');
 
-    $lines[] = str_pad('[' . str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) . '] ' . $label, 80, ' ');
+    $lines[] = '[' . str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) . '] ' . $label;
     $lines[] = 'Command: ' . implode(' ', array_map('escapeshellarg', $command['command']));
     $lines[] = 'Exit code: ' . $exitCode;
     $lines[] = '--- STDOUT ---';
@@ -72,9 +72,7 @@ foreach ($summary as $item) {
 
 exit($overallOk ? 0 : 2);
 
-/**
- * @return list<array{label: string, command: list<string>}>
- */
+/** @return list<array{label: string, command: list<string>}> */
 function zoosper_verification_commands(string $php): array
 {
     return [
@@ -82,24 +80,14 @@ function zoosper_verification_commands(string $php): array
         ['label' => 'Syntax: config/service_providers.php', 'command' => [$php, '-l', 'config/service_providers.php']],
         ['label' => 'Syntax: ApplicationFactory.php', 'command' => [$php, '-l', 'app/zoosper-core/src/Bootstrap/ApplicationFactory.php']],
         ['label' => 'Syntax: ServiceProviderManifestLoader.php', 'command' => [$php, '-l', 'app/zoosper-core/src/Bootstrap/ServiceProviderManifestLoader.php']],
-        ['label' => 'Syntax: LocaleResolution.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/LocaleResolution.php']],
-        ['label' => 'Syntax: LocaleResolverInterface.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/LocaleResolverInterface.php']],
-        ['label' => 'Syntax: ConfiguredLocaleResolver.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/ConfiguredLocaleResolver.php']],
-        ['label' => 'Syntax: TranslationResolver.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/TranslationResolver.php']],
-        ['label' => 'Syntax: AdminTranslatorResolver.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/AdminTranslatorResolver.php']],
         ['label' => 'Syntax: I18nServiceProvider.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/I18nServiceProvider.php']],
-        ['label' => 'Syntax: verify-admin-translator-locale-resolver-integration.php', 'command' => [$php, '-l', 'tools/verify-admin-translator-locale-resolver-integration.php']],
-        ['label' => 'Syntax: apply-admin-translator-resolver-to-controller.php', 'command' => [$php, '-l', 'tools/apply-admin-translator-resolver-to-controller.php']],
-        ['label' => 'Syntax: verify-admin-translator-runtime-wiring.php', 'command' => [$php, '-l', 'tools/verify-admin-translator-runtime-wiring.php']],
-        ['label' => 'Syntax: verify-i18n-service-provider-registration.php', 'command' => [$php, '-l', 'tools/verify-i18n-service-provider-registration.php']],
-        ['label' => 'Syntax: apply-i18n-service-provider-discovery.php', 'command' => [$php, '-l', 'tools/apply-i18n-service-provider-discovery.php']],
-        ['label' => 'Syntax: verify-i18n-service-provider-discovery.php', 'command' => [$php, '-l', 'tools/verify-i18n-service-provider-discovery.php']],
-        ['label' => 'Syntax: verify-bootstrap-provider-manifest-loader.php', 'command' => [$php, '-l', 'tools/verify-bootstrap-provider-manifest-loader.php']],
+        ['label' => 'Syntax: page controllers config', 'command' => [$php, '-l', 'app/zoosper-page/config/controllers.php']],
+        ['label' => 'Syntax: verify-admin-translator-container-injection.php', 'command' => [$php, '-l', 'tools/verify-admin-translator-container-injection.php']],
         ['label' => 'Syntax: apply-bootstrap-provider-manifest-loader-to-application-factory.php', 'command' => [$php, '-l', 'tools/apply-bootstrap-provider-manifest-loader-to-application-factory.php']],
         ['label' => 'Syntax: verify-bootstrap-provider-manifest-runtime-wiring.php', 'command' => [$php, '-l', 'tools/verify-bootstrap-provider-manifest-runtime-wiring.php']],
-        ['label' => 'Syntax: verify-service-provider-manifest-file.php', 'command' => [$php, '-l', 'tools/verify-service-provider-manifest-file.php']],
-        ['label' => 'Syntax: verify-admin-site-locale-resolution.php', 'command' => [$php, '-l', 'tools/verify-admin-site-locale-resolution.php']],
         ['label' => 'Syntax: run-verification-suite.php', 'command' => [$php, '-l', 'tools/run-verification-suite.php']],
+        ['label' => 'Verify: admin translator container injection', 'command' => [$php, 'tools/verify-admin-translator-container-injection.php']],
+        ['label' => 'Verify: bootstrap provider manifest runtime wiring', 'command' => [$php, 'tools/verify-bootstrap-provider-manifest-runtime-wiring.php']],
         ['label' => 'Verify: admin/site locale resolution', 'command' => [$php, 'tools/verify-admin-site-locale-resolution.php']],
         ['label' => 'Verify: admin translator locale resolver integration', 'command' => [$php, 'tools/verify-admin-translator-locale-resolver-integration.php']],
         ['label' => 'Verify: admin translator runtime wiring', 'command' => [$php, 'tools/verify-admin-translator-runtime-wiring.php']],
@@ -107,10 +95,8 @@ function zoosper_verification_commands(string $php): array
         ['label' => 'Verify: service provider manifest file', 'command' => [$php, 'tools/verify-service-provider-manifest-file.php']],
         ['label' => 'Verify: i18n service provider discovery', 'command' => [$php, 'tools/verify-i18n-service-provider-discovery.php']],
         ['label' => 'Verify: bootstrap provider manifest loader', 'command' => [$php, 'tools/verify-bootstrap-provider-manifest-loader.php']],
-        ['label' => 'Verify: bootstrap provider manifest runtime wiring', 'command' => [$php, 'tools/verify-bootstrap-provider-manifest-runtime-wiring.php']],
         ['label' => 'Verify: translatable admin system messages', 'command' => [$php, 'tools/verify-translatable-admin-system-messages.php']],
         ['label' => 'Verify: admin translator resolution', 'command' => [$php, 'tools/verify-admin-translator-resolution.php']],
-        ['label' => 'Verify: translation file aggregator comment safety', 'command' => [$php, 'tools/verify-translation-file-aggregator-comment-safety.php']],
         ['label' => 'Verify: module-owned translation file aggregation', 'command' => [$php, 'tools/verify-module-owned-translation-file-aggregation.php']],
         ['label' => 'Verify: admin form processor page save flow', 'command' => [$php, 'tools/verify-admin-form-processor-page-save-flow.php']],
         ['label' => 'Verify: admin form config empty handles', 'command' => [$php, 'tools/verify-admin-form-config-aggregator-empty-handles.php']],

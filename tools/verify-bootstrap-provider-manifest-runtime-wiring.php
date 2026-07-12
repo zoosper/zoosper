@@ -15,14 +15,17 @@ $providers = is_array($manifest) && isset($manifest['providers']) && is_array($m
     ? array_values(array_filter($manifest['providers'], 'is_string'))
     : [];
 
+$loaderPosition = strpos($factory, 'ServiceProviderManifestLoader');
+$controllerLoaderPosition = strpos($factory, 'ControllerProviderLoader');
+
 $checks = [
     'ApplicationFactory exists' => is_file($factoryPath),
     'ServiceProviderManifestLoader exists' => class_exists(\Zoosper\Core\Bootstrap\ServiceProviderManifestLoader::class),
     'service provider manifest exists' => is_file($manifestPath),
     'manifest contains I18nServiceProvider' => in_array(\Zoosper\Core\I18n\I18nServiceProvider::class, $providers, true),
-    'ApplicationFactory references ServiceProviderManifestLoader' => str_contains($factory, 'ServiceProviderManifestLoader'),
+    'ApplicationFactory references ServiceProviderManifestLoader' => $loaderPosition !== false,
     'ApplicationFactory loads manifest into a container variable' => preg_match('/->load\s*\(\s*\$[A-Za-z_][A-Za-z0-9_]*/', $factory) === 1,
-    'ApplicationFactory references config/service_providers.php loader comment or class' => str_contains($factory, 'config/service_providers.php') || str_contains($factory, 'ServiceProviderManifestLoader'),
+    'ApplicationFactory loads manifest before ControllerProviderLoader' => $loaderPosition !== false && $controllerLoaderPosition !== false && $loaderPosition < $controllerLoaderPosition,
 ];
 
 $failed = false;
