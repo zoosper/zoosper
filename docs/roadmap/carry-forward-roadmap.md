@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- I18n service provider registration foundation.
 - I18n service provider discovery registration foundation.
+- Bootstrap provider manifest loader foundation.
 
 ## Coding guidelines
 
@@ -24,7 +24,7 @@
 
 ## Future TODOs
 
-- Wire `config/service_providers.php` into the concrete bootstrap provider loader if it is not already loaded by the framework.
+- Wire `ServiceProviderManifestLoader` into the concrete application/bootstrap container creation point.
 - Replace manual resolver construction in controllers with injected `TranslatorInterface` once container wiring is complete.
 - Add admin-user locale preference support.
 - Add per-site locale settings from SiteContext/SiteRepository.
