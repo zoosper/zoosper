@@ -8,6 +8,8 @@ use RuntimeException;
 use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\Admin\Form\AdminFormConfigAggregator;
 use Zoosper\Admin\Form\AdminFormConfigProviderFactory;
+use Zoosper\Admin\Form\AdminFormProcessorConfigFactory;
+use Zoosper\Admin\Form\AdminFormProcessorRegistry;
 use Zoosper\Admin\Form\AdminFormProviderRegistry;
 use Zoosper\Admin\Form\AdminFormRenderer;
 use Zoosper\Admin\Layout\AdminLayout;
@@ -58,6 +60,8 @@ final readonly class PageAdminController
         private ?AdminFormProviderRegistry $pageFormSections = null,
         private ?AdminFormRenderer $adminFormRenderer = null,
         private ?AdminFormConfigProviderFactory $adminFormConfigProviderFactory = null,
+        private ?AdminFormProcessorRegistry $pageFormProcessors = null,
+        private ?AdminFormProcessorConfigFactory $adminFormProcessorConfigFactory = null,
     ) {
     }
 
@@ -156,6 +160,13 @@ HTML);
             return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: 'Invalid security token.', submitted: $form), 419);
         }
 
+        $processorError = $this->processPageForm('create', $form, null, $user);
+        if ($processorError !== null) {
+            $this->flashMessages?->error('Unable to create page. Please review the form.', 'page.processor_create_failed');
+
+            return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $processorError, submitted: $form), 422);
+        }
+
         try {
             $id = $this->pages->create(
                 siteId: (int) ($form['site_id'] ?? 0),
@@ -213,6 +224,13 @@ HTML);
             $this->flashMessages?->error('Unable to save page. Invalid security token.', 'page.csrf_failed');
 
             return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, 'Invalid security token.', $form), 419);
+        }
+
+        $processorError = $this->processPageForm('update', $form, $page, $user);
+        if ($processorError !== null) {
+            $this->flashMessages?->error('Unable to save page. Please review the form.', 'page.processor_save_failed');
+
+            return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, $processorError, $form), 422);
         }
 
         try {
@@ -372,6 +390,35 @@ HTML);
     private function projectRootPath(): string
     {
         return dirname(__DIR__, 4);
+    }
+
+
+    /**
+     * @param array<string, mixed> $form
+     */
+    private function processPageForm(string $action, array $form, ?Page $page, AdminUser $user): ?string
+    {
+        $registry = $this->pageFormProcessors ?? $this->defaultPageFormProcessorRegistry();
+        $result = $registry->process('page.form', $form, [
+            'action' => $action,
+            'page' => $page,
+            'user' => $user,
+        ]);
+
+        if ($result->valid) {
+            return null;
+        }
+
+        return implode(' ', $result->errors);
+    }
+
+    private function defaultPageFormProcessorRegistry(): AdminFormProcessorRegistry
+    {
+        $factory = $this->adminFormProcessorConfigFactory ?? new AdminFormProcessorConfigFactory();
+        $rootConfig = $this->config?->array('admin_forms') ?? [];
+        $moduleConfig = (new AdminFormConfigAggregator($this->projectRootPath()))->aggregate($rootConfig);
+
+        return $factory->create($moduleConfig);
     }
 
     private function renderContentEditor(string $escapedContent, ?Page $page = null, string $escapedContentJson = ''): string

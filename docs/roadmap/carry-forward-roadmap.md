@@ -4,8 +4,8 @@
 
 - Module admin form config aggregation foundation.
 - Admin form processors foundation.
-- Admin form processors config hotfix.
 - Empty admin form processor handle aggregation hotfix.
+- Admin form processors wired into page save flow.
 
 ## Coding guidelines
 
@@ -21,7 +21,7 @@
 
 ## Future TODOs
 
-- Wire admin form processors into page create/update flows with clear validation error handling.
+- Add persistence helpers/payload consumers for processor-produced values.
 - Add replacement/remove/disable rules for section providers via config.
 - Add progressive enhancement for collapsible admin form sections or tabs if the page form becomes much longer.
 - Add server-side block renderer integration.
@@ -38,3 +38,4 @@
 - CDN provider/purge adapter.
 - Index Manager.
 - Documentation website build pipeline.
+- Make sure all messages from system are translatable.e.g $this->flashMessages?->error('this message');
