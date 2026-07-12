@@ -8,6 +8,8 @@ use RuntimeException;
 use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
+use Zoosper\Admin\Form\AdminFormProviderRegistry;
+use Zoosper\Admin\Form\AdminFormRenderer;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Access\Permission;
 use Zoosper\Auth\Model\AdminUser;
@@ -19,6 +21,10 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Page\Admin\PageGridCriteria;
 use Zoosper\Page\Admin\PageGridRepository;
+use Zoosper\Page\Admin\Form\PageContentSectionProvider;
+use Zoosper\Page\Admin\Form\PageDetailsSectionProvider;
+use Zoosper\Page\Admin\Form\PagePublishingSectionProvider;
+use Zoosper\Page\Admin\Form\PageSeoSectionProvider;
 use Zoosper\Page\Content\BlockJsonValidator;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
@@ -47,6 +53,8 @@ final readonly class PageAdminController
         private ?FlashMessageStoreInterface $flashMessages = null,
         private ?ConfigRepository $config = null,
         private ?ContentEditorInterface $contentEditor = null,
+        private ?AdminFormProviderRegistry $pageFormSections = null,
+        private ?AdminFormRenderer $adminFormRenderer = null,
     ) {
     }
 
@@ -311,67 +319,43 @@ HTML);
     /** @param array<string, mixed> $submitted */
     private function form(string $action, ?Page $page = null, ?string $error = null, array $submitted = []): string
     {
-        $token = $this->e($this->csrf->token());
+        $token = $this->csrf->token();
         $siteId = (int) ($submitted['site_id'] ?? $page?->siteId ?? 0);
-        $title = $this->e((string) ($submitted['title'] ?? $page?->title ?? ''));
-        $slug = $this->e((string) ($submitted['slug'] ?? $page?->slug ?? ''));
         $content = $this->e((string) ($submitted['content'] ?? $page?->content ?? ''));
         $contentJson = $this->e((string) ($submitted['content_json'] ?? $page?->contentJson ?? ''));
-        $metaTitle = $this->e((string) ($submitted['meta_title'] ?? $page?->metaTitle ?? ''));
-        $metaDescription = $this->e((string) ($submitted['meta_description'] ?? $page?->metaDescription ?? ''));
-        $metaKeywords = $this->e((string) ($submitted['meta_keywords'] ?? $page?->metaKeywords ?? ''));
-        $canonicalUrl = $this->e((string) ($submitted['canonical_url'] ?? $page?->canonicalUrl ?? ''));
-        $siteOptions = $this->siteOptions($siteId);
-        $publishChecked = (isset($submitted['publish']) || $page?->isPublished()) ? ' checked' : '';
-        $errorHtml = $error !== null ? '<p class="error">' . $this->e($error) . '</p>' : '';
-        $backUrl = $this->e($this->adminUrl('/pages'));
-        $safeAction = $this->e($action);
         $editorHtml = $this->renderContentEditor($content, $page, $contentJson);
+        $errorHtml = $error !== null ? '<p class="error">' . $this->e($error) . '</p>' : '';
 
-        return <<<HTML
-{$errorHtml}
-<form method="post" action="{$safeAction}" class="page-form page-form--sectioned">
-    <input type="hidden" name="_csrf_token" value="{$token}">
+        $context = [
+            'page' => $page,
+            'submitted' => $submitted,
+            'siteOptions' => $this->siteOptions($siteId),
+            'title' => $this->e((string) ($submitted['title'] ?? $page?->title ?? '')),
+            'slug' => $this->e((string) ($submitted['slug'] ?? $page?->slug ?? '')),
+            'editorHtml' => $editorHtml,
+            'contentJson' => $contentJson,
+            'metaTitle' => $this->e((string) ($submitted['meta_title'] ?? $page?->metaTitle ?? '')),
+            'metaDescription' => $this->e((string) ($submitted['meta_description'] ?? $page?->metaDescription ?? '')),
+            'metaKeywords' => $this->e((string) ($submitted['meta_keywords'] ?? $page?->metaKeywords ?? '')),
+            'canonicalUrl' => $this->e((string) ($submitted['canonical_url'] ?? $page?->canonicalUrl ?? '')),
+            'publishChecked' => (isset($submitted['publish']) || $page?->isPublished()) ? ' checked' : '',
+            'backUrl' => $this->e($this->adminUrl('/pages')),
+        ];
 
-    <section class="card page-form__section page-form__section--details" aria-labelledby="page-details-heading">
-        <header class="page-form__section-header">
-            <h2 id="page-details-heading">Page details</h2>
-            <p class="muted">Choose the site and define the public page identity.</p>
-        </header>
-        <label>Site <select name="site_id" required>{$siteOptions}</select></label>
-        <label>Title <input type="text" name="title" value="{$title}" required></label>
-        <label>Slug <input type="text" name="slug" value="{$slug}" required></label>
-    </section>
+        $registry = $this->pageFormSections ?? $this->defaultPageFormSectionRegistry();
+        $renderer = $this->adminFormRenderer ?? new AdminFormRenderer();
+        $sections = $registry->sectionsFor('page.form', $context);
 
-    <section class="card page-form__section page-form__section--content" aria-labelledby="page-content-heading">
-        <header class="page-form__section-header">
-            <h2 id="page-content-heading">Content</h2>
-            <p class="muted">Edit the page body. The HTML fallback is sanitised and Editor.js JSON is validated on save.</p>
-        </header>
-        {$editorHtml}
-    </section>
+        return $errorHtml . $renderer->render($action, $token, $sections);
+    }
 
-    <section class="card page-form__section page-form__section--seo" aria-labelledby="page-seo-heading">
-        <header class="page-form__section-header">
-            <h2 id="page-seo-heading">Search engine optimisation</h2>
-            <p class="muted">Optional search metadata kept separate from the page body.</p>
-        </header>
-        <label>Meta title <input type="text" name="meta_title" value="{$metaTitle}" maxlength="255"></label>
-        <label>Meta description <textarea name="meta_description" rows="3" maxlength="500">{$metaDescription}</textarea></label>
-        <label>Meta keywords <input type="text" name="meta_keywords" value="{$metaKeywords}" maxlength="500"></label>
-        <label>Canonical URL <input type="url" name="canonical_url" value="{$canonicalUrl}" maxlength="500"></label>
-    </section>
-
-    <section class="card page-form__section page-form__section--publishing" aria-labelledby="page-publishing-heading">
-        <header class="page-form__section-header">
-            <h2 id="page-publishing-heading">Publishing</h2>
-            <p class="muted">Control publication state and save your changes.</p>
-        </header>
-        <label class="checkbox"><input type="checkbox" name="publish" value="1"{$publishChecked}> Publish page</label>
-        <div class="toolbar"><button type="submit">Save page</button><a class="button secondary" href="{$backUrl}">Back</a></div>
-    </section>
-</form>
-HTML;
+    private function defaultPageFormSectionRegistry(): AdminFormProviderRegistry
+    {
+        return (new AdminFormProviderRegistry())
+            ->add(new PageDetailsSectionProvider())
+            ->add(new PageContentSectionProvider())
+            ->add(new PageSeoSectionProvider())
+            ->add(new PagePublishingSectionProvider());
     }
 
     private function renderContentEditor(string $escapedContent, ?Page $page = null, string $escapedContentJson = ''): string

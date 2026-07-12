@@ -2,10 +2,8 @@
 
 ## Completed foundations
 
-- Editor.js JSON hidden field and server-side block JSON validation on save.
-- Editor.js ContentEditorInterface contract hotfix.
-- Editor.js JSON save verifier alignment.
 - Admin page form section organisation foundation.
+- Admin form section registry / page form extensibility foundation.
 
 ## Coding guidelines
 
@@ -14,11 +12,12 @@
 - Always include meaningful PHPDoc and helpful comments for models, repositories, services, tools and security-sensitive code.
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
 - Preserve page SEO metadata fields and the “Search engine optimisation” admin section during page-related refactors.
-- Add contract-level verification when implementing or replacing interfaces; syntax checks are not enough.
-- Prefer behaviour/contract verification over brittle source-string matching.
+- Keep controllers clean; admin UI sections should be contributed through providers/registries where practical.
+- Third-party developers must be able to extend/override core behaviour without editing core code.
 
 ## Future TODOs
-
+- Add provider registration through module service providers/config so third-party modules can contribute admin sections automatically.
+- Add admin form processors so third-party sections can validate and persist their own fields.
 - Add progressive enhancement for collapsible admin form sections or tabs if the page form becomes much longer.
 - Add server-side block renderer integration.
 - Add a safe feature flag or migration path to switch selected pages to `content_format=block_json`.
