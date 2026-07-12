@@ -147,6 +147,14 @@ final readonly class LoginController
 <form method="post" action="/admin/login" class="login-form">
     <input type="hidden" name="_csrf_token" value="{$token}">
     <label>Email <input type="email" name="email" value="{$email}" autocomplete="username" required autofocus></label>
+        <div class="admin-form-field admin-form-field--locale">
+            <label for="admin-user-locale">Admin interface locale</label>
+            <select id="admin-user-locale" name="locale">
+                <option value="">Use configured admin locale</option>
+                <option value="en_AU" <?= (($submitted['locale'] ?? $user->locale ?? '') === 'en_AU') ? 'selected' : '' ?>>English (Australia)</option>
+            </select>
+            <small class="admin-form-help">Leave blank to use the configured admin locale.</small>
+        </div>
     <label>Password <input type="password" name="password" autocomplete="current-password" required></label>
     <button type="submit">Sign in</button>
 </form>
