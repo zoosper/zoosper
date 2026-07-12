@@ -45,6 +45,7 @@ function zoosper_verification_commands(): array
 
     return [
         ['label' => 'Syntax: config/i18n.php', 'command' => [$php, '-l', 'config/i18n.php']],
+        ['label' => 'Syntax: config/service_providers.php', 'command' => [$php, '-l', 'config/service_providers.php']],
         ['label' => 'Syntax: LocaleResolution.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/LocaleResolution.php']],
         ['label' => 'Syntax: LocaleResolverInterface.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/LocaleResolverInterface.php']],
         ['label' => 'Syntax: ConfiguredLocaleResolver.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/ConfiguredLocaleResolver.php']],
@@ -59,12 +60,14 @@ function zoosper_verification_commands(): array
         ['label' => 'Syntax: apply-i18n-service-provider-discovery.php', 'command' => [$php, '-l', 'tools/apply-i18n-service-provider-discovery.php']],
         ['label' => 'Syntax: verify-i18n-service-provider-discovery.php', 'command' => [$php, '-l', 'tools/verify-i18n-service-provider-discovery.php']],
         ['label' => 'Syntax: verify-bootstrap-provider-manifest-loader.php', 'command' => [$php, '-l', 'tools/verify-bootstrap-provider-manifest-loader.php']],
+        ['label' => 'Syntax: verify-service-provider-manifest-file.php', 'command' => [$php, '-l', 'tools/verify-service-provider-manifest-file.php']],
         ['label' => 'Syntax: verify-admin-site-locale-resolution.php', 'command' => [$php, '-l', 'tools/verify-admin-site-locale-resolution.php']],
         ['label' => 'Syntax: run-verification-suite.php', 'command' => [$php, '-l', 'tools/run-verification-suite.php']],
         ['label' => 'Verify: admin/site locale resolution', 'command' => [$php, 'tools/verify-admin-site-locale-resolution.php']],
         ['label' => 'Verify: admin translator locale resolver integration', 'command' => [$php, 'tools/verify-admin-translator-locale-resolver-integration.php']],
         ['label' => 'Verify: admin translator runtime wiring', 'command' => [$php, 'tools/verify-admin-translator-runtime-wiring.php']],
         ['label' => 'Verify: i18n service provider registration', 'command' => [$php, 'tools/verify-i18n-service-provider-registration.php']],
+        ['label' => 'Verify: service provider manifest file', 'command' => [$php, 'tools/verify-service-provider-manifest-file.php']],
         ['label' => 'Verify: i18n service provider discovery', 'command' => [$php, 'tools/verify-i18n-service-provider-discovery.php']],
         ['label' => 'Verify: bootstrap provider manifest loader', 'command' => [$php, 'tools/verify-bootstrap-provider-manifest-loader.php']],
         ['label' => 'Verify: translatable admin system messages', 'command' => [$php, 'tools/verify-translatable-admin-system-messages.php']],
