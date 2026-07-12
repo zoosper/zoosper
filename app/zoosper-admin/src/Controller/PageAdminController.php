@@ -24,6 +24,13 @@ use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
 use Zoosper\Site\Repository\SiteRepository;
 
+/**
+ * Admin CRUD controller for CMS pages.
+ *
+ * Page body content is sanitised on save. SEO metadata is escaped in form
+ * rendering and persisted separately from the content body so future block_json
+ * work does not remove the search engine optimisation editing section.
+ */
 final readonly class PageAdminController
 {
     public function __construct(
@@ -134,11 +141,7 @@ HTML);
         if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
             $this->flashMessages?->error('Unable to save page. Invalid security token.', 'page.csrf_failed');
 
-            return $this->html(
-                'Create page',
-                $this->form($this->adminUrl('/pages/create'), error: 'Invalid security token.', submitted: $form),
-                419,
-            );
+            return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: 'Invalid security token.', submitted: $form), 419);
         }
 
         try {
@@ -149,6 +152,10 @@ HTML);
                 content: $this->sanitiseContent((string) ($form['content'] ?? '')),
                 status: isset($form['publish']) ? 'published' : 'draft',
                 userId: $user->id,
+                metaTitle: $this->normaliseOptionalString($form['meta_title'] ?? null),
+                metaDescription: $this->normaliseOptionalString($form['meta_description'] ?? null),
+                metaKeywords: $this->normaliseOptionalString($form['meta_keywords'] ?? null),
+                canonicalUrl: $this->normaliseOptionalString($form['canonical_url'] ?? null),
             );
 
             $this->flashMessages?->success('Page created successfully.', 'page.created');
@@ -157,11 +164,7 @@ HTML);
         } catch (RuntimeException $exception) {
             $this->flashMessages?->error('Unable to create page. Please review the form.', 'page.create_failed');
 
-            return $this->html(
-                'Create page',
-                $this->form($this->adminUrl('/pages/create'), error: $exception->getMessage(), submitted: $form),
-                422,
-            );
+            return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $exception->getMessage(), submitted: $form), 422);
         }
     }
 
@@ -195,11 +198,7 @@ HTML);
         if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
             $this->flashMessages?->error('Unable to save page. Invalid security token.', 'page.csrf_failed');
 
-            return $this->html(
-                'Edit page',
-                $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, 'Invalid security token.', $form),
-                419,
-            );
+            return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, 'Invalid security token.', $form), 419);
         }
 
         try {
@@ -210,6 +209,10 @@ HTML);
                 slug: $this->normaliseSlug((string) ($form['slug'] ?? '')),
                 content: $this->sanitiseContent((string) ($form['content'] ?? '')),
                 userId: $user->id,
+                metaTitle: $this->normaliseOptionalString($form['meta_title'] ?? null),
+                metaDescription: $this->normaliseOptionalString($form['meta_description'] ?? null),
+                metaKeywords: $this->normaliseOptionalString($form['meta_keywords'] ?? null),
+                canonicalUrl: $this->normaliseOptionalString($form['canonical_url'] ?? null),
             );
 
             if (isset($form['publish'])) {
@@ -222,11 +225,7 @@ HTML);
         } catch (RuntimeException $exception) {
             $this->flashMessages?->error('Unable to save page. Please review the form.', 'page.save_failed');
 
-            return $this->html(
-                'Edit page',
-                $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, $exception->getMessage(), $form),
-                422,
-            );
+            return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, $exception->getMessage(), $form), 422);
         }
     }
 
@@ -277,9 +276,7 @@ HTML);
             return $this->html('Page not found', '<p>Page not found.</p>', 404);
         }
 
-        $publish
-            ? $this->pages->publish($page->id, $user->id)
-            : $this->pages->unpublish($page->id, $user->id);
+        $publish ? $this->pages->publish($page->id, $user->id) : $this->pages->unpublish($page->id, $user->id);
 
         $this->flashMessages?->success(
             $publish ? 'Page published successfully.' : 'Page unpublished successfully.',
@@ -298,9 +295,7 @@ HTML);
     {
         $id = $request->query('id');
 
-        return $id !== null && ctype_digit($id)
-            ? $this->pages->findById((int) $id)
-            : null;
+        return $id !== null && ctype_digit($id) ? $this->pages->findById((int) $id) : null;
     }
 
     private function sanitiseContent(string $content): string
@@ -316,6 +311,10 @@ HTML);
         $title = $this->e((string) ($submitted['title'] ?? $page?->title ?? ''));
         $slug = $this->e((string) ($submitted['slug'] ?? $page?->slug ?? ''));
         $content = $this->e((string) ($submitted['content'] ?? $page?->content ?? ''));
+        $metaTitle = $this->e((string) ($submitted['meta_title'] ?? $page?->metaTitle ?? ''));
+        $metaDescription = $this->e((string) ($submitted['meta_description'] ?? $page?->metaDescription ?? ''));
+        $metaKeywords = $this->e((string) ($submitted['meta_keywords'] ?? $page?->metaKeywords ?? ''));
+        $canonicalUrl = $this->e((string) ($submitted['canonical_url'] ?? $page?->canonicalUrl ?? ''));
         $siteOptions = $this->siteOptions($siteId);
         $publishChecked = (isset($submitted['publish']) || $page?->isPublished()) ? ' checked' : '';
         $errorHtml = $error !== null ? '<p class="error">' . $this->e($error) . '</p>' : '';
@@ -332,6 +331,13 @@ HTML);
     <label>Slug <input type="text" name="slug" value="{$slug}" required></label>
     <label>Content</label>
     {$editorHtml}
+    <fieldset class="card page-form__section page-form__seo">
+        <legend>Search engine optimisation</legend>
+        <label>Meta title <input type="text" name="meta_title" value="{$metaTitle}" maxlength="255"></label>
+        <label>Meta description <textarea name="meta_description" rows="3" maxlength="500">{$metaDescription}</textarea></label>
+        <label>Meta keywords <input type="text" name="meta_keywords" value="{$metaKeywords}" maxlength="500"></label>
+        <label>Canonical URL <input type="url" name="canonical_url" value="{$canonicalUrl}" maxlength="500"></label>
+    </fieldset>
     <label class="checkbox"><input type="checkbox" name="publish" value="1"{$publishChecked}> Publish page</label>
     <div class="toolbar"><button type="submit">Save page</button><a class="button secondary" href="{$backUrl}">Back</a></div>
 </form>
@@ -357,7 +363,6 @@ HTML;
     private function siteOptions(int $selectedSiteId): string
     {
         $html = '';
-
         foreach ($this->sites->allActive() as $site) {
             $selected = $site->id === $selectedSiteId ? ' selected' : '';
             $label = $this->e($site->name . ' (' . $site->code . ')');
@@ -379,10 +384,7 @@ HTML;
             return $this->statusButton($page);
         }
 
-        return $this->statusButtonByValues(
-            (int) $this->pageValue($page, 'id'),
-            $this->isPublishedRow($page),
-        );
+        return $this->statusButtonByValues((int) $this->pageValue($page, 'id'), $this->isPublishedRow($page));
     }
 
     private function statusButtonByValues(int $pageId, bool $isPublished): string
@@ -419,11 +421,7 @@ HTML;
     /** @param Page|array<string, mixed> $page */
     private function isPublishedRow(Page|array $page): bool
     {
-        if ($page instanceof Page) {
-            return $page->isPublished();
-        }
-
-        return (string) $this->pageValue($page, 'status') === 'published';
+        return $page instanceof Page ? $page->isPublished() : (string) $this->pageValue($page, 'status') === 'published';
     }
 
     private function normaliseSlug(string $slug): string
@@ -434,12 +432,16 @@ HTML;
         return trim($slug, '-');
     }
 
+    private function normaliseOptionalString(mixed $value): ?string
+    {
+        $value = trim((string) ($value ?? ''));
+
+        return $value === '' ? null : $value;
+    }
+
     private function html(string $title, string $content, int $statusCode = 200): Response
     {
-        return Response::html(
-            $this->layout->render($title, $content, $this->guard->user(), 'pages'),
-            $statusCode,
-        );
+        return Response::html($this->layout->render($title, $content, $this->guard->user(), 'pages'), $statusCode);
     }
 
     private function adminUrl(string $path): string

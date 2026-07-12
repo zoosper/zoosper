@@ -5,28 +5,47 @@ declare(strict_types=1);
 namespace Zoosper\Page\Repository;
 
 use PDO;
-use RuntimeException;
 use Zoosper\Page\Model\Page;
 
 /**
  * Repository for CMS pages.
  *
- * Phase 0.80 hydrates and preserves dual content metadata while keeping the
- * current HTML save/render behaviour unchanged.
+ * The repository hydrates dual content metadata (`content_format`,
+ * `content_json`) and SEO metadata while keeping the current HTML save/render
+ * behaviour unchanged. Column detection keeps older local databases compatible
+ * during phased development.
  */
 final readonly class PageRepository
 {
     private bool $hasContentFormat;
     private bool $hasContentJson;
+    private bool $hasMetaTitle;
+    private bool $hasMetaDescription;
+    private bool $hasMetaKeywords;
+    private bool $hasCanonicalUrl;
 
     public function __construct(private PDO $pdo)
     {
         $this->hasContentFormat = $this->columnExists('pages', 'content_format');
         $this->hasContentJson = $this->columnExists('pages', 'content_json');
+        $this->hasMetaTitle = $this->columnExists('pages', 'meta_title');
+        $this->hasMetaDescription = $this->columnExists('pages', 'meta_description');
+        $this->hasMetaKeywords = $this->columnExists('pages', 'meta_keywords');
+        $this->hasCanonicalUrl = $this->columnExists('pages', 'canonical_url');
     }
 
-    public function create(int $siteId, string $title, string $slug, string $content, string $status = 'draft', ?int $userId = null): int
-    {
+    public function create(
+        int $siteId,
+        string $title,
+        string $slug,
+        string $content,
+        string $status = 'draft',
+        ?int $userId = null,
+        ?string $metaTitle = null,
+        ?string $metaDescription = null,
+        ?string $metaKeywords = null,
+        ?string $canonicalUrl = null,
+    ): int {
         $columns = ['site_id', 'title', 'slug', 'content', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'];
         $values = [':site_id', ':title', ':slug', ':content', ':status', ':created_by', ':updated_by', ':created_at', ':updated_at'];
         $params = [
@@ -41,20 +60,14 @@ final readonly class PageRepository
             'updated_at' => gmdate('Y-m-d H:i:s'),
         ];
 
-        if ($this->hasContentFormat) {
-            $columns[] = 'content_format';
-            $values[] = ':content_format';
-            $params['content_format'] = 'html';
-        }
+        $this->addOptionalCreateColumn($columns, $values, $params, 'content_format', 'html', $this->hasContentFormat);
+        $this->addOptionalCreateColumn($columns, $values, $params, 'content_json', null, $this->hasContentJson);
+        $this->addOptionalCreateColumn($columns, $values, $params, 'meta_title', $this->normaliseNullable($metaTitle), $this->hasMetaTitle);
+        $this->addOptionalCreateColumn($columns, $values, $params, 'meta_description', $this->normaliseNullable($metaDescription), $this->hasMetaDescription);
+        $this->addOptionalCreateColumn($columns, $values, $params, 'meta_keywords', $this->normaliseNullable($metaKeywords), $this->hasMetaKeywords);
+        $this->addOptionalCreateColumn($columns, $values, $params, 'canonical_url', $this->normaliseNullable($canonicalUrl), $this->hasCanonicalUrl);
 
-        if ($this->hasContentJson) {
-            $columns[] = 'content_json';
-            $values[] = ':content_json';
-            $params['content_json'] = null;
-        }
-
-        $sql = 'INSERT INTO pages (`' . implode('`, `', $columns) . '`) VALUES (' . implode(', ', $values) . ')';
-        $statement = $this->pdo->prepare($sql);
+        $statement = $this->pdo->prepare('INSERT INTO pages (`' . implode('`, `', $columns) . '`) VALUES (' . implode(', ', $values) . ')');
         $statement->execute($params);
 
         $pageId = (int) $this->pdo->lastInsertId();
@@ -63,13 +76,43 @@ final readonly class PageRepository
         return $pageId;
     }
 
-    public function createPublished(int $siteId, string $title, string $slug, string $content, ?int $userId = null): int
-    {
-        return $this->create($siteId, $title, $slug, $content, 'published', $userId);
+    public function createPublished(
+        int $siteId,
+        string $title,
+        string $slug,
+        string $content,
+        ?int $userId = null,
+        ?string $metaTitle = null,
+        ?string $metaDescription = null,
+        ?string $metaKeywords = null,
+        ?string $canonicalUrl = null,
+    ): int {
+        return $this->create(
+            siteId: $siteId,
+            title: $title,
+            slug: $slug,
+            content: $content,
+            status: 'published',
+            userId: $userId,
+            metaTitle: $metaTitle,
+            metaDescription: $metaDescription,
+            metaKeywords: $metaKeywords,
+            canonicalUrl: $canonicalUrl,
+        );
     }
 
-    public function update(int $id, int $siteId, string $title, string $slug, string $content, ?int $userId = null): void
-    {
+    public function update(
+        int $id,
+        int $siteId,
+        string $title,
+        string $slug,
+        string $content,
+        ?int $userId = null,
+        ?string $metaTitle = null,
+        ?string $metaDescription = null,
+        ?string $metaKeywords = null,
+        ?string $canonicalUrl = null,
+    ): void {
         $sets = [
             '`site_id` = :site_id',
             '`title` = :title',
@@ -88,15 +131,12 @@ final readonly class PageRepository
             'updated_at' => gmdate('Y-m-d H:i:s'),
         ];
 
-        if ($this->hasContentFormat) {
-            $sets[] = '`content_format` = :content_format';
-            $params['content_format'] = 'html';
-        }
-
-        if ($this->hasContentJson) {
-            $sets[] = '`content_json` = :content_json';
-            $params['content_json'] = null;
-        }
+        $this->addOptionalUpdateColumn($sets, $params, 'content_format', 'html', $this->hasContentFormat);
+        $this->addOptionalUpdateColumn($sets, $params, 'content_json', null, $this->hasContentJson);
+        $this->addOptionalUpdateColumn($sets, $params, 'meta_title', $this->normaliseNullable($metaTitle), $this->hasMetaTitle);
+        $this->addOptionalUpdateColumn($sets, $params, 'meta_description', $this->normaliseNullable($metaDescription), $this->hasMetaDescription);
+        $this->addOptionalUpdateColumn($sets, $params, 'meta_keywords', $this->normaliseNullable($metaKeywords), $this->hasMetaKeywords);
+        $this->addOptionalUpdateColumn($sets, $params, 'canonical_url', $this->normaliseNullable($canonicalUrl), $this->hasCanonicalUrl);
 
         $statement = $this->pdo->prepare('UPDATE pages SET ' . implode(', ', $sets) . ' WHERE id = :id');
         $statement->execute($params);
@@ -126,6 +166,7 @@ final readonly class PageRepository
     {
         $statement = $this->pdo->query('SELECT ' . $this->selectColumns() . ' FROM pages ORDER BY id DESC');
         $pages = [];
+
         foreach ($statement->fetchAll() as $row) {
             if (is_array($row)) {
                 $pages[] = $this->hydrate($row);
@@ -174,19 +215,24 @@ final readonly class PageRepository
             updatedAt: isset($row['updated_at']) ? (string) $row['updated_at'] : null,
             publishedAt: isset($row['published_at']) ? (string) $row['published_at'] : null,
             contentFormat: (string) ($row['content_format'] ?? 'html'),
-            contentJson: isset($row['content_json']) && $row['content_json'] !== null ? (string) $row['content_json'] : null,
+            contentJson: $this->nullableString($row['content_json'] ?? null),
+            metaTitle: $this->nullableString($row['meta_title'] ?? null),
+            metaDescription: $this->nullableString($row['meta_description'] ?? null),
+            metaKeywords: $this->nullableString($row['meta_keywords'] ?? null),
+            canonicalUrl: $this->nullableString($row['canonical_url'] ?? null),
         );
     }
 
     private function selectColumns(): string
     {
         $columns = ['id', 'site_id', 'title', 'slug', 'content', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at', 'published_at'];
-        if ($this->hasContentFormat) {
-            $columns[] = 'content_format';
-        }
-        if ($this->hasContentJson) {
-            $columns[] = 'content_json';
-        }
+
+        $this->addOptionalSelectColumn($columns, 'content_format', $this->hasContentFormat);
+        $this->addOptionalSelectColumn($columns, 'content_json', $this->hasContentJson);
+        $this->addOptionalSelectColumn($columns, 'meta_title', $this->hasMetaTitle);
+        $this->addOptionalSelectColumn($columns, 'meta_description', $this->hasMetaDescription);
+        $this->addOptionalSelectColumn($columns, 'meta_keywords', $this->hasMetaKeywords);
+        $this->addOptionalSelectColumn($columns, 'canonical_url', $this->hasCanonicalUrl);
 
         return '`' . implode('`, `', $columns) . '`';
     }
@@ -205,6 +251,49 @@ final readonly class PageRepository
             'created_by' => $userId,
             'created_at' => gmdate('Y-m-d H:i:s'),
         ]);
+    }
+
+    /** @param list<string> $columns @param array<string, mixed> $params */
+    private function addOptionalCreateColumn(array &$columns, array &$values, array &$params, string $column, mixed $value, bool $enabled): void
+    {
+        if (!$enabled) {
+            return;
+        }
+
+        $columns[] = $column;
+        $values[] = ':' . $column;
+        $params[$column] = $value;
+    }
+
+    /** @param list<string> $sets @param array<string, mixed> $params */
+    private function addOptionalUpdateColumn(array &$sets, array &$params, string $column, mixed $value, bool $enabled): void
+    {
+        if (!$enabled) {
+            return;
+        }
+
+        $sets[] = '`' . $column . '` = :' . $column;
+        $params[$column] = $value;
+    }
+
+    /** @param list<string> $columns */
+    private function addOptionalSelectColumn(array &$columns, string $column, bool $enabled): void
+    {
+        if ($enabled) {
+            $columns[] = $column;
+        }
+    }
+
+    private function normaliseNullable(?string $value): ?string
+    {
+        $value = $value === null ? null : trim($value);
+
+        return $value === '' ? null : $value;
+    }
+
+    private function nullableString(mixed $value): ?string
+    {
+        return $value === null ? null : (string) $value;
     }
 
     private function columnExists(string $table, string $column): bool

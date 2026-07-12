@@ -10,6 +10,10 @@ namespace Zoosper\Page\Model;
  * The `content` property remains the current sanitised HTML fallback used by
  * existing frontend rendering. `contentFormat` and `contentJson` prepare the
  * model for future block_json persistence without breaking current HTML pages.
+ *
+ * SEO metadata fields are intentionally kept with the page model so page
+ * refactors do not accidentally remove the search engine optimisation section
+ * from the admin editing experience.
  */
 final readonly class Page
 {
@@ -27,6 +31,10 @@ final readonly class Page
         public ?string $publishedAt = null,
         public string $contentFormat = 'html',
         public ?string $contentJson = null,
+        public ?string $metaTitle = null,
+        public ?string $metaDescription = null,
+        public ?string $metaKeywords = null,
+        public ?string $canonicalUrl = null,
     ) {
     }
 
@@ -37,6 +45,8 @@ final readonly class Page
 
     public function hasBlockJson(): bool
     {
-        return $this->contentFormat === 'block_json' && $this->contentJson !== null && trim($this->contentJson) !== '';
+        return $this->contentFormat === 'block_json'
+            && $this->contentJson !== null
+            && trim($this->contentJson) !== '';
     }
 }

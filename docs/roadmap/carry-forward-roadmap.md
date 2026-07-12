@@ -2,8 +2,16 @@
 
 ## Completed foundations
 
-- Page content format schema foundation.
 - Page repository dual content hydration foundation.
+- Page SEO metadata restoration and admin SEO section recovery.
+
+## Coding guidelines
+
+- Always produce clean, well-formatted code like PHPStorm Ctrl+Alt+L.
+- Avoid minimised/compressed PHP, JavaScript, CSS and documentation output.
+- Always include meaningful PHPDoc and helpful comments for models, repositories, services, tools and security-sensitive code.
+- Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
+- Preserve page SEO metadata fields and the “Search engine optimisation” admin section during page-related refactors.
 
 ## Future TODOs
 
