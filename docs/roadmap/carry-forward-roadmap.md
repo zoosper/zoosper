@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Admin user locale hydration hotfix.
 - Admin context translator resolution foundation.
+- Admin translator injected runtime verifier hotfix.
 
 ## Coding guidelines
 
@@ -12,6 +12,7 @@
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
 - Keep controllers clean; services and extension points should be provider/config driven where practical.
 - Locale codes used for translation lookup must be validated strictly before they affect file paths.
+- Verification tools must be updated when the intended priority/order of runtime fallbacks changes.
 - Every future phase should include or update one verification runner file.
 
 ## Future TODOs
