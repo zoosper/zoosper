@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- UserAdminController locale UI verifier scope hotfix.
 - UserAdminController rendering pattern review foundation.
+- Safe UserAdminController locale UI integration.
 
 ## Coding guidelines
 
@@ -19,8 +19,8 @@
 
 ## Future TODOs
 
-- Integrate AdminUserLocalePreferenceFieldRenderer into UserAdminController using the controller's actual rendering pattern.
 - Persist admin-user locale preference from the UI after safe integration.
+- Replace hard-coded en_AU locale helper with SupportedLocaleProvider injection if/when UserAdminController receives services cleanly.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Add server-side block renderer integration.
 - Add safe content_format=block_json switch.
