@@ -4,6 +4,7 @@
 
 - Module admin form config aggregation foundation.
 - Admin form processors foundation.
+- Admin form processors config hotfix.
 
 ## Coding guidelines
 

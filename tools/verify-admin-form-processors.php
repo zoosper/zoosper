@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 $basePath = require __DIR__ . '/bootstrap.php';
 $rootConfig = is_file($basePath . '/config/admin_forms.php') ? require $basePath . '/config/admin_forms.php' : [];
+$pageModuleConfigPath = $basePath . '/app/zoosper-page/config/admin_forms.php';
+$pageModuleConfig = is_file($pageModuleConfigPath) ? require $pageModuleConfigPath : [];
 $config = (new \Zoosper\Admin\Form\AdminFormConfigAggregator($basePath))->aggregate($rootConfig);
 
 print "Zoosper admin form processor foundation verification\n";
@@ -48,7 +50,10 @@ $checks = [
     'AdminFormProcessorConfigFactory exists' => class_exists(\Zoosper\Admin\Form\AdminFormProcessorConfigFactory::class),
     'aggregated config has processors key' => isset($config['processors']) && is_array($config['processors']),
     'root config has processors key' => isset($rootConfig['processors']) && is_array($rootConfig['processors']),
-    'page module config has page.form processors key' => isset(($config['processors'] ?? [])['page.form']),
+    'page module config file exists' => is_file($pageModuleConfigPath),
+    'page module config has processors key' => isset($pageModuleConfig['processors']) && is_array($pageModuleConfig['processors']),
+    'page module config has page.form processors key' => isset(($pageModuleConfig['processors'] ?? [])['page.form']),
+    'aggregated config has page.form processors key' => isset(($config['processors'] ?? [])['page.form']),
     'processor registry returns success payload' => $success->valid && ($success->payload['sample'] ?? null) === 'ok',
     'processor registry merges validation errors' => !$failure->valid && $failure->errors !== [],
     'processor config factory returns registry' => $factoryRegistry instanceof \Zoosper\Admin\Form\AdminFormProcessorRegistry,
