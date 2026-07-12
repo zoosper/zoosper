@@ -2,8 +2,11 @@
 
 ## Completed foundations
 
+- Translatable admin system messages foundation.
+- Verifier string interpolation hotfix.
 - Module-owned translation file aggregation foundation.
 - Translation file aggregator comment hotfix.
+- Translation aggregator verifier scope hotfix.
 
 ## Coding guidelines
 
@@ -20,6 +23,7 @@
 - Source-scanning verifier strings must avoid accidental PHP variable interpolation.
 - Translation files should be module-owned where possible and project-overridable through config-level dictionaries.
 - PHPDoc must never include unescaped text that can terminate the docblock early, such as literal wildcard path examples containing slash-star.
+- Verifiers must scope source checks carefully so valid runtime strings do not cause false failures intended only for PHPDoc comments.
 
 ## Future TODOs
 
@@ -33,6 +37,7 @@
 - Add media library with uploads stored outside public first.
 - Add quote, delimiter, table and button blocks after renderer contracts are ready.
 - Add pagination to all search result grids, e.g. CMS pages, audit logs and login history.
+- Add customer login and customer account management.
 - CLI local module generator: `php bin/zoosper make:module Vendor/Module`.
 - Static asset command: `php bin/zoosper static:publish`.
 - Consolidate developer tools into stable CLI commands.
@@ -42,4 +47,3 @@
 - CDN provider/purge adapter.
 - Index Manager.
 - Documentation website build pipeline.
-- Customer login and manage their account
