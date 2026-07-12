@@ -2,9 +2,8 @@
 
 ## Completed foundations
 
-- Admin form section registry / page form extensibility foundation.
-- Admin form registry verifier alignment / roadmap recovery.
 - Module-contributed admin form section registration foundation.
+- Module admin form config aggregation foundation.
 
 ## Coding guidelines
 
@@ -19,8 +18,8 @@
 
 ## Future TODOs
 
-- Add module config aggregation/merge so app modules and third-party modules can contribute `admin_forms.php` automatically.
 - Add admin form processors so third-party sections can validate and persist their own fields.
+- Add replacement/remove/disable rules for section providers via config.
 - Add progressive enhancement for collapsible admin form sections or tabs if the page form becomes much longer.
 - Add server-side block renderer integration.
 - Add a safe feature flag or migration path to switch selected pages to `content_format=block_json`.

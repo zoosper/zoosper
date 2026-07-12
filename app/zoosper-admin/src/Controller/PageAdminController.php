@@ -6,6 +6,7 @@ namespace Zoosper\Admin\Controller;
 
 use RuntimeException;
 use Zoosper\Admin\Editor\ContentEditorInterface;
+use Zoosper\Admin\Form\AdminFormConfigAggregator;
 use Zoosper\Admin\Form\AdminFormConfigProviderFactory;
 use Zoosper\Admin\Form\AdminFormProviderRegistry;
 use Zoosper\Admin\Form\AdminFormRenderer;
@@ -354,9 +355,10 @@ HTML);
     private function defaultPageFormSectionRegistry(): AdminFormProviderRegistry
     {
         $factory = $this->adminFormConfigProviderFactory ?? new AdminFormConfigProviderFactory();
-        $config = $this->config?->array('admin_forms') ?? [];
+        $rootConfig = $this->config?->array('admin_forms') ?? [];
+        $moduleConfig = (new AdminFormConfigAggregator($this->projectRootPath()))->aggregate($rootConfig);
 
-        return $factory->create($config, [
+        return $factory->create($moduleConfig, [
             'page.form' => [
                 PageDetailsSectionProvider::class,
                 PageContentSectionProvider::class,
@@ -364,6 +366,12 @@ HTML);
                 PagePublishingSectionProvider::class,
             ],
         ]);
+    }
+
+
+    private function projectRootPath(): string
+    {
+        return dirname(__DIR__, 4);
     }
 
     private function renderContentEditor(string $escapedContent, ?Page $page = null, string $escapedContentJson = ''): string

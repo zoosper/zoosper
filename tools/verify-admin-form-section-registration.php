@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 $basePath = require __DIR__ . '/bootstrap.php';
 $configPath = $basePath . '/config/admin_forms.php';
-$config = is_file($configPath) ? require $configPath : [];
+$rootConfig = is_file($configPath) ? require $configPath : [];
+$config = (new \Zoosper\Admin\Form\AdminFormConfigAggregator($basePath))->aggregate($rootConfig);
 $controller = (string) file_get_contents($basePath . '/app/zoosper-admin/src/Controller/PageAdminController.php');
 
 print "Zoosper admin form section registration verification\n";
@@ -39,6 +40,7 @@ $checks = [
     'config/admin_forms.php exists' => is_file($configPath),
     'AdminFormConfigProviderFactory exists' => class_exists(\Zoosper\Admin\Form\AdminFormConfigProviderFactory::class),
     'admin_forms config has page.form handle' => isset(($config['forms'] ?? [])['page.form']),
+    'AdminFormConfigAggregator exists' => class_exists(\Zoosper\Admin\Form\AdminFormConfigAggregator::class),
     'factory creates registry' => $registry instanceof \Zoosper\Admin\Form\AdminFormProviderRegistry,
     'configured sections sort predictably' => $keys === ['page.details', 'page.content', 'page.seo', 'page.publishing'],
     'configured rendered form has content_json' => str_contains($html, 'name="content_json"'),
@@ -46,6 +48,7 @@ $checks = [
     'configured rendered form has publishing controls' => str_contains($html, 'name="publish"'),
     'PageAdminController imports config factory' => str_contains($controller, 'AdminFormConfigProviderFactory'),
     'PageAdminController reads admin_forms config' => str_contains($controller, "array('admin_forms')"),
+    'PageAdminController aggregates module admin forms' => str_contains($controller, 'AdminFormConfigAggregator'),
     'PageAdminController keeps fallback providers' => str_contains($controller, 'PageDetailsSectionProvider::class'),
 ];
 
