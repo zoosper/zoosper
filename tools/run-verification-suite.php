@@ -19,9 +19,11 @@ if (!is_dir(dirname($outputPath))) {
 $commands = [
     ['Syntax: UserAdminController.php', [$php, '-l', 'app/zoosper-admin/src/Controller/UserAdminController.php']],
     ['Syntax: LoginController.php', [$php, '-l', 'app/zoosper-admin/src/Controller/LoginController.php']],
-    ['Syntax: diagnose-user-admin-controller-locale-ui.php', [$php, '-l', 'tools/diagnose-user-admin-controller-locale-ui.php']],
-    ['Syntax: verify-user-admin-controller-locale-ui.php', [$php, '-l', 'tools/verify-user-admin-controller-locale-ui.php']],
+    ['Syntax: inspect-user-admin-controller-rendering-pattern.php', [$php, '-l', 'tools/inspect-user-admin-controller-rendering-pattern.php']],
+    ['Syntax: verify-user-admin-rendering-pattern-review.php', [$php, '-l', 'tools/verify-user-admin-rendering-pattern-review.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
+    ['Inspect: UserAdminController rendering pattern', [$php, 'tools/inspect-user-admin-controller-rendering-pattern.php']],
+    ['Verify: UserAdminController rendering pattern review', [$php, 'tools/verify-user-admin-rendering-pattern-review.php']],
     ['Verify: UserAdminController locale UI', [$php, 'tools/verify-user-admin-controller-locale-ui.php']],
     ['Verify: admin user locale preference UI', [$php, 'tools/verify-admin-user-locale-preference-ui.php']],
     ['Verify: supported admin locales', [$php, 'tools/verify-supported-admin-locales.php']],
@@ -47,6 +49,7 @@ foreach ($commands as $index => [$label, $command]) {
         fclose($pipes[2]);
         $exit = proc_close($process);
     }
+
     $passed = $exit === 0;
     $ok = $ok && $passed;
     $summary[] = '- ' . $label . ': ' . ($passed ? 'ok' : 'FAIL');

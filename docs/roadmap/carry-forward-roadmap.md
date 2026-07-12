@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- UserAdminController locale UI parse hotfix.
 - UserAdminController locale UI verifier scope hotfix.
+- UserAdminController rendering pattern review foundation.
 
 ## Coding guidelines
 
