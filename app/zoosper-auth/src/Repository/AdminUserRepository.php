@@ -150,4 +150,18 @@ final readonly class AdminUserRepository
         $statement->execute(['user_id' => $userId]);
         return array_map(static fn (array $row): string => (string) $row['code'], $statement->fetchAll());
     }
+    /**
+     * Updates only the admin interface locale for an existing admin user.
+     *
+     * A null locale intentionally means the configured admin locale should be
+     * used. The caller is responsible for validating the locale format.
+     */
+    public function updateLocale(int $id, ?string $locale): void
+    {
+        $statement = $this->pdo->prepare('UPDATE admin_users SET locale = :locale WHERE id = :id');
+        $statement->execute([
+            'locale' => $locale,
+            'id' => $id,
+        ]);
+    }
 }
