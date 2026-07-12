@@ -6,10 +6,11 @@ namespace Zoosper\Admin\Controller;
 
 use RuntimeException;
 use Zoosper\Admin\Editor\ContentEditorInterface;
-use Zoosper\Admin\Layout\AdminLayout;
-use Zoosper\Admin\Message\FlashMessageStoreInterface;
+use Zoosper\Admin\Form\AdminFormConfigProviderFactory;
 use Zoosper\Admin\Form\AdminFormProviderRegistry;
 use Zoosper\Admin\Form\AdminFormRenderer;
+use Zoosper\Admin\Layout\AdminLayout;
+use Zoosper\Admin\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Access\Permission;
 use Zoosper\Auth\Model\AdminUser;
@@ -19,12 +20,12 @@ use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
-use Zoosper\Page\Admin\PageGridCriteria;
-use Zoosper\Page\Admin\PageGridRepository;
 use Zoosper\Page\Admin\Form\PageContentSectionProvider;
 use Zoosper\Page\Admin\Form\PageDetailsSectionProvider;
 use Zoosper\Page\Admin\Form\PagePublishingSectionProvider;
 use Zoosper\Page\Admin\Form\PageSeoSectionProvider;
+use Zoosper\Page\Admin\PageGridCriteria;
+use Zoosper\Page\Admin\PageGridRepository;
 use Zoosper\Page\Content\BlockJsonValidator;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
@@ -34,9 +35,9 @@ use Zoosper\Site\Repository\SiteRepository;
 /**
  * Admin CRUD controller for CMS pages.
  *
- * Page body content is sanitised on save. Editor.js JSON is captured in
- * `content_json`, validated server-side, and stored for the future block_json
- * renderer while `content` remains the active sanitised HTML fallback.
+ * The controller orchestrates request flow only. The page form UI is composed
+ * through admin form section providers so core and third-party modules can add,
+ * replace or reorder sections without modifying this controller.
  */
 final readonly class PageAdminController
 {
@@ -55,6 +56,7 @@ final readonly class PageAdminController
         private ?ContentEditorInterface $contentEditor = null,
         private ?AdminFormProviderRegistry $pageFormSections = null,
         private ?AdminFormRenderer $adminFormRenderer = null,
+        private ?AdminFormConfigProviderFactory $adminFormConfigProviderFactory = null,
     ) {
     }
 
@@ -351,11 +353,17 @@ HTML);
 
     private function defaultPageFormSectionRegistry(): AdminFormProviderRegistry
     {
-        return (new AdminFormProviderRegistry())
-            ->add(new PageDetailsSectionProvider())
-            ->add(new PageContentSectionProvider())
-            ->add(new PageSeoSectionProvider())
-            ->add(new PagePublishingSectionProvider());
+        $factory = $this->adminFormConfigProviderFactory ?? new AdminFormConfigProviderFactory();
+        $config = $this->config?->array('admin_forms') ?? [];
+
+        return $factory->create($config, [
+            'page.form' => [
+                PageDetailsSectionProvider::class,
+                PageContentSectionProvider::class,
+                PageSeoSectionProvider::class,
+                PagePublishingSectionProvider::class,
+            ],
+        ]);
     }
 
     private function renderContentEditor(string $escapedContent, ?Page $page = null, string $escapedContentJson = ''): string
@@ -441,9 +449,6 @@ HTML);
         return $page instanceof Page ? $page->isPublished() : (string) $this->pageValue($page, 'status') === 'published';
     }
 
-    /**
-     * Validate and normalise the optional Editor.js JSON document.
-     */
     private function normaliseContentJson(mixed $value): ?string
     {
         $json = trim((string) ($value ?? ''));
