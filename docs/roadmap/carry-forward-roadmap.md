@@ -2,9 +2,8 @@
 
 ## Completed foundations
 
-- Admin translator resolution foundation.
-- Translatable admin system message verifier alignment.
 - Admin/site locale resolution foundation.
+- Verification runner / report writer foundation.
 
 ## Coding guidelines
 
@@ -21,6 +20,7 @@
 - Source-scanning verifier strings must avoid accidental PHP variable interpolation.
 - Translation files should be module-owned where possible and project-overridable through config-level dictionaries.
 - Locale resolution should be delegated to resolver services instead of being hard-coded in controllers.
+- Every future phase should include or update one verification runner file so all syntax/check commands can be run with one command and the full output is written to a report file.
 
 ## Future TODOs
 
