@@ -21,8 +21,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
-use Zoosper\Core\I18n\AdminTranslatorResolver;
-use Zoosper\Core\I18n\TranslationResolver;
+use Zoosper\Core\I18n\IdentityTranslator;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -566,12 +565,9 @@ HTML);
     {
         return ($this->translator ?? $this->defaultTranslator())->translate($message, $parameters);
     }
-
     private function defaultTranslator(): TranslatorInterface
     {
-        $i18nConfig = $this->config?->array('i18n') ?? [];
-
-        return (new AdminTranslatorResolver($this->projectRootPath(), $i18nConfig))->resolve();
+        return new IdentityTranslator();
     }
     private function e(string $value): string
     {
