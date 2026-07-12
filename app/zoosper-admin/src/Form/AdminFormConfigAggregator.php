@@ -6,6 +6,10 @@ namespace Zoosper\Admin\Form;
 
 /**
  * Aggregates admin form provider and processor configuration from modules.
+ *
+ * Empty handles are intentionally preserved. A module may declare an empty
+ * processor list for a form handle to document that the extension point exists
+ * even before any concrete processor classes are registered.
  */
 final readonly class AdminFormConfigAggregator
 {
@@ -93,13 +97,13 @@ final readonly class AdminFormConfigAggregator
                 continue;
             }
 
+            if (!isset($current[$formHandle])) {
+                $current[$formHandle] = [];
+            }
+
             foreach ($classes as $class) {
                 if (!is_string($class) || $class === '') {
                     continue;
-                }
-
-                if (!isset($current[$formHandle])) {
-                    $current[$formHandle] = [];
                 }
 
                 if (!in_array($class, $current[$formHandle], true)) {

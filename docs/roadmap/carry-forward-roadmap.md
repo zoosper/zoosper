@@ -5,6 +5,7 @@
 - Module admin form config aggregation foundation.
 - Admin form processors foundation.
 - Admin form processors config hotfix.
+- Empty admin form processor handle aggregation hotfix.
 
 ## Coding guidelines
 
@@ -16,6 +17,7 @@
 - Keep controllers clean; admin UI sections and processors should be contributed through providers/registries/config where practical.
 - Third-party developers must be able to extend/override core behaviour without editing core code.
 - Prefer behaviour/contract/rendered-output verification over brittle source-string matching.
+- Preserve empty config handles when they intentionally document extension points.
 
 ## Future TODOs
 
