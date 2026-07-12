@@ -2,13 +2,9 @@
 
 ## Completed foundations
 
-- Translatable admin system messages foundation.
-- Verifier string interpolation hotfix.
-- Module-owned translation file aggregation foundation.
-- Translation file aggregator comment hotfix.
-- Translation aggregator verifier scope hotfix.
 - Admin translator resolution foundation.
 - Translatable admin system message verifier alignment.
+- Admin/site locale resolution foundation.
 
 ## Coding guidelines
 
@@ -24,12 +20,13 @@
 - All admin/system-facing messages should pass through a translation contract/helper instead of being emitted as final hard-coded strings.
 - Source-scanning verifier strings must avoid accidental PHP variable interpolation.
 - Translation files should be module-owned where possible and project-overridable through config-level dictionaries.
-- PHPDoc must never include unescaped text that can terminate the docblock early, such as literal wildcard path examples containing slash-star.
-- Verifiers must be updated when architecture deliberately replaces an older fallback path with a newer one.
+- Locale resolution should be delegated to resolver services instead of being hard-coded in controllers.
 
 ## Future TODOs
 
-- Add admin/site locale resolution and fallback locale policy.
+- Wire `ConfiguredLocaleResolver` into admin translator resolution/runtime services.
+- Add admin-user locale preference support.
+- Add per-site locale settings from SiteContext/SiteRepository.
 - Register the resolved translator through the DI/container once the service-provider wiring is ready.
 - Add persistence helpers/payload consumers for processor-produced values.
 - Add replacement/remove/disable rules for section providers via config.
