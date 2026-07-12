@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Bootstrap provider manifest loader foundation.
 - Service provider manifest file hotfix.
+- Bootstrap provider manifest runtime wiring foundation.
 
 ## Coding guidelines
 
@@ -25,8 +25,7 @@
 
 ## Future TODOs
 
-- Wire `ServiceProviderManifestLoader` into the concrete application/bootstrap container creation point.
-- Replace manual resolver construction in controllers with injected `TranslatorInterface` once container wiring is complete.
+- Replace manual resolver construction in controllers with injected `TranslatorInterface` once container wiring is confirmed stable.
 - Add admin-user locale preference support.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Add persistence helpers/payload consumers for processor-produced values.

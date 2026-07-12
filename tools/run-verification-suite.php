@@ -2,57 +2,92 @@
 
 declare(strict_types=1);
 
-/**
- * Runs Zoosper verification commands and writes full output to a report file.
- *
- * Usage:
- *   php tools/run-verification-suite.php
- *   php tools/run-verification-suite.php --output=var/reports/my-report.txt
- */
-
-$rootPath = dirname(__DIR__);
-$outputPath = zoosper_verification_output_path($rootPath, $argv);
-$startedAt = new DateTimeImmutable('now');
-$commands = zoosper_verification_commands();
-$results = [];
-$failed = false;
-
-foreach ($commands as $entry) {
-    $result = zoosper_run_command($entry['command'], $rootPath);
-    $results[] = [
-        'label' => $entry['label'],
-        'command' => $entry['command'],
-        'exitCode' => $result['exitCode'],
-        'stdout' => $result['stdout'],
-        'stderr' => $result['stderr'],
-    ];
-
-    if ($result['exitCode'] !== 0) {
-        $failed = true;
+$basePath = require __DIR__ . '/bootstrap.php';
+$php = PHP_BINARY;
+$output = null;
+foreach ($argv as $argument) {
+    if (str_starts_with($argument, '--output=')) {
+        $output = substr($argument, strlen('--output='));
     }
 }
 
-$finishedAt = new DateTimeImmutable('now');
-zoosper_write_report($outputPath, $startedAt, $finishedAt, $results, $failed);
-zoosper_print_summary($outputPath, $results, $failed);
+if ($output === null || $output === '') {
+    $output = 'var/reports/verification-' . gmdate('Ymd-His') . '.txt';
+}
 
-exit($failed ? 2 : 0);
+$outputPath = str_starts_with($output, '/') ? $output : $basePath . '/' . $output;
+$directory = dirname($outputPath);
+if (!is_dir($directory)) {
+    mkdir($directory, 0775, true);
+}
 
-/** @return list<array{label: string, command: list<string>}> */
-function zoosper_verification_commands(): array
+$commands = zoosper_verification_commands($php);
+$lines = [];
+$lines[] = 'Zoosper verification suite report';
+$lines[] = '=================================';
+$lines[] = 'Started: ' . gmdate('c');
+$overallOk = true;
+$summary = [];
+
+foreach ($commands as $index => $command) {
+    $label = $command['label'];
+    $process = proc_open($command['command'], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $basePath);
+    if (!is_resource($process)) {
+        $exitCode = 127;
+        $stdout = '';
+        $stderr = 'Unable to start command.';
+    } else {
+        $stdout = stream_get_contents($pipes[1]) ?: '';
+        $stderr = stream_get_contents($pipes[2]) ?: '';
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        $exitCode = proc_close($process);
+    }
+
+    $ok = $exitCode === 0;
+    $overallOk = $overallOk && $ok;
+    $summary[] = '- ' . $label . ': ' . ($ok ? 'ok' : 'FAIL');
+
+    $lines[] = str_pad('[' . str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) . '] ' . $label, 80, ' ');
+    $lines[] = 'Command: ' . implode(' ', array_map('escapeshellarg', $command['command']));
+    $lines[] = 'Exit code: ' . $exitCode;
+    $lines[] = '--- STDOUT ---';
+    $lines[] = rtrim($stdout);
+    $lines[] = '--- STDERR ---';
+    $lines[] = rtrim($stderr);
+    $lines[] = str_repeat('-', 80);
+}
+
+$lines[3] = 'Finished: ' . gmdate('c');
+array_splice($lines, 3, 0, 'Overall result: ' . ($overallOk ? 'OK' : 'FAIL'));
+file_put_contents($outputPath, implode(PHP_EOL, $lines) . PHP_EOL);
+
+print "Zoosper verification suite\n";
+print "==========================\n";
+print 'Report: ' . $outputPath . PHP_EOL;
+print 'Overall result: ' . ($overallOk ? 'OK' : 'FAIL') . PHP_EOL;
+foreach ($summary as $item) {
+    print $item . PHP_EOL;
+}
+
+exit($overallOk ? 0 : 2);
+
+/**
+ * @return list<array{label: string, command: list<string>}>
+ */
+function zoosper_verification_commands(string $php): array
 {
-    $php = PHP_BINARY;
-
     return [
         ['label' => 'Syntax: config/i18n.php', 'command' => [$php, '-l', 'config/i18n.php']],
         ['label' => 'Syntax: config/service_providers.php', 'command' => [$php, '-l', 'config/service_providers.php']],
+        ['label' => 'Syntax: ApplicationFactory.php', 'command' => [$php, '-l', 'app/zoosper-core/src/Bootstrap/ApplicationFactory.php']],
+        ['label' => 'Syntax: ServiceProviderManifestLoader.php', 'command' => [$php, '-l', 'app/zoosper-core/src/Bootstrap/ServiceProviderManifestLoader.php']],
         ['label' => 'Syntax: LocaleResolution.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/LocaleResolution.php']],
         ['label' => 'Syntax: LocaleResolverInterface.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/LocaleResolverInterface.php']],
         ['label' => 'Syntax: ConfiguredLocaleResolver.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/ConfiguredLocaleResolver.php']],
         ['label' => 'Syntax: TranslationResolver.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/TranslationResolver.php']],
         ['label' => 'Syntax: AdminTranslatorResolver.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/AdminTranslatorResolver.php']],
         ['label' => 'Syntax: I18nServiceProvider.php', 'command' => [$php, '-l', 'app/zoosper-core/src/I18n/I18nServiceProvider.php']],
-        ['label' => 'Syntax: ServiceProviderManifestLoader.php', 'command' => [$php, '-l', 'app/zoosper-core/src/Bootstrap/ServiceProviderManifestLoader.php']],
         ['label' => 'Syntax: verify-admin-translator-locale-resolver-integration.php', 'command' => [$php, '-l', 'tools/verify-admin-translator-locale-resolver-integration.php']],
         ['label' => 'Syntax: apply-admin-translator-resolver-to-controller.php', 'command' => [$php, '-l', 'tools/apply-admin-translator-resolver-to-controller.php']],
         ['label' => 'Syntax: verify-admin-translator-runtime-wiring.php', 'command' => [$php, '-l', 'tools/verify-admin-translator-runtime-wiring.php']],
@@ -60,6 +95,8 @@ function zoosper_verification_commands(): array
         ['label' => 'Syntax: apply-i18n-service-provider-discovery.php', 'command' => [$php, '-l', 'tools/apply-i18n-service-provider-discovery.php']],
         ['label' => 'Syntax: verify-i18n-service-provider-discovery.php', 'command' => [$php, '-l', 'tools/verify-i18n-service-provider-discovery.php']],
         ['label' => 'Syntax: verify-bootstrap-provider-manifest-loader.php', 'command' => [$php, '-l', 'tools/verify-bootstrap-provider-manifest-loader.php']],
+        ['label' => 'Syntax: apply-bootstrap-provider-manifest-loader-to-application-factory.php', 'command' => [$php, '-l', 'tools/apply-bootstrap-provider-manifest-loader-to-application-factory.php']],
+        ['label' => 'Syntax: verify-bootstrap-provider-manifest-runtime-wiring.php', 'command' => [$php, '-l', 'tools/verify-bootstrap-provider-manifest-runtime-wiring.php']],
         ['label' => 'Syntax: verify-service-provider-manifest-file.php', 'command' => [$php, '-l', 'tools/verify-service-provider-manifest-file.php']],
         ['label' => 'Syntax: verify-admin-site-locale-resolution.php', 'command' => [$php, '-l', 'tools/verify-admin-site-locale-resolution.php']],
         ['label' => 'Syntax: run-verification-suite.php', 'command' => [$php, '-l', 'tools/run-verification-suite.php']],
@@ -70,6 +107,7 @@ function zoosper_verification_commands(): array
         ['label' => 'Verify: service provider manifest file', 'command' => [$php, 'tools/verify-service-provider-manifest-file.php']],
         ['label' => 'Verify: i18n service provider discovery', 'command' => [$php, 'tools/verify-i18n-service-provider-discovery.php']],
         ['label' => 'Verify: bootstrap provider manifest loader', 'command' => [$php, 'tools/verify-bootstrap-provider-manifest-loader.php']],
+        ['label' => 'Verify: bootstrap provider manifest runtime wiring', 'command' => [$php, 'tools/verify-bootstrap-provider-manifest-runtime-wiring.php']],
         ['label' => 'Verify: translatable admin system messages', 'command' => [$php, 'tools/verify-translatable-admin-system-messages.php']],
         ['label' => 'Verify: admin translator resolution', 'command' => [$php, 'tools/verify-admin-translator-resolution.php']],
         ['label' => 'Verify: translation file aggregator comment safety', 'command' => [$php, 'tools/verify-translation-file-aggregator-comment-safety.php']],
@@ -85,110 +123,4 @@ function zoosper_verification_commands(): array
         ['label' => 'Verify: page SEO metadata', 'command' => [$php, 'tools/verify-page-seo-metadata.php']],
         ['label' => 'Verify: service providers', 'command' => [$php, 'tools/verify-service-providers.php']],
     ];
-}
-
-/** @param list<string> $argv */
-function zoosper_verification_output_path(string $rootPath, array $argv): string
-{
-    foreach ($argv as $argument) {
-        if (str_starts_with($argument, '--output=')) {
-            $path = trim(substr($argument, strlen('--output=')));
-            if ($path !== '') {
-                return str_starts_with($path, '/') ? $path : $rootPath . '/' . $path;
-            }
-        }
-    }
-
-    $timestamp = (new DateTimeImmutable('now'))->format('Ymd-His');
-
-    return $rootPath . '/var/reports/verification-' . $timestamp . '.txt';
-}
-
-/**
- * @param list<string> $command
- *
- * @return array{exitCode: int, stdout: string, stderr: string}
- */
-function zoosper_run_command(array $command, string $rootPath): array
-{
-    $descriptorSpec = [
-        0 => ['pipe', 'r'],
-        1 => ['pipe', 'w'],
-        2 => ['pipe', 'w'],
-    ];
-    $commandString = implode(' ', array_map('escapeshellarg', $command));
-    $process = proc_open($commandString, $descriptorSpec, $pipes, $rootPath);
-
-    if (!is_resource($process)) {
-        return [
-            'exitCode' => 127,
-            'stdout' => '',
-            'stderr' => 'Unable to start command: ' . $commandString,
-        ];
-    }
-
-    fclose($pipes[0]);
-    $stdout = stream_get_contents($pipes[1]) ?: '';
-    $stderr = stream_get_contents($pipes[2]) ?: '';
-    fclose($pipes[1]);
-    fclose($pipes[2]);
-    $exitCode = proc_close($process);
-
-    return [
-        'exitCode' => is_int($exitCode) ? $exitCode : 1,
-        'stdout' => $stdout,
-        'stderr' => $stderr,
-    ];
-}
-
-/**
- * @param list<array{label: string, command: list<string>, exitCode: int, stdout: string, stderr: string}> $results
- */
-function zoosper_write_report(
-    string $outputPath,
-    DateTimeImmutable $startedAt,
-    DateTimeImmutable $finishedAt,
-    array $results,
-    bool $failed,
-): void {
-    $directory = dirname($outputPath);
-    if (!is_dir($directory)) {
-        mkdir($directory, 0775, true);
-    }
-
-    $lines = [];
-    $lines[] = 'Zoosper verification suite report';
-    $lines[] = '=================================';
-    $lines[] = 'Started: ' . $startedAt->format(DATE_ATOM);
-    $lines[] = 'Finished: ' . $finishedAt->format(DATE_ATOM);
-    $lines[] = 'Overall result: ' . ($failed ? 'FAIL' : 'OK');
-    $lines[] = '';
-
-    foreach ($results as $index => $result) {
-        $lines[] = sprintf('[%02d] %s', $index + 1, $result['label']);
-        $lines[] = 'Command: ' . implode(' ', $result['command']);
-        $lines[] = 'Exit code: ' . $result['exitCode'];
-        $lines[] = '--- STDOUT ---';
-        $lines[] = rtrim($result['stdout']);
-        $lines[] = '--- STDERR ---';
-        $lines[] = rtrim($result['stderr']);
-        $lines[] = str_repeat('-', 80);
-    }
-
-    file_put_contents($outputPath, implode(PHP_EOL, $lines) . PHP_EOL);
-}
-
-/**
- * @param list<array{label: string, command: list<string>, exitCode: int, stdout: string, stderr: string}> $results
- */
-function zoosper_print_summary(string $outputPath, array $results, bool $failed): void
-{
-    print 'Zoosper verification suite' . PHP_EOL;
-    print '==========================' . PHP_EOL;
-    print 'Report: ' . $outputPath . PHP_EOL;
-    print 'Overall result: ' . ($failed ? 'FAIL' : 'OK') . PHP_EOL . PHP_EOL;
-
-    foreach ($results as $result) {
-        print '- ' . $result['label'] . ': ' . ($result['exitCode'] === 0 ? 'ok' : 'FAIL') . PHP_EOL;
-    }
 }
