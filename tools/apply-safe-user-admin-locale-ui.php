@@ -6,8 +6,8 @@ $basePath = require __DIR__ . '/bootstrap.php';
 $controllerPath = $basePath . '/app/zoosper-admin/src/Controller/UserAdminController.php';
 $loginControllerPath = $basePath . '/app/zoosper-admin/src/Controller/LoginController.php';
 
-print "Zoosper safe UserAdminController locale UI integration\n";
-print "======================================================\n\n";
+print "Zoosper safe UserAdminController locale UI integration hotfix\n";
+print "=============================================================\n\n";
 
 if (!is_file($controllerPath)) {
     fwrite(STDERR, "Missing UserAdminController: {$controllerPath}\n");
@@ -31,24 +31,71 @@ if (str_contains($source, '$localeFieldHtml') && str_contains($source, 'renderAd
     exit(0);
 }
 
+$block = find_form_heredoc_block($source);
+if ($block === null) {
+    fwrite(STDERR, "Could not find a heredoc/nowdoc block containing the admin user form and email field.\n");
+    fwrite(STDERR, "Run tools/diagnose-safe-user-admin-locale-ui.php and share the output.\n");
+    exit(2);
+}
+
 $source = add_locale_render_method($source);
-$source = add_locale_field_variable_before_form_heredoc($source);
-$source = insert_locale_placeholder_into_form($source);
+$source = add_locale_field_variable_before_block($source, $block);
+$source = insert_locale_placeholder_into_block($source, $block);
 
 if ($source === $original) {
     fwrite(STDERR, "No changes were made. Run tools/diagnose-safe-user-admin-locale-ui.php.\n");
     exit(2);
 }
 
-$backup = $controllerPath . '.phase-1.09.bak';
+$backup = $controllerPath . '.phase-1.09.1.bak';
 if (!is_file($backup)) {
     copy($controllerPath, $backup);
-    print "- backup created: app/zoosper-admin/src/Controller/UserAdminController.php.phase-1.09.bak\n";
+    print "- backup created: app/zoosper-admin/src/Controller/UserAdminController.php.phase-1.09.1.bak\n";
 }
 
 file_put_contents($controllerPath, $source);
 print "- updated app/zoosper-admin/src/Controller/UserAdminController.php\n";
 print "Result: OK\n";
+
+/** @return array{start:int,end:int,openerLineStart:int,body:string,label:string}|null */
+function find_form_heredoc_block(string $source): ?array
+{
+    if (preg_match_all('/<<<\s*(?:\'(?<slabel>[A-Za-z_][A-Za-z0-9_]*)\'|"(?<dlabel>[A-Za-z_][A-Za-z0-9_]*)"|(?<label>[A-Za-z_][A-Za-z0-9_]*))/m', $source, $matches, PREG_OFFSET_CAPTURE) < 1) {
+        return null;
+    }
+
+    foreach ($matches[0] as $index => $match) {
+        $label = $matches['label'][$index][0] ?: ($matches['slabel'][$index][0] ?: $matches['dlabel'][$index][0]);
+        $openerOffset = $match[1];
+        $lineEnd = strpos($source, "\n", $openerOffset);
+        if ($lineEnd === false) {
+            continue;
+        }
+
+        $terminatorPattern = '/^\s*' . preg_quote($label, '/') . '\s*;?\s*$/m';
+        if (preg_match($terminatorPattern, $source, $endMatch, PREG_OFFSET_CAPTURE, $lineEnd + 1) !== 1) {
+            continue;
+        }
+
+        $blockStart = $lineEnd + 1;
+        $blockEnd = $endMatch[0][1];
+        $body = substr($source, $blockStart, $blockEnd - $blockStart);
+        if (str_contains($body, '<form') && (str_contains($body, 'name="email"') || str_contains($body, "name='email'"))) {
+            $openerLineStart = strrpos(substr($source, 0, $openerOffset), "\n");
+            $openerLineStart = $openerLineStart === false ? 0 : $openerLineStart + 1;
+
+            return [
+                'start' => $blockStart,
+                'end' => $blockEnd,
+                'openerLineStart' => $openerLineStart,
+                'body' => $body,
+                'label' => $label,
+            ];
+        }
+    }
+
+    return null;
+}
 
 function add_locale_render_method(string $source): string
 {
@@ -92,55 +139,44 @@ PHP_METHOD;
     return substr($source, 0, $position) . $method . substr($source, $position);
 }
 
-function add_locale_field_variable_before_form_heredoc(string $source): string
+/** @param array{openerLineStart:int} $block */
+function add_locale_field_variable_before_block(string $source, array $block): string
 {
     if (str_contains($source, '$localeFieldHtml = $this->renderAdminLocaleField(')) {
         return $source;
     }
 
-    $matches = [];
-    if (preg_match_all('/^\s*\$[A-Za-z_][A-Za-z0-9_]*\s*=\s*<<<[A-Z_]+/m', $source, $matches, PREG_OFFSET_CAPTURE) < 1) {
-        fwrite(STDERR, "Could not find a heredoc assignment in UserAdminController.\n");
-        exit(2);
-    }
+    $line = substr($source, $block['openerLineStart'], strpos($source, "\n", $block['openerLineStart']) - $block['openerLineStart']);
+    $indent = preg_match('/^(\s*)/', $line, $matches) === 1 ? $matches[1] : '        ';
+    $insert = $indent . '$localeFieldHtml = $this->renderAdminLocaleField($submitted[\'locale\'] ?? $user->locale ?? null);' . PHP_EOL;
 
-    foreach ($matches[0] as [$match, $offset]) {
-        $after = substr($source, $offset, 3000);
-        if (str_contains($after, '<form') && (str_contains($after, 'name="email"') || str_contains($after, "name='email'"))) {
-            $lineStart = strrpos(substr($source, 0, $offset), "\n");
-            $lineStart = $lineStart === false ? 0 : $lineStart + 1;
-            $indent = preg_match('/^(\s*)/', substr($source, $lineStart, $offset - $lineStart), $indentMatches) === 1 ? $indentMatches[1] : '        ';
-            $insert = $indent . '$localeFieldHtml = $this->renderAdminLocaleField($submitted[\'locale\'] ?? $user->locale ?? null);' . PHP_EOL;
-
-            return substr($source, 0, $lineStart) . $insert . substr($source, $lineStart);
-        }
-    }
-
-    fwrite(STDERR, "Could not find form heredoc with email field.\n");
-    exit(2);
+    return substr($source, 0, $block['openerLineStart']) . $insert . substr($source, $block['openerLineStart']);
 }
 
-function insert_locale_placeholder_into_form(string $source): string
+/** @param array{start:int,end:int,body:string} $block */
+function insert_locale_placeholder_into_block(string $source, array $block): string
 {
     if (str_contains($source, '{$localeFieldHtml}')) {
         return $source;
     }
 
+    $body = $block['body'];
     $patterns = [
-        '/(\n\s*<label[^>]*>\s*Email\s*<\/label>.*?\n\s*<input[^>]+name=["\']email["\'][^>]*>)/is',
-        '/(\n\s*<input[^>]+name=["\']email["\'][^>]*>)/is',
-        '/(\n\s*<label[^>]*>\s*Password\s*<\/label>)/is',
+        '/(<input[^>]+name=["\']email["\'][^>]*>)/is',
+        '/(<label[^>]*>\s*Password\s*<\/label>)/is',
+        '/(<label[^>]*>\s*Status\s*<\/label>)/is',
     ];
 
     foreach ($patterns as $pattern) {
-        if (preg_match($pattern, $source, $match, PREG_OFFSET_CAPTURE) === 1) {
-            $position = $match[0][1] + strlen($match[0][0]);
+        if (preg_match($pattern, $body, $match, PREG_OFFSET_CAPTURE) === 1) {
+            $relativePosition = $match[0][1] + strlen($match[0][0]);
+            $absolutePosition = $block['start'] + $relativePosition;
             $insert = PHP_EOL . '        {$localeFieldHtml}';
 
-            return substr($source, 0, $position) . $insert . substr($source, $position);
+            return substr($source, 0, $absolutePosition) . $insert . substr($source, $absolutePosition);
         }
     }
 
-    fwrite(STDERR, "Unable to insert locale field placeholder into form safely.\n");
+    fwrite(STDERR, "Unable to insert locale field placeholder into form block safely.\n");
     exit(2);
 }

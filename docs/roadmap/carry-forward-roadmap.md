@@ -2,16 +2,16 @@
 
 ## Completed foundations
 
-- UserAdminController rendering pattern review foundation.
 - Safe UserAdminController locale UI integration.
+- Heredoc detection hotfix.
 
 ## Coding guidelines
 
 - Always produce clean, well-formatted code like PHPStorm Ctrl+Alt+L.
 - Always include meaningful PHPDoc and helpful comments.
 - Do not insert raw PHP template tags into PHP controller strings/heredocs.
+- UI apply tools must inspect all heredoc/nowdoc opener variants, not just one assignment pattern.
 - UI apply tools must be aware of the target rendering style before modifying source.
-- Verification must scope source checks to the relevant region, not the whole file, when the whole file naturally contains the searched token.
 - Do not patch UI into login/auth controllers unless the phase explicitly targets login/auth UI.
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
 - Locale codes used for translation lookup must be validated strictly before they affect file paths.
