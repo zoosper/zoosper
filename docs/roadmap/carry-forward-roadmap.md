@@ -2,8 +2,9 @@
 
 ## Completed foundations
 
-- Heredoc detection hotfix.
 - Locale placeholder position hotfix.
+- Admin notice success CSS restoration.
+- Admin user locale persistence readiness checks.
 
 ## Coding guidelines
 
@@ -11,14 +12,14 @@
 - Always include meaningful PHPDoc and helpful comments.
 - Do not insert raw PHP template tags into PHP controller strings/heredocs.
 - UI apply tools must not insert content inside an input attribute; prefer line-based insertion before/after complete label blocks.
-- UI apply tools must inspect all heredoc/nowdoc opener variants, not just one assignment pattern.
 - Verification must include rendered/source position checks for inserted UI fields.
-- Do not patch UI into login/auth controllers unless the phase explicitly targets login/auth UI.
+- Admin notices must retain visible success/error/warning styling after UI changes.
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
+- Locale codes used for translation lookup must be validated strictly before they affect file paths.
 
 ## Future TODOs
 
-- Persist admin-user locale preference from the UI after safe integration.
+- Persist admin-user locale preference from the UI if readiness confirms the save flow is not already persisting it.
 - Replace hard-coded en_AU locale helper with SupportedLocaleProvider injection if/when UserAdminController receives services cleanly.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Add server-side block renderer integration.
