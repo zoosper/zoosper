@@ -242,11 +242,13 @@ final readonly class UserAdminController
         $disabledSelected = $status === 'disabled' ? ' selected' : '';
         $resetTwoFactorHtml = $this->resetTwoFactorPanel($user);
 
+        $localeFieldHtml = $this->renderAdminLocaleField($submitted['locale'] ?? $user->locale ?? null);
         return <<<HTML
 {$errorHtml}
 <form method="post" action="{$escapedAction}" class="page-form">
     <input type="hidden" name="_csrf_token" value="{$token}">
-    <label>Name <input type="text" name="name" value="{$name}" required></label>
+    <label>Name <input type="text" name="name" value
+        {$localeFieldHtml}="{$name}" required></label>
     <label>Email <input type="email" name="email" value="{$email}" required></label>
     <label>Password <input type="password" name="password" autocomplete="new-password"><span class="muted">Leave blank to keep existing password.</span></label>
     <label>Status <select name="status"><option value="active"{$activeSelected}>Active</option><option value="disabled"{$disabledSelected}>Disabled</option></select></label>
@@ -321,5 +323,28 @@ HTML;
     private function e(string $value): string
     {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    }
+    /**
+     * Renders the admin interface locale field for the user form.
+     *
+     * This method deliberately builds escaped HTML from PHP variables instead
+     * of embedding raw PHP template tags inside controller-rendered heredoc.
+     */
+    private function renderAdminLocaleField(?string $currentLocale): string
+    {
+        $currentLocale = is_string($currentLocale) ? trim($currentLocale) : '';
+        $blankSelected = $currentLocale === '' ? ' selected' : '';
+        $enAuSelected = $currentLocale === 'en_AU' ? ' selected' : '';
+
+        return implode("\n", [
+            '<div class="admin-form-field admin-form-field--locale">',
+            '    <label for="admin-user-locale">Admin interface locale</label>',
+            '    <select id="admin-user-locale" name="locale">',
+            '        <option value=""' . $blankSelected . '>Use configured admin locale</option>',
+            '        <option value="en_AU"' . $enAuSelected . '>English (Australia)</option>',
+            '    </select>',
+            '    <small class="admin-form-help">Leave blank to use the configured admin locale.</small>',
+            '</div>',
+        ]);
     }
 }
