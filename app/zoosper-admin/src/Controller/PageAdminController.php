@@ -21,6 +21,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
+use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\IdentityTranslator;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Http\Request;
@@ -60,6 +61,7 @@ final readonly class PageAdminController
         private ?ConfigRepository $config = null,
         private ?ContentEditorInterface $contentEditor = null,
         private ?TranslatorInterface $translator = null,
+        private ?AdminContextTranslatorResolver $adminContextTranslatorResolver = null,
         private ?AdminFormProviderRegistry $pageFormSections = null,
         private ?AdminFormRenderer $adminFormRenderer = null,
         private ?AdminFormConfigProviderFactory $adminFormConfigProviderFactory = null,
@@ -563,7 +565,11 @@ HTML);
      */
     private function t(string $message, array $parameters = []): string
     {
-        return ($this->translator ?? $this->defaultTranslator())->translate($message, $parameters);
+        $translator = $this->adminContextTranslatorResolver?->resolveForAdminUser($this->guard->user())
+            ?? $this->translator
+            ?? $this->defaultTranslator();
+
+        return $translator->translate($message, $parameters);
     }
     private function defaultTranslator(): TranslatorInterface
     {
