@@ -17,7 +17,6 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
-    ['Syntax: I18nServiceProvider.php', [$php, '-l', 'app/zoosper-core/src/I18n/I18nServiceProvider.php']],
     ['Syntax: apply-admin-user-locale-hydration.php', [$php, '-l', 'tools/apply-admin-user-locale-hydration.php']],
     ['Syntax: verify-admin-user-locale-hydration.php', [$php, '-l', 'tools/verify-admin-user-locale-hydration.php']],
     ['Syntax: diagnose-admin-user-locale-hydration.php', [$php, '-l', 'tools/diagnose-admin-user-locale-hydration.php']],
