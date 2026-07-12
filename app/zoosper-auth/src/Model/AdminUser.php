@@ -16,6 +16,7 @@ final readonly class AdminUser
         public string $passwordHash,
         public string $status,
         public array $permissions,
+        public ?string $locale = null,
     ) {
     }
 

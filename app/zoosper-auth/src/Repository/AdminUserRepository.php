@@ -138,7 +138,9 @@ final readonly class AdminUserRepository
     /** @param array<string, mixed> $row */
     private function hydrate(array $row): AdminUser
     {
-        return new AdminUser((int) $row['id'], (string) $row['email'], (string) $row['name'], (string) $row['password_hash'], (string) $row['status'], $this->permissionsForUser((int) $row['id']));
+        return new AdminUser((int) $row['id'], (string) $row['email'], (string) $row['name'], (string) $row['password_hash'], (string) $row['status'], $this->permissionsForUser((int) $row['id']),
+            locale: isset($row['locale']) && is_string($row['locale']) && trim($row['locale']) !== '' ? trim($row['locale']) : null
+        );
     }
 
     /** @return list<string> */
