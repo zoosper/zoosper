@@ -21,6 +21,8 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
+use Zoosper\Core\I18n\IdentityTranslator;
+use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Page\Admin\Form\PageContentSectionProvider;
@@ -57,6 +59,7 @@ final readonly class PageAdminController
         private ?FlashMessageStoreInterface $flashMessages = null,
         private ?ConfigRepository $config = null,
         private ?ContentEditorInterface $contentEditor = null,
+        private ?TranslatorInterface $translator = null,
         private ?AdminFormProviderRegistry $pageFormSections = null,
         private ?AdminFormRenderer $adminFormRenderer = null,
         private ?AdminFormConfigProviderFactory $adminFormConfigProviderFactory = null,
@@ -155,14 +158,14 @@ HTML);
 
         $form = $request->form();
         if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
-            $this->flashMessages?->error('Unable to save page. Invalid security token.', 'page.csrf_failed');
+            $this->flashMessages?->error($this->t('Unable to save page. Invalid security token.'), 'page.csrf_failed');
 
-            return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: 'Invalid security token.', submitted: $form), 419);
+            return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $this->t('Invalid security token.'), submitted: $form), 419);
         }
 
         $processorError = $this->processPageForm('create', $form, null, $user);
         if ($processorError !== null) {
-            $this->flashMessages?->error('Unable to create page. Please review the form.', 'page.processor_create_failed');
+            $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), 'page.processor_create_failed');
 
             return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $processorError, submitted: $form), 422);
         }
@@ -183,11 +186,11 @@ HTML);
                 canonicalUrl: $this->normaliseOptionalString($form['canonical_url'] ?? null),
             );
 
-            $this->flashMessages?->success('Page created successfully.', 'page.created');
+            $this->flashMessages?->success($this->t('Page created successfully.'), 'page.created');
 
             return Response::redirect($this->adminUrl('/pages/edit?id=' . $id));
         } catch (RuntimeException $exception) {
-            $this->flashMessages?->error('Unable to create page. Please review the form.', 'page.create_failed');
+            $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), 'page.create_failed');
 
             return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $exception->getMessage(), submitted: $form), 422);
         }
@@ -201,7 +204,7 @@ HTML);
 
         $page = $this->pageFromRequest($request);
         if ($page === null) {
-            return $this->html('Page not found', '<p>Page not found.</p>', 404);
+            return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
         }
 
         return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page));
@@ -216,19 +219,19 @@ HTML);
 
         $page = $this->pageFromRequest($request);
         if ($page === null) {
-            return $this->html('Page not found', '<p>Page not found.</p>', 404);
+            return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
         }
 
         $form = $request->form();
         if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
-            $this->flashMessages?->error('Unable to save page. Invalid security token.', 'page.csrf_failed');
+            $this->flashMessages?->error($this->t('Unable to save page. Invalid security token.'), 'page.csrf_failed');
 
             return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, 'Invalid security token.', $form), 419);
         }
 
         $processorError = $this->processPageForm('update', $form, $page, $user);
         if ($processorError !== null) {
-            $this->flashMessages?->error('Unable to save page. Please review the form.', 'page.processor_save_failed');
+            $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.processor_save_failed');
 
             return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, $processorError, $form), 422);
         }
@@ -253,11 +256,11 @@ HTML);
                 $this->pages->publish($page->id, $user->id);
             }
 
-            $this->flashMessages?->success('Page saved successfully.', 'page.saved');
+            $this->flashMessages?->success($this->t('Page saved successfully.'), 'page.saved');
 
             return Response::redirect($this->adminUrl('/pages/edit?id=' . $page->id));
         } catch (RuntimeException $exception) {
-            $this->flashMessages?->error('Unable to save page. Please review the form.', 'page.save_failed');
+            $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.save_failed');
 
             return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, $exception->getMessage(), $form), 422);
         }
@@ -300,20 +303,20 @@ HTML);
         }
 
         if (!$this->csrf->isValid((string) ($request->form()['_csrf_token'] ?? ''))) {
-            $this->flashMessages?->error('Unable to change page status. Invalid security token.', 'page.status_csrf_failed');
+            $this->flashMessages?->error($this->t('Unable to change page status. Invalid security token.'), 'page.status_csrf_failed');
 
-            return $this->html('Invalid token', '<p>Invalid security token.</p>', 419);
+            return $this->html($this->t('Invalid token'), '<p>' . $this->e($this->t('Invalid security token.')) . '</p>', 419);
         }
 
         $page = $this->pageFromRequest($request);
         if ($page === null) {
-            return $this->html('Page not found', '<p>Page not found.</p>', 404);
+            return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
         }
 
         $publish ? $this->pages->publish($page->id, $user->id) : $this->pages->unpublish($page->id, $user->id);
 
         $this->flashMessages?->success(
-            $publish ? 'Page published successfully.' : 'Page unpublished successfully.',
+            $publish ? $this->t('Page published successfully.') : $this->t('Page unpublished successfully.'),
             $publish ? 'page.published' : 'page.unpublished',
         );
 
@@ -552,6 +555,15 @@ HTML);
         $basePath = (string) ($adminConfig['base_path'] ?? '/admin');
 
         return rtrim($basePath, '/') . '/' . ltrim($path, '/');
+    }
+
+
+    /**
+     * @param array<string, scalar|null> $parameters
+     */
+    private function t(string $message, array $parameters = []): string
+    {
+        return ($this->translator ?? new IdentityTranslator())->translate($message, $parameters);
     }
 
     private function e(string $value): string

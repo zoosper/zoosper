@@ -2,10 +2,8 @@
 
 ## Completed foundations
 
-- Module admin form config aggregation foundation.
-- Admin form processors foundation.
-- Empty admin form processor handle aggregation hotfix.
 - Admin form processors wired into page save flow.
+- Translatable admin system messages foundation.
 
 ## Coding guidelines
 
@@ -18,9 +16,12 @@
 - Third-party developers must be able to extend/override core behaviour without editing core code.
 - Prefer behaviour/contract/rendered-output verification over brittle source-string matching.
 - Preserve empty config handles when they intentionally document extension points.
+- All admin/system-facing messages should pass through a translation contract/helper instead of being emitted as final hard-coded strings.
 
 ## Future TODOs
 
+- Add module-owned translation file aggregation.
+- Replace `IdentityTranslator` with a locale-aware translator.
 - Add persistence helpers/payload consumers for processor-produced values.
 - Add replacement/remove/disable rules for section providers via config.
 - Add progressive enhancement for collapsible admin form sections or tabs if the page form becomes much longer.
