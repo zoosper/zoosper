@@ -17,8 +17,9 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
+    ['Syntax: LoginController.php', [$php, '-l', 'app/zoosper-admin/src/Controller/LoginController.php']],
     ['Syntax: AdminUserLocalePreferenceFieldRenderer.php', [$php, '-l', 'app/zoosper-admin/src/I18n/AdminUserLocalePreferenceFieldRenderer.php']],
-    ['Syntax: apply-admin-user-locale-preference-ui.php', [$php, '-l', 'tools/apply-admin-user-locale-preference-ui.php']],
+    ['Syntax: apply-admin-user-locale-preference-ui-hotfix.php', [$php, '-l', 'tools/apply-admin-user-locale-preference-ui-hotfix.php']],
     ['Syntax: diagnose-admin-user-locale-preference-ui.php', [$php, '-l', 'tools/diagnose-admin-user-locale-preference-ui.php']],
     ['Syntax: verify-admin-user-locale-preference-ui.php', [$php, '-l', 'tools/verify-admin-user-locale-preference-ui.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
