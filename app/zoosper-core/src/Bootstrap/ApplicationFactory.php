@@ -77,6 +77,9 @@ final class ApplicationFactory
 
             return $pageController->view($request);
         });
+        // Phase 0.99.1: load root service providers declared in config/service_providers.php.
+        (new \Zoosper\Core\Bootstrap\ServiceProviderManifestLoader($basePath))->load($services);
+
 
         return new Application(
             $router,
