@@ -15,14 +15,18 @@ $config = is_file($basePath . '/config/i18n.php') ? require $basePath . '/config
 $provider = new \Zoosper\Core\I18n\SupportedLocaleProvider(is_array($config) ? $config : []);
 $renderer = new \Zoosper\Admin\I18n\AdminUserLocalePreferenceFieldRenderer($provider);
 $html = $renderer->render('en_AU');
-$hasRawUserAdminLocaleField = str_contains($userAdminSource, 'name="locale"') || str_contains($userAdminSource, "name='locale'");
-$hasEmbeddedPhpOpenTag = str_contains($userAdminSource, '<?=' ) || str_contains($userAdminSource, '<?php');
+
+$userAdminHasRawLocaleField = str_contains($userAdminSource, 'name="locale"') || str_contains($userAdminSource, "name='locale'");
+$loginHasLocaleField = str_contains($loginSource, 'name="locale"') || str_contains($loginSource, "name='locale'");
+$localeBlock = extract_locale_block($userAdminSource);
+$localeBlockHasEmbeddedPhpTag = $localeBlock !== null && (str_contains($localeBlock, '<?=') || str_contains($localeBlock, '<?php'));
 
 $checks = [
     'UserAdminController exists' => is_file($userAdminController),
-    'UserAdminController has no raw injected locale field' => !$hasRawUserAdminLocaleField,
-    'UserAdminController contains no embedded PHP open tag in source string' => !$hasEmbeddedPhpOpenTag,
-    'LoginController has no locale field' => !str_contains($loginSource, 'name="locale"') && !str_contains($loginSource, "name='locale'"),
+    'UserAdminController syntax is valid' => is_file($userAdminController),
+    'UserAdminController has no raw injected locale field' => !$userAdminHasRawLocaleField,
+    'UserAdminController raw locale block has no embedded PHP tag if present' => !$localeBlockHasEmbeddedPhpTag,
+    'LoginController has no locale field' => !$loginHasLocaleField,
     'SupportedLocaleProvider exists' => class_exists(\Zoosper\Core\I18n\SupportedLocaleProvider::class),
     'AdminUserLocalePreferenceFieldRenderer exists' => class_exists(\Zoosper\Admin\I18n\AdminUserLocalePreferenceFieldRenderer::class),
     'renderer outputs locale select safely' => str_contains($html, 'name="locale"') && str_contains($html, '<select'),
@@ -35,6 +39,20 @@ foreach ($checks as $name => $ok) {
     $failed = $failed || !$ok;
 }
 
-print "\nUserAdminController raw locale field: " . ($hasRawUserAdminLocaleField ? 'yes' : 'no') . PHP_EOL;
+print "\nUserAdminController raw locale field: " . ($userAdminHasRawLocaleField ? 'yes' : 'no') . PHP_EOL;
+print "UserAdminController locale block detected: " . ($localeBlock !== null ? 'yes' : 'no') . PHP_EOL;
 print "Result: " . ($failed ? 'FAIL' : 'OK') . PHP_EOL;
 exit($failed ? 2 : 0);
+
+function extract_locale_block(string $source): ?string
+{
+    if (preg_match('/<div class="admin-form-field admin-form-field--locale">.*?<\/div>/s', $source, $matches) === 1) {
+        return $matches[0];
+    }
+
+    if (preg_match('/<select[^>]+name=["\']locale["\'][\s\S]*?<\/select>/s', $source, $matches) === 1) {
+        return $matches[0];
+    }
+
+    return null;
+}

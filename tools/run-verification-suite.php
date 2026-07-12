@@ -19,7 +19,6 @@ if (!is_dir(dirname($outputPath))) {
 $commands = [
     ['Syntax: UserAdminController.php', [$php, '-l', 'app/zoosper-admin/src/Controller/UserAdminController.php']],
     ['Syntax: LoginController.php', [$php, '-l', 'app/zoosper-admin/src/Controller/LoginController.php']],
-    ['Syntax: apply-user-admin-controller-locale-ui-parse-hotfix.php', [$php, '-l', 'tools/apply-user-admin-controller-locale-ui-parse-hotfix.php']],
     ['Syntax: diagnose-user-admin-controller-locale-ui.php', [$php, '-l', 'tools/diagnose-user-admin-controller-locale-ui.php']],
     ['Syntax: verify-user-admin-controller-locale-ui.php', [$php, '-l', 'tools/verify-user-admin-controller-locale-ui.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
