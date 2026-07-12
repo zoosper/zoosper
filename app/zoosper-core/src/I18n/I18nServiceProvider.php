@@ -28,6 +28,7 @@ final readonly class I18nServiceProvider
     {
         $this->registerService($container, LocaleResolverInterface::class, fn (): LocaleResolverInterface => new ConfiguredLocaleResolver($this->i18nConfig));
         $this->registerService($container, ConfiguredLocaleResolver::class, fn (): ConfiguredLocaleResolver => new ConfiguredLocaleResolver($this->i18nConfig));
+        $this->registerService($container, AdminUserLocaleResolver::class, fn (): AdminUserLocaleResolver => new AdminUserLocaleResolver(new ConfiguredLocaleResolver($this->i18nConfig)));
         $this->registerService($container, TranslationFileAggregator::class, fn (): TranslationFileAggregator => new TranslationFileAggregator($this->basePath));
         $this->registerService($container, TranslationResolver::class, fn (): TranslationResolver => new TranslationResolver($this->basePath));
         $this->registerService($container, AdminTranslatorResolver::class, fn (): AdminTranslatorResolver => new AdminTranslatorResolver($this->basePath, $this->i18nConfig));
