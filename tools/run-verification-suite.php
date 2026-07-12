@@ -17,12 +17,13 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
+    ['Syntax: UserAdminController.php', [$php, '-l', 'app/zoosper-admin/src/Controller/UserAdminController.php']],
     ['Syntax: LoginController.php', [$php, '-l', 'app/zoosper-admin/src/Controller/LoginController.php']],
-    ['Syntax: AdminUserLocalePreferenceFieldRenderer.php', [$php, '-l', 'app/zoosper-admin/src/I18n/AdminUserLocalePreferenceFieldRenderer.php']],
-    ['Syntax: apply-admin-user-locale-preference-ui-hotfix.php', [$php, '-l', 'tools/apply-admin-user-locale-preference-ui-hotfix.php']],
-    ['Syntax: diagnose-admin-user-locale-preference-ui.php', [$php, '-l', 'tools/diagnose-admin-user-locale-preference-ui.php']],
-    ['Syntax: verify-admin-user-locale-preference-ui.php', [$php, '-l', 'tools/verify-admin-user-locale-preference-ui.php']],
+    ['Syntax: apply-user-admin-controller-locale-ui.php', [$php, '-l', 'tools/apply-user-admin-controller-locale-ui.php']],
+    ['Syntax: diagnose-user-admin-controller-locale-ui.php', [$php, '-l', 'tools/diagnose-user-admin-controller-locale-ui.php']],
+    ['Syntax: verify-user-admin-controller-locale-ui.php', [$php, '-l', 'tools/verify-user-admin-controller-locale-ui.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
+    ['Verify: UserAdminController locale UI', [$php, 'tools/verify-user-admin-controller-locale-ui.php']],
     ['Verify: admin user locale preference UI', [$php, 'tools/verify-admin-user-locale-preference-ui.php']],
     ['Verify: supported admin locales', [$php, 'tools/verify-supported-admin-locales.php']],
     ['Verify: admin context translator resolution', [$php, 'tools/verify-admin-context-translator-resolution.php']],
