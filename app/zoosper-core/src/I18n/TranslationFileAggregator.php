@@ -7,15 +7,18 @@ namespace Zoosper\Core\I18n;
 /**
  * Aggregates module-owned translation files for a locale.
  *
- * Supported paths are deliberately module-friendly:
+ * Supported paths are deliberately module-friendly. The examples below avoid
+ * literal wildcard path syntax so this PHPDoc block cannot be accidentally
+ * closed by a slash-star sequence inside an example path.
  *
- * - app/*/i18n/{locale}.php
- * - modules/*/i18n/{locale}.php
- * - modules/*/*/i18n/{locale}.php
- * - vendor/*/*/i18n/{locale}.php
- * - config/i18n/{locale}.php
+ * Supported locations:
+ * - application module i18n directories
+ * - first-level community module i18n directories
+ * - vendor/community module i18n directories
+ * - Composer vendor package i18n directories
+ * - project-level config i18n directories
  *
- * Files must return `array<string, string>`. Later files override earlier files,
+ * Files must return array<string, string>. Later files override earlier files,
  * allowing project-level config to customise module copy without editing core.
  */
 final readonly class TranslationFileAggregator

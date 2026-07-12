@@ -2,9 +2,8 @@
 
 ## Completed foundations
 
-- Translatable admin system messages foundation.
-- Verifier string interpolation hotfix.
 - Module-owned translation file aggregation foundation.
+- Translation file aggregator comment hotfix.
 
 ## Coding guidelines
 
@@ -20,6 +19,7 @@
 - All admin/system-facing messages should pass through a translation contract/helper instead of being emitted as final hard-coded strings.
 - Source-scanning verifier strings must avoid accidental PHP variable interpolation.
 - Translation files should be module-owned where possible and project-overridable through config-level dictionaries.
+- PHPDoc must never include unescaped text that can terminate the docblock early, such as literal wildcard path examples containing slash-star.
 
 ## Future TODOs
 
