@@ -17,11 +17,11 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
-    ['Syntax: AdminUserCoreWriteSqlBuilder.php', [$php, '-l', 'app/zoosper-auth/src/Entity/Save/AdminUserCoreWriteSqlBuilder.php']],
-    ['Syntax: AdminUserSavePipeline.php', [$php, '-l', 'app/zoosper-auth/src/Entity/Save/AdminUserSavePipeline.php']],
-    ['Syntax: diagnose-user-admin-controller-save-flow.php', [$php, '-l', 'tools/diagnose-user-admin-controller-save-flow.php']],
-    ['Syntax: verify-admin-user-core-write-migration-support.php', [$php, '-l', 'tools/verify-admin-user-core-write-migration-support.php']],
+    ['Syntax: inspect-user-admin-controller-save-flow.php', [$php, '-l', 'tools/inspect-user-admin-controller-save-flow.php']],
+    ['Syntax: verify-user-admin-save-flow-discovery.php', [$php, '-l', 'tools/verify-user-admin-save-flow-discovery.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
+    ['Inspect: UserAdminController save flow', [$php, 'tools/inspect-user-admin-controller-save-flow.php']],
+    ['Verify: UserAdminController save-flow discovery', [$php, 'tools/verify-user-admin-save-flow-discovery.php']],
     ['Verify: AdminUser core write migration support', [$php, 'tools/verify-admin-user-core-write-migration-support.php']],
     ['Verify: AdminUser save data pipeline', [$php, 'tools/verify-admin-user-save-data-pipeline.php']],
     ['Verify: AdminUser field definition provider', [$php, 'tools/verify-admin-user-field-definition-provider.php']],
