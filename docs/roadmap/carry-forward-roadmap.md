@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- Admin entity save pipeline foundation.
 - AdminUser field definition provider and write map.
+- AdminUser save data pipeline.
 
 ## Coding guidelines
 
@@ -21,9 +21,9 @@
 
 ## Future TODOs
 
-- Phase 1.14: Migrate UserAdminController save flow to EntityDataObject and FieldDefinitionRegistry.
-- Phase 1.15: Entity extension data persistence table for third-party fields.
-- Phase 1.16: before/after validate/save event dispatcher integration.
+- Phase 1.15: Migrate UserAdminController save flow to AdminUserSaveDataFactory and AdminUserCoreWriteDataMapper.
+- Phase 1.16: Entity extension data persistence table for third-party fields.
+- Phase 1.17: before/after validate/save event dispatcher integration.
 - Replace hard-coded en_AU locale helper with SupportedLocaleProvider injection if/when UserAdminController receives services cleanly.
 - Add per-site locale settings from SiteContext/SiteRepository.
 - Add server-side block renderer integration.
@@ -32,4 +32,3 @@
 - Add pagination to admin grids.
 - Add customer login and customer account management.
 - Add admin menu link to mail logs
-- Make sure any form elements inserted through 3rd party modules are saved too.

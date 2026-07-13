@@ -17,11 +17,12 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
-    ['Syntax: FieldDefinitionProviderInterface.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/FieldDefinitionProviderInterface.php']],
-    ['Syntax: AdminUserFieldDefinitionProvider.php', [$php, '-l', 'app/zoosper-auth/src/Entity/Save/AdminUserFieldDefinitionProvider.php']],
-    ['Syntax: AdminUserFieldRegistryFactory.php', [$php, '-l', 'app/zoosper-auth/src/Entity/Save/AdminUserFieldRegistryFactory.php']],
-    ['Syntax: verify-admin-user-field-definition-provider.php', [$php, '-l', 'tools/verify-admin-user-field-definition-provider.php']],
+    ['Syntax: AdminUserSaveDataFactory.php', [$php, '-l', 'app/zoosper-auth/src/Entity/Save/AdminUserSaveDataFactory.php']],
+    ['Syntax: AdminUserCoreWriteDataMapper.php', [$php, '-l', 'app/zoosper-auth/src/Entity/Save/AdminUserCoreWriteDataMapper.php']],
+    ['Syntax: AdminUserSavePipelineContextFactory.php', [$php, '-l', 'app/zoosper-auth/src/Entity/Save/AdminUserSavePipelineContextFactory.php']],
+    ['Syntax: verify-admin-user-save-data-pipeline.php', [$php, '-l', 'tools/verify-admin-user-save-data-pipeline.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
+    ['Verify: AdminUser save data pipeline', [$php, 'tools/verify-admin-user-save-data-pipeline.php']],
     ['Verify: AdminUser field definition provider', [$php, 'tools/verify-admin-user-field-definition-provider.php']],
     ['Verify: admin entity save pipeline foundation', [$php, 'tools/verify-admin-entity-save-pipeline-foundation.php']],
     ['Verify: admin notice success CSS', [$php, 'tools/verify-admin-notice-success-css.php']],
