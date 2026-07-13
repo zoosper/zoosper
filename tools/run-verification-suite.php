@@ -17,16 +17,15 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
-    ['Syntax: AdminUserRepository.php', [$php, '-l', 'app/zoosper-auth/src/Repository/AdminUserRepository.php']],
-    ['Syntax: apply-admin-user-locale-pdo-param-hotfix.php', [$php, '-l', 'tools/apply-admin-user-locale-pdo-param-hotfix.php']],
-    ['Syntax: apply-admin-notice-error-css.php', [$php, '-l', 'tools/apply-admin-notice-error-css.php']],
-    ['Syntax: verify-admin-user-locale-pdo-params.php', [$php, '-l', 'tools/verify-admin-user-locale-pdo-params.php']],
-    ['Syntax: verify-admin-notice-error-css.php', [$php, '-l', 'tools/verify-admin-notice-error-css.php']],
+    ['Syntax: EntityExtensionValue.php', [$php, '-l', 'app/zoosper-core/src/Entity/Extension/EntityExtensionValue.php']],
+    ['Syntax: EntityExtensionValueRepository.php', [$php, '-l', 'app/zoosper-core/src/Entity/Extension/EntityExtensionValueRepository.php']],
+    ['Syntax: EntityExtensionDataPersister.php', [$php, '-l', 'app/zoosper-core/src/Entity/Extension/EntityExtensionDataPersister.php']],
+    ['Syntax: verify-entity-extension-data-persistence.php', [$php, '-l', 'tools/verify-entity-extension-data-persistence.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
+    ['Verify: entity extension data persistence', [$php, 'tools/verify-entity-extension-data-persistence.php']],
+    ['Verify: roadmap planning docs', [$php, 'tools/verify-roadmap-planning-docs.php']],
     ['Verify: AdminUser locale PDO params', [$php, 'tools/verify-admin-user-locale-pdo-params.php']],
     ['Verify: admin notice error CSS', [$php, 'tools/verify-admin-notice-error-css.php']],
-    ['Verify: UserAdminController named locale argument', [$php, 'tools/verify-user-admin-controller-named-locale-hotfix.php']],
-    ['Verify: UserAdminController pipeline locale persistence', [$php, 'tools/verify-user-admin-controller-pipeline-locale-persistence.php']],
     ['Verify: admin notice success CSS', [$php, 'tools/verify-admin-notice-success-css.php']],
     ['Verify: admin user locale hydration', [$php, 'tools/verify-admin-user-locale-hydration.php']],
     ['Verify: service providers', [$php, 'tools/verify-service-providers.php']],
