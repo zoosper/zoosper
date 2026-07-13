@@ -7,6 +7,18 @@ $basePath = require __DIR__ . '/bootstrap.php';
 print "Zoosper AdminUser save data pipeline verification\n";
 print "=================================================\n\n";
 
+$extensionProvider = new class implements \Zoosper\Core\Entity\Save\FieldDefinitionProviderInterface {
+    public function definitions(): iterable
+    {
+        return [\Zoosper\Core\Entity\Save\FieldDefinition::extension('vendor_module', 'vendor_note', 'Vendor note')];
+    }
+};
+
+$registryFactory = new \Zoosper\Auth\Entity\Save\AdminUserFieldRegistryFactory([$extensionProvider]);
+$dataFactory = new \Zoosper\Auth\Entity\Save\AdminUserSaveDataFactory($registryFactory);
+$mapper = new \Zoosper\Auth\Entity\Save\AdminUserCoreWriteDataMapper($registryFactory);
+$contextFactory = new \Zoosper\Auth\Entity\Save\AdminUserSavePipelineContextFactory($dataFactory);
+
 $submitted = [
     'name' => 'Damu',
     'email' => 'damu@example.test',
@@ -19,11 +31,9 @@ $submitted = [
     'rogue_column' => 'must_not_persist',
 ];
 
-$dataFactory = new \Zoosper\Auth\Entity\Save\AdminUserSaveDataFactory();
 $data = $dataFactory->fromSubmitted($submitted);
-$mapper = new \Zoosper\Auth\Entity\Save\AdminUserCoreWriteDataMapper();
 $coreData = $mapper->map($data);
-$context = (new \Zoosper\Auth\Entity\Save\AdminUserSavePipelineContextFactory())->create($submitted, 7);
+$context = $contextFactory->create($submitted, 7);
 $extensionData = $context->fieldRegistry()->extensionData($context->data());
 
 $unsafeData = $dataFactory->fromSubmitted(['locale' => '../bad']);
@@ -55,6 +65,11 @@ foreach ($checks as $name => $ok) {
 print "\nCore write data sample:\n";
 foreach ($coreData as $column => $value) {
     print '- ' . $column . ': ' . (is_array($value) ? json_encode($value) : (string) $value) . PHP_EOL;
+}
+
+print "\nExtension data sample:\n";
+foreach ($extensionData as $module => $values) {
+    print '- ' . $module . ': ' . json_encode($values) . PHP_EOL;
 }
 
 print "\nResult: " . ($failed ? 'FAIL' : 'OK') . PHP_EOL;

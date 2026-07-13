@@ -4,6 +4,7 @@
 
 - AdminUser field definition provider and write map.
 - AdminUser save data pipeline.
+- AdminUser save context extension-provider verification hotfix.
 
 ## Coding guidelines
 
@@ -12,6 +13,7 @@
 - Do not blindly write `$_POST` or arbitrary `setData()` values to core tables.
 - Every persisted field must be declared through a field definition/write map.
 - Third-party module fields must stay available in the save data object, but persist through extension storage or module handlers unless explicitly mapped as core columns.
+- Tests/verifiers that assert third-party extension-field behaviour must inject a third-party field-definition provider.
 - Handler fields such as passwords and role assignments must be processed by dedicated handlers, not automatic core column writes.
 - Save flows should dispatch before/after validation and before/after save lifecycle events.
 - Admin locale values must be normalised and strictly validated before persistence.
@@ -32,3 +34,4 @@
 - Add pagination to admin grids.
 - Add customer login and customer account management.
 - Add admin menu link to mail logs
+- add form_key to forms to avoid stale form submissions and hack prevention
