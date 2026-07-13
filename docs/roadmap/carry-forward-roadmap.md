@@ -2,22 +2,19 @@
 
 ## Completed foundations
 
-- UserAdminController save-flow discovery.
 - UserAdminController pipeline locale persistence.
+- Named argument locale hotfix.
 
 ## Coding guidelines
 
 - Always produce clean, well-formatted code like PHPStorm Ctrl+Alt+L.
 - Always include meaningful PHPDoc and helpful comments.
+- Do not mix positional arguments after named arguments in generated PHP code.
 - Do not blindly write `$_POST` or arbitrary `setData()` values to core tables.
 - Every persisted field must be declared through a field definition/write map.
 - Generated SQL must be based on field-definition approved core write data only.
-- Third-party module fields must stay available in the save data object, but persist through extension storage or module handlers unless explicitly mapped as core columns.
-- Handler fields such as passwords and role assignments must be processed by dedicated handlers, not automatic core column writes.
-- Save flows should dispatch before/after validation and before/after save lifecycle events.
 - Admin locale values must be normalised and strictly validated before persistence.
 - Empty admin locale values should persist as null to preserve configured admin-locale fallback.
-- Prefer generic entity save pipelines over brittle controller-specific patches.
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
 
 ## Future TODOs
@@ -33,3 +30,4 @@
 - Add customer login and customer account management.
 - Add admin menu link to mail logs
 - add form_key to forms to avoid stale form submissions and hack prevention
+- Don't use raw queries as it will break true modern modularity of the CMS. Also using Data Models/Objects will help developers to use different SQL clients. (MySQL, MariaDB, MSSQL, PostgreSQL etc).
