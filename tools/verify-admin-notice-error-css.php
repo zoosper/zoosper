@@ -41,7 +41,8 @@ function find_admin_css_files(string $basePath): array
         foreach ($iterator as $file) {
             if ($file instanceof SplFileInfo && $file->getExtension() === 'css') {
                 $path = $file->getPathname();
-                if (str_contains($path, 'admin') || str_contains((string) file_get_contents($path), '.notice')) {
+                $contents = (string) file_get_contents($path);
+                if (str_contains($path, 'admin') || str_contains($contents, '.notice')) {
                     $files[] = $path;
                 }
             }

@@ -2,14 +2,20 @@
 
 ## Completed foundations
 
-- Roadmap consolidation and extension data persistence planning.
 - Entity Extension Data Persistence Table foundation.
-- Entity extension data persistence foundation.
+- Roadmap and error CSS verification hotfix.
+- Error notice selector alias hotfix.
 
 ## Coding guidelines
 
 - Always produce clean, well-formatted code like PHPStorm Ctrl+Alt+L.
 - Always include meaningful PHPDoc and helpful comments.
+- Admin notices must use canonical selectors such as `.notice-success`, `.notice-error` and future `.notice-warning`.
+- Admin notices must retain visible success/error/warning styling after UI changes.
+- Verifiers should avoid being too brittle around equivalent wording, but selectors used by rendered markup should be canonical.
+- Every SQL placeholder token must have a matching execute/bind parameter.
+- Every persisted field must be declared through a field definition/write map.
+- Third-party module fields must persist through extension storage or module handlers unless explicitly mapped as core columns.
 - Use correct modern programming terminology, even when planning from informal wording.
 - When pausing for planning, include pros, cons, risks, implementation options and roadmap updates.
 - Do not blindly write `$_POST` or arbitrary `setData()` values to core tables.
@@ -22,7 +28,7 @@
 - Handler fields such as passwords and role assignments must be processed by dedicated handlers, not automatic core column writes.
 - Admin notices must retain visible success/error/warning styling after UI changes.
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
-
+- 
 ## Next roadmap phases
 
 ### Phase 1.20 - Entity Save Lifecycle Events
