@@ -17,14 +17,12 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
-    ['Syntax: FieldStorageType.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/FieldStorageType.php']],
-    ['Syntax: EntityDataObject.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/EntityDataObject.php']],
-    ['Syntax: FieldDefinition.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/FieldDefinition.php']],
-    ['Syntax: FieldDefinitionRegistry.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/FieldDefinitionRegistry.php']],
-    ['Syntax: EntitySaveContext.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/EntitySaveContext.php']],
-    ['Syntax: EntitySaveLifecycle.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/EntitySaveLifecycle.php']],
-    ['Syntax: verify-admin-entity-save-pipeline-foundation.php', [$php, '-l', 'tools/verify-admin-entity-save-pipeline-foundation.php']],
+    ['Syntax: FieldDefinitionProviderInterface.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/FieldDefinitionProviderInterface.php']],
+    ['Syntax: AdminUserFieldDefinitionProvider.php', [$php, '-l', 'app/zoosper-auth/src/Entity/Save/AdminUserFieldDefinitionProvider.php']],
+    ['Syntax: AdminUserFieldRegistryFactory.php', [$php, '-l', 'app/zoosper-auth/src/Entity/Save/AdminUserFieldRegistryFactory.php']],
+    ['Syntax: verify-admin-user-field-definition-provider.php', [$php, '-l', 'tools/verify-admin-user-field-definition-provider.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
+    ['Verify: AdminUser field definition provider', [$php, 'tools/verify-admin-user-field-definition-provider.php']],
     ['Verify: admin entity save pipeline foundation', [$php, 'tools/verify-admin-entity-save-pipeline-foundation.php']],
     ['Verify: admin notice success CSS', [$php, 'tools/verify-admin-notice-success-css.php']],
     ['Verify: safe UserAdminController locale HTML position', [$php, 'tools/verify-safe-user-admin-locale-html-position.php']],
