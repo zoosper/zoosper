@@ -66,3 +66,11 @@
     border: 1px solid #abefc6;
     color: #067647;
 }
+
+/* Phase 1.19.2: standard error notice selector alias. */
+.notice.notice-error,
+.notice-error {
+    background: #fef3f2;
+    border: 1px solid #fecdca;
+    color: #b42318;
+}

@@ -61,3 +61,25 @@
 - Add media library with uploads stored outside public first.
 - Add warning notice CSS and verifier.
 - Add developer documentation for field definitions, extension data and lifecycle events.
+
+- Do not mix positional arguments after named arguments in generated PHP code.
+
+- Save flows should dispatch before/after validation and before/after save lifecycle events.
+
+- Admin locale values must be normalised and strictly validated before persistence.
+
+- Empty admin locale values should persist as null to preserve configured admin-locale fallback.
+
+- Keep controllers thin and move business logic into services, repositories, handlers or pipelines.
+
+- Avoid raw SQL across controllers; repositories/query services should own persistence.
+
+- Design persistence abstractions so future database engines such as MySQL, MariaDB, PostgreSQL, Microsoft SQL Server or SQLite can be supported where practical.
+
+- Continue reducing raw query usage where it blocks true modularity and database portability.
+
+### Phase 1.19 - Entity Extension Data Persistence Table
+- Added entity_extension_values schema seed.
+- Added repository for extension values.
+- Added persister that saves FieldStorageType::ExtensionTable fields.
+- Verified third-party fields are separated from core write data.
