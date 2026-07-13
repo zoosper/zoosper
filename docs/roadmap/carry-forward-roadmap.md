@@ -2,8 +2,8 @@
 
 ## Completed foundations
 
-- AdminUser core write migration support.
 - UserAdminController save-flow discovery.
+- UserAdminController pipeline locale persistence.
 
 ## Coding guidelines
 
@@ -12,7 +12,6 @@
 - Do not blindly write `$_POST` or arbitrary `setData()` values to core tables.
 - Every persisted field must be declared through a field definition/write map.
 - Generated SQL must be based on field-definition approved core write data only.
-- Do not patch controller persistence until the real save method and persistence call are identified.
 - Third-party module fields must stay available in the save data object, but persist through extension storage or module handlers unless explicitly mapped as core columns.
 - Handler fields such as passwords and role assignments must be processed by dedicated handlers, not automatic core column writes.
 - Save flows should dispatch before/after validation and before/after save lifecycle events.
@@ -23,7 +22,6 @@
 
 ## Future TODOs
 
-- Phase 1.17: Migrate UserAdminController save flow to AdminUserSavePipeline using the inspection report.
 - Phase 1.18: Entity extension data persistence table for third-party fields.
 - Phase 1.19: before/after validate/save event dispatcher integration.
 - Replace hard-coded en_AU locale helper with SupportedLocaleProvider injection if/when UserAdminController receives services cleanly.

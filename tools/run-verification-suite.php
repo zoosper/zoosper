@@ -17,10 +17,12 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
-    ['Syntax: inspect-user-admin-controller-save-flow.php', [$php, '-l', 'tools/inspect-user-admin-controller-save-flow.php']],
-    ['Syntax: verify-user-admin-save-flow-discovery.php', [$php, '-l', 'tools/verify-user-admin-save-flow-discovery.php']],
+    ['Syntax: UserAdminController.php', [$php, '-l', 'app/zoosper-admin/src/Controller/UserAdminController.php']],
+    ['Syntax: AdminUserRepository.php', [$php, '-l', 'app/zoosper-auth/src/Repository/AdminUserRepository.php']],
+    ['Syntax: apply-user-admin-controller-pipeline-locale-persistence.php', [$php, '-l', 'tools/apply-user-admin-controller-pipeline-locale-persistence.php']],
+    ['Syntax: verify-user-admin-controller-pipeline-locale-persistence.php', [$php, '-l', 'tools/verify-user-admin-controller-pipeline-locale-persistence.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
-    ['Inspect: UserAdminController save flow', [$php, 'tools/inspect-user-admin-controller-save-flow.php']],
+    ['Verify: UserAdminController pipeline locale persistence', [$php, 'tools/verify-user-admin-controller-pipeline-locale-persistence.php']],
     ['Verify: UserAdminController save-flow discovery', [$php, 'tools/verify-user-admin-save-flow-discovery.php']],
     ['Verify: AdminUser core write migration support', [$php, 'tools/verify-admin-user-core-write-migration-support.php']],
     ['Verify: AdminUser save data pipeline', [$php, 'tools/verify-admin-user-save-data-pipeline.php']],
