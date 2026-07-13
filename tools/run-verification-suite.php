@@ -17,9 +17,13 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
-    ['Syntax: apply-admin-notice-error-selector-alias.php', [$php, '-l', 'tools/apply-admin-notice-error-selector-alias.php']],
-    ['Syntax: verify-admin-notice-error-css.php', [$php, '-l', 'tools/verify-admin-notice-error-css.php']],
+    ['Syntax: EntitySaveEventListenerInterface.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/EntitySaveEventListenerInterface.php']],
+    ['Syntax: EntitySaveEventDispatcherInterface.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/EntitySaveEventDispatcherInterface.php']],
+    ['Syntax: EntitySaveEventDispatcher.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/EntitySaveEventDispatcher.php']],
+    ['Syntax: EntitySaveLifecycleRunner.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/EntitySaveLifecycleRunner.php']],
+    ['Syntax: verify-entity-save-lifecycle-events.php', [$php, '-l', 'tools/verify-entity-save-lifecycle-events.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
+    ['Verify: entity save lifecycle events', [$php, 'tools/verify-entity-save-lifecycle-events.php']],
     ['Verify: entity extension data persistence', [$php, 'tools/verify-entity-extension-data-persistence.php']],
     ['Verify: roadmap planning docs', [$php, 'tools/verify-roadmap-planning-docs.php']],
     ['Verify: AdminUser locale PDO params', [$php, 'tools/verify-admin-user-locale-pdo-params.php']],
