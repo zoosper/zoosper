@@ -3,6 +3,7 @@
 ## Completed foundations
 
 - Roadmap consolidation and extension data persistence planning.
+- Entity Extension Data Persistence Table foundation.
 - Entity extension data persistence foundation.
 
 ## Coding guidelines
@@ -15,6 +16,7 @@
 - Every persisted field must be declared through a field definition/write map.
 - Generated SQL must be based on field-definition approved core write data only.
 - Every SQL placeholder token must have a matching execute/bind parameter.
+- Verifiers must check placeholder/parameter consistency after SQL write-map patches.
 - Third-party module fields must stay available in the save data object, but persist through extension storage or module handlers unless explicitly mapped as core columns.
 - Extension-table fields must be stored outside core entity tables by entity type, entity id, module and field name.
 - Handler fields such as passwords and role assignments must be processed by dedicated handlers, not automatic core column writes.

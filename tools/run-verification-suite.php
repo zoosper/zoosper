@@ -17,10 +17,9 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
-    ['Syntax: EntityExtensionValue.php', [$php, '-l', 'app/zoosper-core/src/Entity/Extension/EntityExtensionValue.php']],
-    ['Syntax: EntityExtensionValueRepository.php', [$php, '-l', 'app/zoosper-core/src/Entity/Extension/EntityExtensionValueRepository.php']],
-    ['Syntax: EntityExtensionDataPersister.php', [$php, '-l', 'app/zoosper-core/src/Entity/Extension/EntityExtensionDataPersister.php']],
-    ['Syntax: verify-entity-extension-data-persistence.php', [$php, '-l', 'tools/verify-entity-extension-data-persistence.php']],
+    ['Syntax: apply-roadmap-and-error-css-verification-hotfix.php', [$php, '-l', 'tools/apply-roadmap-and-error-css-verification-hotfix.php']],
+    ['Syntax: verify-roadmap-planning-docs.php', [$php, '-l', 'tools/verify-roadmap-planning-docs.php']],
+    ['Syntax: verify-admin-notice-error-css.php', [$php, '-l', 'tools/verify-admin-notice-error-css.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
     ['Verify: entity extension data persistence', [$php, 'tools/verify-entity-extension-data-persistence.php']],
     ['Verify: roadmap planning docs', [$php, 'tools/verify-roadmap-planning-docs.php']],
