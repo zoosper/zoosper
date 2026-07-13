@@ -89,7 +89,7 @@ final readonly class UserAdminController
                 hash: $this->passwordHasher->hash($password),
                 status: (string) ($form['status'] ?? 'active'),
                 roleIds: $this->roleIdsFromForm($form),
-                $this->adminUserLocaleFromForm($form));
+                locale: $this->adminUserLocaleFromForm($form));
 
             return Response::redirect('/admin/users/edit?id=' . $id . '&notice=created');
         } catch (RuntimeException $exception) {
@@ -152,7 +152,7 @@ final readonly class UserAdminController
                 name: trim((string) ($form['name'] ?? '')),
                 status: (string) ($form['status'] ?? 'active'),
                 roleIds: $this->roleIdsFromForm($form),
-                $this->adminUserLocaleFromForm($form));
+                locale: $this->adminUserLocaleFromForm($form));
 
             $password = trim((string) ($form['password'] ?? ''));
             if ($password !== '') {
