@@ -2,19 +2,20 @@
 
 ## Completed foundations
 
-- UserAdminController pipeline locale persistence.
 - Named argument locale hotfix.
+- PDO locale parameter hotfix.
+- Admin error notice CSS restoration.
 
 ## Coding guidelines
 
 - Always produce clean, well-formatted code like PHPStorm Ctrl+Alt+L.
 - Always include meaningful PHPDoc and helpful comments.
+- Every SQL placeholder token must have a matching execute/bind parameter.
+- Verifiers must check placeholder/parameter consistency after SQL write-map patches.
+- Admin notices must retain visible success/error/warning styling after UI changes.
 - Do not mix positional arguments after named arguments in generated PHP code.
 - Do not blindly write `$_POST` or arbitrary `setData()` values to core tables.
 - Every persisted field must be declared through a field definition/write map.
-- Generated SQL must be based on field-definition approved core write data only.
-- Admin locale values must be normalised and strictly validated before persistence.
-- Empty admin locale values should persist as null to preserve configured admin-locale fallback.
 - Preserve existing fields, admin sections and behaviour during refactors unless removal is explicitly requested.
 
 ## Future TODOs
