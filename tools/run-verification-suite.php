@@ -17,13 +17,15 @@ if (!is_dir(dirname($outputPath))) {
 }
 
 $commands = [
-    ['Syntax: UserAdminController.php', [$php, '-l', 'app/zoosper-admin/src/Controller/UserAdminController.php']],
-    ['Syntax: LoginController.php', [$php, '-l', 'app/zoosper-admin/src/Controller/LoginController.php']],
-    ['Syntax: apply-admin-user-locale-persistence.php', [$php, '-l', 'tools/apply-admin-user-locale-persistence.php']],
-    ['Syntax: diagnose-admin-user-locale-persistence.php', [$php, '-l', 'tools/diagnose-admin-user-locale-persistence.php']],
-    ['Syntax: verify-admin-user-locale-persistence.php', [$php, '-l', 'tools/verify-admin-user-locale-persistence.php']],
+    ['Syntax: FieldStorageType.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/FieldStorageType.php']],
+    ['Syntax: EntityDataObject.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/EntityDataObject.php']],
+    ['Syntax: FieldDefinition.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/FieldDefinition.php']],
+    ['Syntax: FieldDefinitionRegistry.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/FieldDefinitionRegistry.php']],
+    ['Syntax: EntitySaveContext.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/EntitySaveContext.php']],
+    ['Syntax: EntitySaveLifecycle.php', [$php, '-l', 'app/zoosper-core/src/Entity/Save/EntitySaveLifecycle.php']],
+    ['Syntax: verify-admin-entity-save-pipeline-foundation.php', [$php, '-l', 'tools/verify-admin-entity-save-pipeline-foundation.php']],
     ['Syntax: run-verification-suite.php', [$php, '-l', 'tools/run-verification-suite.php']],
-    ['Verify: admin user locale persistence', [$php, 'tools/verify-admin-user-locale-persistence.php']],
+    ['Verify: admin entity save pipeline foundation', [$php, 'tools/verify-admin-entity-save-pipeline-foundation.php']],
     ['Verify: admin notice success CSS', [$php, 'tools/verify-admin-notice-success-css.php']],
     ['Verify: safe UserAdminController locale HTML position', [$php, 'tools/verify-safe-user-admin-locale-html-position.php']],
     ['Verify: safe UserAdminController locale UI', [$php, 'tools/verify-safe-user-admin-locale-ui.php']],
