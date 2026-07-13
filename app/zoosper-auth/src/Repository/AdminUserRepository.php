@@ -61,13 +61,13 @@ final readonly class AdminUserRepository
     }
 
     /** @param list<int> $roleIds */
-    public function createWithRoleIds(string $email, string $name, string $hash, string $status, array $roleIds): int
+    public function createWithRoleIds(string $email, string $name, string $hash, string $status, array $roleIds, ?string $locale = null): int
     {
         if ($this->findByEmail($email) !== null) {
             throw new RuntimeException('Admin user already exists for email: ' . $email);
         }
         $now = gmdate('Y-m-d H:i:s');
-        $statement = $this->pdo->prepare('INSERT INTO admin_users (email, name, password_hash, status, created_at, updated_at) VALUES (:email, :name, :password_hash, :status, :created_at, :updated_at)');
+        $statement = $this->pdo->prepare('INSERT INTO admin_users (email, name, password_hash, status, locale, created_at, updated_at) VALUES (:email, :name, :password_hash, :status, :locale, :created_at, :updated_at)');
         $statement->execute(['email' => mb_strtolower($email), 'name' => $name, 'password_hash' => $hash, 'status' => $status, 'created_at' => $now, 'updated_at' => $now]);
         $userId = (int) $this->pdo->lastInsertId();
         $this->syncRoles($userId, $roleIds);
@@ -75,7 +75,7 @@ final readonly class AdminUserRepository
     }
 
     /** @param list<int> $roleIds */
-    public function updateUser(int $id, string $email, string $name, string $status, array $roleIds): void
+    public function updateUser(int $id, string $email, string $name, string $status, array $roleIds, ?string $locale = null): void
     {
         if ($this->findById($id) === null) {
             throw new RuntimeException('Admin user does not exist: ' . $id);
@@ -84,7 +84,7 @@ final readonly class AdminUserRepository
         if ($byEmail !== null && $byEmail->id !== $id) {
             throw new RuntimeException('Another admin user already uses email: ' . $email);
         }
-        $statement = $this->pdo->prepare('UPDATE admin_users SET email = :email, name = :name, status = :status, updated_at = :updated_at WHERE id = :id');
+        $statement = $this->pdo->prepare('UPDATE admin_users SET email = :email, name = :name, status = :status, locale = :locale, updated_at = :updated_at WHERE id = :id');
         $statement->execute(['id' => $id, 'email' => mb_strtolower($email), 'name' => $name, 'status' => $status, 'updated_at' => gmdate('Y-m-d H:i:s')]);
         $this->syncRoles($id, $roleIds);
     }

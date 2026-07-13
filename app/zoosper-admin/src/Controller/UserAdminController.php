@@ -89,7 +89,7 @@ final readonly class UserAdminController
                 hash: $this->passwordHasher->hash($password),
                 status: (string) ($form['status'] ?? 'active'),
                 roleIds: $this->roleIdsFromForm($form),
-            );
+                $this->adminUserLocaleFromForm($form));
 
             return Response::redirect('/admin/users/edit?id=' . $id . '&notice=created');
         } catch (RuntimeException $exception) {
@@ -152,7 +152,7 @@ final readonly class UserAdminController
                 name: trim((string) ($form['name'] ?? '')),
                 status: (string) ($form['status'] ?? 'active'),
                 roleIds: $this->roleIdsFromForm($form),
-            );
+                $this->adminUserLocaleFromForm($form));
 
             $password = trim((string) ($form['password'] ?? ''));
             if ($password !== '') {
@@ -301,6 +301,22 @@ HTML;
      * @param array<string, mixed> $form
      * @return list<int>
      */
+
+    /**
+     * Normalises the submitted admin interface locale through the AdminUser save pipeline.
+     *
+     * This keeps controller locale handling aligned with the field-definition
+     * write map used by modular AdminUser save flows.
+     *
+     * @param array<string, mixed> $form
+     */
+    private function adminUserLocaleFromForm(array $form): ?string
+    {
+        $data = (new \Zoosper\Auth\Entity\Save\AdminUserSaveDataFactory())->fromSubmitted($form);
+        $locale = $data->getData('locale');
+
+        return is_string($locale) && trim($locale) !== '' ? trim($locale) : null;
+    }
     private function roleIdsFromForm(array $form): array
     {
         $ids = $form['role_ids'] ?? [];
