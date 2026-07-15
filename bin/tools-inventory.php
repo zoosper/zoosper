@@ -79,8 +79,15 @@ function classify(string $name, string $relPath): string
     return 'REVIEW';
 }
 
-/** @return array<int,string> */
-function scanDir(string $dir): array
+/**
+ * Recursively collect .php/.sh script paths under a directory.
+ *
+ * Renamed from scanDir() to avoid a case-insensitive clash with PHP's built-in
+ * scandir().
+ *
+ * @return array<int,string>
+ */
+function collectScripts(string $dir): array
 {
     if (!is_dir($dir)) {
         return [];
@@ -118,7 +125,7 @@ function main(array $argv): int
     ];
 
     foreach (['tools', 'tests'] as $sub) {
-        foreach (scanDir($root . DIRECTORY_SEPARATOR . $sub) as $path) {
+        foreach (collectScripts($root . DIRECTORY_SEPARATOR . $sub) as $path) {
             $r = $rel($path);
             $buckets[classify(basename($path), $r)][] = $r;
         }
@@ -159,7 +166,7 @@ function main(array $argv): int
 
     fwrite(STDOUT, "Tools inventory written to: {$out}\n");
     foreach ($buckets as $name => $list) {
-        fwrite(STDOUT, sprintf('  %-16s %d\n', $name, count($list)));
+        fwrite(STDOUT, sprintf('  %-16s %d' . "\n", $name, count($list)));
     }
     if ($buckets['REVIEW'] !== []) {
         fwrite(STDOUT, "\n  NOTE: REVIEW bucket is non-empty - classify these manually.\n");
