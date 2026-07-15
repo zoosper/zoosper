@@ -8,6 +8,7 @@ use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Database\ConnectionFactory;
 use Zoosper\Core\Database\Migrator;
+use Zoosper\Core\Scaffold\ModuleScaffolder;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Site\Repository\SiteRepository;
 
@@ -22,6 +23,21 @@ $options = parseOptions(array_slice($argv, 2));
 if ($command === 'migrate') {
     (new Migrator($pdo, $basePath . '/database/migrations'))->migrate();
     echo "Zoosper migrations completed.\n";
+    exit(0);
+}
+
+if ($command === 'make:module') {
+    $moduleName = $argv[2] ?? '';
+    $result = (new ModuleScaffolder($basePath))->scaffold($moduleName);
+
+    echo "Created module {$result->moduleName}\n";
+    echo "Namespace: {$result->namespace}\n";
+    echo "Path: {$result->modulePath}\n";
+    echo "Files:\n";
+    foreach ($result->createdFiles as $file) {
+        echo "  - {$file}\n";
+    }
+    echo "\nNext: add the PSR-4 autoload snippet from {$result->modulePath}/README.md if you add PHP classes.\n";
     exit(0);
 }
 
@@ -79,40 +95,32 @@ if ($command === 'page:create') {
 echo "Zoosper CLI\n";
 echo "Commands:\n";
 echo "  migrate\n";
+echo "  make:module Vendor_Module\n";
 echo "  admin:create --email=admin@example.com --password='ChangeMe123!' --name='Admin User'\n";
 echo "  site:create --code=main --name='Main Website' --host=127.0.0.1\n";
 echo "  page:create --site=main --title='Home' --slug=home --content='Welcome to Zoosper.'\n";
 
-/**
- * @param list<string> $args
- * @return array<string, string>
- */
+/** @param list<string> $args @return array<string, string> */
 function parseOptions(array $args): array
 {
     $options = [];
-
     foreach ($args as $arg) {
         if (!str_starts_with($arg, '--') || !str_contains($arg, '=')) {
             continue;
         }
-
         [$key, $value] = explode('=', substr($arg, 2), 2);
         $options[$key] = $value;
     }
-
     return $options;
 }
 
-/**
- * @param array<string, string> $options
- */
+/** @param array<string, string> $options */
 function required(array $options, string $key): string
 {
     if (!array_key_exists($key, $options) || $options[$key] === '') {
         fwrite(STDERR, "Missing required option: --{$key}=...\n");
         exit(1);
     }
-
     return $options[$key];
 }
 

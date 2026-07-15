@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mkdir -p var/reports
+: > var/reports/verify-summary.txt
+
+run_step() {
+  local name="$1"
+  local log="$2"
+  shift 2
+
+  echo "==> ${name}"
+  if "$@" > "${log}" 2>&1; then
+    echo "PASS ${name}" | tee -a var/reports/verify-summary.txt
+  else
+    echo "FAIL ${name}" | tee -a var/reports/verify-summary.txt
+    tail -80 "${log}" || true
+    exit 1
+  fi
+}
+
+run_step "composer dump-autoload" var/reports/composer-dump-autoload.log composer dump-autoload
+run_step "pest" var/reports/pest.log ./vendor/bin/pest
+run_step "schema validate" var/reports/schema-validate.log php bin/zoosper-schema validate
+run_step "tools inventory" var/reports/tools-inventory.log php bin/tools-inventory.php
+
+echo
+echo "========================================"
+echo "Verification summary"
+echo "========================================"
+cat var/reports/verify-summary.txt
+
+echo
+echo "Latest Pest summary"
+grep -E "(Tests:|FAIL|WARN|DEPR)" var/reports/pest.log | tail -20 || tail -25 var/reports/pest.log
