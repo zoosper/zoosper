@@ -13,6 +13,11 @@
         "marko/database-mysql": "^0.8",
         "marko/framework": "^0.8"
     },
+    "require-dev": {
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin": "^3.0",
+        "phpunit/phpunit": "^11.0"
+    },
     "autoload": {
         "psr-4": {
             "Zoosper\\Admin\\": "app/zoosper-admin/src/",
@@ -26,15 +31,28 @@
             "Zoosper\\TwoFactor\\": "app/zoosper-two-factor/src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
+            "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/"
+        }
+    },
     "scripts": {
         "serve": "php -S 127.0.0.1:8080 -t public",
         "migrate": "php bin/zoosper migrate",
         "admin:create": "php bin/zoosper admin:create",
         "site:create": "php bin/zoosper site:create",
         "page:create": "php bin/zoosper page:create",
-        "test": "php tests/run.php"
+        "test": "pest",
+        "test:unit": "pest --testsuite=Unit",
+        "test:feature": "pest --testsuite=Feature",
+        "test:coverage": "pest --coverage --min=60"
+
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Zoosper CMS - PHPUnit / Pest configuration (Phase 1.21, co-located tests)
+
+    Tests are CO-LOCATED inside each module's own tests/ folder so that a module
+    stays fully self-contained: drop the module folder in and its tests come with
+    it; delete the folder and its tests go too. There is deliberately NO root
+    tests/ directory. The glob patterns below discover every module's tests.
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         cacheDirectory=".phpunit.cache"
+         failOnWarning="true"
+         failOnRisky="true"
+         beStrictAboutOutputDuringTests="true">
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>app/*/tests/Unit</directory>
+            <directory>modules/*/tests/Unit</directory>
+            <directory>modules/*/*/tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory>app/*/tests/Feature</directory>
+            <directory>modules/*/tests/Feature</directory>
+            <directory>modules/*/*/tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+
+    <source>
+        <include>
+            <directory>app</directory>
+            <directory>modules</directory>
+        </include>
+    </source>
+
+    <coverage>
+        <report>
+            <text outputFile="php://stdout" showOnlySummary="true"/>
+        </report>
+    </coverage>
+</phpunit>
