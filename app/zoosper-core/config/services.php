@@ -6,6 +6,8 @@ use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Entity\Extension\EntityExtensionDataPersister;
+use Zoosper\Core\Entity\Extension\EntityExtensionValueRepository;
 use Zoosper\Core\Filesystem\ProjectPathResolver;
 use Zoosper\Core\Html\HtmlSanitizerFactory;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
@@ -42,4 +44,8 @@ return [
         return new HtmlSanitizerFactory($config);
     },
     HtmlSanitizerInterface::class => static fn (ServiceContainer $services): HtmlSanitizerInterface => $services->get(HtmlSanitizerFactory::class)->create(),
+
+    // Phase 1.29 follow-up: generic per-module entity extension value store.
+    EntityExtensionValueRepository::class => static fn (ServiceContainer $services): EntityExtensionValueRepository => new EntityExtensionValueRepository($services->get(PDO::class)),
+    EntityExtensionDataPersister::class => static fn (ServiceContainer $services): EntityExtensionDataPersister => new EntityExtensionDataPersister($services->get(EntityExtensionValueRepository::class)),
 ];
