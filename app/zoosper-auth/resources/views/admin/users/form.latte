@@ -1,0 +1,29 @@
+{* Admin user create/edit form (Phase 1.26a). Latte auto-escapes all output. *}
+{if $noticeType !== null}<div class="notice notice-{$noticeType}">{$noticeMessage}</div>{/if}
+{if $error !== null}<div class="notice notice-error">{$error}</div>{/if}
+<form method="post" action="{$action}" class="page-form">
+    <input type="hidden" name="_csrf_token" value="{$csrfToken}">
+    <label>Name <input type="text" name="name" value="{$name}" required></label>
+    <div class="admin-form-field admin-form-field--locale">
+        <label for="admin-user-locale">Admin interface locale</label>
+        <select id="admin-user-locale" name="locale">
+            <option value=""{if $currentLocale === ''} selected{/if}>Use configured admin locale</option>
+            <option value="en_AU"{if $currentLocale === 'en_AU'} selected{/if}>English (Australia)</option>
+        </select>
+        <small class="admin-form-help">Leave blank to use the configured admin locale.</small>
+    </div>
+    <label>Email <input type="email" name="email" value="{$email}" required></label>
+    <label>Password <input type="password" name="password" autocomplete="new-password"><span class="muted">Leave blank to keep existing password.</span></label>
+    <label>Status <select name="status"><option value="active"{if $status === 'active'} selected{/if}>Active</option><option value="disabled"{if $status === 'disabled'} selected{/if}>Disabled</option></select></label>
+    <fieldset class="card"><legend>Roles</legend>
+        {foreach $roles as $role}<label class="checkbox"><input type="checkbox" name="role_ids[]" value="{$role['id']}"{if $role['checked']} checked{/if}> {$role['label']}</label>{/foreach}
+    </fieldset>
+    {if $isEdit}
+    <fieldset class="card danger-zone">
+        <legend>Two-factor authentication</legend>
+        <p class="muted">Reset this user's 2FA enrolment so they can set it up again on their next login. This does not display or log OTPs, TOTP secrets, recovery codes or QR data.</p>
+        <button type="submit" name="_action" value="reset_2fa" class="button secondary" onclick="return confirm('Reset 2FA for this admin user? They will need to enrol again.');">Reset 2FA</button>
+    </fieldset>
+    {/if}
+    <div class="toolbar"><button type="submit">Save user</button><a class="button secondary" href="/admin/users">Back</a></div>
+</form>

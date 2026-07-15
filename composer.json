@@ -34,7 +34,8 @@
     "autoload-dev": {
         "psr-4": {
             "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
-            "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/"
+            "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/",
+            "Zoosper\\Auth\\Tests\\": "app/zoosper-auth/tests/"
         }
     },
     "scripts": {

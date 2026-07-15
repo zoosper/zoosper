@@ -5,14 +5,16 @@ declare(strict_types=1);
 /**
  * Auth module admin controller registrations.
  *
- * Phase 1.25b: injects the EntitySaveLifecycleRunner into UserAdminController so
- * admin-user saves run through the entity save lifecycle at runtime.
+ * Phase 1.26a: injects AdminViewRenderer into UserAdminController so it renders
+ * Latte templates (zoosper-auth::admin/users/*) instead of inline HTML. The
+ * EntitySaveLifecycleRunner injection from Phase 1.25b is preserved.
  */
 
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Controller\RoleAdminController;
 use Zoosper\Admin\Controller\UserAdminController;
 use Zoosper\Admin\Layout\AdminLayout;
+use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
@@ -29,7 +31,7 @@ return [
         $services->get(AdminUserRepository::class),
         $services->get(RoleRepository::class),
         $services->get(PasswordHasher::class),
-        $services->get(AdminLayout::class),
+        $services->get(AdminViewRenderer::class),
         $services->has(AdminTwoFactorResetService::class) ? $services->get(AdminTwoFactorResetService::class) : null,
         saveLifecycle: $services->get(EntitySaveLifecycleRunner::class),
     ),

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Controller;
 
 use RuntimeException;
-use Zoosper\Admin\Layout\AdminLayout;
+use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Access\Permission;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Repository\AdminUserRepository;
@@ -24,11 +24,15 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
 /**
  * Admin CRUD controller for admin users.
  *
- * Phase 1.24: admin user persistence is routed through the entity save lifecycle
- * when an EntitySaveLifecycleRunner is injected, letting modules validate, mutate
- * or block a save via listeners without touching this controller. When the runner
- * is absent the controller behaves exactly as before (direct save). Locale
- * handling and 2FA reset are preserved unchanged.
+ * Phase 1.26a: this is now a thin request handler. It resolves permission and
+ * CSRF, reads the request, calls services, builds a small view-model, and renders
+ * a Latte template. ALL HTML lives in templates under
+ * app/zoosper-auth/resources/views/admin/users/ (namespace zoosper-auth::).
+ * Admin-user saves run through the entity save lifecycle when a runner is injected.
+ *
+ * PCI-aware: the 2FA reset action never reads, displays or logs OTPs, TOTP
+ * secrets, recovery-code plaintext, provisioning URIs, QR data, SMTP passwords
+ * or reset tokens.
  */
 final readonly class UserAdminController
 {
@@ -38,48 +42,36 @@ final readonly class UserAdminController
         private AdminUserRepository $users,
         private RoleRepository $roles,
         private PasswordHasher $passwordHasher,
-        private AdminLayout $layout,
+        private AdminViewRenderer $views,
         private ?AdminTwoFactorResetService $twoFactorReset = null,
         private ?EntitySaveLifecycleRunner $saveLifecycle = null,
     ) {
     }
 
-    /**
-     * Show the admin user listing.
-     */
     public function index(Request $request): Response
     {
         if ($this->requireUserManager() === null) {
             return Response::redirect('/admin/login');
         }
 
-        $rows = '';
-        foreach ($this->users->all() as $user) {
-            $rows .= '<tr><td>' . $user->id . '</td><td>' . $this->e($user->name) . '</td><td>' . $this->e($user->email) . '</td><td>' . $this->e($user->status) . '</td><td><a href="/admin/users/edit?id=' . $user->id . '">Edit</a></td></tr>';
-        }
-
-        if ($rows === '') {
-            $rows = '<tr><td colspan="5">No admin users yet.</td></tr>';
-        }
-
-        return $this->html('Admin Users', '<div class="toolbar"><a class="button" href="/admin/users/create">Create admin user</a></div><table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody>' . $rows . '</tbody></table>');
+        return Response::html($this->views->render(
+            'Admin Users',
+            'zoosper-auth::admin/users/index',
+            ['users' => $this->users->all()],
+            $this->guard->user(),
+            'admin-users',
+        ));
     }
 
-    /**
-     * Show the create-admin-user form.
-     */
     public function createForm(Request $request): Response
     {
         if ($this->requireUserManager() === null) {
             return Response::redirect('/admin/login');
         }
 
-        return $this->html('Create Admin User', $this->form('/admin/users/create'));
+        return $this->renderUserForm('Create Admin User', '/admin/users/create', null, []);
     }
 
-    /**
-     * Persist a new admin user.
-     */
     public function create(Request $request): Response
     {
         if ($this->requireUserManager() === null) {
@@ -88,7 +80,7 @@ final readonly class UserAdminController
 
         $form = $request->form();
         if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
-            return $this->html('Create Admin User', $this->form('/admin/users/create', null, 'Invalid security token.', $form), 419);
+            return $this->renderUserForm('Create Admin User', '/admin/users/create', null, $form, 419, 'Invalid security token.');
         }
 
         try {
@@ -109,18 +101,15 @@ final readonly class UserAdminController
             });
 
             if ($context->hasErrors()) {
-                return $this->html('Create Admin User', $this->form('/admin/users/create', null, $this->firstContextError($context), $form), 422);
+                return $this->renderUserForm('Create Admin User', '/admin/users/create', null, $form, 422, $this->firstContextError($context));
             }
 
             return Response::redirect('/admin/users/edit?id=' . $createdId . '&notice=created');
         } catch (RuntimeException $exception) {
-            return $this->html('Create Admin User', $this->form('/admin/users/create', null, $exception->getMessage(), $form), 422);
+            return $this->renderUserForm('Create Admin User', '/admin/users/create', null, $form, 422, $exception->getMessage());
         }
     }
 
-    /**
-     * Show the edit-admin-user form with optional status messaging.
-     */
     public function editForm(Request $request): Response
     {
         if ($this->requireUserManager() === null) {
@@ -129,13 +118,12 @@ final readonly class UserAdminController
 
         $user = $this->userFromRequest($request);
         if ($user === null) {
-            return $this->html('Admin User Not Found', '<p>Admin user not found.</p>', 404);
+            return $this->renderMessage('Admin User Not Found', 'Admin user not found.', 404);
         }
 
-        return $this->html(
-            'Edit Admin User',
-            $this->noticeFromRequest($request) . $this->form('/admin/users/edit?id=' . $user->id, $user),
-        );
+        [$noticeType, $noticeMessage] = $this->noticeFor($request);
+
+        return $this->renderUserForm('Edit Admin User', '/admin/users/edit?id=' . $user->id, $user, [], 200, null, $noticeType, $noticeMessage);
     }
 
     /**
@@ -154,12 +142,12 @@ final readonly class UserAdminController
 
         $user = $this->userFromRequest($request);
         if ($user === null) {
-            return $this->html('Admin User Not Found', '<p>Admin user not found.</p>', 404);
+            return $this->renderMessage('Admin User Not Found', 'Admin user not found.', 404);
         }
 
         $form = $request->form();
         if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
-            return $this->html('Edit Admin User', $this->form('/admin/users/edit?id=' . $user->id, $user, 'Invalid security token.', $form), 419);
+            return $this->renderUserForm('Edit Admin User', '/admin/users/edit?id=' . $user->id, $user, $form, 419, 'Invalid security token.');
         }
 
         if (($form['_action'] ?? '') === 'reset_2fa') {
@@ -183,17 +171,19 @@ final readonly class UserAdminController
             });
 
             if ($context->hasErrors()) {
-                return $this->html('Edit Admin User', $this->form('/admin/users/edit?id=' . $user->id, $user, $this->firstContextError($context), $form), 422);
+                return $this->renderUserForm('Edit Admin User', '/admin/users/edit?id=' . $user->id, $user, $form, 422, $this->firstContextError($context));
             }
 
             return Response::redirect('/admin/users/edit?id=' . $user->id . '&notice=saved');
         } catch (RuntimeException $exception) {
-            return $this->html('Edit Admin User', $this->form('/admin/users/edit?id=' . $user->id, $user, $exception->getMessage(), $form), 422);
+            return $this->renderUserForm('Edit Admin User', '/admin/users/edit?id=' . $user->id, $user, $form, 422, $exception->getMessage());
         }
     }
 
     /**
      * Reset a user's 2FA state so they can enrol again.
+     *
+     * PCI-aware: never reads, displays or logs secrets, TOTP data or tokens.
      */
     private function resetTwoFactor(AdminUser $targetUser, AdminUser $actor): Response
     {
@@ -260,118 +250,25 @@ final readonly class UserAdminController
     private function userFromRequest(Request $request): ?AdminUser
     {
         $id = $request->query('id');
+
         return $id !== null && ctype_digit($id) ? $this->users->findById((int) $id) : null;
     }
 
     /**
-     * Render an escaped notice based on a query-string code.
+     * Map a query-string notice code to a [type, message] pair for the template.
+     *
+     * @return array{0: string|null, 1: string}
      */
-    private function noticeFromRequest(Request $request): string
+    private function noticeFor(Request $request): array
     {
         return match ($request->query('notice')) {
-            'created' => $this->notice('success', 'Admin user created.'),
-            'saved' => $this->notice('success', 'Admin user saved.'),
-            '2fa_reset' => $this->notice('success', '2FA reset completed. The admin user can enrol again on their next login.'),
-            '2fa_unavailable' => $this->notice('error', '2FA reset service is not available.'),
-            '2fa_failed' => $this->notice('error', '2FA reset failed. Check application logs for non-sensitive error details.'),
-            default => '',
+            'created' => ['success', 'Admin user created.'],
+            'saved' => ['success', 'Admin user saved.'],
+            '2fa_reset' => ['success', '2FA reset completed. The admin user can enrol again on their next login.'],
+            '2fa_unavailable' => ['error', '2FA reset service is not available.'],
+            '2fa_failed' => ['error', '2FA reset failed. Check application logs for non-sensitive error details.'],
+            default => [null, ''],
         };
-    }
-
-    /**
-     * Render a status notice block.
-     */
-    private function notice(string $type, string $message): string
-    {
-        return '<div class="notice notice-' . $this->e($type) . '">' . $this->e($message) . '</div>';
-    }
-
-    /**
-     * Render the create/edit form.
-     *
-     * @param array<string, mixed> $submitted
-     */
-    private function form(string $action, ?AdminUser $user = null, ?string $error = null, array $submitted = []): string
-    {
-        $token = $this->e($this->csrf->token());
-        $escapedAction = $this->e($action);
-        $name = $this->e((string) ($submitted['name'] ?? $user?->name ?? ''));
-        $email = $this->e((string) ($submitted['email'] ?? $user?->email ?? ''));
-        $status = (string) ($submitted['status'] ?? $user?->status ?? 'active');
-        $selectedRoles = $submitted !== [] ? $this->roleIdsFromForm($submitted) : ($user !== null ? $this->users->roleIdsForUser($user->id) : []);
-        $errorHtml = $error !== null ? $this->notice('error', $error) : '';
-        $roleOptions = $this->roleCheckboxes($selectedRoles);
-        $activeSelected = $status === 'active' ? ' selected' : '';
-        $disabledSelected = $status === 'disabled' ? ' selected' : '';
-        $resetTwoFactorHtml = $this->resetTwoFactorPanel($user);
-
-        $localeFieldHtml = $this->renderAdminLocaleField($submitted['locale'] ?? $user->locale ?? null);
-        return <<<HTML
-{$errorHtml}
-<form method="post" action="{$escapedAction}" class="page-form">
-    <input type="hidden" name="_csrf_token" value="{$token}">
-    <label>Name <input type="text" name="name" value
-        ="{$name}" required></label>
-    {$localeFieldHtml}
-    <label>Email <input type="email" name="email" value="{$email}" required></label>
-    <label>Password <input type="password" name="password" autocomplete="new-password"><span class="muted">Leave blank to keep existing password.</span></label>
-    <label>Status <select name="status"><option value="active"{$activeSelected}>Active</option><option value="disabled"{$disabledSelected}>Disabled</option></select></label>
-    <fieldset class="card"><legend>Roles</legend>{$roleOptions}</fieldset>
-    {$resetTwoFactorHtml}
-    <div class="toolbar"><button type="submit">Save user</button><a class="button secondary" href="/admin/users">Back</a></div>
-</form>
-HTML;
-    }
-
-    /**
-     * Render the 2FA reset panel for existing users.
-     */
-    private function resetTwoFactorPanel(?AdminUser $user): string
-    {
-        if ($user === null) {
-            return '';
-        }
-
-        return <<<HTML
-<fieldset class="card danger-zone">
-    <legend>Two-factor authentication</legend>
-    <p class="muted">Reset this user's 2FA enrolment so they can set it up again on their next login. This does not display or log OTPs, TOTP secrets, recovery codes or QR data.</p>
-    <button type="submit" name="_action" value="reset_2fa" class="button secondary" onclick="return confirm('Reset 2FA for this admin user? They will need to enrol again.');">Reset 2FA</button>
-</fieldset>
-HTML;
-    }
-
-    /**
-     * Render role assignment checkboxes.
-     *
-     * @param list<int> $selected
-     */
-    private function roleCheckboxes(array $selected): string
-    {
-        $html = '';
-        foreach ($this->roles->allRoles() as $role) {
-            $id = (int) $role['id'];
-            $checked = in_array($id, $selected, true) ? ' checked' : '';
-            $label = $this->e((string) $role['label']);
-            $html .= '<label class="checkbox"><input type="checkbox" name="role_ids[]" value="' . $id . '"' . $checked . '> ' . $label . '</label>';
-        }
-        return $html;
-    }
-
-    /**
-     * Normalises the submitted admin interface locale through the AdminUser save pipeline.
-     *
-     * This keeps controller locale handling aligned with the field-definition
-     * write map used by modular AdminUser save flows.
-     *
-     * @param array<string, mixed> $form
-     */
-    private function adminUserLocaleFromForm(array $form): ?string
-    {
-        $data = (new \Zoosper\Auth\Entity\Save\AdminUserSaveDataFactory())->fromSubmitted($form);
-        $locale = $data->getData('locale');
-
-        return is_string($locale) && trim($locale) !== '' ? trim($locale) : null;
     }
 
     /**
@@ -386,46 +283,90 @@ HTML;
         if (!is_array($ids)) {
             return [];
         }
+
         return array_values(array_map(static fn (mixed $id): int => (int) $id, $ids));
     }
 
     /**
-     * Render a full admin HTML response.
-     */
-    private function html(string $title, string $content, int $statusCode = 200): Response
-    {
-        return Response::html($this->layout->render($title, $content, $this->guard->user(), 'admin-users'), $statusCode);
-    }
-
-    /**
-     * Escape text for safe HTML output.
-     */
-    private function e(string $value): string
-    {
-        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-    }
-
-    /**
-     * Renders the admin interface locale field for the user form.
+     * Normalise the submitted admin interface locale through the AdminUser save
+     * data factory, keeping controller locale handling aligned with the modular
+     * field-definition write map.
      *
-     * This method deliberately builds escaped HTML from PHP variables instead
-     * of embedding raw PHP template tags inside controller-rendered heredoc.
+     * @param array<string, mixed> $form
      */
-    private function renderAdminLocaleField(?string $currentLocale): string
+    private function adminUserLocaleFromForm(array $form): ?string
     {
-        $currentLocale = is_string($currentLocale) ? trim($currentLocale) : '';
-        $blankSelected = $currentLocale === '' ? ' selected' : '';
-        $enAuSelected = $currentLocale === 'en_AU' ? ' selected' : '';
+        $data = (new \Zoosper\Auth\Entity\Save\AdminUserSaveDataFactory())->fromSubmitted($form);
+        $locale = $data->getData('locale');
 
-        return implode("\n", [
-            '<div class="admin-form-field admin-form-field--locale">',
-            '    <label for="admin-user-locale">Admin interface locale</label>',
-            '    <select id="admin-user-locale" name="locale">',
-            '        <option value=""' . $blankSelected . '>Use configured admin locale</option>',
-            '        <option value="en_AU"' . $enAuSelected . '>English (Australia)</option>',
-            '    </select>',
-            '    <small class="admin-form-help">Leave blank to use the configured admin locale.</small>',
-            '</div>',
-        ]);
+        return is_string($locale) && trim($locale) !== '' ? trim($locale) : null;
+    }
+
+    /**
+     * Build the create/edit form view-model and render the Latte template.
+     *
+     * @param array<string, mixed> $submitted
+     */
+    private function renderUserForm(
+        string $title,
+        string $action,
+        ?AdminUser $user,
+        array $submitted,
+        int $status = 200,
+        ?string $error = null,
+        ?string $noticeType = null,
+        string $noticeMessage = '',
+    ): Response {
+        $selectedRoleIds = $submitted !== []
+            ? $this->roleIdsFromForm($submitted)
+            : ($user !== null ? $this->users->roleIdsForUser($user->id) : []);
+
+        $roles = [];
+        foreach ($this->roles->allRoles() as $role) {
+            $id = (int) $role['id'];
+            $roles[] = [
+                'id' => $id,
+                'label' => (string) $role['label'],
+                'checked' => in_array($id, $selectedRoleIds, true),
+            ];
+        }
+
+        $currentLocale = trim((string) ($submitted['locale'] ?? $user?->locale ?? ''));
+
+        $viewModel = [
+            'action' => $action,
+            'csrfToken' => $this->csrf->token(),
+            'name' => (string) ($submitted['name'] ?? $user?->name ?? ''),
+            'email' => (string) ($submitted['email'] ?? $user?->email ?? ''),
+            'status' => (string) ($submitted['status'] ?? $user?->status ?? 'active'),
+            'currentLocale' => $currentLocale,
+            'roles' => $roles,
+            'isEdit' => $user !== null,
+            'error' => $error,
+            'noticeType' => $noticeType,
+            'noticeMessage' => $noticeMessage,
+        ];
+
+        return Response::html($this->views->render(
+            $title,
+            'zoosper-auth::admin/users/form',
+            $viewModel,
+            $this->guard->user(),
+            'admin-users',
+        ), $status);
+    }
+
+    /**
+     * Render a simple admin message screen (e.g. not-found).
+     */
+    private function renderMessage(string $title, string $message, int $status): Response
+    {
+        return Response::html($this->views->render(
+            $title,
+            'zoosper-auth::admin/users/message',
+            ['message' => $message],
+            $this->guard->user(),
+            'admin-users',
+        ), $status);
     }
 }

@@ -8,6 +8,13 @@ use PDO;
 use RuntimeException;
 use Zoosper\Auth\Model\AdminUser;
 
+/**
+ * Repository for admin users, roles and permissions.
+ *
+ * Phase 1.26a-fix: createWithRoleIds() and updateUser() now bind the :locale
+ * placeholder (previously omitted, which caused PDO HY093 - number of bound
+ * variables did not match the number of tokens).
+ */
 final readonly class AdminUserRepository
 {
     public function __construct(private PDO $pdo)
@@ -68,7 +75,7 @@ final readonly class AdminUserRepository
         }
         $now = gmdate('Y-m-d H:i:s');
         $statement = $this->pdo->prepare('INSERT INTO admin_users (email, name, password_hash, status, locale, created_at, updated_at) VALUES (:email, :name, :password_hash, :status, :locale, :created_at, :updated_at)');
-        $statement->execute(['email' => mb_strtolower($email), 'name' => $name, 'password_hash' => $hash, 'status' => $status, 'created_at' => $now, 'updated_at' => $now]);
+        $statement->execute(['email' => mb_strtolower($email), 'name' => $name, 'password_hash' => $hash, 'status' => $status, 'locale' => $locale, 'created_at' => $now, 'updated_at' => $now]);
         $userId = (int) $this->pdo->lastInsertId();
         $this->syncRoles($userId, $roleIds);
         return $userId;
@@ -85,7 +92,7 @@ final readonly class AdminUserRepository
             throw new RuntimeException('Another admin user already uses email: ' . $email);
         }
         $statement = $this->pdo->prepare('UPDATE admin_users SET email = :email, name = :name, status = :status, locale = :locale, updated_at = :updated_at WHERE id = :id');
-        $statement->execute(['id' => $id, 'email' => mb_strtolower($email), 'name' => $name, 'status' => $status, 'updated_at' => gmdate('Y-m-d H:i:s')]);
+        $statement->execute(['id' => $id, 'email' => mb_strtolower($email), 'name' => $name, 'status' => $status, 'locale' => $locale, 'updated_at' => gmdate('Y-m-d H:i:s')]);
         $this->syncRoles($id, $roleIds);
     }
 
@@ -150,6 +157,7 @@ final readonly class AdminUserRepository
         $statement->execute(['user_id' => $userId]);
         return array_map(static fn (array $row): string => (string) $row['code'], $statement->fetchAll());
     }
+
     /**
      * Updates only the admin interface locale for an existing admin user.
      *
