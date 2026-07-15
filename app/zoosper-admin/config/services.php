@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/**
+ * Admin module service registrations.
+ *
+ * Phase 1.25: registers the shared entity save event dispatcher and the
+ * EntitySaveLifecycleRunner, and attaches the real PageSaveValidationListener so
+ * page saves are validated through the entity save lifecycle.
+ */
+
 use Zoosper\Admin\Asset\AdminAssetRegistry;
 use Zoosper\Admin\Asset\AdminAssetTemplateRenderer;
 use Zoosper\Admin\Asset\AdminAssetViewDataProvider;
@@ -24,7 +32,12 @@ use Zoosper\Admin\UI\AdminComponentRenderer;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Entity\Save\EntitySaveEventDispatcher;
+use Zoosper\Core\Entity\Save\EntitySaveEventDispatcherInterface;
+use Zoosper\Core\Entity\Save\EntitySaveLifecycle;
+use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Page\Save\PageSaveValidationListener;
 
 return [
     LoginHistoryRepository::class => static fn (ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
@@ -65,4 +78,22 @@ return [
         $services->get(AdminLayout::class),
     ),
     AdminComponentRenderer::class => static fn (ServiceContainer $services): AdminComponentRenderer => new AdminComponentRenderer($services->get('theme.admin_template_renderer')),
+
+    /*
+     * Entity save lifecycle (Phase 1.25).
+     *
+     * The dispatcher is resolved once and cached by the container, so all callers
+     * share a single instance with the same attached listeners.
+     */
+    EntitySaveEventDispatcherInterface::class => static function (): EntitySaveEventDispatcherInterface {
+        // Shared, singleton dispatcher (the container caches the first result).
+        // Module save listeners are attached here. NOTE (roadmap 1.26): replace this
+        // hard-coded attach with module-contributed listener discovery so modules
+        // register listeners without editing this central factory.
+        $dispatcher = new EntitySaveEventDispatcher();
+        $dispatcher->listen(EntitySaveLifecycle::VALIDATE_AFTER, new PageSaveValidationListener());
+
+        return $dispatcher;
+    },
+    EntitySaveLifecycleRunner::class => static fn (ServiceContainer $services): EntitySaveLifecycleRunner => new EntitySaveLifecycleRunner($services->get(EntitySaveEventDispatcherInterface::class)),
 ];

@@ -20,6 +20,10 @@ use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
+use Zoosper\Core\Entity\Save\EntityDataObject;
+use Zoosper\Core\Entity\Save\EntitySaveContext;
+use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
+use Zoosper\Core\Entity\Save\FieldDefinitionRegistry;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\IdentityTranslator;
@@ -44,6 +48,11 @@ use Zoosper\Site\Repository\SiteRepository;
  * The controller orchestrates request flow only. The page form UI is composed
  * through admin form section providers so core and third-party modules can add,
  * replace or reorder sections without modifying this controller.
+ *
+ * Phase 1.24: page persistence is routed through the entity save lifecycle when
+ * an EntitySaveLifecycleRunner is injected, letting modules validate, mutate or
+ * block a save via listeners without touching this controller. When the runner
+ * is absent the controller behaves exactly as before (direct save).
  */
 final readonly class PageAdminController
 {
@@ -67,6 +76,7 @@ final readonly class PageAdminController
         private ?AdminFormConfigProviderFactory $adminFormConfigProviderFactory = null,
         private ?AdminFormProcessorRegistry $pageFormProcessors = null,
         private ?AdminFormProcessorConfigFactory $adminFormProcessorConfigFactory = null,
+        private ?EntitySaveLifecycleRunner $saveLifecycle = null,
     ) {
     }
 
@@ -173,24 +183,33 @@ HTML);
         }
 
         try {
-            $id = $this->pages->create(
-                siteId: (int) ($form['site_id'] ?? 0),
-                title: trim((string) ($form['title'] ?? '')),
-                slug: $this->normaliseSlug((string) ($form['slug'] ?? '')),
-                content: $this->sanitiseContent((string) ($form['content'] ?? '')),
-                status: isset($form['publish']) ? 'published' : 'draft',
-                userId: $user->id,
-                contentFormat: 'html',
-                contentJson: $this->normaliseContentJson($form['content_json'] ?? null),
-                metaTitle: $this->normaliseOptionalString($form['meta_title'] ?? null),
-                metaDescription: $this->normaliseOptionalString($form['meta_description'] ?? null),
-                metaKeywords: $this->normaliseOptionalString($form['meta_keywords'] ?? null),
-                canonicalUrl: $this->normaliseOptionalString($form['canonical_url'] ?? null),
-            );
+            $createdId = null;
+            $context = $this->runEntitySave('page', $form, null, function (EntitySaveContext $c) use ($form, $user, &$createdId): void {
+                $createdId = $this->pages->create(
+                    siteId: (int) ($form['site_id'] ?? 0),
+                    title: trim((string) ($form['title'] ?? '')),
+                    slug: $this->normaliseSlug((string) ($form['slug'] ?? '')),
+                    content: $this->sanitiseContent((string) ($form['content'] ?? '')),
+                    status: isset($form['publish']) ? 'published' : 'draft',
+                    userId: $user->id,
+                    contentFormat: 'html',
+                    contentJson: $this->normaliseContentJson($form['content_json'] ?? null),
+                    metaTitle: $this->normaliseOptionalString($form['meta_title'] ?? null),
+                    metaDescription: $this->normaliseOptionalString($form['meta_description'] ?? null),
+                    metaKeywords: $this->normaliseOptionalString($form['meta_keywords'] ?? null),
+                    canonicalUrl: $this->normaliseOptionalString($form['canonical_url'] ?? null),
+                );
+            });
+
+            if ($context->hasErrors()) {
+                $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), 'page.create_failed');
+
+                return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $this->firstContextError($context), submitted: $form), 422);
+            }
 
             $this->flashMessages?->success($this->t('Page created successfully.'), 'page.created');
 
-            return Response::redirect($this->adminUrl('/pages/edit?id=' . $id));
+            return Response::redirect($this->adminUrl('/pages/edit?id=' . $createdId));
         } catch (RuntimeException $exception) {
             $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), 'page.create_failed');
 
@@ -239,23 +258,31 @@ HTML);
         }
 
         try {
-            $this->pages->update(
-                id: $page->id,
-                siteId: (int) ($form['site_id'] ?? 0),
-                title: trim((string) ($form['title'] ?? '')),
-                slug: $this->normaliseSlug((string) ($form['slug'] ?? '')),
-                content: $this->sanitiseContent((string) ($form['content'] ?? '')),
-                userId: $user->id,
-                contentFormat: 'html',
-                contentJson: $this->normaliseContentJson($form['content_json'] ?? null),
-                metaTitle: $this->normaliseOptionalString($form['meta_title'] ?? null),
-                metaDescription: $this->normaliseOptionalString($form['meta_description'] ?? null),
-                metaKeywords: $this->normaliseOptionalString($form['meta_keywords'] ?? null),
-                canonicalUrl: $this->normaliseOptionalString($form['canonical_url'] ?? null),
-            );
+            $context = $this->runEntitySave('page', $form, $page->id, function (EntitySaveContext $c) use ($form, $page, $user): void {
+                $this->pages->update(
+                    id: $page->id,
+                    siteId: (int) ($form['site_id'] ?? 0),
+                    title: trim((string) ($form['title'] ?? '')),
+                    slug: $this->normaliseSlug((string) ($form['slug'] ?? '')),
+                    content: $this->sanitiseContent((string) ($form['content'] ?? '')),
+                    userId: $user->id,
+                    contentFormat: 'html',
+                    contentJson: $this->normaliseContentJson($form['content_json'] ?? null),
+                    metaTitle: $this->normaliseOptionalString($form['meta_title'] ?? null),
+                    metaDescription: $this->normaliseOptionalString($form['meta_description'] ?? null),
+                    metaKeywords: $this->normaliseOptionalString($form['meta_keywords'] ?? null),
+                    canonicalUrl: $this->normaliseOptionalString($form['canonical_url'] ?? null),
+                );
 
-            if (isset($form['publish'])) {
-                $this->pages->publish($page->id, $user->id);
+                if (isset($form['publish'])) {
+                    $this->pages->publish($page->id, $user->id);
+                }
+            });
+
+            if ($context->hasErrors()) {
+                $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.save_failed');
+
+                return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, $this->firstContextError($context), $form), 422);
             }
 
             $this->flashMessages?->success($this->t('Page saved successfully.'), 'page.saved');
@@ -340,6 +367,42 @@ HTML);
     private function sanitiseContent(string $content): string
     {
         return $this->htmlSanitizer?->sanitise($content)->toString() ?? $content;
+    }
+
+    /**
+     * Run a persistence closure through the entity save lifecycle when a runner
+     * is injected, falling back to a direct save when it is not.
+     *
+     * @param array<string, mixed>              $form
+     * @param callable(EntitySaveContext): void $save
+     */
+    private function runEntitySave(string $entityType, array $form, int|string|null $entityId, callable $save): EntitySaveContext
+    {
+        $data = (new EntityDataObject())->addData($form);
+        $context = new EntitySaveContext($entityType, $data, new FieldDefinitionRegistry(), $entityId);
+
+        if ($this->saveLifecycle !== null) {
+            return $this->saveLifecycle->run($context, $save);
+        }
+
+        $save($context);
+
+        return $context;
+    }
+
+    /**
+     * Flatten accumulated lifecycle errors into a single message string.
+     */
+    private function firstContextError(EntitySaveContext $context): string
+    {
+        $messages = [];
+        foreach ($context->errors() as $fieldErrors) {
+            foreach ($fieldErrors as $message) {
+                $messages[] = (string) $message;
+            }
+        }
+
+        return $messages === [] ? $this->t('Please review the form.') : implode(' ', $messages);
     }
 
     /** @param array<string, mixed> $submitted */

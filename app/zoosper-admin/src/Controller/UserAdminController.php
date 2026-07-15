@@ -13,10 +13,23 @@ use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Core\Entity\Save\EntityDataObject;
+use Zoosper\Core\Entity\Save\EntitySaveContext;
+use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
+use Zoosper\Core\Entity\Save\FieldDefinitionRegistry;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
 
+/**
+ * Admin CRUD controller for admin users.
+ *
+ * Phase 1.24: admin user persistence is routed through the entity save lifecycle
+ * when an EntitySaveLifecycleRunner is injected, letting modules validate, mutate
+ * or block a save via listeners without touching this controller. When the runner
+ * is absent the controller behaves exactly as before (direct save). Locale
+ * handling and 2FA reset are preserved unchanged.
+ */
 final readonly class UserAdminController
 {
     public function __construct(
@@ -27,6 +40,7 @@ final readonly class UserAdminController
         private PasswordHasher $passwordHasher,
         private AdminLayout $layout,
         private ?AdminTwoFactorResetService $twoFactorReset = null,
+        private ?EntitySaveLifecycleRunner $saveLifecycle = null,
     ) {
     }
 
@@ -83,15 +97,22 @@ final readonly class UserAdminController
                 throw new RuntimeException('Password is required for new admin users.');
             }
 
-            $id = $this->users->createWithRoleIds(
-                email: trim((string) ($form['email'] ?? '')),
-                name: trim((string) ($form['name'] ?? '')),
-                hash: $this->passwordHasher->hash($password),
-                status: (string) ($form['status'] ?? 'active'),
-                roleIds: $this->roleIdsFromForm($form),
-                locale: $this->adminUserLocaleFromForm($form));
+            $createdId = null;
+            $context = $this->runEntitySave('admin_user', $form, null, function (EntitySaveContext $c) use ($form, $password, &$createdId): void {
+                $createdId = $this->users->createWithRoleIds(
+                    email: trim((string) ($form['email'] ?? '')),
+                    name: trim((string) ($form['name'] ?? '')),
+                    hash: $this->passwordHasher->hash($password),
+                    status: (string) ($form['status'] ?? 'active'),
+                    roleIds: $this->roleIdsFromForm($form),
+                    locale: $this->adminUserLocaleFromForm($form));
+            });
 
-            return Response::redirect('/admin/users/edit?id=' . $id . '&notice=created');
+            if ($context->hasErrors()) {
+                return $this->html('Create Admin User', $this->form('/admin/users/create', null, $this->firstContextError($context), $form), 422);
+            }
+
+            return Response::redirect('/admin/users/edit?id=' . $createdId . '&notice=created');
         } catch (RuntimeException $exception) {
             return $this->html('Create Admin User', $this->form('/admin/users/create', null, $exception->getMessage(), $form), 422);
         }
@@ -146,17 +167,23 @@ final readonly class UserAdminController
         }
 
         try {
-            $this->users->updateUser(
-                id: $user->id,
-                email: trim((string) ($form['email'] ?? '')),
-                name: trim((string) ($form['name'] ?? '')),
-                status: (string) ($form['status'] ?? 'active'),
-                roleIds: $this->roleIdsFromForm($form),
-                locale: $this->adminUserLocaleFromForm($form));
+            $context = $this->runEntitySave('admin_user', $form, $user->id, function (EntitySaveContext $c) use ($form, $user): void {
+                $this->users->updateUser(
+                    id: $user->id,
+                    email: trim((string) ($form['email'] ?? '')),
+                    name: trim((string) ($form['name'] ?? '')),
+                    status: (string) ($form['status'] ?? 'active'),
+                    roleIds: $this->roleIdsFromForm($form),
+                    locale: $this->adminUserLocaleFromForm($form));
 
-            $password = trim((string) ($form['password'] ?? ''));
-            if ($password !== '') {
-                $this->users->updatePassword($user->id, $this->passwordHasher->hash($password));
+                $password = trim((string) ($form['password'] ?? ''));
+                if ($password !== '') {
+                    $this->users->updatePassword($user->id, $this->passwordHasher->hash($password));
+                }
+            });
+
+            if ($context->hasErrors()) {
+                return $this->html('Edit Admin User', $this->form('/admin/users/edit?id=' . $user->id, $user, $this->firstContextError($context), $form), 422);
             }
 
             return Response::redirect('/admin/users/edit?id=' . $user->id . '&notice=saved');
@@ -181,6 +208,42 @@ final readonly class UserAdminController
         }
 
         return Response::redirect('/admin/users/edit?id=' . $targetUser->id . '&notice=2fa_reset');
+    }
+
+    /**
+     * Run a persistence closure through the entity save lifecycle when a runner
+     * is injected, falling back to a direct save when it is not.
+     *
+     * @param array<string, mixed>              $form
+     * @param callable(EntitySaveContext): void $save
+     */
+    private function runEntitySave(string $entityType, array $form, int|string|null $entityId, callable $save): EntitySaveContext
+    {
+        $data = (new EntityDataObject())->addData($form);
+        $context = new EntitySaveContext($entityType, $data, new FieldDefinitionRegistry(), $entityId);
+
+        if ($this->saveLifecycle !== null) {
+            return $this->saveLifecycle->run($context, $save);
+        }
+
+        $save($context);
+
+        return $context;
+    }
+
+    /**
+     * Flatten accumulated lifecycle errors into a single message string.
+     */
+    private function firstContextError(EntitySaveContext $context): string
+    {
+        $messages = [];
+        foreach ($context->errors() as $fieldErrors) {
+            foreach ($fieldErrors as $message) {
+                $messages[] = (string) $message;
+            }
+        }
+
+        return $messages === [] ? 'Please review the form.' : implode(' ', $messages);
     }
 
     /**
@@ -296,13 +359,6 @@ HTML;
     }
 
     /**
-     * Extract selected role IDs from submitted form data.
-     *
-     * @param array<string, mixed> $form
-     * @return list<int>
-     */
-
-    /**
      * Normalises the submitted admin interface locale through the AdminUser save pipeline.
      *
      * This keeps controller locale handling aligned with the field-definition
@@ -317,6 +373,13 @@ HTML;
 
         return is_string($locale) && trim($locale) !== '' ? trim($locale) : null;
     }
+
+    /**
+     * Extract selected role IDs from submitted form data.
+     *
+     * @param array<string, mixed> $form
+     * @return list<int>
+     */
     private function roleIdsFromForm(array $form): array
     {
         $ids = $form['role_ids'] ?? [];
@@ -341,6 +404,7 @@ HTML;
     {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
+
     /**
      * Renders the admin interface locale field for the user form.
      *

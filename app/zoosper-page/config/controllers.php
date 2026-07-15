@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/**
+ * Page module admin controller registrations.
+ *
+ * Phase 1.25b: injects the EntitySaveLifecycleRunner into PageAdminController so
+ * page saves run through the entity save lifecycle at runtime, activating
+ * PageSaveValidationListener (title required + min length, site required).
+ */
+
 use Zoosper\Admin\Controller\PageAdminController;
 use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\Admin\Layout\AdminLayout;
@@ -11,6 +19,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\TranslatorInterface;
@@ -33,7 +42,8 @@ return [
         $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
         $services->has(ContentEditorInterface::class) ? $services->get(ContentEditorInterface::class) : null,
-                $services->has(TranslatorInterface::class) ? $services->get(TranslatorInterface::class) : null,
+        $services->has(TranslatorInterface::class) ? $services->get(TranslatorInterface::class) : null,
         $services->has(AdminContextTranslatorResolver::class) ? $services->get(AdminContextTranslatorResolver::class) : null,
+        saveLifecycle: $services->get(EntitySaveLifecycleRunner::class),
     ),
 ];
