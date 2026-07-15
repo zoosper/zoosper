@@ -2,14 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Page module admin controller registrations.
- *
- * Phase 1.27: AdminViewRenderer is required (the page index is rendered by a
- * Latte template), and ErrorHandler is injected so page save exceptions are
- * logged before the controller returns a 422.
- */
-
 use Zoosper\Admin\Controller\PageAdminController;
 use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\Admin\Layout\AdminLayout;
@@ -20,6 +12,7 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
+use Zoosper\Core\Event\EventDispatcherInterface;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\TranslatorInterface;
@@ -47,5 +40,6 @@ return [
         adminContextTranslatorResolver: $services->has(AdminContextTranslatorResolver::class) ? $services->get(AdminContextTranslatorResolver::class) : null,
         saveLifecycle: $services->get(EntitySaveLifecycleRunner::class),
         errorHandler: $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
+        events: $services->has(EventDispatcherInterface::class) ? $services->get(EventDispatcherInterface::class) : null,
     ),
 ];

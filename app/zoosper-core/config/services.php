@@ -8,10 +8,15 @@ use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Entity\Extension\EntityExtensionDataPersister;
 use Zoosper\Core\Entity\Extension\EntityExtensionValueRepository;
+use Zoosper\Core\Event\EventDispatcher;
+use Zoosper\Core\Event\EventDispatcherInterface;
+use Zoosper\Core\Event\ModuleEventListenerLoader;
 use Zoosper\Core\Filesystem\ProjectPathResolver;
 use Zoosper\Core\Html\HtmlSanitizerFactory;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Http\JsonResponder;
+use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Site\CurrentSiteContext;
 use Zoosper\Core\Site\SiteContextResolver;
 use Zoosper\Core\Site\SiteContextResolverFactory;
@@ -45,7 +50,14 @@ return [
     },
     HtmlSanitizerInterface::class => static fn (ServiceContainer $services): HtmlSanitizerInterface => $services->get(HtmlSanitizerFactory::class)->create(),
 
-    // Phase 1.29 follow-up: generic per-module entity extension value store.
     EntityExtensionValueRepository::class => static fn (ServiceContainer $services): EntityExtensionValueRepository => new EntityExtensionValueRepository($services->get(PDO::class)),
     EntityExtensionDataPersister::class => static fn (ServiceContainer $services): EntityExtensionDataPersister => new EntityExtensionDataPersister($services->get(EntityExtensionValueRepository::class)),
+
+    // Phase 1.30: general module event/observer bus.
+    EventDispatcherInterface::class => static function (ServiceContainer $services): EventDispatcherInterface {
+        $dispatcher = new EventDispatcher($services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null);
+        (new ModuleEventListenerLoader($services->get(ModuleRegistry::class), $services))->attach($dispatcher);
+
+        return $dispatcher;
+    },
 ];
