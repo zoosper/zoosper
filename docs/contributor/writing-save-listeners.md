@@ -1,7 +1,7 @@
 # Writing Entity Save Listeners
 
 Hook into entity saves (pages, admin users, more) **without editing core
-controllers**. This guide is copy-paste oriented.
+controllers or core services.php**. This guide is copy-paste oriented.
 
 ## Step 1 - Implement the listener
 
@@ -36,25 +36,37 @@ final class PageNormaliserListener implements EntitySaveEventListenerInterface
 }
 ```
 
-## Step 2 - Register it (module config/services.php)
+## Step 2 - Register it via module discovery (Phase 1.28)
+
+Create a `config/entity_save_listeners.php` in **your own module**. It is
+discovered automatically by `ModuleEntitySaveListenerLoader` - no core file is
+touched.
 
 ```php
 <?php
 
+declare(strict_types=1);
+
 use Acme\Blog\Save\PageNormaliserListener;
-use Zoosper\Core\Entity\Save\EntitySaveEventDispatcher;
-use Zoosper\Core\Entity\Save\EntitySaveEventDispatcherInterface;
 use Zoosper\Core\Entity\Save\EntitySaveLifecycle;
 
 return [
-    EntitySaveEventDispatcherInterface::class => static function (): EntitySaveEventDispatcherInterface {
-        $dispatcher = new EntitySaveEventDispatcher();
-        $dispatcher->listen(EntitySaveLifecycle::DATA_COLLECT_AFTER, new PageNormaliserListener());
-
-        return $dispatcher;
-    },
+    EntitySaveLifecycle::DATA_COLLECT_AFTER => [
+        PageNormaliserListener::class,
+    ],
 ];
 ```
+
+The loader resolves each entry as follows:
+
+- an `EntitySaveEventListenerInterface` **instance** -> used as-is;
+- a **callable** (e.g. a closure) -> used as-is;
+- a **class-string** -> resolved from the service container if registered,
+  otherwise constructed with `new`.
+
+**Listeners with dependencies:** register the listener in your module
+`config/services.php` and reference it by class-string here - the loader resolves
+it from the container first, so its dependencies are injected.
 
 ## Step 3 - Choose the right stage
 
@@ -75,8 +87,6 @@ returns without persisting if `hasErrors()` is true after the validate stages or
 after `SAVE_BEFORE`.
 
 ## Storing extension-table data
-
-Declare a field as an extension field and let the persister store it:
 
 ```php
 use Zoosper\Core\Entity\Save\FieldDefinition;
@@ -117,97 +127,8 @@ tokens, session/CSRF tokens, SMTP passwords, or payment data from a listener.
 
 ## Controller integration recipe
 
-This is the exact, minimal way to wire an admin controller to the runner. It is
-**backward compatible**: the runner is injected as an optional last parameter, and
-if it is absent the controller falls back to the current direct save.
-
-### (a) Imports
-
-```php
-use Zoosper\Core\Entity\Save\EntityDataObject;
-use Zoosper\Core\Entity\Save\EntitySaveContext;
-use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
-use Zoosper\Core\Entity\Save\FieldDefinitionRegistry;
-```
-
-### (b) Optional constructor parameter (appended LAST)
-
-```php
-public function __construct(
-    // ... all existing parameters unchanged ...
-    private ?EntitySaveLifecycleRunner $saveLifecycle = null,
-) {
-}
-```
-
-Appending last keeps every existing call site valid - no DI breakage.
-
-### (c) A shared helper
-
-```php
-/**
- * Run a persistence closure through the entity save lifecycle when available,
- * falling back to a direct save when the runner is not wired.
- *
- * @param array<string, mixed>            $form
- * @param callable(EntitySaveContext): void $save
- */
-private function runEntitySave(string $entityType, array $form, int|string|null $entityId, callable $save): EntitySaveContext
-{
-    $data = (new EntityDataObject())->addData($form);
-    $context = new EntitySaveContext($entityType, $data, new FieldDefinitionRegistry(), $entityId);
-
-    if ($this->saveLifecycle !== null) {
-        return $this->saveLifecycle->run($context, $save);
-    }
-
-    // Legacy fallback: preserve existing behaviour when the runner is absent.
-    $save($context);
-
-    return $context;
-}
-```
-
-### (d) PageAdminController::create() - wrap the existing save
-
-```php
-$createdId = null;
-$context = $this->runEntitySave('page', $form, null, function (EntitySaveContext $c) use ($form, $user, &$createdId): void {
-    $createdId = $this->pages->create(
-        siteId: (int) ($form['site_id'] ?? 0),
-        title: trim((string) ($form['title'] ?? '')),
-        slug: $this->normaliseSlug((string) ($form['slug'] ?? '')),
-        content: $this->sanitiseContent((string) ($form['content'] ?? '')),
-        status: isset($form['publish']) ? 'published' : 'draft',
-        userId: $user->id,
-        contentFormat: 'html',
-        contentJson: $this->normaliseContentJson($form['content_json'] ?? null),
-        metaTitle: $this->normaliseOptionalString($form['meta_title'] ?? null),
-        metaDescription: $this->normaliseOptionalString($form['meta_description'] ?? null),
-        metaKeywords: $this->normaliseOptionalString($form['meta_keywords'] ?? null),
-        canonicalUrl: $this->normaliseOptionalString($form['canonical_url'] ?? null),
-    );
-});
-
-if ($context->hasErrors()) {
-    $firstError = implode(' ', array_merge(...array_values($context->errors())));
-    $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), 'page.create_failed');
-
-    return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $firstError, submitted: $form), 422);
-}
-
-$this->flashMessages?->success($this->t('Page created successfully.'), 'page.created');
-
-return Response::redirect($this->adminUrl('/pages/edit?id=' . $createdId));
-```
-
-All existing behaviour is preserved (CSRF -> 419, processor errors -> 422, SEO
-metadata fields, HTML sanitisation). The lifecycle is purely an **added**
-extension point.
-
-### (e) UserAdminController::update() - same shape
-
-Wrap `$this->users->updateUser(...)` (and the optional password update) inside
-`runEntitySave('admin_user', $form, $user->id, function (EntitySaveContext $c) { ... })`,
-then branch on `$context->hasErrors()` for the 422 path. Locale handling via
-`adminUserLocaleFromForm()` stays exactly as-is.
+Controllers delegate persistence to `EntitySaveLifecycleRunner` via a small
+`runEntitySave()` helper (see `PageAdminController` / `UserAdminController`). When
+a listener adds an error, the runner aborts before persistence and the controller
+returns the existing 422 form. No controller change is needed to add a new
+listener - just drop a `config/entity_save_listeners.php` into a module.
