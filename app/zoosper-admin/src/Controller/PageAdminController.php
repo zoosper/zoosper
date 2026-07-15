@@ -30,6 +30,7 @@ use Zoosper\Core\I18n\IdentityTranslator;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Page\Admin\Form\PageContentSectionProvider;
 use Zoosper\Page\Admin\Form\PageDetailsSectionProvider;
 use Zoosper\Page\Admin\Form\PagePublishingSectionProvider;
@@ -49,10 +50,10 @@ use Zoosper\Site\Repository\SiteRepository;
  * through admin form section providers so core and third-party modules can add,
  * replace or reorder sections without modifying this controller.
  *
- * Phase 1.24: page persistence is routed through the entity save lifecycle when
- * an EntitySaveLifecycleRunner is injected, letting modules validate, mutate or
- * block a save via listeners without touching this controller. When the runner
- * is absent the controller behaves exactly as before (direct save).
+ * Phase 1.27: AdminViewRenderer is now required and the index list is rendered
+ * by a Latte template (no controller heredoc). Caught exceptions (including
+ * PDOExceptions, which extend RuntimeException) are logged via ErrorHandler
+ * before returning the 422 form, so save failures are never silent.
  */
 final readonly class PageAdminController
 {
@@ -63,7 +64,7 @@ final readonly class PageAdminController
         private SiteRepository $sites,
         private PageRenderer $renderer,
         private AdminLayout $layout,
-        private ?AdminViewRenderer $views = null,
+        private AdminViewRenderer $views,
         private ?PageGridRepository $pageGrid = null,
         private ?HtmlSanitizerInterface $htmlSanitizer = null,
         private ?FlashMessageStoreInterface $flashMessages = null,
@@ -77,6 +78,7 @@ final readonly class PageAdminController
         private ?AdminFormProcessorRegistry $pageFormProcessors = null,
         private ?AdminFormProcessorConfigFactory $adminFormProcessorConfigFactory = null,
         private ?EntitySaveLifecycleRunner $saveLifecycle = null,
+        private ?ErrorHandler $errorHandler = null,
     ) {
     }
 
@@ -92,64 +94,18 @@ final readonly class PageAdminController
         $pages = $pagination?->items ?? $this->pages->all();
         $sites = $this->sites->allActive();
 
-        if ($this->views !== null) {
-            return Response::html($this->views->render(
-                title: 'Pages',
-                template: 'zoosper-page::admin/pages/index',
-                data: [
-                    'pages' => $pages,
-                    'pagination' => $pagination,
-                    'criteria' => $criteria,
-                    'sites' => $sites,
-                ],
-                user: $user,
-                active: 'pages',
-            ));
-        }
-
-        $rows = '';
-        foreach ($pages as $page) {
-            $id = (int) $this->pageValue($page, 'id');
-            $title = $this->e((string) $this->pageValue($page, 'title'));
-            $slug = $this->e((string) $this->pageValue($page, 'slug'));
-            $status = $this->e((string) $this->pageValue($page, 'status'));
-            $editUrl = $this->e($this->adminUrl('/pages/edit?id=' . $id));
-            $previewUrl = $this->e($this->adminUrl('/pages/preview?id=' . $id));
-            $publicLink = $this->isPublishedRow($page)
-                ? '<a href="/' . $slug . '" target="_blank">View</a>'
-                : '<span class="muted">Draft</span>';
-
-            $rows .= <<<HTML
-<tr>
-    <td>{$id}</td>
-    <td>{$title}</td>
-    <td><code>/{$slug}</code></td>
-    <td>{$status}</td>
-    <td class="actions">
-        <a href="{$editUrl}">Edit</a>
-        <a href="{$previewUrl}" target="_blank">Preview</a>
-        {$publicLink}
-        {$this->statusButtonForRow($page)}
-    </td>
-</tr>
-HTML;
-        }
-
-        if ($rows === '') {
-            $rows = '<tr><td colspan="5">No pages yet.</td></tr>';
-        }
-
-        $createUrl = $this->e($this->adminUrl('/pages/create'));
-
-        return $this->html('Pages', <<<HTML
-<div class="toolbar">
-    <a class="button" href="{$createUrl}">Create page</a>
-</div>
-<table>
-    <thead><tr><th>ID</th><th>Title</th><th>Slug</th><th>Status</th><th>Actions</th></tr></thead>
-    <tbody>{$rows}</tbody>
-</table>
-HTML);
+        return Response::html($this->views->render(
+            'Pages',
+            'zoosper-page::admin/pages/index',
+            [
+                'pages' => $pages,
+                'pagination' => $pagination,
+                'criteria' => $criteria,
+                'sites' => $sites,
+            ],
+            $user,
+            'pages',
+        ));
     }
 
     public function createForm(Request $request): Response
@@ -211,6 +167,7 @@ HTML);
 
             return Response::redirect($this->adminUrl('/pages/edit?id=' . $createdId));
         } catch (RuntimeException $exception) {
+            $this->errorHandler?->logException($exception, ['controller' => 'PageAdminController', 'action' => 'create']);
             $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), 'page.create_failed');
 
             return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $exception->getMessage(), submitted: $form), 422);
@@ -289,6 +246,7 @@ HTML);
 
             return Response::redirect($this->adminUrl('/pages/edit?id=' . $page->id));
         } catch (RuntimeException $exception) {
+            $this->errorHandler?->logException($exception, ['controller' => 'PageAdminController', 'action' => 'update']);
             $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.save_failed');
 
             return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, $exception->getMessage(), $form), 422);
@@ -518,58 +476,6 @@ HTML);
         }
 
         return $html;
-    }
-
-    private function statusButton(Page $page): string
-    {
-        return $this->statusButtonByValues($page->id, $page->isPublished());
-    }
-
-    /** @param Page|array<string, mixed> $page */
-    private function statusButtonForRow(Page|array $page): string
-    {
-        if ($page instanceof Page) {
-            return $this->statusButton($page);
-        }
-
-        return $this->statusButtonByValues((int) $this->pageValue($page, 'id'), $this->isPublishedRow($page));
-    }
-
-    private function statusButtonByValues(int $pageId, bool $isPublished): string
-    {
-        $token = $this->e($this->csrf->token());
-        $action = $isPublished ? 'unpublish' : 'publish';
-        $label = $isPublished ? 'Unpublish' : 'Publish';
-        $url = $this->e($this->adminUrl('/pages/' . $action . '?id=' . $pageId));
-
-        return '<form method="post" action="' . $url . '" class="inline-form">'
-            . '<input type="hidden" name="_csrf_token" value="' . $token . '">'
-            . '<button type="submit">' . $label . '</button>'
-            . '</form>';
-    }
-
-    /** @param Page|array<string, mixed> $page */
-    private function pageValue(Page|array $page, string $key): mixed
-    {
-        if ($page instanceof Page) {
-            return match ($key) {
-                'id' => $page->id,
-                'site_id', 'siteId' => $page->siteId,
-                'title' => $page->title,
-                'slug' => $page->slug,
-                'content' => $page->content,
-                'status' => $page->status,
-                default => null,
-            };
-        }
-
-        return $page[$key] ?? null;
-    }
-
-    /** @param Page|array<string, mixed> $page */
-    private function isPublishedRow(Page|array $page): bool
-    {
-        return $page instanceof Page ? $page->isPublished() : (string) $this->pageValue($page, 'status') === 'published';
     }
 
     private function normaliseContentJson(mixed $value): ?string

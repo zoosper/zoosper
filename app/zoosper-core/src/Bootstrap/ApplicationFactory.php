@@ -60,7 +60,8 @@ final class ApplicationFactory
 
         $controllers = (new ControllerProviderLoader($modules, $services))->load();
 
-        $router = new Router();
+        // Phase 1.27: inject ErrorHandler so the router logs uncaught exceptions.
+        $router = new Router($errorHandler);
         $routeLoader = new ModuleRouteLoader($modules, $controllers);
         $routeLoader->registerAdminRoutes($router);
         $routeLoader->registerApiRoutes($router);
