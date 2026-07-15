@@ -11,6 +11,9 @@ use ReflectionMethod;
 use RuntimeException;
 use Throwable;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\Schema\SchemaLoader;
+use Zoosper\Core\Schema\SchemaMigrator;
+use Zoosper\Core\Schema\SchemaSnapshotRepository;
 
 /**
  * Runs traditional migration files and module-owned declarative schema files.
@@ -19,6 +22,12 @@ use Zoosper\Core\Module\ModuleRegistry;
  * `bin/zoosper migrate` as the single schema update entry point. Core and
  * marketplace modules can own schema in `config/db_schema.php`, while explicit
  * migration files remain supported for one-off data/schema changes.
+ *
+ * Phase 1.29: module-owned schema is now applied by the unified `Schema/` engine
+ * (validated by SchemaValidator and audited by SchemaSnapshotRepository),
+ * replacing the previous create-only DeclarativeSchemaApplier. There is now a
+ * single declarative schema engine used by both `bin/zoosper migrate` and
+ * `bin/zoosper-schema apply`.
  *
  * Supported migration file formats:
  *
@@ -96,12 +105,15 @@ final class Migrator
     }
 
     /**
-     * Apply every enabled module-owned `config/db_schema.php` file.
+     * Apply every enabled module-owned config/db_schema.php via the unified
+     * Schema/ engine (validated + snapshotted).
      */
     private function applyModuleSchemas(): void
     {
         $modules = $this->modules ?? new ModuleRegistry($this->basePath);
-        (new DeclarativeSchemaApplier($this->pdo, $modules))->applyAll();
+        $registry = (new SchemaLoader($modules))->load();
+        $snapshots = new SchemaSnapshotRepository($this->pdo);
+        (new SchemaMigrator($this->pdo, $this->driver(), $snapshots))->apply($registry);
     }
 
     /**
