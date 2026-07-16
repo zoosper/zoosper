@@ -78,7 +78,7 @@ final readonly class ModuleRouteLoader
                     path: (string) ($route['path'] ?? ''),
                     controller: (string) ($route['controller'] ?? ''),
                     action: (string) ($route['action'] ?? '__invoke'),
-                    permission: isset($route['permission']) ? (string) $route['permission'] : null,
+                    permissions: ModuleRouteDefinition::normalisePermissions($route['permission'] ?? null),
                     public: (bool) ($route['public'] ?? false),
                 );
             }
@@ -115,7 +115,7 @@ final readonly class ModuleRouteLoader
             return [$controller, $action];
         }
 
-        $context = new RouteContext($route->method, $route->path, $route->public, $route->permission);
+        $context = new RouteContext($route->method, $route->path, $route->public, $route->permissions);
         $pipeline = new MiddlewarePipeline($middleware);
 
         return static fn (Request $request): Response => $pipeline->handle(

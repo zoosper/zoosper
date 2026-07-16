@@ -13,15 +13,12 @@ use Zoosper\Core\Http\Response;
 /**
  * Fail-secure admin authentication + authorisation guard.
  *
- * Phase 1.33 (fail-secure, decoupled checks):
  *   - public route            -> always allowed through.
- *   - non-public route        -> a valid authenticated session is REQUIRED,
- *                                even when no specific permission is declared.
- *   - non-public + permission -> additionally requires that ACL permission.
+ *   - non-public route        -> a valid authenticated session is REQUIRED.
+ *   - non-public + permission -> allowed if the user has ANY ONE of the
+ *                                declared permissions (OR semantics, 1.33b).
  *
- * On failure it redirects to the admin login route, matching existing controller
- * behaviour. Applied to admin routes only; the stateless API pipeline is not
- * affected.
+ * Applied to admin routes only; the stateless API pipeline is not affected.
  */
 final readonly class AuthenticationMiddleware implements RouteMiddleware
 {
@@ -42,10 +39,17 @@ final readonly class AuthenticationMiddleware implements RouteMiddleware
             return Response::redirect($this->loginPath);
         }
 
-        if ($context->permission !== null && !$user->can($context->permission)) {
-            return Response::redirect($this->loginPath);
+        $required = $context->requiresAnyPermission();
+        if ($required === []) {
+            return $next($request);
         }
 
-        return $next($request);
+        foreach ($required as $permission) {
+            if ($user->can($permission)) {
+                return $next($request);
+            }
+        }
+
+        return Response::redirect($this->loginPath);
     }
 }
