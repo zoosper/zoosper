@@ -239,11 +239,6 @@ final readonly class PageAdminController
         }
 
         $form = $request->form();
-        if (!$this->csrf->isValid((string)($form['_csrf_token'] ?? ''))) {
-            $this->flashMessages?->error($this->t('Unable to save page. Invalid security token.'), 'page.csrf_failed');
-
-            return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $this->t('Invalid security token.'), submitted: $form), 419);
-        }
 
         $processorError = $this->processPageForm('create', $form, null, $user);
         if ($processorError !== null) {
@@ -445,11 +440,6 @@ final readonly class PageAdminController
         }
 
         $form = $request->form();
-        if (!$this->csrf->isValid((string)($form['_csrf_token'] ?? ''))) {
-            $this->flashMessages?->error($this->t('Unable to save page. Invalid security token.'), 'page.csrf_failed');
-
-            return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, 'Invalid security token.', $form), 419);
-        }
 
         $processorError = $this->processPageForm('update', $form, $page, $user);
         if ($processorError !== null) {
@@ -507,12 +497,6 @@ final readonly class PageAdminController
         $user = $this->requirePageManager();
         if ($user === null) {
             return Response::redirect($this->adminUrl('/login'));
-        }
-
-        if (!$this->csrf->isValid((string)($request->form()['_csrf_token'] ?? ''))) {
-            $this->flashMessages?->error($this->t('Unable to change page status. Invalid security token.'), 'page.status_csrf_failed');
-
-            return $this->html($this->t('Invalid token'), '<p>' . $this->e($this->t('Invalid security token.')) . '</p>', 419);
         }
 
         $page = $this->pageFromRequest($request);

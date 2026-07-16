@@ -53,9 +53,7 @@ final readonly class RoleAdminController
         $actor = $this->requireRoleManager();
         if ($actor === null) { return Response::redirect('/admin/login'); }
         $form = $request->form();
-        if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
-            return $this->html('Create Role', $this->form('/admin/roles/create', null, 'Invalid security token.', $form), 419);
-        }
+
         try {
             $id = $this->roles->createRole((string) ($form['code'] ?? ''), trim((string) ($form['label'] ?? '')), $this->idsFromForm($form, 'permission_ids'));
             $this->auditLogger?->record($actor, 'role.created', 'admin_role', (string) $id, 'Created admin role', ['code' => (string) ($form['code'] ?? '')], $request);
@@ -80,9 +78,7 @@ final readonly class RoleAdminController
         $role = $this->roleFromRequest($request);
         if ($role === null) { return $this->html('Role Not Found', '<p>Role not found.</p>', 404); }
         $form = $request->form();
-        if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
-            return $this->html('Edit Role', $this->form('/admin/roles/edit?id=' . (int) $role['id'], $role, 'Invalid security token.', $form), 419);
-        }
+
         try {
             $permissionIds = $this->idsFromForm($form, 'permission_ids');
             $userIds = $this->idsFromForm($form, 'user_ids');

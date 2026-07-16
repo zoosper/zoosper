@@ -79,9 +79,6 @@ final readonly class UserAdminController
         }
 
         $form = $request->form();
-        if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
-            return $this->renderUserForm('Create Admin User', '/admin/users/create', null, $form, 419, 'Invalid security token.');
-        }
 
         try {
             $password = (string) ($form['password'] ?? '');
@@ -146,9 +143,6 @@ final readonly class UserAdminController
         }
 
         $form = $request->form();
-        if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
-            return $this->renderUserForm('Edit Admin User', '/admin/users/edit?id=' . $user->id, $user, $form, 419, 'Invalid security token.');
-        }
 
         if (($form['_action'] ?? '') === 'reset_2fa') {
             return $this->resetTwoFactor($user, $actor);

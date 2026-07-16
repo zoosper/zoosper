@@ -60,9 +60,6 @@ final readonly class ThemeAdminController
         }
 
         $form = $request->form();
-        if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
-            return Response::html('Invalid security token.', 419);
-        }
 
         $siteId = (int) ($form['site_id'] ?? 0);
         $themeCode = trim((string) ($form['theme_code'] ?? ''));
