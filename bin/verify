@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Which PHP binary to use. Override per project:
+#   PHP=php8.5 bin/verify
+PHP="${PHP:-php}"
+
 mkdir -p var/reports
 : > var/reports/verify-summary.txt
 
@@ -19,10 +23,12 @@ run_step() {
   fi
 }
 
-run_step "composer dump-autoload" var/reports/composer-dump-autoload.log composer dump-autoload
-run_step "pest" var/reports/pest.log ./vendor/bin/pest
-run_step "schema validate" var/reports/schema-validate.log php bin/zoosper-schema validate
-run_step "tools inventory" var/reports/tools-inventory.log php bin/tools-inventory.php
+echo "Using PHP: $(${PHP} -v | head -1)"
+
+run_step "composer dump-autoload" var/reports/composer-dump-autoload.log ${PHP} "$(command -v composer)" dump-autoload
+run_step "pest" var/reports/pest.log ${PHP} ./vendor/bin/pest
+run_step "schema validate" var/reports/schema-validate.log ${PHP} bin/zoosper-schema validate
+run_step "tools inventory" var/reports/tools-inventory.log ${PHP} bin/tools-inventory.php
 
 echo
 echo "========================================"

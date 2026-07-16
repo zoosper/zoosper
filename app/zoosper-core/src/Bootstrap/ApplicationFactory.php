@@ -21,6 +21,7 @@ use Zoosper\Core\Routing\ModuleRouteLoader;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
 use Zoosper\Page\Controller\PageController;
+use Zoosper\Core\Config\ModuleConfigAggregator;
 
 final class ApplicationFactory
 {
@@ -35,9 +36,11 @@ final class ApplicationFactory
      */
     public static function create(string $basePath): Application
     {
-        $config = ConfigRepository::fromPath($basePath . '/config');
-        $pdo = (new ConnectionFactory($config, $basePath))->create();
         $modules = new ModuleRegistry($basePath);
+        $config = ConfigRepository::fromArray(
+            (new ModuleConfigAggregator($modules, $basePath . '/config'))->aggregate()
+        );
+        $pdo = (new ConnectionFactory($config, $basePath))->create();
 
         $logManager = new LogManager($config, $basePath);
         $errorHandler = new ErrorHandler($logManager->exceptions());
