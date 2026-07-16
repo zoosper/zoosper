@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Zoosper\Auth\Http\AuthenticationMiddleware;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\AuthService;
@@ -20,4 +21,10 @@ return [
     ),
     SessionGuard::class => static fn (ServiceContainer $services): SessionGuard => new SessionGuard($services->get(AdminUserRepository::class)),
     CsrfTokenManager::class => static fn (ServiceContainer $services): CsrfTokenManager => new CsrfTokenManager(),
+
+    // Phase 1.33: admin authentication guard (fail-secure). Registered so the
+    // ModuleAdminMiddlewareLoader can resolve it from config/admin_middleware.php.
+    AuthenticationMiddleware::class => static fn (ServiceContainer $services): AuthenticationMiddleware => new AuthenticationMiddleware(
+        $services->get(SessionGuard::class),
+    ),
 ];

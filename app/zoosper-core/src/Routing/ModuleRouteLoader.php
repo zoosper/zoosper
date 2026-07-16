@@ -6,6 +6,11 @@ namespace Zoosper\Core\Routing;
 
 use ReflectionClass;
 use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Core\Http\Middleware\MiddlewarePipeline;
+use Zoosper\Core\Http\Middleware\RouteContext;
+use Zoosper\Core\Http\Middleware\RouteMiddleware;
+use Zoosper\Core\Http\Request;
+use Zoosper\Core\Http\Response;
 use Zoosper\Core\Module\ModuleRegistry;
 
 final readonly class ModuleRouteLoader
@@ -17,20 +22,28 @@ final readonly class ModuleRouteLoader
     ) {
     }
 
-    public function registerAdminRoutes(Router $router): void
+    /**
+     * Phase 1.33: admin routes are wrapped in the given middleware pipeline
+     * (auth guard, etc). API routes are intentionally NOT wrapped so the
+     * stateless API is unaffected.
+     *
+     * @param list<RouteMiddleware> $middleware
+     */
+    public function registerAdminRoutes(Router $router, array $middleware = []): void
     {
-        $this->registerRoutesFromConfig($router, 'admin_routes.php');
+        $this->registerRoutesFromConfig($router, 'admin_routes.php', $middleware);
     }
 
     public function registerApiRoutes(Router $router): void
     {
-        $this->registerRoutesFromConfig($router, 'api_routes.php');
+        $this->registerRoutesFromConfig($router, 'api_routes.php', []);
     }
 
-    private function registerRoutesFromConfig(Router $router, string $configFile): void
+    /** @param list<RouteMiddleware> $middleware */
+    private function registerRoutesFromConfig(Router $router, string $configFile, array $middleware): void
     {
         foreach ($this->load($configFile) as $route) {
-            $router->map($route->method, $route->path, $this->handlerFor($route));
+            $router->map($route->method, $route->path, $this->handlerFor($route, $middleware));
         }
     }
 
@@ -78,8 +91,11 @@ final readonly class ModuleRouteLoader
         return $routes;
     }
 
-    /** @return callable */
-    private function handlerFor(ModuleRouteDefinition $route): callable
+    /**
+     * @param list<RouteMiddleware> $middleware
+     * @return callable
+     */
+    private function handlerFor(ModuleRouteDefinition $route, array $middleware): callable
     {
         $controller = $this->controllerFor($route->controller, $route);
 
@@ -93,7 +109,20 @@ final readonly class ModuleRouteLoader
             );
         }
 
-        return [$controller, $route->action];
+        $action = $route->action;
+
+        if ($middleware === []) {
+            return [$controller, $action];
+        }
+
+        $context = new RouteContext($route->method, $route->path, $route->public, $route->permission);
+        $pipeline = new MiddlewarePipeline($middleware);
+
+        return static fn (Request $request): Response => $pipeline->handle(
+            $request,
+            $context,
+            static fn (Request $req): Response => $controller->{$action}($req),
+        );
     }
 
     private function controllerFor(string $class, ModuleRouteDefinition $route): object

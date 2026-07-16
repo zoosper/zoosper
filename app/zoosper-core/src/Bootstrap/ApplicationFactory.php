@@ -6,10 +6,12 @@ namespace Zoosper\Core\Bootstrap;
 
 use PDO;
 use Zoosper\Core\Config\ConfigRepository;
+use Zoosper\Core\Config\ModuleConfigAggregator;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
 use Zoosper\Core\Database\ConnectionFactory;
 use Zoosper\Core\Http\Application;
+use Zoosper\Core\Http\Middleware\ModuleAdminMiddlewareLoader;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Log\ErrorHandler;
@@ -21,18 +23,19 @@ use Zoosper\Core\Routing\ModuleRouteLoader;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
 use Zoosper\Page\Controller\PageController;
-use Zoosper\Core\Config\ModuleConfigAggregator;
 
 final class ApplicationFactory
 {
     /**
      * Build the HTTP application and load module-owned service providers.
      *
-     * The core bootstrap now registers only true bootstrap primitives: config,
-     * PDO, module registry, logging/error handling and router construction.
-     * Feature services must be declared by modules in config/services.php so
-     * marketplace/local modules can add or override behaviour without editing
-     * this file.
+     * Phase 1.32: configuration is assembled from layered sources - each enabled
+     * module may ship defaults in config/settings/*.php, and the project root
+     * config/*.php always overrides them. The module registry is therefore built
+     * before configuration is resolved.
+     *
+     * Phase 1.33: admin routes are wrapped in a module-contributed middleware
+     * pipeline (authentication guard). API routes are left unwrapped and stateless.
      */
     public static function create(string $basePath): Application
     {
@@ -66,7 +69,11 @@ final class ApplicationFactory
         // Phase 1.27: inject ErrorHandler so the router logs uncaught exceptions.
         $router = new Router($errorHandler);
         $routeLoader = new ModuleRouteLoader($modules, $controllers);
-        $routeLoader->registerAdminRoutes($router);
+
+        // Phase 1.33: admin routes run through the module-contributed middleware
+        // pipeline (auth guard). API routes stay unwrapped/stateless.
+        $adminMiddleware = (new ModuleAdminMiddlewareLoader($modules, $services))->load();
+        $routeLoader->registerAdminRoutes($router, $adminMiddleware);
         $routeLoader->registerApiRoutes($router);
 
         $pageController = $services->get(PageController::class);
