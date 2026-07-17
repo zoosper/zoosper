@@ -60,6 +60,7 @@ final readonly class ModuleScaffolder
         return [
             'module.php' => "<?php\n\ndeclare(strict_types=1);\n\nreturn [\n    'name' => '{$raw}',\n    'enabled' => true,\n    'version' => '0.1.0',\n];\n",
             'config/services.php' => "<?php\n\ndeclare(strict_types=1);\n\nuse Zoosper\\Core\\Container\\ServiceContainer;\n\nreturn [\n    // {$raw} service factories go here.\n];\n",
+            'config/console.php' => "<?php\n\ndeclare(strict_types=1);\n\nreturn [\n    // ConsoleCommandClass::class,\n];\n",
             'config/controllers.php' => <<<'PHP'
             <?php
             
@@ -82,7 +83,7 @@ final readonly class ModuleScaffolder
             'tests/Pest.php' => "<?php\n\ndeclare(strict_types=1);\n\nuses(\\Zoosper\\Core\\Testing\\TestCase::class)->in(__DIR__);\n",
             'tests/Unit/ModuleBootstrapTest.php' => "<?php\n\ndeclare(strict_types=1);\n\nnamespace {$ns}\\Tests\\Unit;\n\ntest('module scaffold exists', function () {\n    expect(is_file(dirname(__DIR__, 2) . '/module.php'))->toBeTrue();\n});\n",
             'src/.gitkeep' => "",
-            'README.md' => "# {$raw}\n\nGenerated Zoosper module scaffold.\n\n## Autoload\n\nAdd this to `composer.json` if you create PHP classes under `src/`:\n\n```json\n\"{$ns}\\\\\": \"app/{$folder}/src/\"\n```\n\nThen run:\n\n```bash\ncomposer dump-autoload\n```\n\n## Events\n\nUse `config/events.php` to observe application events without touching core.\n",
+            'README.md' => "# {$raw}\n\nGenerated Zoosper module scaffold.\n\n## Autoload\n\nAdd this to `composer.json` if you create PHP classes under `src/`:\n\n```json\n\"{$ns}\\\\\": \"app/{$folder}/src/\"\n```\n\nThen run:\n\n```bash\ncomposer dump-autoload\n```\n\n## Console commands\n\nUse `config/console.php` to add module-owned commands to `bin/zoosper` without editing core. Register dependency-backed commands in `config/services.php`.\n\n## Events\n\nUse `config/events.php` to observe application events without touching core.\n",
         ];
     }
 }
