@@ -14,24 +14,19 @@ use Zoosper\Site\Repository\SiteRepository;
  * config/sites.php array remains as a bootstrap fallback when no active DB site
  * matches the host, or when the site module/repository is not available yet.
  *
- * The resolver only handles public site metadata and must never handle
- * credentials, OTPs, TOTP secrets, recovery-code plaintext, reset tokens, SMTP
- * passwords, payment data or customer-private values.
+ * Phase 1.34e: DB-backed contexts expose the numeric siteId so page/API hot
+ * paths can use Request::siteContext() without re-resolving through the legacy
+ * Zoosper\Site\Service\SiteResolver path.
  */
 final readonly class SiteContextResolver
 {
-    /**
-     * @param array<string, mixed> $config
-     */
+    /** @param array<string, mixed> $config */
     public function __construct(
         private array $config,
         private ?SiteRepository $sites = null,
     ) {
     }
 
-    /**
-     * Resolve site context from host/path, falling back to config/sites.php.
-     */
     public function resolve(?string $host = null, string $path = '/'): SiteContext
     {
         $host = $this->normaliseHost($host ?? '');
@@ -53,17 +48,11 @@ final readonly class SiteContextResolver
         return $this->contextFromStoreView($this->defaultStoreView());
     }
 
-    /**
-     * Resolve the default configured store view.
-     */
     public function default(): SiteContext
     {
         return $this->contextFromStoreView($this->defaultStoreView());
     }
 
-    /**
-     * Build a rich Core SiteContext from the flattened DB site row.
-     */
     private function contextFromDbSite(DbSite $site): SiteContext
     {
         return new SiteContext(
@@ -77,6 +66,7 @@ final readonly class SiteContextResolver
             currency: $site->currency,
             baseUrl: rtrim($site->baseUrl, '/'),
             pathPrefix: $this->normaliseOptionalPrefix($site->pathPrefix),
+            siteId: $site->id,
         );
     }
 
@@ -90,11 +80,7 @@ final readonly class SiteContextResolver
         return $path === $pathPrefix || str_starts_with($path, rtrim($pathPrefix, '/') . '/');
     }
 
-    /**
-     * Return all configured active store views.
-     *
-     * @return list<array<string, mixed>>
-     */
+    /** @return list<array<string, mixed>> */
     private function activeStoreViews(): array
     {
         $storeViews = $this->config['store_views'] ?? [];
@@ -120,11 +106,7 @@ final readonly class SiteContextResolver
         return $normalised;
     }
 
-    /**
-     * Return the configured default store view row.
-     *
-     * @return array<string, mixed>
-     */
+    /** @return array<string, mixed> */
     private function defaultStoreView(): array
     {
         $storeViews = $this->config['store_views'] ?? [];
@@ -156,11 +138,7 @@ final readonly class SiteContextResolver
         ];
     }
 
-    /**
-     * Determine whether a config store view matches host and path.
-     *
-     * @param array<string, mixed> $storeView
-     */
+    /** @param array<string, mixed> $storeView */
     private function matches(array $storeView, string $host, string $path): bool
     {
         $domains = $storeView['domains'] ?? [];
@@ -189,11 +167,7 @@ final readonly class SiteContextResolver
         return $path === $pathPrefix || str_starts_with($path, rtrim($pathPrefix, '/') . '/');
     }
 
-    /**
-     * Build a typed context from a config row.
-     *
-     * @param array<string, mixed> $storeView
-     */
+    /** @param array<string, mixed> $storeView */
     private function contextFromStoreView(array $storeView): SiteContext
     {
         return new SiteContext(

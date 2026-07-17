@@ -28,14 +28,6 @@ final class ApplicationFactory
 {
     /**
      * Build the HTTP application and load module-owned service providers.
-     *
-     * Phase 1.32: configuration is assembled from layered sources - each enabled
-     * module may ship defaults in config/settings/*.php, and the project root
-     * config/*.php always overrides them. The module registry is therefore built
-     * before configuration is resolved.
-     *
-     * Phase 1.33: admin routes are wrapped in a module-contributed middleware
-     * pipeline (authentication guard). API routes are left unwrapped and stateless.
      */
     public static function create(string $basePath): Application
     {
@@ -60,9 +52,8 @@ final class ApplicationFactory
 
         (new ModuleLoggerProviderLoader($modules, $logManager, $services))->register();
         (new ServiceProviderLoader($modules, $services))->register();
-        // Phase 1.00: load root service providers before controller providers are created.
-        (new \Zoosper\Core\Bootstrap\ServiceProviderManifestLoader($basePath))->load($services);
-
+        // Load root service providers before controller providers are created.
+        (new ServiceProviderManifestLoader($basePath))->load($services);
 
         $controllers = (new ControllerProviderLoader($modules, $services))->load();
 
@@ -71,7 +62,7 @@ final class ApplicationFactory
         $routeLoader = new ModuleRouteLoader($modules, $controllers);
 
         // Phase 1.33: admin routes run through the module-contributed middleware
-        // pipeline (auth guard). API routes stay unwrapped/stateless.
+        // pipeline (auth guard + CSRF). API routes stay unwrapped/stateless.
         $adminMiddleware = (new ModuleAdminMiddlewareLoader($modules, $services))->load();
         $routeLoader->registerAdminRoutes($router, $adminMiddleware);
         $routeLoader->registerApiRoutes($router);
@@ -91,9 +82,6 @@ final class ApplicationFactory
 
             return $pageController->view($request);
         });
-        // Phase 0.99.1: load root service providers declared in config/service_providers.php.
-        (new \Zoosper\Core\Bootstrap\ServiceProviderManifestLoader($basePath))->load($services);
-
 
         return new Application(
             $router,

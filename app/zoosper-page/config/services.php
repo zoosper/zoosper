@@ -9,7 +9,7 @@ use Zoosper\Core\Site\CurrentSiteContext;
 use Zoosper\Page\Controller\PageController;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
-use Zoosper\Site\Service\SiteResolver;
+use Zoosper\Site\Repository\SiteRepository;
 
 return [
     PageRepository::class => static fn (ServiceContainer $services): PageRepository => new PageRepository($services->get(PDO::class)),
@@ -20,7 +20,7 @@ return [
         $services->get(CurrentSiteContext::class),
     ),
     PageController::class => static fn (ServiceContainer $services): PageController => new PageController(
-        $services->get(SiteResolver::class),
+        $services->get(SiteRepository::class),
         $services->get(PageRepository::class),
         $services->get(PageRenderer::class),
     ),

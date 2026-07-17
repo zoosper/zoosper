@@ -25,6 +25,7 @@ final readonly class SiteContext
         public string $currency,
         public string $baseUrl,
         public string $pathPrefix = '',
+        public ?int $siteId = null,
     ) {
     }
 
@@ -46,6 +47,7 @@ final readonly class SiteContext
             'currency' => $this->currency,
             'base_url' => $this->baseUrl,
             'path_prefix' => $this->pathPrefix,
+            'site_id' => $this->siteId !== null ? (string) $this->siteId : '',
         ];
     }
 }

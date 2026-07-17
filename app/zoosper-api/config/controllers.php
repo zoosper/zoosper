@@ -12,7 +12,7 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Page\Repository\PageRepository;
-use Zoosper\Site\Service\SiteResolver;
+use Zoosper\Site\Repository\SiteRepository;
 
 return [
     ApiAuthController::class => static fn (ServiceContainer $services): ApiAuthController => new ApiAuthController(
@@ -36,7 +36,7 @@ return [
 
     ContentPageController::class => static fn (ServiceContainer $services): ContentPageController => new ContentPageController(
         $services->get(JsonResponder::class),
-        $services->get(SiteResolver::class),
+        $services->get(SiteRepository::class),
         $services->get(PageRepository::class),
     ),
 ];
