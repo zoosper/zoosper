@@ -11,6 +11,7 @@ use Zoosper\Admin\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuItem;
 use Zoosper\Auth\Model\AdminUser;
+use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Theme\Template\TemplateRenderer;
 use Zoosper\Theme\Theme\ThemeResolver;
@@ -25,6 +26,7 @@ final readonly class AdminLayout
         private ?AdminAssetViewDataProvider $assetViewData = null,
         private ?FlashMessageStoreInterface $flashMessages = null,
         private ?FlashMessageRenderer $flashRenderer = null,
+        private ?CsrfTokenManager $csrf = null,
     ) {
     }
 
@@ -95,13 +97,26 @@ final readonly class AdminLayout
 
     /**
      * Render the POST-only logout form for the admin navigation.
+     *
+     * The central admin CSRF middleware validates all state-changing methods,
+     * including /admin/logout. The logout form therefore must carry the current
+     * session token, otherwise logout can be blocked with the 419 session-token
+     * page even though the user is authenticated.
      */
     private function logoutForm(): string
     {
         $action = htmlspecialchars($this->adminUrl('/logout'), ENT_QUOTES, 'UTF-8');
+        $tokenInput = '';
+
+        if ($this->csrf !== null) {
+            $tokenInput = '<input type="hidden" name="_csrf_token" value="'
+                . htmlspecialchars($this->csrf->token(), ENT_QUOTES, 'UTF-8')
+                . '">';
+        }
 
         return '<div class="menu-group">Account</div>'
             . '<form method="post" action="' . $action . '" class="admin-nav-logout-form">'
+            . $tokenInput
             . '<button type="submit" class="admin-nav-logout-button">Logout</button>'
             . '</form>';
     }

@@ -31,6 +31,7 @@ use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuLoader;
 use Zoosper\Admin\UI\AdminComponentRenderer;
 use Zoosper\Admin\UI\AdminViewRenderer;
+use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Entity\Save\EntitySaveEventDispatcher;
@@ -72,6 +73,7 @@ return [
         $services->get(AdminAssetViewDataProvider::class),
         $services->get(FlashMessageStoreInterface::class),
         $services->get(FlashMessageRenderer::class),
+        $services->get(CsrfTokenManager::class),
     ),
     AdminViewRenderer::class => static fn (ServiceContainer $services): AdminViewRenderer => new AdminViewRenderer(
         $services->get('theme.admin_template_renderer'),
