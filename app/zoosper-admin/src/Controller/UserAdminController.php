@@ -6,7 +6,6 @@ namespace Zoosper\Admin\Controller;
 
 use RuntimeException;
 use Zoosper\Admin\UI\AdminViewRenderer;
-use Zoosper\Auth\Access\Permission;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
@@ -50,33 +49,27 @@ final readonly class UserAdminController
 
     public function index(Request $request): Response
     {
-        if ($this->requireUserManager() === null) {
-            return Response::redirect('/admin/login');
-        }
+        $adminUser = $this->currentAdminUser();
 
         return Response::html($this->views->render(
             'Admin Users',
             'zoosper-auth::admin/users/index',
             ['users' => $this->users->all()],
-            $this->guard->user(),
+            $adminUser,
             'admin-users',
         ));
     }
 
     public function createForm(Request $request): Response
     {
-        if ($this->requireUserManager() === null) {
-            return Response::redirect('/admin/login');
-        }
+        $this->currentAdminUser();
 
         return $this->renderUserForm('Create Admin User', '/admin/users/create', null, []);
     }
 
     public function create(Request $request): Response
     {
-        if ($this->requireUserManager() === null) {
-            return Response::redirect('/admin/login');
-        }
+        $this->currentAdminUser();
 
         $form = $request->form();
 
@@ -109,9 +102,7 @@ final readonly class UserAdminController
 
     public function editForm(Request $request): Response
     {
-        if ($this->requireUserManager() === null) {
-            return Response::redirect('/admin/login');
-        }
+        $this->currentAdminUser();
 
         $user = $this->userFromRequest($request);
         if ($user === null) {
@@ -132,10 +123,7 @@ final readonly class UserAdminController
      */
     public function update(Request $request): Response
     {
-        $actor = $this->requireUserManager();
-        if ($actor === null) {
-            return Response::redirect('/admin/login');
-        }
+        $actor = $this->currentAdminUser();
 
         $user = $this->userFromRequest($request);
         if ($user === null) {
@@ -231,11 +219,16 @@ final readonly class UserAdminController
     }
 
     /**
-     * Require an admin user with user/role management permission.
+     * Return the authenticated admin user after the middleware permission gate.
      */
-    private function requireUserManager(): ?AdminUser
+    private function currentAdminUser(): AdminUser
     {
-        return $this->guard->requirePermission(Permission::RoleManage->value) ?? $this->guard->requirePermission('user.manage');
+        $user = $this->guard->user();
+        if ($user === null) {
+            throw new RuntimeException('Authenticated admin user required after middleware guard.');
+        }
+
+        return $user;
     }
 
     /**

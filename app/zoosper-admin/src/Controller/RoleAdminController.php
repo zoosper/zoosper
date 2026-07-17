@@ -7,7 +7,6 @@ namespace Zoosper\Admin\Controller;
 use RuntimeException;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Layout\AdminLayout;
-use Zoosper\Auth\Access\Permission;
 use Zoosper\Auth\Acl\AclTreeBuilder;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Repository\AdminUserRepository;
@@ -31,9 +30,7 @@ final readonly class RoleAdminController
 
     public function index(Request $request): Response
     {
-        if ($this->requireRoleManager() === null) {
-            return Response::redirect('/admin/login');
-        }
+        $this->currentAdminUser();
         $rows = '';
         foreach ($this->roles->allRoles() as $role) {
             $id = (int) $role['id'];
@@ -44,14 +41,13 @@ final readonly class RoleAdminController
 
     public function createForm(Request $request): Response
     {
-        if ($this->requireRoleManager() === null) { return Response::redirect('/admin/login'); }
+        $this->currentAdminUser();
         return $this->html('Create Role', $this->form('/admin/roles/create'));
     }
 
     public function create(Request $request): Response
     {
-        $actor = $this->requireRoleManager();
-        if ($actor === null) { return Response::redirect('/admin/login'); }
+        $actor = $this->currentAdminUser();
         $form = $request->form();
 
         try {
@@ -65,7 +61,7 @@ final readonly class RoleAdminController
 
     public function editForm(Request $request): Response
     {
-        if ($this->requireRoleManager() === null) { return Response::redirect('/admin/login'); }
+        $this->currentAdminUser();
         $role = $this->roleFromRequest($request);
         if ($role === null) { return $this->html('Role Not Found', '<p>Role not found.</p>', 404); }
         return $this->html('Edit Role', $this->form('/admin/roles/edit?id=' . (int) $role['id'], $role));
@@ -73,8 +69,7 @@ final readonly class RoleAdminController
 
     public function update(Request $request): Response
     {
-        $actor = $this->requireRoleManager();
-        if ($actor === null) { return Response::redirect('/admin/login'); }
+        $actor = $this->currentAdminUser();
         $role = $this->roleFromRequest($request);
         if ($role === null) { return $this->html('Role Not Found', '<p>Role not found.</p>', 404); }
         $form = $request->form();
@@ -90,9 +85,17 @@ final readonly class RoleAdminController
         }
     }
 
-    private function requireRoleManager(): ?AdminUser
+    /**
+     * Return the authenticated admin user after the middleware permission gate.
+     */
+    private function currentAdminUser(): AdminUser
     {
-        return $this->guard->requirePermission(Permission::RoleManage->value);
+        $user = $this->guard->user();
+        if ($user === null) {
+            throw new RuntimeException('Authenticated admin user required after middleware guard.');
+        }
+
+        return $user;
     }
 
     /** @return array<string, mixed>|null */
