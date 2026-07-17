@@ -28,7 +28,8 @@
             "Zoosper\\Page\\": "app/zoosper-page/src/",
             "Zoosper\\Site\\": "app/zoosper-site/src/",
             "Zoosper\\Theme\\": "app/zoosper-theme/src/",
-            "Zoosper\\TwoFactor\\": "app/zoosper-two-factor/src/"
+            "Zoosper\\TwoFactor\\": "app/zoosper-two-factor/src/",
+            "Zoosper\\Media\\": "app/zoosper-media/src/"
         }
     },
     "autoload-dev": {
@@ -36,7 +37,8 @@
             "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
             "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/",
             "Zoosper\\Auth\\Tests\\": "app/zoosper-auth/tests/",
-            "Zoosper\\Site\\Tests\\": "app/zoosper-site/tests/"
+            "Zoosper\\Site\\Tests\\": "app/zoosper-site/tests/",
+            "Zoosper\\Media\\Tests\\": "app/zoosper-media/tests/"
         }
     },
     "scripts": {
@@ -49,7 +51,6 @@
         "test:unit": "pest --testsuite=Unit",
         "test:feature": "pest --testsuite=Feature",
         "test:coverage": "pest --coverage --min=60"
-
     },
     "config": {
         "sort-packages": true,
