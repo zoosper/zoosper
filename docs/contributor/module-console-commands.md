@@ -2,7 +2,23 @@
 
 Zoosper modules can contribute CLI commands to `bin/zoosper` without editing core files.
 
-## Register a command
+## Fast path: scaffold a command
+
+Create the module first:
+
+```bash
+php bin/zoosper make:module Acme_Blog
+```
+
+Then scaffold a command:
+
+```bash
+php bin/zoosper make:command Acme_Blog ReindexPostsCommand --name=blog:posts:reindex --description="Reindex blog posts."
+```
+
+This creates a command class under the module `src/Console/` folder and wires the class into the module's `config/console.php` file.
+
+## Register a command manually
 
 Create a module-owned `config/console.php` file:
 
