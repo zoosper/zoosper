@@ -8,9 +8,20 @@ use PDO;
 use RuntimeException;
 use Zoosper\Site\Model\Site;
 
+/**
+ * Persists and hydrates sites (flattened store views).
+ *
+ * Phase 1.34b: hydration reads the enriched store-view dimensions, falling back
+ * to safe defaults when a column is absent (e.g. a legacy row before the schema
+ * enrichment ran). create() persists the enriched columns so new sites are
+ * consistent. This positions SiteRepository to become the single source of truth
+ * for site resolution in Phase 1.34c.
+ */
 final readonly class SiteRepository
 {
-    public function __construct(private PDO $pdo) {}
+    public function __construct(private PDO $pdo)
+    {
+    }
 
     public function findActiveByHost(string $host): ?Site
     {
@@ -44,14 +55,44 @@ final readonly class SiteRepository
         return array_map(fn (array $row): Site => $this->hydrate($row), $statement->fetchAll());
     }
 
-    public function create(string $code, string $name, string $host, string $homepageSlug = 'home', string $themeCode = 'default'): int
-    {
+    public function create(
+        string $code,
+        string $name,
+        string $host,
+        string $homepageSlug = 'home',
+        string $themeCode = 'default',
+        string $locale = 'en_AU',
+        string $currency = 'AUD',
+        string $baseUrl = '',
+        string $websiteCode = 'main',
+        string $storeCode = 'main',
+        string $storeViewCode = 'default',
+        string $pathPrefix = '',
+    ): int {
         if ($this->findByCode($code) !== null) {
             throw new RuntimeException('Site already exists: ' . $code);
         }
         $now = gmdate('Y-m-d H:i:s');
-        $statement = $this->pdo->prepare('INSERT INTO sites (code, name, status, homepage_slug, theme_code, created_at, updated_at) VALUES (:code, :name, :status, :homepage_slug, :theme_code, :created_at, :updated_at)');
-        $statement->execute(['code' => $code, 'name' => $name, 'status' => 'active', 'homepage_slug' => $homepageSlug, 'theme_code' => $themeCode, 'created_at' => $now, 'updated_at' => $now]);
+        $statement = $this->pdo->prepare(
+            'INSERT INTO sites (code, name, status, homepage_slug, theme_code, locale, currency, base_url, website_code, store_code, store_view_code, path_prefix, created_at, updated_at) '
+            . 'VALUES (:code, :name, :status, :homepage_slug, :theme_code, :locale, :currency, :base_url, :website_code, :store_code, :store_view_code, :path_prefix, :created_at, :updated_at)'
+        );
+        $statement->execute([
+            'code' => $code,
+            'name' => $name,
+            'status' => 'active',
+            'homepage_slug' => $homepageSlug,
+            'theme_code' => $themeCode,
+            'locale' => $locale,
+            'currency' => $currency,
+            'base_url' => $baseUrl,
+            'website_code' => $websiteCode,
+            'store_code' => $storeCode,
+            'store_view_code' => $storeViewCode,
+            'path_prefix' => $pathPrefix,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
         $siteId = (int) $this->pdo->lastInsertId();
         $this->addDomain($siteId, $host, true);
         return $siteId;
@@ -78,8 +119,15 @@ final readonly class SiteRepository
             code: (string) $row['code'],
             name: (string) $row['name'],
             status: (string) $row['status'],
-            homepageSlug: $row['homepage_slug'] !== null ? (string) $row['homepage_slug'] : null,
+            homepageSlug: ($row['homepage_slug'] ?? null) !== null ? (string) $row['homepage_slug'] : null,
             themeCode: (string) ($row['theme_code'] ?? 'default'),
+            locale: (string) ($row['locale'] ?? 'en_AU'),
+            currency: (string) ($row['currency'] ?? 'AUD'),
+            baseUrl: (string) ($row['base_url'] ?? ''),
+            websiteCode: (string) ($row['website_code'] ?? 'main'),
+            storeCode: (string) ($row['store_code'] ?? 'main'),
+            storeViewCode: (string) ($row['store_view_code'] ?? 'default'),
+            pathPrefix: (string) ($row['path_prefix'] ?? ''),
         );
     }
 }

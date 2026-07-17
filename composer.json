@@ -35,7 +35,8 @@
         "psr-4": {
             "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
             "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/",
-            "Zoosper\\Auth\\Tests\\": "app/zoosper-auth/tests/"
+            "Zoosper\\Auth\\Tests\\": "app/zoosper-auth/tests/",
+            "Zoosper\\Site\\Tests\\": "app/zoosper-site/tests/"
         }
     },
     "scripts": {
