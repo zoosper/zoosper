@@ -5,22 +5,19 @@ declare(strict_types=1);
 namespace Zoosper\Core\Tests\Unit\Routing;
 
 /**
- * Phase 1.34f drift guard.
+ * Phase 1.34g drift guard.
  *
- * Site resolution, render context and cache context must not grow new direct
- * $_SERVER host/path reads in production source. The request boundary owns
- * superglobal reads; the only temporary exception is the legacy CurrentSiteContext
- * service factory in core/config/services.php, which is retired in Phase 1.34g
- * after all renderer callers are fully request-threaded.
+ * Site resolution, render context and cache context must not grow direct
+ * $_SERVER host/path reads in production source. Request::fromGlobals() is the
+ * single approved boundary for host/path superglobal capture. The former
+ * CurrentSiteContext service-factory fallback was retired in Phase 1.34g.
  */
-test('direct host and request-uri superglobal reads are restricted to approved production boundaries', function () {
+test('direct host and request-uri superglobal reads are restricted to the request boundary', function () {
     $root = dirname(__DIR__, 5);
     $appRoot = $root . '/app';
 
     $allowed = [
         'app/zoosper-core/src/Http/Request.php',
-        'app/zoosper-core/src/Http/Application.php',
-        'app/zoosper-core/config/services.php',
     ];
 
     $patterns = [
@@ -63,10 +60,11 @@ test('direct host and request-uri superglobal reads are restricted to approved p
     expect($violations)->toBe([]);
 });
 
-test('the temporary CurrentSiteContext factory remains the only approved legacy host/path fallback', function () {
+test('CurrentSiteContext service factory no longer reads host or request URI globals', function () {
     $root = dirname(__DIR__, 5);
     $services = (string) file_get_contents($root . '/app/zoosper-core/config/services.php');
 
-    expect(substr_count($services, '$_SERVER[\'HTTP_HOST\']'))->toBeLessThanOrEqual(1);
-    expect(substr_count($services, '$_SERVER[\'REQUEST_URI\']'))->toBeLessThanOrEqual(1);
+    expect($services)->not->toContain('$_SERVER[\'HTTP_HOST\']');
+    expect($services)->not->toContain('$_SERVER[\'REQUEST_URI\']');
+    expect($services)->toContain('->default()');
 });

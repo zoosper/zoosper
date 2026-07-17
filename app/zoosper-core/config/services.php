@@ -34,10 +34,7 @@ return [
         $services->has(SiteRepository::class) ? $services->get(SiteRepository::class) : null,
     ))->create(),
     CurrentSiteContext::class => static fn (ServiceContainer $services): CurrentSiteContext => new CurrentSiteContext(
-        $services->get(SiteContextResolver::class)->resolve(
-            (string) ($_SERVER['HTTP_HOST'] ?? ''),
-            parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH) ?: '/',
-        ),
+        $services->get(SiteContextResolver::class)->default(),
     ),
     CdnUrlResolver::class => static fn (ServiceContainer $services): CdnUrlResolver => (new CdnUrlResolverFactory($services->get(ConfigRepository::class)))->create(),
     CacheKeyBuilder::class => static fn (ServiceContainer $services): CacheKeyBuilder => new CacheKeyBuilder(),
