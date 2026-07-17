@@ -7,12 +7,14 @@ namespace Zoosper\Core\Http;
 use Throwable;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
+use Zoosper\Core\Site\SiteContextResolver;
 
 final readonly class Application
 {
     public function __construct(
         private Router $router,
         private SecurityHeaders $securityHeaders,
+        private ?SiteContextResolver $siteResolver = null,
     ) {
     }
 
@@ -31,6 +33,15 @@ final readonly class Application
 
         $this->securityHeaders->apply();
         $request = Request::fromGlobals();
+
+        // Phase 1.34a: resolve the site context ONCE per request, from the request
+        // (not $_SERVER), and carry it immutably on the request down the stack. When
+        // the resolver is not wired the request simply carries no context (safe).
+        if ($this->siteResolver !== null) {
+            $request = $request->withSiteContext(
+                $this->siteResolver->resolve($request->host(), $request->path()),
+            );
+        }
 
         try {
             $response = $this->router->dispatch($request);

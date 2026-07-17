@@ -98,6 +98,7 @@ final class ApplicationFactory
         return new Application(
             $router,
             new SecurityHeaders($config->array('security.headers')),
+            $services->get(\Zoosper\Core\Site\SiteContextResolver::class),
         );
     }
 }
