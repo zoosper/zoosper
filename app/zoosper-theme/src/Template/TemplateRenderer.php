@@ -7,6 +7,7 @@ namespace Zoosper\Theme\Template;
 use RuntimeException;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\Site\SiteContext;
 use Zoosper\Core\View\TemplateViewContextProvider;
 use Zoosper\Theme\Layout\LayoutUpdateRepository;
 use Zoosper\Theme\Template\Engine\PhpTemplateEngine;
@@ -59,16 +60,21 @@ final readonly class TemplateRenderer
         $path = $this->resolveTemplatePath($theme, $template);
 
         $siteContext = $request?->siteContext();
-        $data = array_replace(
-            $this->viewContext?->data(
+        if (!$siteContext instanceof SiteContext && ($data['siteContext'] ?? null) instanceof SiteContext) {
+            $siteContext = $data['siteContext'];
+        }
+
+        $sharedData = $siteContext instanceof SiteContext
+            ? ($this->viewContext?->data(
                 themeCode: $theme->code,
                 routeName: $handle,
                 siteContext: $siteContext,
                 host: $request?->host() ?? '',
                 path: $request?->path() ?? '/',
-            ) ?? [],
-            $data,
-        );
+            ) ?? [])
+            : [];
+
+        $data = array_replace($sharedData, $data);
 
         $data['e'] ??= static fn (mixed $value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
         $data['partial'] ??= fn (string $name, array $partialData = []): string => $this->partial($name, array_merge($data, $partialData), $theme->code, $handle, $request);

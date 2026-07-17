@@ -9,8 +9,7 @@ namespace Zoosper\Core\Tests\Unit\Routing;
  *
  * Site resolution, render context and cache context must not grow direct
  * $_SERVER host/path reads in production source. Request::fromGlobals() is the
- * single approved boundary for host/path superglobal capture. The former
- * CurrentSiteContext service-factory fallback was retired in Phase 1.34g.
+ * single approved boundary for host/path superglobal capture.
  */
 test('direct host and request-uri superglobal reads are restricted to the request boundary', function () {
     $root = dirname(__DIR__, 5);
@@ -40,8 +39,6 @@ test('direct host and request-uri superglobal reads are restricted to the reques
 
         $relative = ltrim(str_replace($root, '', $file->getPathname()), '/\\');
 
-        // Tests deliberately contain $_SERVER fixtures and string patterns to
-        // prove globals are ignored. The guard is for production source only.
         if (str_contains($relative, '/tests/')) {
             continue;
         }
@@ -60,11 +57,17 @@ test('direct host and request-uri superglobal reads are restricted to the reques
     expect($violations)->toBe([]);
 });
 
-test('CurrentSiteContext service factory no longer reads host or request URI globals', function () {
+test('template and page render hot paths no longer depend on CurrentSiteContext fallback', function () {
     $root = dirname(__DIR__, 5);
-    $services = (string) file_get_contents($root . '/app/zoosper-core/config/services.php');
 
-    expect($services)->not->toContain('$_SERVER[\'HTTP_HOST\']');
-    expect($services)->not->toContain('$_SERVER[\'REQUEST_URI\']');
-    expect($services)->toContain('->default()');
+    foreach ([
+        'app/zoosper-core/src/View/TemplateViewContextProvider.php',
+        'app/zoosper-page/src/Service/PageRenderer.php',
+        'app/zoosper-core/config/services.php',
+        'app/zoosper-page/config/services.php',
+    ] as $relative) {
+        $source = (string) file_get_contents($root . '/' . $relative);
+
+        expect($source)->not->toContain('CurrentSiteContext');
+    }
 });

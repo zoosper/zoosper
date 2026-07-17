@@ -17,7 +17,6 @@ use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Core\Module\ModuleRegistry;
-use Zoosper\Core\Site\CurrentSiteContext;
 use Zoosper\Core\Site\SiteContextResolver;
 use Zoosper\Core\Site\SiteContextResolverFactory;
 use Zoosper\Core\Url\CdnUrlResolver;
@@ -33,13 +32,9 @@ return [
         $services->get(ConfigRepository::class),
         $services->has(SiteRepository::class) ? $services->get(SiteRepository::class) : null,
     ))->create(),
-    CurrentSiteContext::class => static fn (ServiceContainer $services): CurrentSiteContext => new CurrentSiteContext(
-        $services->get(SiteContextResolver::class)->default(),
-    ),
     CdnUrlResolver::class => static fn (ServiceContainer $services): CdnUrlResolver => (new CdnUrlResolverFactory($services->get(ConfigRepository::class)))->create(),
     CacheKeyBuilder::class => static fn (ServiceContainer $services): CacheKeyBuilder => new CacheKeyBuilder(),
     TemplateViewContextProvider::class => static fn (ServiceContainer $services): TemplateViewContextProvider => new TemplateViewContextProvider(
-        $services->get(CurrentSiteContext::class),
         $services->get(CdnUrlResolver::class),
         $services->get(CacheKeyBuilder::class),
     ),

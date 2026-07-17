@@ -7,7 +7,7 @@ namespace Zoosper\Page\Service;
 use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
-use Zoosper\Core\Site\CurrentSiteContext;
+use Zoosper\Core\Site\SiteContext;
 use Zoosper\Page\Model\Page;
 use Zoosper\Site\Model\Site;
 use Zoosper\Theme\Template\TemplateRenderer;
@@ -19,18 +19,15 @@ final readonly class PageRenderer
         private ?TemplateRenderer $templates = null,
         private ?CmsVersion $version = null,
         private ?ModuleRegistry $modules = null,
-        private ?CurrentSiteContext $currentSiteContext = null,
     ) {
     }
 
     /**
      * Render a CMS page through the selected frontend theme.
      *
-     * Phase 1.34d foundation: an optional Request can be threaded into the
-     * template renderer so shared view context/cache dimensions use the immutable
-     * request-carried SiteContext instead of global $_SERVER reads. Existing
-     * callers remain compatible and use the legacy immutable CurrentSiteContext
-     * fallback until the PageController thread is completed.
+     * Request::siteContext() is the preferred source for frontend requests. Admin
+     * preview/non-request callers use an explicit Site-derived SiteContext so the
+     * render stack never falls back to a container-held site context.
      */
     public function render(Page $page, Site $site, ?Request $request = null): string
     {
@@ -40,7 +37,7 @@ final readonly class PageRenderer
         );
         $themeCode = $site->themeCode;
         $versionLabel = ($this->version ?? new CmsVersion())->label();
-        $siteContext = $request?->siteContext() ?? $this->currentSiteContext?->get();
+        $siteContext = $request?->siteContext() ?? $this->siteContextFromSite($site);
 
         $data = [
             'page' => $page,
@@ -52,5 +49,34 @@ final readonly class PageRenderer
         $content = $templates->render('zoosper-page::page/view', $data, $themeCode, 'default', $request);
 
         return $templates->renderLayout('layout', $content, $data, $themeCode, 'default', $request);
+    }
+
+    private function siteContextFromSite(Site $site): SiteContext
+    {
+        return new SiteContext(
+            websiteCode: $site->websiteCode,
+            websiteName: $site->name,
+            storeCode: $site->storeCode,
+            storeName: $site->name,
+            storeViewCode: $site->storeViewCode,
+            storeViewName: $site->name,
+            locale: $site->locale,
+            currency: $site->currency,
+            baseUrl: rtrim($site->baseUrl, '/'),
+            pathPrefix: $this->normaliseOptionalPrefix($site->pathPrefix),
+            siteId: $site->id,
+        );
+    }
+
+    private function normaliseOptionalPrefix(string $prefix): string
+    {
+        $prefix = trim($prefix);
+        if ($prefix === '') {
+            return '';
+        }
+
+        $prefix = '/' . ltrim($prefix, '/');
+
+        return $prefix === '/' ? '' : rtrim($prefix, '/');
     }
 }

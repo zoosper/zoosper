@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Tests\Unit\View;
 
+use InvalidArgumentException;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Http\Request;
-use Zoosper\Core\Site\CurrentSiteContext;
 use Zoosper\Core\Site\SiteContext;
 use Zoosper\Core\Url\CdnUrlResolver;
 use Zoosper\Core\View\TemplateViewContextProvider;
@@ -31,10 +31,9 @@ function viewSiteContext(string $code, string $baseUrl = 'https://example.test')
     );
 }
 
-function providerWithFallback(SiteContext $fallback): TemplateViewContextProvider
+function requestScopedProvider(): TemplateViewContextProvider
 {
     return new TemplateViewContextProvider(
-        new CurrentSiteContext($fallback),
         new CdnUrlResolver([]),
         new CacheKeyBuilder(),
     );
@@ -44,7 +43,7 @@ test('template view context uses explicit request values instead of globals', fu
     $_SERVER['HTTP_HOST'] = 'wrong.example';
     $_SERVER['REQUEST_URI'] = '/wrong-path';
 
-    $provider = providerWithFallback(viewSiteContext('fallback', 'https://fallback.example'));
+    $provider = requestScopedProvider();
     $explicit = viewSiteContext('site_a', 'https://site-a.example');
 
     $data = $provider->data(
@@ -56,6 +55,7 @@ test('template view context uses explicit request values instead of globals', fu
     );
 
     expect($data['siteContext'])->toBe($explicit);
+    expect($data)->not->toHaveKey('currentSiteContext');
     expect($data['cacheContext']->websiteCode)->toBe('site_a');
     expect($data['cacheContext']->host)->toBe('site-a.example');
     expect($data['cacheContext']->path)->toBe('/products/view');
@@ -63,18 +63,9 @@ test('template view context uses explicit request values instead of globals', fu
     expect($data['cacheContext']->routeName)->toBe('page.view');
 });
 
-test('template view context falls back to immutable CurrentSiteContext without reading globals', function () {
-    $_SERVER['HTTP_HOST'] = 'wrong.example';
-    $_SERVER['REQUEST_URI'] = '/wrong-path';
-
-    $fallback = viewSiteContext('fallback', 'https://fallback.example');
-    $data = providerWithFallback($fallback)->data(themeCode: 'default', routeName: 'fallback.route');
-
-    expect($data['siteContext'])->toBe($fallback);
-    expect($data['cacheContext']->websiteCode)->toBe('fallback');
-    expect($data['cacheContext']->host)->toBe('fallback.example');
-    expect($data['cacheContext']->path)->toBe('/');
-});
+test('template view context requires an explicit site context', function () {
+    requestScopedProvider()->data(themeCode: 'default', routeName: 'fallback.route');
+})->throws(InvalidArgumentException::class, 'explicit SiteContext');
 
 test('template renderer threads request context into shared template data', function () {
     $root = sys_get_temp_dir() . '/zoosper-template-thread-' . bin2hex(random_bytes(4));
@@ -100,12 +91,11 @@ test('template renderer threads request context into shared template data', func
         }
     };
 
-    $provider = providerWithFallback(viewSiteContext('fallback', 'https://fallback.example'));
     $renderer = new TemplateRenderer(
         new ThemeResolver($root, 'default'),
         null,
         null,
-        $provider,
+        requestScopedProvider(),
         new TemplateEngineRegistry($engine),
     );
 
@@ -115,4 +105,35 @@ test('template renderer threads request context into shared template data', func
     $html = $renderer->render('view', [], 'default', 'page.view', $request);
 
     expect($html)->toBe('site_a|site-a.example|/catalog/page|default|page.view');
+});
+
+test('template renderer can use explicit site context from data for non-request renders', function () {
+    $root = sys_get_temp_dir() . '/zoosper-template-data-context-' . bin2hex(random_bytes(4));
+    $templateDir = $root . '/default/templates';
+    mkdir($templateDir, 0775, true);
+    file_put_contents($templateDir . '/view.test', 'placeholder');
+
+    $engine = new class implements TemplateEngineInterface {
+        public function extensions(): array
+        {
+            return ['test'];
+        }
+
+        public function renderFile(string $path, array $data): string
+        {
+            return $data['siteContext']->websiteCode . '|' . $data['cacheContext']->host;
+        }
+    };
+
+    $renderer = new TemplateRenderer(
+        new ThemeResolver($root, 'default'),
+        null,
+        null,
+        requestScopedProvider(),
+        new TemplateEngineRegistry($engine),
+    );
+
+    $html = $renderer->render('view', ['siteContext' => viewSiteContext('preview', 'https://preview.example')], 'default', 'preview.view');
+
+    expect($html)->toBe('preview|preview.example');
 });

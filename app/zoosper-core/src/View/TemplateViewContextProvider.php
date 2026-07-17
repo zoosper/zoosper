@@ -4,34 +4,31 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\View;
 
+use InvalidArgumentException;
 use Zoosper\Core\Cache\CacheContext;
 use Zoosper\Core\Cache\CacheKeyBuilder;
-use Zoosper\Core\Site\CurrentSiteContext;
 use Zoosper\Core\Site\SiteContext;
 use Zoosper\Core\Url\CdnUrlResolver;
 
 /**
  * Provides safe shared view context data to frontend/admin templates.
  *
- * Phase 1.34d foundation: callers can now pass the request-carried SiteContext,
- * host and path explicitly. This removes the provider's direct $_SERVER reads and
- * lets the render stack use immutable request state rather than global state.
- *
- * The legacy CurrentSiteContext fallback remains temporarily for call sites that
- * have not yet been threaded with Request. It is immutable since 1.34a and will
- * be retired once every renderer call passes request context explicitly.
+ * Phase 1.34g retires the legacy site-context fallback from the render
+ * path. Callers must now pass the request-carried SiteContext, or an explicit
+ * SiteContext derived from the known Site model for non-request admin previews.
+ * This keeps cache/render dimensions request-scoped and prevents accidental
+ * fallback to a container-held default site.
  */
 final readonly class TemplateViewContextProvider
 {
     public function __construct(
-        private CurrentSiteContext $currentSiteContext,
         private CdnUrlResolver $cdnUrlResolver,
         private CacheKeyBuilder $cacheKeyBuilder,
     ) {
     }
 
     /**
-     * Build shared template data for the current request.
+     * Build shared template data for the current render.
      *
      * Explicit controller/template data should always override this shared data
      * when TemplateRenderer merges arrays.
@@ -45,7 +42,10 @@ final readonly class TemplateViewContextProvider
         string $host = '',
         string $path = '/',
     ): array {
-        $siteContext ??= $this->currentSiteContext->get();
+        if ($siteContext === null) {
+            throw new InvalidArgumentException('Template view context requires an explicit SiteContext. Pass Request::siteContext() or a Site-derived context.');
+        }
+
         $host = $this->normaliseHost($host !== '' ? $host : $this->hostFromSiteContext($siteContext));
         $path = $this->normalisePath($path);
 
@@ -61,7 +61,6 @@ final readonly class TemplateViewContextProvider
 
         return [
             'siteContext' => $siteContext,
-            'currentSiteContext' => $this->currentSiteContext,
             'cdn' => $this->cdnUrlResolver,
             'cacheContext' => $cacheContext,
             'cacheKeys' => $this->cacheKeyBuilder,

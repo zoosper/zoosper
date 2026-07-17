@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Module\ModuleRegistry;
-use Zoosper\Core\Site\CurrentSiteContext;
 use Zoosper\Page\Controller\PageController;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
@@ -17,7 +16,6 @@ return [
         $services->get('theme.frontend_template_renderer'),
         $services->get(CmsVersion::class),
         $services->get(ModuleRegistry::class),
-        $services->get(CurrentSiteContext::class),
     ),
     PageController::class => static fn (ServiceContainer $services): PageController => new PageController(
         $services->get(SiteRepository::class),
