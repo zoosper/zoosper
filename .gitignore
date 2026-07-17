@@ -8,3 +8,6 @@
 .idea/
 /var/
 /node_modules/
+/bin/dumper-*
+/PHASE-*.md
+/APPLY-*.md
