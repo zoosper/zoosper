@@ -6,8 +6,17 @@ declare(strict_types=1);
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Core\Config\ConfigRepository;
+use Zoosper\Core\Console\ConsoleApplication;
+use Zoosper\Core\Console\ConsoleOutput;
+use Zoosper\Core\Console\ModuleConsoleCommandLoader;
+use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Container\ServiceProviderLoader;
 use Zoosper\Core\Database\ConnectionFactory;
 use Zoosper\Core\Database\Migrator;
+use Zoosper\Core\Exception\ConsoleExceptionFormatter;
+use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Log\LogManager;
+use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Scaffold\ModuleScaffolder;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Site\Repository\SiteRepository;
@@ -20,85 +29,121 @@ $pdo = (new ConnectionFactory($config, $basePath))->create();
 $command = $argv[1] ?? 'help';
 $options = parseOptions(array_slice($argv, 2));
 
-if ($command === 'migrate') {
-    (new Migrator($pdo, $basePath . '/database/migrations'))->migrate();
-    echo "Zoosper migrations completed.\n";
-    exit(0);
-}
-
-if ($command === 'make:module') {
-    $moduleName = $argv[2] ?? '';
-    $result = (new ModuleScaffolder($basePath))->scaffold($moduleName);
-
-    echo "Created module {$result->moduleName}\n";
-    echo "Namespace: {$result->namespace}\n";
-    echo "Path: {$result->modulePath}\n";
-    echo "Files:\n";
-    foreach ($result->createdFiles as $file) {
-        echo "  - {$file}\n";
-    }
-    echo "\nNext: add the PSR-4 autoload snippet from {$result->modulePath}/README.md if you add PHP classes.\n";
-    exit(0);
-}
-
-if ($command === 'admin:create') {
-    $email = required($options, 'email');
-    $password = required($options, 'password');
-    $name = $options['name'] ?? 'Admin User';
-
-    $users = new AdminUserRepository($pdo);
-
-    if ($users->findByEmail($email) !== null) {
-        fwrite(STDERR, "Admin user already exists: {$email}\n");
-        exit(1);
+try {
+    if ($command === 'migrate') {
+        (new Migrator($pdo, $basePath . '/database/migrations', new ModuleRegistry($basePath)))->migrate();
+        echo "Zoosper migrations completed.\n";
+        exit(0);
     }
 
-    $id = $users->create($email, $name, (new PasswordHasher())->hash($password), 'super_admin');
-    echo "Created super admin user #{$id}: {$email}\n";
-    exit(0);
-}
+    if ($command === 'make:module') {
+        $moduleName = $argv[2] ?? '';
+        $result = (new ModuleScaffolder($basePath))->scaffold($moduleName);
 
-if ($command === 'site:create') {
-    $code = $options['code'] ?? (string) env('DEFAULT_SITE_CODE', 'main');
-    $name = $options['name'] ?? (string) env('DEFAULT_SITE_NAME', 'Main Website');
-    $host = $options['host'] ?? (string) env('DEFAULT_SITE_HOST', '127.0.0.1');
-    $homepageSlug = $options['homepage'] ?? 'home';
-
-    $sites = new SiteRepository($pdo);
-    $id = $sites->create($code, $name, $host, $homepageSlug);
-
-    echo "Created site #{$id}: {$code} ({$host})\n";
-    exit(0);
-}
-
-if ($command === 'page:create') {
-    $siteCode = $options['site'] ?? 'main';
-    $title = required($options, 'title');
-    $slug = $options['slug'] ?? slugify($title);
-    $content = $options['content'] ?? 'Hello from Zoosper.';
-
-    $sites = new SiteRepository($pdo);
-    $site = $sites->findByCode($siteCode);
-
-    if ($site === null) {
-        fwrite(STDERR, "Site does not exist: {$siteCode}\n");
-        exit(1);
+        echo "Created module {$result->moduleName}\n";
+        echo "Namespace: {$result->namespace}\n";
+        echo "Path: {$result->modulePath}\n";
+        echo "Files:\n";
+        foreach ($result->createdFiles as $file) {
+            echo "  - {$file}\n";
+        }
+        echo "\nNext: add the PSR-4 autoload snippet from {$result->modulePath}/README.md if you add PHP classes.\n";
+        exit(0);
     }
 
-    $pages = new PageRepository($pdo);
-    $id = $pages->createPublished($site->id, $title, $slug, $content);
+    if ($command === 'admin:create') {
+        $email = required($options, 'email');
+        $password = required($options, 'password');
+        $name = $options['name'] ?? 'Admin User';
 
-    echo "Created published page #{$id}: /{$slug}\n";
-    exit(0);
+        $users = new AdminUserRepository($pdo);
+
+        if ($users->findByEmail($email) !== null) {
+            fwrite(STDERR, "Admin user already exists: {$email}\n");
+            exit(1);
+        }
+
+        $id = $users->create($email, $name, (new PasswordHasher())->hash($password), 'super_admin');
+        echo "Created super admin user #{$id}: {$email}\n";
+        exit(0);
+    }
+
+    if ($command === 'site:create') {
+        $code = $options['code'] ?? (string) env('DEFAULT_SITE_CODE', 'main');
+        $name = $options['name'] ?? (string) env('DEFAULT_SITE_NAME', 'Main Website');
+        $host = $options['host'] ?? (string) env('DEFAULT_SITE_HOST', '127.0.0.1');
+        $homepageSlug = $options['homepage'] ?? 'home';
+
+        $sites = new SiteRepository($pdo);
+        $id = $sites->create($code, $name, $host, $homepageSlug);
+
+        echo "Created site #{$id}: {$code} ({$host})\n";
+        exit(0);
+    }
+
+    if ($command === 'page:create') {
+        $siteCode = $options['site'] ?? 'main';
+        $title = required($options, 'title');
+        $slug = $options['slug'] ?? slugify($title);
+        $content = $options['content'] ?? 'Hello from Zoosper.';
+
+        $sites = new SiteRepository($pdo);
+        $site = $sites->findByCode($siteCode);
+
+        if ($site === null) {
+            fwrite(STDERR, "Site does not exist: {$siteCode}\n");
+            exit(1);
+        }
+
+        $pages = new PageRepository($pdo);
+        $id = $pages->createPublished($site->id, $title, $slug, $content);
+
+        echo "Created published page #{$id}: /{$slug}\n";
+        exit(0);
+    }
+
+    $output = new ConsoleOutput();
+    $moduleCommands = loadModuleCommands($basePath, $config, $pdo);
+    $application = new ConsoleApplication(builtInCommands(), $moduleCommands);
+
+    exit($application->run($command, array_slice($argv, 2), $output));
+} catch (Throwable $exception) {
+    fwrite(STDERR, (new ConsoleExceptionFormatter())->format($exception));
+    exit(1);
 }
 
-echo "Zoosper CLI\n";
-echo "Commands:\n";
-echo "  migrate\n";
-echo "  make:module Vendor_Module\n";
-echo "  admin:create --email=admin@example.com --password='ChangeMe123!' --name='Admin User'\n";
-echo "  site:create --code=main --name='Main Website' --host=127.0.0.1\n";
-echo "  page:create --site=main --title='Home' --slug=home --content='Welcome to Zoosper.'\n";
+/** @return list<string> */
+function builtInCommands(): array
+{
+    return [
+        'migrate',
+        'make:module Vendor_Module',
+        "admin:create --email=admin@example.com --password='ChangeMe123!' --name='Admin User'",
+        "site:create --code=main --name='Main Website' --host=127.0.0.1",
+        "page:create --site=main --title='Home' --slug=home --content='Welcome to Zoosper.'",
+    ];
+}
+
+/** @return array<string, \Zoosper\Core\Console\ConsoleCommandInterface> */
+function loadModuleCommands(string $basePath, ConfigRepository $config, PDO $pdo): array
+{
+    $modules = new ModuleRegistry($basePath);
+    $services = new ServiceContainer();
+    $services->set(ConfigRepository::class, $config);
+    $services->set(ModuleRegistry::class, $modules);
+    $services->set(PDO::class, $pdo);
+
+    $logManager = new LogManager($config, $basePath);
+    $errorHandler = new ErrorHandler($logManager->exceptions());
+    $services->set(LogManager::class, $logManager);
+    $services->set(ErrorHandler::class, $errorHandler);
+    $services->set('logger.default', $logManager->default());
+    $services->set('logger.exception', $logManager->exceptions());
+
+    (new ServiceProviderLoader($modules, $services))->register();
+
+    return (new ModuleConsoleCommandLoader($modules, $services))->load();
+}
 
 /** @param list<string> $args @return array<string, string> */
 function parseOptions(array $args): array
