@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Theme\Template;
 
 use RuntimeException;
+use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\View\TemplateViewContextProvider;
 use Zoosper\Theme\Layout\LayoutUpdateRepository;
@@ -25,27 +26,27 @@ final readonly class TemplateRenderer
     }
 
     /** @param array<string, mixed> $data */
-    public function render(string $template, array $data = [], ?string $themeCode = null, string $handle = 'default'): string
+    public function render(string $template, array $data = [], ?string $themeCode = null, string $handle = 'default', ?Request $request = null): string
     {
         $theme = $this->themes->resolve($themeCode);
-        return $this->renderFromTheme($theme, $template, $data, $handle);
+        return $this->renderFromTheme($theme, $template, $data, $handle, $request);
     }
 
     /** @param array<string, mixed> $data */
-    public function renderLayout(string $layout, string $content, array $data = [], ?string $themeCode = null, string $handle = 'default'): string
+    public function renderLayout(string $layout, string $content, array $data = [], ?string $themeCode = null, string $handle = 'default', ?Request $request = null): string
     {
         $data['content'] = $content;
-        return $this->render($layout, $data, $themeCode, $handle);
+        return $this->render($layout, $data, $themeCode, $handle, $request);
     }
 
     /** @param array<string, mixed> $data */
-    public function partial(string $template, array $data = [], ?string $themeCode = null, string $handle = 'default'): string
+    public function partial(string $template, array $data = [], ?string $themeCode = null, string $handle = 'default', ?Request $request = null): string
     {
-        return $this->render('partials/' . ltrim($template, '/'), $data, $themeCode, $handle);
+        return $this->render('partials/' . ltrim($template, '/'), $data, $themeCode, $handle, $request);
     }
 
     /** @param array<string, mixed> $data */
-    private function renderFromTheme(Theme $theme, string $template, array $data, string $handle): string
+    private function renderFromTheme(Theme $theme, string $template, array $data, string $handle, ?Request $request = null): string
     {
         $update = $this->layoutUpdates?->forTheme($theme, $handle);
         $template = ltrim($template, '/');
@@ -57,20 +58,27 @@ final readonly class TemplateRenderer
         $template = $update?->replacementFor($template) ?? $template;
         $path = $this->resolveTemplatePath($theme, $template);
 
+        $siteContext = $request?->siteContext();
         $data = array_replace(
-            $this->viewContext?->data(themeCode: $theme->code, routeName: $handle) ?? [],
+            $this->viewContext?->data(
+                themeCode: $theme->code,
+                routeName: $handle,
+                siteContext: $siteContext,
+                host: $request?->host() ?? '',
+                path: $request?->path() ?? '/',
+            ) ?? [],
             $data,
         );
 
         $data['e'] ??= static fn (mixed $value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-        $data['partial'] ??= fn (string $name, array $partialData = []): string => $this->partial($name, array_merge($data, $partialData), $theme->code, $handle);
-        $data['slot'] ??= fn (string $slotName, array $slotData = []): string => $this->renderSlot($theme, $handle, $slotName, array_merge($data, $slotData));
+        $data['partial'] ??= fn (string $name, array $partialData = []): string => $this->partial($name, array_merge($data, $partialData), $theme->code, $handle, $request);
+        $data['slot'] ??= fn (string $slotName, array $slotData = []): string => $this->renderSlot($theme, $handle, $slotName, array_merge($data, $slotData), $request);
 
         return $this->engines()->forPath($path)->renderFile($path, $data);
     }
 
     /** @param array<string, mixed> $data */
-    private function renderSlot(Theme $theme, string $handle, string $slotName, array $data): string
+    private function renderSlot(Theme $theme, string $handle, string $slotName, array $data, ?Request $request = null): string
     {
         $update = $this->layoutUpdates?->forTheme($theme, $handle);
         if ($update === null) {
@@ -79,7 +87,7 @@ final readonly class TemplateRenderer
 
         $html = '';
         foreach ($update->injectionsFor($slotName) as $template) {
-            $html .= $this->renderFromTheme($theme, $template, $data, $handle);
+            $html .= $this->renderFromTheme($theme, $template, $data, $handle, $request);
         }
         return $html;
     }

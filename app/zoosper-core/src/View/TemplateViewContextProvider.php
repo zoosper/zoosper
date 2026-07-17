@@ -7,16 +7,19 @@ namespace Zoosper\Core\View;
 use Zoosper\Core\Cache\CacheContext;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Site\CurrentSiteContext;
+use Zoosper\Core\Site\SiteContext;
 use Zoosper\Core\Url\CdnUrlResolver;
 
 /**
  * Provides safe shared view context data to frontend/admin templates.
  *
- * The provider exposes public site context, CDN URL helpers and cache-key helper
- * objects to templates without requiring controllers to pass hard-coded store
- * codes. It must never include credentials, session IDs, CSRF tokens, OTPs,
- * TOTP secrets, recovery-code plaintext, reset tokens, SMTP passwords, payment
- * data or customer-private values.
+ * Phase 1.34d foundation: callers can now pass the request-carried SiteContext,
+ * host and path explicitly. This removes the provider's direct $_SERVER reads and
+ * lets the render stack use immutable request state rather than global state.
+ *
+ * The legacy CurrentSiteContext fallback remains temporarily for call sites that
+ * have not yet been threaded with Request. It is immutable since 1.34a and will
+ * be retired once every renderer call passes request context explicitly.
  */
 final readonly class TemplateViewContextProvider
 {
@@ -35,11 +38,16 @@ final readonly class TemplateViewContextProvider
      *
      * @return array<string, mixed>
      */
-    public function data(?string $themeCode = null, string $routeName = ''): array
-    {
-        $siteContext = $this->currentSiteContext->get();
-        $host = (string) ($_SERVER['HTTP_HOST'] ?? '');
-        $path = parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH) ?: '/';
+    public function data(
+        ?string $themeCode = null,
+        string $routeName = '',
+        ?SiteContext $siteContext = null,
+        string $host = '',
+        string $path = '/',
+    ): array {
+        $siteContext ??= $this->currentSiteContext->get();
+        $host = $this->normaliseHost($host !== '' ? $host : $this->hostFromSiteContext($siteContext));
+        $path = $this->normalisePath($path);
 
         $cacheContext = CacheContext::fromSiteContext(
             siteContext: $siteContext,
@@ -58,5 +66,29 @@ final readonly class TemplateViewContextProvider
             'cacheContext' => $cacheContext,
             'cacheKeys' => $this->cacheKeyBuilder,
         ];
+    }
+
+    private function hostFromSiteContext(SiteContext $siteContext): string
+    {
+        $host = parse_url($siteContext->baseUrl, PHP_URL_HOST);
+
+        return is_string($host) ? $host : '';
+    }
+
+    private function normaliseHost(string $host): string
+    {
+        $host = strtolower(trim($host));
+        if (str_contains($host, ':')) {
+            $host = explode(':', $host, 2)[0];
+        }
+
+        return $host;
+    }
+
+    private function normalisePath(string $path): string
+    {
+        $path = '/' . ltrim(trim($path), '/');
+
+        return $path === '/' ? '/' : rtrim($path, '/');
     }
 }

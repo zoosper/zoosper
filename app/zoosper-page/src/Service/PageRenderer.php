@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Page\Service;
 
 use Zoosper\Core\App\CmsVersion;
+use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Site\CurrentSiteContext;
 use Zoosper\Page\Model\Page;
@@ -25,11 +26,13 @@ final readonly class PageRenderer
     /**
      * Render a CMS page through the selected frontend theme.
      *
-     * Phase 0.62 intentionally renders extensionless template names so the
-     * TemplateEngineRegistry can prefer `.latte` templates while keeping `.php`
-     * fallback templates available during the migration.
+     * Phase 1.34d foundation: an optional Request can be threaded into the
+     * template renderer so shared view context/cache dimensions use the immutable
+     * request-carried SiteContext instead of global $_SERVER reads. Existing
+     * callers remain compatible and use the legacy immutable CurrentSiteContext
+     * fallback until the PageController thread is completed.
      */
-    public function render(Page $page, Site $site): string
+    public function render(Page $page, Site $site, ?Request $request = null): string
     {
         $templates = $this->templates ?? new TemplateRenderer(
             new ThemeResolver(dirname(__DIR__, 4) . '/themes', 'default'),
@@ -37,7 +40,7 @@ final readonly class PageRenderer
         );
         $themeCode = $site->themeCode;
         $versionLabel = ($this->version ?? new CmsVersion())->label();
-        $siteContext = $this->currentSiteContext?->get();
+        $siteContext = $request?->siteContext() ?? $this->currentSiteContext?->get();
 
         $data = [
             'page' => $page,
@@ -46,8 +49,8 @@ final readonly class PageRenderer
             'versionLabel' => $versionLabel,
         ];
 
-        $content = $templates->render('zoosper-page::page/view', $data, $themeCode);
+        $content = $templates->render('zoosper-page::page/view', $data, $themeCode, 'default', $request);
 
-        return $templates->renderLayout('layout', $content, $data, $themeCode);
+        return $templates->renderLayout('layout', $content, $data, $themeCode, 'default', $request);
     }
 }
