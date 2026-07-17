@@ -37,10 +37,7 @@ final readonly class AdminTwoFactorSetupController
      */
     public function form(Request $request): Response
     {
-        $user = $this->guard->user();
-        if ($user === null) {
-            return Response::redirect($this->adminUrl('/login'));
-        }
+        $user = $this->currentAdminUser();
 
         $setup = $this->enrolment->startSetup($user->email);
         $_SESSION['pending_2fa_secret'] = $setup['secret'];
@@ -65,17 +62,10 @@ final readonly class AdminTwoFactorSetupController
      */
     public function confirm(Request $request): Response
     {
-        $user = $this->guard->user();
-        if ($user === null) {
-            return Response::redirect($this->adminUrl('/login'));
-        }
+        $user = $this->currentAdminUser();
 
         $form = $request->form();
-        if (!$this->csrf->isValid((string) ($form['_csrf_token'] ?? ''))) {
-            return Response::html($this->layout->render('Set up 2FA', '<p class="error">Invalid security token.</p>', $user, 'admin-users'), 419);
-        }
-
-        $secret = (string) ($_SESSION['pending_2fa_secret'] ?? '');
+$secret = (string) ($_SESSION['pending_2fa_secret'] ?? '');
         $codes = $secret !== '' ? $this->enrolment->confirm($user->id, $secret, (string) ($form['otp'] ?? '')) : [];
         if ($codes === []) {
             return Response::html($this->layout->render('Set up 2FA', '<p class="error">Invalid authenticator code.</p><p><a class="button secondary" href="' . $this->e($this->adminUrl('/2fa/setup')) . '">Try again</a></p>', $user, 'admin-users'), 422);
@@ -114,5 +104,17 @@ final readonly class AdminTwoFactorSetupController
     private function e(string $value): string
     {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    }
+    /**
+     * Return the authenticated admin user after the middleware authentication gate.
+     */
+    private function currentAdminUser(): \Zoosper\Auth\Model\AdminUser
+    {
+        $user = $this->guard->user();
+        if ($user === null) {
+            throw new \RuntimeException('Authenticated admin user required after middleware guard.');
+        }
+
+        return $user;
     }
 }
