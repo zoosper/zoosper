@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Mail\Controller;
 
+use RuntimeException;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
@@ -27,10 +28,7 @@ final readonly class EmailLogAdminController
 
     public function index(Request $request): Response
     {
-        $user = $this->guard->requirePermission('role.manage') ?? $this->guard->requirePermission('settings.manage');
-        if ($user === null) {
-            return Response::redirect('/admin/login');
-        }
+        $user = $this->currentAdminUser();
 
         $filters = [
             'status' => (string) ($request->query('status') ?? ''),
@@ -54,10 +52,7 @@ final readonly class EmailLogAdminController
 
     public function view(Request $request): Response
     {
-        $user = $this->guard->requirePermission('role.manage') ?? $this->guard->requirePermission('settings.manage');
-        if ($user === null) {
-            return Response::redirect('/admin/login');
-        }
+        $user = $this->currentAdminUser();
 
         $id = (int) ($request->query('id') ?? 0);
         $row = $id > 0 ? $this->logs->find($id) : null;
@@ -106,5 +101,17 @@ final readonly class EmailLogAdminController
     private function e(string $value): string
     {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    }
+    /**
+     * Return the authenticated admin user after the middleware permission gate.
+     */
+    private function currentAdminUser(): \Zoosper\Auth\Model\AdminUser
+    {
+        $user = $this->guard->user();
+        if ($user === null) {
+            throw new RuntimeException('Authenticated admin user required after middleware guard.');
+        }
+
+        return $user;
     }
 }

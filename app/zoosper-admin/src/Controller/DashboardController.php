@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Controller;
 
+use RuntimeException;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\CsrfTokenManager;
@@ -23,10 +24,7 @@ final readonly class DashboardController
 
     public function index(Request $request): Response
     {
-        $user = $this->guard->requirePermission('admin.access');
-        if ($user === null) {
-            return Response::redirect('/admin/login');
-        }
+        $user = $this->currentAdminUser();
 
         if ($this->views !== null) {
             return Response::html($this->views->render(
@@ -44,5 +42,17 @@ final readonly class DashboardController
             $user,
             'dashboard',
         ));
+    }
+    /**
+     * Return the authenticated admin user after the middleware permission gate.
+     */
+    private function currentAdminUser(): \Zoosper\Auth\Model\AdminUser
+    {
+        $user = $this->guard->user();
+        if ($user === null) {
+            throw new RuntimeException('Authenticated admin user required after middleware guard.');
+        }
+
+        return $user;
     }
 }

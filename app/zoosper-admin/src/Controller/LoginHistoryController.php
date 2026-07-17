@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Controller;
 
+use RuntimeException;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
@@ -23,10 +24,7 @@ final readonly class LoginHistoryController
 
     public function index(Request $request): Response
     {
-        $user = $this->guard->requirePermission('role.manage');
-        if ($user === null) {
-            return Response::redirect('/admin/login');
-        }
+        $user = $this->currentAdminUser();
 
         $rows = $this->history->latest();
         if ($this->views !== null) {
@@ -40,5 +38,17 @@ final readonly class LoginHistoryController
         }
 
         return Response::html($this->layout->render('Login History', '<p>Login history view renderer is not configured.</p>', $user, 'login-history'));
+    }
+    /**
+     * Return the authenticated admin user after the middleware permission gate.
+     */
+    private function currentAdminUser(): \Zoosper\Auth\Model\AdminUser
+    {
+        $user = $this->guard->user();
+        if ($user === null) {
+            throw new RuntimeException('Authenticated admin user required after middleware guard.');
+        }
+
+        return $user;
     }
 }
