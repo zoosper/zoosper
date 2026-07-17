@@ -30,10 +30,7 @@ final readonly class ThemeAdminController
 
     public function index(Request $request): Response
     {
-        $user = $this->guard->requirePermission('settings.manage');
-        if ($user === null) {
-            return Response::redirect('/admin/login');
-        }
+        $user = $this->currentAdminUser();
 
         if ($this->views !== null) {
             return Response::html($this->views->render(
@@ -54,10 +51,7 @@ final readonly class ThemeAdminController
 
     public function assign(Request $request): Response
     {
-        $user = $this->guard->requirePermission('settings.manage');
-        if ($user === null) {
-            return Response::redirect('/admin/login');
-        }
+        $user = $this->currentAdminUser();
 
         $form = $request->form();
 
@@ -84,5 +78,17 @@ final readonly class ThemeAdminController
                 'themes',
             ), 422);
         }
+    }
+    /**
+     * Return the authenticated admin user after the middleware permission gate.
+     */
+    private function currentAdminUser(): \Zoosper\Auth\Model\AdminUser
+    {
+        $user = $this->guard->user();
+        if ($user === null) {
+            throw new RuntimeException('Authenticated admin user required after middleware guard.');
+        }
+
+        return $user;
     }
 }

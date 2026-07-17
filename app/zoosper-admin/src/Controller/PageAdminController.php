@@ -15,7 +15,6 @@ use Zoosper\Admin\Form\AdminFormRenderer;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\UI\AdminViewRenderer;
-use Zoosper\Auth\Access\Permission;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
@@ -90,10 +89,7 @@ final readonly class PageAdminController
 
     public function index(Request $request): Response
     {
-        $user = $this->requirePageManager();
-        if ($user === null) {
-            return Response::redirect($this->adminUrl('/login'));
-        }
+        $user = $this->currentAdminUser();
 
         $criteria = PageGridCriteria::fromQuery($_GET);
         $pagination = $this->pageGrid?->paginate($criteria);
@@ -113,13 +109,7 @@ final readonly class PageAdminController
             'pages',
         ));
     }
-
-    private function requirePageManager(): ?AdminUser
-    {
-        return $this->guard->requirePermission(Permission::PageManage->value);
-    }
-
-    private function adminUrl(string $path): string
+private function adminUrl(string $path): string
     {
         $adminConfig = $this->config?->array('admin') ?? [];
         $basePath = (string)($adminConfig['base_path'] ?? '/admin');
@@ -134,9 +124,7 @@ final readonly class PageAdminController
 
     public function createForm(Request $request): Response
     {
-        if ($this->requirePageManager() === null) {
-            return Response::redirect($this->adminUrl('/login'));
-        }
+        $this->currentAdminUser();
 
         return $this->html('Create page', $this->form($this->adminUrl('/pages/create')));
     }
@@ -233,10 +221,7 @@ final readonly class PageAdminController
 
     public function create(Request $request): Response
     {
-        $user = $this->requirePageManager();
-        if ($user === null) {
-            return Response::redirect($this->adminUrl('/login'));
-        }
+        $user = $this->currentAdminUser();
 
         $form = $request->form();
 
@@ -408,9 +393,7 @@ final readonly class PageAdminController
 
     public function editForm(Request $request): Response
     {
-        if ($this->requirePageManager() === null) {
-            return Response::redirect($this->adminUrl('/login'));
-        }
+        $this->currentAdminUser();
 
         $page = $this->pageFromRequest($request);
         if ($page === null) {
@@ -429,10 +412,7 @@ final readonly class PageAdminController
 
     public function update(Request $request): Response
     {
-        $user = $this->requirePageManager();
-        if ($user === null) {
-            return Response::redirect($this->adminUrl('/login'));
-        }
+        $user = $this->currentAdminUser();
 
         $page = $this->pageFromRequest($request);
         if ($page === null) {
@@ -494,10 +474,7 @@ final readonly class PageAdminController
 
     private function changeStatus(Request $request, bool $publish): Response
     {
-        $user = $this->requirePageManager();
-        if ($user === null) {
-            return Response::redirect($this->adminUrl('/login'));
-        }
+        $user = $this->currentAdminUser();
 
         $page = $this->pageFromRequest($request);
         if ($page === null) {
@@ -527,9 +504,7 @@ final readonly class PageAdminController
 
     public function preview(Request $request): Response
     {
-        if ($this->requirePageManager() === null) {
-            return Response::redirect($this->adminUrl('/login'));
-        }
+        $this->currentAdminUser();
 
         $page = $this->pageFromRequest($request);
         if ($page === null) {
@@ -542,5 +517,17 @@ final readonly class PageAdminController
         }
 
         return Response::html($this->renderer->render($page, $site));
+    }
+    /**
+     * Return the authenticated admin user after the middleware permission gate.
+     */
+    private function currentAdminUser(): AdminUser
+    {
+        $user = $this->guard->user();
+        if ($user === null) {
+            throw new RuntimeException('Authenticated admin user required after middleware guard.');
+        }
+
+        return $user;
     }
 }
