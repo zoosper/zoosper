@@ -23,12 +23,16 @@ use Zoosper\Core\Site\SiteContextResolverFactory;
 use Zoosper\Core\Url\CdnUrlResolver;
 use Zoosper\Core\Url\CdnUrlResolverFactory;
 use Zoosper\Core\View\TemplateViewContextProvider;
+use Zoosper\Site\Repository\SiteRepository;
 
 return [
     ProjectPathResolver::class => static fn (ServiceContainer $services): ProjectPathResolver => ProjectPathResolver::fromCoreModule(),
     JsonResponder::class => static fn (ServiceContainer $services): JsonResponder => new JsonResponder(),
     CmsVersion::class => static fn (ServiceContainer $services): CmsVersion => new CmsVersion($services->get(ConfigRepository::class)),
-    SiteContextResolver::class => static fn (ServiceContainer $services): SiteContextResolver => (new SiteContextResolverFactory($services->get(ConfigRepository::class)))->create(),
+    SiteContextResolver::class => static fn (ServiceContainer $services): SiteContextResolver => (new SiteContextResolverFactory(
+        $services->get(ConfigRepository::class),
+        $services->has(SiteRepository::class) ? $services->get(SiteRepository::class) : null,
+    ))->create(),
     CurrentSiteContext::class => static fn (ServiceContainer $services): CurrentSiteContext => new CurrentSiteContext(
         $services->get(SiteContextResolver::class)->resolve(
             (string) ($_SERVER['HTTP_HOST'] ?? ''),

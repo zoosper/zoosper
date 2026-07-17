@@ -4,31 +4,45 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Site;
 
+use Zoosper\Site\Model\Site as DbSite;
+use Zoosper\Site\Repository\SiteRepository;
+
 /**
  * Resolves the current website/store/store-view context from host and path.
  *
- * The resolver intentionally uses request context and configured domain/path
- * mappings so application code does not need to pass or hard-code store codes.
- * It only reads public site metadata and must never handle credentials, OTPs,
- * TOTP secrets, recovery-code plaintext, reset tokens, SMTP passwords, payment
- * data or customer-private values.
+ * Phase 1.34c: SiteRepository is now the primary source of truth. The legacy
+ * config/sites.php array remains as a bootstrap fallback when no active DB site
+ * matches the host, or when the site module/repository is not available yet.
+ *
+ * The resolver only handles public site metadata and must never handle
+ * credentials, OTPs, TOTP secrets, recovery-code plaintext, reset tokens, SMTP
+ * passwords, payment data or customer-private values.
  */
 final readonly class SiteContextResolver
 {
     /**
      * @param array<string, mixed> $config
      */
-    public function __construct(private array $config)
-    {
+    public function __construct(
+        private array $config,
+        private ?SiteRepository $sites = null,
+    ) {
     }
 
     /**
-     * Resolve site context from host/path, falling back to the configured default.
+     * Resolve site context from host/path, falling back to config/sites.php.
      */
     public function resolve(?string $host = null, string $path = '/'): SiteContext
     {
-        $host = $this->normaliseHost($host ?? ($_SERVER['HTTP_HOST'] ?? ''));
+        $host = $this->normaliseHost($host ?? '');
         $path = $this->normalisePath($path);
+
+        if ($this->sites !== null && $host !== '') {
+            $site = $this->sites->findActiveByHost($host);
+            if ($site !== null && $this->dbSiteMatchesPath($site, $path)) {
+                return $this->contextFromDbSite($site);
+            }
+        }
 
         foreach ($this->activeStoreViews() as $storeView) {
             if ($this->matches($storeView, $host, $path)) {
@@ -45,6 +59,35 @@ final readonly class SiteContextResolver
     public function default(): SiteContext
     {
         return $this->contextFromStoreView($this->defaultStoreView());
+    }
+
+    /**
+     * Build a rich Core SiteContext from the flattened DB site row.
+     */
+    private function contextFromDbSite(DbSite $site): SiteContext
+    {
+        return new SiteContext(
+            websiteCode: $site->websiteCode,
+            websiteName: $site->name,
+            storeCode: $site->storeCode,
+            storeName: $site->name,
+            storeViewCode: $site->storeViewCode,
+            storeViewName: $site->name,
+            locale: $site->locale,
+            currency: $site->currency,
+            baseUrl: rtrim($site->baseUrl, '/'),
+            pathPrefix: $this->normaliseOptionalPrefix($site->pathPrefix),
+        );
+    }
+
+    private function dbSiteMatchesPath(DbSite $site, string $path): bool
+    {
+        $pathPrefix = $this->normaliseOptionalPrefix($site->pathPrefix);
+        if ($pathPrefix === '') {
+            return true;
+        }
+
+        return $path === $pathPrefix || str_starts_with($path, rtrim($pathPrefix, '/') . '/');
     }
 
     /**
@@ -114,7 +157,7 @@ final readonly class SiteContextResolver
     }
 
     /**
-     * Determine whether a store view matches host and path.
+     * Determine whether a config store view matches host and path.
      *
      * @param array<string, mixed> $storeView
      */
