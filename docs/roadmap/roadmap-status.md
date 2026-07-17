@@ -1,33 +1,38 @@
 # Zoosper CMS — Roadmap Status
 
-Snapshot: 2026-07-15 (AEST).
+Snapshot: 2026-07-17 (AEST).
 
 ## Delivered
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.20–1.28 | Entity save lifecycle | Built, activated, module-discovered listeners |
-| 1.26–1.27 | Thin controllers + central logging | HTML in Latte; Router catch-and-log |
-| 1.29 | Schema engine unification | One validated, snapshotted, module-owned engine; entity_extension_values fresh-install fix |
-| 1.30 | General event/observer system | Module config/events.php discovery; page publish/unpublish emitters |
-| 1.31 | Module generator CLI | bin/zoosper make:module + bin/verify runner |
-| 1.32 | Configuration layering | Module config/settings/*.php merged under root config/*.php |
-| 1.33 | **Middleware pipeline** | PSR-15-style pipeline in ModuleRouteLoader; fail-secure AuthenticationMiddleware (1.33a/b) + CsrfMiddleware (1.33c); admin routes only, API untouched |
+| 1.20–1.28 | Entity save lifecycle | Built, activated, and module-discovered listeners are covered by Pest tests. |
+| 1.26–1.27 | Thin controllers + central logging | HTML moved into templates where targeted; router catch-and-log safety net added. |
+| 1.29 | Schema engine unification | One validated, snapshotted, module-owned schema engine; entity_extension_values fresh-install fix. |
+| 1.30 | General event/observer system | Module config/events.php discovery; page publish/unpublish emitters. |
+| 1.31 | Module generator CLI | bin/zoosper make:module foundation. |
+| 1.32 | Configuration layering | Module config/settings/*.php merged under root config/*.php. |
+| 1.33 | Middleware pipeline | PSR-15-style route middleware pipeline; fail-secure authentication and central CSRF guard for admin routes; API routes remain stateless. |
+| 1.33b | Route permission OR semantics | Route permission metadata accepts string or list with OR semantics; parity tests guard user/mail routes. |
+| 1.33d | Controller middleware cleanup | Redundant controller-level permission/auth/CSRF gates removed from protected admin controllers; middleware owns route-level access decisions. |
+| 1.34 | Site-resolution unification | Request-carried SiteContext is the runtime source of truth; page/API/render paths no longer use legacy fallbacks; CurrentSiteContext retired. |
+| 1.40 | Module-owned console commands | config/console.php discovery, make:module console placeholder, and make:command scaffolder. |
 
-> Correction: an earlier snapshot listed 1.33 as "Router path parameters". That
-> was stale. 1.33 shipped as the middleware pipeline + auth/CSRF guards. Router
-> path parameters are re-planned as Phase 1.35.
+## Current
+| Phase | Title | Outcome |
+|---|---|---|
+| 1.35 | Router path parameters | Add immutable Request route params, static-first parameterised route matching, inline constraints, and module route coverage. |
 
 ## Planned
 | Phase | Title |
 |---|---|
-| 1.33d | Remove now-redundant controller-level auth/CSRF checks (belt-and-braces cleanup) |
-| 1.34 | Site-resolution unification (SiteRepository = source of truth; SiteContext = resolution layer) |
-| 1.35 | Router path parameters (/admin/pages/{id}) |
-| 1.36 | Wire content_json to frontend rendering (BlockJsonToHtmlRenderer in PageRenderer) |
-| 1.37 | Media / upload module (first real third-party module using every extension point) |
+| 1.36 | Wire content_json to frontend rendering through PageRenderer. |
+| 1.37 | Media / upload module. |
+| 1.38 | RoleAdminController Latte/template migration. |
+| 1.39 | DB-backed rate limiting. |
 
 ## Backlog (not urgent)
 - 2FA verification after admin login.
 - Descriptive exceptions everywhere.
 - SchemaSqlBuilder: honour bigint/unsigned auto-increment primary keys.
-- Rate limiting.
+- Method plugin/interceptor system.
+- Route cache/AOT compilation if routing performance requires it later.

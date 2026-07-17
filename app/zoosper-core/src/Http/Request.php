@@ -9,15 +9,17 @@ use Zoosper\Core\Site\SiteContext;
 /**
  * Immutable HTTP request value object.
  *
- * Phase 1.34a: the resolved site context is now carried as an immutable property
- * on the request itself. It is attached exactly once in Application::handle()
- * (via withSiteContext) and flows down the dispatch/controller stack, so no code
- * needs to read $_SERVER or reach for a mutable, container-held site singleton.
- * This prevents cross-request/cross-domain context bleeding under any runtime.
+ * Phase 1.34a: the resolved site context is carried as an immutable property on
+ * the request itself. Phase 1.35 adds immutable route parameters extracted by
+ * the router from parameterised paths such as /admin/pages/{id}.
  */
 final readonly class Request
 {
-    /** @param array<string, string> $headers @param array<string, string> $query */
+    /**
+     * @param array<string, string> $headers
+     * @param array<string, string> $query
+     * @param array<string, string> $routeParams
+     */
     public function __construct(
         private string $method,
         private string $path,
@@ -27,6 +29,7 @@ final readonly class Request
         private string $host = 'localhost',
         private ?string $clientIp = null,
         private ?SiteContext $siteContext = null,
+        private array $routeParams = [],
     ) {
     }
 
@@ -51,9 +54,6 @@ final readonly class Request
 
     /**
      * Return a new request instance carrying the resolved site context.
-     *
-     * The request is immutable, so this returns a copy - callers must use the
-     * returned instance. This is the only supported way to attach site context.
      */
     public function withSiteContext(SiteContext $siteContext): self
     {
@@ -66,12 +66,37 @@ final readonly class Request
             host: $this->host,
             clientIp: $this->clientIp,
             siteContext: $siteContext,
+            routeParams: $this->routeParams,
         );
     }
 
     /**
-     * The site context resolved for this request, or null if none was attached.
+     * Return a new request instance carrying router-extracted path parameters.
+     *
+     * @param array<string, scalar|null> $routeParams
      */
+    public function withRouteParams(array $routeParams): self
+    {
+        $normalised = [];
+        foreach ($routeParams as $key => $value) {
+            if (is_string($key) && $key !== '') {
+                $normalised[$key] = (string) $value;
+            }
+        }
+
+        return new self(
+            method: $this->method,
+            path: $this->path,
+            headers: $this->headers,
+            body: $this->body,
+            query: $this->query,
+            host: $this->host,
+            clientIp: $this->clientIp,
+            siteContext: $this->siteContext,
+            routeParams: $normalised,
+        );
+    }
+
     public function siteContext(): ?SiteContext
     {
         return $this->siteContext;
@@ -105,6 +130,24 @@ final readonly class Request
     public function query(string $key, ?string $default = null): ?string
     {
         return $this->query[$key] ?? $default;
+    }
+
+    /**
+     * Return one router-extracted path parameter.
+     */
+    public function routeParam(string $key, ?string $default = null): ?string
+    {
+        return $this->routeParams[$key] ?? $default;
+    }
+
+    /**
+     * Return all router-extracted path parameters.
+     *
+     * @return array<string, string>
+     */
+    public function routeParams(): array
+    {
+        return $this->routeParams;
     }
 
     /** @return array<string, mixed> */
