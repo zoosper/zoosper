@@ -75,11 +75,11 @@ final readonly class MediaUploadValidator
             return 'application/octet-stream';
         }
 
-        try {
-            return (string) finfo_file($finfo, $path);
-        } finally {
-            finfo_close($finfo);
-        }
+        /**
+         * PHP 8.5 deprecates finfo_close(); finfo objects are released
+         * automatically, so intentionally do not close it manually.
+         */
+        return (string) finfo_file($finfo, $path);
     }
 
     private function looksLikeImage(string $path): bool

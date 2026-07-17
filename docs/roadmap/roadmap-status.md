@@ -17,17 +17,14 @@ Snapshot: 2026-07-17 (AEST).
 | 1.34 | Site-resolution unification | Request-carried SiteContext is the runtime source of truth; page/API/render paths no longer use legacy fallbacks; CurrentSiteContext retired. |
 | 1.35 | Router path parameters | Immutable Request route params, static-first parameterised route matching, inline constraints, and module route coverage. |
 | 1.36 | Frontend content_json rendering | block_json pages render from validated content_json through PageRenderer while preserving existing HTML fallback behaviour. |
+| 1.37 | Media / upload module | Module-owned media table, admin media library, upload validation, private original storage and controlled public media publishing. |
+| 1.37b | Module autoload synchronisation | Composer PSR-4 mappings are generated from enabled module metadata, avoiding manual composer.json edits for future modules. |
 | 1.40 | Module-owned console commands | config/console.php discovery, make:module console placeholder, and make:command scaffolder. |
-
-## Current
-| Phase | Title | Outcome |
-|---|---|---|
-| 1.37 | Media / upload module | Add module-owned media table, admin media library, upload validation, private original storage and controlled public media publishing. |
 
 ## Planned
 | Phase | Title |
 |---|---|
-| 1.37b | Editor.js image block integration backed by media assets. |
+| 1.37c | Editor.js image block integration backed by media assets. |
 | 1.38 | RoleAdminController Latte/template migration. |
 | 1.39 | DB-backed rate limiting. |
 
