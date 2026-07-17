@@ -5,14 +5,11 @@ declare(strict_types=1);
 /**
  * Module-owned frontend page view template.
  *
- * This template intentionally server-renders the primary page title and content
- * for SEO and Core Web Vitals. Dynamic/private fragments can be loaded later
- * through AJAX endpoints, but core CMS content should remain present in the
- * initial HTML response.
- *
  * @var object $page
  * @var callable $e
+ * @var string|null $renderedContent Page body HTML prepared by PageRenderer.
  */
+$bodyHtml = $renderedContent ?? $page->content ?? '';
 ?>
 <article class="cms-page cms-page--module-view">
     <header class="cms-page__header">
@@ -20,6 +17,6 @@ declare(strict_types=1);
     </header>
 
     <div class="cms-page__content">
-        <?= $page->content ?? '' ?>
+        <?= $bodyHtml ?>
     </div>
 </article>

@@ -1,16 +1,12 @@
-# Phase 0.80 - Page Repository Dual Content Hydration Foundation
+# Page Repository Dual Content Hydration Foundation
 
-The `pages` table now has `content_format` and `content_json`. Phase 0.80 updates the PHP page model and repository to understand those columns while preserving current HTML behaviour.
+The `pages` table has `content_format` and `content_json`. The `Page` model and `PageRepository` hydrate those columns while preserving existing HTML page behaviour.
 
 ## Current behaviour
 
 ```text
-Admin save writes sanitised HTML to pages.content.
-content_format remains html.
-content_json remains null.
-Frontend continues rendering pages.content.
+content_format=html       -> PageRenderer renders pages.content
+content_format=block_json -> PageRenderer renders pages.content_json via BlockJsonToHtmlRenderer, with pages.content fallback
 ```
 
-## Future behaviour
-
-A later phase will post Editor.js JSON, validate it server-side, store it in `content_json`, and render through the server-side block renderer.
+This keeps existing HTML pages compatible while enabling structured Editor.js content to become the canonical frontend body for pages that opt into `block_json`.

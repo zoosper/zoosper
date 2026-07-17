@@ -8,6 +8,7 @@ use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Site\SiteContext;
+use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
 use Zoosper\Page\Model\Page;
 use Zoosper\Site\Model\Site;
 use Zoosper\Theme\Template\TemplateRenderer;
@@ -19,6 +20,7 @@ final readonly class PageRenderer
         private ?TemplateRenderer $templates = null,
         private ?CmsVersion $version = null,
         private ?ModuleRegistry $modules = null,
+        private ?BlockJsonToHtmlRenderer $blockJsonRenderer = null,
     ) {
     }
 
@@ -38,17 +40,42 @@ final readonly class PageRenderer
         $themeCode = $site->themeCode;
         $versionLabel = ($this->version ?? new CmsVersion())->label();
         $siteContext = $request?->siteContext() ?? $this->siteContextFromSite($site);
+        $renderedContent = $this->renderContent($page);
 
         $data = [
             'page' => $page,
             'site' => $site,
             'siteContext' => $siteContext,
             'versionLabel' => $versionLabel,
+            'renderedContent' => $renderedContent,
         ];
 
         $content = $templates->render('zoosper-page::page/view', $data, $themeCode, 'default', $request);
 
         return $templates->renderLayout('layout', $content, $data, $themeCode, 'default', $request);
+    }
+
+    /**
+     * Return the frontend body HTML for this page.
+     *
+     * Existing HTML pages remain backwards compatible. Pages explicitly marked as
+     * block_json render from the validated structured document when available and
+     * fall back to the saved HTML bridge if the JSON cannot be decoded.
+     */
+    public function renderContent(Page $page): string
+    {
+        if (!$page->hasBlockJson()) {
+            return $page->content;
+        }
+
+        $document = json_decode((string) $page->contentJson, true);
+        if (!is_array($document)) {
+            return $page->content;
+        }
+
+        $html = ($this->blockJsonRenderer ?? new BlockJsonToHtmlRenderer())->render($document);
+
+        return trim($html) !== '' ? $html : $page->content;
     }
 
     private function siteContextFromSite(Site $site): SiteContext

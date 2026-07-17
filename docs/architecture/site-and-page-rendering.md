@@ -1,25 +1,31 @@
 # Site and Page Rendering Architecture
 
-Phase 0.3 introduces the first real CMS flow.
+Zoosper renders CMS pages through the request-carried site context and the selected frontend theme.
 
 ## Request flow
 
 ```text
 HTTP request
-  -> Router
-  -> PageController fallback
-  -> SiteResolver by host
+  -> Request::fromGlobals()
+  -> Application resolves SiteContext once
+  -> Request::withSiteContext(SiteContext)
+  -> Router fallback
+  -> PageController
   -> PageRepository by site_id + slug
   -> PageRenderer
+  -> TemplateRenderer / theme override
   -> HTML response
 ```
 
 ## Important rules
 
-- A site is resolved from the request host.
+- A site context is resolved once and carried on `Request::siteContext()`.
 - Pages are scoped by `site_id`.
 - Only pages with `status = published` are rendered publicly.
-- User-authored page content is escaped before rendering.
+- Page titles and slugs remain escaped in templates.
+- Page body HTML is prepared by `PageRenderer` and rendered without double escaping.
+- Existing HTML pages render `pages.content`.
+- `block_json` pages render supported `content_json` blocks through `BlockJsonToHtmlRenderer` with HTML fallback.
 - The homepage uses the site's `homepage_slug` when the request path is `/`.
 
 ## Tables
@@ -28,13 +34,6 @@ HTTP request
 - `site_domains`
 - `pages`
 - `page_revisions`
-
-## CLI examples
-
-```bash
-php bin/zoosper site:create --code=main --name='Main Website' --host=127.0.0.1
-php bin/zoosper page:create --site=main --title='Home' --slug=home --content='Welcome to Zoosper.'
-```
 
 ## API endpoint
 

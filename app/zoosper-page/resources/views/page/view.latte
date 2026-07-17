@@ -1,11 +1,10 @@
-{* Module-owned CMS page view, converted to Latte in Phase 0.62. *}
+{* Module-owned CMS page view. The body HTML is prepared by PageRenderer. *}
 <article class="cms-page page-shell cms-page--module-view">
     <header class="cms-page__header">
         <h1>{$page->title ?? ''}</h1>
     </header>
 
     <div class="cms-page__content">
-        {* Existing CMS content may contain trusted/sanitised HTML. A dedicated sanitiser phase should make this explicit before WYSIWYG. *}
-        {$page->content ?? ''|noescape}
+        {($renderedContent ?? $page->content ?? '')|noescape}
     </div>
 </article>

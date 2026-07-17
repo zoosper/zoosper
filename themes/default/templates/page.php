@@ -5,12 +5,11 @@ declare(strict_types=1);
 /**
  * Default CMS page template.
  *
- * Page content remains server-rendered for SEO. Do not move SEO-critical content
- * such as title, H1, body, canonical data or structured data behind AJAX.
- *
  * @var object $page
  * @var callable $e
+ * @var string|null $renderedContent Page body HTML prepared by PageRenderer.
  */
+$bodyHtml = $renderedContent ?? $page->content ?? '';
 ?>
 <article class="cms-page">
     <header class="cms-page__header">
@@ -18,6 +17,6 @@ declare(strict_types=1);
     </header>
 
     <div class="cms-page__content">
-        <?= $page->content ?? '' ?>
+        <?= $bodyHtml ?>
     </div>
 </article>

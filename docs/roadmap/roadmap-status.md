@@ -15,17 +15,17 @@ Snapshot: 2026-07-17 (AEST).
 | 1.33b | Route permission OR semantics | Route permission metadata accepts string or list with OR semantics; parity tests guard user/mail routes. |
 | 1.33d | Controller middleware cleanup | Redundant controller-level permission/auth/CSRF gates removed from protected admin controllers; middleware owns route-level access decisions. |
 | 1.34 | Site-resolution unification | Request-carried SiteContext is the runtime source of truth; page/API/render paths no longer use legacy fallbacks; CurrentSiteContext retired. |
+| 1.35 | Router path parameters | Immutable Request route params, static-first parameterised route matching, inline constraints, and module route coverage. |
 | 1.40 | Module-owned console commands | config/console.php discovery, make:module console placeholder, and make:command scaffolder. |
 
 ## Current
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.35 | Router path parameters | Add immutable Request route params, static-first parameterised route matching, inline constraints, and module route coverage. |
+| 1.36 | Frontend content_json rendering | Render block_json pages from validated content_json through PageRenderer while preserving existing HTML fallback behaviour. |
 
 ## Planned
 | Phase | Title |
 |---|---|
-| 1.36 | Wire content_json to frontend rendering through PageRenderer. |
 | 1.37 | Media / upload module. |
 | 1.38 | RoleAdminController Latte/template migration. |
 | 1.39 | DB-backed rate limiting. |
