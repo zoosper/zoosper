@@ -13,27 +13,25 @@ declare(strict_types=1);
 
 $basePath = require __DIR__ . '/bootstrap.php';
 $options = getopt('', ['host::', 'path::', 'theme::', 'route::']);
-
-if (isset($options['host'])) {
-    $_SERVER['HTTP_HOST'] = (string) $options['host'];
-}
-if (isset($options['path'])) {
-    $_SERVER['REQUEST_URI'] = (string) $options['path'];
-}
+$host = isset($options['host']) ? strtolower(trim((string) $options['host'])) : (string) env('DEFAULT_SITE_HOST', 'localhost');
+$path = isset($options['path']) ? trim((string) $options['path']) : '/';
+$theme = (string) ($options['theme'] ?? 'default');
+$route = (string) ($options['route'] ?? 'frontend.page');
 
 $config = \Zoosper\Core\Config\ConfigRepository::fromPath($basePath . '/config');
 $siteResolver = (new \Zoosper\Core\Site\SiteContextResolverFactory($config))->create();
-$currentSite = new \Zoosper\Core\Site\CurrentSiteContext($siteResolver);
+$siteContext = $siteResolver->resolve($host, $path);
 $cdn = (new \Zoosper\Core\Url\CdnUrlResolverFactory($config))->create();
 $cacheKeys = new \Zoosper\Core\Cache\CacheKeyBuilder();
-$provider = new \Zoosper\Core\View\TemplateViewContextProvider($currentSite, $cdn, $cacheKeys);
-$data = $provider->data((string) ($options['theme'] ?? 'default'), (string) ($options['route'] ?? 'frontend.page'));
+$provider = new \Zoosper\Core\View\TemplateViewContextProvider($cdn, $cacheKeys);
+$data = $provider->data($theme, $route, $siteContext, $host, $path);
 
-$siteContext = $data['siteContext'];
 $cacheContext = $data['cacheContext'];
 
 print "Zoosper render context diagnostics\n";
 print "==================================\n\n";
+print 'host             : ' . $host . PHP_EOL;
+print 'path             : ' . $path . PHP_EOL;
 print 'store_view       : ' . $siteContext->storeViewCode . PHP_EOL;
 print 'locale           : ' . $siteContext->locale . PHP_EOL;
 print 'currency         : ' . $siteContext->currency . PHP_EOL;

@@ -1,14 +1,18 @@
-# Phase 0.54 - Render context wiring
+# Render Context Wiring
 
 ## Goal
 
-Make site context, CDN URL resolution and cache-key helpers available to actual page/theme rendering without hard-coding store codes.
+Make site context, CDN URL resolution and cache-key helpers available to page/theme rendering without hard-coding store codes.
+
+## Current model
+
+Render context is explicit. Frontend requests carry the resolved site context on `Request::siteContext()`. Non-request renders, such as previews or diagnostics, pass an explicit `SiteContext` derived from the known site or from `SiteContextResolver::resolve($host, $path)`.
 
 ## Components wired
 
 ```text
 SiteContextResolver
-CurrentSiteContext
+SiteContext
 CdnUrlResolver
 CacheKeyBuilder
 TemplateViewContextProvider
@@ -20,7 +24,6 @@ PageRenderer
 
 ```php
 $siteContext
-$currentSiteContext
 $cdn
 $cacheContext
 $cacheKeys
@@ -28,7 +31,7 @@ $cacheKeys
 
 These are safe public metadata/helper objects only. They must not contain credentials, session IDs, CSRF tokens, OTPs, TOTP secrets, recovery-code plaintext, reset tokens, SMTP passwords, payment data or customer-private values.
 
-## What this phase does not do
+## What this does not do
 
 - It does not enable full-page cache storage.
 - It does not enable block cache storage.
@@ -38,4 +41,4 @@ These are safe public metadata/helper objects only. They must not contain creden
 
 ## Why TemplateViewContextProvider exists
 
-It keeps the shared render context in one small provider instead of making every controller inject and pass site/CDN/cache helper data manually.
+It keeps shared render context generation in one small provider while still requiring callers to pass the request-carried or otherwise explicit `SiteContext`.

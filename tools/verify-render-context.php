@@ -7,9 +7,12 @@ declare(strict_types=1);
  */
 
 $basePath = require __DIR__ . '/bootstrap.php';
+$options = getopt('', ['host::', 'path::']);
+$host = isset($options['host']) ? strtolower(trim((string) $options['host'])) : (string) env('DEFAULT_SITE_HOST', 'localhost');
+$path = isset($options['path']) ? trim((string) $options['path']) : '/';
+
 $checks = [
     'Zoosper\\Core\\View\\TemplateViewContextProvider',
-    'Zoosper\\Core\\Site\\CurrentSiteContext',
     'Zoosper\\Core\\Site\\SiteContextResolverFactory',
     'Zoosper\\Core\\Url\\CdnUrlResolverFactory',
     'Zoosper\\Core\\Cache\\CacheKeyBuilder',
@@ -29,11 +32,11 @@ foreach ($checks as $class) {
 
 $config = \Zoosper\Core\Config\ConfigRepository::fromPath($basePath . '/config');
 $siteResolver = (new \Zoosper\Core\Site\SiteContextResolverFactory($config))->create();
-$currentSite = new \Zoosper\Core\Site\CurrentSiteContext($siteResolver);
+$siteContext = $siteResolver->resolve($host, $path);
 $cdn = (new \Zoosper\Core\Url\CdnUrlResolverFactory($config))->create();
 $cacheKeys = new \Zoosper\Core\Cache\CacheKeyBuilder();
-$provider = new \Zoosper\Core\View\TemplateViewContextProvider($currentSite, $cdn, $cacheKeys);
-$data = $provider->data('default', 'verify.render');
+$provider = new \Zoosper\Core\View\TemplateViewContextProvider($cdn, $cacheKeys);
+$data = $provider->data('default', 'verify.render', $siteContext, $host, $path);
 
 foreach (['siteContext', 'cdn', 'cacheContext', 'cacheKeys'] as $key) {
     $ok = array_key_exists($key, $data);

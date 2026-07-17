@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Tests\Unit\Site;
 
-use ReflectionClass;
 use Zoosper\Core\Http\Request;
-use Zoosper\Core\Site\CurrentSiteContext;
 use Zoosper\Core\Site\SiteContextResolver;
 
 /**
- * Phase 1.34a proof-of-isolation tests.
+ * Phase 1.34 proof-of-isolation tests.
  *
  * These assert that the resolved site context is carried immutably per request
- * and cannot bleed between requests, and that the legacy holder can no longer be
- * mutated (no set() mutator) - closing the cross-domain state-bleed vector.
+ * and cannot bleed between requests. Phase 1.34g-b removes the legacy container
+ * holder entirely, so Request::siteContext() is the only supported per-request
+ * carrier in the application runtime.
  */
 
 /**
@@ -82,18 +81,8 @@ test('withSiteContext returns a new immutable request without mutating the origi
     expect($withContext->siteContext())->not->toBeNull();
 });
 
-test('CurrentSiteContext is immutable and exposes no mutator', function () {
-    expect(method_exists(CurrentSiteContext::class, 'set'))->toBeFalse();
+test('legacy current site context holder file is retired', function () {
+    $root = dirname(__DIR__, 5);
 
-    $reflection = new ReflectionClass(CurrentSiteContext::class);
-    expect($reflection->isReadOnly())->toBeTrue();
-});
-
-test('CurrentSiteContext returns exactly the context it was constructed with', function () {
-    $resolver = isolationResolver();
-    $context = $resolver->resolve('other.example', '/');
-    $holder = new CurrentSiteContext($context);
-
-    expect($holder->get())->toBe($context);
-    expect($holder->get()->websiteCode)->toBe('other');
+    expect(is_file($root . '/app/zoosper-core/src/Site/CurrentSiteContext.php'))->toBeFalse();
 });
