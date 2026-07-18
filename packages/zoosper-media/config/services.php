@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
 use Zoosper\Media\Repository\MediaAssetRepository;
@@ -15,4 +16,5 @@ return [
     MediaStorage::class => static fn (ServiceContainer $services): MediaStorage => new MediaStorage(dirname(__DIR__, 3)),
     EditorJsImageUploadResponseFactory::class => static fn (ServiceContainer $services): EditorJsImageUploadResponseFactory => new EditorJsImageUploadResponseFactory(),
     EditorJsImageToolConfig::class => static fn (ServiceContainer $services): EditorJsImageToolConfig => new EditorJsImageToolConfig(),
+    EditorJsImageBlockSanitizer::class => static fn (ServiceContainer $services): EditorJsImageBlockSanitizer => new EditorJsImageBlockSanitizer(),
 ];

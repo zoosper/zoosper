@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
 use Zoosper\Page\Controller\PageController;
 use Zoosper\Page\Repository\PageRepository;
@@ -13,7 +14,9 @@ use Zoosper\Site\Repository\SiteRepository;
 
 return [
     PageRepository::class => static fn (ServiceContainer $services): PageRepository => new PageRepository($services->get(PDO::class)),
-    BlockJsonToHtmlRenderer::class => static fn (ServiceContainer $services): BlockJsonToHtmlRenderer => new BlockJsonToHtmlRenderer(),
+    BlockJsonToHtmlRenderer::class => static fn (ServiceContainer $services): BlockJsonToHtmlRenderer => new BlockJsonToHtmlRenderer(
+        $services->has(EditorJsImageBlockSanitizer::class) ? $services->get(EditorJsImageBlockSanitizer::class) : null,
+    ),
     PageRenderer::class => static fn (ServiceContainer $services): PageRenderer => new PageRenderer(
         $services->get('theme.frontend_template_renderer'),
         $services->get(CmsVersion::class),
