@@ -39,6 +39,7 @@ use Zoosper\Core\Entity\Save\EntitySaveEventDispatcherInterface;
 use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Entity\Save\ModuleEntitySaveListenerLoader;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 
 return [
     LoginHistoryRepository::class => static fn (ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
@@ -52,7 +53,11 @@ return [
     FlashMessageStoreInterface::class => static fn (ServiceContainer $services): FlashMessageStoreInterface => new SessionFlashMessageStore(),
     FlashMessageRenderer::class => static fn (ServiceContainer $services): FlashMessageRenderer => new FlashMessageRenderer(),
     TextareaContentEditor::class => static fn (ServiceContainer $services): TextareaContentEditor => new TextareaContentEditor(),
-    EditorJsContentEditor::class => static fn (ServiceContainer $services): EditorJsContentEditor => new EditorJsContentEditor($services->get(TextareaContentEditor::class)),
+    EditorJsContentEditor::class => static fn (ServiceContainer $services): EditorJsContentEditor => new EditorJsContentEditor(
+        $services->get(TextareaContentEditor::class),
+        $services->has(EditorJsImageToolConfig::class) ? $services->get(EditorJsImageToolConfig::class) : null,
+        $services->get(CsrfTokenManager::class),
+    ),
     ContentEditorRegistry::class => static fn (ServiceContainer $services): ContentEditorRegistry => new ContentEditorRegistry(
         $services->get(EditorJsContentEditor::class),
         $services->get(TextareaContentEditor::class),
@@ -80,14 +85,6 @@ return [
         $services->get(AdminLayout::class),
     ),
     AdminComponentRenderer::class => static fn (ServiceContainer $services): AdminComponentRenderer => new AdminComponentRenderer($services->get('theme.admin_template_renderer')),
-
-    /*
-     * Entity save lifecycle (Phase 1.28).
-     *
-     * The dispatcher is resolved once and cached by the container. Its listeners
-     * are DISCOVERED from each enabled module's config/entity_save_listeners.php,
-     * so modules extend the save lifecycle without editing this core file.
-     */
     EntitySaveEventDispatcherInterface::class => static function (ServiceContainer $services): EntitySaveEventDispatcherInterface {
         $dispatcher = new EntitySaveEventDispatcher();
         (new ModuleEntitySaveListenerLoader($services->get(ModuleRegistry::class), $services))->attach($dispatcher);

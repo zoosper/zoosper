@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$assetVersion = '0.73';
+$assetVersion = '1.37l';
 
 return [
     'assets' => [

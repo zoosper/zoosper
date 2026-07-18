@@ -29,6 +29,24 @@
         });
     }
 
+    function imageBlockFromFigure(element) {
+        var image = element.querySelector('img');
+        if (!image || !image.getAttribute('src')) {
+            return null;
+        }
+
+        return {
+            type: 'image',
+            data: {
+                file: { url: image.getAttribute('src') },
+                caption: element.querySelector('figcaption') ? element.querySelector('figcaption').innerHTML.trim() : '',
+                withBorder: element.classList.contains('cms-image--bordered'),
+                withBackground: element.classList.contains('cms-image--background'),
+                stretched: element.classList.contains('cms-image--stretched')
+            }
+        };
+    }
+
     function htmlToEditorData(html) {
         var root = document.createElement('div');
         root.innerHTML = html || '';
@@ -50,6 +68,14 @@
             var element = node;
             var tag = element.tagName.toLowerCase();
             if (tag === 'script' || tag === 'style' || tag === 'iframe' || tag === 'object' || tag === 'embed') {
+                return;
+            }
+
+            if (tag === 'figure') {
+                var imageBlock = imageBlockFromFigure(element);
+                if (imageBlock) {
+                    blocks.push(imageBlock);
+                }
                 return;
             }
 
@@ -104,6 +130,20 @@
         }
     }
 
+    function parseJsonAttribute(element, attribute) {
+        var raw = element.getAttribute(attribute);
+        if (!raw || raw.trim() === '') {
+            return null;
+        }
+
+        try {
+            var decoded = JSON.parse(raw);
+            return decoded && typeof decoded === 'object' ? decoded : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
     function renderListItems(items) {
         if (!Array.isArray(items)) {
             return '';
@@ -119,6 +159,34 @@
         }).filter(Boolean).join('');
     }
 
+    function renderImageBlock(block) {
+        var data = block && block.data ? block.data : {};
+        var file = data.file && typeof data.file === 'object' ? data.file : {};
+        var url = typeof file.url === 'string' ? file.url : '';
+        if (url.trim() === '') {
+            return '';
+        }
+
+        var caption = typeof data.caption === 'string' ? data.caption : '';
+        var classes = ['cms-image'];
+        if (data.withBorder) {
+            classes.push('cms-image--bordered');
+        }
+        if (data.withBackground) {
+            classes.push('cms-image--background');
+        }
+        if (data.stretched) {
+            classes.push('cms-image--stretched');
+        }
+
+        var html = '<figure class="' + classes.join(' ') + '"><img src="' + textToSafeInlineHtml(url) + '" alt="' + textToSafeInlineHtml(caption) + '" loading="lazy">';
+        if (caption.trim() !== '') {
+            html += '<figcaption>' + caption + '</figcaption>';
+        }
+
+        return html + '</figure>';
+    }
+
     function editorDataToHtml(data) {
         if (!data || !Array.isArray(data.blocks)) {
             return '';
@@ -127,6 +195,10 @@
         return data.blocks.map(function (block) {
             if (!block || !block.type) {
                 return '';
+            }
+
+            if (block.type === 'image') {
+                return renderImageBlock(block);
             }
 
             if (block.type === 'header') {
@@ -175,7 +247,7 @@
         }
     }
 
-    function buildToolsConfig() {
+    function buildToolsConfig(wrapper) {
         var bundle = window.ZoosperEditorJsBundle || {};
         var tools = {};
 
@@ -184,11 +256,7 @@
                 class: bundle.Header,
                 inlineToolbar: true,
                 shortcut: 'CMD+SHIFT+H',
-                config: {
-                    placeholder: 'Heading',
-                    levels: [2, 3, 4],
-                    defaultLevel: 2
-                }
+                config: { placeholder: 'Heading', levels: [2, 3, 4], defaultLevel: 2 }
             };
         }
 
@@ -196,10 +264,16 @@
             tools.list = {
                 class: bundle.EditorjsList,
                 inlineToolbar: true,
-                config: {
-                    defaultStyle: 'unordered',
-                    maxLevel: 3
-                }
+                config: { defaultStyle: 'unordered', maxLevel: 3 }
+            };
+        }
+
+        var imageToolConfig = parseJsonAttribute(wrapper, 'data-zoosper-image-tool');
+        if (imageToolConfig && typeof bundle.ImageTool === 'function') {
+            tools.image = {
+                class: bundle.ImageTool,
+                config: imageToolConfig,
+                inlineToolbar: true
             };
         }
 
@@ -211,7 +285,7 @@
         wrapper.classList.add('is-editorjs-ready');
         wrapper.classList.add('is-editorjs-active');
         textarea.setAttribute('data-zoosper-editor-source', 'html');
-        setStatus(status, 'Editor.js ready with JSON capture. Saves still pass through server-side HTML sanitisation.');
+        setStatus(status, 'Editor.js ready with JSON capture and media image support. Saves still pass through server-side HTML sanitisation.');
     }
 
     function fallbackToTextarea(wrapper, holder, textarea, status, message) {
@@ -243,7 +317,7 @@
         var editor = new window.EditorJS({
             holder: holder.id,
             data: parseInitialJson(jsonInput) || htmlToEditorData(textarea.value),
-            tools: buildToolsConfig(),
+            tools: buildToolsConfig(wrapper),
             placeholder: 'Start writing page content...',
             onChange: debounce(function () {
                 editor.save().then(function (data) {
