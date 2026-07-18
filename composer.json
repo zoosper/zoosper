@@ -11,7 +11,8 @@
         "latte/latte": "^3.1",
         "marko/database": "^0.8",
         "marko/database-mysql": "^0.8",
-        "marko/framework": "^0.8"
+        "marko/framework": "^0.8",
+        "zoosper/media": "*@dev"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",
@@ -67,5 +68,14 @@
         "platform": {
             "php": "8.5"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/zoosper-media",
+            "options": {
+                "symlink": true
+            }
+        }
+    ]
 }
