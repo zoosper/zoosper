@@ -13,15 +13,9 @@ use Zoosper\Core\Http\Response;
 /**
  * Central CSRF guard for stateful admin requests.
  *
- * Phase 1.33c: validates the _csrf_token form field on state-changing HTTP
- * methods (POST/PUT/PATCH/DELETE). Safe (GET/HEAD/OPTIONS) requests pass
- * through untouched. Applied to the ADMIN pipeline only - the stateless API
- * pipeline is not wrapped, so token-based API auth is unaffected.
- *
- * Controllers keep their own CSRF checks for now (belt-and-braces); those become
- * redundant once this guard is verified and can be removed in a cleanup phase.
- *
- * PCI-aware: never logs or echoes the token value.
+ * Validates either the `_csrf_token` form field or the `X-CSRF-Token` request
+ * header on state-changing admin requests. Header support is required for async
+ * JavaScript uploads such as the Editor.js Image Tool.
  */
 final readonly class CsrfMiddleware implements RouteMiddleware
 {
@@ -38,7 +32,7 @@ final readonly class CsrfMiddleware implements RouteMiddleware
             return $next($request);
         }
 
-        $token = (string)($request->form()['_csrf_token'] ?? '');
+        $token = (string) ($request->form()['_csrf_token'] ?? $request->header('x-csrf-token', '') ?? '');
         if (!$this->csrf->isValid($token)) {
             return Response::html($this->page(), 419);
         }
@@ -46,10 +40,6 @@ final readonly class CsrfMiddleware implements RouteMiddleware
         return $next($request);
     }
 
-    /**
-     * Render a self-contained, styled 419 page. Kept dependency-free so the guard
-     * works even before the admin layout/theme is resolvable in the pipeline.
-     */
     private function page(): string
     {
         return '<!doctype html><html lang="en"><head><meta charset="utf-8">'

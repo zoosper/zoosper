@@ -52,9 +52,6 @@ final readonly class Request
         );
     }
 
-    /**
-     * Return a new request instance carrying the resolved site context.
-     */
     public function withSiteContext(SiteContext $siteContext): self
     {
         return new self(
@@ -70,11 +67,7 @@ final readonly class Request
         );
     }
 
-    /**
-     * Return a new request instance carrying router-extracted path parameters.
-     *
-     * @param array<string, scalar|null> $routeParams
-     */
+    /** @param array<string, scalar|null> $routeParams */
     public function withRouteParams(array $routeParams): self
     {
         $normalised = [];
@@ -122,9 +115,16 @@ final readonly class Request
         return $this->clientIp !== '' ? $this->clientIp : null;
     }
 
+    public function header(string $name, ?string $default = null): ?string
+    {
+        $key = strtolower($name);
+
+        return $this->headers[$key] ?? $default;
+    }
+
     public function userAgent(): ?string
     {
-        return $this->headers['user-agent'] ?? null;
+        return $this->header('user-agent');
     }
 
     public function query(string $key, ?string $default = null): ?string
@@ -132,19 +132,12 @@ final readonly class Request
         return $this->query[$key] ?? $default;
     }
 
-    /**
-     * Return one router-extracted path parameter.
-     */
     public function routeParam(string $key, ?string $default = null): ?string
     {
         return $this->routeParams[$key] ?? $default;
     }
 
-    /**
-     * Return all router-extracted path parameters.
-     *
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     public function routeParams(): array
     {
         return $this->routeParams;
