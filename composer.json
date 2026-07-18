@@ -25,28 +25,35 @@
             "Zoosper\\Auth\\": "app/zoosper-auth/src/",
             "Zoosper\\Core\\": "app/zoosper-core/src/",
             "Zoosper\\Mail\\": "app/zoosper-mail/src/",
+            "Zoosper\\Media\\": "app/zoosper-media/src/",
             "Zoosper\\Page\\": "app/zoosper-page/src/",
             "Zoosper\\Site\\": "app/zoosper-site/src/",
             "Zoosper\\Theme\\": "app/zoosper-theme/src/",
             "Zoosper\\TwoFactor\\": "app/zoosper-two-factor/src/",
-            "Zoosper\\Media\\": "app/zoosper-media/src/"
+            "Zoosper\\UrlRewrite\\": "app/zoosper-url-rewrite/src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
-            "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/",
             "Zoosper\\Auth\\Tests\\": "app/zoosper-auth/tests/",
-            "Zoosper\\Site\\Tests\\": "app/zoosper-site/tests/",
-            "Zoosper\\Media\\Tests\\": "app/zoosper-media/tests/"
+            "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
+            "Zoosper\\Media\\Tests\\": "app/zoosper-media/tests/",
+            "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/",
+            "Zoosper\\Site\\Tests\\": "app/zoosper-site/tests/"
         }
     },
     "scripts": {
+        "pre-autoload-dump": [
+            "@php tools/sync-module-autoload.php"
+        ],
         "serve": "php -S 127.0.0.1:8080 -t public",
         "migrate": "php bin/zoosper migrate",
         "admin:create": "php bin/zoosper admin:create",
         "site:create": "php bin/zoosper site:create",
         "page:create": "php bin/zoosper page:create",
+        "modules:autoload": "@php tools/sync-module-autoload.php",
+        "modules:autoload-verify": "@php tools/verify-module-autoload-sync.php",
+        "modules:package-audit": "@php tools/audit-module-package-readiness.php",
         "test": "pest",
         "test:unit": "pest --testsuite=Unit",
         "test:feature": "pest --testsuite=Feature",

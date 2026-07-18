@@ -9,10 +9,8 @@ use RuntimeException;
 /**
  * Synchronises Composer PSR-4 mappings from enabled Zoosper module metadata.
  *
- * Composer does not support a `Zoosper\**` wildcard namespace mapping for the
- * current module-folder layout (`app/zoosper-media/src`, etc). This synchroniser
- * keeps Composer explicit while removing the manual composer.json edit each time
- * a first-party or marketplace module is introduced.
+ * Supports both historical Zoosper module names such as `zoosper-page` and the
+ * newer package-friendly `Vendor_Module` shape such as `Zoosper_Media`.
  */
 final readonly class ModuleAutoloadSynchronizer
 {
@@ -63,21 +61,20 @@ final readonly class ModuleAutoloadSynchronizer
                 continue;
             }
 
-            $name = (string) ($module['name'] ?? '');
-            $namespace = $this->namespaceFromModuleName($name);
-            if ($namespace === null) {
+            $moduleDir = dirname($moduleFile);
+            $identity = ModulePackageIdentity::fromModule($module, basename($moduleDir));
+            if ($identity === null) {
                 continue;
             }
 
-            $moduleDir = dirname($moduleFile);
             $srcDir = $moduleDir . '/src';
             if (is_dir($srcDir)) {
-                $autoload[$namespace] = $this->relativeDirectory($srcDir);
+                $autoload[$identity->namespace] = $this->relativeDirectory($srcDir);
             }
 
             $testsDir = $moduleDir . '/tests';
             if (is_dir($testsDir)) {
-                $autoloadDev[$namespace . 'Tests\\'] = $this->relativeDirectory($testsDir);
+                $autoloadDev[$identity->namespace . 'Tests\\'] = $this->relativeDirectory($testsDir);
             }
         }
 
@@ -138,18 +135,6 @@ final readonly class ModuleAutoloadSynchronizer
         sort($files);
 
         return $files;
-    }
-
-    private function namespaceFromModuleName(string $name): ?string
-    {
-        $name = trim($name);
-        if (preg_match('/^[A-Za-z][A-Za-z0-9]*_[A-Za-z][A-Za-z0-9]*$/', $name) !== 1) {
-            return null;
-        }
-
-        [$vendor, $module] = explode('_', $name, 2);
-
-        return ucfirst(strtolower($vendor)) . '\\' . ucfirst(strtolower($module)) . '\\';
     }
 
     private function relativeDirectory(string $directory): string

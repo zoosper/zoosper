@@ -11,7 +11,9 @@ function autoloadSyncFixture(): string
     $root = sys_get_temp_dir() . '/zoosper-autoload-sync-' . bin2hex(random_bytes(4));
     mkdir($root . '/app/zoosper-media/src/Service', 0775, true);
     mkdir($root . '/app/zoosper-media/tests/Unit', 0775, true);
+    mkdir($root . '/app/zoosper-page/src/Repository', 0775, true);
     file_put_contents($root . '/app/zoosper-media/module.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn ['name' => 'Zoosper_Media', 'enabled' => true];\n");
+    file_put_contents($root . '/app/zoosper-page/module.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn ['name' => 'zoosper-page', 'enabled' => true];\n");
     file_put_contents($root . '/composer.json', json_encode(['autoload' => ['psr-4' => []], 'autoload-dev' => ['psr-4' => []]], JSON_PRETTY_PRINT));
 
     return $root;
@@ -27,6 +29,14 @@ test('discovers module source and test psr-4 mappings from module metadata', fun
     expect($mappings['autoload-dev']['Zoosper\\Media\\Tests\\'])->toBe('app/zoosper-media/tests/');
 });
 
+test('discovers historical kebab named modules too', function () {
+    $root = autoloadSyncFixture();
+    $mappings = (new ModuleAutoloadSynchronizer($root))->discoverMappings();
+
+    expect($mappings['autoload'])->toHaveKey('Zoosper\\Page\\');
+    expect($mappings['autoload']['Zoosper\\Page\\'])->toBe('app/zoosper-page/src/');
+});
+
 test('sync updates composer json without replacing existing mappings', function () {
     $root = autoloadSyncFixture();
     $composer = json_decode((string) file_get_contents($root . '/composer.json'), true);
@@ -39,4 +49,5 @@ test('sync updates composer json without replacing existing mappings', function 
     expect($result['changed'])->toBeTrue();
     expect($updated['autoload']['psr-4']['Existing\\'])->toBe('existing/src/');
     expect($updated['autoload']['psr-4']['Zoosper\\Media\\'])->toBe('app/zoosper-media/src/');
+    expect($updated['autoload']['psr-4']['Zoosper\\Page\\'])->toBe('app/zoosper-page/src/');
 });
