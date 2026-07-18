@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Module;
 
+use Zoosper\Core\Composer\ModulePackageIdentity;
+
 /**
- * Discovers Zoosper modules from core, local/project and Composer packages.
+ * Discovers enabled Zoosper modules from app/, local packages/ and Composer vendor/.
  *
- * Discovery locations:
- *
- * - app/<module>/module.php for product-owned Zoosper modules.
- * - modules/<module>/module.php for simple local modules.
- * - modules/<vendor>/<module>/module.php for project/community modules.
- * - vendor packages with composer type "zoosper-module" or extra.zoosper.module.
- *
- * Custom and marketplace modules should not edit core files. They can contribute
- * routes, services, schemas, templates and assets through their own config files.
+ * Module discovery still supports the historical app/* layout, but Phase 1.37g
+ * adds Composer-package discovery so modules can gradually move to path
+ * repositories and later separate repositories without changing every consumer.
  */
 final readonly class ModuleRegistry
 {
@@ -23,89 +19,126 @@ final readonly class ModuleRegistry
     {
     }
 
-    /**
-     * @return list<ModuleDefinition>
-     */
+    /** @return list<Module> */
     public function enabledModules(): array
     {
-        $modules = array_values(array_filter(
-            $this->allModules(),
-            static fn (ModuleDefinition $module): bool => $module->enabled,
-        ));
-
-        (new ModuleDependencyValidator())->validate($modules);
-
-        return $modules;
-    }
-
-    /**
-     * @return list<ModuleDefinition>
-     */
-    public function allModules(): array
-    {
         $modules = [];
+        $seenRealPaths = [];
+        $seenNames = [];
 
-        foreach ($this->moduleFiles() as $moduleFile) {
-            $metadata = require $moduleFile;
-
-            if (!is_array($metadata)) {
+        foreach ($this->moduleCandidates() as $candidate) {
+            $module = $this->moduleFromCandidate($candidate['moduleFile'], $candidate['source']);
+            if ($module === null || !$module->enabled) {
                 continue;
             }
 
-            $name = (string) ($metadata['name'] ?? basename(dirname($moduleFile)));
-            $modules[] = new ModuleDefinition(
-                name: $name,
-                path: dirname($moduleFile),
-                enabled: (bool) ($metadata['enabled'] ?? true),
-                metadata: $metadata,
-            );
+            $realPath = realpath($module->path) ?: $module->path;
+            $dedupeKey = strtolower($module->name);
+
+            if (isset($seenRealPaths[$realPath]) || isset($seenNames[$dedupeKey])) {
+                continue;
+            }
+
+            $seenRealPaths[$realPath] = true;
+            $seenNames[$dedupeKey] = true;
+            $modules[] = $module;
         }
 
-        usort($modules, static function (ModuleDefinition $a, ModuleDefinition $b): int {
-            $aOrder = (int) ($a->metadata['sort_order'] ?? 100);
-            $bOrder = (int) ($b->metadata['sort_order'] ?? 100);
-
-            return $aOrder <=> $bOrder ?: $a->name <=> $b->name;
+        usort($modules, static function (Module $a, Module $b): int {
+            return [$a->sortOrder, $a->name] <=> [$b->sortOrder, $b->name];
         });
 
         return $modules;
     }
 
     /**
-     * @return list<string>
+     * @return list<array{moduleFile: string, source: string}>
      */
-    private function moduleFiles(): array
+    private function moduleCandidates(): array
     {
-        $files = [];
+        $candidates = [];
 
-        foreach ($this->moduleRoots() as $root) {
-            foreach (glob($root . '/*/module.php') ?: [] as $moduleFile) {
-                $files[] = $moduleFile;
-            }
-
-            foreach (glob($root . '/*/*/module.php') ?: [] as $moduleFile) {
-                $files[] = $moduleFile;
-            }
+        foreach ($this->globbedModuleFiles('app/*/module.php', 'app') as $candidate) {
+            $candidates[] = $candidate;
+        }
+        foreach ($this->globbedModuleFiles('packages/*/module.php', 'packages') as $candidate) {
+            $candidates[] = $candidate;
+        }
+        foreach ($this->globbedModuleFiles('modules/*/module.php', 'modules') as $candidate) {
+            $candidates[] = $candidate;
+        }
+        foreach ($this->globbedModuleFiles('modules/*/*/module.php', 'modules') as $candidate) {
+            $candidates[] = $candidate;
+        }
+        foreach ($this->composerPackageModuleFiles() as $candidate) {
+            $candidates[] = $candidate;
         }
 
-        foreach ((new ComposerModuleDiscovery($this->basePath))->moduleFiles() as $moduleFile) {
-            $files[] = $moduleFile;
-        }
-
-        $files = array_values(array_unique($files));
-        sort($files);
-
-        return $files;
+        return $candidates;
     }
 
     /**
-     * @return list<string>
+     * @return list<array{moduleFile: string, source: string}>
      */
-    private function moduleRoots(): array
+    private function globbedModuleFiles(string $pattern, string $source): array
     {
-        return array_values(array_filter([
-            $this->basePath . '/app',
-            $this->basePath . '/modules',
-        ], static fn (string $path): bool => is_dir($path)));
+        $files = glob(rtrim($this->basePath, '/\\') . '/' . $pattern) ?: [];
+        sort($files);
+
+        return array_map(
+            static fn (string $file): array => ['moduleFile' => $file, 'source' => $source],
+            $files,
+        );
+    }
+
+    /**
+     * @return list<array{moduleFile: string, source: string}>
+     */
+    private function composerPackageModuleFiles(): array
+    {
+        $files = glob(rtrim($this->basePath, '/\\') . '/vendor/*/*/composer.json') ?: [];
+        sort($files);
+        $result = [];
+
+        foreach ($files as $composerFile) {
+            $json = json_decode((string) file_get_contents($composerFile), true);
+            if (!is_array($json)) {
+                continue;
+            }
+
+            $extra = is_array($json['extra']['zoosper'] ?? null) ? $json['extra']['zoosper'] : [];
+            $modulePath = (string) ($extra['module'] ?? '');
+            if ($modulePath === '') {
+                continue;
+            }
+
+            $moduleFile = dirname($composerFile) . '/' . ltrim($modulePath, '/\\');
+            if (is_file($moduleFile)) {
+                $result[] = ['moduleFile' => $moduleFile, 'source' => 'vendor'];
+            }
+        }
+
+        return $result;
+    }
+
+    private function moduleFromCandidate(string $moduleFile, string $source): ?Module
+    {
+        $metadata = require $moduleFile;
+        if (!is_array($metadata)) {
+            return null;
+        }
+
+        $modulePath = dirname($moduleFile);
+        $identity = ModulePackageIdentity::fromModule($metadata, basename($modulePath));
+        $name = (string) ($metadata['name'] ?? $identity?->moduleName ?? basename($modulePath));
+
+        return new Module(
+            name: $name,
+            path: $modulePath,
+            enabled: (bool) ($metadata['enabled'] ?? true),
+            version: (string) ($metadata['version'] ?? '0.1.0'),
+            sortOrder: (int) ($metadata['sort_order'] ?? 100),
+            source: $source,
+        );
     }
 }
