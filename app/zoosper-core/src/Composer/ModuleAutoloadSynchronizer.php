@@ -9,8 +9,9 @@ use RuntimeException;
 /**
  * Synchronises Composer PSR-4 mappings from enabled Zoosper module metadata.
  *
- * Supports both historical Zoosper module names such as `zoosper-page` and the
- * newer package-friendly `Vendor_Module` shape such as `Zoosper_Media`.
+ * Supports historical app modules, local package-path modules, community modules
+ * and Vendor_Module/package-friendly identities. This keeps root development
+ * autoloading intact while packages are gradually extracted.
  */
 final readonly class ModuleAutoloadSynchronizer
 {
@@ -121,6 +122,7 @@ final readonly class ModuleAutoloadSynchronizer
     {
         $patterns = [
             $this->basePath . '/app/*/module.php',
+            $this->basePath . '/packages/*/module.php',
             $this->basePath . '/modules/*/module.php',
             $this->basePath . '/modules/*/*/module.php',
         ];

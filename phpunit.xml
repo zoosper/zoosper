@@ -20,11 +20,13 @@
             <directory>app/*/tests/Unit</directory>
             <directory>modules/*/tests/Unit</directory>
             <directory>modules/*/*/tests/Unit</directory>
+            <directory>packages/*/tests</directory>
         </testsuite>
         <testsuite name="Feature">
             <directory>app/*/tests/Feature</directory>
             <directory>modules/*/tests/Feature</directory>
             <directory>modules/*/*/tests/Feature</directory>
+            <directory>packages/*/tests</directory>
         </testsuite>
     </testsuites>
 
@@ -32,6 +34,7 @@
         <include>
             <directory>app</directory>
             <directory>modules</directory>
+            <directory>packages</directory>
         </include>
     </source>
 
