@@ -11,8 +11,9 @@ print "======================================\n\n";
 
 $checks = [
     'phpunit.xml exists' => is_file($phpunitFile),
-    'packages/*/tests configured' => str_contains($xml, 'packages/*/tests'),
-    'packages/zoosper-media/tests exists' => is_dir($basePath . '/packages/zoosper-media/tests'),
+    'packages/*/tests/Unit configured' => str_contains($xml, 'packages/*/tests/Unit'),
+    'broad packages/*/tests entry absent' => !str_contains($xml, '<directory>packages/*/tests</directory>'),
+    'packages/zoosper-media/tests/Unit exists' => is_dir($basePath . '/packages/zoosper-media/tests/Unit'),
 ];
 
 $failed = false;
