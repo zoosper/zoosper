@@ -1,0 +1,1 @@
+{"name":"zoosper/auth","description":"Zoosper_Auth module for Zoosper CMS.","type":"zoosper-module","license":"MIT","require":{"php":"^8.5","zoosper/core":"*@dev"},"autoload":{"psr-4":{"Zoosper\\Auth\\":"src/"}},"autoload-dev":{"psr-4":{"Zoosper\\Auth\\Tests\\":"tests/"}},"extra":{"zoosper":{"module":"module.php","name":"Zoosper_Auth"}}}

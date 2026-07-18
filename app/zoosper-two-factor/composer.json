@@ -1,0 +1,1 @@
+{"name":"zoosper/two-factor","description":"Zoosper_TwoFactor module for Zoosper CMS.","type":"zoosper-module","license":"MIT","require":{"php":"^8.5","zoosper/core":"*@dev","zoosper/auth":"*@dev","zoosper/admin":"*@dev"},"autoload":{"psr-4":{"Zoosper\\TwoFactor\\":"src/"}},"extra":{"zoosper":{"module":"module.php","name":"Zoosper_TwoFactor"}}}

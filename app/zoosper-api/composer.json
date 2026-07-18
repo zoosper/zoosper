@@ -1,0 +1,1 @@
+{"name":"zoosper/api","description":"Zoosper_Api module for Zoosper CMS.","type":"zoosper-module","license":"MIT","require":{"php":"^8.5","zoosper/core":"*@dev","zoosper/auth":"*@dev","zoosper/page":"*@dev","zoosper/site":"*@dev"},"autoload":{"psr-4":{"Zoosper\\Api\\":"src/"}},"extra":{"zoosper":{"module":"module.php","name":"Zoosper_Api"}}}

@@ -1,0 +1,1 @@
+{"name":"zoosper/url-rewrite","description":"Zoosper_UrlRewrite module for Zoosper CMS.","type":"zoosper-module","license":"MIT","require":{"php":"^8.5","zoosper/core":"*@dev"},"autoload":{"psr-4":{"Zoosper\\UrlRewrite\\":"src/"}},"extra":{"zoosper":{"module":"module.php","name":"Zoosper_UrlRewrite"}}}

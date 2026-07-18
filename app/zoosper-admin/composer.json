@@ -1,0 +1,1 @@
+{"name":"zoosper/admin","description":"Zoosper_Admin module for Zoosper CMS.","type":"zoosper-module","license":"MIT","require":{"php":"^8.5","zoosper/core":"*@dev","zoosper/auth":"*@dev","zoosper/theme":"*@dev"},"autoload":{"psr-4":{"Zoosper\\Admin\\":"src/"}},"extra":{"zoosper":{"module":"module.php","name":"Zoosper_Admin"}}}
