@@ -52,6 +52,21 @@ function classify(string $name, string $relPath): string
         }
     }
 
+    $opsExact = [
+        'ensure-package-testsuites.php',
+        'generate-module-composer-manifests.php',
+        'normalise-package-testsuites.php',
+        'page-content-schema-db.php',
+        'pilot-extract-media-path-repository.php',
+        'public-webroot-policy.php',
+        'remove-media-app-compatibility.php',
+        'remove-public-themes-directory.php',
+        'sync-module-autoload.php',
+    ];
+    if (in_array($name, $opsExact, true) || str_contains($name, 'mailpit-docker')) {
+        return 'KEEP_OPS';
+    }
+
     if (str_starts_with($name, 'verify-') || $name === 'run-verification-suite.php') {
         return 'MIGRATE_TO_PEST';
     }
@@ -65,15 +80,6 @@ function classify(string $name, string $relPath): string
         if (str_starts_with($name, $prefix)) {
             return 'KEEP_OPS';
         }
-    }
-
-    $opsExact = [
-        'page-content-schema-db.php',
-        'public-webroot-policy.php',
-        'remove-public-themes-directory.php',
-    ];
-    if (in_array($name, $opsExact, true) || str_contains($name, 'mailpit-docker')) {
-        return 'KEEP_OPS';
     }
 
     return 'REVIEW';
