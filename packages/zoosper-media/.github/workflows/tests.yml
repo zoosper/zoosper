@@ -1,0 +1,28 @@
+name: Media package tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: pdo, sqlite3, fileinfo, mbstring
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run unit tests
+        run: vendor/bin/pest --testsuite=Unit

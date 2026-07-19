@@ -1,1 +1,47 @@
-{"name":"zoosper/media","description":"Zoosper_Media module for Zoosper CMS.","type":"zoosper-module","license":"MIT","require":{"php":"^8.5","zoosper/core":"*@dev","zoosper/admin":"*@dev","zoosper/auth":"*@dev"},"autoload":{"psr-4":{"Zoosper\\Media\\":"src/"}},"autoload-dev":{"psr-4":{"Zoosper\\Media\\Tests\\":"tests/"}},"extra":{"zoosper":{"module":"module.php","name":"Zoosper_Media"}}}
+{
+    "name": "zoosper/media",
+    "description": "Zoosper Media module for Zoosper CMS.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "ext-pdo": "*",
+        "zoosper/core": "*@dev",
+        "zoosper/admin": "*@dev",
+        "zoosper/auth": "*@dev"
+    },
+    "require-dev": {
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin": "^3.0",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\Media\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zoosper\\Media\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "test:unit": "pest --testsuite=Unit"
+    },
+    "extra": {
+        "zoosper": {
+            "module": "module.php",
+            "name": "Zoosper_Media"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "platform": {
+            "php": "8.5"
+        }
+    }
+}

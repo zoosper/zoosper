@@ -6,6 +6,7 @@ use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
+use Zoosper\Media\Processing\MediaProcessingPolicy;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Service\MediaStorage;
 use Zoosper\Media\Service\MediaUploadValidator;
@@ -17,4 +18,5 @@ return [
     EditorJsImageUploadResponseFactory::class => static fn (ServiceContainer $services): EditorJsImageUploadResponseFactory => new EditorJsImageUploadResponseFactory(),
     EditorJsImageToolConfig::class => static fn (ServiceContainer $services): EditorJsImageToolConfig => new EditorJsImageToolConfig(),
     EditorJsImageBlockSanitizer::class => static fn (ServiceContainer $services): EditorJsImageBlockSanitizer => new EditorJsImageBlockSanitizer(),
+    MediaProcessingPolicy::class => static fn (ServiceContainer $services): MediaProcessingPolicy => new MediaProcessingPolicy(),
 ];
