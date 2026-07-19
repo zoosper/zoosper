@@ -91,6 +91,12 @@ final readonly class SchemaSqlBuilder
         if (is_bool($value)) {
             return $value ? '1' : '0';
         }
-        return "'" . str_replace("'", "''", (string) $value) . "'";
+
+        $string = (string) $value;
+        if (strtoupper($string) === 'CURRENT_TIMESTAMP') {
+            return 'CURRENT_TIMESTAMP';
+        }
+
+        return "'" . str_replace("'", "''", $string) . "'";
     }
 }

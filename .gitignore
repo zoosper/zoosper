@@ -11,3 +11,7 @@
 /bin/dump-*
 /PHASE-*.md
 /APPLY-*.md
+
+
+/public/media/ 
+/storage/media/

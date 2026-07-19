@@ -57,3 +57,55 @@
 .codex-editor__redactor {
     padding-bottom: 2rem !important;
 }
+
+/* Phase 1.37m: Editor.js image tool UX polish. */
+.zoosper-content-editor .image-tool {
+    margin: 1rem 0;
+}
+
+.zoosper-content-editor .image-tool__image,
+.zoosper-content-editor .image-tool__image-picture {
+    max-width: 100%;
+}
+
+.zoosper-content-editor .image-tool__image img,
+.zoosper-content-editor .image-tool__image-picture img,
+.zoosper-content-editor .ce-block img {
+    border-radius: 0.5rem;
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
+.zoosper-content-editor .image-tool__caption,
+.zoosper-content-editor .cdx-input {
+    border-color: #cbd5e1;
+    border-radius: 0.375rem;
+    box-shadow: none;
+    color: #334155;
+}
+
+.zoosper-content-editor .image-tool__caption:focus,
+.zoosper-content-editor .cdx-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    outline: none;
+}
+
+.zoosper-content-editor .image-tool--withBorder .image-tool__image img {
+    border: 1px solid #cbd5e1;
+}
+
+.zoosper-content-editor .image-tool--withBackground .image-tool__image {
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    padding: 1rem;
+}
+
+.zoosper-content-editor .image-tool--stretched .image-tool__image img {
+    width: 100%;
+}
+
+.zoosper-content-editor .cdx-notifies {
+    z-index: 1000;
+}
