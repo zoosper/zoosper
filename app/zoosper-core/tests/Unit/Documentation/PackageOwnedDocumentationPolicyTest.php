@@ -13,12 +13,20 @@ test('root package owned documentation policy exists', function () {
     expect($doc)->toContain('root `docs/` folder should become');
 });
 
-test('package docs migration tools are present and source only', function () {
+test('package documentation ownership audit tool is present and source only', function () {
     $root = dirname(__DIR__, 5);
     $audit = (string) file_get_contents($root . '/tools/audit-doc-package-ownership.php');
-    $plan = (string) file_get_contents($root . '/tools/plan-package-docs-migration.php');
 
     expect($audit)->toContain('documentation package ownership audit');
-    expect($plan)->toContain('PACKAGE DOCS MIGRATION PLAN');
-    expect($plan)->not->toContain('.env');
+    expect($audit)->toContain('package docs directory exists');
+    expect($audit)->toContain('Media docs still present under root docs');
+});
+
+test('package documentation migration planner is intentionally treated as a removable helper', function () {
+    $root = dirname(__DIR__, 5);
+    $doc = (string) file_get_contents($root . '/docs/operations/package-docs-migration.md');
+
+    expect($doc)->toContain('php8.5 tools/audit-doc-package-ownership.php');
+    expect($doc)->toContain('Do not keep generated migration plans in the repo');
+    expect($doc)->toContain('rm -f tools/plan-package-docs-migration.php package-docs-migration-plan.txt');
 });
