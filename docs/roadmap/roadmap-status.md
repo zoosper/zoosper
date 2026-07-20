@@ -5,12 +5,12 @@ Snapshot: 2026-07-20 (AEST).
 ## Delivered
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37s | PHP 8.5 Composer toolchain hardening | Composer can be explicitly run through PHP 8.5 via a wrapper and documented command pattern. |
+| 1.37s | PHP 8.5 Composer toolchain hardening | The PHP 8.5 Composer mismatch was diagnosed and documented. |
 
 ## Current
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37r.3.1 | Media admin upload inspection tool restore | Durable inspection tool is restored so migration readiness tests target an existing source-only tool. |
+| 1.37s.1 | PHP 8.5 Composer guidance cleanup | The shell wrapper is no longer required; docs and tests now lock the direct `php8.5 $(which composer)` workflow. |
 
 ## Planned near-term
 | Phase | Title |

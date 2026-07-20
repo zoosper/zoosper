@@ -4,16 +4,10 @@ Zoosper requires PHP 8.5+. On machines where the default `php` command still poi
 
 ## Correct commands
 
-Use this when running Composer manually:
+Run Composer itself through PHP 8.5:
 
 ```bash
 php8.5 $(which composer) dump-autoload
-```
-
-Or use the wrapper added in this phase:
-
-```bash
-tools/composer-php85.sh dump-autoload
 ```
 
 Run Pest explicitly with PHP 8.5:
@@ -22,7 +16,7 @@ Run Pest explicitly with PHP 8.5:
 php8.5 vendor/bin/pest
 ```
 
-The existing verification wrapper remains the preferred all-in-one check:
+Use the existing verification wrapper for the full suite:
 
 ```bash
 PHP=php8.5 bin/verify
@@ -47,3 +41,11 @@ Composer scripts such as:
 ```
 
 use the PHP runtime Composer is currently using. Therefore Composer itself must be launched by PHP 8.5.
+
+## Repo hygiene note
+
+Do not keep one-off shell wrappers for this workflow unless they are classified as durable ops tooling. The canonical command is the direct Composer invocation above:
+
+```bash
+php8.5 $(which composer) dump-autoload
+```
