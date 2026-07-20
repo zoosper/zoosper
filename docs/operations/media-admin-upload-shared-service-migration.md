@@ -1,5 +1,7 @@
 # Media admin upload shared-service migration operations
 
+Phase 1.37r.3.1 restores the durable inspection tool expected by the migration readiness tests.
+
 Run the inspection:
 
 ```bash
@@ -12,17 +14,26 @@ It writes:
 media-admin-upload-migration-inspection.txt
 ```
 
-Run the test:
+Run targeted tests:
 
 ```bash
-vendor/bin/pest packages/zoosper-media/tests/Unit/Controller/MediaAdminUploadMigrationInspectionTest.php
+php8.5 vendor/bin/pest packages/zoosper-media/tests/Unit/Controller/MediaAdminUploadControllerMigrationReadinessTest.php packages/zoosper-media/tests/Unit/Controller/MediaAdminUploadMigrationInspectionTest.php
 ```
 
 Run full verification:
 
 ```bash
-PHP=php8.5 composer dump-autoload
 PHP=php8.5 bin/verify
 ```
 
-The next implementation phase should use the inspection output to migrate `MediaAdminController::upload()` without guessing redirect, flash or view behaviour.
+If `tools/composer-php85.sh` has no executable bit after unzip, either run it through bash:
+
+```bash
+bash tools/composer-php85.sh dump-autoload
+```
+
+or restore executable mode:
+
+```bash
+chmod 755 tools/composer-php85.sh
+```

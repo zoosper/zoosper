@@ -5,14 +5,12 @@ Snapshot: 2026-07-20 (AEST).
 ## Delivered
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37r.2 | Media admin upload migration readiness | Audit tooling confirmed the remaining normal admin upload migration target. |
-| 1.37r.2.1 | Media admin upload readiness test hotfix | Readiness test permits `.env` in a safety note while preventing it from being listed as a dump target. |
-| 1.37r.3-prep | Media admin upload migration inspection | Exact `MediaAdminController` constructor/upload signals are captured for safe migration to `MediaUploadService`. |
+| 1.37s | PHP 8.5 Composer toolchain hardening | Composer can be explicitly run through PHP 8.5 via a wrapper and documented command pattern. |
 
 ## Current
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37r.2.2 | Media admin upload readiness test dump-removal hotfix | Readiness test now targets the durable inspection tool instead of the removed temporary dump helper. |
+| 1.37r.3.1 | Media admin upload inspection tool restore | Durable inspection tool is restored so migration readiness tests target an existing source-only tool. |
 
 ## Planned near-term
 | Phase | Title |
