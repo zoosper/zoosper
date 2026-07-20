@@ -19,13 +19,17 @@ use Zoosper\Media\Repository\MediaAssetRepository;
  */
 final readonly class MediaUploadService
 {
+    private MediaStoredFileCleanupService $cleanup;
+
     public function __construct(
         private MediaAssetRepository $assets,
         private MediaUploadValidator $validator,
         private MediaStorage $storage,
         private string $basePath,
         private ?ErrorHandler $errorHandler = null,
+        ?MediaStoredFileCleanupService $cleanup = null,
     ) {
+        $this->cleanup = $cleanup ?? new MediaStoredFileCleanupService($basePath);
     }
 
     /** @param array<string, mixed> $file */
@@ -52,14 +56,17 @@ final readonly class MediaUploadService
                 createdBy: $user->id,
             );
         } catch (Throwable $exception) {
+            $cleanupResult = null;
             if (is_object($stored)) {
-                $this->cleanupStoredFiles($stored, $exception);
+                $cleanupResult = $this->cleanup->cleanup($stored);
             }
 
             $this->errorHandler?->logException($exception, [
                 'service' => 'MediaUploadService',
                 'action' => 'upload',
                 'cleanup_attempted' => is_object($stored),
+                'cleanup_deleted' => $cleanupResult?->deletedCount() ?? 0,
+                'cleanup_skipped' => $cleanupResult?->skippedCount() ?? 0,
             ]);
 
             return MediaUploadServiceResult::failure('Unable to store uploaded media file.', 500);
@@ -80,53 +87,5 @@ final readonly class MediaUploadService
         $filename = preg_replace('/[^A-Za-z0-9._-]+/', '-', $filename) ?: 'upload';
 
         return mb_substr($filename, 0, 255);
-    }
-
-    private function cleanupStoredFiles(object $stored, Throwable $reason): void
-    {
-        foreach (['storagePath', 'publicPath'] as $property) {
-            if (!isset($stored->{$property}) || !is_string($stored->{$property})) {
-                continue;
-            }
-
-            foreach ($this->candidatePaths($stored->{$property}) as $path) {
-                $this->safeUnlink($path, $reason);
-            }
-        }
-    }
-
-    /** @return list<string> */
-    private function candidatePaths(string $storedPath): array
-    {
-        $storedPath = trim($storedPath);
-        if ($storedPath === '') {
-            return [];
-        }
-
-        $candidates = [];
-        if (str_starts_with($storedPath, '/')) {
-            $candidates[] = $this->basePath . '/public' . $storedPath;
-            $candidates[] = $this->basePath . $storedPath;
-        } else {
-            $candidates[] = $this->basePath . '/' . $storedPath;
-            if (str_starts_with($storedPath, 'media/')) {
-                $candidates[] = $this->basePath . '/public/' . $storedPath;
-            }
-        }
-
-        return array_values(array_unique($candidates));
-    }
-
-    private function safeUnlink(string $path, Throwable $reason): void
-    {
-        $base = realpath($this->basePath);
-        $real = realpath($path);
-        if ($base === false || $real === false || !str_starts_with($real, $base . DIRECTORY_SEPARATOR)) {
-            return;
-        }
-
-        if (is_file($real)) {
-            @unlink($real);
-        }
     }
 }

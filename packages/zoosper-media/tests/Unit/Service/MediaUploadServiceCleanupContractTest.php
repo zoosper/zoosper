@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Zoosper\Media\Tests\Unit\Service;
 
+use Zoosper\Media\Service\MediaStoredFileCleanupService;
 use Zoosper\Media\Service\MediaUploadService;
 use Zoosper\Media\Service\MediaUploadServiceResult;
 
-test('media upload service contract centralises storage db persistence and cleanup', function () {
+test('media upload service contract centralises storage db persistence and delegated cleanup', function () {
     $root = dirname(__DIR__, 5);
     $source = (string) file_get_contents($root . '/packages/zoosper-media/src/Service/MediaUploadService.php');
 
     expect(class_exists(MediaUploadService::class))->toBeTrue();
+    expect(class_exists(MediaStoredFileCleanupService::class))->toBeTrue();
     expect($source)->toContain('$this->storage->store');
     expect($source)->toContain('$this->assets->create');
-    expect($source)->toContain('cleanupStoredFiles');
+    expect($source)->toContain('$this->cleanup->cleanup($stored)');
     expect($source)->toContain('storagePath');
     expect($source)->toContain('publicPath');
-    expect($source)->toContain('safeUnlink');
+    expect($source)->toContain('MediaStoredFileCleanupService');
 });
 
 test('media upload service result separates validation storage and success responses', function () {
