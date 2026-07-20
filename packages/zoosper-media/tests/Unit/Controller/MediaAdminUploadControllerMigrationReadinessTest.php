@@ -17,16 +17,15 @@ test('media admin upload duplication audit tool exists and describes migration t
     expect($source)->toContain('Migrate MediaAdminController::upload() to MediaUploadService');
 });
 
-test('media admin upload controller dump tool limits itself to source and config files', function () {
+test('media admin upload inspection tool replaces the removed temporary dump helper', function () {
     $root = dirname(__DIR__, 5);
-    $source = (string) file_get_contents($root . '/tools/dump-media-admin-upload-controller-1.37r2.php');
+    $source = (string) file_get_contents($root . '/tools/inspect-media-admin-upload-migration.php');
 
-    expect($source)->toContain('MediaAdminController.php');
-    expect($source)->toContain('MediaUploadService.php');
-    expect($source)->toContain('PCI note');
-    expect($source)->toContain('no .env, uploaded media, secrets or table data read');
-    expect($source)->not->toContain("'.env'");
-    expect($source)->not->toContain('".env"');
+    expect($source)->toContain('MEDIA ADMIN UPLOAD MIGRATION INSPECTION');
+    expect($source)->toContain('MediaAdminController exists');
+    expect($source)->toContain('Admin controller directly calls storage->store');
+    expect($source)->toContain('Admin controller directly calls assets->create');
+    expect($source)->toContain('source only; no .env, uploaded media, secrets or table data read');
 });
 
 test('shared media upload service remains available for normal admin upload migration', function () {
