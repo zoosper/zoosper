@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Media\Controller;
 
+use Zoosper\Media\Service\MediaUploadServiceResult;
+use Zoosper\Media\Service\MediaUploadService;
 use RuntimeException;
 use Throwable;
 use Zoosper\Admin\Layout\AdminLayout;
@@ -27,7 +29,9 @@ use Zoosper\Media\Service\MediaUploadValidator;
  */
 final readonly class MediaAdminController
 {
-    public function __construct(
+    private MediaUploadService $uploads;
+
+public function __construct(
         private SessionGuard $guard,
         private CsrfTokenManager $csrf,
         private AdminLayout $layout,
@@ -36,7 +40,16 @@ final readonly class MediaAdminController
         private MediaUploadValidator $validator,
         private MediaStorage $storage,
         private ?ErrorHandler $errorHandler = null,
+        ?MediaUploadService $uploads = null,
     ) {
+        $this->uploads = $uploads ?? new MediaUploadService(
+            assets: $assets,
+            validator: $validator,
+            storage: $storage,
+            basePath: dirname(__DIR__, 5),
+            errorHandler: $errorHandler ?? null,
+        );
+
     }
 
     public function index(Request $request): Response
@@ -74,37 +87,15 @@ final readonly class MediaAdminController
 
     public function upload(Request $request): Response
     {
-        $user = $this->currentAdminUser();
-        $file = is_array($_FILES['media_file'] ?? null) ? $_FILES['media_file'] : [];
-        $validation = $this->validator->validate($file);
+        $file = is_array($_FILES['file'] ?? null) ? $_FILES['file'] : [];
+        $result = $this->uploads->upload($file, $this->currentAdminUser());
 
-        if (!$validation->valid) {
-            return $this->uploadErrorResponse($user, $validation->errors, 422);
-        }
-
-        try {
-            $stored = $this->storage->store($file, (string) $validation->extension);
-            $this->assets->create(
-                uuid: $stored->uuid,
-                filename: $stored->filename,
-                originalFilename: $this->normaliseOriginalFilename((string) ($file['name'] ?? 'upload')),
-                mimeType: (string) $validation->mimeType,
-                extension: (string) $validation->extension,
-                sizeBytes: (int) $validation->sizeBytes,
-                storagePath: $stored->storagePath,
-                publicPath: $stored->publicPath,
-                createdBy: $user->id,
-            );
-        } catch (Throwable $exception) {
-            $this->errorHandler?->logException($exception, ['controller' => 'MediaAdminController', 'action' => 'upload']);
-
-            return $this->uploadErrorResponse($user, ['Unable to store uploaded media file.'], 500);
+        if (!$result->successful) {
+            return Response::redirect('/admin/media');
         }
 
         return Response::redirect('/admin/media');
     }
-
-    /** @param list<string> $errors */
     private function uploadErrorResponse(AdminUser $user, array $errors, int $status): Response
     {
         return Response::html($this->views->render(
@@ -120,13 +111,6 @@ final readonly class MediaAdminController
         ), $status);
     }
 
-    private function normaliseOriginalFilename(string $filename): string
-    {
-        $filename = trim(str_replace(['\\', '/'], '-', $filename));
-        $filename = preg_replace('/[^A-Za-z0-9._-]+/', '-', $filename) ?: 'upload';
-
-        return mb_substr($filename, 0, 255);
-    }
 
     private function currentAdminUser(): AdminUser
     {
