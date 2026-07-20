@@ -5,17 +5,17 @@ Snapshot: 2026-07-20 (AEST).
 ## Delivered
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37s | PHP 8.5 Composer toolchain hardening | The PHP 8.5 Composer mismatch was diagnosed and documented. |
+| 1.37t | Package-owned documentation foundation | Package-specific docs now have a formal home under package docs, starting with `packages/zoosper-media/docs/`. |
 
 ## Current
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37s.1 | PHP 8.5 Composer guidance cleanup | The shell wrapper is no longer required; docs and tests now lock the direct `php8.5 $(which composer)` workflow. |
+| 1.37t.1 | Media package docs test path hotfix | Media package documentation tests now resolve the package root correctly. |
 
 ## Planned near-term
 | Phase | Title |
 |---|---|
 | 1.37r.3 | Migrate normal admin media upload controller to MediaUploadService. |
-| 1.37r.4 | Behaviour-level upload controller tests for storage succeeds / DB fails. |
+| 1.37t.2 | Move first media docs batch into packages/zoosper-media/docs with root link stubs. |
 | 1.37n.1 | Local media derivative processor behind MediaProcessorInterface. |
 | 1.38 | RoleAdminController Latte/template migration. |
