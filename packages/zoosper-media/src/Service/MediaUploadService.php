@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Media\Service;
 
+use Zoosper\Media\Processing\MediaUploadDerivativeDispatcher;
 use Throwable;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Core\Log\ErrorHandler;
@@ -28,6 +29,8 @@ final readonly class MediaUploadService
         private string $basePath,
         private ?ErrorHandler $errorHandler = null,
         ?MediaStoredFileCleanupService $cleanup = null,
+    
+        private ?MediaUploadDerivativeDispatcher $derivatives = null
     ) {
         $this->cleanup = $cleanup ?? new MediaStoredFileCleanupService($basePath);
     }
@@ -55,6 +58,8 @@ final readonly class MediaUploadService
                 publicPath: $stored->publicPath,
                 createdBy: $user->id,
             );
+
+            $this->derivatives?->processAfterUpload($stored->storagePath);
         } catch (Throwable $exception) {
             $cleanupResult = null;
             if (is_object($stored)) {
