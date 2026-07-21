@@ -2,10 +2,15 @@
 
 Snapshot: 2026-07-21 (AEST).
 
-## Current
+## Delivered
 | Phase | Title | Outcome |
 |---|---|---|
 | 1.37r.6 | Media upload integration readiness probe | Package-local probe identifies whether upload failure-path tests should use fakes or concrete fixtures. |
+
+## Current
+| Phase | Title | Outcome |
+|---|---|---|
+| 1.37r.6.1 | Media upload integration probe cleanup | Probe warnings are removed and the concrete-fixture strategy is documented for the next behavioural test. |
 
 ## Planned near-term
 | Phase | Title |

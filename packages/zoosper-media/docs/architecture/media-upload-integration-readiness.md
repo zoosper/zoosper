@@ -1,6 +1,6 @@
 # Media upload integration readiness
 
-Phase 1.37r.6 prepares the next behavioural test for the media upload failure path.
+Phase 1.37r.6.1 cleans the readiness probe and prepares the concrete-fixture strategy for the next behavioural test.
 
 ## Target behaviour
 
@@ -19,9 +19,23 @@ Expected outcome:
 - No orphan media file remains.
 ```
 
-## Why a readiness probe first
+## Probe result interpretation
 
-The concrete media classes may be final or may require real dependencies such as PDO or filesystem roots. The readiness probe reports whether `MediaStorage`, `MediaAssetRepository` and `MediaUploadValidator` can be substituted in a clean unit/integration test or whether the test should use concrete fixtures.
+The probe reports whether `MediaStorage`, `MediaAssetRepository` and `MediaUploadValidator` can be substituted in a clean test. If they are final or otherwise unsuitable for fake subclasses, the behavioural test should use concrete fixtures.
+
+## Preferred next strategy
+
+Use:
+
+```text
+- a temporary filesystem root
+- a concrete MediaUploadValidator
+- a concrete MediaStorage writing under the temp root
+- a repository fixture that fails after storage succeeds
+- assertions that private and public files no longer exist after failure
+```
+
+If a concrete repository fixture needs database support, prefer a SQLite-backed repository fixture over brittle reflection.
 
 ## Probe command
 
@@ -29,4 +43,4 @@ The concrete media classes may be final or may require real dependencies such as
 php8.5 packages/zoosper-media/tools/probe-media-upload-integration-readiness.php
 ```
 
-The output should guide whether Phase 1.37r.7 uses subclasses/fakes or a real SQLite-backed fixture.
+The probe should run without PHP warnings. Earlier non-compound `use ReflectionClass;` and `use ReflectionException;` imports were intentionally removed.

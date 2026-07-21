@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 require dirname(__DIR__, 3) . '/tools/bootstrap.php';
 
-use ReflectionClass;
-use ReflectionException;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Service\MediaStorage;
 use Zoosper\Media\Service\MediaUploadService;
@@ -34,7 +32,7 @@ foreach ($classes as $class) {
     print '- ' . $class . PHP_EOL;
     print '  final          : ' . ($reflection->isFinal() ? 'yes' : 'no') . PHP_EOL;
     print '  instantiable   : ' . ($reflection->isInstantiable() ? 'yes' : 'no') . PHP_EOL;
-    print '  constructor    : ' . ($reflection->getConstructor()?->__toString() !== '' ? 'yes' : 'no') . PHP_EOL;
+    print '  constructor    : ' . ($reflection->getConstructor() !== null ? 'yes' : 'no') . PHP_EOL;
 
     foreach (['validate', 'store', 'create', 'upload'] as $method) {
         if ($reflection->hasMethod($method)) {
@@ -54,6 +52,11 @@ $seams = [
 foreach ($seams as $label => $available) {
     print '- ' . $label . ': ' . ($available ? 'yes' : 'needs concrete fixture') . PHP_EOL;
 }
+
+print "\nRecommended next test strategy:\n" . PHP_EOL;
+print '- Use concrete fixture setup when a class is final or not safely substitutable.' . PHP_EOL;
+print '- Prefer a temporary filesystem root and SQLite-backed repository fixture.' . PHP_EOL;
+print '- Avoid brittle reflection mutation of readonly/final dependencies.' . PHP_EOL;
 
 print "\nResult: " . ($ok ? 'OK' : 'FAIL') . PHP_EOL;
 exit($ok ? 0 : 2);

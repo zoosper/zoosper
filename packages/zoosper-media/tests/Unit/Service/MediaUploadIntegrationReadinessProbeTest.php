@@ -14,6 +14,17 @@ test('media upload integration readiness probe documents concrete seams', functi
     expect($source)->toContain('MediaAssetRepository::class');
     expect($source)->toContain('MediaUploadValidator::class');
     expect($source)->toContain('Required integration-test seams');
+    expect($source)->toContain('Recommended next test strategy');
+});
+
+test('media upload integration readiness probe avoids non compound reflection imports', function () {
+    $root = dirname(__DIR__, 3);
+    $source = (string) file_get_contents($root . '/tools/probe-media-upload-integration-readiness.php');
+
+    expect($source)->not->toContain('use ReflectionClass;');
+    expect($source)->not->toContain('use ReflectionException;');
+    expect($source)->toContain('new ReflectionClass($class)');
+    expect($source)->toContain('catch (ReflectionException $exception)');
 });
 
 test('media upload integration readiness docs explain the next behavioural test target', function () {
@@ -23,4 +34,6 @@ test('media upload integration readiness docs explain the next behavioural test 
     expect($doc)->toContain('storage succeeds / repository fails');
     expect($doc)->toContain('MediaUploadService');
     expect($doc)->toContain('MediaStoredFileCleanupService');
+    expect($doc)->toContain('temporary filesystem root');
+    expect($doc)->toContain('SQLite-backed repository fixture');
 });

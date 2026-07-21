@@ -6,6 +6,14 @@ Run the readiness probe:
 php8.5 packages/zoosper-media/tools/probe-media-upload-integration-readiness.php
 ```
 
+Expected result:
+
+```text
+Result: OK
+```
+
+The probe should not emit PHP warnings about non-compound Reflection imports.
+
 Run targeted tests:
 
 ```bash
@@ -19,4 +27,4 @@ php8.5 $(which composer) dump-autoload
 PHP=php8.5 bin/verify
 ```
 
-Do not commit generated temporary media files or probe output snapshots. The probe itself is durable package-local tooling.
+Do not commit generated temporary media files or probe output snapshots.
