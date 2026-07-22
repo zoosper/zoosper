@@ -5,13 +5,12 @@ Snapshot: 2026-07-22 (AEST).
 ## Recently delivered
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37n.3 | Upload derivative processing seam | Upload-time derivative dispatch is feature-gated and disabled by default. |
-| 1.37n.4 | Local copy derivative smoke | Controlled smoke validates local copy derivative generation without changing default upload behaviour. |
+| 1.37u | Admin sidebar route integrity and launch readiness stubs | Durable audit and launch-readiness route stubs are in place. |
 
 ## Current focus
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37u | Admin sidebar route integrity and launch readiness stubs | Durable audit and launch-readiness route stubs are in place; temporary helper tools are removed before commit. |
+| 1.37v | Sites and site domains admin CRUD | Implement admin CRUD for Sites and Site Domains so Zoosper can be configured from the admin UI. |
 
 ## Launch readiness arc
 | Phase | Title |
