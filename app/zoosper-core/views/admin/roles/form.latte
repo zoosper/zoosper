@@ -1,0 +1,49 @@
+{* Role admin form scaffold for Phase 1.38. *}
+{varType mixed $role}
+{varType iterable $permissions}
+{varType iterable $selectedPermissions}
+{varType array|null $errors}
+{varType string $csrfToken}
+{varType string $actionUrl}
+{varType string|null $cancelUrl}
+
+<section class="admin-section admin-role-form">
+    <header class="admin-section__header">
+        <h1>{if $role}Edit role{else}Create role{/if}</h1>
+    </header>
+
+    {ifset $errors}
+        <div class="admin-errors">
+            {foreach $errors as $error}
+                <div class="admin-error">{$error}</div>
+            {/foreach}
+        </div>
+    {/ifset}
+
+    <form method="post" action="{$actionUrl}" class="admin-form">
+        <input type="hidden" name="csrf_token" value="{$csrfToken}">
+
+        <label>
+            <span>Name</span>
+            <input type="text" name="name" value="{$role['name'] ?? $role->name ?? ''}">
+        </label>
+
+        <fieldset>
+            <legend>Permissions</legend>
+            {foreach $permissions as $permission}
+                {var $permissionId = $permission['id'] ?? $permission->id ?? ''}
+                <label>
+                    <input type="checkbox" name="permissions[]" value="{$permissionId}" {if in_array($permissionId, (array) $selectedPermissions, true)}checked{/if}>
+                    {$permission['label'] ?? $permission['name'] ?? $permission->label ?? $permission->name ?? $permissionId}
+                </label>
+            {/foreach}
+        </fieldset>
+
+        <div class="admin-form__actions">
+            <button type="submit">Save role</button>
+            {ifset $cancelUrl}
+                <a href="{$cancelUrl}">Cancel</a>
+            {/ifset}
+        </div>
+    </form>
+</section>

@@ -1,0 +1,55 @@
+{* Role admin list scaffold for Phase 1.38. *}
+{varType iterable $roles}
+{varType array|null $messages}
+{varType string|null $csrfToken}
+{varType string|null $createUrl}
+{varType string|null $editUrlBase}
+{varType string|null $deleteUrlBase}
+
+<section class="admin-section admin-roles">
+    <header class="admin-section__header">
+        <h1>Roles</h1>
+        {ifset $createUrl}
+            <a class="button button-primary" href="{$createUrl}">Create role</a>
+        {/ifset}
+    </header>
+
+    {ifset $messages}
+        <div class="admin-messages">
+            {foreach $messages as $message}
+                <div class="admin-message">{$message}</div>
+            {/foreach}
+        </div>
+    {/ifset}
+
+    <table class="admin-table admin-roles-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Permissions</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $roles as $role}
+                <tr>
+                    <td>{$role['name'] ?? $role->name ?? ''}</td>
+                    <td>{$role['permission_count'] ?? $role->permission_count ?? ''}</td>
+                    <td>
+                        {ifset $editUrlBase}
+                            <a href="{$editUrlBase}{$role['id'] ?? $role->id ?? ''}">Edit</a>
+                        {/ifset}
+                        {ifset $deleteUrlBase}
+                            <form method="post" action="{$deleteUrlBase}{$role['id'] ?? $role->id ?? ''}" class="inline-form">
+                                {ifset $csrfToken}
+                                    <input type="hidden" name="csrf_token" value="{$csrfToken}">
+                                {/ifset}
+                                <button type="submit">Delete</button>
+                            </form>
+                        {/ifset}
+                    </td>
+                </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</section>
