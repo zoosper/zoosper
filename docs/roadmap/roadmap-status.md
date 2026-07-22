@@ -11,7 +11,7 @@ Snapshot: 2026-07-22 (AEST).
 ## Current focus
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37u | Admin sidebar route integrity and launch readiness stubs | Remove dead admin navigation links and prepare CMS launch-readiness arc. |
+| 1.37u | Admin sidebar route integrity and launch readiness stubs | Durable audit and launch-readiness route stubs are in place; temporary helper tools are removed before commit. |
 
 ## Launch readiness arc
 | Phase | Title |

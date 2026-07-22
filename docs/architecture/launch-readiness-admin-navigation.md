@@ -1,36 +1,12 @@
 # Launch Readiness: Admin Navigation
 
-## Context
-
-The admin sidebar is now the visible contract for what Zoosper CMS can do. Dead links in this navigation undermine confidence and slow real usage.
-
-Current areas that need route completion:
-
-```text
-Site Domains
-Sites
-Settings
-```
+Phase 1.37u starts the Launch Readiness Arc by making admin navigation a tested contract.
 
 ## Principle
 
-Admin navigation should only link to real routes.
+Core CMS navigation must not point to permanent `href="#"` placeholders.
 
-If a feature is not complete yet, the route should still render a safe readiness page explaining what is coming next, rather than using `href="#"`.
-
-## Route integrity rule
-
-Every sidebar anchor should meet one of these conditions:
-
-```text
-- It links to a registered admin route.
-- It is a POST form action such as logout.
-- It is intentionally excluded by a documented test exception.
-```
-
-For launch readiness, `href="#"` should be treated as admin navigation drift.
-
-## Recommended protected routes
+For the launch-readiness phase, the critical targets are:
 
 ```text
 /admin/sites
@@ -38,25 +14,18 @@ For launch readiness, `href="#"` should be treated as admin navigation drift.
 /admin/settings
 ```
 
-## Suggested permissions
+If a feature is not fully implemented yet, it should still have a safe route or documented readiness stub so the admin does not look broken.
 
-Initial simple permission mapping:
-
-```text
-/admin/sites        -> site.manage
-/admin/site-domains -> site.manage
-/admin/settings     -> settings.manage
-```
-
-If the permission tree is not ready for `site.manage`, use the nearest existing safe administrative permission temporarily, but document the intended final permission.
-
-## Follow-up phases
-
-After route integrity is locked:
+## Durable tooling
 
 ```text
-1.37v — Sites and site domains admin CRUD
-1.37w — Core settings storage and admin settings UI
-1.37x — Site theme assignment and frontend theme validation
-1.37y — Dashboard launch readiness checklist
+tools/audit-admin-launch-readiness-navigation.php
 ```
+
+The audit is durable operational tooling and should stay in the root `tools/` directory.
+
+Temporary migration/scaffolding helpers should not be committed once their work has been applied. The durable outputs are the audit, docs, tests and launch-readiness stubs.
+
+## Follow-up
+
+Phase 1.37v should implement real Sites and Site Domains CRUD. Phase 1.37w should implement real Settings persistence and UI.

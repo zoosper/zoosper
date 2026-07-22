@@ -1,50 +1,40 @@
 # Launch Readiness Admin Navigation Operations
 
-## Target phase
-
-```text
-Phase 1.37u — Admin sidebar route integrity and launch readiness stubs
-```
-
-## Manual inspection before build
-
-Inspect the sidebar source/template and confirm there are no intended permanent `href="#"` links for core CMS areas.
-
-Current known targets:
-
-```text
-Site Domains -> /admin/site-domains
-Sites        -> /admin/sites
-Settings     -> /admin/settings
-```
-
-## Suggested verification commands after build
+Run the durable audit:
 
 ```bash
-php8.5 vendor/bin/pest app/zoosper-core/tests/Unit/Routing/AdminSidebarRouteIntegrityTest.php
+php8.5 tools/audit-admin-launch-readiness-navigation.php
 ```
+
+Run targeted tests:
+
+```bash
+php8.5 vendor/bin/pest app/zoosper-core/tests/Unit/Routing/AdminLaunchReadinessNavigationTest.php
+```
+
+Run full verification:
 
 ```bash
 php8.5 $(which composer) dump-autoload
 PHP=php8.5 bin/verify
 ```
 
-## Expected result
+## Cleanup policy
+
+Do not commit temporary root helper tools for one-off navigation replacement or stub scaffolding.
+
+These files should be absent before commit:
 
 ```text
-PASS composer dump-autoload
-PASS pest
-PASS schema validate
-PASS tools inventory
+tools/apply-admin-launch-readiness-navigation.php
+tools/scaffold-admin-launch-readiness-stubs.php
 ```
 
-## Build notes
-
-Keep the first implementation additive and low-risk:
+The committed artefacts should be:
 
 ```text
-- add real routes
-- add safe readiness pages
-- test the route/navigation contract
-- avoid full CRUD until Phase 1.37v
+- durable audit tool
+- launch-readiness stubs
+- routing/navigation tests
+- architecture/operations/roadmap docs
 ```
