@@ -6,22 +6,28 @@ Run bulk audit:
 php8.5 tools/audit-sites-domains-admin-crud-bulk.php
 ```
 
+Run implementation-readiness audit:
+
+```bash
+php8.5 tools/audit-sites-domains-admin-crud-implementation.php
+```
+
 Generate source-only inspection output:
 
 ```bash
-php8.5 tools/inspect-sites-domains-admin-crud-bulk.php
+php8.5 tools/inspect-sites-domains-admin-current-source.php
 ```
 
 Remove generated inspection before commit unless intentionally needed:
 
 ```bash
-rm -f sites-domains-admin-crud-bulk-inspection.txt
+rm -f sites-domains-admin-current-source-inspection.txt sites-domains-admin-crud-bulk-inspection.txt
 ```
 
 Run targeted tests:
 
 ```bash
-php8.5 vendor/bin/pest app/zoosper-core/tests/Unit/Admin/SitesDomainsAdminCrudBulkTest.php app/zoosper-core/tests/Unit/Admin/SitesDomainsAdminCrudContractTest.php
+php8.5 vendor/bin/pest app/zoosper-core/tests/Unit/Admin/SitesDomainsAdminCrudBulkTest.php app/zoosper-core/tests/Unit/Admin/SitesDomainsAdminCrudContractTest.php app/zoosper-core/tests/Unit/Admin/SitesDomainsAdminImplementationReadinessTest.php
 ```
 
 Run full verification:
@@ -33,4 +39,4 @@ PHP=php8.5 bin/verify
 
 ## Implementation note
 
-Actual CRUD source should be generated only after reviewing the inspection output because route/controller/template conventions can differ between modules.
+Actual CRUD source should be generated only after reviewing the current-source inspection output because route/controller/template conventions can differ between modules.
