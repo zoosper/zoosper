@@ -10,12 +10,6 @@ use Zoosper\Site\Model\Site;
 
 /**
  * Persists and hydrates sites (flattened store views).
- *
- * Phase 1.34b: hydration reads the enriched store-view dimensions, falling back
- * to safe defaults when a column is absent (e.g. a legacy row before the schema
- * enrichment ran). create() persists the enriched columns so new sites are
- * consistent. This positions SiteRepository to become the single source of truth
- * for site resolution in Phase 1.34c.
  */
 final readonly class SiteRepository
 {
@@ -45,6 +39,13 @@ final readonly class SiteRepository
         $statement->execute(['id' => $id]);
         $row = $statement->fetch();
         return is_array($row) ? $this->hydrate($row) : null;
+    }
+
+    /** @return list<Site> */
+    public function all(): array
+    {
+        $statement = $this->pdo->query('SELECT * FROM sites ORDER BY name ASC');
+        return array_map(fn (array $row): Site => $this->hydrate($row), $statement->fetchAll());
     }
 
     /** @return list<Site> */
@@ -96,6 +97,47 @@ final readonly class SiteRepository
         $siteId = (int) $this->pdo->lastInsertId();
         $this->addDomain($siteId, $host, true);
         return $siteId;
+    }
+
+    public function update(
+        int $id,
+        string $code,
+        string $name,
+        string $status,
+        string $homepageSlug = 'home',
+        string $themeCode = 'default',
+        string $locale = 'en_AU',
+        string $currency = 'AUD',
+        string $baseUrl = '',
+        string $websiteCode = 'main',
+        string $storeCode = 'main',
+        string $storeViewCode = 'default',
+        string $pathPrefix = '',
+    ): void {
+        $existing = $this->findByCode($code);
+        if ($existing !== null && $existing->id !== $id) {
+            throw new RuntimeException('Site already exists: ' . $code);
+        }
+
+        $statement = $this->pdo->prepare(
+            'UPDATE sites SET code = :code, name = :name, status = :status, homepage_slug = :homepage_slug, theme_code = :theme_code, locale = :locale, currency = :currency, base_url = :base_url, website_code = :website_code, store_code = :store_code, store_view_code = :store_view_code, path_prefix = :path_prefix, updated_at = :updated_at WHERE id = :id'
+        );
+        $statement->execute([
+            'id' => $id,
+            'code' => $code,
+            'name' => $name,
+            'status' => $status,
+            'homepage_slug' => $homepageSlug,
+            'theme_code' => $themeCode,
+            'locale' => $locale,
+            'currency' => $currency,
+            'base_url' => $baseUrl,
+            'website_code' => $websiteCode,
+            'store_code' => $storeCode,
+            'store_view_code' => $storeViewCode,
+            'path_prefix' => $pathPrefix,
+            'updated_at' => gmdate('Y-m-d H:i:s'),
+        ]);
     }
 
     public function updateTheme(int $siteId, string $themeCode): void

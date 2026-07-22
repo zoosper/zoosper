@@ -6,12 +6,12 @@ Snapshot: 2026-07-22 (AEST).
 | Phase | Title | Outcome |
 |---|---|---|
 | 1.37u | Admin sidebar route integrity and launch readiness stubs | Durable audit and launch-readiness route stubs are in place. |
-| 1.37v.3 | Sites and Site Domains CRUD implementation blueprint | Source-specific implementation contract is defined. |
+| 1.37v.5.2 | Module-owned CRUD parse and docs hotfix | Admin config parse errors are removed and readiness documentation contracts are restored. |
 
 ## Current focus
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37v.4 | Sites/Site Domains runtime CRUD readiness | Runtime CRUD readiness audit is durable; temporary preparer helper is removed before commit and the cleanup policy is tested. |
+| 1.37v.6 | Sites/Site Domains browser smoke hardening | Validate the new CRUD screens through manual/browser smoke and patch any runtime drift. |
 
 ## Launch readiness arc
 | Phase | Title |
