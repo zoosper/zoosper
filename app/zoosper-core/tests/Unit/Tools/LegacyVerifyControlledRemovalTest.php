@@ -39,18 +39,17 @@ it('documents the controlled legacy verify removal process', function () use ($r
     assertStringContainsString('--confirm-pest-coverage', $docs);
     assertStringContainsString('--confirm-remove', $docs);
     assertStringContainsString('equivalent Pest coverage', $docs);
-    assertStringContainsString('tools/verify-project-structure.php', $docs);
 });
 
-it('keeps legacy verify removal dry-run by default', function () use ($rootPath): void {
-    $script = $rootPath('tools/verify-project-structure.php');
+it('keeps source-owned legacy verify removal dry-run by default', function () use ($rootPath): void {
+    $script = $rootPath('tools/verify-runtime-path-safety.php');
     assertFileExists($script);
 
     $outputDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'zoosper-controlled-removal-' . bin2hex(random_bytes(6));
     $command = escapeshellarg(PHP_BINARY)
         . ' '
         . escapeshellarg($rootPath('tools/remove-migrated-legacy-verify.php'))
-        . ' --script=tools/verify-project-structure.php'
+        . ' --script=tools/verify-runtime-path-safety.php'
         . ' --output-dir='
         . escapeshellarg($outputDir);
 
@@ -58,22 +57,22 @@ it('keeps legacy verify removal dry-run by default', function () use ($rootPath)
 
     assertSame(0, $exitCode);
     assertFileExists($script);
-    assertFileExists($outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-controlled-removal-verify-project-structure.txt');
+    assertFileExists($outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-controlled-removal-verify-runtime-path-safety.txt');
 
-    $report = (string) file_get_contents($outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-controlled-removal-verify-project-structure.txt');
+    $report = (string) file_get_contents($outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-controlled-removal-verify-runtime-path-safety.txt');
 
     assertStringContainsString('Mode: dry-run', $report);
     assertStringContainsString('Result: dry-run only; no files changed', $report);
 });
 
-it('refuses apply without explicit confirmations', function () use ($rootPath): void {
-    $script = $rootPath('tools/verify-project-structure.php');
+it('refuses apply for source-owned scripts even with explicit confirmations', function () use ($rootPath): void {
+    $script = $rootPath('tools/verify-runtime-path-safety.php');
     assertFileExists($script);
 
     $command = escapeshellarg(PHP_BINARY)
         . ' '
         . escapeshellarg($rootPath('tools/remove-migrated-legacy-verify.php'))
-        . ' --script=tools/verify-project-structure.php --apply';
+        . ' --script=tools/verify-runtime-path-safety.php --apply --confirm-pest-coverage --confirm-remove';
 
     exec($command, $output, $exitCode);
 
@@ -93,7 +92,7 @@ it('refuses non allowlisted legacy verify scripts', function () use ($rootPath):
 });
 
 it('refuses path traversal and operational tool removal', function () use ($rootPath): void {
-    foreach (['../tools/verify-project-structure.php', 'tools/audit-public-webroot.php'] as $candidate) {
+    foreach (['../tools/verify-runtime-path-safety.php', 'tools/audit-public-webroot.php'] as $candidate) {
         $command = escapeshellarg(PHP_BINARY)
             . ' '
             . escapeshellarg($rootPath('tools/remove-migrated-legacy-verify.php'))
@@ -113,6 +112,6 @@ it('keeps the apply gate explicit in source', function () use ($rootPath): void 
     assertStringContainsString('--confirm-pest-coverage', $source);
     assertStringContainsString('--confirm-remove', $source);
     assertStringContainsString('Dry-run is the default', $source);
-    assertStringContainsString('allowedPilotScripts', $source);
+    assertStringContainsString('migrationStatusFor', $source);
     assertStringContainsString('unlink', $source);
 });

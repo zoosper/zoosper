@@ -27,18 +27,20 @@ if (! is_dir($outputDir) && ! mkdir($outputDir, 0775, true) && ! is_dir($outputD
     exit(1);
 }
 
-$checks = [
-    'legacy_script_exists' => is_file($root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $legacyScript)),
-    'coverage_test_exists' => is_file($root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $coverageTest)),
-    'migration_doc_exists' => is_file($root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $migrationDoc)),
-    'status_doc_exists' => is_file($root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $statusDoc)),
-];
-
+$legacyPath = $root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $legacyScript);
+$legacyExists = is_file($legacyPath);
 $status = 'unknown';
 $statusPath = $root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $statusDoc);
+
 if (is_file($statusPath)) {
     $status = migrationStatusFor((string) file_get_contents($statusPath), $legacyScript);
 }
+
+$checks = [
+    'coverage_test_exists' => is_file($root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $coverageTest)),
+    'migration_doc_exists' => is_file($root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $migrationDoc)),
+    'status_doc_exists' => is_file($statusPath),
+];
 
 $errors = [];
 foreach ($checks as $name => $passed) {
@@ -51,6 +53,14 @@ if ($status !== 'source-owned' && $status !== 'migrated') {
     $errors[] = 'Unexpected migration status: ' . $status;
 }
 
+if ($status === 'source-owned' && ! $legacyExists) {
+    $errors[] = 'Legacy script is source-owned but missing: ' . $legacyScript;
+}
+
+if ($status === 'migrated' && $legacyExists) {
+    $errors[] = 'Legacy script is migrated but still exists: ' . $legacyScript;
+}
+
 $txtPath = rtrim($outputDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'verify-project-structure-migration.txt';
 $logPath = rtrim($outputDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'verify-project-structure-migration.log';
 
@@ -60,10 +70,13 @@ $report[] = '';
 $report[] = 'Generated: ' . (new DateTimeImmutable('now'))->format(DateTimeInterface::ATOM);
 $report[] = 'Repo root: ' . $root;
 $report[] = 'Legacy script: ' . $legacyScript;
+$report[] = 'Legacy script exists: ' . ($legacyExists ? 'yes' : 'no');
 $report[] = 'Replacement Pest coverage: ' . $coverageTest;
 $report[] = 'Migration status: ' . $status;
 $report[] = 'Errors: ' . count($errors);
 $report[] = '';
+$report[] = '- legacy_script_expected_state: ' . ($status === 'migrated' ? 'absent' : 'present');
+$report[] = '- legacy_script_state: ' . ($legacyExists ? 'present' : 'absent');
 
 foreach ($checks as $name => $passed) {
     $report[] = '- ' . $name . ': ' . ($passed ? 'pass' : 'fail');
@@ -82,6 +95,7 @@ file_put_contents($txtPath, implode(PHP_EOL, $report) . PHP_EOL);
 $log = [];
 $log[] = 'Verify project structure migration evidence written to: ' . $txtPath;
 $log[] = 'MIGRATION_STATUS ' . $status;
+$log[] = 'LEGACY_SCRIPT_EXISTS ' . ($legacyExists ? 'yes' : 'no');
 $log[] = 'EVIDENCE_ERRORS ' . count($errors);
 $log[] = 'REPORT_LOG ' . $logPath;
 file_put_contents($logPath, implode(PHP_EOL, $log) . PHP_EOL);

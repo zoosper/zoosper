@@ -18,7 +18,7 @@ The legacy verify script has equivalent Pest coverage and may be removed from `t
 
 | Legacy verify script | Status | Expected Pest ownership | Notes |
 |---|---|---|---|
-| `tools/verify-project-structure.php` | source-owned | `app/zoosper-core/tests/Unit/Tools` or existing project-structure tests | Do not delete until status is changed to `migrated` in the same focused phase. |
+| `tools/verify-project-structure.php` | migrated | `app/zoosper-core/tests/Unit/Tools/LegacyVerifyProjectStructureCoverageTest.php` | Replacement Pest coverage exists and the legacy script has been retired. |
 | `tools/verify-runtime-path-safety.php` | source-owned | runtime path safety tests / public webroot policy tests | Do not delete until equivalent coverage is confirmed. |
 | `tools/verify-service-provider-manifest-file.php` | source-owned | service provider manifest/config tests | Do not delete until equivalent coverage is confirmed. |
 | `tools/verify-module-composer-manifests.php` | source-owned | module composer manifest/package identity tests | Do not delete until equivalent coverage is confirmed. |

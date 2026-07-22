@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use function PHPUnit\Framework\assertDirectoryExists;
+use function PHPUnit\Framework\assertFileDoesNotExist;
 use function PHPUnit\Framework\assertFileExists;
 use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertSame;
@@ -59,13 +60,13 @@ it('keeps media package source and tests discoverable after package extraction w
     assertDirectoryExists($rootPath('packages/zoosper-media/tests'));
 });
 
-it('keeps legacy project structure verify script source-owned before ledger promotion', function () use ($rootPath): void {
-    assertFileExists($rootPath('tools/verify-project-structure.php'));
+it('records legacy project structure verify script as migrated after retirement', function () use ($rootPath): void {
+    assertFileDoesNotExist($rootPath('tools/verify-project-structure.php'));
     assertFileExists($rootPath('docs/development/legacy-verify-migration-status.md'));
 
     $status = (string) file_get_contents($rootPath('docs/development/legacy-verify-migration-status.md'));
 
-    assertStringContainsString('| `tools/verify-project-structure.php` | source-owned |', $status);
+    assertStringContainsString('| `tools/verify-project-structure.php` | migrated |', $status);
 });
 
 it('provides read only evidence tooling for the project structure migration candidate', function () use ($rootPath): void {
@@ -88,6 +89,6 @@ it('provides read only evidence tooling for the project structure migration cand
     $report = (string) file_get_contents($outputDir . DIRECTORY_SEPARATOR . 'verify-project-structure-migration.txt');
 
     assertStringContainsString('Legacy script: tools/verify-project-structure.php', $report);
-    assertStringContainsString('Replacement Pest coverage:', $report);
+    assertStringContainsString('Migration status: migrated', $report);
     assertStringContainsString('Errors: 0', $report);
 });

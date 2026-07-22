@@ -37,12 +37,12 @@ it('provides a read only legacy verify migration planning command', function () 
     assertStringContainsString('Deletion must happen in a focused commit', $source);
 });
 
-it('generates a migration plan for one legacy verify script in an isolated output directory', function () use ($rootPath): void {
+it('generates a migration plan for one source-owned legacy verify script in an isolated output directory', function () use ($rootPath): void {
     $outputDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'zoosper-legacy-verify-plan-' . bin2hex(random_bytes(6));
     $command = escapeshellarg(PHP_BINARY)
         . ' '
         . escapeshellarg($rootPath('tools/plan-legacy-verify-migration.php'))
-        . ' --script=tools/verify-project-structure.php'
+        . ' --script=tools/verify-runtime-path-safety.php'
         . ' --output-dir='
         . escapeshellarg($outputDir);
 
@@ -50,13 +50,13 @@ it('generates a migration plan for one legacy verify script in an isolated outpu
 
     assertSame(0, $exitCode);
 
-    $planPath = $outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-migration-plan-verify-project-structure.txt';
+    $planPath = $outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-migration-plan-verify-runtime-path-safety.txt';
 
     assertFileExists($planPath);
 
     $contents = (string) file_get_contents($planPath);
 
     assertStringContainsString('# Legacy Verify Migration Plan', $contents);
-    assertStringContainsString('tools/verify-project-structure.php', $contents);
+    assertStringContainsString('tools/verify-runtime-path-safety.php', $contents);
     assertStringContainsString('This planner does not delete files', $contents);
 });

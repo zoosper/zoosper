@@ -5,6 +5,7 @@ declare(strict_types=1);
 use function PHPUnit\Framework\assertFileExists;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertStringContainsString;
+use function PHPUnit\Framework\assertStringNotContainsString;
 use function PHPUnit\Framework\assertTrue;
 use function PHPUnit\Framework\fail;
 
@@ -28,7 +29,7 @@ $rootPath = static function (string $path = '') use ($repoRootPath): string {
     return $path === '' ? $root : $root . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
 };
 
-it('keeps inventory and inspection tools aligned on legacy verify candidates', function () use ($rootPath): void {
+it('keeps inventory and inspection tools aligned on remaining legacy verify candidates', function () use ($rootPath): void {
     assertFileExists($rootPath('tools/generate-tools-inventory-report.php'));
     assertFileExists($rootPath('tools/inspect-legacy-verify-migration.php'));
 
@@ -44,11 +45,13 @@ it('keeps inventory and inspection tools aligned on legacy verify candidates', f
     $inventory = (string) file_get_contents($inventoryDir . DIRECTORY_SEPARATOR . 'tools-inventory.txt');
     $inspection = (string) file_get_contents($inspectionDir . DIRECTORY_SEPARATOR . 'legacy-verify-migration-inspection.txt');
 
-    foreach (['tools/verify-project-structure.php', 'tools/verify-runtime-path-safety.php', 'tools/verify-roadmap-planning-docs.php'] as $script) {
+    foreach (['tools/verify-runtime-path-safety.php', 'tools/verify-roadmap-planning-docs.php'] as $script) {
         assertStringContainsString($script, $inventory);
         assertStringContainsString($script, $inspection);
     }
 
+    assertStringNotContainsString('tools/verify-project-structure.php', $inventory);
+    assertStringNotContainsString('tools/verify-project-structure.php', $inspection);
     assertStringContainsString('MIGRATE_TO_PEST', $inventory);
     assertStringContainsString('Legacy verify scripts:', $inspection);
     assertTrue(str_contains($inventory, 'DELETE_NOW'));

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use function PHPUnit\Framework\assertFileDoesNotExist;
 use function PHPUnit\Framework\assertFileExists;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertStringContainsString;
@@ -38,14 +39,22 @@ it('documents the ledger aware removal gate', function () use ($rootPath): void 
     assertStringContainsString('docs/development/legacy-verify-migration-status.md', $contents);
 });
 
-it('refuses apply for source owned scripts even with confirmation flags', function () use ($rootPath): void {
-    $script = $rootPath('tools/verify-project-structure.php');
+it('records project structure as migrated and removed', function () use ($rootPath): void {
+    assertFileDoesNotExist($rootPath('tools/verify-project-structure.php'));
+
+    $status = (string) file_get_contents($rootPath('docs/development/legacy-verify-migration-status.md'));
+
+    assertStringContainsString('| `tools/verify-project-structure.php` | migrated |', $status);
+});
+
+it('refuses apply for remaining source owned scripts even with confirmation flags', function () use ($rootPath): void {
+    $script = $rootPath('tools/verify-runtime-path-safety.php');
     assertFileExists($script);
 
     $command = escapeshellarg(PHP_BINARY)
         . ' '
         . escapeshellarg($rootPath('tools/remove-migrated-legacy-verify.php'))
-        . ' --script=tools/verify-project-structure.php --apply --confirm-pest-coverage --confirm-remove';
+        . ' --script=tools/verify-runtime-path-safety.php --apply --confirm-pest-coverage --confirm-remove';
 
     exec($command, $output, $exitCode);
 
@@ -58,7 +67,7 @@ it('keeps dry run available for source owned scripts', function () use ($rootPat
     $command = escapeshellarg(PHP_BINARY)
         . ' '
         . escapeshellarg($rootPath('tools/remove-migrated-legacy-verify.php'))
-        . ' --script=tools/verify-project-structure.php'
+        . ' --script=tools/verify-runtime-path-safety.php'
         . ' --output-dir='
         . escapeshellarg($outputDir);
 
@@ -66,7 +75,7 @@ it('keeps dry run available for source owned scripts', function () use ($rootPat
 
     assertSame(0, $exitCode);
 
-    $reportPath = $outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-controlled-removal-verify-project-structure.txt';
+    $reportPath = $outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-controlled-removal-verify-runtime-path-safety.txt';
     assertFileExists($reportPath);
 
     $report = (string) file_get_contents($reportPath);

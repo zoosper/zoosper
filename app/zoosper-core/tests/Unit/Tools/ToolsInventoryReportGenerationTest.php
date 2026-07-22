@@ -5,6 +5,7 @@ declare(strict_types=1);
 use function PHPUnit\Framework\assertFileExists;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertStringContainsString;
+use function PHPUnit\Framework\assertStringNotContainsString;
 use function PHPUnit\Framework\assertTrue;
 use function PHPUnit\Framework\fail;
 
@@ -12,11 +13,7 @@ $repoRootPath = static function (): string {
     $current = __DIR__;
 
     while ($current !== dirname($current)) {
-        if (
-            is_file($current . DIRECTORY_SEPARATOR . 'composer.json')
-            && is_dir($current . DIRECTORY_SEPARATOR . 'app')
-            && is_dir($current . DIRECTORY_SEPARATOR . 'tools')
-        ) {
+        if (is_file($current . DIRECTORY_SEPARATOR . 'composer.json') && is_dir($current . DIRECTORY_SEPARATOR . 'tools')) {
             return $current;
         }
 
@@ -72,7 +69,7 @@ it('generates tools inventory reports in an isolated output directory', function
     assertStringContainsString('Tools inventory written to:', $log);
 });
 
-it('classifies legacy verify scripts as Pest migration candidates', function () use ($rootPath): void {
+it('classifies remaining legacy verify scripts as Pest migration candidates', function () use ($rootPath): void {
     $outputDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'zoosper-tools-inventory-' . bin2hex(random_bytes(6));
     $command = escapeshellarg(PHP_BINARY)
         . ' '
@@ -86,7 +83,8 @@ it('classifies legacy verify scripts as Pest migration candidates', function () 
 
     $report = (string) file_get_contents($outputDir . DIRECTORY_SEPARATOR . 'tools-inventory.txt');
 
-    assertStringContainsString('tools/verify-project-structure.php', $report);
+    assertStringContainsString('tools/verify-runtime-path-safety.php', $report);
+    assertStringNotContainsString('tools/verify-project-structure.php', $report);
     assertStringContainsString('### [MIGRATE_TO_PEST]', $report);
     assertTrue(! str_contains($report, '### [DELETE_NOW]  (1)'));
 });

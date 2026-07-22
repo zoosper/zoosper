@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use function PHPUnit\Framework\assertFileDoesNotExist;
 use function PHPUnit\Framework\assertFileExists;
 use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertStringContainsString;
@@ -12,11 +13,7 @@ $repoRootPath = static function (): string {
     $current = __DIR__;
 
     while ($current !== dirname($current)) {
-        if (
-            is_file($current . DIRECTORY_SEPARATOR . 'composer.json')
-            && is_dir($current . DIRECTORY_SEPARATOR . 'app')
-            && is_dir($current . DIRECTORY_SEPARATOR . 'tools')
-        ) {
+        if (is_file($current . DIRECTORY_SEPARATOR . 'composer.json') && is_dir($current . DIRECTORY_SEPARATOR . 'tools')) {
             return $current;
         }
 
@@ -33,14 +30,14 @@ $rootPath = static function (string $path = '') use ($repoRootPath): string {
 };
 
 $pilotVerifyScripts = [
-    'tools/verify-project-structure.php',
-    'tools/verify-runtime-path-safety.php',
-    'tools/verify-service-provider-manifest-file.php',
-    'tools/verify-module-composer-manifests.php',
-    'tools/verify-roadmap-planning-docs.php',
+    'tools/verify-project-structure.php' => 'migrated',
+    'tools/verify-runtime-path-safety.php' => 'source-owned',
+    'tools/verify-service-provider-manifest-file.php' => 'source-owned',
+    'tools/verify-module-composer-manifests.php' => 'source-owned',
+    'tools/verify-roadmap-planning-docs.php' => 'source-owned',
 ];
 
-it('documents the first legacy verify Pest migration pilot batch', function () use ($rootPath, $pilotVerifyScripts): void {
+it('documents the first legacy verify Pest migration pilot batch', function () use ($rootPath): void {
     $docPath = $rootPath('docs/development/legacy-verify-pest-migration-pilot.md');
 
     assertFileExists($docPath);
@@ -49,14 +46,15 @@ it('documents the first legacy verify Pest migration pilot batch', function () u
 
     assertStringContainsString('Phase 1.37w.2', $contents);
     assertStringContainsString('A legacy verify script may be removed only after equivalent Pest coverage exists', $contents);
-
-    foreach ($pilotVerifyScripts as $script) {
-        assertStringContainsString($script, $contents);
-    }
 });
 
-it('keeps the pilot batch source-owned until equivalent Pest coverage is migrated', function () use ($rootPath, $pilotVerifyScripts): void {
-    foreach ($pilotVerifyScripts as $script) {
+it('keeps source-owned pilot scripts present and migrated scripts absent', function () use ($rootPath, $pilotVerifyScripts): void {
+    foreach ($pilotVerifyScripts as $script => $status) {
+        if ($status === 'migrated') {
+            assertFileDoesNotExist($rootPath($script));
+            continue;
+        }
+
         assertFileExists($rootPath($script));
         assertTrue(str_starts_with(basename($script), 'verify-'));
     }
@@ -70,7 +68,7 @@ it('keeps operational tool prefixes out of the pilot deletion path', function ()
     }
 });
 
-it('can cross-check the generated inventory when present without requiring generated reports in git', function () use ($rootPath, $pilotVerifyScripts): void {
+it('can cross-check the generated inventory when present without requiring generated reports in git', function () use ($rootPath): void {
     $inventoryPath = $rootPath('var/reports/tools-inventory.txt');
 
     if (! is_file($inventoryPath)) {
@@ -83,10 +81,6 @@ it('can cross-check the generated inventory when present without requiring gener
 
     assertStringContainsString('MIGRATE_TO_PEST', $contents);
     assertStringContainsString('KEEP_OPS', $contents);
-
-    foreach ($pilotVerifyScripts as $script) {
-        assertStringContainsString($script, $contents);
-    }
 });
 
 it('keeps the pilot candidate list explicit and reviewable', function () use ($pilotVerifyScripts): void {

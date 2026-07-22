@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use function PHPUnit\Framework\assertFileDoesNotExist;
 use function PHPUnit\Framework\assertFileExists;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertStringContainsString;
@@ -35,8 +36,8 @@ it('documents the legacy verify migration status model', function () use ($rootP
 
     assertStringContainsString('source-owned', $contents);
     assertStringContainsString('migrated', $contents);
-    assertStringContainsString('tools/verify-project-structure.php', $contents);
-    assertStringContainsString('tools/verify-roadmap-planning-docs.php', $contents);
+    assertStringContainsString('| `tools/verify-project-structure.php` | migrated |', $contents);
+    assertStringContainsString('| `tools/verify-roadmap-planning-docs.php` | source-owned |', $contents);
 });
 
 it('audits the migration status ledger in an isolated output directory', function () use ($rootPath): void {
@@ -63,17 +64,15 @@ it('audits the migration status ledger in an isolated output directory', functio
     assertStringContainsString('STATUS_ERRORS 0', $log);
 });
 
-it('keeps all current pilot scripts source owned before the first actual removal', function () use ($rootPath): void {
-    $contents = (string) file_get_contents($rootPath('docs/development/legacy-verify-migration-status.md'));
+it('allows migrated project structure script to be absent while source-owned scripts remain present', function () use ($rootPath): void {
+    assertFileDoesNotExist($rootPath('tools/verify-project-structure.php'));
 
     foreach ([
-        'tools/verify-project-structure.php',
         'tools/verify-runtime-path-safety.php',
         'tools/verify-service-provider-manifest-file.php',
         'tools/verify-module-composer-manifests.php',
         'tools/verify-roadmap-planning-docs.php',
     ] as $script) {
-        assertStringContainsString('| `' . $script . '` | source-owned |', $contents);
         assertFileExists($rootPath($script));
     }
 });
