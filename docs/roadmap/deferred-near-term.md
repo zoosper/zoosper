@@ -24,4 +24,38 @@ Revisit this list after the Launch Readiness Arc has delivered:
 1.37y — Dashboard launch readiness checklist
 ```
 
+
+## Deferred Strategic Roadmap Additions
+
+The following items are accepted as useful future direction but are not part of the immediate Phase 1.37 launch-readiness track.
+
+### Versioned Module API
+
+Introduce versioned module API contracts so third-party modules can declare compatible Zoosper platform/module API ranges. This should reduce upgrade risk once the extension ecosystem grows.
+
+### Swappable Driver Interfaces
+
+Formalise swappable drivers for storage, cache, media processing, rendering, search/indexing, queueing, and notification delivery. The media processor interface is the current pilot pattern.
+
+### Workflow, Staging, and Preview
+
+Add workflow and content staging support in a later Phase 2.x track, including draft/scheduled/published states, preview URLs, approval flows, campaign windows, and immutable revisions.
+
+### AI/RAG Extension Hooks
+
+Add optional AI/RAG integration hooks for content embedding, semantic search, editorial assistance, metadata generation, and module-provided indexing pipelines.
+
+### Developer Experience Enhancements
+
+Consider optional TypeScript helper generation and frontend/theme starter kits once admin/editor contracts stabilise.
+
+### Performance Track
+
+Keep framework overhead low and benchmark critical public/admin paths. Resident PHP/server-runner optimisation should be evaluated after correctness, security, and modularity stabilise.
+
+### Optional E-commerce Primitives
+
+Long-term Phase 3.x possibility: catalogue/PIM, inventory, pricing, cart/checkout, and order foundations. This remains optional and should not block CMS launch readiness.
+
 At that point, promote the deferred items back into the active roadmap sequence.
+
