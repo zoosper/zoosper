@@ -6,11 +6,13 @@ declare(strict_types=1);
  * Controlled removal helper for migrated legacy tools/verify-*.php scripts.
  *
  * Dry-run is the default. Actual deletion is deliberately hard-gated and
- * requires --apply, --confirm-pest-coverage, and --confirm-remove.
+ * requires --apply, --confirm-pest-coverage, --confirm-remove, and a `migrated`
+ * status in docs/development/legacy-verify-migration-status.md.
  */
 
 $root = dirname(__DIR__);
 $outputDir = $root . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'reports';
+$statusPath = $root . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'development' . DIRECTORY_SEPARATOR . 'legacy-verify-migration-status.md';
 $script = null;
 $apply = false;
 $confirmPestCoverage = false;
@@ -43,6 +45,13 @@ if (! in_array($normalisedScript, allowedPilotScripts(), true)) {
     exit(1);
 }
 
+$status = migrationStatusFor($statusPath, $normalisedScript);
+
+if ($apply && $status !== 'migrated') {
+    fwrite(STDERR, 'Refusing apply because migration ledger status is not migrated for ' . $normalisedScript . ' (status: ' . $status . ')' . PHP_EOL);
+    exit(1);
+}
+
 if ($apply && (! $confirmPestCoverage || ! $confirmRemove)) {
     fwrite(STDERR, 'Refusing apply without --confirm-pest-coverage and --confirm-remove: ' . $normalisedScript . PHP_EOL);
     exit(1);
@@ -67,9 +76,10 @@ $lines[] = '# Legacy Verify Controlled Removal';
 $lines[] = '';
 $lines[] = 'Script: ' . $normalisedScript;
 $lines[] = 'Mode: ' . ($apply ? 'apply' : 'dry-run');
+$lines[] = 'Migration status: ' . $status;
 $lines[] = 'Generated: ' . (new DateTimeImmutable('now'))->format(DateTimeInterface::ATOM);
 $lines[] = '';
-$lines[] = 'Safety gate: equivalent Pest coverage must exist before deletion.';
+$lines[] = 'Safety gate: equivalent Pest coverage and migrated ledger status must exist before deletion.';
 $lines[] = 'Allowed pilot script: yes';
 $lines[] = 'Apply confirmations: ' . ($confirmPestCoverage && $confirmRemove ? 'complete' : 'incomplete');
 
@@ -108,6 +118,34 @@ function validateLegacyVerifyPath(string $script): void
         fwrite(STDERR, 'Refusing non legacy verify script: ' . $script . PHP_EOL);
         exit(1);
     }
+}
+
+function migrationStatusFor(string $statusPath, string $script): string
+{
+    if (! is_file($statusPath)) {
+        fwrite(STDERR, 'Migration status ledger not found: ' . $statusPath . PHP_EOL);
+        exit(1);
+    }
+
+    $contents = (string) file_get_contents($statusPath);
+
+    foreach (preg_split('/\R/', $contents) ?: [] as $line) {
+        $line = trim($line);
+
+        if (! str_starts_with($line, '| `' . $script . '` |')) {
+            continue;
+        }
+
+        $columns = array_map('trim', explode('|', trim($line, '|')));
+        if (count($columns) < 2) {
+            break;
+        }
+
+        return trim($columns[1], '` ');
+    }
+
+    fwrite(STDERR, 'Migration status ledger does not include script: ' . $script . PHP_EOL);
+    exit(1);
 }
 
 /**
