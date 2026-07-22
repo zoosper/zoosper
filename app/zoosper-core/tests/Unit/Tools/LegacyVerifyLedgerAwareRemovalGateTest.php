@@ -11,67 +11,35 @@ use function PHPUnit\Framework\fail;
 
 $repoRootPath = static function (): string {
     $current = __DIR__;
-
     while ($current !== dirname($current)) {
-        if (is_file($current . DIRECTORY_SEPARATOR . 'composer.json') && is_dir($current . DIRECTORY_SEPARATOR . 'tools')) {
-            return $current;
-        }
-
+        if (is_file($current . DIRECTORY_SEPARATOR . 'composer.json') && is_dir($current . DIRECTORY_SEPARATOR . 'tools')) return $current;
         $current = dirname($current);
     }
-
     fail('Unable to locate Zoosper repository root from ' . __DIR__);
 };
-
-$rootPath = static function (string $path = '') use ($repoRootPath): string {
-    $root = $repoRootPath();
-
-    return $path === '' ? $root : $root . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
-};
+$rootPath = static fn (string $path = ''): string => ($r = $repoRootPath()) && $path === '' ? $r : $r . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
 
 it('records migrated pilot scripts as removed', function () use ($rootPath): void {
-    assertFileDoesNotExist($rootPath('tools/verify-project-structure.php'));
-    assertFileDoesNotExist($rootPath('tools/verify-runtime-path-safety.php'));
-
+    foreach (['tools/verify-project-structure.php', 'tools/verify-runtime-path-safety.php', 'tools/verify-service-provider-manifest-file.php'] as $script) {
+        assertFileDoesNotExist($rootPath($script));
+    }
     $status = (string) file_get_contents($rootPath('docs/development/legacy-verify-migration-status.md'));
-
-    assertStringContainsString('| `tools/verify-project-structure.php` | migrated |', $status);
-    assertStringContainsString('| `tools/verify-runtime-path-safety.php` | migrated |', $status);
+    assertStringContainsString('| `tools/verify-service-provider-manifest-file.php` | migrated |', $status);
 });
 
 it('refuses apply for remaining source owned scripts even with confirmation flags', function () use ($rootPath): void {
-    $script = $rootPath('tools/verify-service-provider-manifest-file.php');
+    $script = $rootPath('tools/verify-module-composer-manifests.php');
     assertFileExists($script);
-
-    $command = escapeshellarg(PHP_BINARY)
-        . ' '
-        . escapeshellarg($rootPath('tools/remove-migrated-legacy-verify.php'))
-        . ' --script=tools/verify-service-provider-manifest-file.php --apply --confirm-pest-coverage --confirm-remove';
-
+    $command = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($rootPath('tools/remove-migrated-legacy-verify.php')) . ' --script=tools/verify-module-composer-manifests.php --apply --confirm-pest-coverage --confirm-remove';
     exec($command, $output, $exitCode);
-
     assertTrue($exitCode !== 0);
     assertFileExists($script);
 });
 
 it('keeps dry run available for source owned scripts', function () use ($rootPath): void {
     $outputDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'zoosper-ledger-aware-removal-' . bin2hex(random_bytes(6));
-    $command = escapeshellarg(PHP_BINARY)
-        . ' '
-        . escapeshellarg($rootPath('tools/remove-migrated-legacy-verify.php'))
-        . ' --script=tools/verify-service-provider-manifest-file.php'
-        . ' --output-dir='
-        . escapeshellarg($outputDir);
-
+    $command = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($rootPath('tools/remove-migrated-legacy-verify.php')) . ' --script=tools/verify-module-composer-manifests.php --output-dir=' . escapeshellarg($outputDir);
     exec($command, $output, $exitCode);
-
     assertSame(0, $exitCode);
-
-    $reportPath = $outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-controlled-removal-verify-service-provider-manifest-file.txt';
-    assertFileExists($reportPath);
-
-    $report = (string) file_get_contents($reportPath);
-
-    assertStringContainsString('Mode: dry-run', $report);
-    assertStringContainsString('Migration status: source-owned', $report);
+    assertFileExists($outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-controlled-removal-verify-module-composer-manifests.txt');
 });

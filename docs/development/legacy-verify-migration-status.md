@@ -20,7 +20,7 @@ The legacy verify script has equivalent Pest coverage and may be removed from `t
 |---|---|---|---|
 | `tools/verify-project-structure.php` | migrated | `app/zoosper-core/tests/Unit/Tools/LegacyVerifyProjectStructureCoverageTest.php` | Replacement Pest coverage exists and the legacy script has been retired. |
 | `tools/verify-runtime-path-safety.php` | migrated | `app/zoosper-core/tests/Unit/Tools/LegacyVerifyRuntimePathSafetyCoverageTest.php` | Replacement Pest coverage exists and the legacy script has been retired. |
-| `tools/verify-service-provider-manifest-file.php` | source-owned | service provider manifest/config tests | Do not delete until equivalent coverage is confirmed. |
+| `tools/verify-service-provider-manifest-file.php` | migrated | `app/zoosper-core/tests/Unit/Tools/LegacyVerifyServiceProviderManifestCoverageTest.php` | Replacement Pest coverage exists and the legacy script has been retired. |
 | `tools/verify-module-composer-manifests.php` | source-owned | module composer manifest/package identity tests | Do not delete until equivalent coverage is confirmed. |
 | `tools/verify-roadmap-planning-docs.php` | source-owned | documentation/roadmap tests | Do not delete until equivalent coverage is confirmed. |
 
