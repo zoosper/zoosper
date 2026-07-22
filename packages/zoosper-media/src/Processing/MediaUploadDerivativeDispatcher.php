@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Media\Processing;
 
+use Zoosper\Media\Model\MediaAsset;
+
 /**
  * Upload-time derivative orchestration seam.
  *
@@ -20,13 +22,24 @@ final readonly class MediaUploadDerivativeDispatcher
     ) {
     }
 
-    public function processAfterUpload(string $storagePath): MediaProcessingResult
+    public function processAfterUpload(MediaAsset|string $assetOrStoragePath): MediaProcessingResult
     {
         $policy = $this->policy ?? new MediaUploadDerivativePolicy(false);
         if (!$policy->enabled()) {
             return MediaProcessingResult::success([]);
         }
 
-        return $this->processor->process($storagePath, $this->plan);
+        if ($assetOrStoragePath instanceof MediaAsset) {
+            $plan = $this->plan ?? (new MediaProcessingPolicy())->defaultPlan();
+            return $this->processor->process($assetOrStoragePath, $plan);
+        }
+
+        if (method_exists($this->processor, 'processStoragePath')) {
+            return $this->processor->processStoragePath($assetOrStoragePath, $this->plan);
+        }
+
+        return MediaProcessingResult::failure([
+            'Derivative processor requires a persisted MediaAsset instance for upload-time processing.',
+        ]);
     }
 }
