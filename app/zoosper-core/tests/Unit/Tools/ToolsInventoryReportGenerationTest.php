@@ -18,26 +18,21 @@ $repoRootPath = static function (): string {
 };
 $rootPath = static fn (string $path = ''): string => ($r = $repoRootPath()) && $path === '' ? $r : $r . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
 
-it('provides a deterministic tools inventory report generator', function () use ($rootPath): void {
-    assertFileExists($rootPath('tools/generate-tools-inventory-report.php'));
-});
-
 it('generates tools inventory reports in an isolated output directory', function () use ($rootPath): void {
+    assertFileExists($rootPath('tools/generate-tools-inventory-report.php'));
     $outputDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'zoosper-tools-inventory-' . bin2hex(random_bytes(6));
-    $command = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($rootPath('tools/generate-tools-inventory-report.php')) . ' --output-dir=' . escapeshellarg($outputDir);
-    exec($command, $output, $exitCode);
+    exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($rootPath('tools/generate-tools-inventory-report.php')) . ' --output-dir=' . escapeshellarg($outputDir), $output, $exitCode);
     assertSame(0, $exitCode);
     assertFileExists($outputDir . DIRECTORY_SEPARATOR . 'tools-inventory.txt');
 });
 
-it('classifies remaining legacy verify scripts as Pest migration candidates', function () use ($rootPath): void {
+it('classifies the final pilot legacy verify script as Pest migration candidate', function () use ($rootPath): void {
     $outputDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'zoosper-tools-inventory-' . bin2hex(random_bytes(6));
-    $command = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($rootPath('tools/generate-tools-inventory-report.php')) . ' --output-dir=' . escapeshellarg($outputDir);
-    exec($command, $output, $exitCode);
+    exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($rootPath('tools/generate-tools-inventory-report.php')) . ' --output-dir=' . escapeshellarg($outputDir), $output, $exitCode);
     assertSame(0, $exitCode);
     $report = (string) file_get_contents($outputDir . DIRECTORY_SEPARATOR . 'tools-inventory.txt');
-    assertStringContainsString('tools/verify-module-composer-manifests.php', $report);
-    foreach (['tools/verify-project-structure.php', 'tools/verify-runtime-path-safety.php', 'tools/verify-service-provider-manifest-file.php'] as $script) {
+    assertStringContainsString('tools/verify-roadmap-planning-docs.php', $report);
+    foreach (['tools/verify-project-structure.php','tools/verify-runtime-path-safety.php','tools/verify-service-provider-manifest-file.php','tools/verify-module-composer-manifests.php'] as $script) {
         assertStringNotContainsString($script, $report);
     }
 });

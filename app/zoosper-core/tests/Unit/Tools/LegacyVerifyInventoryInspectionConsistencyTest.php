@@ -18,7 +18,7 @@ $repoRootPath = static function (): string {
 };
 $rootPath = static fn (string $path = ''): string => ($r = $repoRootPath()) && $path === '' ? $r : $r . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
 
-it('keeps inventory and inspection tools aligned on remaining legacy verify candidates', function () use ($rootPath): void {
+it('keeps inventory and inspection tools aligned on final legacy verify candidate', function () use ($rootPath): void {
     assertFileExists($rootPath('tools/generate-tools-inventory-report.php'));
     assertFileExists($rootPath('tools/inspect-legacy-verify-migration.php'));
     $inventoryDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'zoosper-inventory-' . bin2hex(random_bytes(6));
@@ -29,11 +29,9 @@ it('keeps inventory and inspection tools aligned on remaining legacy verify cand
     assertSame(0, $inspectionExitCode);
     $inventory = (string) file_get_contents($inventoryDir . DIRECTORY_SEPARATOR . 'tools-inventory.txt');
     $inspection = (string) file_get_contents($inspectionDir . DIRECTORY_SEPARATOR . 'legacy-verify-migration-inspection.txt');
-    foreach (['tools/verify-module-composer-manifests.php', 'tools/verify-roadmap-planning-docs.php'] as $script) {
-        assertStringContainsString($script, $inventory);
-        assertStringContainsString($script, $inspection);
-    }
-    foreach (['tools/verify-project-structure.php', 'tools/verify-runtime-path-safety.php', 'tools/verify-service-provider-manifest-file.php'] as $script) {
+    assertStringContainsString('tools/verify-roadmap-planning-docs.php', $inventory);
+    assertStringContainsString('tools/verify-roadmap-planning-docs.php', $inspection);
+    foreach (['tools/verify-project-structure.php','tools/verify-runtime-path-safety.php','tools/verify-service-provider-manifest-file.php','tools/verify-module-composer-manifests.php'] as $script) {
         assertStringNotContainsString($script, $inventory);
         assertStringNotContainsString($script, $inspection);
     }

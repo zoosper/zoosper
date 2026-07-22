@@ -22,11 +22,11 @@ $pilotVerifyScripts = [
     'tools/verify-project-structure.php' => 'migrated',
     'tools/verify-runtime-path-safety.php' => 'migrated',
     'tools/verify-service-provider-manifest-file.php' => 'migrated',
-    'tools/verify-module-composer-manifests.php' => 'source-owned',
+    'tools/verify-module-composer-manifests.php' => 'migrated',
     'tools/verify-roadmap-planning-docs.php' => 'source-owned',
 ];
 
-it('keeps source-owned pilot scripts present and migrated scripts absent', function () use ($rootPath, $pilotVerifyScripts): void {
+it('keeps final source-owned pilot script present and migrated scripts absent', function () use ($rootPath, $pilotVerifyScripts): void {
     foreach ($pilotVerifyScripts as $script => $status) {
         if ($status === 'migrated') {
             assertFileDoesNotExist($rootPath($script));
