@@ -2,30 +2,35 @@
 
 declare(strict_types=1);
 
-use function PHPUnit\Framework\assertFileDoesNotExist;
-use function PHPUnit\Framework\assertFileExists;
-use function PHPUnit\Framework\assertStringContainsString;
-use function PHPUnit\Framework\fail;
-
 $repoRootPath = static function (): string {
     $current = __DIR__;
     while ($current !== dirname($current)) {
-        if (is_file($current . DIRECTORY_SEPARATOR . 'composer.json') && is_dir($current . DIRECTORY_SEPARATOR . 'tools')) return $current;
+        if (is_file($current . DIRECTORY_SEPARATOR . 'composer.json') && is_dir($current . DIRECTORY_SEPARATOR . 'tools')) {
+            return $current;
+        }
         $current = dirname($current);
     }
-    fail('Unable to locate Zoosper repository root from ' . __DIR__);
+    \PHPUnit\Framework\fail('Unable to locate Zoosper repository root from ' . __DIR__);
 };
-$rootPath = static fn (string $path = ''): string => ($r = $repoRootPath()) && $path === '' ? $r : $r . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
 
-it('documents four migrated and one source owned legacy verify statuses', function () use ($rootPath): void {
+$rootPath = static function (string $path = '') use ($repoRootPath): string {
+    $root = $repoRootPath();
+    return $path === '' ? $root : $root . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
+};
+
+use function PHPUnit\Framework\assertFileDoesNotExist;
+use function PHPUnit\Framework\assertStringContainsString;
+
+it('documents all five pilot statuses as migrated', function () use ($rootPath): void {
     $contents = (string) file_get_contents($rootPath('docs/development/legacy-verify-migration-status.md'));
-    assertStringContainsString('| `tools/verify-module-composer-manifests.php` | migrated |', $contents);
-    assertStringContainsString('| `tools/verify-roadmap-planning-docs.php` | source-owned |', $contents);
-});
-
-it('allows migrated scripts to be absent while roadmap docs remains present', function () use ($rootPath): void {
-    foreach (['tools/verify-project-structure.php','tools/verify-runtime-path-safety.php','tools/verify-service-provider-manifest-file.php','tools/verify-module-composer-manifests.php'] as $script) {
+    foreach ([
+        'tools/verify-project-structure.php',
+        'tools/verify-runtime-path-safety.php',
+        'tools/verify-service-provider-manifest-file.php',
+        'tools/verify-module-composer-manifests.php',
+        'tools/verify-roadmap-planning-docs.php',
+    ] as $script) {
+        assertStringContainsString('| `' . $script . '` | migrated |', $contents);
         assertFileDoesNotExist($rootPath($script));
     }
-    assertFileExists($rootPath('tools/verify-roadmap-planning-docs.php'));
 });

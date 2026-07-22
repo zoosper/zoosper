@@ -2,35 +2,27 @@
 
 This document records replacement migration coverage for `tools/verify-roadmap-planning-docs.php`.
 
-The goal is to preserve the source-contract intent of the legacy verify script as durable Pest coverage before any deletion happens.
+The source-contract intent of the legacy verify script is now preserved as durable Pest coverage.
 
 ## Current state
 
-`tools/verify-roadmap-planning-docs.php` remains `source-owned` in the migration status ledger.
+`tools/verify-roadmap-planning-docs.php` is marked `migrated` in the migration status ledger and has been retired from `tools/`.
 
-This phase adds replacement Pest coverage in:
+Replacement Pest coverage lives in:
 
 ```text
 app/zoosper-core/tests/Unit/Tools/LegacyVerifyRoadmapPlanningDocsCoverageTest.php
 ```
 
-It also adds a read-only audit tool:
+Read-only audit tooling lives in:
 
 ```text
 tools/audit-verify-roadmap-planning-docs-migration.php
 ```
 
-## Migration gate
+## Migration result
 
-The legacy script must not be deleted in this phase.
-
-A future focused phase may delete it only after:
-
-1. the replacement Pest coverage is green;
-2. `docs/development/legacy-verify-migration-status.md` changes the script status from `source-owned` to `migrated`;
-3. `tools/remove-migrated-legacy-verify.php` allows deletion because the ledger says `migrated`;
-4. the full Pest suite remains green;
-5. generated `var/reports` artefacts remain uncommitted unless intentionally promoted.
+The roadmap/planning docs contract is now owned by Pest coverage instead of a legacy one-off verify script.
 
 ## Covered contract
 
@@ -38,6 +30,10 @@ The replacement coverage verifies conservative roadmap/planning documentation ex
 
 - roadmap/development documentation directory exists;
 - key 1.37w migration policy/status documents exist;
-- the migration status ledger includes the final source-owned pilot candidate;
-- generated report/audit docs are evidence-only runtime artefacts unless intentionally promoted;
-- the controlled removal helper recognises the final pilot candidate but refuses deletion while source-owned.
+- the migration status ledger records the retired script as `migrated` after removal;
+- generated report/audit docs remain evidence-only runtime artefacts unless intentionally promoted;
+- the first pilot batch is represented as fully migrated.
+
+## Commit hygiene
+
+Generated reports under `var/reports/` remain runtime artefacts and should not normally be committed.
