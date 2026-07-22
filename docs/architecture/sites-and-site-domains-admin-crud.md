@@ -1,36 +1,34 @@
 # Sites and Site Domains Admin CRUD
 
-Phase 1.37v moves the Launch Readiness Arc from navigation stubs toward real site configuration.
+The launch-readiness CMS milestone needs real admin-managed site and domain configuration.
 
-## Domain model
-
-For the launch-ready CMS milestone, keep the model deliberately simple:
+## Site model
 
 ```text
-Site
-  - id
-  - name
-  - code
-  - status
-  - default_locale
-  - theme_code
-  - created_at
-  - updated_at
-
-Site Domain
-  - id
-  - site_id
-  - host
-  - path_prefix
-  - is_primary
-  - status
-  - created_at
-  - updated_at
+id
+name
+code
+status
+default_locale
+theme_code
+created_at
+updated_at
 ```
 
-Do not introduce organisation tenancy, billing tenancy, multi-database tenancy or Magento-style website/store/store-view depth yet.
+## Site Domain model
 
-## Admin routes
+```text
+id
+site_id
+host
+path_prefix
+is_primary
+status
+created_at
+updated_at
+```
+
+## Launch routes
 
 ```text
 /admin/sites
@@ -41,30 +39,16 @@ Do not introduce organisation tenancy, billing tenancy, multi-database tenancy o
 /admin/site-domains/edit
 ```
 
-## Permissions
+## Implementation principle
 
-Initial intended permissions:
+Use the current Zoosper admin conventions rather than introducing a separate CRUD framework. The source inspection tool exists so the implementation can match current controllers, route config, service registration, templates and permission naming.
 
-```text
-site.manage
-```
-
-If the current ACL tree cannot yet express `site.manage`, use the nearest existing administrative permission temporarily and document the follow-up parity fix.
-
-## UX target
-
-`/admin/sites` should list sites and allow create/edit.
-
-`/admin/site-domains` should list host/path mappings and allow create/edit.
-
-Phase 1.37v should prioritise:
+## Non-goals
 
 ```text
-- no dead routes
-- safe forms
-- validation
-- persistence
-- green verification
+- organisation tenancy
+- billing tenancy
+- multi-database tenancy
+- DNS verification
+- Magento website/store/store-view hierarchy
 ```
-
-Advanced multisite modelling can come later.

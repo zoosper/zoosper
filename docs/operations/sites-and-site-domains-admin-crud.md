@@ -1,27 +1,27 @@
 # Sites and Site Domains Admin CRUD Operations
 
-Run the CRUD audit:
+Run bulk audit:
 
 ```bash
-php8.5 tools/audit-sites-domains-admin-crud.php
+php8.5 tools/audit-sites-domains-admin-crud-bulk.php
 ```
 
-Generate a local source inspection file if needed:
+Generate source-only inspection output:
 
 ```bash
-php8.5 tools/inspect-sites-domains-admin-crud.php
+php8.5 tools/inspect-sites-domains-admin-crud-bulk.php
 ```
 
-Remove the generated inspection output before commit unless intentionally needed:
+Remove generated inspection before commit unless intentionally needed:
 
 ```bash
-rm -f sites-domains-admin-crud-inspection.txt
+rm -f sites-domains-admin-crud-bulk-inspection.txt
 ```
 
 Run targeted tests:
 
 ```bash
-php8.5 vendor/bin/pest app/zoosper-core/tests/Unit/Admin/SitesDomainsAdminCrudContractTest.php
+php8.5 vendor/bin/pest app/zoosper-core/tests/Unit/Admin/SitesDomainsAdminCrudBulkTest.php app/zoosper-core/tests/Unit/Admin/SitesDomainsAdminCrudContractTest.php
 ```
 
 Run full verification:
@@ -31,14 +31,6 @@ php8.5 $(which composer) dump-autoload
 PHP=php8.5 bin/verify
 ```
 
-## Build guidance
+## Implementation note
 
-Keep the first CRUD implementation additive:
-
-```text
-- reuse existing SiteRepository and schema where available
-- add SiteDomain schema only if absent
-- avoid destructive schema changes
-- use one permission seam for both screens initially
-- keep generated inspection files out of git
-```
+Actual CRUD source should be generated only after reviewing the inspection output because route/controller/template conventions can differ between modules.
