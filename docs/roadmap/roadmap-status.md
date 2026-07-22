@@ -6,13 +6,12 @@ Snapshot: 2026-07-22 (AEST).
 | Phase | Title | Outcome |
 |---|---|---|
 | 1.37u | Admin sidebar route integrity and launch readiness stubs | Durable audit and launch-readiness route stubs are in place. |
-| 1.37v | Sites and Site Domains CRUD contract | Initial CRUD contract, audit and implementation plan are documented. |
-| 1.37v.2 | Sites/Site Domains implementation readiness | Source-specific implementation readiness tooling is available. |
+| 1.37v.3 | Sites and Site Domains CRUD implementation blueprint | Source-specific implementation contract is defined. |
 
 ## Current focus
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37v.3 | Sites and Site Domains CRUD implementation blueprint | Finalise source-specific implementation contract before writing CRUD controllers/routes/templates. |
+| 1.37v.4 | Sites/Site Domains runtime CRUD readiness | Runtime CRUD generation is gated by source inspection to avoid convention drift. |
 
 ## Launch readiness arc
 | Phase | Title |
