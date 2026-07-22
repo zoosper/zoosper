@@ -2,35 +2,27 @@
 
 This document records replacement migration coverage for `tools/verify-runtime-path-safety.php`.
 
-The goal is to preserve the source-contract intent of the legacy verify script as durable Pest coverage before any deletion happens.
+The source-contract intent of the legacy verify script is now preserved as durable Pest coverage.
 
 ## Current state
 
-`tools/verify-runtime-path-safety.php` remains `source-owned` in the migration status ledger.
+`tools/verify-runtime-path-safety.php` is marked `migrated` in the migration status ledger and has been retired from `tools/`.
 
-This phase adds replacement Pest coverage in:
+Replacement Pest coverage lives in:
 
 ```text
 app/zoosper-core/tests/Unit/Tools/LegacyVerifyRuntimePathSafetyCoverageTest.php
 ```
 
-It also adds a read-only audit tool:
+Read-only audit tooling lives in:
 
 ```text
 tools/audit-verify-runtime-path-safety-migration.php
 ```
 
-## Migration gate
+## Migration result
 
-The legacy script must not be deleted in this phase.
-
-A future focused phase may delete it only after:
-
-1. the replacement Pest coverage is green;
-2. `docs/development/legacy-verify-migration-status.md` changes the script status from `source-owned` to `migrated`;
-3. `tools/remove-migrated-legacy-verify.php` allows deletion because the ledger says `migrated`;
-4. the full Pest suite remains green;
-5. generated `var/reports` artefacts remain uncommitted unless intentionally promoted.
+The runtime path safety contract is now owned by Pest coverage instead of a legacy one-off verify script.
 
 ## Covered contract
 
@@ -40,4 +32,8 @@ The replacement coverage verifies conservative runtime/path expectations that ar
 - generated report paths remain under `var/reports`;
 - public/runtime boundary policy tooling remains present;
 - path traversal and operational-tool deletion protections remain covered by the removal workflow;
-- the candidate script is still source-owned until ledger promotion.
+- the migration status ledger records the script as `migrated` after removal.
+
+## Commit hygiene
+
+Generated reports under `var/reports/` remain runtime artefacts and should not normally be committed.

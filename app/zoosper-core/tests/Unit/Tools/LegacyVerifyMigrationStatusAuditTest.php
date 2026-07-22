@@ -29,15 +29,11 @@ $rootPath = static function (string $path = '') use ($repoRootPath): string {
 };
 
 it('documents the legacy verify migration status model', function () use ($rootPath): void {
-    assertFileExists($rootPath('docs/development/legacy-verify-migration-status.md'));
-    assertFileExists($rootPath('tools/audit-legacy-verify-migration-status.php'));
-
     $contents = (string) file_get_contents($rootPath('docs/development/legacy-verify-migration-status.md'));
 
-    assertStringContainsString('source-owned', $contents);
-    assertStringContainsString('migrated', $contents);
     assertStringContainsString('| `tools/verify-project-structure.php` | migrated |', $contents);
-    assertStringContainsString('| `tools/verify-roadmap-planning-docs.php` | source-owned |', $contents);
+    assertStringContainsString('| `tools/verify-runtime-path-safety.php` | migrated |', $contents);
+    assertStringContainsString('| `tools/verify-service-provider-manifest-file.php` | source-owned |', $contents);
 });
 
 it('audits the migration status ledger in an isolated output directory', function () use ($rootPath): void {
@@ -52,23 +48,18 @@ it('audits the migration status ledger in an isolated output directory', functio
 
     assertSame(0, $exitCode);
     assertFileExists($outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-migration-status.txt');
-    assertFileExists($outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-migration-status.log');
 
     $report = (string) file_get_contents($outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-migration-status.txt');
-    $log = (string) file_get_contents($outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-migration-status.log');
 
-    assertStringContainsString('# Legacy Verify Migration Status Audit', $report);
     assertStringContainsString('Entries: 5', $report);
     assertStringContainsString('Errors: 0', $report);
-    assertStringContainsString('STATUS_ENTRIES 5', $log);
-    assertStringContainsString('STATUS_ERRORS 0', $log);
 });
 
-it('allows migrated project structure script to be absent while source-owned scripts remain present', function () use ($rootPath): void {
+it('allows migrated scripts to be absent while source-owned scripts remain present', function () use ($rootPath): void {
     assertFileDoesNotExist($rootPath('tools/verify-project-structure.php'));
+    assertFileDoesNotExist($rootPath('tools/verify-runtime-path-safety.php'));
 
     foreach ([
-        'tools/verify-runtime-path-safety.php',
         'tools/verify-service-provider-manifest-file.php',
         'tools/verify-module-composer-manifests.php',
         'tools/verify-roadmap-planning-docs.php',

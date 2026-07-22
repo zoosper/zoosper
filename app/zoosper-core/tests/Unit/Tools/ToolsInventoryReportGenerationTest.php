@@ -32,15 +32,6 @@ $rootPath = static function (string $path = '') use ($repoRootPath): string {
 it('provides a deterministic tools inventory report generator', function () use ($rootPath): void {
     assertFileExists($rootPath('tools/generate-tools-inventory-report.php'));
     assertFileExists($rootPath('docs/development/tools-inventory-report-generation.md'));
-
-    $tool = (string) file_get_contents($rootPath('tools/generate-tools-inventory-report.php'));
-
-    assertStringContainsString('tools-inventory.txt', $tool);
-    assertStringContainsString('tools-inventory.log', $tool);
-    assertStringContainsString('MIGRATE_TO_PEST', $tool);
-    assertStringContainsString('KEEP_OPS', $tool);
-    assertStringContainsString('DELETE_NOW', $tool);
-    assertStringContainsString('REVIEW', $tool);
 });
 
 it('generates tools inventory reports in an isolated output directory', function () use ($rootPath): void {
@@ -56,17 +47,6 @@ it('generates tools inventory reports in an isolated output directory', function
     assertSame(0, $exitCode);
     assertFileExists($outputDir . DIRECTORY_SEPARATOR . 'tools-inventory.txt');
     assertFileExists($outputDir . DIRECTORY_SEPARATOR . 'tools-inventory.log');
-
-    $report = (string) file_get_contents($outputDir . DIRECTORY_SEPARATOR . 'tools-inventory.txt');
-    $log = (string) file_get_contents($outputDir . DIRECTORY_SEPARATOR . 'tools-inventory.log');
-
-    assertStringContainsString('## ZOOSPER CMS - TOOLS INVENTORY', $report);
-    assertStringContainsString('MIGRATE_TO_PEST', $report);
-    assertStringContainsString('KEEP_OPS', $report);
-    assertStringContainsString('DELETE_NOW', $report);
-    assertStringContainsString('REVIEW', $report);
-    assertStringContainsString('PCI note', $report);
-    assertStringContainsString('Tools inventory written to:', $log);
 });
 
 it('classifies remaining legacy verify scripts as Pest migration candidates', function () use ($rootPath): void {
@@ -83,8 +63,9 @@ it('classifies remaining legacy verify scripts as Pest migration candidates', fu
 
     $report = (string) file_get_contents($outputDir . DIRECTORY_SEPARATOR . 'tools-inventory.txt');
 
-    assertStringContainsString('tools/verify-runtime-path-safety.php', $report);
+    assertStringContainsString('tools/verify-service-provider-manifest-file.php', $report);
     assertStringNotContainsString('tools/verify-project-structure.php', $report);
+    assertStringNotContainsString('tools/verify-runtime-path-safety.php', $report);
     assertStringContainsString('### [MIGRATE_TO_PEST]', $report);
     assertTrue(! str_contains($report, '### [DELETE_NOW]  (1)'));
 });

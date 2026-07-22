@@ -45,13 +45,15 @@ it('keeps inventory and inspection tools aligned on remaining legacy verify cand
     $inventory = (string) file_get_contents($inventoryDir . DIRECTORY_SEPARATOR . 'tools-inventory.txt');
     $inspection = (string) file_get_contents($inspectionDir . DIRECTORY_SEPARATOR . 'legacy-verify-migration-inspection.txt');
 
-    foreach (['tools/verify-runtime-path-safety.php', 'tools/verify-roadmap-planning-docs.php'] as $script) {
+    foreach (['tools/verify-service-provider-manifest-file.php', 'tools/verify-roadmap-planning-docs.php'] as $script) {
         assertStringContainsString($script, $inventory);
         assertStringContainsString($script, $inspection);
     }
 
     assertStringNotContainsString('tools/verify-project-structure.php', $inventory);
+    assertStringNotContainsString('tools/verify-runtime-path-safety.php', $inventory);
     assertStringNotContainsString('tools/verify-project-structure.php', $inspection);
+    assertStringNotContainsString('tools/verify-runtime-path-safety.php', $inspection);
     assertStringContainsString('MIGRATE_TO_PEST', $inventory);
     assertStringContainsString('Legacy verify scripts:', $inspection);
     assertTrue(str_contains($inventory, 'DELETE_NOW'));

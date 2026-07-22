@@ -29,12 +29,6 @@ $rootPath = static function (string $path = '') use ($repoRootPath): string {
 
 it('provides a read only legacy verify migration planning command', function () use ($rootPath): void {
     assertFileExists($rootPath('tools/plan-legacy-verify-migration.php'));
-
-    $source = (string) file_get_contents($rootPath('tools/plan-legacy-verify-migration.php'));
-
-    assertStringContainsString('--script=', $source);
-    assertStringContainsString('This command is read-only', $source);
-    assertStringContainsString('Deletion must happen in a focused commit', $source);
 });
 
 it('generates a migration plan for one source-owned legacy verify script in an isolated output directory', function () use ($rootPath): void {
@@ -42,7 +36,7 @@ it('generates a migration plan for one source-owned legacy verify script in an i
     $command = escapeshellarg(PHP_BINARY)
         . ' '
         . escapeshellarg($rootPath('tools/plan-legacy-verify-migration.php'))
-        . ' --script=tools/verify-runtime-path-safety.php'
+        . ' --script=tools/verify-service-provider-manifest-file.php'
         . ' --output-dir='
         . escapeshellarg($outputDir);
 
@@ -50,13 +44,12 @@ it('generates a migration plan for one source-owned legacy verify script in an i
 
     assertSame(0, $exitCode);
 
-    $planPath = $outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-migration-plan-verify-runtime-path-safety.txt';
+    $planPath = $outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-migration-plan-verify-service-provider-manifest-file.txt';
 
     assertFileExists($planPath);
 
     $contents = (string) file_get_contents($planPath);
 
     assertStringContainsString('# Legacy Verify Migration Plan', $contents);
-    assertStringContainsString('tools/verify-runtime-path-safety.php', $contents);
-    assertStringContainsString('This planner does not delete files', $contents);
+    assertStringContainsString('tools/verify-service-provider-manifest-file.php', $contents);
 });

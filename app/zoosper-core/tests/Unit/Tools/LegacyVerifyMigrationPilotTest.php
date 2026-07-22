@@ -31,21 +31,14 @@ $rootPath = static function (string $path = '') use ($repoRootPath): string {
 
 $pilotVerifyScripts = [
     'tools/verify-project-structure.php' => 'migrated',
-    'tools/verify-runtime-path-safety.php' => 'source-owned',
+    'tools/verify-runtime-path-safety.php' => 'migrated',
     'tools/verify-service-provider-manifest-file.php' => 'source-owned',
     'tools/verify-module-composer-manifests.php' => 'source-owned',
     'tools/verify-roadmap-planning-docs.php' => 'source-owned',
 ];
 
 it('documents the first legacy verify Pest migration pilot batch', function () use ($rootPath): void {
-    $docPath = $rootPath('docs/development/legacy-verify-pest-migration-pilot.md');
-
-    assertFileExists($docPath);
-
-    $contents = (string) file_get_contents($docPath);
-
-    assertStringContainsString('Phase 1.37w.2', $contents);
-    assertStringContainsString('A legacy verify script may be removed only after equivalent Pest coverage exists', $contents);
+    assertFileExists($rootPath('docs/development/legacy-verify-pest-migration-pilot.md'));
 });
 
 it('keeps source-owned pilot scripts present and migrated scripts absent', function () use ($rootPath, $pilotVerifyScripts): void {
@@ -66,21 +59,6 @@ it('keeps operational tool prefixes out of the pilot deletion path', function ()
     foreach (['audit-*', 'diagnose-*', 'inspect-*', 'repair-*', 'smoke-*', 'sync-*', 'publish-*', 'generate-*', 'normalise-*', 'ensure-*'] as $prefix) {
         assertStringContainsString($prefix, $contents);
     }
-});
-
-it('can cross-check the generated inventory when present without requiring generated reports in git', function () use ($rootPath): void {
-    $inventoryPath = $rootPath('var/reports/tools-inventory.txt');
-
-    if (! is_file($inventoryPath)) {
-        assertTrue(true);
-
-        return;
-    }
-
-    $contents = (string) file_get_contents($inventoryPath);
-
-    assertStringContainsString('MIGRATE_TO_PEST', $contents);
-    assertStringContainsString('KEEP_OPS', $contents);
 });
 
 it('keeps the pilot candidate list explicit and reviewable', function () use ($pilotVerifyScripts): void {

@@ -38,7 +38,6 @@ if (is_file($statusPath)) {
 }
 
 $checks = [
-    'legacy_script_exists' => $legacyExists,
     'coverage_test_exists' => is_file($root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $coverageTest)),
     'migration_doc_exists' => is_file($root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $migrationDoc)),
     'status_doc_exists' => is_file($statusPath),
@@ -52,8 +51,16 @@ foreach ($checks as $name => $passed) {
     }
 }
 
-if ($status !== 'source-owned') {
-    $errors[] = 'Expected migration status source-owned before deletion, found: ' . $status;
+if ($status !== 'source-owned' && $status !== 'migrated') {
+    $errors[] = 'Unexpected migration status: ' . $status;
+}
+
+if ($status === 'source-owned' && ! $legacyExists) {
+    $errors[] = 'Legacy script is source-owned but missing: ' . $legacyScript;
+}
+
+if ($status === 'migrated' && $legacyExists) {
+    $errors[] = 'Legacy script is migrated but still exists: ' . $legacyScript;
 }
 
 $txtPath = rtrim($outputDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'verify-runtime-path-safety-migration.txt';
@@ -70,6 +77,8 @@ $report[] = 'Replacement Pest coverage: ' . $coverageTest;
 $report[] = 'Migration status: ' . $status;
 $report[] = 'Errors: ' . count($errors);
 $report[] = '';
+$report[] = '- legacy_script_expected_state: ' . ($status === 'migrated' ? 'absent' : 'present');
+$report[] = '- legacy_script_state: ' . ($legacyExists ? 'present' : 'absent');
 
 foreach ($checks as $name => $passed) {
     $report[] = '- ' . $name . ': ' . ($passed ? 'pass' : 'fail');

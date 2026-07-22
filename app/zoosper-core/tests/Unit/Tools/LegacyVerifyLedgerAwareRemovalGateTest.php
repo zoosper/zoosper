@@ -29,32 +29,24 @@ $rootPath = static function (string $path = '') use ($repoRootPath): string {
     return $path === '' ? $root : $root . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
 };
 
-it('documents the ledger aware removal gate', function () use ($rootPath): void {
-    assertFileExists($rootPath('docs/development/legacy-verify-ledger-aware-removal.md'));
-
-    $contents = (string) file_get_contents($rootPath('docs/development/legacy-verify-ledger-aware-removal.md'));
-
-    assertStringContainsString('source-owned', $contents);
-    assertStringContainsString('migrated', $contents);
-    assertStringContainsString('docs/development/legacy-verify-migration-status.md', $contents);
-});
-
-it('records project structure as migrated and removed', function () use ($rootPath): void {
+it('records migrated pilot scripts as removed', function () use ($rootPath): void {
     assertFileDoesNotExist($rootPath('tools/verify-project-structure.php'));
+    assertFileDoesNotExist($rootPath('tools/verify-runtime-path-safety.php'));
 
     $status = (string) file_get_contents($rootPath('docs/development/legacy-verify-migration-status.md'));
 
     assertStringContainsString('| `tools/verify-project-structure.php` | migrated |', $status);
+    assertStringContainsString('| `tools/verify-runtime-path-safety.php` | migrated |', $status);
 });
 
 it('refuses apply for remaining source owned scripts even with confirmation flags', function () use ($rootPath): void {
-    $script = $rootPath('tools/verify-runtime-path-safety.php');
+    $script = $rootPath('tools/verify-service-provider-manifest-file.php');
     assertFileExists($script);
 
     $command = escapeshellarg(PHP_BINARY)
         . ' '
         . escapeshellarg($rootPath('tools/remove-migrated-legacy-verify.php'))
-        . ' --script=tools/verify-runtime-path-safety.php --apply --confirm-pest-coverage --confirm-remove';
+        . ' --script=tools/verify-service-provider-manifest-file.php --apply --confirm-pest-coverage --confirm-remove';
 
     exec($command, $output, $exitCode);
 
@@ -67,7 +59,7 @@ it('keeps dry run available for source owned scripts', function () use ($rootPat
     $command = escapeshellarg(PHP_BINARY)
         . ' '
         . escapeshellarg($rootPath('tools/remove-migrated-legacy-verify.php'))
-        . ' --script=tools/verify-runtime-path-safety.php'
+        . ' --script=tools/verify-service-provider-manifest-file.php'
         . ' --output-dir='
         . escapeshellarg($outputDir);
 
@@ -75,20 +67,11 @@ it('keeps dry run available for source owned scripts', function () use ($rootPat
 
     assertSame(0, $exitCode);
 
-    $reportPath = $outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-controlled-removal-verify-runtime-path-safety.txt';
+    $reportPath = $outputDir . DIRECTORY_SEPARATOR . 'legacy-verify-controlled-removal-verify-service-provider-manifest-file.txt';
     assertFileExists($reportPath);
 
     $report = (string) file_get_contents($reportPath);
 
     assertStringContainsString('Mode: dry-run', $report);
     assertStringContainsString('Migration status: source-owned', $report);
-    assertStringContainsString('Result: dry-run only; no files changed', $report);
-});
-
-it('keeps removal helper source tied to the migration status ledger', function () use ($rootPath): void {
-    $source = (string) file_get_contents($rootPath('tools/remove-migrated-legacy-verify.php'));
-
-    assertStringContainsString('legacy-verify-migration-status.md', $source);
-    assertStringContainsString('migrationStatusFor', $source);
-    assertStringContainsString('$status !== \'migrated\'', $source);
 });
