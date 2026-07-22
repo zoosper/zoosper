@@ -4,14 +4,15 @@
 
 Prepare the runtime CRUD implementation pass for Sites and Site Domains without blindly writing controllers/routes against unknown conventions.
 
-The generated `sites-domains-implementation-targets.txt` file is source-only and safe to inspect, but the visible attached content is only the header plus the start of `PageAdminController`. The runtime patch therefore remains convention-gated.
+The generated `sites-domains-implementation-targets.txt` file is source-only and safe to inspect, but the visible attached content was not enough to safely generate runtime CRUD source without guessing. The runtime patch therefore remains convention-gated.
 
-## Added tooling
+## Durable tooling
 
 ```text
 tools/audit-sites-domains-admin-crud-runtime.php
-tools/prepare-sites-domains-admin-crud-runtime.php
 ```
+
+The temporary runtime preparer helper is intentionally removed before commit. Source-specific CRUD generation should happen in a later patch after inspection output is reviewed locally.
 
 ## Required implementation targets
 
@@ -41,7 +42,6 @@ After reviewing the inspection output locally, the next patch should generate:
 
 ```bash
 php8.5 tools/audit-sites-domains-admin-crud-runtime.php
-php8.5 tools/prepare-sites-domains-admin-crud-runtime.php
 php8.5 vendor/bin/pest app/zoosper-core/tests/Unit/Admin/SitesDomainsAdminRuntimeCrudReadinessTest.php
 PHP=php8.5 bin/verify
 ```

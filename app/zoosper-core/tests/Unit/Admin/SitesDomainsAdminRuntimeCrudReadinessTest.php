@@ -17,12 +17,20 @@ test('runtime crud audit tracks concrete implementation signals', function () {
     expect($audit)->toContain('NEEDS_IMPLEMENTATION');
 });
 
-test('runtime crud preparer is source inspection gated', function () {
+test('temporary runtime crud preparer is intentionally not required', function () {
     $root = dirname(__DIR__, 5);
-    $tool = (string) file_get_contents($root . '/tools/prepare-sites-domains-admin-crud-runtime.php');
 
-    expect($tool)->toContain('sites-domains-implementation-targets.txt');
-    expect($tool)->toContain('PageAdminController convention visible');
-    expect($tool)->toContain('No write performed');
-    expect($tool)->toContain('source-specific patch');
+    expect(file_exists($root . '/tools/prepare-sites-domains-admin-crud-runtime.php'))->toBeFalse();
+});
+
+test('runtime crud operations document source inspection workflow and cleanup policy', function () {
+    $root = dirname(__DIR__, 5);
+    $ops = (string) file_get_contents($root . '/docs/operations/sites-and-site-domains-admin-crud.md');
+
+    expect($ops)->toContain('tools/audit-sites-domains-admin-crud-runtime.php');
+    expect($ops)->toContain('tools/inspect-sites-domains-implementation-targets.php');
+    expect($ops)->toContain('rm -f sites-domains-implementation-targets.txt');
+    expect($ops)->toContain('Do not commit temporary preparer tools');
+    expect($ops)->toContain('tools/prepare-sites-domains-admin-crud-runtime.php');
+    expect($ops)->toContain('should be absent before commit');
 });

@@ -11,7 +11,7 @@ Snapshot: 2026-07-22 (AEST).
 ## Current focus
 | Phase | Title | Outcome |
 |---|---|---|
-| 1.37v.4 | Sites/Site Domains runtime CRUD readiness | Runtime CRUD generation is gated by source inspection to avoid convention drift. |
+| 1.37v.4 | Sites/Site Domains runtime CRUD readiness | Runtime CRUD readiness audit is durable; temporary preparer helper is removed before commit and the cleanup policy is tested. |
 
 ## Launch readiness arc
 | Phase | Title |
