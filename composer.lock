@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4454398311eb4160c78e75ff4712051b",
+    "content-hash": "98fc444908b0345e18a6872b51764267",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -797,6 +797,283 @@
                 "source": "https://github.com/php-fig/container/tree/2.0.2"
             },
             "time": "2021-11-05T16:47:00+00:00"
+        },
+        {
+            "name": "zoosper/admin",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-admin",
+                "reference": "e5fc66767db8b20b06b58fbb4d93e23c1f74aa0f"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/auth": "*@dev",
+                "zoosper/core": "*@dev",
+                "zoosper/theme": "*@dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_Admin"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Admin\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper_Admin module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/auth",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-auth",
+                "reference": "adda9a8a0cd26436ed090156ea9fff6487f0cf4a"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/core": "*@dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_Auth"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Auth\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Auth\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper_Auth module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/core",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-core",
+                "reference": "a8d2eaa64ae70cf4784bf9d90a53373710590f30"
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": "^8.5"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_Core"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Core\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Core\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper_Core module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/media",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "packages/zoosper-media",
+                "reference": "6d13e06086dd7a2faaf1c5506aafd169f478200a"
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": "^8.5",
+                "zoosper/admin": "*@dev",
+                "zoosper/auth": "*@dev",
+                "zoosper/core": "*@dev"
+            },
+            "require-dev": {
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin": "^3.0",
+                "phpunit/phpunit": "^11.0"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_Media"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Media\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Media\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ],
+                "test:unit": [
+                    "pest --testsuite=Unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper Media module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/page",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-page",
+                "reference": "33bf8f8fa2fbc2665e7b6ae1b7ae1e14ef4a7170"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/admin": "*@dev",
+                "zoosper/core": "*@dev",
+                "zoosper/site": "*@dev",
+                "zoosper/theme": "*@dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_Page"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Page\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Page\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper_Page module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/site",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-site",
+                "reference": "aafb10d32826018b9cf110158fb2568aee3bb6e1"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/core": "*@dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_Site"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Site\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Site\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper_Site module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/theme",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-theme",
+                "reference": "8c693e55ca7ef91ced3483ea43e1491531a5fee0"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/core": "*@dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_Theme"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Theme\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper_Theme module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         }
     ],
     "packages-dev": [
@@ -4751,13 +5028,21 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {},
-    "prefer-stable": false,
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "zoosper/admin": 20,
+        "zoosper/auth": 20,
+        "zoosper/core": 20,
+        "zoosper/media": 20,
+        "zoosper/page": 20,
+        "zoosper/site": 20,
+        "zoosper/theme": 20
+    },
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.5",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "php": "^8.5"
     },
     "platform-dev": {},
     "platform-overrides": {

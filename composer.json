@@ -4,15 +4,21 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": "^8.5",
-        "ext-pdo": "*",
         "bacon/bacon-qr-code": "^3.0",
+        "ext-pdo": "*",
         "ezyang/htmlpurifier": "^4.19",
         "latte/latte": "^3.1",
         "marko/database": "^0.8",
         "marko/database-mysql": "^0.8",
         "marko/framework": "^0.8",
-        "zoosper/media": "*@dev"
+        "php": "^8.5",
+        "zoosper/admin": "*@dev",
+        "zoosper/auth": "*@dev",
+        "zoosper/core": "*@dev",
+        "zoosper/media": "*@dev",
+        "zoosper/page": "*@dev",
+        "zoosper/site": "*@dev",
+        "zoosper/theme": "*@dev"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",
@@ -77,6 +83,50 @@
             "options": {
                 "symlink": true
             }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-core",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-auth",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-theme",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-page",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-site",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-admin",
+            "options": {
+                "symlink": true
+            }
         }
-    ]
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
