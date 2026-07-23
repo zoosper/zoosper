@@ -31,12 +31,10 @@ final readonly class RoleAdminController
     public function index(Request $request): Response
     {
         $this->currentAdminUser();
-        $rows = '';
-        foreach ($this->roles->allRoles() as $role) {
-            $id = (int) $role['id'];
-            $rows .= '<tr><td>' . $id . '</td><td>' . $this->e((string) $role['label']) . '</td><td><code>' . $this->e((string) $role['code']) . '</code></td><td><a href="/admin/roles/edit?id=' . $id . '">Edit</a></td></tr>';
-        }
-        return $this->html('Roles & Permissions', '<div class="toolbar"><a class="button" href="/admin/roles/create">Create role</a></div><table><thead><tr><th>ID</th><th>Label</th><th>Code</th><th>Actions</th></tr></thead><tbody>' . $rows . '</tbody></table>');
+
+        return $this->html('Roles & Permissions', $this->renderRoleView('index.php', [
+            'roles' => $this->roles->allRoles(),
+        ]));
     }
 
     public function createForm(Request $request): Response
@@ -108,27 +106,23 @@ final readonly class RoleAdminController
     /** @param array<string, mixed>|null $role @param array<string, mixed> $submitted */
     private function form(string $action, ?array $role = null, ?string $error = null, array $submitted = []): string
     {
-        $token = $this->e($this->csrf->token());
-        $code = $this->e((string) ($submitted['code'] ?? $role['code'] ?? ''));
-        $label = $this->e((string) ($submitted['label'] ?? $role['label'] ?? ''));
         $roleId = $role !== null ? (int) $role['id'] : null;
-        $selectedPermissions = $submitted !== [] ? $this->idsFromForm($submitted, 'permission_ids') : ($roleId !== null ? $this->roles->permissionIdsForRole($roleId) : []);
-        $selectedUsers = $submitted !== [] ? $this->idsFromForm($submitted, 'user_ids') : ($roleId !== null ? $this->roles->userIdsForRole($roleId) : []);
-        $errorHtml = $error !== null ? '<p class="error">' . $this->e($error) . '</p>' : '';
-        $permissionTree = $this->permissionTree($selectedPermissions);
-        $userAssignment = $this->userAssignment($selectedUsers);
+        $selectedPermissions = $submitted !== []
+            ? $this->idsFromForm($submitted, 'permission_ids')
+            : ($roleId !== null ? $this->roles->permissionIdsForRole($roleId) : []);
+        $selectedUsers = $submitted !== []
+            ? $this->idsFromForm($submitted, 'user_ids')
+            : ($roleId !== null ? $this->roles->userIdsForRole($roleId) : []);
 
-        return <<<HTML
-{$errorHtml}
-<form method="post" action="{$action}" class="page-form">
-    <input type="hidden" name="_csrf_token" value="{$token}">
-    <label>Role label <input type="text" name="label" value="{$label}" required></label>
-    <label>Role code <input type="text" name="code" value="{$code}" required></label>
-    <section class="card"><h2>Permission Tree</h2>{$permissionTree}</section>
-    <section class="card"><h2>Assigned Users</h2><p class="muted">Search and tick admin users to assign them directly to this role.</p><input type="search" id="role-user-filter" placeholder="Search users by name or email" oninput="document.querySelectorAll('[data-role-user]').forEach(function(row){row.style.display=row.textContent.toLowerCase().includes(event.target.value.toLowerCase())?'flex':'none';})">{$userAssignment}</section>
-    <div class="toolbar"><button type="submit">Save role</button><a class="button secondary" href="/admin/roles">Back</a></div>
-</form>
-HTML;
+        return $this->renderRoleView('form.php', [
+            'action' => $action,
+            'csrfToken' => $this->csrf->token(),
+            'code' => (string) ($submitted['code'] ?? $role['code'] ?? ''),
+            'label' => (string) ($submitted['label'] ?? $role['label'] ?? ''),
+            'error' => $error,
+            'permissionTree' => $this->permissionTree($selectedPermissions),
+            'userAssignment' => $this->userAssignment($selectedUsers),
+        ]);
     }
 
     /** @param list<int> $selected */
@@ -136,29 +130,24 @@ HTML;
     {
         $groups = require dirname(__DIR__, 3) . '/zoosper-auth/config/acl.php';
         $tree = (new AclTreeBuilder())->build($this->roles->allPermissions(), is_array($groups) ? $groups : []);
-        $html = '';
-        foreach ($tree as $group) {
-            $html .= '<fieldset><legend>' . $this->e($group->label) . '</legend>';
-            foreach ($group->permissions as $permission) {
-                $id = (int) $permission['id'];
-                $checked = in_array($id, $selected, true) ? ' checked' : '';
-                $html .= '<label class="checkbox"><input type="checkbox" name="permission_ids[]" value="' . $id . '"' . $checked . '> <strong>' . $this->e((string) $permission['code']) . '</strong> <span class="muted">' . $this->e((string) $permission['label']) . '</span></label>';
-            }
-            $html .= '</fieldset>';
-        }
-        return $html;
+
+        return $this->renderRoleView('permission-tree.php', [
+            'tree' => $tree,
+            'selected' => $selected,
+        ]);
     }
 
     /** @param list<int> $selected */
     private function userAssignment(array $selected): string
     {
-        if ($this->users === null) { return '<p class="muted">User assignment requires AdminUserRepository injection.</p>'; }
-        $html = '';
-        foreach ($this->users->allForAssignment() as $user) {
-            $checked = in_array($user->id, $selected, true) ? ' checked' : '';
-            $html .= '<label class="checkbox" data-role-user><input type="checkbox" name="user_ids[]" value="' . $user->id . '"' . $checked . '> ' . $this->e($user->name) . ' <span class="muted">' . $this->e($user->email) . '</span></label>';
+        if ($this->users === null) {
+            return 'User assignment requires AdminUserRepository injection.';
         }
-        return $html !== '' ? $html : '<p class="muted">No admin users found.</p>';
+
+        return $this->renderRoleView('user-assignment.php', [
+            'users' => $this->users->allForAssignment(),
+            'selected' => $selected,
+        ]);
     }
 
     /** @param array<string, mixed> $form @return list<int> */
@@ -174,7 +163,21 @@ HTML;
         return Response::html($this->layout->render($title, $content, $this->guard->user(), 'admin-roles'), $statusCode);
     }
 
-    private function e(string $value): string
+    private function renderRoleView(string $template, array $data = []): string
+    {
+        $path = dirname(__DIR__, 2) . '/resources/views/admin/roles/' . ltrim($template, '/');
+        if (!is_file($path)) {
+            throw new RuntimeException('Role admin view not found: ' . $template);
+        }
+
+        $escape = static fn (string $value): string => htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        extract($data, EXTR_SKIP);
+        ob_start();
+        require $path;
+        return (string) ob_get_clean();
+    }
+
+private function e(string $value): string
     {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
