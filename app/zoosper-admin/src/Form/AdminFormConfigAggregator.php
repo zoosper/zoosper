@@ -2,8 +2,16 @@
 
 declare(strict_types=1);
 
+
+/**
+ * PHASE_140DF_ADMIN_FORM_CONFIG_LAYERED_LOADER
+ * Runtime migration marker: approved to use ConfigFileLayeredLoader
+ * for module-default plus root-override config resolution.
+ */
 namespace Zoosper\Admin\Form;
 
+
+use Zoosper\Core\Config\ConfigFileLayeredLoader;
 /**
  * Aggregates admin form provider and processor configuration from modules.
  *
