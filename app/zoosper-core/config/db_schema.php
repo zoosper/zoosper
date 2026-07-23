@@ -45,4 +45,27 @@ return [
             ],
         ],
     ],
+    'rate_limit_buckets' => [
+        'columns' => [
+            'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],
+            'scope' => ['type' => 'string', 'length' => 120, 'nullable' => false],
+            'identity_hash' => ['type' => 'string', 'length' => 128, 'nullable' => false],
+            'rule_key' => ['type' => 'string', 'length' => 120, 'nullable' => false],
+            'window_starts_at' => ['type' => 'integer', 'nullable' => false],
+            'window_ends_at' => ['type' => 'integer', 'nullable' => false],
+            'attempts' => ['type' => 'integer', 'nullable' => false, 'default' => 0],
+            'created_at' => ['type' => 'integer', 'nullable' => false],
+            'updated_at' => ['type' => 'integer', 'nullable' => false],
+        ],
+        'indexes' => [
+            'rate_limit_buckets_unique_window' => [
+                'columns' => ['scope', 'identity_hash', 'rule_key', 'window_starts_at'],
+                'unique' => true,
+            ],
+            'rate_limit_buckets_expires_idx' => [
+                'columns' => ['window_ends_at'],
+            ],
+        ],
+    ],
+
 ];
