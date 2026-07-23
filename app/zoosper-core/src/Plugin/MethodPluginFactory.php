@@ -9,19 +9,19 @@ use RuntimeException;
 /**
  * Creates method interceptor instances from plugin definitions.
  *
- * This factory is deliberately tiny and conservative. A later phase can replace
- * construction with container-aware resolution once plugin discovery is wired
- * into the application factory.
+ * The resolver seam keeps the plugin foundation independent from a concrete DI
+ * container while allowing a container-backed resolver to be introduced later.
  */
-final class MethodPluginFactory
+final readonly class MethodPluginFactory
 {
+    public function __construct(
+        private MethodPluginResolverInterface $resolver = new ReflectionMethodPluginResolver(),
+    ) {
+    }
+
     public function create(MethodPluginDefinition $definition): MethodInterceptorInterface
     {
-        if (!class_exists($definition->pluginClass)) {
-            throw new RuntimeException(sprintf('Method plugin class does not exist: %s', $definition->pluginClass));
-        }
-
-        $plugin = new $definition->pluginClass();
+        $plugin = $this->resolver->resolve($definition->pluginClass);
 
         if (!$plugin instanceof MethodInterceptorInterface) {
             throw new RuntimeException(sprintf(
