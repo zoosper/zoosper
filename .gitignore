@@ -12,6 +12,6 @@
 /PHASE-*.md
 /APPLY-*.md
 
-
 /public/media/ 
 /storage/media/
+*.bak
