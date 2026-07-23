@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Form;
 
 
+
+use Zoosper\Admin\Form\AdminConfigLayeredFileLoader;
 use Zoosper\Core\Config\ConfigFileLayeredLoader;
 /**
  * Aggregates admin form provider and processor configuration from modules.
@@ -83,7 +85,7 @@ final readonly class AdminFormConfigAggregator
     /** @return array<string, mixed> */
     private function readConfigFile(string $file): array
     {
-        $config = require $file;
+        $config = $this->loadLayeredAdminFormConfigFile('admin-form-config:' . basename((string) $file), (string) $file);
 
         return is_array($config) ? $config : [];
     }
@@ -121,5 +123,16 @@ final readonly class AdminFormConfigAggregator
         }
 
         return $current;
+    }
+
+    /**
+     * PHASE_140QR_ADMIN_FORM_CONFIG_AGGREGATOR_LAYERED
+     * Load an admin form config file through the proven layered runtime bridge.
+     *
+     * @return array<string, mixed>
+     */
+    private function loadLayeredAdminFormConfigFile(string $source, string $path): array
+    {
+        return (new AdminConfigLayeredFileLoader())->load([$source => $path]);
     }
 }
