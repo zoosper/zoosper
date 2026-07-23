@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Plugin;
 
-use RuntimeException;
-
 /**
  * Creates method interceptor instances from plugin definitions.
  *
@@ -24,11 +22,7 @@ final readonly class MethodPluginFactory
         $plugin = $this->resolver->resolve($definition->pluginClass);
 
         if (!$plugin instanceof MethodInterceptorInterface) {
-            throw new RuntimeException(sprintf(
-                'Method plugin class must implement %s: %s',
-                MethodInterceptorInterface::class,
-                $definition->pluginClass
-            ));
+            throw MethodPluginException::pluginInterfaceMismatch($definition->pluginClass);
         }
 
         return $plugin;
