@@ -6,6 +6,7 @@ namespace Zoosper\Page\Admin\Controller;
 
 use Zoosper\Page\Admin\PageAdminDashboardIndicatorProvider;
 use Zoosper\Page\Admin\PageAdminLaunchReadinessProvider;
+use Zoosper\Page\Admin\PageMomentumAdminDashboardShell;
 use Zoosper\Page\Admin\PageMomentumStatusProvider;
 
 /**
@@ -17,6 +18,7 @@ final class PageMomentumAdminController
         private readonly PageMomentumStatusProvider $statusProvider = new PageMomentumStatusProvider(),
         private readonly PageAdminLaunchReadinessProvider $launchReadinessProvider = new PageAdminLaunchReadinessProvider(),
         private readonly PageAdminDashboardIndicatorProvider $indicatorProvider = new PageAdminDashboardIndicatorProvider(),
+        private readonly PageMomentumAdminDashboardShell $shell = new PageMomentumAdminDashboardShell(),
     ) {
     }
 
@@ -26,7 +28,7 @@ final class PageMomentumAdminController
         $readinessCards = $this->renderCards($this->launchReadinessProvider->sections(), 'heading');
         $indicatorCards = $this->renderCards($this->indicatorProvider->indicators(), 'label');
 
-        return <<<HTML
+        $content = <<<HTML
 <section class="zoosper-admin-card zoosper-page-momentum">
     <header class="zoosper-admin-card__header">
         <h2>Page momentum</h2>
@@ -55,6 +57,8 @@ final class PageMomentumAdminController
     </footer>
 </section>
 HTML;
+
+        return $this->shell->wrap($content);
     }
 
     /**
