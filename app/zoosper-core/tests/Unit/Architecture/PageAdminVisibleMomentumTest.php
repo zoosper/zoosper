@@ -12,11 +12,12 @@ it('keeps visible page admin momentum artefacts available', function (): void {
     expect($root . '/app/zoosper-page/resources/views/admin/page-momentum.latte')->toBeFile();
 });
 
-it('keeps page momentum disabled until wiring phase', function (): void {
+it('allows page momentum to be activated by the Phase 1.48 cutover', function (): void {
     $root = dirname(__DIR__, 5);
     $config = require $root . '/app/zoosper-page/config/admin_page_momentum.php';
 
     expect($config)->toBeArray();
-    expect($config['page_momentum']['enabled'])->toBeFalse();
+    expect($config['page_momentum'])->toBeArray();
     expect($config['page_momentum']['items'])->toBeArray();
+    expect($config['page_momentum']['enabled'])->toBeBool();
 });

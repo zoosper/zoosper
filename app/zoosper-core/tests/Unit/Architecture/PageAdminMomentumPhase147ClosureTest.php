@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 use Zoosper\Page\Admin\PageMomentumAdminIntegrationPreview;
 
-it('keeps page momentum live integration preview disabled by default', function (): void {
+it('keeps page momentum integration preview aligned with current metadata state', function (): void {
     $root = dirname(__DIR__, 5);
     $previewer = new PageMomentumAdminIntegrationPreview();
+    $routeConfig = require $root . '/app/zoosper-page/config/admin_page_momentum_routes.php';
+    $menuConfig = require $root . '/app/zoosper-page/config/admin_page_momentum_menu.php';
 
-    $preview = $previewer->preview(
-        require $root . '/app/zoosper-page/config/admin_page_momentum_routes.php',
-        require $root . '/app/zoosper-page/config/admin_page_momentum_menu.php'
-    );
+    $preview = $previewer->preview($routeConfig, $menuConfig);
+    $expectedCount = (($routeConfig['page_momentum_routes']['enabled'] ?? false) === true
+        && ($menuConfig['page_momentum_menu']['enabled'] ?? false) === true) ? 1 : 0;
 
-    expect($preview['routeCount'])->toBe(0);
-    expect($preview['menuCount'])->toBe(0);
+    expect($preview['routeCount'])->toBe($expectedCount);
+    expect($preview['menuCount'])->toBe($expectedCount);
     expect($preview['liveMutation'])->toBeFalse();
 });
 

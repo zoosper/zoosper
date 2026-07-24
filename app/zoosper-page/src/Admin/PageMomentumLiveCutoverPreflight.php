@@ -7,10 +7,11 @@ namespace Zoosper\Page\Admin;
 use Zoosper\Page\Admin\Controller\PageMomentumAdminController;
 
 /**
- * Verifies that page momentum route/menu metadata is internally safe before a
- * future live admin cutover.
+ * Verifies that page momentum route/menu metadata is internally safe before or
+ * after the live admin metadata activation.
  *
- * This service does not register routes or menu entries.
+ * This service does not register routes or menu entries. It checks structural
+ * readiness only, so it remains valid after Phase 1.48 activates metadata.
  */
 final class PageMomentumLiveCutoverPreflight
 {
@@ -35,8 +36,10 @@ final class PageMomentumLiveCutoverPreflight
         $menuPermission = (string) ($menu['permission'] ?? '');
 
         $checks = [
-            'route_metadata_disabled' => ($routeRoot['enabled'] ?? true) === false,
-            'menu_metadata_disabled' => ($menuRoot['enabled'] ?? true) === false,
+            // These checks intentionally validate type/safety, not disabled state.
+            // Phase 1.48m-z activates the metadata, so disabled-only assertions are stale.
+            'route_metadata_enabled_flag_boolean' => isset($routeRoot['enabled']) && is_bool($routeRoot['enabled']),
+            'menu_metadata_enabled_flag_boolean' => isset($menuRoot['enabled']) && is_bool($menuRoot['enabled']),
             'route_name_present' => $routeName !== '',
             'route_method_get' => ($route['method'] ?? '') === 'GET',
             'route_path_present' => isset($route['path']) && is_string($route['path']) && $route['path'] !== '',
@@ -53,6 +56,8 @@ final class PageMomentumLiveCutoverPreflight
             'checks' => $checks,
             'route' => $route,
             'menu' => $menu,
+            'routeMetadataEnabled' => (bool) ($routeRoot['enabled'] ?? false),
+            'menuMetadataEnabled' => (bool) ($menuRoot['enabled'] ?? false),
             'liveMutation' => false,
         ];
     }

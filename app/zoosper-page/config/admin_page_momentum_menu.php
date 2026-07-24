@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'page_momentum_menu' => [
-        'enabled' => false,
+        'enabled' => true,
         'items' => [
             [
                 'label' => 'Page momentum',

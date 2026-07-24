@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 use Zoosper\Page\Admin\PageMomentumRuntimeBridge;
 
-it('does not export page momentum route or menu definitions while metadata is disabled', function (): void {
+it('exports route and menu definitions according to current metadata state', function (): void {
     $root = dirname(__DIR__, 5);
     $bridge = new PageMomentumRuntimeBridge();
+    $routeConfig = require $root . '/app/zoosper-page/config/admin_page_momentum_routes.php';
+    $menuConfig = require $root . '/app/zoosper-page/config/admin_page_momentum_menu.php';
 
-    $definitions = $bridge->definitions(
-        require $root . '/app/zoosper-page/config/admin_page_momentum_routes.php',
-        require $root . '/app/zoosper-page/config/admin_page_momentum_menu.php'
-    );
+    $definitions = $bridge->definitions($routeConfig, $menuConfig);
+    $expectedCount = (($routeConfig['page_momentum_routes']['enabled'] ?? false) === true
+        && ($menuConfig['page_momentum_menu']['enabled'] ?? false) === true) ? 1 : 0;
 
-    expect($definitions['routeCount'])->toBe(0);
-    expect($definitions['menuCount'])->toBe(0);
+    expect($definitions['routeCount'])->toBe($expectedCount);
+    expect($definitions['menuCount'])->toBe($expectedCount);
 });
 
 it('can export page momentum route and menu definitions in a fixture-enabled config only', function (): void {

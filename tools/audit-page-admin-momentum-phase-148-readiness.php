@@ -53,18 +53,40 @@ $routeConfig = is_file($root . '/app/zoosper-page/config/admin_page_momentum_rou
 $menuConfig = is_file($root . '/app/zoosper-page/config/admin_page_momentum_menu.php')
     ? require $root . '/app/zoosper-page/config/admin_page_momentum_menu.php'
     : [];
-$routeEnabled = (bool) ($routeConfig['page_momentum_routes']['enabled'] ?? true);
-$menuEnabled = (bool) ($menuConfig['page_momentum_menu']['enabled'] ?? true);
+
+$routeRoot = $routeConfig['page_momentum_routes'] ?? [];
+$menuRoot = $menuConfig['page_momentum_menu'] ?? [];
+$routeEnabled = is_array($routeRoot) && isset($routeRoot['enabled']) && is_bool($routeRoot['enabled']) ? $routeRoot['enabled'] : null;
+$menuEnabled = is_array($menuRoot) && isset($menuRoot['enabled']) && is_bool($menuRoot['enabled']) ? $menuRoot['enabled'] : null;
 
 $report[] = '';
-$report[] = '- route metadata enabled: ' . ($routeEnabled ? 'yes' : 'no');
-$report[] = '- menu metadata enabled: ' . ($menuEnabled ? 'yes' : 'no');
-if ($routeEnabled || $menuEnabled) {
+$report[] = '- route metadata enabled: ' . ($routeEnabled === true ? 'yes' : ($routeEnabled === false ? 'no' : 'invalid'));
+$report[] = '- menu metadata enabled: ' . ($menuEnabled === true ? 'yes' : ($menuEnabled === false ? 'no' : 'invalid'));
+
+if ($routeEnabled === null || $menuEnabled === null) {
     $errors++;
 }
 
-$report[] = 'Live route registered: no';
-$report[] = 'Live menu enabled: no';
+$previewFile = $root . '/var/reports/page-admin-momentum-cutover-preview.json';
+if (is_file($previewFile)) {
+    $preview = json_decode((string) file_get_contents($previewFile), true);
+    $previewReady = is_array($preview) && ($preview['preflightReady'] ?? false) === true;
+    $previewMutation = is_array($preview) && ($preview['liveMutation'] ?? true) === true;
+    $routeCount = is_array($preview) && isset($preview['wouldRegisterRoutes']) && is_array($preview['wouldRegisterRoutes']) ? count($preview['wouldRegisterRoutes']) : 0;
+    $menuCount = is_array($preview) && isset($preview['wouldRegisterMenuItems']) && is_array($preview['wouldRegisterMenuItems']) ? count($preview['wouldRegisterMenuItems']) : 0;
+
+    $report[] = '- cutover preview preflight ready: ' . ($previewReady ? 'yes' : 'no');
+    $report[] = '- cutover preview route count: ' . $routeCount;
+    $report[] = '- cutover preview menu count: ' . $menuCount;
+    $report[] = '- cutover preview live mutation: ' . ($previewMutation ? 'yes' : 'no');
+
+    if (!$previewReady || $previewMutation || $routeCount !== 1 || $menuCount !== 1) {
+        $errors++;
+    }
+}
+
+$report[] = 'Live route registered: metadata-active';
+$report[] = 'Live menu enabled: metadata-active';
 $report[] = 'Warnings: ' . $warnings;
 $report[] = 'Errors: ' . $errors;
 

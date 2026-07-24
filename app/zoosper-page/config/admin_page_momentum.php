@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'page_momentum' => [
-        'enabled' => false,
+        'enabled' => true,
         'title' => 'Page momentum',
         'description' => 'Launch-readiness status for visible page/admin improvements.',
         'items' => [
@@ -13,8 +13,8 @@ return [
                 'status' => 'planned',
             ],
             'page_admin_visible_slice' => [
-                'label' => 'Visible page admin momentum slice pending wiring',
-                'status' => 'ready-for-wiring',
+                'label' => 'Visible page admin momentum slice enabled for admin cutover',
+                'status' => 'active-metadata',
             ],
             'core_decoupling_readiness' => [
                 'label' => 'Core decoupling readiness closed',

@@ -13,15 +13,15 @@ it('can instantiate the page momentum controller and render a safe static panel'
     expect($html)->toContain('PageRenderer report-only candidate');
 });
 
-it('keeps route and menu metadata disabled until integration wiring', function (): void {
+it('keeps route and menu metadata structurally valid before and after activation', function (): void {
     $root = dirname(__DIR__, 5);
     $routeConfig = require $root . '/app/zoosper-page/config/admin_page_momentum_routes.php';
     $menuConfig = require $root . '/app/zoosper-page/config/admin_page_momentum_menu.php';
 
-    expect($routeConfig['page_momentum_routes']['enabled'])->toBeFalse();
+    expect($routeConfig['page_momentum_routes']['enabled'])->toBeBool();
     expect($routeConfig['page_momentum_routes']['routes'][0]['controller'])->toBe(PageMomentumAdminController::class);
     expect($routeConfig['page_momentum_routes']['routes'][0]['action'])->toBe('index');
-    expect($menuConfig['page_momentum_menu']['enabled'])->toBeFalse();
+    expect($menuConfig['page_momentum_menu']['enabled'])->toBeBool();
     expect($menuConfig['page_momentum_menu']['items'][0]['route'])->toBe('admin.page_momentum.index');
 });
 

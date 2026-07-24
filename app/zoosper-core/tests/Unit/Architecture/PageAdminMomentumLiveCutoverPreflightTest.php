@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\Page\Admin\PageMomentumLiveCutoverPreflight;
 
-it('passes page momentum live cutover preflight while metadata remains disabled', function (): void {
+it('passes page momentum live cutover preflight for the current metadata state', function (): void {
     $root = dirname(__DIR__, 5);
     $preflight = new PageMomentumLiveCutoverPreflight();
 
@@ -15,8 +15,8 @@ it('passes page momentum live cutover preflight while metadata remains disabled'
 
     expect($result['readyForManualCutover'])->toBeTrue();
     expect($result['liveMutation'])->toBeFalse();
-    expect($result['checks']['route_metadata_disabled'])->toBeTrue();
-    expect($result['checks']['menu_metadata_disabled'])->toBeTrue();
+    expect($result['checks']['route_name_present'])->toBeTrue();
+    expect($result['checks']['menu_route_matches_route_name'])->toBeTrue();
 });
 
 it('keeps phase 1.48 preflight tools available', function (): void {

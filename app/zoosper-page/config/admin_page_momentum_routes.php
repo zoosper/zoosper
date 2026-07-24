@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'page_momentum_routes' => [
-        'enabled' => false,
+        'enabled' => true,
         'routes' => [
             [
                 'name' => 'admin.page_momentum.index',
