@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Page\Admin\Controller;
 
 use Zoosper\Page\Admin\PageAdminDashboardIndicatorProvider;
+use Zoosper\Page\Admin\PageAdminDashboardStatusPresenter;
 use Zoosper\Page\Admin\PageAdminLaunchReadinessProvider;
 use Zoosper\Page\Admin\PageMomentumAdminDashboardShell;
 use Zoosper\Page\Admin\PageMomentumStatusProvider;
@@ -19,6 +20,7 @@ final class PageMomentumAdminController
         private readonly PageAdminLaunchReadinessProvider $launchReadinessProvider = new PageAdminLaunchReadinessProvider(),
         private readonly PageAdminDashboardIndicatorProvider $indicatorProvider = new PageAdminDashboardIndicatorProvider(),
         private readonly PageMomentumAdminDashboardShell $shell = new PageMomentumAdminDashboardShell(),
+        private readonly PageAdminDashboardStatusPresenter $statusPresenter = new PageAdminDashboardStatusPresenter(),
     ) {
     }
 
@@ -36,21 +38,15 @@ final class PageMomentumAdminController
     </header>
     <section>
         <h3>Live status</h3>
-        <div class="zoosper-admin-grid zoosper-admin-grid--two">
-            {$statusCards}
-        </div>
+        <div class="zoosper-admin-grid zoosper-admin-grid--two">{$statusCards}</div>
     </section>
     <section>
         <h3>Page Admin launch-readiness dashboard</h3>
-        <div class="zoosper-admin-grid zoosper-admin-grid--two">
-            {$readinessCards}
-        </div>
+        <div class="zoosper-admin-grid zoosper-admin-grid--two">{$readinessCards}</div>
     </section>
     <section>
         <h3>Dashboard indicators</h3>
-        <div class="zoosper-admin-grid zoosper-admin-grid--two">
-            {$indicatorCards}
-        </div>
+        <div class="zoosper-admin-grid zoosper-admin-grid--two">{$indicatorCards}</div>
     </section>
     <footer class="zoosper-admin-card__footer">
         <p>Route: <code>/admin/page-momentum</code> · Permission: <code>page.manage</code> · Mode: read-only</p>
@@ -68,10 +64,12 @@ HTML;
     {
         $cards = '';
         foreach ($items as $item) {
+            $status = $item['status'] ?? '';
             $cards .= sprintf(
-                '<article class="zoosper-admin-card zoosper-admin-card--nested"><h3>%s</h3><p><strong>%s</strong></p><p>%s</p></article>',
+                '<article class="zoosper-admin-card zoosper-admin-card--nested"><h3>%s</h3><p><span class="%s">%s</span></p><p>%s</p></article>',
                 htmlspecialchars($item[$headingKey] ?? '', ENT_QUOTES, 'UTF-8'),
-                htmlspecialchars($item['status'] ?? '', ENT_QUOTES, 'UTF-8'),
+                htmlspecialchars($this->statusPresenter->classFor($status), ENT_QUOTES, 'UTF-8'),
+                htmlspecialchars($status, ENT_QUOTES, 'UTF-8'),
                 htmlspecialchars($item['detail'] ?? '', ENT_QUOTES, 'UTF-8'),
             );
         }
