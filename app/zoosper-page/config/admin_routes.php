@@ -72,7 +72,7 @@ return array (
     'name' => 'admin.page_momentum.index',
     'method' => 'GET',
     'path' => '/admin/page-momentum',
-    'controller' => 'Zoosper\\Page\\Admin\\Controller\\PageMomentumAdminController',
+    'controller' => 'Zoosper\\Page\\Admin\\Controller\\PageMomentumAdminHttpController',
     'action' => 'index',
     'view' => 'admin/page-momentum.latte',
     'permission' => 'page.manage',
