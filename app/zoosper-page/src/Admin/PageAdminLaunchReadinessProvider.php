@@ -9,11 +9,18 @@ namespace Zoosper\Page\Admin;
  */
 final class PageAdminLaunchReadinessProvider
 {
+    public function __construct(
+        private readonly PageAdminDashboardIndicatorProvider $indicatorProvider = new PageAdminDashboardIndicatorProvider(),
+    ) {
+    }
+
     /**
      * @return list<array{heading: string, status: string, detail: string}>
      */
     public function sections(): array
     {
+        $indicatorCount = count($this->indicatorProvider->indicators());
+
         return [
             [
                 'heading' => 'Live route and menu',
@@ -38,7 +45,7 @@ final class PageAdminLaunchReadinessProvider
             [
                 'heading' => 'Admin UX readiness',
                 'status' => 'in-progress',
-                'detail' => 'Next visible work can add richer dashboard checks for page CRUD, preview, sidebar/menu health, and launch readiness.',
+                'detail' => sprintf('Dashboard now tracks %d richer indicators for CRUD readiness, preview readiness, sidebar/menu health, route/controller consistency, media readiness, and documentation readiness.', $indicatorCount),
             ],
             [
                 'heading' => 'Rollback and safety',
