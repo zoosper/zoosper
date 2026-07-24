@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Admin\Controller;
 
+use Zoosper\Page\Admin\PageAdminDashboardFactProvider;
 use Zoosper\Page\Admin\PageAdminDashboardIndicatorProvider;
 use Zoosper\Page\Admin\PageAdminDashboardStatusPresenter;
 use Zoosper\Page\Admin\PageAdminLaunchReadinessProvider;
@@ -21,6 +22,7 @@ final class PageMomentumAdminController
         private readonly PageAdminDashboardIndicatorProvider $indicatorProvider = new PageAdminDashboardIndicatorProvider(),
         private readonly PageMomentumAdminDashboardShell $shell = new PageMomentumAdminDashboardShell(),
         private readonly PageAdminDashboardStatusPresenter $statusPresenter = new PageAdminDashboardStatusPresenter(),
+        private readonly PageAdminDashboardFactProvider $factProvider = new PageAdminDashboardFactProvider(),
     ) {
     }
 
@@ -29,6 +31,7 @@ final class PageMomentumAdminController
         $statusCards = $this->renderCards($this->statusProvider->items(), 'label');
         $readinessCards = $this->renderCards($this->launchReadinessProvider->sections(), 'heading');
         $indicatorCards = $this->renderCards($this->indicatorProvider->indicators(), 'label');
+        $factCards = $this->renderCards($this->factProvider->facts(), 'label');
 
         $content = <<<HTML
 <section class="zoosper-admin-card zoosper-page-momentum">
@@ -47,6 +50,10 @@ final class PageMomentumAdminController
     <section>
         <h3>Dashboard indicators</h3>
         <div class="zoosper-admin-grid zoosper-admin-grid--two">{$indicatorCards}</div>
+    </section>
+    <section>
+        <h3>Real dashboard facts</h3>
+        <div class="zoosper-admin-grid zoosper-admin-grid--two">{$factCards}</div>
     </section>
     <footer class="zoosper-admin-card__footer">
         <p>Route: <code>/admin/page-momentum</code> · Permission: <code>page.manage</code> · Mode: read-only</p>
