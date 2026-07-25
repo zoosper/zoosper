@@ -65,7 +65,8 @@
         "test": "pest",
         "test:unit": "pest --testsuite=Unit",
         "test:feature": "pest --testsuite=Feature",
-        "test:coverage": "pest --coverage --min=60"
+        "test:coverage": "pest --coverage --min=60",
+        "gate": "php8.5 tools/gate.php"
     },
     "config": {
         "sort-packages": true,
