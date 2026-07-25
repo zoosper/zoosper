@@ -7,21 +7,17 @@ namespace Zoosper\Page\Routing;
 use Zoosper\Core\Routing\FallbackHandlerInterface;
 
 /**
- * Compatibility adapter retained for the older core-decoupling tests.
+ * Page-module implementation of the core-owned fallback handler contract.
  */
-final class PageFallbackHandlerAdapter implements FallbackHandlerInterface
+final class PageFallbackHandler implements FallbackHandlerInterface
 {
     public function __construct(
-        private readonly ?object $pageController = null,
+        private readonly object $pageController,
     ) {
     }
 
     public function supports(object $request): bool
     {
-        if ($this->pageController === null) {
-            return false;
-        }
-
         if (method_exists($this->pageController, 'supports')) {
             return (bool) $this->pageController->supports($request);
         }
@@ -33,7 +29,7 @@ final class PageFallbackHandlerAdapter implements FallbackHandlerInterface
 
     public function handle(object $request): mixed
     {
-        if (!$this->supports($request) || $this->pageController === null) {
+        if (!$this->supports($request)) {
             return null;
         }
 

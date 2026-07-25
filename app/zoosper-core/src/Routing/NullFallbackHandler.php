@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Core\Routing;
 
 /**
- * Safe default fallback handler used before feature modules register one.
+ * Safe no-op fallback handler used when no feature module registers a fallback.
  */
 final class NullFallbackHandler implements FallbackHandlerInterface
 {
