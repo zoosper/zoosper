@@ -2,7 +2,15 @@
 
 declare(strict_types=1);
 
-/** Architecture foundation gate aggregator with durable RoleAdmin cutover allowlist. */
+/**
+ * Architecture foundation gate aggregator.
+ *
+ * Read-only audit that checks the permanent architecture guard set exists and
+ * that core runtime source remains free of direct feature-module dependencies.
+ *
+ * Temporary fixer/hotfix artefacts are warned about, while intentionally durable
+ * tools are allowlisted through config/durable_tools.php.
+ */
 
 $root = dirname(__DIR__);
 $reportDir = $root . '/var/reports';
@@ -16,8 +24,10 @@ $requiredGuards = [
     'tools/audit-site-lookup-boundary-regression.php',
     'tools/audit-site-lookup-service-binding.php',
     'tools/audit-site-lookup-service-binding-regression.php',
+    'tools/audit-durable-tool-registry.php',
     'app/zoosper-core/tests/Unit/Architecture/SiteLookupBoundaryRegressionTest.php',
     'app/zoosper-core/tests/Unit/Architecture/SiteLookupServiceBindingRegressionTest.php',
+    'app/zoosper-core/tests/Unit/Architecture/DurableToolRegistryTest.php',
 ];
 
 foreach ($requiredGuards as $file) {
@@ -45,9 +55,11 @@ if (is_dir($coreSourceDir)) {
         if (!$file instanceof SplFileInfo || !$file->isFile() || $file->getExtension() !== 'php') {
             continue;
         }
+
         $coreFileCount++;
         $relative = str_replace($root . '/', '', $file->getPathname());
         $source = (string) file_get_contents($file->getPathname());
+
         foreach ($forbiddenFeatureNamespaces as $needle) {
             if (str_contains($source, $needle)) {
                 $coreViolations[] = $relative . ' contains ' . $needle;
@@ -62,10 +74,7 @@ foreach ($coreViolations as $violation) {
     $errors[] = 'Core feature coupling regression: ' . $violation;
 }
 
-$durableApplyCutoverAllowlist = [
-    'tools/apply-role-admin-latte-cutover.php',
-    'tools/apply-role-admin-markup-view-cutover.php',
-];
+$durableToolAllowlist = loadDurableToolAllowlist($root, $warnings);
 
 $temporaryArtefacts = [];
 $temporaryPatterns = [
@@ -75,20 +84,24 @@ $temporaryPatterns = [
     '/^docs\/development\/.*-v[0-9]+.*\.md$/',
     '/^docs\/roadmap\/.*-v[0-9]+\.md$/',
 ];
+
 foreach (['tools', 'docs/development', 'docs/roadmap'] as $relativeDir) {
     $dir = $root . '/' . $relativeDir;
     if (!is_dir($dir)) {
         continue;
     }
+
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS));
     foreach ($iterator as $file) {
         if (!$file instanceof SplFileInfo || !$file->isFile()) {
             continue;
         }
+
         $relative = str_replace($root . '/', '', $file->getPathname());
-        if (in_array($relative, $durableApplyCutoverAllowlist, true)) {
+        if (in_array($relative, $durableToolAllowlist, true)) {
             continue;
         }
+
         foreach ($temporaryPatterns as $pattern) {
             if (preg_match($pattern, $relative) === 1) {
                 $temporaryArtefacts[] = $relative;
@@ -106,6 +119,7 @@ if ($temporaryArtefacts !== []) {
 $observations[] = 'Required architecture guards checked: ' . count($requiredGuards);
 $observations[] = 'Core source PHP files scanned: ' . $coreFileCount;
 $observations[] = 'Core feature coupling violations: ' . count($coreViolations);
+$observations[] = 'Durable tool allowlist entries loaded: ' . count($durableToolAllowlist);
 $observations[] = 'Temporary fixer/hotfix artefacts detected: ' . count($temporaryArtefacts);
 
 if (!is_dir($reportDir)) {
@@ -118,6 +132,7 @@ $payload = [
     'warnings' => $warnings,
     'observations' => $observations,
     'coreViolations' => $coreViolations,
+    'durableToolAllowlist' => $durableToolAllowlist,
     'temporaryArtefacts' => $temporaryArtefacts,
 ];
 
@@ -133,6 +148,11 @@ $report[] = '';
 $report[] = '### Observations';
 foreach ($observations as $observation) {
     $report[] = '- ' . $observation;
+}
+$report[] = '';
+$report[] = '### Durable tool allowlist';
+foreach ($durableToolAllowlist as $tool) {
+    $report[] = '- ' . $tool;
 }
 if ($temporaryArtefacts !== []) {
     $report[] = '';
@@ -161,3 +181,30 @@ file_put_contents($reportDir . '/architecture-foundation-gates.json', json_encod
 
 echo implode("\n", $report) . "\n";
 exit($errors === [] ? 0 : 1);
+
+/**
+ * @return list<string>
+ */
+function loadDurableToolAllowlist(string $root, array &$warnings): array
+{
+    $registryFile = $root . '/config/durable_tools.php';
+    if (!is_file($registryFile)) {
+        $warnings[] = 'Durable tool registry not found. Temporary artefact detection will use an empty allowlist.';
+        return [];
+    }
+
+    $registry = require $registryFile;
+    if (!is_array($registry)) {
+        $warnings[] = 'Durable tool registry did not return an array. Temporary artefact detection will use an empty allowlist.';
+        return [];
+    }
+
+    $allowlist = [];
+    foreach ($registry as $tool => $metadata) {
+        if (is_string($tool) && str_starts_with($tool, 'tools/') && !str_contains($tool, '..')) {
+            $allowlist[] = $tool;
+        }
+    }
+
+    return array_values(array_unique($allowlist));
+}
