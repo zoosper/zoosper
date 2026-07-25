@@ -42,7 +42,7 @@
                         {ifset $deleteUrlBase}
                             <form method="post" action="{$deleteUrlBase}{$role['id'] ?? $role->id ?? ''}" class="inline-form">
                                 {ifset $csrfToken}
-                                    <input type="hidden" name="csrf_token" value="{$csrfToken}">
+                                    <input type="hidden" name="_csrf_token" value="{$csrfToken}">
                                 {/ifset}
                                 <button type="submit">Delete</button>
                             </form>
