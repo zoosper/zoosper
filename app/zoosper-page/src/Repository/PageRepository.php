@@ -12,8 +12,9 @@ use Zoosper\Page\Model\Page;
  *
  * The repository hydrates dual content metadata (`content_format`,
  * `content_json`) and SEO metadata while keeping the current HTML save/render
- * behaviour unchanged. Column detection keeps older local databases compatible
- * during phased development.
+ * behaviour unchanged. Optional-column detection is driver-aware so the same
+ * code works on MySQL (INFORMATION_SCHEMA) and SQLite (PRAGMA/sqlite_master),
+ * keeping the project's sanctioned sqlite-for-local-dev policy working.
  */
 final readonly class PageRepository
 {
@@ -304,19 +305,93 @@ final readonly class PageRepository
         return $value === null ? null : (string) $value;
     }
 
+    /**
+     * Driver-aware column existence check.
+     *
+     * SQLite has no INFORMATION_SCHEMA; use PRAGMA table_info. MySQL and other
+     * servers use the SQL-standard INFORMATION_SCHEMA.COLUMNS.
+     */
     private function columnExists(string $table, string $column): bool
     {
-        $statement = $this->pdo->prepare('SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table AND COLUMN_NAME = :column');
-        $statement->execute(['table' => $table, 'column' => $column]);
+        foreach ($this->tableColumns($table) as $existing) {
+            if (strcasecmp($existing, $column) === 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function tableColumns(string $table): array
+    {
+        if ($this->isSqlite()) {
+            $safe = $this->assertIdentifier($table);
+            $statement = $this->pdo->query('PRAGMA table_info("' . $safe . '")');
+            if ($statement === false) {
+                return [];
+            }
+
+            $columns = [];
+            foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                if (isset($row['name'])) {
+                    $columns[] = (string) $row['name'];
+                }
+            }
+
+            return $columns;
+        }
+
+        $statement = $this->pdo->prepare(
+            'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS '
+            . 'WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table'
+        );
+        $statement->execute(['table' => $table]);
+
+        return array_map(static fn (mixed $v): string => (string) $v, $statement->fetchAll(PDO::FETCH_COLUMN));
+    }
+
+    /**
+     * Driver-aware table existence check.
+     */
+    private function tableExists(string $table): bool
+    {
+        if ($this->isSqlite()) {
+            $statement = $this->pdo->prepare(
+                "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = :table"
+            );
+            $statement->execute(['table' => $table]);
+
+            return (int) $statement->fetchColumn() > 0;
+        }
+
+        $statement = $this->pdo->prepare(
+            'SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES '
+            . 'WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table'
+        );
+        $statement->execute(['table' => $table]);
 
         return (int) $statement->fetchColumn() > 0;
     }
 
-    private function tableExists(string $table): bool
+    private function isSqlite(): bool
     {
-        $statement = $this->pdo->prepare('SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table');
-        $statement->execute(['table' => $table]);
+        return strtolower((string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)) === 'sqlite';
+    }
 
-        return (int) $statement->fetchColumn() > 0;
+    /**
+     * Guard a table identifier used in a PRAGMA statement (which cannot bind
+     * parameters). Table names in this repository are trusted constants, but we
+     * validate defensively.
+     */
+    private function assertIdentifier(string $identifier): string
+    {
+        if (preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $identifier) !== 1) {
+            throw new \InvalidArgumentException('Unsafe table identifier: ' . $identifier);
+        }
+
+        return $identifier;
     }
 }

@@ -83,7 +83,17 @@ final class ApplicationFactory
                 ], 404);
             }
 
-            return $fallbackHandler->view($request);
+            // Phase 1.93: use the FallbackHandlerInterface contract (supports/handle).
+            // The previous code called ->view(), which does not exist on the
+            // contract or on NullFallbackHandler, fataling every frontend request.
+            if ($fallbackHandler->supports($request)) {
+                $response = $fallbackHandler->handle($request);
+                if ($response instanceof Response) {
+                    return $response;
+                }
+            }
+
+            return Response::html('Page not found.', 404);
         });
 
         return new Application(
