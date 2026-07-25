@@ -21,9 +21,11 @@
         "zoosper/theme": "*@dev"
     },
     "require-dev": {
+        "icanhazstring/composer-unused": "^0.9.6",
         "pestphp/pest": "^3.0",
         "pestphp/pest-plugin": "^3.0",
-        "phpunit/phpunit": "^11.0"
+        "phpunit/phpunit": "^11.0",
+        "vimeo/psalm": "^6.16"
     },
     "autoload": {
         "psr-4": {
