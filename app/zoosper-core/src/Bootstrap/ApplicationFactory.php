@@ -22,7 +22,8 @@ use Zoosper\Core\Routing\ControllerProviderLoader;
 use Zoosper\Core\Routing\ModuleRouteLoader;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
-use Zoosper\Page\Controller\PageController;
+use Zoosper\Core\Routing\FallbackHandlerInterface;
+use Zoosper\Core\Routing\NullFallbackHandler;
 
 final class ApplicationFactory
 {
@@ -67,9 +68,11 @@ final class ApplicationFactory
         $routeLoader->registerAdminRoutes($router, $adminMiddleware);
         $routeLoader->registerApiRoutes($router);
 
-        $pageController = $services->get(PageController::class);
+        $fallbackHandler = $services->has(FallbackHandlerInterface::class)
+            ? $services->get(FallbackHandlerInterface::class)
+            : new NullFallbackHandler();
 
-        $router->fallback(static function (Request $request) use ($pageController): Response {
+        $router->fallback(static function (Request $request) use ($fallbackHandler): Response {
             if (str_starts_with($request->path(), '/api/')) {
                 return Response::json([
                     'success' => false,
@@ -80,7 +83,7 @@ final class ApplicationFactory
                 ], 404);
             }
 
-            return $pageController->view($request);
+            return $fallbackHandler->view($request);
         });
 
         return new Application(
