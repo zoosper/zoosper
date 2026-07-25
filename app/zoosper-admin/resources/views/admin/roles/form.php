@@ -12,7 +12,7 @@
     <p class="error"><?= $escape($error) ?></p>
 <?php endif; ?>
 <form method="post" action="<?= $escape($action) ?>">
-    <input type="hidden" name="csrf_token" value="<?= $escape($csrfToken) ?>">
+    <input type="hidden" name="_csrf_token" value="<?= $escape($csrfToken) ?>">
 
     <label>
         Role label
