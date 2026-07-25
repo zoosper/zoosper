@@ -3,14 +3,16 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Site\SiteLookupInterface;
+use Zoosper\Site\Infrastructure\DatabaseSiteLookup;
 use Zoosper\Site\Repository\SiteDomainRepository;
 use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Site\Service\SiteResolver;
 
 return [
-    \\Zoosper\\Core\\Site\\SiteLookupInterface::class => static function ($container): \\Zoosper\\Site\\Infrastructure\\DatabaseSiteLookup {
-        return new \\Zoosper\\Site\\Infrastructure\\DatabaseSiteLookup(
-            $container->get(\\Zoosper\\Site\\Repository\\SiteRepository::class)
+    SiteLookupInterface::class => static function (ServiceContainer $services): DatabaseSiteLookup {
+        return new DatabaseSiteLookup(
+            $services->get(SiteRepository::class)
         );
     },
     SiteRepository::class => static fn (ServiceContainer $services): SiteRepository => new SiteRepository($services->get(PDO::class)),
