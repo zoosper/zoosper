@@ -14,9 +14,9 @@ it('passes page admin dashboard status system closure invariants', function (): 
     expect($result['statusTokenCount'])->toBe(7);
 });
 
-it('keeps phase 1.61 closure tools available', function (): void {
+it('keeps durable dashboard status system closure tool available', function (): void {
     $root = dirname(__DIR__, 5);
 
+    expect(class_exists(PageAdminDashboardStatusSystemGuard::class))->toBeTrue();
     expect($root . '/tools/audit-page-admin-dashboard-status-system-closure.php')->toBeFile();
-    expect($root . '/tools/audit-page-admin-momentum-phase-161-closure.php')->toBeFile();
 });

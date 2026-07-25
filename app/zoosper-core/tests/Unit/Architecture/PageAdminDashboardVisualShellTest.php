@@ -18,10 +18,9 @@ it('wraps the page momentum dashboard in a standalone styled shell', function ()
     expect($html)->toContain('read-only');
 });
 
-it('keeps phase 1.60 visual shell tools available', function (): void {
+it('keeps the durable visual shell smoke tool available', function (): void {
     $root = dirname(__DIR__, 5);
 
     expect(class_exists(PageMomentumAdminDashboardShell::class))->toBeTrue();
     expect($root . '/tools/smoke-page-admin-dashboard-visual-shell.php')->toBeFile();
-    expect($root . '/tools/audit-page-admin-momentum-phase-160-closure.php')->toBeFile();
 });

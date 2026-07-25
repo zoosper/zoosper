@@ -17,9 +17,10 @@ it('passes page admin dashboard facts closure invariants', function (): void {
     expect($result['unknownStatuses'])->toBe([]);
 });
 
-it('keeps phase 1.62 closure tools available', function (): void {
+it('keeps durable dashboard facts closure classes available', function (): void {
     $root = dirname(__DIR__, 5);
 
+    expect(PageAdminDashboardFactProvider::class)->toBeString();
+    expect(PageAdminDashboardFactsGuard::class)->toBeString();
     expect($root . '/tools/audit-page-admin-dashboard-facts-closure.php')->toBeFile();
-    expect($root . '/tools/audit-page-admin-momentum-phase-162-closure.php')->toBeFile();
 });

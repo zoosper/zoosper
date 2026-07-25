@@ -16,9 +16,9 @@ it('passes launch readiness dashboard closure invariants', function (): void {
     expect($result['missingHeadings'])->toBe([]);
 });
 
-it('keeps phase 1.58 closure tools available', function (): void {
+it('keeps durable launch readiness dashboard tools available', function (): void {
     $root = dirname(__DIR__, 5);
 
     expect($root . '/tools/audit-page-admin-launch-readiness-dashboard-invariants.php')->toBeFile();
-    expect($root . '/tools/audit-page-admin-momentum-phase-158-closure.php')->toBeFile();
+    expect(class_exists(PageAdminLaunchReadinessDashboardGuard::class))->toBeTrue();
 });

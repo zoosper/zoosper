@@ -22,9 +22,8 @@ it('provides live page momentum status items', function (): void {
     expect($items[0]['label'])->toBe('Live admin route');
 });
 
-it('keeps phase 1.57 live panel tools available', function (): void {
+it('keeps the durable live panel smoke tool available', function (): void {
     $root = dirname(__DIR__, 5);
 
     expect($root . '/tools/smoke-page-admin-momentum-live-panel.php')->toBeFile();
-    expect($root . '/tools/audit-page-admin-momentum-phase-157-readiness.php')->toBeFile();
 });
