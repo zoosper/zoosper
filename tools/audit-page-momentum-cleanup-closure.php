@@ -6,8 +6,12 @@ declare(strict_types=1);
  * Page Momentum cleanup closure audit.
  *
  * Read-only final guard for the Page Momentum cleanup arc. It confirms the live
- * dashboard core remains present while removed scaffolding symbols/configs no
- * longer appear in active docs/tools/tests.
+ * dashboard core remains present while removed scaffolding symbols/config names
+ * no longer appear in active docs/tools/tests.
+ *
+ * Important: tools/docs whose purpose is to clean up, audit, or document the
+ * cleanup may legitimately contain removed symbol names as vocabulary. Those
+ * files are explicitly excluded from stale-reference detection.
  */
 
 $root = dirname(__DIR__);
@@ -60,6 +64,22 @@ $requiredTools = [
     'tools/audit-repository-file-count-baseline.php',
 ];
 
+$allowedReferenceFiles = [
+    'tools/audit-page-momentum-cleanup-closure.php',
+    'tools/cleanup-page-momentum-post-runtime-support-artifacts.php',
+    'tools/plan-page-momentum-runtime-consolidation.php',
+    'tools/audit-page-momentum-runtime-dependencies.php',
+    'docs/development/page-momentum-post-runtime-support-cleanup.md',
+    'docs/development/page-momentum-runtime-consolidation-plan.md',
+    'docs/development/page-momentum-runtime-consolidation-planner-fix.md',
+    'docs/development/page-momentum-runtime-consolidation-test-hotfix.md',
+    'docs/development/page-momentum-route-metadata-test-escape-hotfix.md',
+    'docs/development/page-momentum-cleanup-closure.md',
+    'docs/roadmap/roadmap-status-fragment-phase-1.65m-z.md',
+    'docs/roadmap/roadmap-status-fragment-phase-1.66a-l.md',
+    'docs/roadmap/roadmap-status-fragment-phase-1.66m-z.md',
+];
+
 $errors = [];
 $warnings = [];
 $observations = [];
@@ -87,7 +107,7 @@ $scanScopes = [
 $symbolRefs = [];
 $configRefs = [];
 foreach (listFiles($root, $scanScopes) as $relative => $path) {
-    if ($relative === 'tools/audit-page-momentum-cleanup-closure.php') {
+    if (in_array($relative, $allowedReferenceFiles, true)) {
         continue;
     }
 
@@ -120,6 +140,7 @@ $pageMomentumActiveCoreCount = count(array_filter($expectedRuntimeCore, static f
 $observations[] = 'Expected live Page Momentum runtime core present: ' . $pageMomentumActiveCoreCount . '/' . count($expectedRuntimeCore);
 $observations[] = 'Removed runtime candidate symbol reference groups: ' . count($symbolRefs);
 $observations[] = 'Removed runtime candidate config reference groups: ' . count($configRefs);
+$observations[] = 'Allowed cleanup vocabulary files excluded: ' . count($allowedReferenceFiles);
 
 if (!is_dir($reportDir)) {
     mkdir($reportDir, 0775, true);
@@ -133,6 +154,7 @@ $payload = [
     'expectedRuntimeCore' => $expectedRuntimeCore,
     'symbolReferences' => $symbolRefs,
     'configReferences' => $configRefs,
+    'allowedReferenceFiles' => $allowedReferenceFiles,
 ];
 
 $report = [];
@@ -143,7 +165,6 @@ $report[] = '';
 $report[] = 'Errors: ' . count($errors);
 $report[] = 'Warnings: ' . count($warnings);
 $report[] = 'Observations: ' . count($observations);
-
 $report[] = '';
 $report[] = '### Observations';
 foreach ($observations as $observation) {
