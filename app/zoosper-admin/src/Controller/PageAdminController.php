@@ -44,7 +44,8 @@ use Zoosper\Page\Event\PageUnpublishedEvent;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
-use Zoosper\Site\Repository\SiteLookupInterface;
+use Zoosper\Core\Site\SiteLookupInterface;
+
 /**
  * Admin CRUD controller for CMS pages.
  *

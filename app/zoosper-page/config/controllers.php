@@ -20,14 +20,14 @@ use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Page\Admin\PageGridRepository;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
-use Zoosper\Site\Repository\SiteRepository;
+use Zoosper\Core\Site\SiteLookupInterface;
 
 return [
     PageAdminController::class => static fn (ServiceContainer $services): PageAdminController => new PageAdminController(
         guard: $services->get(SessionGuard::class),
         csrf: $services->get(CsrfTokenManager::class),
         pages: $services->get(PageRepository::class),
-        sites: $services->get(SiteRepository::class),
+        sites: $services->get(SiteLookupInterface::class),
         renderer: $services->get(PageRenderer::class),
         layout: $services->get(AdminLayout::class),
         views: $services->get(AdminViewRenderer::class),

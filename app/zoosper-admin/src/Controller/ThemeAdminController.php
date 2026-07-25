@@ -12,7 +12,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
-use Zoosper\Site\Repository\SiteLookupInterface;
+use Zoosper\Core\Site\SiteLookupInterface;
 use Zoosper\Theme\Theme\ThemeRepository;
 
 final readonly class ThemeAdminController

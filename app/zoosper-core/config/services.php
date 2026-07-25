@@ -22,7 +22,6 @@ use Zoosper\Core\Site\SiteContextResolverFactory;
 use Zoosper\Core\Url\CdnUrlResolver;
 use Zoosper\Core\Url\CdnUrlResolverFactory;
 use Zoosper\Core\View\TemplateViewContextProvider;
-use Zoosper\Site\Repository\SiteRepository;
 
 return [
     ProjectPathResolver::class => static fn (ServiceContainer $services): ProjectPathResolver => ProjectPathResolver::fromCoreModule(),
@@ -30,7 +29,7 @@ return [
     CmsVersion::class => static fn (ServiceContainer $services): CmsVersion => new CmsVersion($services->get(ConfigRepository::class)),
     SiteContextResolver::class => static fn (ServiceContainer $services): SiteContextResolver => (new SiteContextResolverFactory(
         $services->get(ConfigRepository::class),
-        $services->has(SiteRepository::class) ? $services->get(SiteRepository::class) : null,
+        $services->has(\Zoosper\Core\Site\SiteLookupInterface::class) ? $services->get(\Zoosper\Core\Site\SiteLookupInterface::class) : null,
     ))->create(),
     CdnUrlResolver::class => static fn (ServiceContainer $services): CdnUrlResolver => (new CdnUrlResolverFactory($services->get(ConfigRepository::class)))->create(),
     CacheKeyBuilder::class => static fn (ServiceContainer $services): CacheKeyBuilder => new CacheKeyBuilder(),
