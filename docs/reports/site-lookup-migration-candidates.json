@@ -1,0 +1,23 @@
+{
+    "phase": "1.77-site-lookup-cli/snapshot",
+    "generatedAt": "2026-07-25T08:52:45+00:00",
+    "totals": {
+        "candidates": 2,
+        "autoMigratable": 0,
+        "manual": 2
+    },
+    "candidates": [
+        {
+            "file": "app/zoosper-api/src/Controller/ContentPageController.php",
+            "autoMigratable": false,
+            "note": "Manual review recommended before migrating."
+        },
+        {
+            "file": "app/zoosper-page/src/Controller/PageController.php",
+            "autoMigratable": false,
+            "note": "Manual review recommended before migrating."
+        }
+    ],
+    "warnings": [],
+    "scannedFiles": 643
+}
