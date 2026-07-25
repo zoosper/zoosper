@@ -2,14 +2,7 @@
 
 declare(strict_types=1);
 
-/**
- * Architecture foundation gate aggregator.
- *
- * Read-only audit that checks the permanent architecture guard set exists and
- * that core runtime source remains free of direct feature-module dependencies.
- * It also warns about temporary hotfix/fixer artefacts so the repository stays
- * lean after heavy architecture work.
- */
+/** Architecture foundation gate aggregator with durable RoleAdmin cutover allowlist. */
 
 $root = dirname(__DIR__);
 $reportDir = $root . '/var/reports';
@@ -52,11 +45,9 @@ if (is_dir($coreSourceDir)) {
         if (!$file instanceof SplFileInfo || !$file->isFile() || $file->getExtension() !== 'php') {
             continue;
         }
-
         $coreFileCount++;
         $relative = str_replace($root . '/', '', $file->getPathname());
         $source = (string) file_get_contents($file->getPathname());
-
         foreach ($forbiddenFeatureNamespaces as $needle) {
             if (str_contains($source, $needle)) {
                 $coreViolations[] = $relative . ' contains ' . $needle;
@@ -71,6 +62,11 @@ foreach ($coreViolations as $violation) {
     $errors[] = 'Core feature coupling regression: ' . $violation;
 }
 
+$durableApplyCutoverAllowlist = [
+    'tools/apply-role-admin-latte-cutover.php',
+    'tools/apply-role-admin-markup-view-cutover.php',
+];
+
 $temporaryArtefacts = [];
 $temporaryPatterns = [
     '/^tools\/fix-.*\.php$/',
@@ -79,26 +75,20 @@ $temporaryPatterns = [
     '/^docs\/development\/.*-v[0-9]+.*\.md$/',
     '/^docs\/roadmap\/.*-v[0-9]+\.md$/',
 ];
-
-$scanForTemporary = [
-    'tools',
-    'docs/development',
-    'docs/roadmap',
-];
-
-foreach ($scanForTemporary as $relativeDir) {
+foreach (['tools', 'docs/development', 'docs/roadmap'] as $relativeDir) {
     $dir = $root . '/' . $relativeDir;
     if (!is_dir($dir)) {
         continue;
     }
-
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS));
     foreach ($iterator as $file) {
         if (!$file instanceof SplFileInfo || !$file->isFile()) {
             continue;
         }
-
         $relative = str_replace($root . '/', '', $file->getPathname());
+        if (in_array($relative, $durableApplyCutoverAllowlist, true)) {
+            continue;
+        }
         foreach ($temporaryPatterns as $pattern) {
             if (preg_match($pattern, $relative) === 1) {
                 $temporaryArtefacts[] = $relative;
