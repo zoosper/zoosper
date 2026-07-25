@@ -3,33 +3,70 @@
 declare(strict_types=1);
 
 /**
- * Phase 1.81 quality gate runner.
+ * Phase 1.84 quality gate runner.
  *
- * Hotfix over Phase 1.79: tools:hygiene now respects known durable tools that
- * are intentionally kept and covered by tests. Noisy names alone are no longer
- * enough to flag a tool when the project has declared it durable.
+ * Unifies durable-tool knowledge behind a single manifest (config/durable-tools.php)
+ * shared with the DurableToolRegistry, so the gate and the test suite can never
+ * disagree about which tools are durable.
+ *
+ * Registered checks:
+ *   site-lookup:audit           - page hot-path boundary regressions (hard errors)
+ *   tools:hygiene               - leftover one-off helpers / dead tool files (warnings)
+ *   durable-registry:integrity  - manifest vs disk drift (hard errors)
  *
  * Usage:
  *   php8.5 tools/gate.php [--strict]
+ *
+ * --strict promotes hygiene warnings into build-failing errors.
  */
 
 $root = dirname(__DIR__);
 $toolsDir = $root . '/tools';
 $siteLookupCli = $root . '/tools/site-lookup.php';
+$manifestPath = $root . '/config/durable-tools.php';
 $strict = in_array('--strict', $argv, true);
 
-$durableToolAllowlist = [
-    'apply-admin-form-config-aggregator-layered-loader.php' => 'Test-protected admin form config aggregator layered loader repair tool.',
-    'apply-admin-form-config-layered-loader.php' => 'Test-protected admin form config layered loader migration tool.',
-    'apply-composer-internal-package-stability.php' => 'Test-protected Composer internal package stability repair tool.',
-    'apply-composer-local-package-repositories.php' => 'Test-protected Composer local package repository repair tool.',
-    'apply-rate-limit-admin-login-policy.php' => 'Test-protected rate-limit admin login policy apply tool.',
-    'apply-rate-limit-admin-middleware-hook.php' => 'Test-protected rate-limit admin middleware hook apply tool.',
-    'apply-role-admin-latte-cutover.php' => 'Test-protected guarded RoleAdminController Latte cutover executor.',
-    'apply-role-admin-markup-view-cutover.php' => 'Test-protected Role Admin markup view cutover tool.',
-    'apply-site-lookup-service-binding.php' => 'Recent site lookup service binding finalisation tool retained for rollback/auditability.',
-    'cleanup-expired-rate-limit-buckets.php' => 'Test-protected dry-run-first expired rate-limit bucket cleanup command.',
-];
+/**
+ * Load the canonical durable-tool manifest.
+ *
+ * @return array{map: array<string, array{reason: string}>, source: string}
+ */
+$loadDurableManifest = static function () use ($manifestPath): array {
+    if (is_file($manifestPath)) {
+        $loaded = require $manifestPath;
+        if (is_array($loaded)) {
+            return ['map' => $loaded, 'source' => 'config/durable-tools.php'];
+        }
+    }
+
+    // Fallback keeps the gate usable if the manifest is missing, but the
+    // integrity check will flag the situation loudly.
+    $fallback = [
+        'tools/apply-admin-form-config-aggregator-layered-loader.php' => ['reason' => 'fallback'],
+        'tools/apply-admin-form-config-layered-loader.php' => ['reason' => 'fallback'],
+        'tools/apply-composer-internal-package-stability.php' => ['reason' => 'fallback'],
+        'tools/apply-composer-local-package-repositories.php' => ['reason' => 'fallback'],
+        'tools/apply-rate-limit-admin-login-policy.php' => ['reason' => 'fallback'],
+        'tools/apply-rate-limit-admin-middleware-hook.php' => ['reason' => 'fallback'],
+        'tools/apply-role-admin-latte-cutover.php' => ['reason' => 'fallback'],
+        'tools/apply-role-admin-markup-view-cutover.php' => ['reason' => 'fallback'],
+        'tools/apply-site-lookup-service-binding.php' => ['reason' => 'fallback'],
+        'tools/cleanup-expired-rate-limit-buckets.php' => ['reason' => 'fallback'],
+        'tools/install-git-hooks.php' => ['reason' => 'fallback'],
+    ];
+
+    return ['map' => $fallback, 'source' => 'built-in fallback (manifest missing)'];
+};
+
+$manifest = $loadDurableManifest();
+$durableMap = $manifest['map'];
+$manifestSource = $manifest['source'];
+
+// Basenames for hygiene lookups (manifest keys are repo-relative paths).
+$durableBasenames = [];
+foreach (array_keys($durableMap) as $toolPath) {
+    $durableBasenames[basename($toolPath)] = true;
+}
 
 /**
  * Gate check: site-lookup boundary audit (reuses the unified CLI).
@@ -80,10 +117,9 @@ $siteLookupAudit = static function () use ($root, $siteLookupCli): array {
 };
 
 /**
- * Gate check: tools/ hygiene. Flags likely tool drift while respecting known
- * durable tools that intentionally survive cleanup phases.
+ * Gate check: tools/ hygiene. Respects the durable manifest.
  */
-$toolsHygiene = static function () use ($toolsDir, $durableToolAllowlist): array {
+$toolsHygiene = static function () use ($toolsDir, $durableBasenames): array {
     $name = 'tools:hygiene';
     $details = [];
     $durablePresent = 0;
@@ -103,22 +139,20 @@ $toolsHygiene = static function () use ($toolsDir, $durableToolAllowlist): array
 
     $oneOffPattern = '/^(cleanup|apply|fix|migrate-once|one-off)[-_].+\.php$/i';
     foreach ($basenames as $base) {
-        if (isset($durableToolAllowlist[$base])) {
+        if (isset($durableBasenames[$base])) {
             $durablePresent++;
             continue;
         }
-
         if (preg_match($oneOffPattern, $base) === 1) {
-            $details[] = "Possible leftover one-off helper: tools/{$base} (delete after use if no longer needed, or add to the durable tool allowlist with a reason).";
+            $details[] = "Possible leftover one-off helper: tools/{$base} (delete after use, or add to config/durable-tools.php with a reason).";
         }
     }
 
     foreach ($files as $file) {
         $base = basename($file);
-        if (isset($durableToolAllowlist[$base])) {
+        if (isset($durableBasenames[$base])) {
             continue;
         }
-
         $contents = (string) file_get_contents($file);
         $stripped = trim(preg_replace('/<\?php|declare\(strict_types=1\);/', '', $contents) ?? '');
         if ($stripped === '') {
@@ -127,20 +161,19 @@ $toolsHygiene = static function () use ($toolsDir, $durableToolAllowlist): array
     }
 
     foreach ($basenames as $base) {
-        if (isset($durableToolAllowlist[$base])) {
+        if (isset($durableBasenames[$base])) {
             continue;
         }
-
         if (preg_match('/^(.*)-v\d+\.php$/', $base, $m) === 1) {
             $baseName = $m[1] . '.php';
-            if (in_array($baseName, $basenames, true) && !isset($durableToolAllowlist[$baseName])) {
+            if (in_array($baseName, $basenames, true) && !isset($durableBasenames[$baseName])) {
                 $details[] = "Versioned duplicate: tools/{$base} exists alongside tools/{$baseName} (consolidate).";
             }
         }
     }
 
     $warningCount = count($details);
-    $durableNote = $durablePresent > 0 ? " {$durablePresent} durable tool(s) were recognised and ignored." : '';
+    $durableNote = $durablePresent > 0 ? " {$durablePresent} durable tool(s) recognised via manifest and ignored." : '';
 
     return [
         'name' => $name,
@@ -154,6 +187,42 @@ $toolsHygiene = static function () use ($toolsDir, $durableToolAllowlist): array
 };
 
 /**
+ * Gate check: durable registry integrity. Fails on manifest/disk drift.
+ */
+$durableRegistryIntegrity = static function () use ($root, $durableMap, $manifestSource): array {
+    $name = 'durable-registry:integrity';
+    $details = [];
+    $errors = 0;
+
+    if ($manifestSource !== 'config/durable-tools.php') {
+        $errors++;
+        $details[] = 'Canonical manifest config/durable-tools.php is missing; using ' . $manifestSource . '.';
+    }
+
+    foreach ($durableMap as $toolPath => $meta) {
+        if (!is_file($root . '/' . $toolPath)) {
+            $errors++;
+            $details[] = "Manifest lists {$toolPath} but it is missing on disk (recover it or remove the entry).";
+        }
+        $reason = is_array($meta) ? ($meta['reason'] ?? '') : '';
+        if (trim((string) $reason) === '') {
+            $errors++;
+            $details[] = "Manifest entry {$toolPath} has an empty reason (every durable tool needs a documented reason).";
+        }
+    }
+
+    return [
+        'name' => $name,
+        'errors' => $errors,
+        'warnings' => 0,
+        'summary' => $errors === 0
+            ? 'Durable manifest is consistent with disk (source: ' . $manifestSource . ').'
+            : "{$errors} durable manifest integrity error(s).",
+        'details' => $details,
+    ];
+};
+
+/**
  * Registered gate checks.
  *
  * @var array<int, callable(): array{name:string,errors:int,warnings:int,summary:string,details:array<int,string>}> $checks
@@ -161,6 +230,7 @@ $toolsHygiene = static function () use ($toolsDir, $durableToolAllowlist): array
 $checks = [
     $siteLookupAudit,
     $toolsHygiene,
+    $durableRegistryIntegrity,
 ];
 
 $results = [];
@@ -179,6 +249,7 @@ $effectiveErrors = $strict ? $totalErrors + $totalWarnings : $totalErrors;
 
 echo "## Zoosper Quality Gate\n\n";
 echo 'Generated: ' . gmdate('c') . "\n";
+echo 'Manifest source: ' . $manifestSource . "\n";
 echo 'Mode: ' . ($strict ? 'strict (warnings fail)' : 'standard (warnings advisory)') . "\n";
 echo 'Checks run: ' . count($results) . "\n";
 echo 'Total errors: ' . $totalErrors . "\n";
