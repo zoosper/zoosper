@@ -14,6 +14,11 @@ final class NullSiteLookup implements SiteLookupInterface
         return null;
     }
 
+    public function findActiveByHost(string $host): ?ResolvedSite
+    {
+        return null;
+    }
+
     public function findByCode(string $code): ?ResolvedSite
     {
         return null;

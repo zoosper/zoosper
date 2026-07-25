@@ -32,6 +32,17 @@ final class DatabaseSiteLookup implements SiteLookupInterface
         return null;
     }
 
+    public function findActiveByHost(string $host): ?ResolvedSite
+    {
+        foreach (['findActiveByHost', 'findByHost', 'findByDomain'] as $method) {
+            if (method_exists($this->sites, $method)) {
+                return $this->toResolvedSite($this->sites->{$method}($host));
+            }
+        }
+
+        return null;
+    }
+
     public function findByCode(string $code): ?ResolvedSite
     {
         foreach (['findByCode', 'findOneByCode'] as $method) {
@@ -66,11 +77,20 @@ final class DatabaseSiteLookup implements SiteLookupInterface
 
         if (is_array($site)) {
             return new ResolvedSite(
-                $site['id'] ?? null,
-                (string) ($site['code'] ?? ''),
-                (string) ($site['name'] ?? ''),
-                (string) ($site['base_url'] ?? $site['baseUrl'] ?? ''),
-                (bool) ($site['is_active'] ?? $site['isActive'] ?? true),
+                id: $site['id'] ?? null,
+                code: (string) ($site['code'] ?? $site['store_code'] ?? $site['storeCode'] ?? ''),
+                name: (string) ($site['name'] ?? $site['store_name'] ?? $site['storeName'] ?? ''),
+                baseUrl: (string) ($site['base_url'] ?? $site['baseUrl'] ?? ''),
+                isActive: (bool) ($site['is_active'] ?? $site['isActive'] ?? true),
+                websiteCode: isset($site['website_code']) || isset($site['websiteCode']) ? (string) ($site['website_code'] ?? $site['websiteCode']) : null,
+                websiteName: isset($site['website_name']) || isset($site['websiteName']) ? (string) ($site['website_name'] ?? $site['websiteName']) : null,
+                storeCode: isset($site['store_code']) || isset($site['storeCode']) ? (string) ($site['store_code'] ?? $site['storeCode']) : null,
+                storeName: isset($site['store_name']) || isset($site['storeName']) ? (string) ($site['store_name'] ?? $site['storeName']) : null,
+                storeViewCode: isset($site['store_view_code']) || isset($site['storeViewCode']) ? (string) ($site['store_view_code'] ?? $site['storeViewCode']) : null,
+                storeViewName: isset($site['store_view_name']) || isset($site['storeViewName']) ? (string) ($site['store_view_name'] ?? $site['storeViewName']) : null,
+                locale: isset($site['locale']) ? (string) $site['locale'] : null,
+                currency: isset($site['currency']) ? (string) $site['currency'] : null,
+                pathPrefix: isset($site['path_prefix']) || isset($site['pathPrefix']) ? (string) ($site['path_prefix'] ?? $site['pathPrefix']) : null,
             );
         }
 

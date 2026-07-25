@@ -12,6 +12,11 @@ interface SiteLookupInterface
 {
     public function findByHost(string $host): ?ResolvedSite;
 
+    /**
+     * Compatibility lookup for the historical active-site resolver path.
+     */
+    public function findActiveByHost(string $host): ?ResolvedSite;
+
     public function findByCode(string $code): ?ResolvedSite;
 
     public function findDefault(): ?ResolvedSite;

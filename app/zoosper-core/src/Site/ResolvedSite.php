@@ -18,6 +18,15 @@ final readonly class ResolvedSite
         public string $name,
         public string $baseUrl = '',
         public bool $isActive = true,
+        public ?string $websiteCode = null,
+        public ?string $websiteName = null,
+        public ?string $storeCode = null,
+        public ?string $storeName = null,
+        public ?string $storeViewCode = null,
+        public ?string $storeViewName = null,
+        public ?string $locale = null,
+        public ?string $currency = null,
+        public ?string $pathPrefix = null,
     ) {
     }
 }
