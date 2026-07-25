@@ -1,0 +1,33 @@
+{
+    "phase": "1.76-site-lookup-migration-candidates",
+    "generatedAt": "2026-07-25T08:46:14+00:00",
+    "totals": {
+        "candidates": 4,
+        "autoMigratable": 2,
+        "manual": 2
+    },
+    "candidates": [
+        {
+            "file": "app/zoosper-api/src/Controller/ContentPageController.php",
+            "autoMigratable": false,
+            "note": "Manual review recommended before migrating."
+        },
+        {
+            "file": "app/zoosper-page/src/Controller/PageController.php",
+            "autoMigratable": false,
+            "note": "Manual review recommended before migrating."
+        },
+        {
+            "file": "app/zoosper-admin/src/Controller/PageAdminController.php",
+            "autoMigratable": true,
+            "note": "Clean constructor type-hint swap candidate for the assisted helper."
+        },
+        {
+            "file": "app/zoosper-admin/src/Controller/ThemeAdminController.php",
+            "autoMigratable": true,
+            "note": "Clean constructor type-hint swap candidate for the assisted helper."
+        }
+    ],
+    "warnings": [],
+    "scannedFiles": 643
+}

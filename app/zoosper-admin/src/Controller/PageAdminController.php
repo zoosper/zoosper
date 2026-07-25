@@ -44,8 +44,7 @@ use Zoosper\Page\Event\PageUnpublishedEvent;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
-use Zoosper\Site\Repository\SiteRepository;
-
+use Zoosper\Site\Repository\SiteLookupInterface;
 /**
  * Admin CRUD controller for CMS pages.
  *
@@ -64,7 +63,7 @@ final readonly class PageAdminController
         private SessionGuard                     $guard,
         private CsrfTokenManager                 $csrf,
         private PageRepository                   $pages,
-        private SiteRepository                   $sites,
+        private SiteLookupInterface                   $sites,
         private PageRenderer                     $renderer,
         private AdminLayout                      $layout,
         private AdminViewRenderer                $views,
