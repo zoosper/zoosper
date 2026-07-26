@@ -7,11 +7,19 @@ namespace Zoosper\Auth\Service;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Repository\AdminUserRepository;
 
-final readonly class AuthService
+final class AuthService
 {
+    /**
+     * Cached dummy hash used to equalise timing when no valid user is found.
+     * Generated once via the real hasher so its verification cost matches a
+     * genuine password check (same algorithm/cost), which is what makes the
+     * timing constant.
+     */
+    private ?string $dummyHash = null;
+
     public function __construct(
-        private AdminUserRepository $users,
-        private PasswordHasher $hasher,
+        private readonly AdminUserRepository $users,
+        private readonly PasswordHasher $hasher,
     ) {
     }
 
@@ -19,16 +27,41 @@ final readonly class AuthService
     {
         $user = $this->users->findByEmail($email);
 
+        // Constant-time guard (Sonnet review Sec-4): always run a real password
+        // verification, even when the user is missing or inactive, so the
+        // response time for "unknown email" matches "known email, wrong
+        // password". This removes the username-enumeration timing side-channel.
+        $hashToCheck = ($user !== null && $user->isActive() && $user->passwordHash !== '')
+            ? $user->passwordHash
+            : $this->dummyHash();
+
+        $passwordValid = $this->hasher->verify($password, $hashToCheck);
+
         if ($user === null || !$user->isActive()) {
             return null;
         }
 
-        if (!$this->hasher->verify($password, $user->passwordHash)) {
+        if (!$passwordValid) {
             return null;
         }
 
         $this->users->updateLastLogin($user->id);
 
         return $this->users->findById($user->id);
+    }
+
+    /**
+     * Lazily produce (and cache) a valid dummy hash using the real hasher, so
+     * the fake verification path costs the same as a real one.
+     */
+    private function dummyHash(): string
+    {
+        if ($this->dummyHash === null) {
+            // Hash a random, unusable secret; the value is never compared for
+            // equality, only used to spend the same CPU as a real verify.
+            $this->dummyHash = $this->hasher->hash(bin2hex(random_bytes(32)));
+        }
+
+        return $this->dummyHash;
     }
 }
