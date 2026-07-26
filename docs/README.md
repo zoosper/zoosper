@@ -5,7 +5,7 @@ Zoosper is a modern, fast, secure, **true modular** PHP 8.5+ CMS. Markdown under
 > **Canonical reading path:** [Developer & operator guide](guide/index.md)  
 > Legend: ✅ available · 🔄 in progress · ⬜ planned
 
-Phase-by-phase files under `architecture/`, `operations/`, `progress/`, and `website/` are historical working notes. Prefer **`docs/guide/`** for accurate, feature-based documentation.
+Historical phase-by-phase notes (architecture/, operations/, progress/, roadmap/, development/, website/) are retained because they are referenced by Pest test files. All current documentation lives in feature-based guides under `docs/guide/`.
 
 ## Guide (canonical)
 
@@ -33,32 +33,33 @@ Start here: **[guide/index.md](guide/index.md)**
 ## Strategy & roadmap
 
 - [Why Zoosper](strategy/why-zoosper.md)
-- [Roadmap status](roadmap/roadmap-status.md)
+- [Roadmap status](../ROADMAP.md) — master roadmap at project root
 
 ## Contributor guides
 
 - [Testing guide](contributor/testing-guide.md)
 - [Writing save listeners](contributor/writing-save-listeners.md)
 - [Writing event listeners](contributor/writing-event-listeners.md)
+- [Module console commands](contributor/module-console-commands.md)
 - [Module generator](contributor/module-generator.md)
 - [Legacy tooling retirement](contributor/legacy-tooling-retirement-policy.md)
+- [Coding standards apply deprecation](contributor/coding-standards-apply-deprecation.md)
 
-## Operations
+## Troubleshooting
 
-- [Module development (legacy path)](operations/module-development.md) — superseded by [modularity-and-modules.md](guide/modularity-and-modules.md)
-- [Local SMTP with Mailpit](operations/local-smtp-mailpit.md)
+Common issues and solutions in [troubleshooting/](troubleshooting/).
 
-## Archive trees (historical)
+## Historical directories
 
-These folders retain phase delivery notes and are not the primary docs path:
+These directories contain phase-by-phase notes and are retained because they are referenced by Pest test files:
 
 ```text
-docs/architecture/   phase architecture notes and ADRs
-docs/operations/     per-phase verification write-ups
-docs/progress/       phase progress reports
-docs/website/        early public-doc drafts
-docs/development/    cutover and hygiene notes
-docs/roadmap/        plans and status fragments
+architecture/   phase architecture notes and ADRs
+operations/     per-phase verification write-ups
+progress/       phase progress reports
+roadmap/        plans and status fragments
+development/    cutover and hygiene notes
+website/        early public-doc drafts
 ```
 
 When a feature changes, update the relevant **`docs/guide/`** page in the same change.

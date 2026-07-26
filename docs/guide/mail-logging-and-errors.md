@@ -8,6 +8,15 @@ Configure SMTP via `.env` (`MAIL_*`, `SMTP_*`). Default local development target
 docker compose -f deploy/docker/mailpit/docker-compose.mailpit.yml up -d
 ```
 
+Mailpit's web UI is exposed on http://127.0.0.1:8025.
+
+Test mail configuration:
+
+```bash
+php tools/diagnose-mail-config.php
+php tools/send-test-email.php --to=admin@example.test
+```
+
 Do not commit production SMTP credentials. Do not log SMTP passwords.
 
 Successful SMTP delivery means the remote server accepted the message — not that the recipient’s inbox received it.

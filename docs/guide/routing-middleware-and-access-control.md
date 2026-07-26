@@ -71,6 +71,12 @@ API routes are **not** wrapped by this stack.
 
 POST forms must include the session CSRF token field expected by middleware (typically `_csrf_token`). Logout uses `POST /admin/logout` with the same token — do not weaken logout to GET.
 
+### Session security
+
+- Do not convert logout to GET.
+- Do not exempt logout from CSRF unless there is a documented security decision.
+- Do not log session IDs, CSRF tokens, OTPs, TOTP secrets, reset tokens or recovery-code plaintext.
+
 ## Users, roles & permissions
 
 Administration screens manage:
@@ -91,6 +97,10 @@ Typical permissions:
 | `role.manage` | Roles and permission matrix |
 
 Permissions attach to roles; users receive one or more roles.
+
+### Permission tree
+
+Permissions can be grouped under logical parents using `parent_code` and `sort_order` in `admin_permissions`. Module `config/acl.php` defines group labels and order. The role editor displays grouped permissions with assigned users.
 
 Declare new permissions in module `config/acl.php` and reference them on routes.
 
