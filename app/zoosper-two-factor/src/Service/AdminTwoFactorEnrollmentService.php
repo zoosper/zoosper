@@ -10,12 +10,6 @@ use Zoosper\TwoFactor\Repository\AdminTwoFactorEnrollmentRepository;
 use Zoosper\TwoFactor\Totp\TotpSecretGenerator;
 use Zoosper\TwoFactor\Totp\TotpVerifier;
 
-/**
- * Coordinates 2FA enrolment/re-enrolment for admin users.
- *
- * Secrets and recovery-code plaintext are returned only for the setup view and
- * confirmation flow. They must never be logged or persisted as plaintext.
- */
 final readonly class AdminTwoFactorEnrollmentService
 {
     public function __construct(
@@ -34,7 +28,6 @@ final readonly class AdminTwoFactorEnrollmentService
         return !$this->repository->hasActiveEnrollment($adminUserId);
     }
 
-    /** @return array{secret:string,uri:string} */
     public function startSetup(string $email): array
     {
         $secret = $this->secrets->generate();
@@ -44,7 +37,6 @@ final readonly class AdminTwoFactorEnrollmentService
         ];
     }
 
-    /** @return list<string> */
     public function confirm(int $adminUserId, string $secret, string $otp): array
     {
         if (!$this->verifier->verify($secret, $otp)) {
@@ -56,5 +48,15 @@ final readonly class AdminTwoFactorEnrollmentService
         $this->repository->saveConfirmedEnrollment($adminUserId, $this->protector->protect($secret), $hashes);
 
         return $codes;
+    }
+
+    public function revealSecret(int $adminUserId): ?string
+    {
+        $protected = $this->repository->findProtectedSecret($adminUserId);
+        if ($protected === null) {
+            return null;
+        }
+
+        return $this->protector->reveal($protected);
     }
 }
