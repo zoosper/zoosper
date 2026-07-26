@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 it('registers durable tools that should survive cleanup phases', function (): void {
     $root = dirname(__DIR__, 5);
-    $registryFile = $root . '/config/durable_tools.php';
+    $registryFile = $root . '/config/durable-tools.php';
 
     expect(is_file($registryFile))->toBeTrue();
 
@@ -28,5 +28,5 @@ it('provides a durable tool registry audit command', function (): void {
 
     $source = file_get_contents($tool) ?: '';
     expect($source)->toContain('Durable Tool Registry Audit');
-    expect($source)->toContain('config/durable_tools.php');
+    expect($source)->toContain('config/durable-tools.php');
 });

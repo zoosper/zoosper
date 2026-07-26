@@ -9,7 +9,7 @@ declare(strict_types=1);
  * that core runtime source remains free of direct feature-module dependencies.
  *
  * Temporary fixer/hotfix artefacts are warned about, while intentionally durable
- * tools are allowlisted through config/durable_tools.php.
+ * tools are allowlisted through config/durable-tools.php.
  */
 
 $root = dirname(__DIR__);
@@ -187,7 +187,7 @@ exit($errors === [] ? 0 : 1);
  */
 function loadDurableToolAllowlist(string $root, array &$warnings): array
 {
-    $registryFile = $root . '/config/durable_tools.php';
+    $registryFile = $root . '/config/durable-tools.php';
     if (!is_file($registryFile)) {
         $warnings[] = 'Durable tool registry not found. Temporary artefact detection will use an empty allowlist.';
         return [];

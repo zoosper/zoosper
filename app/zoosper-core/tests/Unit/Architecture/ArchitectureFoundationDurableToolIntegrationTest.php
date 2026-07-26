@@ -10,7 +10,7 @@ it('loads durable tool allowlist from the durable tool registry', function (): v
 
     $source = file_get_contents($audit) ?: '';
 
-    expect($source)->toContain('config/durable_tools.php');
+    expect($source)->toContain('config/durable-tools.php');
     expect($source)->toContain('loadDurableToolAllowlist');
     expect($source)->not->toContain('tools/apply-role-admin-latte-cutover.php\',');
     expect($source)->not->toContain('tools/apply-role-admin-markup-view-cutover.php\',');
@@ -18,7 +18,7 @@ it('loads durable tool allowlist from the durable tool registry', function (): v
 
 it('keeps registered durable apply/cutover tools out of temporary artefact detection', function (): void {
     $root = dirname(__DIR__, 5);
-    $registry = require $root . '/config/durable_tools.php';
+    $registry = require $root . '/config/durable-tools.php';
 
     expect($registry)->toHaveKey('tools/apply-role-admin-latte-cutover.php');
     expect($registry)->toHaveKey('tools/apply-role-admin-markup-view-cutover.php');

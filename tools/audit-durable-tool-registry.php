@@ -5,12 +5,12 @@ declare(strict_types=1);
 /**
  * Durable tool registry audit.
  *
- * Read-only guard that verifies all tools declared in config/durable_tools.php
+ * Read-only guard that verifies all tools declared in config/durable-tools.php
  * exist and that no registry entry points outside tools/.
  */
 
 $root = dirname(__DIR__);
-$registryFile = $root . '/config/durable_tools.php';
+$registryFile = $root . '/config/durable-tools.php';
 $reportDir = $root . '/var/reports';
 $errors = [];
 $warnings = [];
@@ -18,7 +18,7 @@ $observations = [];
 $entries = [];
 
 if (!is_file($registryFile)) {
-    $errors[] = 'Missing durable tool registry: config/durable_tools.php';
+    $errors[] = 'Missing durable tool registry: config/durable-tools.php';
     $registry = [];
 } else {
     $registry = require $registryFile;
@@ -54,7 +54,7 @@ foreach ($registry as $relative => $metadata) {
 }
 
 $observations[] = 'Durable tool entries checked: ' . count($entries);
-$observations[] = 'Registry file: config/durable_tools.php';
+$observations[] = 'Registry file: config/durable-tools.php';
 
 if (!is_dir($reportDir)) {
     mkdir($reportDir, 0775, true);
