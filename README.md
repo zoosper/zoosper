@@ -32,6 +32,10 @@ page_size
 
 The controller integration remains module-owned in `zoosper-page`.
 
+## Documentation
+
+Canonical feature guides: [docs/guide/index.md](docs/guide/index.md).
+
 ## Roadmap
 
-Next planned phases include admin 2FA foundation and fuller form field injection implementation.
+See [docs/roadmap/roadmap-status.md](docs/roadmap/roadmap-status.md).
