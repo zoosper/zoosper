@@ -23,7 +23,14 @@ final readonly class Application
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_name((string) env('SESSION_NAME', 'ZOOSPERSESSID'));
             session_set_cookie_params([
-                'secure' => filter_var(env('SESSION_SECURE', false), FILTER_VALIDATE_BOOLEAN),
+                // Phase 1.100: the secure flag now DEFAULTS to whether the current
+                // request is served over HTTPS, instead of a hard-coded false.
+                //   - Local HTTP dev: default false (cookies still work).
+                //   - Production HTTPS: default true automatically, closing the
+                //     footgun where forgetting SESSION_SECURE=true leaked the
+                //     session cookie over plain HTTP.
+                // An explicit SESSION_SECURE env value always wins.
+                'secure' => filter_var(env('SESSION_SECURE', self::requestIsHttps()), FILTER_VALIDATE_BOOLEAN),
                 'httponly' => true,
                 'samesite' => (string) env('SESSION_SAMESITE', 'Lax'),
                 'path' => '/',
@@ -56,5 +63,27 @@ final readonly class Application
         }
 
         $response->send();
+    }
+
+    /**
+     * Determine whether the current request is being served over HTTPS.
+     *
+     * Checks the standard HTTPS server var, the common reverse-proxy header
+     * X-Forwarded-Proto, and the canonical HTTPS port. Kept static and
+     * dependency-free so it is trivially unit-testable via $_SERVER.
+     */
+    public static function requestIsHttps(): bool
+    {
+        $https = strtolower((string) ($_SERVER['HTTPS'] ?? ''));
+        if ($https !== '' && $https !== 'off') {
+            return true;
+        }
+
+        $forwardedProto = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
+        if ($forwardedProto === 'https') {
+            return true;
+        }
+
+        return (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443;
     }
 }
