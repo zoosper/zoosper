@@ -12,16 +12,33 @@ use Zoosper\Core\Composer\ModulePackageIdentity;
  * Module discovery still supports the historical app/* layout, but Phase 1.37g
  * adds Composer-package discovery so modules can gradually move to path
  * repositories and later separate repositories without changing every consumer.
+ *
+ * Phase 1.108: enabledModules() is now memoized per instance (Sonnet Phase 2
+ * §2.2/§3). Discovery performs multiple filesystem globs plus a `require` per
+ * candidate module.php and a `json_decode` per vendor composer.json. Because a
+ * SINGLE ModuleRegistry instance is constructed once in ApplicationFactory and
+ * shared across every module-driven loader (services, controllers, routes,
+ * events, entity-save listeners, admin menu, translations, admin assets), one
+ * memoized call here removes the redundant re-scan from ALL of them for the
+ * lifetime of the request/process. Discovery is pure (no side effects), so
+ * caching is safe.
  */
-final readonly class ModuleRegistry
+final class ModuleRegistry
 {
-    public function __construct(private string $basePath)
+    /** @var list<Module>|null Cached result of the first enabledModules() call. */
+    private ?array $cachedModules = null;
+
+    public function __construct(private readonly string $basePath)
     {
     }
 
     /** @return list<Module> */
     public function enabledModules(): array
     {
+        if ($this->cachedModules !== null) {
+            return $this->cachedModules;
+        }
+
         $modules = [];
         $seenRealPaths = [];
         $seenNames = [];
@@ -48,7 +65,20 @@ final readonly class ModuleRegistry
             return [$a->sortOrder, $a->name] <=> [$b->sortOrder, $b->name];
         });
 
-        return $modules;
+        $this->cachedModules = $modules;
+
+        return $this->cachedModules;
+    }
+
+    /**
+     * Force the next enabledModules() call to re-scan the filesystem. Not used
+     * in normal request handling (module state cannot change mid-request); it
+     * exists for long-lived worker processes (Swoole/FrankenPHP) or tests that
+     * need to observe a changed module set within the same registry instance.
+     */
+    public function clearCache(): void
+    {
+        $this->cachedModules = null;
     }
 
     /**
