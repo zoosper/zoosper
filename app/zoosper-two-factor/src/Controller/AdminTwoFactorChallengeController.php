@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\TwoFactor\Controller;
 
+use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
@@ -19,7 +20,16 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorEnrollmentService;
  * Reachable only while the session is "pending 2FA" (password verified, second
  * factor not yet supplied). It renders a standalone page (NOT the admin layout,
  * since there is no fully-authenticated user yet), verifies a TOTP or recovery
- * code, and — only on success — promotes the session to fully authenticated.
+ * code, and - only on success - promotes the session to fully authenticated.
+ *
+ * Phase 1.113 HOTFIX: successful 2FA completion NOW records a login-history
+ * 'success' row (previously the ONLY recording happened in LoginController's
+ * password-only branch, so an OTP-completed login was never logged at all).
+ * Wrong-code attempts are also recorded as 'otp_failed' so failed authenticator
+ * attempts are visible for security monitoring - directly serving the "detect
+ * bad activity" use case. LoginHistoryRepository is an OPTIONAL, LAST
+ * constructor parameter (the established drop-in-safe pattern in this
+ * codebase): if not injected, recording is simply skipped rather than erroring.
  *
  * Never logs OTPs, TOTP secrets, recovery-code plaintext or challenge tokens.
  */
@@ -34,6 +44,7 @@ final readonly class AdminTwoFactorChallengeController
         private AdminTwoFactorEnrollmentService $enrollment,
         private AdminUserRepository $users,
         private string $adminBasePath = '/admin',
+        private ?LoginHistoryRepository $loginHistory = null,
     ) {
     }
 
@@ -79,16 +90,16 @@ final readonly class AdminTwoFactorChallengeController
         }
 
         if (!$result->passed) {
-            $message = $result->reason === 'invalid_or_expired'
-                ? 'This challenge has expired. Please sign in again.'
-                : 'Incorrect code. Please try again.';
-
             if ($result->reason === 'invalid_or_expired') {
                 $this->abandon();
                 return Response::redirect($this->path('/login'));
             }
 
-            return Response::html($this->page($this->challengeForm($message)), 422);
+            // Phase 1.113: wrong-code attempts are now recorded so repeated
+            // failures are visible in login history for security monitoring.
+            $this->recordAttempt($request, $userId, 'otp_failed');
+
+            return Response::html($this->page($this->challengeForm('Incorrect code. Please try again.')), 422);
         }
 
         $user = $this->users->findById($result->adminUserId);
@@ -98,6 +109,11 @@ final readonly class AdminTwoFactorChallengeController
         }
 
         unset($_SESSION[self::TOKEN_KEY]);
+
+        // Phase 1.113: THIS is the fix — a login that required 2FA now records
+        // its success here, since LoginController's own login() never reaches
+        // its "success" branch for enrolled users (it redirects here instead).
+        $this->recordAttempt($request, $user->id, 'success', $user->email);
 
         return Response::redirect($this->adminBasePath);
     }
@@ -109,6 +125,32 @@ final readonly class AdminTwoFactorChallengeController
     {
         unset($_SESSION[self::TOKEN_KEY]);
         $this->guard->clearPendingTwoFactorChallenge();
+    }
+
+    /**
+     * Record a login-history row for a 2FA-stage event, when a
+     * LoginHistoryRepository has been injected. Resolves the email from the
+     * user id when not explicitly provided (e.g. on a wrong-code attempt, where
+     * only the pending user id is known).
+     */
+    private function recordAttempt(Request $request, int $adminUserId, string $status, ?string $email = null): void
+    {
+        if ($this->loginHistory === null) {
+            return;
+        }
+
+        if ($email === null) {
+            $user = $this->users->findById($adminUserId);
+            $email = $user?->email ?? '';
+        }
+
+        $this->loginHistory->record(
+            $adminUserId,
+            $email,
+            $status,
+            $request->clientIp(),
+            $request->userAgent(),
+        );
     }
 
     private function path(string $suffix): string

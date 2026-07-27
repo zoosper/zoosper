@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Controller;
 
-use Throwable;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\AuthService;
@@ -18,6 +17,18 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorLoginRedirectService;
 
 /**
  * Handles admin login and logout requests.
+ *
+ * Phase 1.113 HOTFIX: login history was silently NEVER being recorded.
+ * The previous code called a `callLoginHistory()` helper that probed
+ * method_exists() for names like 'recordSuccess'/'success'/'recordFailure'/
+ * 'failure' on LoginHistoryRepository, but that class only ever exposed a
+ * method literally called `record()`. None of the probed names matched, so the
+ * loop silently fell through every time and NOTHING was ever written - a
+ * pre-existing bug, not something introduced by the 2FA work. This explains a
+ * stale login history. Fixed by calling ->record() directly, with the correct
+ * signature, and now also passing client IP + user agent (previously omitted
+ * entirely, even though the repository always accepted them) so login history
+ * can actually be used to detect suspicious activity, as intended.
  *
  * Phase 1.107 — login-time 2FA enforcement (Sonnet Phase 2 §1):
  *   - A correct password for a user with an ACTIVE 2FA enrolment no longer fully
@@ -68,7 +79,7 @@ final readonly class LoginController
         $user = $this->auth->authenticate($email, $password);
 
         if ($user === null) {
-            $this->recordLoginFailure($email);
+            $this->recordLoginEvent($request, null, $email, 'failed');
             return Response::html($this->page($this->form('Invalid email or password.', $email)), 422);
         }
 
@@ -78,12 +89,17 @@ final readonly class LoginController
             $this->guard->beginTwoFactorChallenge($user);
             $_SESSION[self::CHALLENGE_TOKEN_KEY] = $this->twoFactorChallenge->issue($user->id);
 
+            // Password stage passed; full authentication is still pending the
+            // OTP/recovery step. Recorded distinctly so login history shows the
+            // real state rather than a premature "success".
+            $this->recordLoginEvent($request, $user->id, $user->email, 'password_ok_pending_2fa');
+
             return Response::redirect('/admin/2fa/challenge');
         }
 
         // No active 2FA: full login now (redirect service nudges to setup).
         $this->guard->login($user);
-        $this->recordLoginSuccess($user);
+        $this->recordLoginEvent($request, $user->id, $user->email, 'success');
 
         return Response::redirect($this->postLoginPath($user));
     }
@@ -106,8 +122,6 @@ final readonly class LoginController
             return false;
         }
 
-        // requiresEnrollment() is true when there is NO active enrolment, so an
-        // enrolled user is the negation.
         return !$this->twoFactorEnrollment->requiresEnrollment($user->id);
     }
 
@@ -120,34 +134,23 @@ final readonly class LoginController
         return $this->twoFactorRedirect->pathFor($user);
     }
 
-    private function recordLoginSuccess(AdminUser $user): void
-    {
-        $this->callLoginHistory(['recordSuccess', 'recordLoginSuccess', 'success'], [$user->id, $user->email]);
-    }
-
-    private function recordLoginFailure(string $email): void
-    {
-        $this->callLoginHistory(['recordFailure', 'recordLoginFailure', 'failure'], [$email]);
-    }
-
     /**
-     * @param list<string> $methods
-     * @param list<mixed> $arguments
+     * Record a login-history row directly via LoginHistoryRepository::record().
+     *
+     * Phase 1.113: this REPLACES the previous callLoginHistory() method-name
+     * probing, which never matched a real method and therefore never wrote
+     * anything. Client IP and user agent are now included, since
+     * LoginHistoryRepository always accepted them but they were never passed.
      */
-    private function callLoginHistory(array $methods, array $arguments): void
+    private function recordLoginEvent(Request $request, ?int $adminUserId, string $email, string $status): void
     {
-        foreach ($methods as $method) {
-            if (!method_exists($this->loginHistory, $method)) {
-                continue;
-            }
-
-            try {
-                $this->loginHistory->{$method}(...$arguments);
-                return;
-            } catch (Throwable) {
-                // Keep authentication stable even if historical repository method signatures changed.
-            }
-        }
+        $this->loginHistory->record(
+            $adminUserId,
+            $email,
+            $status,
+            $request->clientIp(),
+            $request->userAgent(),
+        );
     }
 
     private function form(?string $error = null, string $email = ''): string

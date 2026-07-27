@@ -18,6 +18,12 @@ use Zoosper\Core\Http\Response;
  * from the request query (page/page_size/q/entity_type) and calls the new
  * paginate() method instead of the unbounded latest() "top 100" query.
  *
+ * Phase 1.112 hotfix: Request::query() is a single-key accessor
+ * (query(string $key, ?string $default = null): ?string), NOT a bulk
+ * "all params" getter — Request has no such method. AuditLogCriteria::fromQuery()
+ * expects an array, so the known keys are read individually here and assembled
+ * into that array before being passed in.
+ *
  * The 'rows' view-data key is preserved (now sourced from the paginated
  * result's items) so existing templates that only read 'rows' keep working
  * unchanged; 'pagination' and 'criteria' are ADDED for templates that choose to
@@ -38,7 +44,7 @@ final readonly class AuditLogController
     {
         $user = $this->currentAdminUser();
 
-        $criteria = AuditLogCriteria::fromQuery($request->query());
+        $criteria = AuditLogCriteria::fromQuery($this->queryParams($request));
         $result = $this->logs->paginate($criteria);
 
         if ($this->views !== null) {
@@ -57,6 +63,27 @@ final readonly class AuditLogController
         }
 
         return Response::html($this->layout->render('Audit Log', '<p>Audit log view renderer is not configured.</p>', $user, 'audit-log'));
+    }
+
+    /**
+     * Read the query-string keys AuditLogCriteria::fromQuery() understands from
+     * the request. Request::query() is single-key only, so each supported key
+     * is read individually rather than assuming a bulk "all params" accessor.
+     *
+     * @return array<string, string>
+     */
+    private function queryParams(Request $request): array
+    {
+        $params = [];
+
+        foreach (['page', 'page_size', 'q', 'entity_type'] as $key) {
+            $value = $request->query($key);
+            if ($value !== null) {
+                $params[$key] = $value;
+            }
+        }
+
+        return $params;
     }
 
     /**

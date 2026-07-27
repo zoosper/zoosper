@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
@@ -40,6 +41,9 @@ return [
             $services->get(AdminTwoFactorEnrollmentService::class),
             $services->get(AdminUserRepository::class),
             $adminBasePath,
+            // Phase 1.113: inject LoginHistoryRepository so a 2FA-completed
+            // login (and wrong-code attempts) are recorded in login history.
+            $services->has(LoginHistoryRepository::class) ? $services->get(LoginHistoryRepository::class) : null,
         );
     },
 ];

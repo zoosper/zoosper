@@ -265,7 +265,7 @@
         },
         {
             "name": "marko/cli",
-            "version": "0.8.4",
+            "version": "0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-cli.git",
@@ -303,13 +303,13 @@
             ],
             "description": "Marko Framework CLI",
             "support": {
-                "source": "https://github.com/marko-php/marko-cli/tree/0.8.4"
+                "source": "https://github.com/marko-php/marko-cli/tree/0.8.5"
             },
             "time": "2026-05-02T01:27:31+00:00"
         },
         {
             "name": "marko/config",
-            "version": "0.8.4",
+            "version": "0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-config.git",
@@ -345,22 +345,22 @@
             ],
             "description": "Configuration loading and merging for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-config/tree/0.8.4"
+                "source": "https://github.com/marko-php/marko-config/tree/0.8.5"
             },
             "time": "2026-05-02T01:27:31+00:00"
         },
         {
             "name": "marko/core",
-            "version": "0.8.4",
+            "version": "0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-core.git",
-                "reference": "29ee582381dd06e2a654786395f36f7160459894"
+                "reference": "316f7189a341343b038e39da53424dc3f82bb38c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-core/zipball/29ee582381dd06e2a654786395f36f7160459894",
-                "reference": "29ee582381dd06e2a654786395f36f7160459894",
+                "url": "https://api.github.com/repos/marko-php/marko-core/zipball/316f7189a341343b038e39da53424dc3f82bb38c",
+                "reference": "316f7189a341343b038e39da53424dc3f82bb38c",
                 "shasum": ""
             },
             "require": {
@@ -388,22 +388,22 @@
             ],
             "description": "Marko Framework Core",
             "support": {
-                "source": "https://github.com/marko-php/marko-core/tree/0.8.4"
+                "source": "https://github.com/marko-php/marko-core/tree/0.8.5"
             },
-            "time": "2026-06-24T20:23:02+00:00"
+            "time": "2026-07-26T15:19:30+00:00"
         },
         {
             "name": "marko/database",
-            "version": "0.8.4",
+            "version": "0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-database.git",
-                "reference": "100735ae25d416c10d54190dbfd1d1126d15cec4"
+                "reference": "c1fd412dd1aa95ab3790950c0ba3c0d918df9cc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-database/zipball/100735ae25d416c10d54190dbfd1d1126d15cec4",
-                "reference": "100735ae25d416c10d54190dbfd1d1126d15cec4",
+                "url": "https://api.github.com/repos/marko-php/marko-database/zipball/c1fd412dd1aa95ab3790950c0ba3c0d918df9cc3",
+                "reference": "c1fd412dd1aa95ab3790950c0ba3c0d918df9cc3",
                 "shasum": ""
             },
             "require": {
@@ -431,22 +431,22 @@
             ],
             "description": "Marko Framework Database Layer - Entity-driven schema with Data Mapper pattern",
             "support": {
-                "source": "https://github.com/marko-php/marko-database/tree/0.8.4"
+                "source": "https://github.com/marko-php/marko-database/tree/0.8.5"
             },
-            "time": "2026-06-12T18:20:25+00:00"
+            "time": "2026-07-26T15:19:30+00:00"
         },
         {
             "name": "marko/database-mysql",
-            "version": "0.8.4",
+            "version": "0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-database-mysql.git",
-                "reference": "c379119c11e8b897b981f225b5fb02aa50b60f7f"
+                "reference": "94400623afde5785a3ae1fc4bba7d7353ffd028e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-database-mysql/zipball/c379119c11e8b897b981f225b5fb02aa50b60f7f",
-                "reference": "c379119c11e8b897b981f225b5fb02aa50b60f7f",
+                "url": "https://api.github.com/repos/marko-php/marko-database-mysql/zipball/94400623afde5785a3ae1fc4bba7d7353ffd028e",
+                "reference": "94400623afde5785a3ae1fc4bba7d7353ffd028e",
                 "shasum": ""
             },
             "require": {
@@ -475,22 +475,22 @@
             ],
             "description": "MySQL driver for Marko Framework Database Layer",
             "support": {
-                "source": "https://github.com/marko-php/marko-database-mysql/tree/0.8.4"
+                "source": "https://github.com/marko-php/marko-database-mysql/tree/0.8.5"
             },
-            "time": "2026-06-12T19:00:11+00:00"
+            "time": "2026-07-26T15:19:30+00:00"
         },
         {
             "name": "marko/errors",
-            "version": "0.8.4",
+            "version": "0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-errors.git",
-                "reference": "32b7f21bd5e5ca5561b1cb29b0e9703ff44ecdcc"
+                "reference": "d4fdaa8df18b9f24d2262d37f168dfd7d196e2ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-errors/zipball/32b7f21bd5e5ca5561b1cb29b0e9703ff44ecdcc",
-                "reference": "32b7f21bd5e5ca5561b1cb29b0e9703ff44ecdcc",
+                "url": "https://api.github.com/repos/marko-php/marko-errors/zipball/d4fdaa8df18b9f24d2262d37f168dfd7d196e2ce",
+                "reference": "d4fdaa8df18b9f24d2262d37f168dfd7d196e2ce",
                 "shasum": ""
             },
             "require": {
@@ -518,13 +518,13 @@
             ],
             "description": "Marko Framework Error Handling",
             "support": {
-                "source": "https://github.com/marko-php/marko-errors/tree/0.8.4"
+                "source": "https://github.com/marko-php/marko-errors/tree/0.8.5"
             },
-            "time": "2026-05-27T16:19:59+00:00"
+            "time": "2026-07-26T15:19:30+00:00"
         },
         {
             "name": "marko/errors-simple",
-            "version": "0.8.4",
+            "version": "0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-errors-simple.git",
@@ -561,22 +561,22 @@
             ],
             "description": "Simple error handling and display for the Marko framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-errors-simple/tree/0.8.4"
+                "source": "https://github.com/marko-php/marko-errors-simple/tree/0.8.5"
             },
             "time": "2026-06-12T17:56:54+00:00"
         },
         {
             "name": "marko/framework",
-            "version": "0.8.4",
+            "version": "0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-framework.git",
-                "reference": "8ac2d58dd561e74c96630908991c3ec351e6be48"
+                "reference": "f001fdc71761c35fbaabc6bcc41c0ff460904545"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-framework/zipball/8ac2d58dd561e74c96630908991c3ec351e6be48",
-                "reference": "8ac2d58dd561e74c96630908991c3ec351e6be48",
+                "url": "https://api.github.com/repos/marko-php/marko-framework/zipball/f001fdc71761c35fbaabc6bcc41c0ff460904545",
+                "reference": "f001fdc71761c35fbaabc6bcc41c0ff460904545",
                 "shasum": ""
             },
             "require": {
@@ -617,13 +617,13 @@
             ],
             "description": "Marko Framework - All core packages for typical web applications",
             "support": {
-                "source": "https://github.com/marko-php/marko-framework/tree/0.8.4"
+                "source": "https://github.com/marko-php/marko-framework/tree/0.8.5"
             },
-            "time": "2026-05-29T12:25:24+00:00"
+            "time": "2026-07-26T15:19:30+00:00"
         },
         {
             "name": "marko/hashing",
-            "version": "0.8.4",
+            "version": "0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-hashing.git",
@@ -661,13 +661,13 @@
             ],
             "description": "Password hashing and verification for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-hashing/tree/0.8.4"
+                "source": "https://github.com/marko-php/marko-hashing/tree/0.8.5"
             },
             "time": "2026-03-25T17:53:35+00:00"
         },
         {
             "name": "marko/routing",
-            "version": "0.8.4",
+            "version": "0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-routing.git",
@@ -703,13 +703,13 @@
             ],
             "description": "Marko Framework Routing",
             "support": {
-                "source": "https://github.com/marko-php/marko-routing/tree/0.8.4"
+                "source": "https://github.com/marko-php/marko-routing/tree/0.8.5"
             },
             "time": "2026-06-12T19:00:11+00:00"
         },
         {
             "name": "marko/validation",
-            "version": "0.8.4",
+            "version": "0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-validation.git",
@@ -741,7 +741,7 @@
             ],
             "description": "Validation component for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-validation/tree/0.8.4"
+                "source": "https://github.com/marko-php/marko-validation/tree/0.8.5"
             },
             "time": "2026-06-12T17:56:54+00:00"
         },
@@ -1079,16 +1079,16 @@
     "packages-dev": [
         {
             "name": "amphp/amp",
-            "version": "v3.1.2",
+            "version": "v3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/amp.git",
-                "reference": "2f3ebed5a4f663968a0590dbb7654a8b32cb63cb"
+                "reference": "73c38b323ff8d790abf0f76c56fcc892bda4111a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/amp/zipball/2f3ebed5a4f663968a0590dbb7654a8b32cb63cb",
-                "reference": "2f3ebed5a4f663968a0590dbb7654a8b32cb63cb",
+                "url": "https://api.github.com/repos/amphp/amp/zipball/73c38b323ff8d790abf0f76c56fcc892bda4111a",
+                "reference": "73c38b323ff8d790abf0f76c56fcc892bda4111a",
                 "shasum": ""
             },
             "require": {
@@ -1148,7 +1148,7 @@
             ],
             "support": {
                 "issues": "https://github.com/amphp/amp/issues",
-                "source": "https://github.com/amphp/amp/tree/v3.1.2"
+                "source": "https://github.com/amphp/amp/tree/v3.1.3"
             },
             "funding": [
                 {
@@ -1156,7 +1156,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-21T13:59:44+00:00"
+            "time": "2026-07-19T17:59:20+00:00"
         },
         {
             "name": "amphp/byte-stream",
@@ -1535,16 +1535,16 @@
         },
         {
             "name": "amphp/pipeline",
-            "version": "v1.2.6",
+            "version": "v1.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/pipeline.git",
-                "reference": "10941bf38de5c585aa2407b2ec4265d806d4eef2"
+                "reference": "cf2d67696c2015ea7c7fd8f6ec5f8ed7c2d17c17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/pipeline/zipball/10941bf38de5c585aa2407b2ec4265d806d4eef2",
-                "reference": "10941bf38de5c585aa2407b2ec4265d806d4eef2",
+                "url": "https://api.github.com/repos/amphp/pipeline/zipball/cf2d67696c2015ea7c7fd8f6ec5f8ed7c2d17c17",
+                "reference": "cf2d67696c2015ea7c7fd8f6ec5f8ed7c2d17c17",
                 "shasum": ""
             },
             "require": {
@@ -1590,7 +1590,7 @@
             ],
             "support": {
                 "issues": "https://github.com/amphp/pipeline/issues",
-                "source": "https://github.com/amphp/pipeline/tree/v1.2.6"
+                "source": "https://github.com/amphp/pipeline/tree/v1.2.7"
             },
             "funding": [
                 {
@@ -1598,7 +1598,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-27T16:15:40+00:00"
+            "time": "2026-07-26T14:50:43+00:00"
         },
         {
             "name": "amphp/process",

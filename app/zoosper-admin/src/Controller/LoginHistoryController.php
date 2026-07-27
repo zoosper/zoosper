@@ -18,6 +18,11 @@ use Zoosper\Core\Http\Response;
  * from the request query (page/page_size/q/status) and calls the new
  * paginate() method instead of the unbounded latest() "top 100" query.
  *
+ * Phase 1.112 hotfix: Request::query() is single-key only
+ * (query(string $key, ?string $default = null): ?string) — there is no bulk
+ * "all params" getter on Request. The known keys are read individually here and
+ * assembled into the array LoginHistoryCriteria::fromQuery() expects.
+ *
  * The 'rows' view-data key is preserved so existing templates keep working
  * unchanged; 'pagination' and 'criteria' are ADDED for templates that choose to
  * render page links.
@@ -36,7 +41,7 @@ final readonly class LoginHistoryController
     {
         $user = $this->currentAdminUser();
 
-        $criteria = LoginHistoryCriteria::fromQuery($request->query());
+        $criteria = LoginHistoryCriteria::fromQuery($this->queryParams($request));
         $result = $this->history->paginate($criteria);
 
         if ($this->views !== null) {
@@ -55,6 +60,26 @@ final readonly class LoginHistoryController
         }
 
         return Response::html($this->layout->render('Login History', '<p>Login history view renderer is not configured.</p>', $user, 'login-history'));
+    }
+
+    /**
+     * Read the query-string keys LoginHistoryCriteria::fromQuery() understands
+     * from the request, since Request::query() is single-key only.
+     *
+     * @return array<string, string>
+     */
+    private function queryParams(Request $request): array
+    {
+        $params = [];
+
+        foreach (['page', 'page_size', 'q', 'status'] as $key) {
+            $value = $request->query($key);
+            if ($value !== null) {
+                $params[$key] = $value;
+            }
+        }
+
+        return $params;
     }
 
     /**
