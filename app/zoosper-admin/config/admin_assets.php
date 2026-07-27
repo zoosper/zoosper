@@ -21,12 +21,16 @@ return [
             'path' => '/assets/admin/css/zoosper-content-editor.css?v=' . $assetVersion,
             'sort_order' => 30,
         ],
-        // Phase B: Grid Core styles (filter bar, sortable headers, pagination).
-        // Placed after the base admin styles (sort_order 10) so grid rules can
-        // override generic table styling, and before the tag-selector styles.
+        // Phase C1: served through the module asset pipeline
+        // (GET /asset/zoosper-admin/css/zoosper-grid.css), resolved directly
+        // from app/zoosper-admin/resources/assets/css/zoosper-grid.css — no
+        // publish step, no manual copy into public/. The ?v=... cache-busting
+        // query string is PRESERVED exactly as before: AssetController sets a
+        // 1-year immutable Cache-Control header, so without a version bump on
+        // content change, a browser holding a cached copy would never refetch.
         'zoosper-admin-grid-style' => [
             'type' => 'style',
-            'path' => '/assets/admin/css/zoosper-grid.css?v=' . $assetVersion,
+            'path' => '/asset/zoosper-admin/css/zoosper-grid.css?v=' . $assetVersion,
             'sort_order' => 35,
         ],
         'zoosper-admin-tag-selector-style' => [

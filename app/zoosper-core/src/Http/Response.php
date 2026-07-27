@@ -42,6 +42,24 @@ final readonly class Response
         return new self('', $statusCode, ['Location' => $location]);
     }
 
+    /**
+     * Build a response with arbitrary status/headers/body, exactly as given.
+     *
+     * Phase C1 (module asset pipeline): AssetController::serve() already
+     * computes the correct status/headers (Content-Type per file extension,
+     * ETag, Last-Modified, Cache-Control, and a bodyless 304 for a matching
+     * If-None-Match) — this factory exposes the existing private constructor
+     * under a descriptive name so that array can be adapted into a real
+     * Response without guessing at or duplicating that logic. Additive only:
+     * json()/html()/redirect() are unchanged.
+     *
+     * @param array<string, string> $headers
+     */
+    public static function raw(string $body, int $statusCode = 200, array $headers = []): self
+    {
+        return new self($body, $statusCode, $headers);
+    }
+
     public function send(): void
     {
         http_response_code($this->statusCode);
