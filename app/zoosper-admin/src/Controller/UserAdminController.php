@@ -9,6 +9,7 @@ use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
+use Zoosper\Auth\Security\PasswordPolicy;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Auth\Service\SessionGuard;
@@ -29,6 +30,11 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
  * app/zoosper-auth/resources/views/admin/users/ (namespace zoosper-auth::).
  * Admin-user saves run through the entity save lifecycle when a runner is injected.
  *
+ * Phase 1.110 (Sonnet Phase 2 §5): enforces a minimum password policy
+ * (PasswordPolicy) for BOTH new-user creation and password changes on update,
+ * BEFORE any database write. Previously only a non-empty-string check existed,
+ * so a one-character password was accepted.
+ *
  * PCI-aware: the 2FA reset action never reads, displays or logs OTPs, TOTP
  * secrets, recovery-code plaintext, provisioning URIs, QR data, SMTP passwords
  * or reset tokens.
@@ -44,6 +50,7 @@ final readonly class UserAdminController
         private AdminViewRenderer $views,
         private ?AdminTwoFactorResetService $twoFactorReset = null,
         private ?EntitySaveLifecycleRunner $saveLifecycle = null,
+        private ?PasswordPolicy $passwordPolicy = null,
     ) {
     }
 
@@ -78,6 +85,9 @@ final readonly class UserAdminController
             if ($password === '') {
                 throw new RuntimeException('Password is required for new admin users.');
             }
+
+            // Phase 1.110: enforce the password policy BEFORE any write.
+            $this->assertPasswordMeetsPolicy($password);
 
             $createdId = null;
             $context = $this->runEntitySave('admin_user', $form, null, function (EntitySaveContext $c) use ($form, $password, &$createdId): void {
@@ -137,7 +147,16 @@ final readonly class UserAdminController
         }
 
         try {
-            $context = $this->runEntitySave('admin_user', $form, $user->id, function (EntitySaveContext $c) use ($form, $user): void {
+            $password = trim((string) ($form['password'] ?? ''));
+
+            // Phase 1.110: a password change on update must also satisfy the
+            // policy, checked before any write. An empty value means "keep the
+            // existing password" and is intentionally exempt.
+            if ($password !== '') {
+                $this->assertPasswordMeetsPolicy($password);
+            }
+
+            $context = $this->runEntitySave('admin_user', $form, $user->id, function (EntitySaveContext $c) use ($form, $user, $password): void {
                 $this->users->updateUser(
                     id: $user->id,
                     email: trim((string) ($form['email'] ?? '')),
@@ -146,7 +165,6 @@ final readonly class UserAdminController
                     roleIds: $this->roleIdsFromForm($form),
                     locale: $this->adminUserLocaleFromForm($form));
 
-                $password = trim((string) ($form['password'] ?? ''));
                 if ($password !== '') {
                     $this->users->updatePassword($user->id, $this->passwordHasher->hash($password));
                 }
@@ -180,6 +198,24 @@ final readonly class UserAdminController
         }
 
         return Response::redirect('/admin/users/edit?id=' . $targetUser->id . '&notice=2fa_reset');
+    }
+
+    /**
+     * Validate a candidate password against the admin password policy and
+     * throw a RuntimeException (caught by the existing 422 error-rendering
+     * path) describing the first violation when it fails.
+     *
+     * Uses a sane default PasswordPolicy when none is injected, so this check
+     * is always active even before any DI wiring change.
+     */
+    private function assertPasswordMeetsPolicy(string $password): void
+    {
+        $policy = $this->passwordPolicy ?? new PasswordPolicy();
+        $violations = $policy->violations($password);
+
+        if ($violations !== []) {
+            throw new RuntimeException($violations[0]);
+        }
     }
 
     /**
