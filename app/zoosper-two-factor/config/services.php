@@ -5,9 +5,12 @@ declare(strict_types=1);
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\TwoFactor\Challenge\TwoFactorChallengeRepository;
+use Zoosper\TwoFactor\Challenge\TwoFactorChallengeService;
 use Zoosper\TwoFactor\Crypto\SecretProtector;
 use Zoosper\TwoFactor\Qr\TotpQrCodeSvgRenderer;
 use Zoosper\TwoFactor\Recovery\RecoveryCodeGenerator;
+use Zoosper\TwoFactor\Repository\AdminRecoveryCodeRepository;
 use Zoosper\TwoFactor\Repository\AdminTwoFactorEnrollmentRepository;
 use Zoosper\TwoFactor\Repository\AdminTwoFactorResetRepository;
 use Zoosper\TwoFactor\Service\AdminTwoFactorEnrollmentService;
@@ -23,6 +26,8 @@ return [
         $services->has(AuditLogger::class) ? $services->get(AuditLogger::class) : null,
     ),
     AdminTwoFactorEnrollmentRepository::class => static fn (ServiceContainer $services): AdminTwoFactorEnrollmentRepository => new AdminTwoFactorEnrollmentRepository($services->get(PDO::class)),
+    AdminRecoveryCodeRepository::class => static fn (ServiceContainer $services): AdminRecoveryCodeRepository => new AdminRecoveryCodeRepository($services->get(PDO::class)),
+    TwoFactorChallengeRepository::class => static fn (ServiceContainer $services): TwoFactorChallengeRepository => new TwoFactorChallengeRepository($services->get(PDO::class)),
     TotpSecretGenerator::class => static fn (ServiceContainer $services): TotpSecretGenerator => new TotpSecretGenerator(),
     TotpVerifier::class => static function (ServiceContainer $services): TotpVerifier {
         $config = $services->get(ConfigRepository::class)->array('two_factor');
@@ -47,6 +52,18 @@ return [
             $services->get(RecoveryCodeGenerator::class),
             (string) ($config['issuer'] ?? 'Zoosper'),
             (int) ($config['recovery_codes'] ?? 8),
+        );
+    },
+    TwoFactorChallengeService::class => static function (ServiceContainer $services): TwoFactorChallengeService {
+        $config = $services->get(ConfigRepository::class)->array('two_factor');
+        $verifier = $services->get(TotpVerifier::class);
+        $recovery = $services->get(AdminRecoveryCodeRepository::class);
+
+        return new TwoFactorChallengeService(
+            $services->get(TwoFactorChallengeRepository::class),
+            static fn (string $secret, string $code): bool => $verifier->verify($secret, $code),
+            static fn (int $adminUserId, string $code): bool => $recovery->redeem($adminUserId, $code),
+            (int) ($config['challenge_ttl'] ?? 300),
         );
     },
     AdminTwoFactorLoginRedirectService::class => static function (ServiceContainer $services): AdminTwoFactorLoginRedirectService {
