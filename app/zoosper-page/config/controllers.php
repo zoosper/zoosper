@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Controller\PageAdminController;
 use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
@@ -17,6 +16,7 @@ use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Page\Admin\Controller\PageAdminController;
 use Zoosper\Page\Admin\PageGridRepository;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;

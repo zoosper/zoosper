@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Controller;
+namespace Zoosper\Auth\Admin\Controller;
 
 use RuntimeException;
 use Zoosper\Admin\Audit\AuditLogger;
@@ -32,6 +32,17 @@ use Zoosper\Core\Http\Response;
  * $config->array('acl') (properly layered/aggregated); when absent (no DI
  * wiring change made yet), it falls back to the original single-file require so
  * behaviour is identical until the container is updated to inject it.
+ *
+ * Phase E1: ConfigRepository is now actually wired in
+ * (app/zoosper-auth/config/controllers.php), so the ConfigRepository path is
+ * the one exercised in production.
+ *
+ * Phase F1: relocated from Zoosper\Admin\Controller to Zoosper\Auth\Admin\
+ * Controller (namespace change ONLY — no logic touched, including the
+ * `dirname(__DIR__, 3)` fallback path below, which is intentionally left
+ * untouched since it is a documented pre-Phase-1.111 fallback whose depth was
+ * already independent of this class's own location — see the run-order note
+ * in this phase's README for why this specific line needed no change).
  */
 final readonly class RoleAdminController
 {
@@ -203,7 +214,18 @@ final readonly class RoleAdminController
 
     private function renderRoleView(string $template, array $data = []): string
     {
-        $path = dirname(__DIR__, 2) . '/resources/views/admin/roles/' . ltrim($template, '/');
+        // Phase F1 NOTE: this controller was relocated from
+        // app/zoosper-admin/src/Controller to app/zoosper-auth/src/Admin/
+        // Controller, but its raw-PHP view templates were NOT moved (I do not
+        // have form.php/index.php/permission-tree.php/user-assignment.php to
+        // relocate them safely), so they still physically live at
+        // app/zoosper-admin/resources/views/admin/roles/. The path below was
+        // updated so it still resolves to that SAME physical location from
+        // the controller's new home — this is a deliberate, temporary
+        // cross-module reach-back, not an oversight. A natural follow-up is to
+        // move those 4 view files into app/zoosper-auth/resources/views/
+        // admin/roles/ and simplify this path once they are in hand.
+        $path = dirname(__DIR__, 4) . '/zoosper-admin/resources/views/admin/roles/' . ltrim($template, '/');
         if (!is_file($path)) {
             throw new RuntimeException('Role admin view not found: ' . $template);
         }

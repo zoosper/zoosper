@@ -11,6 +11,11 @@ use Zoosper\Core\Routing\ModuleRouteDefinition;
  * Controllers may still read the current user for rendering, event/audit/save
  * attribution and translation context, but must not duplicate route-level
  * permission decisions.
+ *
+ * Phase F1: PageAdminController relocated from app/zoosper-admin/src/Controller
+ * to app/zoosper-page/src/Admin/Controller — the hardcoded path was updated to
+ * match. ThemeAdminController was NOT relocated in this phase and its path is
+ * unchanged.
  */
 
 /** @return array<string, list<string>> */
@@ -63,7 +68,7 @@ test('page and theme admin routes keep middleware permission coverage', function
 test('page and theme admin controllers no longer duplicate permission gates', function () {
     $root = dirname(__DIR__, 5);
     foreach ([
-        'app/zoosper-admin/src/Controller/PageAdminController.php',
+        'app/zoosper-page/src/Admin/Controller/PageAdminController.php',
         'app/zoosper-admin/src/Controller/ThemeAdminController.php',
     ] as $relative) {
         $source = (string) file_get_contents($root . '/' . $relative);
@@ -77,7 +82,7 @@ test('page and theme admin controllers no longer duplicate permission gates', fu
 test('page and theme admin forms still generate csrf tokens for middleware validation', function () {
     $root = dirname(__DIR__, 5);
 
-    $pageController = (string) file_get_contents($root . '/app/zoosper-admin/src/Controller/PageAdminController.php');
+    $pageController = (string) file_get_contents($root . '/app/zoosper-page/src/Admin/Controller/PageAdminController.php');
     $themeController = (string) file_get_contents($root . '/app/zoosper-admin/src/Controller/ThemeAdminController.php');
 
     expect($pageController)->toContain('$this->csrf->token()');

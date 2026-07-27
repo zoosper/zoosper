@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Controller;
+namespace Zoosper\Auth\Admin\Controller;
 
 use RuntimeException;
 use Zoosper\Admin\UI\AdminViewRenderer;
@@ -38,6 +38,13 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
  * PCI-aware: the 2FA reset action never reads, displays or logs OTPs, TOTP
  * secrets, recovery-code plaintext, provisioning URIs, QR data, SMTP passwords
  * or reset tokens.
+ *
+ * Phase F1: relocated from Zoosper\Admin\Controller to Zoosper\Auth\Admin\
+ * Controller (namespace change ONLY — no logic touched). Unlike
+ * RoleAdminController, this class has NO raw filesystem-relative view paths
+ * (it renders exclusively through AdminViewRenderer's Latte template-key
+ * strings, e.g. 'zoosper-auth::admin/users/form', which are location-
+ * independent), so this move required no path-arithmetic fix.
  */
 final readonly class UserAdminController
 {

@@ -10,6 +10,11 @@ use Zoosper\Core\Routing\ModuleRouteDefinition;
  * Phase 1.33d-a guard: auth middleware owns user/role admin permission gates.
  * Controllers may still read the current user for layout/audit/save attribution,
  * but they must not duplicate route-level permission decisions.
+ *
+ * Phase F1: UserAdminController/RoleAdminController relocated from
+ * app/zoosper-admin/src/Controller to app/zoosper-auth/src/Admin/Controller —
+ * the two hardcoded file paths below were updated to match; no assertion
+ * logic changed.
  */
 
 /** @return array<string, list<string>> */
@@ -50,8 +55,8 @@ test('user and role admin routes keep middleware permission coverage', function 
 test('user and role admin controllers no longer duplicate permission gates', function () {
     $root = dirname(__DIR__, 5);
     foreach ([
-        'app/zoosper-admin/src/Controller/UserAdminController.php',
-        'app/zoosper-admin/src/Controller/RoleAdminController.php',
+        'app/zoosper-auth/src/Admin/Controller/UserAdminController.php',
+        'app/zoosper-auth/src/Admin/Controller/RoleAdminController.php',
     ] as $relative) {
         $source = (string) file_get_contents($root . '/' . $relative);
 
@@ -65,8 +70,8 @@ test('user and role admin controllers no longer duplicate permission gates', fun
 test('user and role admin forms still generate csrf tokens for middleware validation', function () {
     $root = dirname(__DIR__, 5);
 
-    $userController = (string) file_get_contents($root . '/app/zoosper-admin/src/Controller/UserAdminController.php');
-    $roleController = (string) file_get_contents($root . '/app/zoosper-admin/src/Controller/RoleAdminController.php');
+    $userController = (string) file_get_contents($root . '/app/zoosper-auth/src/Admin/Controller/UserAdminController.php');
+    $roleController = (string) file_get_contents($root . '/app/zoosper-auth/src/Admin/Controller/RoleAdminController.php');
 
     expect($userController)->toContain('$this->csrf->token()');
     expect($roleController)->toContain('$this->csrf->token()');

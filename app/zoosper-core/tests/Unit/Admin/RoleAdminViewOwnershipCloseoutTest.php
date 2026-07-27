@@ -33,7 +33,12 @@ it('documents final role admin latte closeout', function () use ($rootPath): voi
 });
 
 it('keeps role admin controller free of large inline markup after view cutover', function () use ($rootPath): void {
-    $controller = (string) file_get_contents($rootPath('app/zoosper-admin/src/Controller/RoleAdminController.php'));
+    // Phase F1 fix: RoleAdminController relocated from
+    // app/zoosper-admin/src/Controller to
+    // app/zoosper-auth/src/Admin/Controller — this test's OWN hardcoded path
+    // (separate from the audit tool it also references below) was missed in
+    // the initial F1 relocation pass and is corrected here.
+    $controller = (string) file_get_contents($rootPath('app/zoosper-auth/src/Admin/Controller/RoleAdminController.php'));
     assertStringContainsString('renderRoleView', $controller);
     assertStringNotContainsString('<form', $controller);
     assertStringNotContainsString('<table', $controller);

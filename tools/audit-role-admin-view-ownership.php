@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 /**
  * Strict ownership audit for the RoleAdminController view cutover.
+ *
+ * Phase F1: RoleAdminController relocated from
+ * app/zoosper-admin/src/Controller to app/zoosper-auth/src/Admin/Controller.
+ * $controllerRelative below updated to match. The views themselves
+ * (app/zoosper-admin/resources/views/admin/roles/*.php) were deliberately
+ * NOT relocated in this phase (see RoleAdminController's own renderRoleView()
+ * docblock), so every path in $views below is intentionally UNCHANGED.
  */
-
 $root = dirname(__DIR__);
 $outputDir = $root . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'reports';
 foreach ($argv as $argument) {
@@ -19,7 +25,7 @@ if (! is_dir($outputDir) && ! mkdir($outputDir, 0775, true) && ! is_dir($outputD
     exit(1);
 }
 
-$controllerRelative = 'app/zoosper-admin/src/Controller/RoleAdminController.php';
+$controllerRelative = 'app/zoosper-auth/src/Admin/Controller/RoleAdminController.php';
 $controllerPath = $root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $controllerRelative);
 $views = [
     'index' => 'app/zoosper-admin/resources/views/admin/roles/index.php',

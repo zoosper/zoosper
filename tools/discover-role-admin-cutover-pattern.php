@@ -24,7 +24,7 @@ if (! is_dir($sourceDir) && ! mkdir($sourceDir, 0775, true) && ! is_dir($sourceD
     exit(1);
 }
 
-$controllerRelative = 'app/zoosper-admin/src/Controller/RoleAdminController.php';
+$controllerRelative = 'app/zoosper-auth/src/Admin/Controller/RoleAdminController.php';
 $controllerPath = $root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $controllerRelative);
 $adminLayoutPath = findFile($root . DIRECTORY_SEPARATOR . 'app', 'AdminLayout.php');
 $reportPath = rtrim($outputDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'role-admin-cutover-pattern.txt';

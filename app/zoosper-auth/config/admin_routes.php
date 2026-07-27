@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Controller\RoleAdminController;
-use Zoosper\Admin\Controller\UserAdminController;
+use Zoosper\Auth\Admin\Controller\RoleAdminController;
+use Zoosper\Auth\Admin\Controller\UserAdminController;
 
 return [
     ['method' => 'GET', 'path' => '/admin/users', 'controller' => UserAdminController::class, 'action' => 'index', 'permission' => ['role.manage', 'user.manage']],

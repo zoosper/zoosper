@@ -9,21 +9,19 @@ declare(strict_types=1);
  * Latte templates (zoosper-auth::admin/users/*) instead of inline HTML. The
  * EntitySaveLifecycleRunner injection from Phase 1.25b is preserved.
  *
- * Phase E1: RoleAdminController now receives ConfigRepository as its 7th
- * constructor argument, completing Phase 1.111 (Sonnet Phase 2 §3.3). Before
- * this change, RoleAdminController::aclGroups() always fell back to a raw
- * single-file `require` of zoosper-auth/config/acl.php, because no caller ever
- * passed ConfigRepository in. With this wired, ACL groups now come from
- * $config->array('acl') — properly layered/aggregated across every module's
- * config/acl.php via ModuleConfigAggregator, matching how every other config
- * access in the codebase already works.
+ * Phase E1: RoleAdminController receives ConfigRepository as its 7th
+ * constructor argument, completing Phase 1.111 (Sonnet Phase 2 §3.3).
+ *
+ * Phase F1: RoleAdminController/UserAdminController relocated from
+ * Zoosper\Admin\Controller to Zoosper\Auth\Admin\Controller (use statements
+ * updated below; no other change in this file).
  */
 
 use Zoosper\Admin\Audit\AuditLogger;
-use Zoosper\Admin\Controller\RoleAdminController;
-use Zoosper\Admin\Controller\UserAdminController;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
+use Zoosper\Auth\Admin\Controller\RoleAdminController;
+use Zoosper\Auth\Admin\Controller\UserAdminController;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
