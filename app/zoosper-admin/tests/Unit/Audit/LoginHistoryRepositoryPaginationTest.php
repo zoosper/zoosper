@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Audit\LoginHistoryCriteria;
+use Zoosper\Admin\Audit\LoginHistoryGrid;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Core\Grid\GridCriteria;
 
 /*
- * Phase 1.112 behavioural tests for LoginHistoryRepository pagination +
- * retention (Sonnet Phase 2 §4.2).
+ * Phase A hotfix: REPLACES the Phase 1.112 version of this test file, which
+ * referenced the now-deleted LoginHistoryCriteria class. Exercises the ACTUAL
+ * paginate(GridCriteria) method LoginHistoryRepository implements today.
  */
 
 function makeLoginHistoryPdo(): PDO
@@ -37,27 +38,43 @@ function seedLoginRows(PDO $pdo, int $count, string $status = 'success'): void
     }
 }
 
-it('paginates login history with correct totals and page math', function (): void {
+function loginCriteria(array $overrides = []): GridCriteria
+{
+    return GridCriteria::fromValues($overrides, LoginHistoryGrid::definition());
+}
+
+it('paginates login history with correct totals and page math (no filters)', function (): void {
     $pdo = makeLoginHistoryPdo();
     seedLoginRows($pdo, 33);
     $repo = new LoginHistoryRepository($pdo);
 
-    $page1 = $repo->paginate(new LoginHistoryCriteria(new Pager(1, 20)));
+    $page1 = $repo->paginate(loginCriteria(['page_size' => '20']));
     expect($page1->items)->toHaveCount(20)
         ->and($page1->total)->toBe(33)
         ->and($page1->totalPages())->toBe(2);
 
-    $page2 = $repo->paginate(new LoginHistoryCriteria(new Pager(2, 20)));
+    $page2 = $repo->paginate(loginCriteria(['page' => '2', 'page_size' => '20']));
     expect($page2->items)->toHaveCount(13);
+});
+
+it('an UNFILTERED, bare criteria (matching a plain page visit) returns all rows', function (): void {
+    $pdo = makeLoginHistoryPdo();
+    seedLoginRows($pdo, 9);
+    $repo = new LoginHistoryRepository($pdo);
+
+    $result = $repo->paginate(GridCriteria::fromValues([], LoginHistoryGrid::definition()));
+
+    expect($result->total)->toBe(9)
+        ->and($result->items)->toHaveCount(9);
 });
 
 it('filters by status', function (): void {
     $pdo = makeLoginHistoryPdo();
     seedLoginRows($pdo, 6, 'success');
-    seedLoginRows($pdo, 4, 'failure');
+    seedLoginRows($pdo, 4, 'otp_failed');
     $repo = new LoginHistoryRepository($pdo);
 
-    $failures = $repo->paginate(new LoginHistoryCriteria(new Pager(1, 50), status: 'failure'));
+    $failures = $repo->paginate(loginCriteria(['status' => 'otp_failed', 'page_size' => '50']));
     expect($failures->total)->toBe(4);
 });
 

@@ -5,18 +5,23 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Audit;
 
 use PDO;
+use Zoosper\Core\Grid\GridCriteria;
+use Zoosper\Core\Grid\GridDataSourceInterface;
 use Zoosper\Core\Pagination\PaginationResult;
 
 /**
  * Repository for the admin activity log.
  *
- * Phase 1.112 (Sonnet Phase 2 §4.2): adds real pagination + a retention helper,
- * mirroring Zoosper\Page\Admin\PageGridRepository's proven paginate() pattern
- * (COUNT query + LIMIT/OFFSET query, both parameter-bound). `latest()` is left
- * UNCHANGED so any existing caller keeps its current behaviour; `paginate()` is
- * the new entry point for the admin grid.
+ * Phase A (Grid Core): SUPERSEDES the bespoke AuditLogCriteria/paginate(
+ * AuditLogCriteria) pair introduced in Phase 1.112 with the generic
+ * GridDataSourceInterface. AuditLogCriteria.php has been deleted — one
+ * criteria shape (GridCriteria) now serves every admin grid, per the decision
+ * to avoid running two parallel pagination mechanisms side by side and to
+ * keep the codebase lean.
+ *
+ * `latest()` remains for any other existing caller of the "top N" query.
  */
-final readonly class AuditLogRepository
+final readonly class AuditLogRepository implements GridDataSourceInterface
 {
     public function __construct(private PDO $pdo)
     {
@@ -44,8 +49,7 @@ final readonly class AuditLogRepository
     }
 
     /**
-     * Original unbounded "top N" query. UNCHANGED — kept for backward
-     * compatibility with any existing caller.
+     * Original unbounded "top N" query, kept for any other existing caller.
      *
      * @return list<array<string, mixed>>
      */
@@ -59,11 +63,15 @@ final readonly class AuditLogRepository
     }
 
     /**
-     * Return a paginated, optionally filtered set of activity log rows.
+     * GridDataSourceInterface implementation for the Audit Log grid.
+     * Supports filtering by free-text `q` (summary/action/actor_email) and
+     * `entity_type`, and sorting by `created_at` (applied via the monotonic
+     * `id` column, since row ids increase with time and this avoids any
+     * ambiguity from duplicate timestamps).
      *
      * @return PaginationResult<array<string, mixed>>
      */
-    public function paginate(AuditLogCriteria $criteria): PaginationResult
+    public function paginate(GridCriteria $criteria): PaginationResult
     {
         [$where, $params] = $this->whereClause($criteria);
 
@@ -74,9 +82,10 @@ final readonly class AuditLogRepository
         $count->execute();
         $total = (int) $count->fetchColumn();
 
+        $direction = strtoupper($criteria->sortDir) === 'ASC' ? 'ASC' : 'DESC';
         $sql = 'SELECT * FROM admin_activity_log '
             . $where
-            . ' ORDER BY id DESC'
+            . ' ORDER BY id ' . $direction
             . ' LIMIT :limit OFFSET :offset';
 
         $statement = $this->pdo->prepare($sql);
@@ -97,10 +106,6 @@ final readonly class AuditLogRepository
 
     /**
      * Delete activity log rows older than the given cutoff (retention).
-     * Mirrors DatabaseRateLimitStore::deleteExpired()'s "delete before a cutoff,
-     * return the count" shape. Read-write, so callers should use a dedicated
-     * dry-run-first console command rather than calling this directly from
-     * request-handling code.
      */
     public function deleteOlderThan(string $cutoff): int
     {
@@ -113,19 +118,21 @@ final readonly class AuditLogRepository
     /**
      * @return array{0:string,1:array<string,string|int>}
      */
-    private function whereClause(AuditLogCriteria $criteria): array
+    private function whereClause(GridCriteria $criteria): array
     {
         $conditions = [];
         $params = [];
 
-        if ($criteria->query !== '') {
+        $query = $criteria->filters['q'] ?? '';
+        if ($query !== '') {
             $conditions[] = '(summary LIKE :query OR action LIKE :query OR actor_email LIKE :query)';
-            $params['query'] = '%' . $criteria->query . '%';
+            $params['query'] = '%' . $query . '%';
         }
 
-        if ($criteria->entityType !== '') {
+        $entityType = $criteria->filters['entity_type'] ?? '';
+        if ($entityType !== '') {
             $conditions[] = 'entity_type = :entity_type';
-            $params['entity_type'] = $criteria->entityType;
+            $params['entity_type'] = $entityType;
         }
 
         return [$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params];

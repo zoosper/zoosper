@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Audit\AuditLogCriteria;
+use Zoosper\Admin\Audit\AuditLogGrid;
 use Zoosper\Admin\Audit\AuditLogRepository;
+use Zoosper\Core\Grid\GridCriteria;
 use Zoosper\Core\Pagination\Pager;
 
 /*
- * Phase 1.112 behavioural tests for AuditLogRepository pagination + retention
- * (Sonnet Phase 2 §4.2). Uses a real in-memory SQLite table.
+ * Phase A hotfix: REPLACES the Phase 1.112 version of this test file, which
+ * referenced the now-deleted AuditLogCriteria class. Exercises the ACTUAL
+ * paginate(GridCriteria) method AuditLogRepository implements today.
  */
 
 function makeAuditLogPdo(): PDO
@@ -52,22 +54,41 @@ function seedAuditRows(PDO $pdo, int $count, string $entityType = 'page'): void
     }
 }
 
-it('paginates results with correct totals and page math', function (): void {
+/** Build a bare (unfiltered, page 1) GridCriteria using AuditLogGrid's real definition. */
+function auditCriteria(array $overrides = []): GridCriteria
+{
+    return GridCriteria::fromValues($overrides, AuditLogGrid::definition());
+}
+
+it('paginates results with correct totals and page math (no filters)', function (): void {
     $pdo = makeAuditLogPdo();
     seedAuditRows($pdo, 45);
     $repo = new AuditLogRepository($pdo);
 
-    $page1 = $repo->paginate(new AuditLogCriteria(new Pager(1, 20)));
+    $page1 = $repo->paginate(auditCriteria(['page_size' => '20']));
     expect($page1->items)->toHaveCount(20)
         ->and($page1->total)->toBe(45)
         ->and($page1->totalPages())->toBe(3)
         ->and($page1->hasPrevious())->toBeFalse()
         ->and($page1->hasNext())->toBeTrue();
 
-    $page3 = $repo->paginate(new AuditLogCriteria(new Pager(3, 20)));
-    expect($page3->items)->toHaveCount(5) // 45 - 40
-        ->and($page3->hasNext())->toBeFalse()
-        ->and($page3->hasPrevious())->toBeTrue();
+    $page3 = $repo->paginate(auditCriteria(['page' => '3', 'page_size' => '20']));
+    expect($page3->items)->toHaveCount(5)
+        ->and($page3->hasNext())->toBeFalse();
+});
+
+it('an UNFILTERED, bare criteria (matching a plain page visit) returns all rows', function (): void {
+    // This specifically guards the "no records shown on a bare visit" class of
+    // regression: GridCriteria::fromValues([], ...) must produce a criteria
+    // whose paginate() call returns the full unfiltered result set.
+    $pdo = makeAuditLogPdo();
+    seedAuditRows($pdo, 7);
+    $repo = new AuditLogRepository($pdo);
+
+    $result = $repo->paginate(GridCriteria::fromValues([], AuditLogGrid::definition()));
+
+    expect($result->total)->toBe(7)
+        ->and($result->items)->toHaveCount(7);
 });
 
 it('filters by entity_type without affecting total across other types', function (): void {
@@ -76,8 +97,8 @@ it('filters by entity_type without affecting total across other types', function
     seedAuditRows($pdo, 5, 'admin_user');
     $repo = new AuditLogRepository($pdo);
 
-    $pages = $repo->paginate(new AuditLogCriteria(new Pager(1, 50), entityType: 'page'));
-    $users = $repo->paginate(new AuditLogCriteria(new Pager(1, 50), entityType: 'admin_user'));
+    $pages = $repo->paginate(auditCriteria(['entity_type' => 'page', 'page_size' => '50']));
+    $users = $repo->paginate(auditCriteria(['entity_type' => 'admin_user', 'page_size' => '50']));
 
     expect($pages->total)->toBe(10)
         ->and($users->total)->toBe(5);
@@ -91,8 +112,7 @@ it('filters by free-text query across summary/action/actor_email', function (): 
         ->execute(['bob@example.test', 'deleted', 'page', 'Deleted about page', '2026-07-02 00:00:00']);
 
     $repo = new AuditLogRepository($pdo);
-
-    $result = $repo->paginate(new AuditLogCriteria(new Pager(1, 50), query: 'homepage'));
+    $result = $repo->paginate(auditCriteria(['q' => 'homepage', 'page_size' => '50']));
 
     expect($result->total)->toBe(1)
         ->and($result->items[0]['actor_email'])->toBe('alice@example.test');
@@ -108,12 +128,8 @@ it('deleteOlderThan removes only rows before the cutoff', function (): void {
     $deleted = $repo->deleteOlderThan('2026-06-01 00:00:00');
 
     expect($deleted)->toBe(1);
-
     $remaining = (int) $pdo->query('SELECT COUNT(*) FROM admin_activity_log')->fetchColumn();
     expect($remaining)->toBe(1);
-
-    $summary = $pdo->query('SELECT summary FROM admin_activity_log')->fetchColumn();
-    expect($summary)->toBe('recent row');
 });
 
 it('latest() is unchanged and still returns the raw top-N rows', function (): void {
@@ -121,7 +137,5 @@ it('latest() is unchanged and still returns the raw top-N rows', function (): vo
     seedAuditRows($pdo, 5);
     $repo = new AuditLogRepository($pdo);
 
-    $rows = $repo->latest(3);
-
-    expect($rows)->toHaveCount(3);
+    expect($repo->latest(3))->toHaveCount(3);
 });

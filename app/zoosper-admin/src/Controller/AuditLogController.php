@@ -5,30 +5,24 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Controller;
 
 use RuntimeException;
-use Zoosper\Admin\Audit\AuditLogCriteria;
+use Zoosper\Admin\Audit\AuditLogGrid;
 use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Core\Grid\GridCriteria;
+use Zoosper\Core\Grid\GridHtmlRenderer;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 
 /**
- * Phase 1.112 (Sonnet Phase 2 §4.2): index() now builds an AuditLogCriteria
- * from the request query (page/page_size/q/entity_type) and calls the new
- * paginate() method instead of the unbounded latest() "top 100" query.
+ * Phase A (Grid Core): index() now builds GridCriteria from the request query
+ * using the shared AuditLogGrid definition, calls the repository's generic
+ * paginate(GridCriteria), and renders the result through the ONE shared
+ * GridHtmlRenderer — the same renderer every other admin grid uses. The
+ * template only needs to echo the resulting `gridHtml` string.
  *
- * Phase 1.112 hotfix: Request::query() is a single-key accessor
- * (query(string $key, ?string $default = null): ?string), NOT a bulk
- * "all params" getter — Request has no such method. AuditLogCriteria::fromQuery()
- * expects an array, so the known keys are read individually here and assembled
- * into that array before being passed in.
- *
- * The 'rows' view-data key is preserved (now sourced from the paginated
- * result's items) so existing templates that only read 'rows' keep working
- * unchanged; 'pagination' and 'criteria' are ADDED for templates that choose to
- * render page links, matching the shape PageGridRepository/PageGridCriteria
- * already established for the Pages admin grid.
+ * SUPERSEDES Phase 1.112's AuditLogCriteria-based wiring.
  */
 final readonly class AuditLogController
 {
@@ -44,39 +38,37 @@ final readonly class AuditLogController
     {
         $user = $this->currentAdminUser();
 
-        $criteria = AuditLogCriteria::fromQuery($this->queryParams($request));
+        $definition = AuditLogGrid::definition();
+        $criteria = GridCriteria::fromValues($this->queryValues($request, $definition), $definition);
         $result = $this->logs->paginate($criteria);
+        $gridHtml = (new GridHtmlRenderer())->render($definition, $result, $criteria, '/admin/audit-log');
 
         if ($this->views !== null) {
             return Response::html($this->views->render(
                 title: 'Audit Log',
                 template: 'zoosper-admin::audit-log/index',
-                data: [
-                    'rows' => $result->items,
-                    'pagination' => $result,
-                    'criteria' => $criteria,
-                    'linkParameters' => $criteria->linkParameters(),
-                ],
+                data: ['gridHtml' => $gridHtml],
                 user: $user,
                 active: 'audit-log',
             ));
         }
 
-        return Response::html($this->layout->render('Audit Log', '<p>Audit log view renderer is not configured.</p>', $user, 'audit-log'));
+        return Response::html($this->layout->render('Audit Log', $gridHtml, $user, 'audit-log'));
     }
 
     /**
-     * Read the query-string keys AuditLogCriteria::fromQuery() understands from
-     * the request. Request::query() is single-key only, so each supported key
-     * is read individually rather than assuming a bulk "all params" accessor.
+     * Read the query-string keys the grid understands from the request.
+     * Request::query() is single-key only, so each supported key (pagination,
+     * sorting, and every declared filter) is read individually.
      *
      * @return array<string, string>
      */
-    private function queryParams(Request $request): array
+    private function queryValues(Request $request, \Zoosper\Core\Grid\GridDefinition $definition): array
     {
         $params = [];
+        $keys = array_merge(['page', 'page_size', 'sort', 'dir'], $definition->filterKeys());
 
-        foreach (['page', 'page_size', 'q', 'entity_type'] as $key) {
+        foreach ($keys as $key) {
             $value = $request->query($key);
             if ($value !== null) {
                 $params[$key] = $value;

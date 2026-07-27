@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Audit;
 
 use PDO;
+use Zoosper\Core\Grid\GridCriteria;
+use Zoosper\Core\Grid\GridDataSourceInterface;
 use Zoosper\Core\Pagination\PaginationResult;
 
 /**
  * Repository for admin login history.
  *
- * Phase 1.112 (Sonnet Phase 2 §4.2): adds real pagination + a retention helper,
- * mirroring PageGridRepository::paginate()'s proven pattern. `latest()` is left
- * UNCHANGED for backward compatibility; `paginate()` is the new entry point.
+ * Phase A (Grid Core): SUPERSEDES the bespoke LoginHistoryCriteria/paginate(
+ * LoginHistoryCriteria) pair introduced in Phase 1.112 with the generic
+ * GridDataSourceInterface. LoginHistoryCriteria.php has been deleted.
  */
-final readonly class LoginHistoryRepository
+final readonly class LoginHistoryRepository implements GridDataSourceInterface
 {
     public function __construct(private PDO $pdo)
     {
@@ -37,7 +39,7 @@ final readonly class LoginHistoryRepository
     }
 
     /**
-     * Original unbounded "top N" query. UNCHANGED for backward compatibility.
+     * Original unbounded "top N" query, kept for any other existing caller.
      *
      * @return list<array<string, mixed>>
      */
@@ -51,11 +53,13 @@ final readonly class LoginHistoryRepository
     }
 
     /**
-     * Return a paginated, optionally filtered set of login history rows.
+     * GridDataSourceInterface implementation for the Login History grid.
+     * Supports filtering by free-text `q` (email) and exact `status`, and
+     * sorting by `created_at` (applied via the monotonic `id` column).
      *
      * @return PaginationResult<array<string, mixed>>
      */
-    public function paginate(LoginHistoryCriteria $criteria): PaginationResult
+    public function paginate(GridCriteria $criteria): PaginationResult
     {
         [$where, $params] = $this->whereClause($criteria);
 
@@ -66,9 +70,10 @@ final readonly class LoginHistoryRepository
         $count->execute();
         $total = (int) $count->fetchColumn();
 
+        $direction = strtoupper($criteria->sortDir) === 'ASC' ? 'ASC' : 'DESC';
         $sql = 'SELECT * FROM admin_login_history '
             . $where
-            . ' ORDER BY id DESC'
+            . ' ORDER BY id ' . $direction
             . ' LIMIT :limit OFFSET :offset';
 
         $statement = $this->pdo->prepare($sql);
@@ -101,19 +106,21 @@ final readonly class LoginHistoryRepository
     /**
      * @return array{0:string,1:array<string,string|int>}
      */
-    private function whereClause(LoginHistoryCriteria $criteria): array
+    private function whereClause(GridCriteria $criteria): array
     {
         $conditions = [];
         $params = [];
 
-        if ($criteria->query !== '') {
+        $query = $criteria->filters['q'] ?? '';
+        if ($query !== '') {
             $conditions[] = 'email LIKE :query';
-            $params['query'] = '%' . $criteria->query . '%';
+            $params['query'] = '%' . $query . '%';
         }
 
-        if ($criteria->status !== '') {
+        $status = $criteria->filters['status'] ?? '';
+        if ($status !== '') {
             $conditions[] = 'status = :status';
-            $params['status'] = $criteria->status;
+            $params['status'] = $status;
         }
 
         return [$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params];

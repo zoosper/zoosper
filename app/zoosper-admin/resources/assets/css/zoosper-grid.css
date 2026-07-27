@@ -1,0 +1,104 @@
+/*
+ * Phase A (Grid Core) starter styles for the shared admin grid components:
+ * .grid, .grid-filters, .grid-summary, .grid-table, .grid-sortable,
+ * .grid-pagination. Intentionally minimal — matches the plain-table look of
+ * the existing admin.css rather than reskinning it, so it drops in without a
+ * visual regression. Tune freely; this is a starting point, not a final design.
+ *
+ * NOT YET WIRED into the admin asset pipeline: I do not have
+ * app/zoosper-admin/config/admin_assets.php, so I have not added an entry for
+ * this file. Add it there (or load it manually) to have it actually served.
+ */
+
+.grid-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.grid-filters__field {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.85rem;
+    gap: 4px;
+}
+
+.grid-filters__field input,
+.grid-filters__field select {
+    padding: 6px 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    min-width: 180px;
+}
+
+.grid-filters__apply {
+    padding: 7px 14px;
+    border: 0;
+    border-radius: 6px;
+    background: #0f172a;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.grid-filters__reset {
+    font-size: 0.85rem;
+    color: #64748b;
+    align-self: center;
+}
+
+.grid-summary {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0 0 8px;
+}
+
+.grid-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.grid-table th,
+.grid-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+}
+
+.grid-sortable a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.grid-sortable a:hover {
+    text-decoration: underline;
+}
+
+.grid-sort--active {
+    font-weight: 700;
+}
+
+.grid-empty {
+    text-align: center;
+    color: #94a3b8;
+    padding: 20px 0;
+}
+
+.grid-pagination {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+    font-size: 0.9rem;
+}
+
+.grid-pagination__disabled {
+    color: #cbd5e1;
+    pointer-events: none;
+}
+
+.grid-pagination__status {
+    color: #64748b;
+}
