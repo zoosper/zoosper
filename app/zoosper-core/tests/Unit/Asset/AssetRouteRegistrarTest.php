@@ -10,12 +10,17 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Routing\Router;
 
 /*
- * Phase C1 behavioural test: registers the EXACT production route (via
- * AssetRouteRegistrar::register(), the same class ApplicationFactory calls -
- * no duplicated/rewritten logic that could drift from production) against a
- * real Router, pointed at a genuine temp module-assets fixture, and dispatches
- * real Request objects through it. Proves the whole chain end-to-end:
- * Router -> route match -> AssetController::serve() -> Response.
+ * Phase C1/C2 behavioural test: registers the EXACT production route (via
+ * AssetRouteRegistrar::register() — the same class ApplicationFactory calls,
+ * no duplicated/rewritten logic that could drift) against a real Router,
+ * pointed at a genuine temp module-assets fixture, and dispatches real
+ * Request objects through it. Proves the whole chain end-to-end: Router ->
+ * route match -> AssetController::serve() -> Response.
+ *
+ * Phase C2 fix: ReflectionProperty::setAccessible() calls were removed
+ * (deprecated since PHP 8.1, no-op since then, and now emits a deprecation
+ * warning on PHP 8.5 — properties obtained via Reflection are accessible by
+ * default in modern PHP, so the calls were pure dead weight).
  */
 
 function removeAssetRouteFixtureDir(string $dir): void
@@ -47,15 +52,14 @@ function makeAssetRouteFixture(): array
 }
 
 /**
- * Build a Request for a given path with the given headers.
- *
- * Request's constructor is public (confirmed from source), so it is
- * constructed directly — no reflection needed here.
+ * Build a Request for a given path/method with the given headers. Request's
+ * constructor is public (confirmed from source), so it is constructed
+ * directly — no reflection needed here.
  */
-function makeAssetRequest(string $path, array $headers = []): Request
+function makeAssetRequest(string $path, array $headers = [], string $method = 'GET'): Request
 {
     return new Request(
-        method: 'GET',
+        method: $method,
         path: $path,
         headers: array_change_key_case($headers, CASE_LOWER),
         body: '',
@@ -65,10 +69,10 @@ function makeAssetRequest(string $path, array $headers = []): Request
     );
 }
 
-function buildAssetRouterFor(string $moduleBaseDir): Router
+function buildAssetRouterFor(string $moduleBaseDir, int $cacheMaxAge = 31536000, bool $cacheImmutable = true): Router
 {
     $registry = new AssetModuleRegistry(['test-module' => $moduleBaseDir]);
-    $controller = new AssetController(new AssetResolver($registry));
+    $controller = new AssetController(new AssetResolver($registry), $cacheMaxAge, $cacheImmutable);
 
     $router = new Router();
     AssetRouteRegistrar::register($router, $controller);
@@ -76,28 +80,36 @@ function buildAssetRouterFor(string $moduleBaseDir): Router
     return $router;
 }
 
+/**
+ * Extract the private status/body/headers from a Response without
+ * ReflectionProperty::setAccessible() (unneeded and deprecated on PHP 8.1+).
+ *
+ * @return array{status: int, body: string, headers: array<string, string>}
+ */
+function inspectResponse(\Zoosper\Core\Http\Response $response): array
+{
+    $reflection = new ReflectionClass($response);
+
+    return [
+        'status' => $reflection->getProperty('statusCode')->getValue($response),
+        'body' => $reflection->getProperty('body')->getValue($response),
+        'headers' => $reflection->getProperty('headers')->getValue($response),
+    ];
+}
+
 it('serves a real module asset over the registered route with correct headers', function (): void {
     [$base, $cssContent] = makeAssetRouteFixture();
 
     try {
         $router = buildAssetRouterFor($base);
-        $request = makeAssetRequest('/asset/test-module/css/style.css');
+        $response = $router->dispatch(makeAssetRequest('/asset/test-module/css/style.css'));
+        $r = inspectResponse($response);
 
-        $response = $router->dispatch($request);
-
-        $reflection = new ReflectionClass($response);
-        $bodyProp = $reflection->getProperty('body');
-        $bodyProp->setAccessible(true);
-        $statusProp = $reflection->getProperty('statusCode');
-        $statusProp->setAccessible(true);
-        $headersProp = $reflection->getProperty('headers');
-        $headersProp->setAccessible(true);
-
-        expect($statusProp->getValue($response))->toBe(200)
-            ->and($bodyProp->getValue($response))->toBe($cssContent)
-            ->and($headersProp->getValue($response)['Content-Type'])->toBe('text/css')
-            ->and($headersProp->getValue($response))->toHaveKey('ETag')
-            ->and($headersProp->getValue($response)['Cache-Control'])->toContain('immutable');
+        expect($r['status'])->toBe(200)
+            ->and($r['body'])->toBe($cssContent)
+            ->and($r['headers']['Content-Type'])->toBe('text/css')
+            ->and($r['headers'])->toHaveKey('ETag')
+            ->and($r['headers']['Cache-Control'])->toContain('immutable');
     } finally {
         removeAssetRouteFixtureDir($base);
     }
@@ -108,15 +120,9 @@ it('returns 404 for an unknown module', function (): void {
 
     try {
         $router = buildAssetRouterFor($base);
-        $request = makeAssetRequest('/asset/nonexistent-module/css/style.css');
+        $response = $router->dispatch(makeAssetRequest('/asset/nonexistent-module/css/style.css'));
 
-        $response = $router->dispatch($request);
-
-        $reflection = new ReflectionClass($response);
-        $statusProp = $reflection->getProperty('statusCode');
-        $statusProp->setAccessible(true);
-
-        expect($statusProp->getValue($response))->toBe(404);
+        expect(inspectResponse($response)['status'])->toBe(404);
     } finally {
         removeAssetRouteFixtureDir($base);
     }
@@ -128,15 +134,9 @@ it('returns 404 for a path-traversal attempt', function (): void {
     try {
         $router = buildAssetRouterFor($base);
         // URL-encoded traversal in the path segment.
-        $request = makeAssetRequest('/asset/test-module/..%2f..%2fetc%2fpasswd');
+        $response = $router->dispatch(makeAssetRequest('/asset/test-module/..%2f..%2fetc%2fpasswd'));
 
-        $response = $router->dispatch($request);
-
-        $reflection = new ReflectionClass($response);
-        $statusProp = $reflection->getProperty('statusCode');
-        $statusProp->setAccessible(true);
-
-        expect($statusProp->getValue($response))->toBe(404);
+        expect(inspectResponse($response)['status'])->toBe(404);
     } finally {
         removeAssetRouteFixtureDir($base);
     }
@@ -148,22 +148,16 @@ it('returns 304 when If-None-Match matches the current ETag', function (): void 
     try {
         $router = buildAssetRouterFor($base);
 
-        $first = $router->dispatch(makeAssetRequest('/asset/test-module/css/style.css'));
+        $first = inspectResponse($router->dispatch(makeAssetRequest('/asset/test-module/css/style.css')));
+        $etag = $first['headers']['ETag'];
 
-        $reflection = new ReflectionClass($first);
-        $headersProp = $reflection->getProperty('headers');
-        $headersProp->setAccessible(true);
-        $etag = $headersProp->getValue($first)['ETag'];
+        $second = inspectResponse($router->dispatch(makeAssetRequest(
+            '/asset/test-module/css/style.css',
+            ['If-None-Match' => $etag],
+        )));
 
-        $second = $router->dispatch(makeAssetRequest('/asset/test-module/css/style.css', ['If-None-Match' => $etag]));
-
-        $statusProp = $reflection->getProperty('statusCode');
-        $statusProp->setAccessible(true);
-        $bodyProp = $reflection->getProperty('body');
-        $bodyProp->setAccessible(true);
-
-        expect($statusProp->getValue($second))->toBe(304)
-            ->and($bodyProp->getValue($second))->toBe('');
+        expect($second['status'])->toBe(304)
+            ->and($second['body'])->toBe('');
     } finally {
         removeAssetRouteFixtureDir($base);
     }
@@ -178,15 +172,74 @@ it('supports nested subdirectory paths (js/vendor/deep/file.js style)', function
     try {
         $router = buildAssetRouterFor($base);
         $response = $router->dispatch(makeAssetRequest('/asset/test-module/js/vendor/lib.js'));
+        $r = inspectResponse($response);
 
-        $reflection = new ReflectionClass($response);
-        $statusProp = $reflection->getProperty('statusCode');
-        $statusProp->setAccessible(true);
-        $headersProp = $reflection->getProperty('headers');
-        $headersProp->setAccessible(true);
+        expect($r['status'])->toBe(200)
+            ->and($r['headers']['Content-Type'])->toBe('text/javascript');
+    } finally {
+        removeAssetRouteFixtureDir($base);
+    }
+});
 
-        expect($statusProp->getValue($response))->toBe(200)
-            ->and($headersProp->getValue($response)['Content-Type'])->toBe('text/javascript');
+// --- Phase C2: configurable TTL / immutable flag ---
+
+it('reflects a CUSTOM cache_max_age in the Cache-Control header', function (): void {
+    [$base] = makeAssetRouteFixture();
+
+    try {
+        $router = buildAssetRouterFor($base, cacheMaxAge: 3600, cacheImmutable: true);
+        $r = inspectResponse($router->dispatch(makeAssetRequest('/asset/test-module/css/style.css')));
+
+        expect($r['headers']['Cache-Control'])->toBe('public, max-age=3600, immutable');
+    } finally {
+        removeAssetRouteFixtureDir($base);
+    }
+});
+
+it('omits the immutable directive when cache_immutable is false', function (): void {
+    [$base] = makeAssetRouteFixture();
+
+    try {
+        $router = buildAssetRouterFor($base, cacheMaxAge: 600, cacheImmutable: false);
+        $r = inspectResponse($router->dispatch(makeAssetRequest('/asset/test-module/css/style.css')));
+
+        expect($r['headers']['Cache-Control'])->toBe('public, max-age=600')
+            ->and($r['headers']['Cache-Control'])->not->toContain('immutable');
+    } finally {
+        removeAssetRouteFixtureDir($base);
+    }
+});
+
+// --- Phase C2: HEAD support ---
+
+it('responds to HEAD with the SAME headers as GET but an EMPTY body', function (): void {
+    [$base, $cssContent] = makeAssetRouteFixture();
+
+    try {
+        $router = buildAssetRouterFor($base);
+
+        $get = inspectResponse($router->dispatch(makeAssetRequest('/asset/test-module/css/style.css', [], 'GET')));
+        $head = inspectResponse($router->dispatch(makeAssetRequest('/asset/test-module/css/style.css', [], 'HEAD')));
+
+        expect($get['status'])->toBe(200)
+            ->and($get['body'])->toBe($cssContent)
+            ->and($head['status'])->toBe(200)
+            ->and($head['body'])->toBe('') // MUST NOT include a body (RFC 9110 9.3.2)
+            // MUST have the SAME headers as the equivalent GET response.
+            ->and($head['headers'])->toBe($get['headers']);
+    } finally {
+        removeAssetRouteFixtureDir($base);
+    }
+});
+
+it('HEAD also returns 404 for an unknown module, matching GET', function (): void {
+    [$base] = makeAssetRouteFixture();
+
+    try {
+        $router = buildAssetRouterFor($base);
+        $response = $router->dispatch(makeAssetRequest('/asset/nonexistent-module/css/style.css', [], 'HEAD'));
+
+        expect(inspectResponse($response)['status'])->toBe(404);
     } finally {
         removeAssetRouteFixtureDir($base);
     }

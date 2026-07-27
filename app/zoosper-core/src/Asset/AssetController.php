@@ -10,15 +10,22 @@ namespace Zoosper\Core\Asset;
  * Framework-agnostic: serve() returns a plain structure (status, headers, and
  * either a body string or a readable file path) so it can be adapted to any
  * response object your router uses. It performs conditional-GET handling via
- * ETag / If-None-Match and sets long-lived immutable cache headers.
+ * ETag / If-None-Match and sets long-lived cache headers.
  *
  * Read-only: it never writes to disk.
+ *
+ * Phase C2: both the cache TTL and the `immutable` Cache-Control directive are
+ * now constructor-configurable (previously TTL was configurable but
+ * `immutable` was hard-coded). Both default to their previous hard-coded
+ * values (1 year, immutable=true), so ANY existing caller that does not pass
+ * the new parameter is completely unaffected.
  */
 final class AssetController
 {
     public function __construct(
         private readonly AssetResolver $resolver,
         private readonly int $cacheMaxAgeSeconds = 31536000, // 1 year
+        private readonly bool $cacheImmutable = true,
     ) {
     }
 
@@ -79,7 +86,9 @@ final class AssetController
 
     private function cacheControl(): string
     {
-        return 'public, max-age=' . $this->cacheMaxAgeSeconds . ', immutable';
+        $value = 'public, max-age=' . $this->cacheMaxAgeSeconds;
+
+        return $this->cacheImmutable ? $value . ', immutable' : $value;
     }
 
     /**

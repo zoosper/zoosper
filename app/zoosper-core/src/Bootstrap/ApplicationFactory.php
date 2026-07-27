@@ -73,15 +73,22 @@ final class ApplicationFactory
         $routeLoader->registerAdminRoutes($router, $adminMiddleware);
         $routeLoader->registerApiRoutes($router);
 
-        // Phase C1: register the module asset pipeline route
-        // (GET /asset/{module}/{path}) directly on the router — deliberately
-        // NOT through registerAdminRoutes(), so it carries no auth/CSRF
-        // middleware, consistent with module CSS/JS having always been served
-        // as unauthenticated static files. AssetResolver's path-traversal and
-        // extension-allowlist checks are the real security boundary here.
+        // Phase C1/C2: register the module asset pipeline route
+        // (GET+HEAD /asset/{module}/{path}) directly on the router —
+        // deliberately NOT through registerAdminRoutes(), so it carries no
+        // auth/CSRF middleware, consistent with module CSS/JS having always
+        // been served as unauthenticated static files. AssetResolver's
+        // path-traversal and extension-allowlist checks are the real security
+        // boundary here. Cache TTL/immutability are configurable via
+        // config/asset_pipeline.php (Phase C2) rather than hard-coded.
+        $assetPipelineConfig = $config->array('asset_pipeline');
         $assetModules = new AssetModuleRegistry();
         (new ModuleAssetManifestLoader($modules))->registerInto($assetModules);
-        $assetController = new AssetController(new AssetResolver($assetModules));
+        $assetController = new AssetController(
+            new AssetResolver($assetModules),
+            (int) ($assetPipelineConfig['cache_max_age'] ?? 31536000),
+            (bool) ($assetPipelineConfig['cache_immutable'] ?? true),
+        );
         AssetRouteRegistrar::register($router, $assetController);
 
         $fallbackHandler = $services->has(FallbackHandlerInterface::class)
@@ -99,6 +106,8 @@ final class ApplicationFactory
                 ], 404);
             }
 
+            // The previous code called ->view(), which does not exist on the
+            // contract or on NullFallbackHandler, fataling every frontend request.
             // Phase 1.93: use the FallbackHandlerInterface contract (supports/handle).
             if ($fallbackHandler->supports($request)) {
                 $response = $fallbackHandler->handle($request);
