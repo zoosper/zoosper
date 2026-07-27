@@ -21,6 +21,19 @@ return [
             'path' => '/assets/admin/css/zoosper-content-editor.css?v=' . $assetVersion,
             'sort_order' => 30,
         ],
+        // Phase B: Grid Core styles (filter bar, sortable headers, pagination).
+        // Placed after the base admin styles (sort_order 10) so grid rules can
+        // override generic table styling, and before the tag-selector styles.
+        'zoosper-admin-grid-style' => [
+            'type' => 'style',
+            'path' => '/assets/admin/css/zoosper-grid.css?v=' . $assetVersion,
+            'sort_order' => 35,
+        ],
+        'zoosper-admin-tag-selector-style' => [
+            'type' => 'style',
+            'path' => '/assets/admin/css/zoosper-tag-selector.css',
+            'sort_order' => 40,
+        ],
         'zoosper-admin-messages-script' => [
             'type' => 'script',
             'path' => '/assets/admin/js/zoosper-admin-messages.js?v=' . $assetVersion,

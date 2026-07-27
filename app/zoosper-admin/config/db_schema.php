@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 return [
     'tables' => [
         'admin_login_history' => [
@@ -40,6 +38,18 @@ return [
                 'idx_admin_activity_action' => ['columns' => ['action']],
                 'idx_admin_activity_entity' => ['columns' => ['entity_type', 'entity_id']],
                 'idx_admin_activity_created' => ['columns' => ['created_at']],
+            ],
+        ],
+        'admin_grid_preferences' => [
+            'columns' => [
+                'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],
+                'admin_user_id' => ['type' => 'integer', 'nullable' => false],
+                'grid_key' => ['type' => 'string', 'length' => 64, 'nullable' => false],
+                'visible_columns_json' => ['type' => 'json', 'nullable' => false],
+                'updated_at' => ['type' => 'datetime', 'nullable' => false],
+            ],
+            'indexes' => [
+                'idx_admin_grid_prefs_user_grid' => ['columns' => ['admin_user_id', 'grid_key'], 'unique' => true],
             ],
         ],
     ],

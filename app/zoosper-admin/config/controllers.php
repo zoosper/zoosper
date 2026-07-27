@@ -14,6 +14,8 @@ use Zoosper\Auth\Service\AuthService;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Grid\GridColumnRegistry;
+use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeService;
 use Zoosper\TwoFactor\Service\AdminTwoFactorEnrollmentService;
 use Zoosper\TwoFactor\Service\AdminTwoFactorLoginRedirectService;
@@ -41,6 +43,10 @@ return [
         $services->get(AuditLogRepository::class),
         $services->get(AdminLayout::class),
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
+        // Phase B2: constructed directly from ModuleRegistry (confirmed always
+        // registered by ApplicationFactory) rather than requiring a new
+        // registration in zoosper-core's services.php.
+        new GridColumnRegistry($services->get(ModuleRegistry::class)),
     ),
 
     LoginHistoryController::class => static fn (ServiceContainer $services): LoginHistoryController => new LoginHistoryController(
@@ -48,5 +54,6 @@ return [
         $services->get(LoginHistoryRepository::class),
         $services->get(AdminLayout::class),
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
+        new GridColumnRegistry($services->get(ModuleRegistry::class)),
     ),
 ];

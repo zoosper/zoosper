@@ -10,19 +10,19 @@ use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Core\Grid\GridColumnRegistry;
 use Zoosper\Core\Grid\GridCriteria;
+use Zoosper\Core\Grid\GridDefinition;
 use Zoosper\Core\Grid\GridHtmlRenderer;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 
 /**
- * Phase A (Grid Core): index() now builds GridCriteria from the request query
- * using the shared AuditLogGrid definition, calls the repository's generic
- * paginate(GridCriteria), and renders the result through the ONE shared
- * GridHtmlRenderer — the same renderer every other admin grid uses. The
- * template only needs to echo the resulting `gridHtml` string.
- *
- * SUPERSEDES Phase 1.112's AuditLogCriteria-based wiring.
+ * Phase B2: index() now runs the base AuditLogGrid definition through
+ * GridColumnRegistry::apply() before building criteria, so any OTHER module
+ * can contribute extra columns/filters to this grid via its own
+ * config/grid_columns.php — with ZERO changes required here or in
+ * AuditLogGrid.php.
  */
 final readonly class AuditLogController
 {
@@ -31,6 +31,7 @@ final readonly class AuditLogController
         private AuditLogRepository $logs,
         private AdminLayout $layout,
         private ?AdminViewRenderer $views = null,
+        private ?GridColumnRegistry $columnRegistry = null,
     ) {
     }
 
@@ -38,7 +39,10 @@ final readonly class AuditLogController
     {
         $user = $this->currentAdminUser();
 
-        $definition = AuditLogGrid::definition();
+        $definition = $this->columnRegistry !== null
+            ? $this->columnRegistry->apply('audit-log', AuditLogGrid::definition())
+            : AuditLogGrid::definition();
+
         $criteria = GridCriteria::fromValues($this->queryValues($request, $definition), $definition);
         $result = $this->logs->paginate($criteria);
         $gridHtml = (new GridHtmlRenderer())->render($definition, $result, $criteria, '/admin/audit-log');
@@ -57,13 +61,9 @@ final readonly class AuditLogController
     }
 
     /**
-     * Read the query-string keys the grid understands from the request.
-     * Request::query() is single-key only, so each supported key (pagination,
-     * sorting, and every declared filter) is read individually.
-     *
      * @return array<string, string>
      */
-    private function queryValues(Request $request, \Zoosper\Core\Grid\GridDefinition $definition): array
+    private function queryValues(Request $request, GridDefinition $definition): array
     {
         $params = [];
         $keys = array_merge(['page', 'page_size', 'sort', 'dir'], $definition->filterKeys());

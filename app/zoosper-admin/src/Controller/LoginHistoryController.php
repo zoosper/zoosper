@@ -10,6 +10,7 @@ use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Core\Grid\GridColumnRegistry;
 use Zoosper\Core\Grid\GridCriteria;
 use Zoosper\Core\Grid\GridDefinition;
 use Zoosper\Core\Grid\GridHtmlRenderer;
@@ -17,11 +18,12 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 
 /**
- * Phase A (Grid Core): index() now builds GridCriteria from the request query
- * using the shared LoginHistoryGrid definition, calls the repository's generic
- * paginate(GridCriteria), and renders through the ONE shared GridHtmlRenderer.
- *
- * SUPERSEDES Phase 1.112's LoginHistoryCriteria-based wiring.
+ * Phase B2: index() now runs the base LoginHistoryGrid definition through
+ * GridColumnRegistry::apply() before building criteria. As a live proof, the
+ * zoosper-two-factor module contributes a "User Agent" column via
+ * app/zoosper-two-factor/config/grid_columns.php — real, already-captured
+ * data that was never surfaced before, added with ZERO changes to this file
+ * or LoginHistoryGrid.php.
  */
 final readonly class LoginHistoryController
 {
@@ -30,6 +32,7 @@ final readonly class LoginHistoryController
         private LoginHistoryRepository $history,
         private AdminLayout $layout,
         private ?AdminViewRenderer $views = null,
+        private ?GridColumnRegistry $columnRegistry = null,
     ) {
     }
 
@@ -37,7 +40,10 @@ final readonly class LoginHistoryController
     {
         $user = $this->currentAdminUser();
 
-        $definition = LoginHistoryGrid::definition();
+        $definition = $this->columnRegistry !== null
+            ? $this->columnRegistry->apply('login-history', LoginHistoryGrid::definition())
+            : LoginHistoryGrid::definition();
+
         $criteria = GridCriteria::fromValues($this->queryValues($request, $definition), $definition);
         $result = $this->history->paginate($criteria);
         $gridHtml = (new GridHtmlRenderer())->render($definition, $result, $criteria, '/admin/login-history');

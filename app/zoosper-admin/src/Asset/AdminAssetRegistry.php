@@ -13,6 +13,18 @@ use Zoosper\Core\Module\ModuleRegistry;
  * Modules can contribute CSS and JavaScript through `config/admin_assets.php`.
  * This keeps admin UI dependencies marketplace-friendly and avoids hard-coding
  * feature assets inside a central layout or bootstrap class.
+ *
+ * Phase B4 fix: two independently-authored modules (zoosper-admin and
+ * zoosper-page) both declared an asset entry for the physical file
+ * zoosper-tag-selector.css under different handles, so BOTH were being
+ * rendered as separate <link> tags (a real, confirmed duplicate <link> bug,
+ * not a hypothetical). all() now de-duplicates by the asset's resolved path
+ * WITHOUT its query string (so admin.css?v=1 and admin.css?v=2 are correctly
+ * treated as the SAME physical asset), keeping the first occurrence in final
+ * sort order (lowest sort_order, then handle) and silently dropping later
+ * duplicates. This is deliberately NOT a hard error: two modules coincidentally
+ * declaring the same shared vendor asset is a legitimate marketplace scenario,
+ * not necessarily a misconfiguration — it should be tolerated, not fatal.
  */
 final readonly class AdminAssetRegistry
 {
@@ -21,7 +33,9 @@ final readonly class AdminAssetRegistry
     }
 
     /**
-     * Return all enabled admin assets sorted by sort order and handle.
+     * Return all enabled admin assets sorted by sort order and handle, with
+     * duplicate physical assets (same path, different handle/module)
+     * collapsed to a single entry.
      *
      * @return list<AdminAsset>
      */
@@ -56,7 +70,7 @@ final readonly class AdminAssetRegistry
 
         usort($assets, static fn (AdminAsset $a, AdminAsset $b): int => [$a->sortOrder, $a->handle] <=> [$b->sortOrder, $b->handle]);
 
-        return $assets;
+        return $this->deduplicateByPhysicalPath($assets);
     }
 
     /**
@@ -77,5 +91,33 @@ final readonly class AdminAssetRegistry
     public function scripts(): array
     {
         return array_values(array_filter($this->all(), static fn (AdminAsset $asset): bool => $asset->type === 'script'));
+    }
+
+    /**
+     * Collapse assets that resolve to the SAME physical file (ignoring any
+     * cache-busting query string such as ?v=1.37l) into a single entry,
+     * keeping the first occurrence in the already-sorted list.
+     *
+     * @param list<AdminAsset> $sortedAssets
+     * @return list<AdminAsset>
+     */
+    private function deduplicateByPhysicalPath(array $sortedAssets): array
+    {
+        $seenPhysicalPaths = [];
+        $deduplicated = [];
+
+        foreach ($sortedAssets as $asset) {
+            $physicalPath = strtok($asset->path, '?');
+            $physicalPath = $physicalPath !== false ? $physicalPath : $asset->path;
+
+            if (isset($seenPhysicalPaths[$physicalPath])) {
+                continue;
+            }
+
+            $seenPhysicalPaths[$physicalPath] = true;
+            $deduplicated[] = $asset;
+        }
+
+        return $deduplicated;
     }
 }

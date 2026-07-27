@@ -1,13 +1,7 @@
 /*
- * Phase A (Grid Core) starter styles for the shared admin grid components:
- * .grid, .grid-filters, .grid-summary, .grid-table, .grid-sortable,
- * .grid-pagination. Intentionally minimal — matches the plain-table look of
- * the existing admin.css rather than reskinning it, so it drops in without a
- * visual regression. Tune freely; this is a starting point, not a final design.
- *
- * NOT YET WIRED into the admin asset pipeline: I do not have
- * app/zoosper-admin/config/admin_assets.php, so I have not added an entry for
- * this file. Add it there (or load it manually) to have it actually served.
+ * Grid Core styles: .grid, .grid-filters, .grid-summary, .grid-table,
+ * .grid-sortable, .grid-pagination. Matches the plain-table look of the
+ * existing admin.css rather than reskinning it.
  */
 
 .grid-filters {
@@ -101,4 +95,37 @@
 
 .grid-pagination__status {
     color: #64748b;
+}
+
+/* Column-visibility manager (Phase B): a small toggle panel above the grid. */
+.grid-columns-manager {
+    margin-bottom: 12px;
+}
+
+.grid-columns-manager summary {
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #0f172a;
+    font-weight: 600;
+    list-style: none;
+}
+
+.grid-columns-manager summary::-webkit-details-marker {
+    display: none;
+}
+
+.grid-columns-manager__panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    padding: 10px 0 4px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 10px;
+}
+
+.grid-columns-manager__option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
 }
