@@ -21,17 +21,27 @@ return [
             'path' => '/assets/admin/css/zoosper-content-editor.css?v=' . $assetVersion,
             'sort_order' => 30,
         ],
-        // Phase C1: served through the module asset pipeline
+        // Phase C1/C2: served through the module asset pipeline
         // (GET /asset/zoosper-admin/css/zoosper-grid.css), resolved directly
         // from app/zoosper-admin/resources/assets/css/zoosper-grid.css — no
-        // publish step, no manual copy into public/. The ?v=... cache-busting
-        // query string is PRESERVED exactly as before: AssetController sets a
-        // 1-year immutable Cache-Control header, so without a version bump on
-        // content change, a browser holding a cached copy would never refetch.
+        // publish step, no manual copy into public/.
         'zoosper-admin-grid-style' => [
             'type' => 'style',
             'path' => '/asset/zoosper-admin/css/zoosper-grid.css?v=' . $assetVersion,
             'sort_order' => 35,
+        ],
+        // Phase D1-hotfix: page-momentum.css already exists on disk at
+        // app/zoosper-admin/resources/assets/css/page-momentum.css (confirmed
+        // present when the zoosper-grid.css publish-path investigation ran
+        // `find app/zoosper-admin/resources/assets -maxdepth 3`), but had NO
+        // admin_assets.php entry under EITHER the old /assets/admin/ mechanism
+        // or the new pipeline — flagged as a known gap in Phase C1's README
+        // and completed here as the promised one-line follow-up. Served via
+        // the same no-copy module asset pipeline as zoosper-grid.css.
+        'zoosper-admin-page-momentum-style' => [
+            'type' => 'style',
+            'path' => '/asset/zoosper-admin/css/page-momentum.css?v=' . $assetVersion,
+            'sort_order' => 36,
         ],
         'zoosper-admin-tag-selector-style' => [
             'type' => 'style',

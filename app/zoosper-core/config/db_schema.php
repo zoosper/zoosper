@@ -12,6 +12,16 @@ declare(strict_types=1);
  *    engine creates it on `php bin/zoosper migrate` (previously it was only in a
  *    dead database/schema/*.sql file that nothing read, so a fresh install would
  *    throw "base table not found" the first time an extension field was saved).
+ *  - config_scope_values: Phase D1 scope-config engine (website/store/site
+ *    fallback resolution for future admin-editable settings).
+ *  - rate_limit_buckets: rate-limiting storage. CONFIRMED via `SHOW TABLES`
+ *    against the real MySQL database that this table did NOT exist, even
+ *    though schema_snapshots/entity_extension_values (declared correctly
+ *    inside 'tables') both did. Root cause: this table was previously
+ *    declared as a SIBLING key of 'tables' (i.e. return ['tables' => [...],
+ *    'rate_limit_buckets' => [...]]) instead of NESTED inside it, so the
+ *    schema engine (which only reads the 'tables' key) silently never
+ *    created it. Moved inside 'tables' here — this is the fix.
  */
 return [
     'tables' => [
@@ -44,28 +54,58 @@ return [
                 'idx_entity_extension_module' => ['columns' => ['module']],
             ],
         ],
-    ],
-    'rate_limit_buckets' => [
-        'columns' => [
-            'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],
-            'scope' => ['type' => 'string', 'length' => 120, 'nullable' => false],
-            'identity_hash' => ['type' => 'string', 'length' => 128, 'nullable' => false],
-            'rule_key' => ['type' => 'string', 'length' => 120, 'nullable' => false],
-            'window_starts_at' => ['type' => 'integer', 'nullable' => false],
-            'window_ends_at' => ['type' => 'integer', 'nullable' => false],
-            'attempts' => ['type' => 'integer', 'nullable' => false, 'default' => 0],
-            'created_at' => ['type' => 'integer', 'nullable' => false],
-            'updated_at' => ['type' => 'integer', 'nullable' => false],
-        ],
-        'indexes' => [
-            'rate_limit_buckets_unique_window' => [
-                'columns' => ['scope', 'identity_hash', 'rule_key', 'window_starts_at'],
-                'unique' => true,
+        // Phase D1: scope-aware config engine (website/store/site fallback
+        // resolution). See Zoosper\Core\Config\Scope\ScopeConfigRepository.
+        'config_scope_values' => [
+            'columns' => [
+                'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],
+                // 'default' | 'website' | 'store' | 'site'
+                'scope_type' => ['type' => 'string', 'length' => 16, 'nullable' => false],
+                // NULL for scope_type='default'. Holds the Site.websiteCode string
+                // for 'website', the Site.storeCode string for 'store', or the
+                // Site.id (stored as a string) for 'site' — a single flexible
+                // column rather than three separate nullable FK columns, since
+                // exactly one of those three identifier kinds ever applies to a
+                // given row.
+                'scope_key' => ['type' => 'string', 'length' => 190, 'nullable' => true],
+                // Dot-path config key, e.g. 'general.timezone', 'mail.from_address'.
+                'config_path' => ['type' => 'string', 'length' => 190, 'nullable' => false],
+                'config_value' => ['type' => 'text', 'nullable' => true],
+                'updated_at' => ['type' => 'datetime', 'nullable' => false],
             ],
-            'rate_limit_buckets_expires_idx' => [
-                'columns' => ['window_ends_at'],
+            'indexes' => [
+                // One value per (scope_type, scope_key, config_path) combination.
+                'idx_config_scope_values_unique' => [
+                    'columns' => ['scope_type', 'scope_key', 'config_path'],
+                    'unique' => true,
+                ],
+                'idx_config_scope_values_path' => ['columns' => ['config_path']],
+            ],
+        ],
+        // FIX: moved inside 'tables' (was previously a sibling key of
+        // 'tables', which the schema engine silently ignored — confirmed
+        // missing from the live MySQL database via SHOW TABLES).
+        'rate_limit_buckets' => [
+            'columns' => [
+                'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],
+                'scope' => ['type' => 'string', 'length' => 120, 'nullable' => false],
+                'identity_hash' => ['type' => 'string', 'length' => 128, 'nullable' => false],
+                'rule_key' => ['type' => 'string', 'length' => 120, 'nullable' => false],
+                'window_starts_at' => ['type' => 'integer', 'nullable' => false],
+                'window_ends_at' => ['type' => 'integer', 'nullable' => false],
+                'attempts' => ['type' => 'integer', 'nullable' => false, 'default' => 0],
+                'created_at' => ['type' => 'integer', 'nullable' => false],
+                'updated_at' => ['type' => 'integer', 'nullable' => false],
+            ],
+            'indexes' => [
+                'rate_limit_buckets_unique_window' => [
+                    'columns' => ['scope', 'identity_hash', 'rule_key', 'window_starts_at'],
+                    'unique' => true,
+                ],
+                'rate_limit_buckets_expires_idx' => [
+                    'columns' => ['window_ends_at'],
+                ],
             ],
         ],
     ],
-
 ];
