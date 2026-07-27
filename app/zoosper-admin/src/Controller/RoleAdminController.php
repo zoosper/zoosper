@@ -13,9 +13,26 @@ use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 
+/**
+ * Admin CRUD controller for roles and permissions.
+ *
+ * Phase 1.111 (Sonnet Phase 2 §3.3): permissionTree() previously used a raw
+ * `require dirname(__DIR__, 3) . '/zoosper-auth/config/acl.php'` at runtime.
+ * That bypassed the layered config system entirely, so this controller could
+ * never see project-level or other-module ACL group overrides that every other
+ * config access in the codebase gets via ConfigRepository (which is built by
+ * ModuleConfigAggregator across ALL modules' config/*.php, not just one file).
+ *
+ * The fix injects an OPTIONAL, LAST ConfigRepository dependency (mirroring the
+ * PasswordPolicy pattern from Phase 1.110): when present, ACL groups come from
+ * $config->array('acl') (properly layered/aggregated); when absent (no DI
+ * wiring change made yet), it falls back to the original single-file require so
+ * behaviour is identical until the container is updated to inject it.
+ */
 final readonly class RoleAdminController
 {
     public function __construct(
@@ -25,6 +42,7 @@ final readonly class RoleAdminController
         private AdminLayout $layout,
         private ?AdminUserRepository $users = null,
         private ?AuditLogger $auditLogger = null,
+        private ?ConfigRepository $config = null,
     ) {
     }
 
@@ -125,11 +143,31 @@ final readonly class RoleAdminController
         ]);
     }
 
+    /**
+     * Load the ACL group definitions used to organise the permission tree.
+     *
+     * Phase 1.111: prefers ConfigRepository (layered/aggregated across ALL
+     * modules' config/acl.php) when injected; falls back to the original
+     * single-file require otherwise, so this method's behaviour is unchanged
+     * until the DI wiring is updated to pass a ConfigRepository.
+     *
+     * @return array<string, mixed>
+     */
+    private function aclGroups(): array
+    {
+        if ($this->config !== null) {
+            return $this->config->array('acl');
+        }
+
+        $groups = require dirname(__DIR__, 3) . '/zoosper-auth/config/acl.php';
+
+        return is_array($groups) ? $groups : [];
+    }
+
     /** @param list<int> $selected */
     private function permissionTree(array $selected): string
     {
-        $groups = require dirname(__DIR__, 3) . '/zoosper-auth/config/acl.php';
-        $tree = (new AclTreeBuilder())->build($this->roles->allPermissions(), is_array($groups) ? $groups : []);
+        $tree = (new AclTreeBuilder())->build($this->roles->allPermissions(), $this->aclGroups());
 
         return $this->renderRoleView('permission-tree.php', [
             'tree' => $tree,
