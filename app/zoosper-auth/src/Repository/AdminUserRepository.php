@@ -11,9 +11,9 @@ use Zoosper\Auth\Model\AdminUser;
 /**
  * Repository for admin users, roles and permissions.
  *
- * Phase 1.26a-fix: createWithRoleIds() and updateUser() now bind the :locale
- * placeholder (previously omitted, which caused PDO HY093 - number of bound
- * variables did not match the number of tokens).
+ * Phase 1.109: fixes the list-query N+1 by batch-loading permissions for
+ * all()/search(), and by skipping permission loading entirely for
+ * allForAssignment() where only id/name/email are needed.
  */
 final readonly class AdminUserRepository
 {
@@ -25,14 +25,14 @@ final readonly class AdminUserRepository
     public function all(): array
     {
         $statement = $this->pdo->query('SELECT * FROM admin_users ORDER BY id DESC');
-        return array_map(fn (array $row): AdminUser => $this->hydrate($row), $statement->fetchAll());
+        return $this->hydrateManyWithPermissions($statement->fetchAll());
     }
 
     /** @return list<AdminUser> */
     public function allForAssignment(): array
     {
         $statement = $this->pdo->query('SELECT * FROM admin_users ORDER BY name ASC, email ASC');
-        return array_map(fn (array $row): AdminUser => $this->hydrate($row), $statement->fetchAll());
+        return array_map(fn (array $row): AdminUser => $this->hydrateWithoutPermissions($row), $statement->fetchAll());
     }
 
     /** @return list<AdminUser> */
@@ -42,7 +42,7 @@ final readonly class AdminUserRepository
         $statement->bindValue('term', '%' . $term . '%');
         $statement->bindValue('limit', $limit, PDO::PARAM_INT);
         $statement->execute();
-        return array_map(fn (array $row): AdminUser => $this->hydrate($row), $statement->fetchAll());
+        return $this->hydrateManyWithPermissions($statement->fetchAll());
     }
 
     public function findByEmail(string $email): ?AdminUser
@@ -145,9 +145,55 @@ final readonly class AdminUserRepository
     /** @param array<string, mixed> $row */
     private function hydrate(array $row): AdminUser
     {
-        return new AdminUser((int) $row['id'], (string) $row['email'], (string) $row['name'], (string) $row['password_hash'], (string) $row['status'], $this->permissionsForUser((int) $row['id']),
-            locale: isset($row['locale']) && is_string($row['locale']) && trim($row['locale']) !== '' ? trim($row['locale']) : null
+        return new AdminUser(
+            (int) $row['id'],
+            (string) $row['email'],
+            (string) $row['name'],
+            (string) $row['password_hash'],
+            (string) $row['status'],
+            $this->permissionsForUser((int) $row['id']),
+            locale: isset($row['locale']) && is_string($row['locale']) && trim($row['locale']) !== '' ? trim($row['locale']) : null,
         );
+    }
+
+    /** @param array<string, mixed> $row @param array<int, list<string>> $permissionsByUserId */
+    private function hydrateWithPermissionsMap(array $row, array $permissionsByUserId): AdminUser
+    {
+        $id = (int) $row['id'];
+        return new AdminUser(
+            $id,
+            (string) $row['email'],
+            (string) $row['name'],
+            (string) $row['password_hash'],
+            (string) $row['status'],
+            $permissionsByUserId[$id] ?? [],
+            locale: isset($row['locale']) && is_string($row['locale']) && trim($row['locale']) !== '' ? trim($row['locale']) : null,
+        );
+    }
+
+    /** @param array<string, mixed> $row */
+    private function hydrateWithoutPermissions(array $row): AdminUser
+    {
+        return new AdminUser(
+            (int) $row['id'],
+            (string) $row['email'],
+            (string) $row['name'],
+            (string) $row['password_hash'],
+            (string) $row['status'],
+            [],
+            locale: isset($row['locale']) && is_string($row['locale']) && trim($row['locale']) !== '' ? trim($row['locale']) : null,
+        );
+    }
+
+    /** @param list<array<string, mixed>> $rows @return list<AdminUser> */
+    private function hydrateManyWithPermissions(array $rows): array
+    {
+        if ($rows === []) {
+            return [];
+        }
+        $userIds = array_map(static fn (array $row): int => (int) $row['id'], $rows);
+        $permissionsByUserId = $this->permissionsForUserIds($userIds);
+        return array_map(fn (array $row): AdminUser => $this->hydrateWithPermissionsMap($row, $permissionsByUserId), $rows);
     }
 
     /** @return list<string> */
@@ -158,18 +204,38 @@ final readonly class AdminUserRepository
         return array_map(static fn (array $row): string => (string) $row['code'], $statement->fetchAll());
     }
 
-    /**
-     * Updates only the admin interface locale for an existing admin user.
-     *
-     * A null locale intentionally means the configured admin locale should be
-     * used. The caller is responsible for validating the locale format.
-     */
+    /** @param list<int> $userIds @return array<int, list<string>> */
+    private function permissionsForUserIds(array $userIds): array
+    {
+        $userIds = array_values(array_unique(array_map('intval', $userIds)));
+        if ($userIds === []) {
+            return [];
+        }
+        $placeholders = [];
+        $params = [];
+        foreach ($userIds as $index => $userId) {
+            $key = ':uid' . $index;
+            $placeholders[] = $key;
+            $params[$key] = $userId;
+        }
+        $sql = 'SELECT DISTINCT ur.user_id AS user_id, p.code AS code'
+            . ' FROM admin_permissions p'
+            . ' INNER JOIN admin_role_permissions rp ON rp.permission_id = p.id'
+            . ' INNER JOIN admin_user_roles ur ON ur.role_id = rp.role_id'
+            . ' WHERE ur.user_id IN (' . implode(', ', $placeholders) . ')'
+            . ' ORDER BY ur.user_id, p.code';
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute($params);
+        $grouped = [];
+        foreach ($statement->fetchAll() as $row) {
+            $grouped[(int) $row['user_id']][] = (string) $row['code'];
+        }
+        return $grouped;
+    }
+
     public function updateLocale(int $id, ?string $locale): void
     {
         $statement = $this->pdo->prepare('UPDATE admin_users SET locale = :locale WHERE id = :id');
-        $statement->execute([
-            'locale' => $locale,
-            'id' => $id,
-        ]);
+        $statement->execute(['locale' => $locale, 'id' => $id]);
     }
 }
