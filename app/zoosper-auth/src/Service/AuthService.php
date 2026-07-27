@@ -27,7 +27,7 @@ final class AuthService
     {
         $user = $this->users->findByEmail($email);
 
-        // Constant-time guard (Sonnet review Sec-4): always run a real password
+        // Constant-time guard (Phase 1.102): always run a real password
         // verification, even when the user is missing or inactive, so the
         // response time for "unknown email" matches "known email, wrong
         // password". This removes the username-enumeration timing side-channel.
@@ -43,6 +43,24 @@ final class AuthService
 
         if (!$passwordValid) {
             return null;
+        }
+
+        // Phase E1: transparently upgrade the stored hash if PHP's default
+        // algorithm/cost has changed since it was created (e.g. after a PHP
+        // upgrade, or a deliberate cost increase). This is only possible here,
+        // at the exact moment we have the plaintext password in memory —
+        // password_hash() output cannot be converted to a different
+        // algorithm/cost after the fact without the original plaintext.
+        //
+        // Note on timing: this adds a small amount of extra work ONLY on a
+        // successful login that also needs a rehash. This is not a new
+        // enumeration side-channel — the account-existence/wrong-password
+        // decision has already been made in the two branches above, and an
+        // attacker would need VALID credentials to ever observe this timing,
+        // at which point enumeration is moot. This is the same standard
+        // pattern used by Laravel, Symfony and WordPress.
+        if ($this->hasher->needsRehash($user->passwordHash)) {
+            $this->users->updatePassword($user->id, $this->hasher->hash($password));
         }
 
         $this->users->updateLastLogin($user->id);
