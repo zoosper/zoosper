@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Zoosper\Auth\Console\AdminCreateCommand;
 use Zoosper\Auth\Http\AuthenticationMiddleware;
 use Zoosper\Auth\Http\CsrfMiddleware;
 use Zoosper\Auth\Repository\AdminUserRepository;
@@ -32,5 +33,12 @@ return [
     // Phase 1.33c: central CSRF guard for stateful admin requests.
     CsrfMiddleware::class => static fn (ServiceContainer $services): CsrfMiddleware => new CsrfMiddleware(
         $services->get(CsrfTokenManager::class),
+    ),
+
+    // Console/kernel decoupling phase: admin:create console command,
+    // relocated out of bin/zoosper. Discovered via config/console.php.
+    AdminCreateCommand::class => static fn (ServiceContainer $services): AdminCreateCommand => new AdminCreateCommand(
+        $services->get(AdminUserRepository::class),
+        $services->get(PasswordHasher::class),
     ),
 ];

@@ -13,6 +13,7 @@ use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Routing\PageFallbackHandler;
 use Zoosper\Page\Service\PageRenderer;
 use Zoosper\Site\Repository\SiteRepository;
+use Zoosper\Page\Console\PageCreateCommand;
 
 return [
     PageRepository::class => static fn (ServiceContainer $services): PageRepository => new PageRepository($services->get(PDO::class)),
@@ -29,6 +30,10 @@ return [
         $services->get(SiteRepository::class),
         $services->get(PageRepository::class),
         $services->get(PageRenderer::class),
+    ),
+    PageCreateCommand::class => static fn (ServiceContainer $services): PageCreateCommand => new PageCreateCommand(
+        $services->get(SiteRepository::class),
+        $services->get(\Zoosper\Page\Repository\PageRepository::class), // use however PageRepository is already registered/imported in this file
     ),
 
     // Phase 1.93: register the page module as the frontend fallback handler so
