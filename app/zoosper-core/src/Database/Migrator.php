@@ -29,6 +29,29 @@ use Zoosper\Core\Schema\SchemaSnapshotRepository;
  * single declarative schema engine used by both `bin/zoosper migrate` and
  * `bin/zoosper-schema apply`.
  *
+ * Phase 1.40c: traditional migration *files* are now discovered from two
+ * places, not just the root `database/migrations/` folder:
+ *
+ * 1. The root `database/migrations/` folder — reserved for core bootstrap
+ *    migrations that are not owned by any single feature module (e.g. the
+ *    no-op continuity migration that predates the declarative schema engine).
+ * 2. Each enabled module's own `database/migrations/` folder — e.g.
+ *    `app/zoosper-auth/database/migrations/`. This lets a module own its
+ *    schema history the same way it already owns its declarative
+ *    `config/db_schema.php`, its routes, its controllers, etc. Removing a
+ *    module removes its migration history with it; a marketplace module can
+ *    ship migrations the exact same way a first-party module does.
+ *
+ * Migration identity is still tracked by filename alone (see
+ * hasMigrationRun()/markMigrationRun()), NOT by folder path. This means
+ * relocating an already-applied migration file from the root folder into its
+ * owning module's folder is always safe: the migrations ledger recognises it
+ * by the same filename and will not re-run it.
+ *
+ * Files from both locations are merged and sorted by filename (not full
+ * path), so migrations still execute in their original chronological order
+ * regardless of which module folder they now live in.
+ *
  * Supported migration file formats:
  *
  * - `return ['CREATE TABLE ...', 'CREATE INDEX ...'];`
@@ -85,12 +108,13 @@ final class Migrator
     }
 
     /**
-     * Execute all pending migration files in filename order.
+     * Execute all pending migration files in filename order, drawn from both
+     * the root database/migrations/ folder and every enabled module's own
+     * database/migrations/ folder (Phase 1.40c).
      */
     private function applyFileMigrations(): void
     {
-        $files = glob($this->migrationsPath . '/*.php') ?: [];
-        sort($files);
+        $files = $this->collectMigrationFiles();
 
         foreach ($files as $file) {
             $migrationName = basename($file);
@@ -105,15 +129,51 @@ final class Migrator
     }
 
     /**
+     * Gather migration file paths from the root migrations folder and from
+     * every enabled module's own database/migrations/ folder, then sort by
+     * filename (not full path) so chronological order is preserved
+     * regardless of which folder a file lives in.
+     *
+     * @return list<string>
+     */
+    private function collectMigrationFiles(): array
+    {
+        $files = glob($this->migrationsPath . '/*.php') ?: [];
+
+        foreach ($this->moduleRegistry()->enabledModules() as $module) {
+            $moduleMigrationsPath = rtrim($module->path, '/\\') . '/database/migrations';
+            if (!is_dir($moduleMigrationsPath)) {
+                continue;
+            }
+
+            foreach (glob($moduleMigrationsPath . '/*.php') ?: [] as $moduleFile) {
+                $files[] = $moduleFile;
+            }
+        }
+
+        usort($files, static fn (string $a, string $b): int => basename($a) <=> basename($b));
+
+        return $files;
+    }
+
+    /**
      * Apply every enabled module-owned config/db_schema.php via the unified
      * Schema/ engine (validated + snapshotted).
      */
     private function applyModuleSchemas(): void
     {
-        $modules = $this->modules ?? new ModuleRegistry($this->basePath);
-        $registry = (new SchemaLoader($modules))->load();
+        $registry = (new SchemaLoader($this->moduleRegistry()))->load();
         $snapshots = new SchemaSnapshotRepository($this->pdo);
         (new SchemaMigrator($this->pdo, $this->driver(), $snapshots))->apply($registry);
+    }
+
+    /**
+     * Return the shared ModuleRegistry instance, creating a default one if
+     * none was supplied via the constructor.
+     */
+    private function moduleRegistry(): ModuleRegistry
+    {
+        return $this->modules ??= new ModuleRegistry($this->basePath);
     }
 
     /**
