@@ -1,0 +1,22 @@
+{
+    "name": "zoosper/install",
+    "description": "Zoosper CMS installer module - environment checks, first admin user, seed site.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "zoosper/core": "*@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\Install\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zoosper\\Install\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

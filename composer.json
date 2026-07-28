@@ -13,12 +13,17 @@
         "marko/framework": "^0.8",
         "php": "^8.5",
         "zoosper/admin": "*@dev",
+        "zoosper/api": "*@dev",
         "zoosper/auth": "*@dev",
         "zoosper/core": "*@dev",
+        "zoosper/install": "*@dev",
+        "zoosper/mail": "*@dev",
         "zoosper/media": "*@dev",
         "zoosper/page": "*@dev",
         "zoosper/site": "*@dev",
-        "zoosper/theme": "*@dev"
+        "zoosper/theme": "*@dev",
+        "zoosper/two-factor": "*@dev",
+        "zoosper/url-rewrite": "*@dev"
     },
     "require-dev": {
         "icanhazstring/composer-unused": "^0.9.6",
@@ -26,21 +31,6 @@
         "pestphp/pest-plugin": "^3.0",
         "phpunit/phpunit": "^11.0",
         "vimeo/psalm": "^6.16"
-    },
-    "autoload": {
-        "psr-4": {
-            "Zoosper\\Admin\\": "app/zoosper-admin/src/",
-            "Zoosper\\Api\\": "app/zoosper-api/src/",
-            "Zoosper\\Auth\\": "app/zoosper-auth/src/",
-            "Zoosper\\Core\\": "app/zoosper-core/src/",
-            "Zoosper\\Mail\\": "app/zoosper-mail/src/",
-            "Zoosper\\Media\\": "packages/zoosper-media/src/",
-            "Zoosper\\Page\\": "app/zoosper-page/src/",
-            "Zoosper\\Site\\": "app/zoosper-site/src/",
-            "Zoosper\\Theme\\": "app/zoosper-theme/src/",
-            "Zoosper\\TwoFactor\\": "app/zoosper-two-factor/src/",
-            "Zoosper\\UrlRewrite\\": "app/zoosper-url-rewrite/src/"
-        }
     },
     "autoload-dev": {
         "psr-4": {
@@ -54,16 +44,11 @@
         }
     },
     "scripts": {
-        "pre-autoload-dump": [
-            "@php tools/sync-module-autoload.php"
-        ],
         "serve": "php -S 127.0.0.1:8080 -t public",
         "migrate": "php bin/zoosper migrate",
         "admin:create": "php bin/zoosper admin:create",
         "site:create": "php bin/zoosper site:create",
         "page:create": "php bin/zoosper page:create",
-        "modules:autoload": "@php tools/sync-module-autoload.php",
-        "modules:autoload-verify": "@php tools/verify-module-autoload-sync.php",
         "modules:package-audit": "@php tools/audit-module-package-readiness.php",
         "test": "pest",
         "test:unit": "pest --testsuite=Unit",
@@ -126,6 +111,41 @@
         {
             "type": "path",
             "url": "./app/zoosper-admin",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-api",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-mail",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-two-factor",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-url-rewrite",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-install",
             "options": {
                 "symlink": true
             }

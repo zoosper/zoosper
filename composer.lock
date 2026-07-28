@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "758dfd2b06a3513202e8e3d40f2e71c0",
+    "content-hash": "d98fae79f1608d02f6d72167bfd99ec6",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -174,16 +174,16 @@
         },
         {
             "name": "latte/latte",
-            "version": "v3.1.5",
+            "version": "v3.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "8422eea5dd09c777e892d10f7d87dda42b117253"
+                "reference": "adccfac3d5d7bff441a0e5ae85978f448787f5d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/8422eea5dd09c777e892d10f7d87dda42b117253",
-                "reference": "8422eea5dd09c777e892d10f7d87dda42b117253",
+                "url": "https://api.github.com/repos/nette/latte/zipball/adccfac3d5d7bff441a0e5ae85978f448787f5d4",
+                "reference": "adccfac3d5d7bff441a0e5ae85978f448787f5d4",
                 "shasum": ""
             },
             "require": {
@@ -259,9 +259,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/latte/issues",
-                "source": "https://github.com/nette/latte/tree/v3.1.5"
+                "source": "https://github.com/nette/latte/tree/v3.1.6"
             },
-            "time": "2026-07-25T15:27:40+00:00"
+            "time": "2026-07-27T14:32:10+00:00"
         },
         {
             "name": "marko/cli",
@@ -834,6 +834,42 @@
             }
         },
         {
+            "name": "zoosper/api",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-api",
+                "reference": "ca5d2b3eaad9a8d66532450ae786fce2f5815c9e"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/auth": "*@dev",
+                "zoosper/core": "*@dev",
+                "zoosper/page": "*@dev",
+                "zoosper/site": "*@dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_Api"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Api\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper_Api module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "zoosper/auth",
             "version": "dev-dev",
             "dist": {
@@ -904,6 +940,71 @@
                 "MIT"
             ],
             "description": "Zoosper_Core module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/install",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-install",
+                "reference": "4e8f8dd65e0e37e6347f5551241164f79b25f606"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/core": "*@dev"
+            },
+            "type": "zoosper-module",
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Install\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Install\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper CMS installer module - environment checks, first admin user, seed site.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/mail",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-mail",
+                "reference": "15fe0dd82aaa2d369300bf9796d6b2a5aaaac93a"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/core": "*@dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_Mail"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Mail\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper_Mail module for Zoosper CMS.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -1070,6 +1171,74 @@
                 "MIT"
             ],
             "description": "Zoosper_Theme module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/two-factor",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-two-factor",
+                "reference": "cb8348966c45d2c66ffcb558d5c4707360827021"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/admin": "*@dev",
+                "zoosper/auth": "*@dev",
+                "zoosper/core": "*@dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_TwoFactor"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\TwoFactor\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper_TwoFactor module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/url-rewrite",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-url-rewrite",
+                "reference": "4c74b1ec78ac37b9fb9a5613d42f74332e685215"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/core": "*@dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_UrlRewrite"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\UrlRewrite\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper_UrlRewrite module for Zoosper CMS.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -8087,12 +8256,17 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "zoosper/admin": 20,
+        "zoosper/api": 20,
         "zoosper/auth": 20,
         "zoosper/core": 20,
+        "zoosper/install": 20,
+        "zoosper/mail": 20,
         "zoosper/media": 20,
         "zoosper/page": 20,
         "zoosper/site": 20,
-        "zoosper/theme": 20
+        "zoosper/theme": 20,
+        "zoosper/two-factor": 20,
+        "zoosper/url-rewrite": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
