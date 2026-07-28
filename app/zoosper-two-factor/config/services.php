@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Audit\AuditLogger;
+use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeRepository;
@@ -21,9 +21,14 @@ use Zoosper\TwoFactor\Totp\TotpVerifier;
 
 return [
     AdminTwoFactorResetRepository::class => static fn (ServiceContainer $services): AdminTwoFactorResetRepository => new AdminTwoFactorResetRepository($services->get(PDO::class)),
+
+    // Phase 1.41: depends on Zoosper\Core\Audit\AuditLoggerInterface instead
+    // of the concrete Zoosper\Admin\Audit\AuditLogger. If no module binds
+    // this interface (e.g. Admin is not installed), $services->has(...)
+    // correctly returns false and resets simply skip audit logging.
     AdminTwoFactorResetService::class => static fn (ServiceContainer $services): AdminTwoFactorResetService => new AdminTwoFactorResetService(
         $services->get(AdminTwoFactorResetRepository::class),
-        $services->has(AuditLogger::class) ? $services->get(AuditLogger::class) : null,
+        $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
     ),
     AdminTwoFactorEnrollmentRepository::class => static fn (ServiceContainer $services): AdminTwoFactorEnrollmentRepository => new AdminTwoFactorEnrollmentRepository($services->get(PDO::class)),
     AdminRecoveryCodeRepository::class => static fn (ServiceContainer $services): AdminRecoveryCodeRepository => new AdminRecoveryCodeRepository($services->get(PDO::class)),

@@ -40,6 +40,9 @@ use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Entity\Save\ModuleEntitySaveListenerLoader;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
+use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
+use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 
 return [
     LoginHistoryRepository::class => static fn (ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
@@ -92,4 +95,10 @@ return [
         return $dispatcher;
     },
     EntitySaveLifecycleRunner::class => static fn (ServiceContainer $services): EntitySaveLifecycleRunner => new EntitySaveLifecycleRunner($services->get(EntitySaveEventDispatcherInterface::class)),
+// Phase 1.41: bind Core interfaces to the real Admin implementations, so
+// feature modules (two-factor, and later media/page) can depend on the
+// interface instead of these concrete Admin classes directly.
+    AuditLoggerInterface::class => static fn (ServiceContainer $services): AuditLoggerInterface => $services->get(AuditLogger::class),
+    LoginHistoryRecorderInterface::class => static fn (ServiceContainer $services): LoginHistoryRecorderInterface => $services->get(LoginHistoryRepository::class),
+    AdminLayoutRendererInterface::class => static fn (ServiceContainer $services): AdminLayoutRendererInterface => $services->get(AdminLayout::class),
 ];

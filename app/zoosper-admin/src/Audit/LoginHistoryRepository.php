@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Audit;
 
 use PDO;
+use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
 use Zoosper\Core\Grid\GridCriteria;
 use Zoosper\Core\Grid\GridDataSourceInterface;
 use Zoosper\Core\Pagination\PaginationResult;
@@ -16,7 +17,7 @@ use Zoosper\Core\Pagination\PaginationResult;
  * LoginHistoryCriteria) pair introduced in Phase 1.112 with the generic
  * GridDataSourceInterface. LoginHistoryCriteria.php has been deleted.
  */
-final readonly class LoginHistoryRepository implements GridDataSourceInterface
+final readonly class LoginHistoryRepository implements GridDataSourceInterface, LoginHistoryRecorderInterface
 {
     public function __construct(private PDO $pdo)
     {

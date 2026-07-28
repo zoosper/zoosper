@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\TwoFactor\Controller;
 
-use Zoosper\Admin\Audit\LoginHistoryRepository;
+use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
@@ -44,7 +44,7 @@ final readonly class AdminTwoFactorChallengeController
         private AdminTwoFactorEnrollmentService $enrollment,
         private AdminUserRepository $users,
         private string $adminBasePath = '/admin',
-        private ?LoginHistoryRepository $loginHistory = null,
+        private ?LoginHistoryRecorderInterface $loginHistory = null,
     ) {
     }
 

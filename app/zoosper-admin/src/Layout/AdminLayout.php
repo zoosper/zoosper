@@ -15,8 +15,9 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Theme\Template\TemplateRenderer;
 use Zoosper\Theme\Theme\ThemeResolver;
+use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 
-final readonly class AdminLayout
+final readonly class AdminLayout implements AdminLayoutRendererInterface
 {
     public function __construct(
         private AdminMenu $menu,

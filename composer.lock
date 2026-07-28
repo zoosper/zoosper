@@ -1182,11 +1182,10 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-two-factor",
-                "reference": "cb8348966c45d2c66ffcb558d5c4707360827021"
+                "reference": "d4893f8eb4b94185c572ec086cf3a13004d5f509"
             },
             "require": {
                 "php": "^8.5",
-                "zoosper/admin": "*@dev",
                 "zoosper/auth": "*@dev",
                 "zoosper/core": "*@dev"
             },

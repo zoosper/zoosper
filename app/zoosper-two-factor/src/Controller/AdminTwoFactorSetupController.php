@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\TwoFactor\Controller;
 
-use Zoosper\Admin\Layout\AdminLayout;
+use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
@@ -25,7 +25,7 @@ final readonly class AdminTwoFactorSetupController
     public function __construct(
         private SessionGuard $guard,
         private CsrfTokenManager $csrf,
-        private AdminLayout $layout,
+        private AdminLayoutRendererInterface $layout,
         private AdminTwoFactorEnrollmentService $enrolment,
         private TotpQrCodeSvgRenderer $qrCode,
         private string $adminBasePath = '/admin',
