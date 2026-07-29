@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Layout\AdminLayout;
-use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Media\Controller\MediaAdminController;
@@ -19,8 +18,7 @@ return [
     MediaAdminController::class => static fn (ServiceContainer $services): MediaAdminController => new MediaAdminController(
         guard: $services->get(SessionGuard::class),
         csrf: $services->get(CsrfTokenManager::class),
-        layout: $services->get(AdminLayout::class),
-        views: $services->get(AdminViewRenderer::class),
+        views: $services->get(AdminViewRendererInterface::class),
         assets: $services->get(MediaAssetRepository::class),
         validator: $services->get(MediaUploadValidator::class),
         storage: $services->get(MediaStorage::class),

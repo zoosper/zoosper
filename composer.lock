@@ -1016,12 +1016,11 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-media",
-                "reference": "6d13e06086dd7a2faaf1c5506aafd169f478200a"
+                "reference": "dc8dc2cea551288e195bc4b4d1735d6eab404bf4"
             },
             "require": {
                 "ext-pdo": "*",
                 "php": "^8.5",
-                "zoosper/admin": "*@dev",
                 "zoosper/auth": "*@dev",
                 "zoosper/core": "*@dev"
             },

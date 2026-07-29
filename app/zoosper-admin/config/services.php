@@ -31,7 +31,11 @@ use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuLoader;
 use Zoosper\Admin\UI\AdminComponentRenderer;
 use Zoosper\Admin\UI\AdminViewRenderer;
+use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 use Zoosper\Auth\Service\CsrfTokenManager;
+use Zoosper\Auth\UI\AdminViewRendererInterface;
+use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Entity\Save\EntitySaveEventDispatcher;
@@ -40,40 +44,37 @@ use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Entity\Save\ModuleEntitySaveListenerLoader;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
-use Zoosper\Core\Audit\AuditLoggerInterface;
-use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
-use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 
 return [
-    LoginHistoryRepository::class => static fn (ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
-    AuditLogRepository::class => static fn (ServiceContainer $services): AuditLogRepository => new AuditLogRepository($services->get(PDO::class)),
-    AuditLogger::class => static fn (ServiceContainer $services): AuditLogger => new AuditLogger($services->get(AuditLogRepository::class)),
-    AdminFormUiConfigLoader::class => static fn (ServiceContainer $services): AdminFormUiConfigLoader => new AdminFormUiConfigLoader($services->get(ModuleRegistry::class)),
-    AdminAssetRegistry::class => static fn (ServiceContainer $services): AdminAssetRegistry => new AdminAssetRegistry($services->get(ModuleRegistry::class)),
-    AdminAssetViewDataProvider::class => static fn (ServiceContainer $services): AdminAssetViewDataProvider => new AdminAssetViewDataProvider($services->get(AdminAssetRegistry::class)),
-    AdminAssetTemplateRenderer::class => static fn (ServiceContainer $services): AdminAssetTemplateRenderer => new AdminAssetTemplateRenderer($services->get(AdminAssetRegistry::class)),
-    AssetPathResolver::class => static fn (ServiceContainer $services): AssetPathResolver => new AssetPathResolver($services->get(ConfigRepository::class)),
-    FlashMessageStoreInterface::class => static fn (ServiceContainer $services): FlashMessageStoreInterface => new SessionFlashMessageStore(),
-    FlashMessageRenderer::class => static fn (ServiceContainer $services): FlashMessageRenderer => new FlashMessageRenderer(),
-    TextareaContentEditor::class => static fn (ServiceContainer $services): TextareaContentEditor => new TextareaContentEditor(),
-    EditorJsContentEditor::class => static fn (ServiceContainer $services): EditorJsContentEditor => new EditorJsContentEditor(
+    LoginHistoryRepository::class => static fn(ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
+    AuditLogRepository::class => static fn(ServiceContainer $services): AuditLogRepository => new AuditLogRepository($services->get(PDO::class)),
+    AuditLogger::class => static fn(ServiceContainer $services): AuditLogger => new AuditLogger($services->get(AuditLogRepository::class)),
+    AdminFormUiConfigLoader::class => static fn(ServiceContainer $services): AdminFormUiConfigLoader => new AdminFormUiConfigLoader($services->get(ModuleRegistry::class)),
+    AdminAssetRegistry::class => static fn(ServiceContainer $services): AdminAssetRegistry => new AdminAssetRegistry($services->get(ModuleRegistry::class)),
+    AdminAssetViewDataProvider::class => static fn(ServiceContainer $services): AdminAssetViewDataProvider => new AdminAssetViewDataProvider($services->get(AdminAssetRegistry::class)),
+    AdminAssetTemplateRenderer::class => static fn(ServiceContainer $services): AdminAssetTemplateRenderer => new AdminAssetTemplateRenderer($services->get(AdminAssetRegistry::class)),
+    AssetPathResolver::class => static fn(ServiceContainer $services): AssetPathResolver => new AssetPathResolver($services->get(ConfigRepository::class)),
+    FlashMessageStoreInterface::class => static fn(ServiceContainer $services): FlashMessageStoreInterface => new SessionFlashMessageStore(),
+    FlashMessageRenderer::class => static fn(ServiceContainer $services): FlashMessageRenderer => new FlashMessageRenderer(),
+    TextareaContentEditor::class => static fn(ServiceContainer $services): TextareaContentEditor => new TextareaContentEditor(),
+    EditorJsContentEditor::class => static fn(ServiceContainer $services): EditorJsContentEditor => new EditorJsContentEditor(
         $services->get(TextareaContentEditor::class),
         $services->has(EditorJsImageToolConfig::class) ? $services->get(EditorJsImageToolConfig::class) : null,
         $services->get(CsrfTokenManager::class),
     ),
-    ContentEditorRegistry::class => static fn (ServiceContainer $services): ContentEditorRegistry => new ContentEditorRegistry(
+    ContentEditorRegistry::class => static fn(ServiceContainer $services): ContentEditorRegistry => new ContentEditorRegistry(
         $services->get(EditorJsContentEditor::class),
         $services->get(TextareaContentEditor::class),
     ),
     ContentEditorInterface::class => static function (ServiceContainer $services): ContentEditorInterface {
         $config = $services->get(ConfigRepository::class)->array('editor');
-        $preferred = (string) ($config['default_editor'] ?? 'editorjs');
-        $fallback = (string) ($config['fallback_editor'] ?? 'textarea');
+        $preferred = (string)($config['default_editor'] ?? 'editorjs');
+        $fallback = (string)($config['fallback_editor'] ?? 'textarea');
 
         return $services->get(ContentEditorRegistry::class)->preferred($preferred, $fallback);
     },
-    AdminMenu::class => static fn (ServiceContainer $services): AdminMenu => new AdminMenu(new AdminMenuLoader($services->get(ModuleRegistry::class))),
-    AdminLayout::class => static fn (ServiceContainer $services): AdminLayout => new AdminLayout(
+    AdminMenu::class => static fn(ServiceContainer $services): AdminMenu => new AdminMenu(new AdminMenuLoader($services->get(ModuleRegistry::class))),
+    AdminLayout::class => static fn(ServiceContainer $services): AdminLayout => new AdminLayout(
         $services->get(AdminMenu::class),
         $services->get(ConfigRepository::class),
         $services->get('theme.admin_template_renderer'),
@@ -83,22 +84,23 @@ return [
         $services->get(FlashMessageRenderer::class),
         $services->get(CsrfTokenManager::class),
     ),
-    AdminViewRenderer::class => static fn (ServiceContainer $services): AdminViewRenderer => new AdminViewRenderer(
+    AdminViewRenderer::class => static fn(ServiceContainer $services): AdminViewRenderer => new AdminViewRenderer(
         $services->get('theme.admin_template_renderer'),
         $services->get(AdminLayout::class),
     ),
-    AdminComponentRenderer::class => static fn (ServiceContainer $services): AdminComponentRenderer => new AdminComponentRenderer($services->get('theme.admin_template_renderer')),
+    AdminComponentRenderer::class => static fn(ServiceContainer $services): AdminComponentRenderer => new AdminComponentRenderer($services->get('theme.admin_template_renderer')),
     EntitySaveEventDispatcherInterface::class => static function (ServiceContainer $services): EntitySaveEventDispatcherInterface {
         $dispatcher = new EntitySaveEventDispatcher();
         (new ModuleEntitySaveListenerLoader($services->get(ModuleRegistry::class), $services))->attach($dispatcher);
 
         return $dispatcher;
     },
-    EntitySaveLifecycleRunner::class => static fn (ServiceContainer $services): EntitySaveLifecycleRunner => new EntitySaveLifecycleRunner($services->get(EntitySaveEventDispatcherInterface::class)),
+    EntitySaveLifecycleRunner::class => static fn(ServiceContainer $services): EntitySaveLifecycleRunner => new EntitySaveLifecycleRunner($services->get(EntitySaveEventDispatcherInterface::class)),
 // Phase 1.41: bind Core interfaces to the real Admin implementations, so
 // feature modules (two-factor, and later media/page) can depend on the
 // interface instead of these concrete Admin classes directly.
-    AuditLoggerInterface::class => static fn (ServiceContainer $services): AuditLoggerInterface => $services->get(AuditLogger::class),
-    LoginHistoryRecorderInterface::class => static fn (ServiceContainer $services): LoginHistoryRecorderInterface => $services->get(LoginHistoryRepository::class),
-    AdminLayoutRendererInterface::class => static fn (ServiceContainer $services): AdminLayoutRendererInterface => $services->get(AdminLayout::class),
+    AuditLoggerInterface::class => static fn(ServiceContainer $services): AuditLoggerInterface => $services->get(AuditLogger::class),
+    LoginHistoryRecorderInterface::class => static fn(ServiceContainer $services): LoginHistoryRecorderInterface => $services->get(LoginHistoryRepository::class),
+    AdminLayoutRendererInterface::class => static fn(ServiceContainer $services): AdminLayoutRendererInterface => $services->get(AdminLayout::class),
+    AdminViewRendererInterface::class => static fn(ServiceContainer $services): AdminViewRendererInterface => $services->get(AdminViewRenderer::class),
 ];

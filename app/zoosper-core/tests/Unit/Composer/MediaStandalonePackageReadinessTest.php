@@ -10,7 +10,8 @@ test('media package exposes standalone repository metadata', function () {
 
     expect($composer['name'])->toBe('zoosper/media');
     expect($composer['type'])->toBe('zoosper-module');
-    expect($composer['require'])->toHaveKeys(['php', 'ext-pdo', 'zoosper/core', 'zoosper/admin', 'zoosper/auth']);
+    expect($composer['require'])->toHaveKeys(['php', 'ext-pdo', 'zoosper/core', 'zoosper/auth']);
+    expect($composer['require'])->not->toHaveKey('zoosper/admin');
     expect($composer['autoload']['psr-4']['Zoosper\\Media\\'])->toBe('src/');
     expect($composer['autoload-dev']['psr-4']['Zoosper\\Media\\Tests\\'])->toBe('tests/');
     expect($composer['extra']['zoosper']['module'])->toBe('module.php');
