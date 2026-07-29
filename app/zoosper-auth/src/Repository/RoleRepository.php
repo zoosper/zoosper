@@ -6,7 +6,26 @@ namespace Zoosper\Auth\Repository;
 
 use PDO;
 use RuntimeException;
+use Throwable;
 
+/**
+ * BUG FIX (independently flagged by two reviewer passes, both incorrectly
+ * stating this was "already fixed" elsewhere — it was not, see
+ * AdminUserRepository.php's own matching fix in this same phase):
+ * createRole()/updateRole() previously ran the role row write and the
+ * permission/user-assignment sync as separate, un-transacted statements. A
+ * failure partway through (DB connection drop, constraint violation) could
+ * leave a role with no permissions synced, or a role row created with no
+ * corresponding admin_role_permissions rows at all — silently inconsistent
+ * data, not merely a missed edge case.
+ *
+ * Both methods now wrap their full write sequence in a transaction, using
+ * the same beginTransaction()/commit()/catch(Throwable)+rollBack() pattern
+ * already established elsewhere in this codebase (e.g.
+ * DatabaseRateLimitStore::recordAttempt(),
+ * AdminTwoFactorEnrollmentRepository::saveConfirmedEnrollment()) — no new
+ * pattern introduced.
+ */
 final readonly class RoleRepository
 {
     public function __construct(private PDO $pdo)
@@ -50,28 +69,67 @@ final readonly class RoleRepository
         return array_map(static fn (array $row): int => (int) $row['user_id'], $statement->fetchAll());
     }
 
-    /** @param list<int> $permissionIds */
+    /**
+     * @param list<int> $permissionIds
+     *
+     * Wrapped in a transaction: the role row insert and its initial
+     * permission sync now either both succeed or both roll back together.
+     */
     public function createRole(string $code, string $label, array $permissionIds): int
     {
-        $now = gmdate('Y-m-d H:i:s');
-        $statement = $this->pdo->prepare('INSERT INTO admin_roles (code, label, created_at, updated_at) VALUES (:code, :label, :created_at, :updated_at)');
-        $statement->execute(['code' => $this->normaliseCode($code), 'label' => $label, 'created_at' => $now, 'updated_at' => $now]);
-        $roleId = (int) $this->pdo->lastInsertId();
-        $this->syncPermissions($roleId, $permissionIds);
+        $this->pdo->beginTransaction();
+
+        try {
+            $now = gmdate('Y-m-d H:i:s');
+            $statement = $this->pdo->prepare('INSERT INTO admin_roles (code, label, created_at, updated_at) VALUES (:code, :label, :created_at, :updated_at)');
+            $statement->execute(['code' => $this->normaliseCode($code), 'label' => $label, 'created_at' => $now, 'updated_at' => $now]);
+            $roleId = (int) $this->pdo->lastInsertId();
+            $this->syncPermissions($roleId, $permissionIds);
+
+            $this->pdo->commit();
+        } catch (Throwable $exception) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $exception;
+        }
+
         return $roleId;
     }
 
-    /** @param list<int> $permissionIds @param list<int>|null $userIds */
+    /**
+     * @param list<int> $permissionIds
+     * @param list<int>|null $userIds
+     *
+     * Wrapped in a transaction: the role row update, permission sync, and
+     * (when provided) user-assignment sync now either all succeed or all
+     * roll back together.
+     */
     public function updateRole(int $id, string $code, string $label, array $permissionIds, ?array $userIds = null): void
     {
         if ($this->findRoleById($id) === null) {
             throw new RuntimeException('Role does not exist: ' . $id);
         }
-        $statement = $this->pdo->prepare('UPDATE admin_roles SET code = :code, label = :label, updated_at = :updated_at WHERE id = :id');
-        $statement->execute(['id' => $id, 'code' => $this->normaliseCode($code), 'label' => $label, 'updated_at' => gmdate('Y-m-d H:i:s')]);
-        $this->syncPermissions($id, $permissionIds);
-        if ($userIds !== null) {
-            $this->syncUsersForRole($id, $userIds);
+
+        $this->pdo->beginTransaction();
+
+        try {
+            $statement = $this->pdo->prepare('UPDATE admin_roles SET code = :code, label = :label, updated_at = :updated_at WHERE id = :id');
+            $statement->execute(['id' => $id, 'code' => $this->normaliseCode($code), 'label' => $label, 'updated_at' => gmdate('Y-m-d H:i:s')]);
+            $this->syncPermissions($id, $permissionIds);
+
+            if ($userIds !== null) {
+                $this->syncUsersForRole($id, $userIds);
+            }
+
+            $this->pdo->commit();
+        } catch (Throwable $exception) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $exception;
         }
     }
 

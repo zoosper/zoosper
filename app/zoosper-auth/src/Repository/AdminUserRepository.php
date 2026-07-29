@@ -6,6 +6,7 @@ namespace Zoosper\Auth\Repository;
 
 use PDO;
 use RuntimeException;
+use Throwable;
 use Zoosper\Auth\Model\AdminUser;
 
 /**
@@ -14,6 +15,16 @@ use Zoosper\Auth\Model\AdminUser;
  * Phase 1.109: fixes the list-query N+1 by batch-loading permissions for
  * all()/search(), and by skipping permission loading entirely for
  * allForAssignment() where only id/name/email are needed.
+ *
+ * BUG FIX (this phase): createWithRoleIds()/updateUser() previously ran the
+ * user row write and the role-assignment sync (syncRoles()) as separate,
+ * un-transacted statements. Both reviewer passes that flagged this same
+ * issue in RoleRepository stated it was "already fixed" here — it was not;
+ * on inspection, this file had the identical unwrapped pattern. Both
+ * methods now wrap their full write sequence in a transaction, using the
+ * same pattern already established elsewhere in this codebase (e.g.
+ * DatabaseRateLimitStore::recordAttempt()) and now also applied to
+ * RoleRepository in this same phase.
  */
 final readonly class AdminUserRepository
 {
@@ -67,33 +78,71 @@ final readonly class AdminUserRepository
         return $this->createWithRoleIds($email, $name, $hash, 'active', [$roleId]);
     }
 
-    /** @param list<int> $roleIds */
+    /**
+     * @param list<int> $roleIds
+     *
+     * Wrapped in a transaction: the user row insert and its initial role
+     * assignment now either both succeed or both roll back together.
+     */
     public function createWithRoleIds(string $email, string $name, string $hash, string $status, array $roleIds, ?string $locale = null): int
     {
         if ($this->findByEmail($email) !== null) {
             throw new RuntimeException('Admin user already exists for email: ' . $email);
         }
-        $now = gmdate('Y-m-d H:i:s');
-        $statement = $this->pdo->prepare('INSERT INTO admin_users (email, name, password_hash, status, locale, created_at, updated_at) VALUES (:email, :name, :password_hash, :status, :locale, :created_at, :updated_at)');
-        $statement->execute(['email' => mb_strtolower($email), 'name' => $name, 'password_hash' => $hash, 'status' => $status, 'locale' => $locale, 'created_at' => $now, 'updated_at' => $now]);
-        $userId = (int) $this->pdo->lastInsertId();
-        $this->syncRoles($userId, $roleIds);
+
+        $this->pdo->beginTransaction();
+
+        try {
+            $now = gmdate('Y-m-d H:i:s');
+            $statement = $this->pdo->prepare('INSERT INTO admin_users (email, name, password_hash, status, locale, created_at, updated_at) VALUES (:email, :name, :password_hash, :status, :locale, :created_at, :updated_at)');
+            $statement->execute(['email' => mb_strtolower($email), 'name' => $name, 'password_hash' => $hash, 'status' => $status, 'locale' => $locale, 'created_at' => $now, 'updated_at' => $now]);
+            $userId = (int) $this->pdo->lastInsertId();
+            $this->syncRoles($userId, $roleIds);
+
+            $this->pdo->commit();
+        } catch (Throwable $exception) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $exception;
+        }
+
         return $userId;
     }
 
-    /** @param list<int> $roleIds */
+    /**
+     * @param list<int> $roleIds
+     *
+     * Wrapped in a transaction: the user row update and role-assignment
+     * sync now either both succeed or both roll back together.
+     */
     public function updateUser(int $id, string $email, string $name, string $status, array $roleIds, ?string $locale = null): void
     {
         if ($this->findById($id) === null) {
             throw new RuntimeException('Admin user does not exist: ' . $id);
         }
+
         $byEmail = $this->findByEmail($email);
         if ($byEmail !== null && $byEmail->id !== $id) {
             throw new RuntimeException('Another admin user already uses email: ' . $email);
         }
-        $statement = $this->pdo->prepare('UPDATE admin_users SET email = :email, name = :name, status = :status, locale = :locale, updated_at = :updated_at WHERE id = :id');
-        $statement->execute(['id' => $id, 'email' => mb_strtolower($email), 'name' => $name, 'status' => $status, 'locale' => $locale, 'updated_at' => gmdate('Y-m-d H:i:s')]);
-        $this->syncRoles($id, $roleIds);
+
+        $this->pdo->beginTransaction();
+
+        try {
+            $statement = $this->pdo->prepare('UPDATE admin_users SET email = :email, name = :name, status = :status, locale = :locale, updated_at = :updated_at WHERE id = :id');
+            $statement->execute(['id' => $id, 'email' => mb_strtolower($email), 'name' => $name, 'status' => $status, 'locale' => $locale, 'updated_at' => gmdate('Y-m-d H:i:s')]);
+            $this->syncRoles($id, $roleIds);
+
+            $this->pdo->commit();
+        } catch (Throwable $exception) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $exception;
+        }
     }
 
     public function updatePassword(int $id, string $hash): void
