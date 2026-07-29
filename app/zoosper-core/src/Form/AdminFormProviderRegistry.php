@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Form;
+namespace Zoosper\Core\Form;
 
 use RuntimeException;
 
 /**
  * Runtime registry for admin form section providers.
  *
- * For now, core builds the registry explicitly. Later module service providers
- * can contribute providers to the same registry so extensions can add sections
- * without editing controllers or core templates.
+ * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
+ * see AdminFormSection.php for the full reasoning. Logic is completely
+ * unchanged.
  */
 final class AdminFormProviderRegistry
 {

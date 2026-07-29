@@ -7,11 +7,6 @@ namespace Zoosper\Page\Admin\Controller;
 use RuntimeException;
 use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\Admin\Form\AdminFormConfigAggregator;
-use Zoosper\Admin\Form\AdminFormConfigProviderFactory;
-use Zoosper\Admin\Form\AdminFormProcessorConfigFactory;
-use Zoosper\Admin\Form\AdminFormProcessorRegistry;
-use Zoosper\Admin\Form\AdminFormProviderRegistry;
-use Zoosper\Admin\Form\AdminFormRenderer;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
@@ -24,6 +19,11 @@ use Zoosper\Core\Entity\Save\EntitySaveContext;
 use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Entity\Save\FieldDefinitionRegistry;
 use Zoosper\Core\Event\EventDispatcherInterface;
+use Zoosper\Core\Form\AdminFormConfigProviderFactory;
+use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
+use Zoosper\Core\Form\AdminFormProcessorRegistry;
+use Zoosper\Core\Form\AdminFormProviderRegistry;
+use Zoosper\Core\Form\AdminFormRenderer;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -49,33 +49,23 @@ use Zoosper\Site\Repository\SiteRepository;
 /**
  * Admin CRUD controller for CMS pages.
  *
- * The controller orchestrates request flow only. The page form UI is composed
- * through admin form section providers so core and third-party modules can add,
- * replace or reorder sections without modifying this controller.
- *
- * Phase 1.27: AdminViewRenderer is now required and the index list is rendered
- * by a Latte template (no controller heredoc). Caught exceptions (including
- * PDOExceptions, which extend RuntimeException) are logged via ErrorHandler
- * before returning the 422 form, so save failures are never silent.
- *
- * Phase F1: relocated from Zoosper\Admin\Controller to Zoosper\Page\Admin\
- * Controller (namespace change ONLY — no logic touched).
- *
- * Phase 1.41 (partial, round 3a): `layout` and `views` are now typed to
+ * Phase 1.41 (partial, round 3a): `layout` and `views` typed to
  * Zoosper\Auth\Layout\AdminLayoutRendererInterface and
- * Zoosper\Auth\UI\AdminViewRendererInterface instead of the concrete Admin
- * classes — same interfaces already proven by the two-factor and media
- * decoupling phases. Both call sites (html() and index()) already matched
- * these interfaces' signatures exactly, so no method body changed.
+ * Zoosper\Auth\UI\AdminViewRendererInterface.
  *
- * NOTE: this controller still directly `use`s and, as a fallback,
- * instantiates several other concrete Admin classes (AdminFormSection,
- * AdminFormSectionProviderInterface via the four Page*SectionProvider
- * classes, AdminFormConfigAggregator, AdminFormConfigProviderFactory,
- * AdminFormProcessorConfigFactory, AdminFormProcessorRegistry,
- * AdminFormProviderRegistry, AdminFormRenderer). zoosper-page's
- * composer.json therefore still requires zoosper/admin — that remaining
- * decoupling is a separate, larger phase, not yet started.
+ * Phase 1.41 (page decoupling, part A): AdminFormSection,
+ * AdminFormSectionProviderInterface (used transitively via the four
+ * Page*SectionProvider classes), AdminFormProviderRegistry,
+ * AdminFormRenderer, AdminFormConfigProviderFactory,
+ * AdminFormProcessorRegistry, AdminFormProcessorConfigFactory,
+ * AdminFormProcessorInterface, AdminFormProcessingResult all relocated to
+ * Zoosper\Core\Form. Only import/type references changed; behaviour is
+ * identical.
+ *
+ * NOTE: this controller still imports and, as a fallback, instantiates
+ * AdminFormConfigAggregator (this class stays in the admin module for now,
+ * pending a follow-up phase — it is protected by tests with hardcoded
+ * assertions that need separate, careful updating).
  */
 final readonly class PageAdminController
 {
@@ -333,9 +323,6 @@ private function adminUrl(string $path): string
     }
 
     /**
-     * Run a persistence closure through the entity save lifecycle when a runner
-     * is injected, falling back to a direct save when it is not.
-     *
      * @param array<string, mixed> $form
      * @param callable(EntitySaveContext): void $save
      */
@@ -395,9 +382,6 @@ private function adminUrl(string $path): string
         return $value === '' ? null : $value;
     }
 
-    /**
-     * Flatten accumulated lifecycle errors into a single message string.
-     */
     private function firstContextError(EntitySaveContext $context): string
     {
         $messages = [];
@@ -537,9 +521,7 @@ private function adminUrl(string $path): string
 
         return Response::html($this->renderer->render($page, $site));
     }
-    /**
-     * Return the authenticated admin user after the middleware permission gate.
-     */
+
     private function currentAdminUser(): AdminUser
     {
         $user = $this->guard->user();

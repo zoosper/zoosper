@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Admin\Form;
 
-use Zoosper\Admin\Form\AdminFormSection;
-use Zoosper\Admin\Form\AdminFormSectionProviderInterface;
+use Zoosper\Core\Form\AdminFormSection;
+use Zoosper\Core\Form\AdminFormSectionProviderInterface;
 
 /**
  * Provides the page body editor section.
+ *
+ * Phase 1.41 (page decoupling, part A): AdminFormSection and
+ * AdminFormSectionProviderInterface now imported from Zoosper\Core\Form.
+ * No logic changed.
  */
 final readonly class PageContentSectionProvider implements AdminFormSectionProviderInterface
 {

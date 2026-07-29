@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Form;
+namespace Zoosper\Core\Form;
 
 use InvalidArgumentException;
 
@@ -10,9 +10,13 @@ use InvalidArgumentException;
  * Builds an admin form provider registry from configuration.
  *
  * This is the bridge between module-level configuration and rendered admin
- * forms. Core modules provide default section providers now; third-party modules
- * can later contribute additional provider classes through merged config or
- * service-provider registration without touching controller code.
+ * forms. Core modules provide default section providers now; third-party
+ * modules can later contribute additional provider classes through merged
+ * config or service-provider registration without touching controller code.
+ *
+ * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
+ * see AdminFormSection.php for the full reasoning. Logic is completely
+ * unchanged.
  */
 final readonly class AdminFormConfigProviderFactory
 {

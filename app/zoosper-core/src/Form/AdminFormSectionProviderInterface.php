@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Form;
+namespace Zoosper\Core\Form;
 
 /**
  * Provides one or more sections for a named admin form handle.
+ *
+ * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
+ * see AdminFormSection.php for the full reasoning.
  */
 interface AdminFormSectionProviderInterface
 {

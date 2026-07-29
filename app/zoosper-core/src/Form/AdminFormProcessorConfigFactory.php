@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Form;
+namespace Zoosper\Core\Form;
 
 use InvalidArgumentException;
 
 /**
  * Builds an admin form processor registry from configuration.
+ *
+ * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
+ * see AdminFormSection.php for the full reasoning. Logic is completely
+ * unchanged.
  */
 final readonly class AdminFormProcessorConfigFactory
 {

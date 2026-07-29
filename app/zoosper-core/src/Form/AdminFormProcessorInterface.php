@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Form;
+namespace Zoosper\Core\Form;
 
 /**
  * Processes submitted values for a named admin form handle.
  *
- * Third-party modules can implement this interface to validate and prepare
- * module-owned fields without editing core controllers.
+ * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
+ * see AdminFormSection.php for the full reasoning.
  */
 interface AdminFormProcessorInterface
 {

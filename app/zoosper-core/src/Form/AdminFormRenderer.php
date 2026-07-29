@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Form;
+namespace Zoosper\Core\Form;
 
 /**
  * Renders a sectioned admin form from registered form sections.
+ *
+ * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
+ * see AdminFormSection.php for the full reasoning. Logic is completely
+ * unchanged.
  */
 final readonly class AdminFormRenderer
 {

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Form;
+namespace Zoosper\Core\Form;
 
 /**
  * Result returned by an admin form processor.
  *
- * Processors can return validation errors and optional payload data. The payload
- * gives future page/admin workflows a safe way to pass processed values between
- * module-owned processors and the main controller/service layer.
+ * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
+ * see AdminFormSection.php for the full reasoning. Logic is completely
+ * unchanged.
  */
 final readonly class AdminFormProcessingResult
 {
