@@ -29,4 +29,4 @@ jobs:
         run: php tools/gate.php --strict
 
       - name: Run Pest
-        run: vendor/bin/pest
+        run: php vendor/bin/pest
