@@ -12,9 +12,9 @@ use Zoosper\Admin\Form\AdminFormProcessorConfigFactory;
 use Zoosper\Admin\Form\AdminFormProcessorRegistry;
 use Zoosper\Admin\Form\AdminFormProviderRegistry;
 use Zoosper\Admin\Form\AdminFormRenderer;
-use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
-use Zoosper\Admin\UI\AdminViewRenderer;
+use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
+use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
@@ -59,11 +59,23 @@ use Zoosper\Site\Repository\SiteRepository;
  * before returning the 422 form, so save failures are never silent.
  *
  * Phase F1: relocated from Zoosper\Admin\Controller to Zoosper\Page\Admin\
- * Controller (namespace change ONLY — no logic touched). PageAdminController
- * already depended on Zoosper\Page\Admin\PageGridRepository/PageGridCriteria,
- * so this move places the controller in the module it actually belongs to,
- * consistent with those existing classes, instead of zoosper-admin (which
- * should stay a thin shell providing shared admin UI chrome).
+ * Controller (namespace change ONLY — no logic touched).
+ *
+ * Phase 1.41 (partial, round 3a): `layout` and `views` are now typed to
+ * Zoosper\Auth\Layout\AdminLayoutRendererInterface and
+ * Zoosper\Auth\UI\AdminViewRendererInterface instead of the concrete Admin
+ * classes — same interfaces already proven by the two-factor and media
+ * decoupling phases. Both call sites (html() and index()) already matched
+ * these interfaces' signatures exactly, so no method body changed.
+ *
+ * NOTE: this controller still directly `use`s and, as a fallback,
+ * instantiates several other concrete Admin classes (AdminFormSection,
+ * AdminFormSectionProviderInterface via the four Page*SectionProvider
+ * classes, AdminFormConfigAggregator, AdminFormConfigProviderFactory,
+ * AdminFormProcessorConfigFactory, AdminFormProcessorRegistry,
+ * AdminFormProviderRegistry, AdminFormRenderer). zoosper-page's
+ * composer.json therefore still requires zoosper/admin — that remaining
+ * decoupling is a separate, larger phase, not yet started.
  */
 final readonly class PageAdminController
 {
@@ -73,8 +85,8 @@ final readonly class PageAdminController
         private PageRepository                   $pages,
         private SiteRepository                   $sites,
         private PageRenderer                     $renderer,
-        private AdminLayout                      $layout,
-        private AdminViewRenderer                $views,
+        private AdminLayoutRendererInterface     $layout,
+        private AdminViewRendererInterface       $views,
         private ?PageGridRepository              $pageGrid = null,
         private ?HtmlSanitizerInterface          $htmlSanitizer = null,
         private ?FlashMessageStoreInterface      $flashMessages = null,

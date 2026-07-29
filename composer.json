@@ -1,156 +1,156 @@
 {
-    "name": "zoosper/zoosper",
-    "description": "Zoosper CMS - modern, fast, easy, secure and API-first CMS foundation.",
-    "type": "project",
-    "license": "MIT",
-    "require": {
-        "bacon/bacon-qr-code": "^3.0",
-        "ext-pdo": "*",
-        "ezyang/htmlpurifier": "^4.19",
-        "latte/latte": "^3.1",
-        "marko/database": "^0.8",
-        "marko/database-mysql": "^0.8",
-        "marko/framework": "^0.8",
-        "php": "^8.5",
-        "zoosper/admin": "*@dev",
-        "zoosper/api": "*@dev",
-        "zoosper/auth": "*@dev",
-        "zoosper/core": "*@dev",
-        "zoosper/install": "*@dev",
-        "zoosper/mail": "*@dev",
-        "zoosper/media": "*@dev",
-        "zoosper/page": "*@dev",
-        "zoosper/site": "*@dev",
-        "zoosper/theme": "*@dev",
-        "zoosper/two-factor": "*@dev",
-        "zoosper/url-rewrite": "*@dev"
+  "name": "zoosper/zoosper",
+  "description": "Zoosper CMS - modern, fast, easy, secure and API-first CMS foundation.",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "bacon/bacon-qr-code": "^3.0",
+    "ext-pdo": "*",
+    "ezyang/htmlpurifier": "^4.19",
+    "latte/latte": "^3.1",
+    "marko/database": "^0.8",
+    "marko/database-mysql": "^0.8",
+    "marko/framework": "^0.8",
+    "php": "^8.5",
+    "zoosper/admin": "*@dev",
+    "zoosper/api": "*@dev",
+    "zoosper/auth": "*@dev",
+    "zoosper/core": "*@dev",
+    "zoosper/install": "*@dev",
+    "zoosper/mail": "*@dev",
+    "zoosper/media": "*@dev",
+    "zoosper/page": "*@dev",
+    "zoosper/site": "*@dev",
+    "zoosper/theme": "*@dev",
+    "zoosper/two-factor": "*@dev",
+    "zoosper/url-rewrite": "*@dev"
+  },
+  "require-dev": {
+    "icanhazstring/composer-unused": "^0.9.6",
+    "pestphp/pest": "^3.0",
+    "pestphp/pest-plugin": "^3.0",
+    "phpunit/phpunit": "^11.0",
+    "vimeo/psalm": "^6.16"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Zoosper\\Admin\\Tests\\": "app/zoosper-admin/tests/",
+      "Zoosper\\Auth\\Tests\\": "app/zoosper-auth/tests/",
+      "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
+      "Zoosper\\Media\\Tests\\": "packages/zoosper-media/tests/",
+      "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/",
+      "Zoosper\\Site\\Tests\\": "app/zoosper-site/tests/",
+      "Zoosper\\TwoFactor\\Tests\\": "app/zoosper-two-factor/tests/"
+    }
+  },
+  "scripts": {
+    "serve": "@php -S 127.0.0.1:8080 -t public",
+    "migrate": "@php bin/zoosper migrate",
+    "admin:create": "@php bin/zoosper admin:create",
+    "site:create": "@php bin/zoosper site:create",
+    "page:create": "@php bin/zoosper page:create",
+    "modules:package-audit": "@php tools/audit-module-package-readiness.php",
+    "test": "@php pest",
+    "test:unit": "@php pest --testsuite=Unit",
+    "test:feature": "@php pest --testsuite=Feature",
+    "test:coverage": "@php pest --coverage --min=60",
+    "gate": "@php tools/gate.php"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
     },
-    "require-dev": {
-        "icanhazstring/composer-unused": "^0.9.6",
-        "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin": "^3.0",
-        "phpunit/phpunit": "^11.0",
-        "vimeo/psalm": "^6.16"
+    "platform": {
+      "php": "8.5"
+    }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "packages/zoosper-media",
+      "options": {
+        "symlink": true
+      }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Zoosper\\Admin\\Tests\\": "app/zoosper-admin/tests/",
-            "Zoosper\\Auth\\Tests\\": "app/zoosper-auth/tests/",
-            "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
-            "Zoosper\\Media\\Tests\\": "packages/zoosper-media/tests/",
-            "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/",
-            "Zoosper\\Site\\Tests\\": "app/zoosper-site/tests/",
-            "Zoosper\\TwoFactor\\Tests\\": "app/zoosper-two-factor/tests/"
-        }
+    {
+      "type": "path",
+      "url": "./app/zoosper-core",
+      "options": {
+        "symlink": true
+      }
     },
-    "scripts": {
-        "serve": "php -S 127.0.0.1:8080 -t public",
-        "migrate": "php bin/zoosper migrate",
-        "admin:create": "php bin/zoosper admin:create",
-        "site:create": "php bin/zoosper site:create",
-        "page:create": "php bin/zoosper page:create",
-        "modules:package-audit": "@php tools/audit-module-package-readiness.php",
-        "test": "pest",
-        "test:unit": "pest --testsuite=Unit",
-        "test:feature": "pest --testsuite=Feature",
-        "test:coverage": "pest --coverage --min=60",
-        "gate": "php8.5 tools/gate.php"
+    {
+      "type": "path",
+      "url": "./app/zoosper-auth",
+      "options": {
+        "symlink": true
+      }
     },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        },
-        "platform": {
-            "php": "8.5"
-        }
+    {
+      "type": "path",
+      "url": "./app/zoosper-theme",
+      "options": {
+        "symlink": true
+      }
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "packages/zoosper-media",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "./app/zoosper-core",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "./app/zoosper-auth",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "./app/zoosper-theme",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "./app/zoosper-page",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "./app/zoosper-site",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "./app/zoosper-admin",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "./app/zoosper-api",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "./app/zoosper-mail",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "./app/zoosper-two-factor",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "./app/zoosper-url-rewrite",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "./app/zoosper-install",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    {
+      "type": "path",
+      "url": "./app/zoosper-page",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "./app/zoosper-site",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "./app/zoosper-admin",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "./app/zoosper-api",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "./app/zoosper-mail",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "./app/zoosper-two-factor",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "./app/zoosper-url-rewrite",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "./app/zoosper-install",
+      "options": {
+        "symlink": true
+      }
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

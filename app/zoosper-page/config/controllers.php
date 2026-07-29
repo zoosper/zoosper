@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Zoosper\Admin\Editor\ContentEditorInterface;
-use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
-use Zoosper\Admin\UI\AdminViewRenderer;
+use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
+use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
@@ -23,14 +23,18 @@ use Zoosper\Page\Service\PageRenderer;
 use Zoosper\Site\Repository\SiteRepository;
 
 return [
+    // Phase 1.41 (partial, round 3a): layout/views now resolved via
+    // AdminLayoutRendererInterface / AdminViewRendererInterface instead of
+    // the concrete Zoosper\Admin\Layout\AdminLayout /
+    // Zoosper\Admin\UI\AdminViewRenderer classes.
     PageAdminController::class => static fn (ServiceContainer $services): PageAdminController => new PageAdminController(
         guard: $services->get(SessionGuard::class),
         csrf: $services->get(CsrfTokenManager::class),
         pages: $services->get(PageRepository::class),
         sites: $services->get(SiteRepository::class),
         renderer: $services->get(PageRenderer::class),
-        layout: $services->get(AdminLayout::class),
-        views: $services->get(AdminViewRenderer::class),
+        layout: $services->get(AdminLayoutRendererInterface::class),
+        views: $services->get(AdminViewRendererInterface::class),
         pageGrid: new PageGridRepository($services->get(\PDO::class)),
         htmlSanitizer: $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,
         flashMessages: $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
