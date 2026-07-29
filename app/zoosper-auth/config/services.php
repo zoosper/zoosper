@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Zoosper\Auth\Console\AdminCreateCommand;
 use Zoosper\Auth\Http\AuthenticationMiddleware;
 use Zoosper\Auth\Http\CsrfMiddleware;
+use Zoosper\Auth\Http\RateLimitReportOnlyAdminMiddleware;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\AuthService;
@@ -23,20 +24,16 @@ return [
     ),
     SessionGuard::class => static fn (ServiceContainer $services): SessionGuard => new SessionGuard($services->get(AdminUserRepository::class)),
     CsrfTokenManager::class => static fn (ServiceContainer $services): CsrfTokenManager => new CsrfTokenManager(),
-
-    // Phase 1.33: admin authentication guard (fail-secure). Resolved by
-    // ModuleAdminMiddlewareLoader from config/admin_middleware.php.
     AuthenticationMiddleware::class => static fn (ServiceContainer $services): AuthenticationMiddleware => new AuthenticationMiddleware(
         $services->get(SessionGuard::class),
     ),
-
-    // Phase 1.33c: central CSRF guard for stateful admin requests.
     CsrfMiddleware::class => static fn (ServiceContainer $services): CsrfMiddleware => new CsrfMiddleware(
         $services->get(CsrfTokenManager::class),
     ),
-
-    // Console/kernel decoupling phase: admin:create console command,
-    // relocated out of bin/zoosper. Discovered via config/console.php.
+    RateLimitReportOnlyAdminMiddleware::class => static fn (ServiceContainer $services): RateLimitReportOnlyAdminMiddleware => new RateLimitReportOnlyAdminMiddleware(
+        $services->get(PDO::class),
+        dirname(__DIR__, 3),
+    ),
     AdminCreateCommand::class => static fn (ServiceContainer $services): AdminCreateCommand => new AdminCreateCommand(
         $services->get(AdminUserRepository::class),
         $services->get(PasswordHasher::class),
