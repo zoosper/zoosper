@@ -4,18 +4,22 @@ Zoosper is a modern, lightweight, modular PHP 8.5+ CMS inspired by Magento-style
 
 ## Current phase
 
-Phase 0.23 — Admin Grid Pagination, Search and Filters.
+Phase 1.41 — Admin/module dependency decoupling (two-factor and media modules fully decoupled from the admin module; page module partially decoupled). See [ROADMAP.md](ROADMAP.md) for full status.
 
 ## What is included
 
+- All first-party modules registered as real Composer packages, with per-module dependency resolution
+- Module-owned database migrations (each module owns its own schema history)
 - Module-owned controller providers through `config/controllers.php`
 - Module-owned admin/API routes, menus, ACL/resource config and views
 - Module-owned log filenames through `config/logging.php`
+- Console commands (`admin:create`, `site:create`, `page:create`) discovered per-module, not hardcoded in the CLI kernel
 - Admin form UI metadata through `config/admin_ui.php`
 - Admin grid pagination/search/filter foundation
 - Pages admin grid query service
 - Frontend and admin theme foundations
 - Layout updates with remove, replace and inject operations
+- Login-time 2FA enforcement with recovery-code redemption
 - PCI-aware roadmap notes
 
 ## Pages grid filters
@@ -38,4 +42,4 @@ Canonical feature guides: [docs/guide/index.md](docs/guide/index.md).
 
 ## Roadmap
 
-See [docs/roadmap/roadmap-status.md](docs/roadmap/roadmap-status.md).
+See [ROADMAP.md](ROADMAP.md).
