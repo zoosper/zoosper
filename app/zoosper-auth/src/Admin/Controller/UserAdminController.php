@@ -45,6 +45,32 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
  * (it renders exclusively through AdminViewRenderer's Latte template-key
  * strings, e.g. 'zoosper-auth::admin/users/form', which are location-
  * independent), so this move required no path-arithmetic fix.
+ *
+ * SECURITY FIX (confirmed 2026-07-29, independently flagged by a reviewer
+ * pass): /admin/users/edit (and /admin/users/create) are gated by
+ * ['role.manage', 'user.manage'] with OR semantics — EITHER permission is
+ * sufficient to reach these routes (see app/zoosper-auth/config/admin_routes.php).
+ * But update()/create() previously wrote $this->roleIdsFromForm($form)
+ * unconditionally, with no further check on which of the two OR'd
+ * permissions the actor actually held. An admin holding ONLY 'user.manage'
+ * (deliberately NOT 'role.manage', per the whole point of splitting these
+ * two permissions for separation of duties) could submit role_ids
+ * referencing the super_admin role (or any other role) and grant it to
+ * themselves or any other user — a full privilege escalation.
+ *
+ * Fix: role assignment is now explicitly gated by actor->can('role.manage'),
+ * independent of whichever permission got the request past the route-level
+ * OR-gate:
+ * - update(): if the actor lacks 'role.manage', submitted role_ids are
+ *   silently ignored and the target user's EXISTING role assignments are
+ *   preserved untouched. Every other field (email, name, status, password)
+ *   still updates normally — a user.manage-only admin can still manage user
+ *   profiles, just not role membership.
+ * - create(): assigning a role to a brand-new account is inherently a
+ *   role-management decision (there is no "safe default" role this
+ *   controller can silently pick without inventing product policy). If the
+ *   actor lacks 'role.manage', create() now fails closed with a clear error
+ *   instead of accepting attacker-controlled role_ids.
  */
 final readonly class UserAdminController
 {
@@ -83,7 +109,7 @@ final readonly class UserAdminController
 
     public function create(Request $request): Response
     {
-        $this->currentAdminUser();
+        $actor = $this->currentAdminUser();
 
         $form = $request->form();
 
@@ -95,6 +121,16 @@ final readonly class UserAdminController
 
             // Phase 1.110: enforce the password policy BEFORE any write.
             $this->assertPasswordMeetsPolicy($password);
+
+            // SECURITY FIX: creating a new admin account requires deciding
+            // its role(s) — that is a role-management decision. An actor
+            // who reached this action only via the 'user.manage' OR-branch
+            // (see admin_routes.php) must NOT be able to hand out arbitrary
+            // roles, including super_admin, to a brand-new account. Fail
+            // closed rather than silently picking a "safe default" role.
+            if (!$actor->can('role.manage')) {
+                throw new RuntimeException('You do not have permission to assign roles. Ask an administrator with role management access to create this user.');
+            }
 
             $createdId = null;
             $context = $this->runEntitySave('admin_user', $form, null, function (EntitySaveContext $c) use ($form, $password, &$createdId): void {
@@ -137,6 +173,9 @@ final readonly class UserAdminController
      * The reset action is CSRF-protected and permission-protected. It never
      * reads, displays or logs OTPs, TOTP secrets, recovery-code plaintext,
      * provisioning URIs, QR data, SMTP passwords or reset tokens.
+     *
+     * SECURITY FIX: role_ids are only applied when the acting admin holds
+     * 'role.manage'. See class docblock for the full explanation.
      */
     public function update(Request $request): Response
     {
@@ -163,13 +202,23 @@ final readonly class UserAdminController
                 $this->assertPasswordMeetsPolicy($password);
             }
 
-            $context = $this->runEntitySave('admin_user', $form, $user->id, function (EntitySaveContext $c) use ($form, $user, $password): void {
+            // SECURITY FIX: only an actor holding 'role.manage' may change
+            // this user's role assignments. An actor who reached this action
+            // only via the 'user.manage' OR-branch keeps the user's EXISTING
+            // roles untouched, regardless of what role_ids were submitted in
+            // the form (whether by a legitimate mistake or a deliberate
+            // escalation attempt) — every other field still updates normally.
+            $roleIds = $actor->can('role.manage')
+                ? $this->roleIdsFromForm($form)
+                : $this->users->roleIdsForUser($user->id);
+
+            $context = $this->runEntitySave('admin_user', $form, $user->id, function (EntitySaveContext $c) use ($form, $user, $password, $roleIds): void {
                 $this->users->updateUser(
                     id: $user->id,
                     email: trim((string) ($form['email'] ?? '')),
                     name: trim((string) ($form['name'] ?? '')),
                     status: (string) ($form['status'] ?? 'active'),
-                    roleIds: $this->roleIdsFromForm($form),
+                    roleIds: $roleIds,
                     locale: $this->adminUserLocaleFromForm($form));
 
                 if ($password !== '') {
