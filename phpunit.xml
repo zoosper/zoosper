@@ -30,6 +30,21 @@
         </testsuite>
     </testsuites>
 
+    <!--
+        FIX (2026-07-30): FrontendBootTest and any other Feature test that
+        calls ApplicationFactory::create() boot the real, full application
+        end-to-end. That constructs the full service container, including
+        admin/auth services. SecretProtector's factory correctly throws when
+        no 2FA encryption key is available, so the Pest/PHPUnit process needs
+        its own test-only key just like a real environment needs one in .env.
+
+        This value is test-only and deliberately fake. Never use it in any
+        real environment.
+    -->
+    <php>
+        <env name="TWO_FACTOR_ENCRYPTION_KEY" value="test-only-not-a-real-secret-do-not-use-in-any-real-environment"/>
+    </php>
+
     <source>
         <include>
             <directory>app</directory>

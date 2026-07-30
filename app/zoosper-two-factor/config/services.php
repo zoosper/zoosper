@@ -42,9 +42,44 @@ return [
             (int) ($config['window'] ?? 1),
         );
     },
+
+    // SECURITY FIX (confirmed 2026-07-30, external reviewer pass): this
+    // factory previously fell back to an insecure, publicly-visible
+    // placeholder literal (visible in this file's git history, deliberately
+    // not repeated verbatim here) if config/two_factor.php's
+    // 'encryption_key' was empty/missing. This is the SECOND of two copies
+    // of the same insecure fallback found in this codebase (the other was
+    // in config/two_factor.php itself, already fixed separately) — this is
+    // the one that actually matters, since it's the real point where the
+    // key is used to construct working crypto (SecretProtector, backed by
+    // libsodium secretbox).
+    //
+    // An earlier attempt at this fix made config/two_factor.php itself
+    // throw when no key was present — that broke unrelated tests
+    // (database connection tests, module discovery, frontend boot) because
+    // ConfigRepository::fromPath() eagerly loads EVERY config file the
+    // moment ANY config is requested, so completely unrelated code paths
+    // were tripping a 2FA-specific check. The enforcement now lives HERE
+    // instead — the one place that genuinely needs a real key to do real
+    // encryption — so unrelated config loading is never affected, while
+    // any code that actually tries to build a working SecretProtector
+    // without a real key still fails loudly, exactly as intended.
     SecretProtector::class => static function (ServiceContainer $services): SecretProtector {
         $config = $services->get(ConfigRepository::class)->array('two_factor');
-        return new SecretProtector((string) ($config['encryption_key'] ?? 'change-me-before-production'));
+        $encryptionKey = (string) ($config['encryption_key'] ?? '');
+
+        if ($encryptionKey === '') {
+            throw new \RuntimeException(
+                'No 2FA encryption key is configured. Set either the TWO_FACTOR_ENCRYPTION_KEY '
+                . 'or APP_KEY environment variable to a strong, random secret before using any '
+                . '2FA feature. Admin two-factor (TOTP) secrets are encrypted using this key — '
+                . 'without a real, unique key, 2FA cannot be considered secure. '
+                . 'Generate one with, for example: php -r "echo bin2hex(random_bytes(32));" '
+                . 'and set it as TWO_FACTOR_ENCRYPTION_KEY in your .env file.'
+            );
+        }
+
+        return new SecretProtector($encryptionKey);
     },
     RecoveryCodeGenerator::class => static fn (ServiceContainer $services): RecoveryCodeGenerator => new RecoveryCodeGenerator(),
     AdminTwoFactorEnrollmentService::class => static function (ServiceContainer $services): AdminTwoFactorEnrollmentService {
