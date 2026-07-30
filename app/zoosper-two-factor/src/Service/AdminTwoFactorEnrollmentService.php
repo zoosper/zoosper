@@ -50,6 +50,21 @@ final readonly class AdminTwoFactorEnrollmentService
         return $codes;
     }
 
+    /**
+     * KEY ROTATION FIX (confirmed 2026-07-30, real production lockout
+     * incident): reveal a stored secret. If it can only be decrypted using
+     * a PREVIOUS encryption key (i.e. TWO_FACTOR_ENCRYPTION_KEY has been
+     * rotated since this admin last logged in), this now OPPORTUNISTICALLY
+     * re-encrypts the secret with the CURRENT key and re-saves it —
+     * closing the rotation window for this admin automatically, on their
+     * next successful login, with no manual intervention needed. This is
+     * silent and safe: it only ever re-saves the SAME secret, re-encrypted
+     * with a different key; it never changes what the secret actually is.
+     *
+     * If re-protection fails for any reason, the original (successfully
+     * revealed) secret is still returned — a failed opportunistic
+     * re-encryption must never turn a successful login into a failure.
+     */
     public function revealSecret(int $adminUserId): ?string
     {
         $protected = $this->repository->findProtectedSecret($adminUserId);
@@ -57,6 +72,20 @@ final readonly class AdminTwoFactorEnrollmentService
             return null;
         }
 
-        return $this->protector->reveal($protected);
+        $secret = $this->protector->reveal($protected);
+
+        if ($this->protector->needsReprotection($protected)) {
+            try {
+                $reprotected = $this->protector->protect($secret);
+                $this->repository->updateProtectedSecret($adminUserId, $reprotected);
+            } catch (\Throwable) {
+                // Deliberately swallowed: a failed opportunistic
+                // re-encryption must not turn an otherwise-successful
+                // login into a failure. The rotation window simply stays
+                // open for this admin until the next successful login.
+            }
+        }
+
+        return $secret;
     }
 }

@@ -51,4 +51,24 @@ final readonly class AdminTwoFactorEnrollmentRepository
             throw $exception;
         }
     }
+
+    /**
+     * KEY ROTATION FIX (confirmed 2026-07-30, real production lockout
+     * incident): update ONLY the stored ciphertext for an admin's existing,
+     * already-enabled TOTP enrolment — used by
+     * AdminTwoFactorEnrollmentService::revealSecret()'s opportunistic
+     * re-protection when a secret was decrypted via a previous encryption
+     * key (see SecretProtector's own docblock for the full rotation
+     * story). Deliberately narrower than saveConfirmedEnrollment(): this
+     * must NEVER touch admin_user_recovery_codes or the enrolment's
+     * confirmed_at/enabled state — it is re-encrypting the SAME already-
+     * confirmed secret with a new key, not creating a new enrolment.
+     */
+    public function updateProtectedSecret(int $adminUserId, string $protectedSecret): void
+    {
+        $statement = $this->pdo->prepare(
+            'UPDATE admin_user_two_factor SET secret_ciphertext = :secret, updated_at = NOW() WHERE admin_user_id = :id AND enabled = 1'
+        );
+        $statement->execute(['id' => $adminUserId, 'secret' => $protectedSecret]);
+    }
 }

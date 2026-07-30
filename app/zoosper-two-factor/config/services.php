@@ -47,23 +47,15 @@ return [
     // factory previously fell back to an insecure, publicly-visible
     // placeholder literal (visible in this file's git history, deliberately
     // not repeated verbatim here) if config/two_factor.php's
-    // 'encryption_key' was empty/missing. This is the SECOND of two copies
-    // of the same insecure fallback found in this codebase (the other was
-    // in config/two_factor.php itself, already fixed separately) — this is
-    // the one that actually matters, since it's the real point where the
-    // key is used to construct working crypto (SecretProtector, backed by
-    // libsodium secretbox).
+    // 'encryption_key' was empty/missing. This is enforced here — the
+    // real point where the key is used to construct working crypto.
     //
-    // An earlier attempt at this fix made config/two_factor.php itself
-    // throw when no key was present — that broke unrelated tests
-    // (database connection tests, module discovery, frontend boot) because
-    // ConfigRepository::fromPath() eagerly loads EVERY config file the
-    // moment ANY config is requested, so completely unrelated code paths
-    // were tripping a 2FA-specific check. The enforcement now lives HERE
-    // instead — the one place that genuinely needs a real key to do real
-    // encryption — so unrelated config loading is never affected, while
-    // any code that actually tries to build a working SecretProtector
-    // without a real key still fails loudly, exactly as intended.
+    // KEY ROTATION FIX (confirmed 2026-07-30, real production lockout
+    // incident): SecretProtector now also receives 'previous_encryption_keys'
+    // from config, so a changed TWO_FACTOR_ENCRYPTION_KEY no longer
+    // permanently locks out admins who enrolled under an older key. See
+    // SecretProtector's own docblock and config/two_factor.php for the
+    // full rotation procedure.
     SecretProtector::class => static function (ServiceContainer $services): SecretProtector {
         $config = $services->get(ConfigRepository::class)->array('two_factor');
         $encryptionKey = (string) ($config['encryption_key'] ?? '');
@@ -79,7 +71,9 @@ return [
             );
         }
 
-        return new SecretProtector($encryptionKey);
+        $previousKeys = $config['previous_encryption_keys'] ?? [];
+
+        return new SecretProtector($encryptionKey, is_array($previousKeys) ? $previousKeys : []);
     },
     RecoveryCodeGenerator::class => static fn (ServiceContainer $services): RecoveryCodeGenerator => new RecoveryCodeGenerator(),
     AdminTwoFactorEnrollmentService::class => static function (ServiceContainer $services): AdminTwoFactorEnrollmentService {
