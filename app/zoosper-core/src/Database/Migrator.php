@@ -66,6 +66,29 @@ use Zoosper\Core\Schema\SchemaSnapshotRepository;
  * recovery codes, TOTP secrets or other authentication secrets into logs or
  * schema defaults. Authentication secrets must be protected at the service
  * layer and written only as protected payloads or hashes.
+ *
+ * BUG FIX (confirmed 2026-07-30): tableExists() previously ran
+ * `SHOW TABLES LIKE :table` as a bound, prepared statement on MySQL. This
+ * had been silently working ONLY because PDO::ATTR_EMULATE_PREPARES was
+ * previously left at its (insecure, client-side-emulated) default — see
+ * ConnectionFactory's own EMULATE_PREPARES security fix earlier in this
+ * project's history. Once real, server-side prepared statements were
+ * correctly enabled, this broke: `SHOW TABLES` is a MySQL administrative/
+ * utility statement that MySQL's real binary prepared-statement protocol
+ * does not support parameter binding for at all (only a limited set of
+ * statement types — mostly SELECT/INSERT/UPDATE/DELETE — support real
+ * bound parameters). MySQL's server represents an unresolvable bound
+ * placeholder internally as a literal `?`, which is exactly the confusing
+ * "syntax error ... near '?'" this produced — the placeholder itself was
+ * never a literal `?` character anywhere in this codebase's own source; it
+ * was MySQL's own error message vocabulary for "I don't know what to do
+ * with this parameter here."
+ *
+ * Fixed by querying `information_schema.TABLES` instead — a real, ordinary
+ * SELECT statement that fully supports real bound parameters, and is
+ * already the exact pattern several of this project's own migration files
+ * (e.g. acl_tree_metadata's addMysqlColumnIfMissing()) already use
+ * correctly for the equivalent column-existence check.
  */
 final class Migrator
 {
@@ -371,6 +394,14 @@ final class Migrator
 
     /**
      * Determine whether a table exists.
+     *
+     * BUG FIX: the MySQL branch previously ran `SHOW TABLES LIKE :table` as
+     * a bound, prepared statement — see this class's own docblock above
+     * for the full explanation of why this broke once real server-side
+     * prepared statements were correctly enabled (MySQL's binary prepared-
+     * statement protocol does not support parameter binding for SHOW
+     * statements at all). Fixed by querying information_schema.TABLES
+     * instead, a real SELECT that fully supports bound parameters.
      */
     private function tableExists(string $table): bool
     {
@@ -380,7 +411,9 @@ final class Migrator
             return (bool) $statement->fetchColumn();
         }
 
-        $statement = $this->pdo->prepare('SHOW TABLES LIKE :table');
+        $statement = $this->pdo->prepare(
+            'SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table LIMIT 1'
+        );
         $statement->execute(['table' => $table]);
         return (bool) $statement->fetchColumn();
     }
