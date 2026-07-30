@@ -16,9 +16,27 @@ use Zoosper\Core\Pagination\PaginationResult;
  * Phase A (Grid Core): SUPERSEDES the bespoke LoginHistoryCriteria/paginate(
  * LoginHistoryCriteria) pair introduced in Phase 1.112 with the generic
  * GridDataSourceInterface. LoginHistoryCriteria.php has been deleted.
+ *
+ * CORRECTNESS FIX (confirmed 2026-07-30, external reviewer pass):
+ * paginate() previously hardcoded `ORDER BY id <direction>` and never
+ * referenced $criteria->sortBy at all — the same bug independently
+ * confirmed and fixed in AuditLogRepository. Fixed identically: an
+ * explicit, small allow-list mapping known sort keys to safe column
+ * expressions (self::SORTABLE_COLUMNS), defaulting to `id` for any
+ * unrecognised/null sortBy. This grid also currently declares only
+ * 'created_at' as sortable (mapped to `id`, the monotonic proxy already
+ * used here), so runtime behaviour for existing callers is completely
+ * unchanged.
  */
 final readonly class LoginHistoryRepository implements GridDataSourceInterface, LoginHistoryRecorderInterface
 {
+    /**
+     * @var array<string, string>
+     */
+    private const SORTABLE_COLUMNS = [
+        'created_at' => 'id',
+    ];
+
     public function __construct(private PDO $pdo)
     {
     }
@@ -56,7 +74,7 @@ final readonly class LoginHistoryRepository implements GridDataSourceInterface, 
     /**
      * GridDataSourceInterface implementation for the Login History grid.
      * Supports filtering by free-text `q` (email) and exact `status`, and
-     * sorting by `created_at` (applied via the monotonic `id` column).
+     * sorting via the SORTABLE_COLUMNS allow-list above.
      *
      * @return PaginationResult<array<string, mixed>>
      */
@@ -72,9 +90,10 @@ final readonly class LoginHistoryRepository implements GridDataSourceInterface, 
         $total = (int) $count->fetchColumn();
 
         $direction = strtoupper($criteria->sortDir) === 'ASC' ? 'ASC' : 'DESC';
+        $column = self::SORTABLE_COLUMNS[$criteria->sortBy ?? ''] ?? 'id';
         $sql = 'SELECT * FROM admin_login_history '
             . $where
-            . ' ORDER BY id ' . $direction
+            . ' ORDER BY ' . $column . ' ' . $direction
             . ' LIMIT :limit OFFSET :offset';
 
         $statement = $this->pdo->prepare($sql);

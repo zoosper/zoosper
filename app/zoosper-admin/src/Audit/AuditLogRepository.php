@@ -20,9 +20,39 @@ use Zoosper\Core\Pagination\PaginationResult;
  * keep the codebase lean.
  *
  * `latest()` remains for any other existing caller of the "top N" query.
+ *
+ * CORRECTNESS FIX (confirmed 2026-07-30, external reviewer pass):
+ * paginate() previously hardcoded `ORDER BY id <direction>` and never
+ * referenced $criteria->sortBy at all. This was harmless in practice ONLY
+ * because this grid currently declares just one sortable column
+ * ('created_at', mapped to the monotonic `id` column as a proxy — row ids
+ * increase with time, avoiding ambiguity from duplicate timestamps). But
+ * nothing enforced that a GridDataSourceInterface implementation actually
+ * honours sortBy — if a third-party module ever contributed a different
+ * sortable column via GridColumnRegistry, clicking that column header
+ * would show an "active sort" UI indicator that silently did nothing.
+ *
+ * Fixed with an explicit, small allow-list mapping known sort keys to safe
+ * column expressions (self::SORTABLE_COLUMNS), defaulting to `id` for any
+ * unrecognised/null sortBy — deliberately NOT interpolating $criteria->sortBy
+ * directly into SQL, which would be a real injection risk. Since the only
+ * currently-declared sortable key ('created_at') still maps to 'id',
+ * runtime behaviour for existing callers is completely unchanged; the
+ * method now genuinely consults sortBy instead of silently ignoring it.
  */
 final readonly class AuditLogRepository implements GridDataSourceInterface
 {
+    /**
+     * Allow-list mapping known GridCriteria::$sortBy values to safe SQL
+     * column expressions. Any sortBy not present here (including null)
+     * falls back to 'id' — the existing default behaviour.
+     *
+     * @var array<string, string>
+     */
+    private const SORTABLE_COLUMNS = [
+        'created_at' => 'id',
+    ];
+
     public function __construct(private PDO $pdo)
     {
     }
@@ -65,9 +95,7 @@ final readonly class AuditLogRepository implements GridDataSourceInterface
     /**
      * GridDataSourceInterface implementation for the Audit Log grid.
      * Supports filtering by free-text `q` (summary/action/actor_email) and
-     * `entity_type`, and sorting by `created_at` (applied via the monotonic
-     * `id` column, since row ids increase with time and this avoids any
-     * ambiguity from duplicate timestamps).
+     * `entity_type`, and sorting via the SORTABLE_COLUMNS allow-list above.
      *
      * @return PaginationResult<array<string, mixed>>
      */
@@ -83,9 +111,10 @@ final readonly class AuditLogRepository implements GridDataSourceInterface
         $total = (int) $count->fetchColumn();
 
         $direction = strtoupper($criteria->sortDir) === 'ASC' ? 'ASC' : 'DESC';
+        $column = self::SORTABLE_COLUMNS[$criteria->sortBy ?? ''] ?? 'id';
         $sql = 'SELECT * FROM admin_activity_log '
             . $where
-            . ' ORDER BY id ' . $direction
+            . ' ORDER BY ' . $column . ' ' . $direction
             . ' LIMIT :limit OFFSET :offset';
 
         $statement = $this->pdo->prepare($sql);

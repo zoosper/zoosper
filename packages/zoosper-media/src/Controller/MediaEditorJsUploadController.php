@@ -22,6 +22,22 @@ use Zoosper\Media\Service\MediaUploadValidator;
  * Route-level authentication, permissions and CSRF validation are handled by the
  * admin middleware pipeline. Upload validation, storage, metadata persistence and
  * orphan-file cleanup are centralised in MediaUploadService.
+ *
+ * CORRECTNESS FIX (confirmed 2026-07-30, external reviewer pass): upload()
+ * previously called `(string) $result->stored?->publicPath` — since $stored
+ * is only ever null when $result->successful is false (already checked and
+ * returned above this line), reaching this exact line with a null $stored
+ * should be structurally impossible per MediaUploadService's own success()
+ * contract. But the old code silently tolerated that impossible state
+ * anyway: a null $stored would have quietly produced publicPath="" inside
+ * an HTTP 200 "successful" JSON response, rather than surfacing as an
+ * error — masking what would actually be a real bug in MediaUploadService
+ * if it were ever hit.
+ *
+ * Fixed by explicitly checking the invariant and throwing loudly if it is
+ * ever violated, rather than silently degrading. This can never fire under
+ * MediaUploadService's current, correct behaviour — it exists purely as a
+ * fail-loud guard against a future regression in that contract.
  */
 final readonly class MediaEditorJsUploadController
 {
@@ -54,7 +70,20 @@ final readonly class MediaEditorJsUploadController
             return Response::json($this->responses->failure($result->message), $result->statusCode);
         }
 
-        return Response::json($this->responses->success((string) $result->stored?->publicPath, $result->metadata));
+        // CORRECTNESS FIX: fail loudly rather than silently masking an
+        // impossible-per-contract null $stored inside a "successful" response.
+        if ($result->stored === null) {
+            $exception = new RuntimeException(
+                'MediaUploadServiceResult reported success but $stored is null. '
+                . 'This indicates a bug in MediaUploadService::upload() — its success() '
+                . 'factory should never be called without a real StoredMediaFile.'
+            );
+            $this->errorHandler?->logException($exception, ['controller' => 'MediaEditorJsUploadController', 'action' => 'upload']);
+
+            throw $exception;
+        }
+
+        return Response::json($this->responses->success($result->stored->publicPath, $result->metadata));
     }
 
     private function currentAdminUser(): AdminUser
