@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Auth\Http;
 
 use PDO;
+use RuntimeException;
 use Zoosper\Core\Http\Middleware\RouteContext;
 use Zoosper\Core\Http\Middleware\RouteMiddleware;
 use Zoosper\Core\Http\Request;
@@ -24,6 +25,35 @@ use Zoosper\Core\Security\RateLimit\StaticRateLimitPolicyResolver;
  * RouteMiddleware pipeline. This middleware never blocks a request. It only
  * records diagnostics when rate limiting is explicitly enabled in report_only
  * mode. HTTP 429 enforcement remains a deliberately deferred future phase.
+ *
+ * SECURITY FIX (confirmed 2026-07-30, external reviewer pass):
+ * app/zoosper-core/config/rate_limit.php ships with 'identity_salt' => ''
+ * (an empty string) by default. RateLimitIdentityHasher hashes the caller's
+ * email+IP with SHA-256 using this salt — with no salt at all, that hash is
+ * a straightforward dictionary/rainbow-table target for common email+IP
+ * pairs, NOT the "opaque hash" the surrounding docblocks describe.
+ *
+ * LESSON APPLIED FROM THE 2FA ENCRYPTION KEY FIX (same session, several
+ * rounds needed to get right): this enforcement is DELIBERATELY placed
+ * here, in the middleware's process() method, guarded behind the EXISTING
+ * `$config->enabled && $config->isReportOnly()` check — NOT inside
+ * rate_limit.php itself. That config file is still eagerly `require`d
+ * alongside every other config file by ConfigRepository::fromPath()
+ * (whenever ANY config is requested), so making IT throw would risk the
+ * exact same "unrelated boot/test failures" problem the 2FA config fix hit.
+ * Because rate limiting ships DISABLED by default, and this check only
+ * runs once already past that "is it actually enabled" gate, this can
+ * NEVER trigger for any environment that hasn't explicitly turned rate
+ * limiting on — safe by construction, not by luck.
+ *
+ * A random salt is deliberately NOT auto-generated at runtime: the same
+ * identity must hash to the SAME value across every request to correctly
+ * accumulate a rate-limit bucket count. A fresh random salt on every
+ * request/process would silently break rate-limiting correctness itself
+ * (every request would look like a brand-new identity). A real salt must
+ * come from a persisted, operator-provided secret — hence failing loudly
+ * and telling the operator how to generate one, rather than silently
+ * inventing an unstable one.
  */
 final class RateLimitReportOnlyAdminMiddleware implements RouteMiddleware
 {
@@ -43,6 +73,20 @@ final class RateLimitReportOnlyAdminMiddleware implements RouteMiddleware
         $config = $this->loadRuntimeConfig();
         if (!$config->enabled || !$config->isReportOnly()) {
             return $next($request);
+        }
+
+        // SECURITY FIX: only reached once rate limiting is explicitly
+        // enabled — never affects a default (disabled) installation.
+        if (trim($config->identitySalt) === '') {
+            throw new RuntimeException(
+                'Rate limiting is enabled but no identity salt is configured. Set the '
+                . 'RATE_LIMIT_IDENTITY_SALT environment variable to a strong, random secret '
+                . 'before enabling rate limiting. Without a real salt, the identity hash used '
+                . 'to track login attempts is vulnerable to dictionary/rainbow-table attacks '
+                . 'against common email+IP combinations, rather than being genuinely opaque. '
+                . 'Generate one with, for example: php -r "echo bin2hex(random_bytes(32));" '
+                . 'and set it as RATE_LIMIT_IDENTITY_SALT in your .env file.'
+            );
         }
 
         $email = trim((string) ($request->form()['email'] ?? ''));
