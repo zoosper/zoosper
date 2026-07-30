@@ -6,7 +6,7 @@ namespace Zoosper\Core\Console;
 
 use ReflectionClass;
 use Zoosper\Core\Container\ServiceContainer;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 use Zoosper\Core\Module\ModuleRegistry;
 
 /**

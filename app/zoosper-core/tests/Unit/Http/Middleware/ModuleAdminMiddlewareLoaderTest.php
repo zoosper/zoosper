@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Core\Tests\Unit\Http\Middleware;
 
 use Zoosper\Core\Container\ServiceContainer;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 use Zoosper\Core\Http\Middleware\ModuleAdminMiddlewareLoader;
 use Zoosper\Core\Http\Middleware\RouteContext;
 use Zoosper\Core\Http\Middleware\RouteMiddleware;

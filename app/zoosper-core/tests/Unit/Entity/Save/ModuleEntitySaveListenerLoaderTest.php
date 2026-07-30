@@ -27,7 +27,7 @@ use Zoosper\Core\Entity\Save\EntitySaveEventListenerInterface;
 use Zoosper\Core\Entity\Save\EntitySaveLifecycle;
 use Zoosper\Core\Entity\Save\FieldDefinitionRegistry;
 use Zoosper\Core\Entity\Save\ModuleEntitySaveListenerLoader;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 
 /**
  * Build a loader with the given container, bypassing the constructor so we do not

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d98fae79f1608d02f6d72167bfd99ec6",
+    "content-hash": "1677d31bac5b13d272b2877d0cf5ff74",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -804,12 +804,13 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-admin",
-                "reference": "e5fc66767db8b20b06b58fbb4d93e23c1f74aa0f"
+                "reference": "e0212c2d615acfbda5afec011a3c372d79988709"
             },
             "require": {
                 "php": "^8.5",
                 "zoosper/auth": "*@dev",
                 "zoosper/core": "*@dev",
+                "zoosper/errors": "*@dev",
                 "zoosper/theme": "*@dev"
             },
             "type": "zoosper-module",
@@ -913,11 +914,12 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-core",
-                "reference": "a8d2eaa64ae70cf4784bf9d90a53373710590f30"
+                "reference": "18d40cfa83d46265365fa7b05b982197f2a88c7a"
             },
             "require": {
                 "ext-pdo": "*",
-                "php": "^8.5"
+                "php": "^8.5",
+                "zoosper/errors": "*@dev"
             },
             "type": "zoosper-module",
             "extra": {
@@ -940,6 +942,59 @@
                 "MIT"
             ],
             "description": "Zoosper_Core module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/errors",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "packages/zoosper-errors",
+                "reference": "daf4aa831a6c429cda4b277901dc3f6afaf95237"
+            },
+            "require": {
+                "marko/core": "^0.8",
+                "marko/errors": "^0.8",
+                "marko/errors-simple": "^0.8",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin": "^3.0",
+                "phpunit/phpunit": "^11.0"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "zoosper": {
+                    "module": "module.php",
+                    "name": "Zoosper_Errors"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Errors\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Errors\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ],
+                "test:unit": [
+                    "pest --testsuite=Unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper's loud-errors exception, sensitive-value redaction, and CLI/web error display package, built on Marko's exception base class and error formatters.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -1148,11 +1203,12 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-theme",
-                "reference": "8c693e55ca7ef91ced3483ea43e1491531a5fee0"
+                "reference": "1b536ab811520f844efd68901313696a594e450e"
             },
             "require": {
                 "php": "^8.5",
-                "zoosper/core": "*@dev"
+                "zoosper/core": "*@dev",
+                "zoosper/errors": "*@dev"
             },
             "type": "zoosper-module",
             "extra": {
@@ -8257,6 +8313,7 @@
         "zoosper/api": 20,
         "zoosper/auth": 20,
         "zoosper/core": 20,
+        "zoosper/errors": 20,
         "zoosper/install": 20,
         "zoosper/mail": 20,
         "zoosper/media": 20,

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Core\Container;
 
 use Throwable;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 
 /**
  * Lightweight application service container with lazy factory support.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Scaffold;
 
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 
 /**
  * Normalised representation of a Zoosper module name.

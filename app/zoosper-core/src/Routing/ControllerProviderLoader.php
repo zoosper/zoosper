@@ -6,7 +6,7 @@ namespace Zoosper\Core\Routing;
 
 use Throwable;
 use Zoosper\Core\Container\ServiceContainer;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 use Zoosper\Core\Module\ModuleRegistry;
 
 final readonly class ControllerProviderLoader

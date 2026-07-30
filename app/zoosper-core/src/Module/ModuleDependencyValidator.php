@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Module;
 
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 
 /**
  * Validates enabled module dependencies declared through module.php metadata.

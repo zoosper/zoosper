@@ -17,7 +17,7 @@ namespace Zoosper\Core\Tests\Unit\Schema;
  * PCI-aware: no secrets are used in these tests.
  */
 
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 use Zoosper\Core\Schema\SchemaLoader;
 use Zoosper\Core\Schema\SchemaTable;
 

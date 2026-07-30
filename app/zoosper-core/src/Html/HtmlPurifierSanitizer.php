@@ -6,7 +6,7 @@ namespace Zoosper\Core\Html;
 
 use HTMLPurifier;
 use HTMLPurifier_Config;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 use Zoosper\Core\Filesystem\ProjectPathResolver;
 
 /**

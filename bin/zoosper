@@ -11,7 +11,7 @@ use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
 use Zoosper\Core\Database\ConnectionFactory;
 use Zoosper\Core\Database\Migrator;
-use Zoosper\Core\Exception\ConsoleExceptionFormatter;
+use Zoosper\Errors\ConsoleExceptionFormatter;
 use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Core\Log\LogManager;
 use Zoosper\Core\Module\ModuleManifestCompiler;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Core\Entity\Save;
 
 use Zoosper\Core\Container\ServiceContainer;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 use Zoosper\Core\Module\ModuleRegistry;
 
 /**

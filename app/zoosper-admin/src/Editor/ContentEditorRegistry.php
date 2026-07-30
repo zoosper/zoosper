@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Editor;
 
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 
 /**
  * Registry of available admin content editors.

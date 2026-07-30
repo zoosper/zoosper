@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Theme\Template\Engine;
 
 use Latte\Engine as LatteEngine;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 
 /**
  * Latte template engine adapter.

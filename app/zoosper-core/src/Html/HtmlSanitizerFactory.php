@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Html;
 
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 
 /**
  * Creates the configured HTML sanitizer implementation.

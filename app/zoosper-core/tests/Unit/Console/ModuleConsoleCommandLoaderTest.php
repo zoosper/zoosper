@@ -8,7 +8,7 @@ use Zoosper\Core\Console\ConsoleCommandInterface;
 use Zoosper\Core\Console\ConsoleOutput;
 use Zoosper\Core\Console\ModuleConsoleCommandLoader;
 use Zoosper\Core\Container\ServiceContainer;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 use Zoosper\Core\Module\ModuleRegistry;
 
 final readonly class ExampleDiscoveredCommand implements ConsoleCommandInterface

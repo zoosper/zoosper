@@ -9,7 +9,7 @@ use Zoosper\Core\Event\EventDispatcher;
 use Zoosper\Core\Event\EventListenerInterface;
 use Zoosper\Core\Event\GenericEvent;
 use Zoosper\Core\Event\ModuleEventListenerLoader;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 
 function makeEventLoader(ServiceContainer $services): ModuleEventListenerLoader
 {

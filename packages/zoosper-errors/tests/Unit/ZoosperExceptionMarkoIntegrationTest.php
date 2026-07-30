@@ -5,18 +5,20 @@ declare(strict_types=1);
 use Marko\Core\Exceptions\MarkoException;
 use Marko\Errors\ErrorReport;
 use Marko\Errors\Severity;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 
 /**
- * FRAMEWORK INTEGRATION REGRESSION TEST — proves ZoosperException now
- * genuinely integrates with the already-installed (previously unused)
- * marko/core and marko/errors packages, while proving every existing
- * Zoosper-specific behaviour (context()/suggestion()/docsUrl()/details(),
- * as used by ErrorHandler::logException() and all 18 real call sites
- * across this codebase) continues to work identically.
+ * FRAMEWORK INTEGRATION REGRESSION TEST — proves ZoosperException genuinely
+ * integrates with marko/core and marko/errors, while proving every existing
+ * Zoosper-specific behaviour (context()/suggestion()/docsUrl()/details())
+ * continues to work identically.
  *
- * File placement: app/zoosper-core/tests/Unit/Exception/ZoosperExceptionMarkoIntegrationTest.php
- * — 5 levels up to repo root, matching other per-module tests.
+ * PACKAGE EXTRACTION (2026-07-30): moved from
+ * app/zoosper-core/tests/Unit/Exception/ZoosperExceptionMarkoIntegrationTest.php
+ * into this package's own tests/Unit/ folder — the `use Zoosper\Core\
+ * Exception\ZoosperException;` import updated to `use Zoosper\Errors\
+ * ZoosperException;` to match the class's new home; every assertion is
+ * otherwise unchanged.
  */
 it('is recognised as a genuine MarkoException by instanceof (real framework interoperability)', function (): void {
     $exception = new ZoosperException(message: 'Something failed.');
@@ -41,10 +43,6 @@ it('preserves every existing Zoosper-specific accessor exactly as before (backwa
 });
 
 it('is correctly recognised by the REAL Marko\Errors\ErrorReport::fromThrowable(), populating context/suggestion automatically', function (): void {
-    // This exercises the ACTUAL, already-installed marko/errors package's
-    // own real logic — not a reimplementation of it — proving genuine,
-    // functional interoperability rather than just an `instanceof` check
-    // in isolation.
     $exception = new ZoosperException(
         message: 'Config file missing.',
         context: 'Loading config/example.php',

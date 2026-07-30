@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Core\Routing;
 
 use ReflectionClass;
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 use Zoosper\Core\Http\Middleware\MiddlewarePipeline;
 use Zoosper\Core\Http\Middleware\RouteContext;
 use Zoosper\Core\Http\Middleware\RouteMiddleware;

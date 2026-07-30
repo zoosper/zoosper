@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Theme\Template\Engine;
 
-use Zoosper\Core\Exception\ZoosperException;
+use Zoosper\Errors\ZoosperException;
 
 /**
  * Registry of available template engines by file extension.

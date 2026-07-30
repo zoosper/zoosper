@@ -10,6 +10,7 @@
         "latte/latte": "^3.1",
         "marko/core": "^0.8",
         "marko/errors": "^0.8",
+        "marko/errors-simple": "^0.8",
         "marko/framework": "^0.8",
         "marko/database": "^0.8",
         "marko/database-mysql": "^0.8",
@@ -18,6 +19,7 @@
         "zoosper/api": "*@dev",
         "zoosper/auth": "*@dev",
         "zoosper/core": "*@dev",
+        "zoosper/errors": "*@dev",
         "zoosper/install": "*@dev",
         "zoosper/mail": "*@dev",
         "zoosper/media": "*@dev",
@@ -39,6 +41,7 @@
             "Zoosper\\Admin\\Tests\\": "app/zoosper-admin/tests/",
             "Zoosper\\Auth\\Tests\\": "app/zoosper-auth/tests/",
             "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
+            "Zoosper\\Errors\\Tests\\": "packages/zoosper-errors/tests/",
             "Zoosper\\Media\\Tests\\": "packages/zoosper-media/tests/",
             "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/",
             "Zoosper\\Site\\Tests\\": "app/zoosper-site/tests/",
@@ -71,6 +74,13 @@
         }
     },
     "repositories": [
+        {
+            "type": "path",
+            "url": "packages/zoosper-errors",
+            "options": {
+                "symlink": true
+            }
+        },
         {
             "type": "path",
             "url": "packages/zoosper-media",
