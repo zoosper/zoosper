@@ -67,28 +67,31 @@ use Zoosper\Core\Schema\SchemaSnapshotRepository;
  * schema defaults. Authentication secrets must be protected at the service
  * layer and written only as protected payloads or hashes.
  *
- * BUG FIX (confirmed 2026-07-30): tableExists() previously ran
- * `SHOW TABLES LIKE :table` as a bound, prepared statement on MySQL. This
- * had been silently working ONLY because PDO::ATTR_EMULATE_PREPARES was
- * previously left at its (insecure, client-side-emulated) default — see
- * ConnectionFactory's own EMULATE_PREPARES security fix earlier in this
- * project's history. Once real, server-side prepared statements were
- * correctly enabled, this broke: `SHOW TABLES` is a MySQL administrative/
- * utility statement that MySQL's real binary prepared-statement protocol
- * does not support parameter binding for at all (only a limited set of
- * statement types — mostly SELECT/INSERT/UPDATE/DELETE — support real
- * bound parameters). MySQL's server represents an unresolvable bound
- * placeholder internally as a literal `?`, which is exactly the confusing
- * "syntax error ... near '?'" this produced — the placeholder itself was
- * never a literal `?` character anywhere in this codebase's own source; it
- * was MySQL's own error message vocabulary for "I don't know what to do
- * with this parameter here."
+ * BUG FIX (confirmed 2026-07-30, external reviewer pass — real, correctly
+ * identified deploy-ordering hazard): collectMigrationFiles() and
+ * applyModuleSchemas() previously discovered the module list via
+ * moduleRegistry()->enabledModules(), which (since the module-manifest
+ * compile feature was added) prefers a compiled disk cache
+ * (var/cache/modules.php) when one exists, over a live filesystem scan.
+ * This meant: ship a release that adds a NEW module, and running
+ * `bin/zoosper migrate` (whether standalone, or as part of `bin/zoosper
+ * deploy`'s migrate step, regardless of step ordering relative to compile)
+ * would silently run migrations against the OLD, stale, previously-compiled
+ * module list — completely missing the new module's migrations. Remove a
+ * module and the inverse could happen. This is exactly the class of bug
+ * Magento's setup:upgrade-before-setup:di:compile ordering exists to
+ * prevent.
  *
- * Fixed by querying `information_schema.TABLES` instead — a real, ordinary
- * SELECT statement that fully supports real bound parameters, and is
- * already the exact pattern several of this project's own migration files
- * (e.g. acl_tree_metadata's addMysqlColumnIfMissing()) already use
- * correctly for the equivalent column-existence check.
+ * Fixed at the root, not just by reordering deploy's steps (which would
+ * only protect the `deploy` command specifically, not a standalone
+ * `bin/zoosper migrate` invocation): migrations must always reflect LIVE,
+ * current truth, never a cached snapshot from a previous release. Both
+ * collectMigrationFiles() and SchemaLoader::load() (see that class's own
+ * matching fix) now call ModuleRegistry::discoverModulesLive() explicitly
+ * instead of enabledModules() — bypassing any compiled cache entirely for
+ * the specific purpose of running migrations, regardless of call order,
+ * regardless of whether a compiled cache exists, and regardless of which
+ * script or command constructed this Migrator.
  */
 final class Migrator
 {
@@ -157,13 +160,18 @@ final class Migrator
      * filename (not full path) so chronological order is preserved
      * regardless of which folder a file lives in.
      *
+     * BUG FIX: now calls discoverModulesLive() instead of enabledModules()
+     * — see this class's own docblock above for the full explanation.
+     * Migrations must always see the current, live module list, never a
+     * potentially stale compiled cache from a previous release.
+     *
      * @return list<string>
      */
     private function collectMigrationFiles(): array
     {
         $files = glob($this->migrationsPath . '/*.php') ?: [];
 
-        foreach ($this->moduleRegistry()->enabledModules() as $module) {
+        foreach ($this->moduleRegistry()->discoverModulesLive() as $module) {
             $moduleMigrationsPath = rtrim($module->path, '/\\') . '/database/migrations';
             if (!is_dir($moduleMigrationsPath)) {
                 continue;
@@ -394,14 +402,6 @@ final class Migrator
 
     /**
      * Determine whether a table exists.
-     *
-     * BUG FIX: the MySQL branch previously ran `SHOW TABLES LIKE :table` as
-     * a bound, prepared statement — see this class's own docblock above
-     * for the full explanation of why this broke once real server-side
-     * prepared statements were correctly enabled (MySQL's binary prepared-
-     * statement protocol does not support parameter binding for SHOW
-     * statements at all). Fixed by querying information_schema.TABLES
-     * instead, a real SELECT that fully supports bound parameters.
      */
     private function tableExists(string $table): bool
     {

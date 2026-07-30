@@ -17,6 +17,22 @@ use Zoosper\Core\Module\ModuleRegistry;
  *
  * The pure `tablesFromConfig()` helper turns one config array into SchemaTable
  * objects and is unit-testable without a ModuleRegistry.
+ *
+ * BUG FIX (confirmed 2026-07-30, external reviewer pass, same incident as
+ * Migrator's own matching fix — see that class's docblock for the full
+ * explanation): load() previously called $this->modules->enabledModules(),
+ * which prefers a compiled disk cache (var/cache/modules.php) over a live
+ * scan when one exists. Since this class's whole job is to apply CURRENT,
+ * live schema state (and it already reads each module's db_schema.php file
+ * content directly, never through any cache), using a potentially-stale
+ * cached MODULE LIST here was inconsistent with that goal: a module added
+ * since the cache was last compiled would have its schema silently
+ * skipped entirely during a migrate run.
+ *
+ * Fixed by calling discoverModulesLive() instead — this is the correct,
+ * consistent behaviour for this class specifically: it always wants the
+ * live, current set of enabled modules, matching how it already always
+ * reads their db_schema.php content live.
  */
 final readonly class SchemaLoader
 {
@@ -28,7 +44,7 @@ final readonly class SchemaLoader
     {
         $registry = new SchemaRegistry();
 
-        foreach ($this->modules->enabledModules() as $module) {
+        foreach ($this->modules->discoverModulesLive() as $module) {
             $file = $module->configPath('db_schema.php');
             if (!is_file($file)) {
                 continue;
