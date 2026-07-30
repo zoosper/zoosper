@@ -10,6 +10,11 @@ use PDO;
  * Fixed-window database-backed rate limit store.
  *
  * The caller is responsible for passing an opaque, non-sensitive identity hash.
+ *
+ * SECURITY/CORRECTNESS FIX: recordAttempt() now uses an atomic per-driver
+ * upsert instead of a SELECT-then-branch INSERT/UPDATE path. This prevents a
+ * concurrent identical request from hitting the unique bucket constraint and
+ * surfacing as an uncaught PDOException.
  */
 final class DatabaseRateLimitStore implements RateLimitStoreInterface
 {
@@ -17,12 +22,6 @@ final class DatabaseRateLimitStore implements RateLimitStoreInterface
     {
     }
 
-    /**
-     * Creates the rate_limit_buckets table when it does not already exist.
-     *
-     * This helper is intentionally explicit so tests and small deployments can
-     * bootstrap the table without hiding schema ownership decisions.
-     */
     public function ensureSchema(): void
     {
         $this->pdo->exec(<<<'SQL'
@@ -59,66 +58,63 @@ SQL);
         $windowStartsAt = intdiv($now, $rule->windowSeconds) * $rule->windowSeconds;
         $windowEndsAt = $windowStartsAt + $rule->windowSeconds;
 
-        $this->pdo->beginTransaction();
-
-        try {
-            $select = $this->pdo->prepare(
-                'SELECT id, attempts FROM rate_limit_buckets '
-                . 'WHERE scope = :scope AND identity_hash = :identity_hash AND rule_key = :rule_key AND window_starts_at = :window_starts_at '
-                . 'LIMIT 1'
-            );
-            $select->execute([
-                ':scope' => $rule->scope,
-                ':identity_hash' => $identityHash,
-                ':rule_key' => $rule->key,
-                ':window_starts_at' => $windowStartsAt,
-            ]);
-
-            $row = $select->fetch(PDO::FETCH_ASSOC);
-
-            if (is_array($row)) {
-                $attempts = ((int) $row['attempts']) + 1;
-                $update = $this->pdo->prepare(
-                    'UPDATE rate_limit_buckets SET attempts = :attempts, updated_at = :updated_at WHERE id = :id'
-                );
-                $update->execute([
-                    ':attempts' => $attempts,
-                    ':updated_at' => $now,
-                    ':id' => (int) $row['id'],
-                ]);
-            } else {
-                $attempts = 1;
-                $insert = $this->pdo->prepare(
-                    'INSERT INTO rate_limit_buckets '
-                    . '(scope, identity_hash, rule_key, window_starts_at, window_ends_at, attempts, created_at, updated_at) '
-                    . 'VALUES (:scope, :identity_hash, :rule_key, :window_starts_at, :window_ends_at, :attempts, :created_at, :updated_at)'
-                );
-                $insert->execute([
-                    ':scope' => $rule->scope,
-                    ':identity_hash' => $identityHash,
-                    ':rule_key' => $rule->key,
-                    ':window_starts_at' => $windowStartsAt,
-                    ':window_ends_at' => $windowEndsAt,
-                    ':attempts' => $attempts,
-                    ':created_at' => $now,
-                    ':updated_at' => $now,
-                ]);
-            }
-
-            $this->pdo->commit();
-        } catch (\Throwable $exception) {
-            if ($this->pdo->inTransaction()) {
-                $this->pdo->rollBack();
-            }
-
-            throw $exception;
-        }
+        $this->upsertAttempt($rule, $identityHash, $windowStartsAt, $windowEndsAt, $now);
+        $attempts = $this->currentAttempts($rule, $identityHash, $windowStartsAt);
 
         if ($attempts <= $rule->maxAttempts) {
             return RateLimitDecision::allow($attempts, $rule->maxAttempts);
         }
 
         return RateLimitDecision::deny($attempts, $rule->maxAttempts, max(0, $windowEndsAt - $now));
+    }
+
+    private function upsertAttempt(RateLimitRule $rule, string $identityHash, int $windowStartsAt, int $windowEndsAt, int $now): void
+    {
+        $params = [
+            ':scope' => $rule->scope,
+            ':identity_hash' => $identityHash,
+            ':rule_key' => $rule->key,
+            ':window_starts_at' => $windowStartsAt,
+            ':window_ends_at' => $windowEndsAt,
+            ':created_at' => $now,
+            ':updated_at' => $now,
+        ];
+
+        if ($this->isSqlite()) {
+            $statement = $this->pdo->prepare(
+                'INSERT INTO rate_limit_buckets '
+                . '(scope, identity_hash, rule_key, window_starts_at, window_ends_at, attempts, created_at, updated_at) '
+                . 'VALUES (:scope, :identity_hash, :rule_key, :window_starts_at, :window_ends_at, 1, :created_at, :updated_at) '
+                . 'ON CONFLICT(scope, identity_hash, rule_key, window_starts_at) '
+                . 'DO UPDATE SET attempts = attempts + 1, updated_at = excluded.updated_at'
+            );
+        } else {
+            $statement = $this->pdo->prepare(
+                'INSERT INTO rate_limit_buckets '
+                . '(scope, identity_hash, rule_key, window_starts_at, window_ends_at, attempts, created_at, updated_at) '
+                . 'VALUES (:scope, :identity_hash, :rule_key, :window_starts_at, :window_ends_at, 1, :created_at, :updated_at) '
+                . 'ON DUPLICATE KEY UPDATE attempts = attempts + 1, updated_at = VALUES(updated_at)'
+            );
+        }
+
+        $statement->execute($params);
+    }
+
+    private function currentAttempts(RateLimitRule $rule, string $identityHash, int $windowStartsAt): int
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT attempts FROM rate_limit_buckets '
+            . 'WHERE scope = :scope AND identity_hash = :identity_hash AND rule_key = :rule_key AND window_starts_at = :window_starts_at '
+            . 'LIMIT 1'
+        );
+        $statement->execute([
+            ':scope' => $rule->scope,
+            ':identity_hash' => $identityHash,
+            ':rule_key' => $rule->key,
+            ':window_starts_at' => $windowStartsAt,
+        ]);
+
+        return (int) $statement->fetchColumn();
     }
 
     public function reset(RateLimitRule $rule, string $identityHash): void
@@ -143,5 +139,10 @@ SQL);
         $statement->execute([':now' => $now]);
 
         return $statement->rowCount();
+    }
+
+    private function isSqlite(): bool
+    {
+        return strtolower((string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)) === 'sqlite';
     }
 }
