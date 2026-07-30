@@ -6,6 +6,31 @@ namespace Zoosper\Core\Schema;
 
 use RuntimeException;
 
+/**
+ * CORRECTNESS FIX (confirmed 2026-07-30, external reviewer pass):
+ * createTableSql() previously appended `ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`
+ * with NO explicit COLLATE clause on MySQL/MariaDB, relying entirely on
+ * whatever the connected server's own default utf8mb4 collation happens to
+ * be. MariaDB's default collation for utf8mb4 has genuinely changed across
+ * major versions (e.g. older defaults vs. utf8mb4_uca1400_ai_ci-family
+ * defaults on newer releases). The exact same declarative schema applied
+ * against dev/staging/production servers running different MariaDB point
+ * releases could therefore silently produce tables with DIFFERENT
+ * collations for the same columns — which then causes subtly different
+ * string comparison, sort order, and (for unique indexes) even different
+ * uniqueness behaviour between environments running "the same" schema.
+ *
+ * Fixed by explicitly pinning `COLLATE=utf8mb4_unicode_ci` alongside the
+ * existing CHARSET clause, so every environment gets an identical,
+ * predictable collation regardless of the connected server's own default.
+ * utf8mb4_unicode_ci is chosen as a broadly-compatible, linguistically-aware
+ * collation supported across the MariaDB/MySQL versions this project
+ * already targets — not the newer, MariaDB-only uca1400 family, to avoid
+ * introducing a version floor as a side effect of this fix.
+ *
+ * SQLite's branch is completely unaffected — collation pinning in this
+ * sense is a MySQL/MariaDB-specific concept that does not apply to SQLite.
+ */
 final readonly class SchemaSqlBuilder
 {
     public function __construct(private string $driver)
@@ -18,7 +43,7 @@ final readonly class SchemaSqlBuilder
         foreach ($table->columns as $name => $definition) {
             $columns[] = $this->columnSql((string) $name, $definition, true);
         }
-        return sprintf('CREATE TABLE IF NOT EXISTS %s (%s)%s', $table->name, implode(', ', $columns), $this->driver === 'mysql' ? ' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' : '');
+        return sprintf('CREATE TABLE IF NOT EXISTS %s (%s)%s', $table->name, implode(', ', $columns), $this->driver === 'mysql' ? ' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci' : '');
     }
 
     /** @param array<string, mixed> $definition */
