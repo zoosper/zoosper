@@ -12,12 +12,34 @@ use Zoosper\Core\Site\SiteContext;
  * Phase 1.34a: the resolved site context is carried as an immutable property on
  * the request itself. Phase 1.35 adds immutable route parameters extracted by
  * the router from parameterised paths such as /admin/pages/{id}.
+ *
+ * CORRECTNESS FIX (confirmed 2026-07-30, flagged by an external reviewer
+ * pass): form() previously read the live $_POST superglobal directly on
+ * every call, unlike every other accessor on this class (host, path,
+ * headers, query, siteContext, routeParams), which all read from an
+ * immutable, constructor-injected property. This broke the entire point of
+ * this being an immutable value object:
+ * - A manually-constructed Request (tests, sub-requests, future queue
+ *   workers) could never actually control its own form data — form()
+ *   silently ignored whatever was passed in and read the global instead.
+ * - Tests had to mutate global $_POST state around each call instead of
+ *   simply constructing the object with the data they intended it to have
+ *   (see the fixed CsrfMiddlewareTest for the before/after).
+ *
+ * form() now reads from a genuinely immutable $form property, captured
+ * once in fromGlobals() from the live $_POST at the moment the real
+ * top-level request is bootstrapped — exactly the same pattern already
+ * used for every other property on this class. No backward-compatibility
+ * shim was added (per explicit project decision: 100% AI-authored,
+ * pre-launch, no external users yet — this is the correct long-term
+ * behaviour, not a stopgap).
  */
 final readonly class Request
 {
     /**
      * @param array<string, string> $headers
      * @param array<string, string> $query
+     * @param array<string, mixed> $form
      * @param array<string, string> $routeParams
      */
     public function __construct(
@@ -30,6 +52,7 @@ final readonly class Request
         private ?string $clientIp = null,
         private ?SiteContext $siteContext = null,
         private array $routeParams = [],
+        private array $form = [],
     ) {
     }
 
@@ -49,6 +72,11 @@ final readonly class Request
             query: array_map(static fn (mixed $value): string => (string) $value, $query),
             host: strtolower((string) ($_SERVER['HTTP_HOST'] ?? 'localhost')),
             clientIp: (string) ($_SERVER['REMOTE_ADDR'] ?? ''),
+            // Captured ONCE here, at the true request boundary — the only
+            // place this class should ever read a superglobal. Every other
+            // construction path (manual, tests, sub-requests) provides
+            // $form explicitly through the constructor instead.
+            form: $_POST,
         );
     }
 
@@ -64,6 +92,7 @@ final readonly class Request
             clientIp: $this->clientIp,
             siteContext: $siteContext,
             routeParams: $this->routeParams,
+            form: $this->form,
         );
     }
 
@@ -87,6 +116,33 @@ final readonly class Request
             clientIp: $this->clientIp,
             siteContext: $this->siteContext,
             routeParams: $normalised,
+            form: $this->form,
+        );
+    }
+
+    /**
+     * Return a new Request carrying the given form data, leaving every
+     * other property unchanged. Additive — mirrors withSiteContext()/
+     * withRouteParams() so callers that build a base Request and then need
+     * to attach form data (e.g. a test, or a sub-request built from an
+     * existing one) have an explicit, immutable way to do so instead of
+     * touching $_POST.
+     *
+     * @param array<string, mixed> $form
+     */
+    public function withForm(array $form): self
+    {
+        return new self(
+            method: $this->method,
+            path: $this->path,
+            headers: $this->headers,
+            body: $this->body,
+            query: $this->query,
+            host: $this->host,
+            clientIp: $this->clientIp,
+            siteContext: $this->siteContext,
+            routeParams: $this->routeParams,
+            form: $form,
         );
     }
 
@@ -150,9 +206,17 @@ final readonly class Request
         return is_array($decoded) ? $decoded : [];
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * Return this request's form data.
+     *
+     * FIXED: now reads the immutable $form property captured at
+     * construction time (see fromGlobals()/withForm()), instead of reading
+     * the live $_POST superglobal directly on every call.
+     *
+     * @return array<string, mixed>
+     */
     public function form(): array
     {
-        return $_POST;
+        return $this->form;
     }
 }
