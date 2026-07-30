@@ -14,6 +14,7 @@ use Zoosper\Core\Database\Migrator;
 use Zoosper\Core\Exception\ConsoleExceptionFormatter;
 use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Core\Log\LogManager;
+use Zoosper\Core\Module\ModuleManifestCompiler;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Scaffold\ConsoleCommandScaffolder;
 use Zoosper\Core\Scaffold\ModuleScaffolder;
@@ -31,6 +32,57 @@ try {
     if ($command === 'migrate') {
         (new Migrator($pdo, $basePath . '/database/migrations', new ModuleRegistry($basePath)))->migrate();
         echo "Zoosper migrations completed.\n";
+        exit(0);
+    }
+
+    if ($command === 'compile') {
+        $compiledModules = (new ModuleManifestCompiler($basePath))->compile();
+        echo 'Compiled module manifest: ' . count($compiledModules) . " module(s).\n";
+        foreach ($compiledModules as $module) {
+            echo "  - {$module->name} ({$module->source})\n";
+        }
+        echo "\nCache written to: var/cache/modules.php\n";
+        echo "Run `bin/zoosper cache:clear` at any time to force live discovery again.\n";
+        exit(0);
+    }
+
+    if ($command === 'cache:clear') {
+        $compiler = new ModuleManifestCompiler($basePath);
+        $wasCompiled = $compiler->isCompiled();
+        $compiler->clear();
+        echo $wasCompiled
+            ? "Compiled module manifest cache cleared.\n"
+            : "No compiled module manifest cache was present (already using live discovery).\n";
+        exit(0);
+    }
+
+    if ($command === 'deploy') {
+        echo "== Zoosper deploy ==\n\n";
+
+        echo "[1/3] Regenerating Composer autoloader (composer dump-autoload)...\n";
+        echo "      NOTE: this shells out to whatever 'composer' resolves to on your\n";
+        echo "      PATH. If you use a version-pinned alias (e.g. a php8.5-specific\n";
+        echo "      composer wrapper) and are not certain PATH resolves to it the same\n";
+        echo "      way, run that alias manually first and re-run deploy afterward —\n";
+        echo "      an autoloader regenerated with the wrong PHP/Composer version is\n";
+        echo "      worse than not regenerating it at all.\n";
+        passthru('composer dump-autoload', $autoloadExitCode);
+        if ($autoloadExitCode !== 0) {
+            fwrite(STDERR, "\nAutoload generation failed (exit code {$autoloadExitCode}). Aborting deploy before any schema changes.\n");
+            exit(1);
+        }
+
+        echo "\n[2/3] Applying database migrations (bin/zoosper migrate)...\n";
+        (new Migrator($pdo, $basePath . '/database/migrations', new ModuleRegistry($basePath)))->migrate();
+        echo "Migrations applied.\n";
+
+        echo "\n[3/3] Compiling module manifest (bin/zoosper compile)...\n";
+        $compiledModules = (new ModuleManifestCompiler($basePath))->compile();
+        echo 'Compiled ' . count($compiledModules) . " module(s) to var/cache/modules.php\n";
+
+        echo "\n== Deploy complete ==\n";
+        echo "Reminder: this does NOT run your test suite. Run `composer test` (or your\n";
+        echo "usual alias) to verify before considering this build done.\n";
         exit(0);
     }
 
@@ -99,6 +151,9 @@ function builtInCommands(): array
 {
     return [
         'migrate',
+        'compile',
+        'cache:clear',
+        'deploy',
         'make:module Vendor_Module',
         'make:package-module Vendor/Module',
         'make:command Vendor_Module CommandClass --name=vendor:task:run --description="Describe the command"',

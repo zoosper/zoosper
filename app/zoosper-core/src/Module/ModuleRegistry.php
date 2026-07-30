@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Module;
 
+use Throwable;
 use Zoosper\Core\Composer\ModulePackageIdentity;
 
 /**
@@ -18,18 +19,40 @@ use Zoosper\Core\Composer\ModulePackageIdentity;
  * candidate module.php and a `json_decode` per vendor composer.json. Because a
  * SINGLE ModuleRegistry instance is constructed once in ApplicationFactory and
  * shared across every module-driven loader (services, controllers, routes,
- * events, entity-save listeners, admin menu, translations, admin assets), one
+ * events, entity-save listeners, admin menu, admin assets, translations), one
  * memoized call here removes the redundant re-scan from ALL of them for the
  * lifetime of the request/process. Discovery is pure (no side effects), so
  * caching is safe.
+ *
+ * Phase — compiled module manifest (foundation for the broader "no compiled
+ * module discovery" fix both external reviewer passes flagged): the previous
+ * memoization above only helps WITHIN a single request/process — a fresh
+ * PHP-FPM request still re-globs the filesystem from scratch every time.
+ * enabledModules() now checks for an optional, explicitly-generated compiled
+ * cache file (var/cache/modules.php, produced by `bin/zoosper compile` via
+ * ModuleManifestCompiler) BEFORE falling back to the live filesystem scan.
+ *
+ * This is fully backward compatible: if `bin/zoosper compile` has never been
+ * run (the cache file doesn't exist), behaviour is IDENTICAL to before — a
+ * live scan every time a fresh instance is constructed. Compiling is opt-in.
+ * If the cache file exists but is corrupt/unreadable, discovery fails safe
+ * back to a live scan rather than fataling the whole application.
+ *
+ * discoverModulesLive() is now a public method (previously the scan logic
+ * lived inline in enabledModules()) specifically so ModuleManifestCompiler
+ * can request a guaranteed-fresh scan when generating the cache — it must
+ * never accidentally read its own previous cache output while compiling.
  */
 final class ModuleRegistry
 {
     /** @var list<Module>|null Cached result of the first enabledModules() call. */
     private ?array $cachedModules = null;
 
-    public function __construct(private readonly string $basePath)
+    private readonly string $compiledCachePath;
+
+    public function __construct(private readonly string $basePath, ?string $compiledCachePath = null)
     {
+        $this->compiledCachePath = $compiledCachePath ?? rtrim($basePath, '/\\') . '/var/cache/modules.php';
     }
 
     /** @return list<Module> */
@@ -39,6 +62,43 @@ final class ModuleRegistry
             return $this->cachedModules;
         }
 
+        $fromCompiledCache = $this->loadFromCompiledCache();
+        if ($fromCompiledCache !== null) {
+            $this->cachedModules = $fromCompiledCache;
+
+            return $this->cachedModules;
+        }
+
+        $this->cachedModules = $this->discoverModulesLive();
+
+        return $this->cachedModules;
+    }
+
+    /**
+     * Force the next enabledModules() call to re-scan the filesystem. Not used
+     * in normal request handling (module state cannot change mid-request); it
+     * exists for long-lived worker processes (Swoole/FrankenPHP) or tests that
+     * need to observe a changed module set within the same registry instance.
+     *
+     * Note: this only clears the per-instance memoization above — it does NOT
+     * delete the compiled disk cache. Use ModuleManifestCompiler::clear() (or
+     * `bin/zoosper cache:clear`) for that.
+     */
+    public function clearCache(): void
+    {
+        $this->cachedModules = null;
+    }
+
+    /**
+     * Always performs a fresh filesystem scan, bypassing both the per-instance
+     * memoization above and any compiled disk cache. Public specifically so
+     * ModuleManifestCompiler can guarantee it is compiling live, current
+     * truth — never its own stale prior output.
+     *
+     * @return list<Module>
+     */
+    public function discoverModulesLive(): array
+    {
         $modules = [];
         $seenRealPaths = [];
         $seenNames = [];
@@ -65,20 +125,51 @@ final class ModuleRegistry
             return [$a->sortOrder, $a->name] <=> [$b->sortOrder, $b->name];
         });
 
-        $this->cachedModules = $modules;
-
-        return $this->cachedModules;
+        return $modules;
     }
 
     /**
-     * Force the next enabledModules() call to re-scan the filesystem. Not used
-     * in normal request handling (module state cannot change mid-request); it
-     * exists for long-lived worker processes (Swoole/FrankenPHP) or tests that
-     * need to observe a changed module set within the same registry instance.
+     * Attempt to load the module list from the compiled cache file. Returns
+     * null (never throws) if the file doesn't exist, is unreadable, contains
+     * unexpected data, or fails to parse — any of these fail safely back to
+     * a live filesystem scan in enabledModules(), so a corrupt cache can
+     * never fatal the application.
+     *
+     * @return list<Module>|null
      */
-    public function clearCache(): void
+    private function loadFromCompiledCache(): ?array
     {
-        $this->cachedModules = null;
+        if (!is_file($this->compiledCachePath)) {
+            return null;
+        }
+
+        try {
+            $data = require $this->compiledCachePath;
+        } catch (Throwable) {
+            return null;
+        }
+
+        if (!is_array($data)) {
+            return null;
+        }
+
+        $modules = [];
+        foreach ($data as $entry) {
+            if (!is_array($entry)) {
+                return null;
+            }
+
+            $modules[] = new Module(
+                name: (string) ($entry['name'] ?? ''),
+                path: (string) ($entry['path'] ?? ''),
+                enabled: (bool) ($entry['enabled'] ?? true),
+                version: (string) ($entry['version'] ?? '0.1.0'),
+                sortOrder: (int) ($entry['sortOrder'] ?? 100),
+                source: (string) ($entry['source'] ?? 'app'),
+            );
+        }
+
+        return $modules;
     }
 
     /**
