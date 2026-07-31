@@ -9,7 +9,7 @@ final readonly class SchemaValidator
     public function validate(SchemaRegistry $registry): SchemaValidationResult
     {
         $errors = [];
-        $supportedTypes = ['integer', 'int', 'bigint', 'string', 'text', 'datetime', 'boolean', 'bool', 'json'];
+        $supportedTypes = ['integer', 'int', 'bigint', 'string', 'text', 'longtext', 'datetime', 'boolean', 'bool', 'json'];
 
         foreach ($registry->tables() as $table) {
             if ($table->name === '') {
@@ -54,3 +54,4 @@ final readonly class SchemaValidator
         return new SchemaValidationResult($errors);
     }
 }
+

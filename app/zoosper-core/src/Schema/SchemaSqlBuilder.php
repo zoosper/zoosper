@@ -100,6 +100,7 @@ final readonly class SchemaSqlBuilder
             'integer', 'int' => $this->driver === 'mysql' ? 'INT' : 'INTEGER',
             'bigint' => $this->driver === 'mysql' ? 'BIGINT' : 'INTEGER',
             'text' => 'TEXT',
+            'longtext' => $this->driver === 'mysql' ? 'LONGTEXT' : 'TEXT',
             'datetime' => $this->driver === 'mysql' ? 'DATETIME' : 'TEXT',
             'boolean', 'bool' => $this->driver === 'mysql' ? 'TINYINT(1)' : 'INTEGER',
             'json' => $this->driver === 'mysql' ? 'LONGTEXT' : 'TEXT',
@@ -125,3 +126,4 @@ final readonly class SchemaSqlBuilder
         return "'" . str_replace("'", "''", $string) . "'";
     }
 }
+
