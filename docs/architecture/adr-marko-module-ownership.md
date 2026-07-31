@@ -1,0 +1,59 @@
+# ADR: Marko Module Ownership and Runtime Locations
+
+## Status
+
+Accepted as the target architecture. Implementation is staged.
+
+## Context
+
+The current module registry recognises multiple source locations and
+deduplicates repeated identities. Repository source layout and runtime module
+discovery have become mixed concerns.
+
+Marko's peer-module model uses Composer package identity and explicit priority
+layers. Zoosper needs predictable overrides and loud conflicts without adding
+another module system.
+
+## Decision
+
+Every runtime module is a Composer package and a Marko module.
+
+Runtime priority is:
+
+1. `vendor/` for framework and Composer-installed packages, lowest priority.
+2. `modules/` for manually installed third-party modules, middle priority.
+3. `app/` for application customisations, highest priority.
+
+The repository may keep first-party package source under `packages/` while
+developing the monorepo. Composer path repositories make those packages
+available to runtime discovery. `packages/` is not an additional runtime scan
+layer.
+
+Duplicate module identity at the same priority is an error. Higher-priority
+overrides must be explicit and diagnosable. Silent deduplication is forbidden.
+
+Zoosper first-party modules remain peers. `zoosper-core` must not receive
+special extension rights merely because it boots early.
+
+## Consequences
+
+### Positive
+
+- One package identity and one runtime discovery model.
+- Project customisation can override vendor behaviour without patches.
+- Ambiguity fails loudly.
+- First-party packages can move to separate repositories without changing the
+  runtime model.
+
+### Negative
+
+- Existing source locations and package metadata require migration.
+- Module compilation and migration discovery must be audited before changing
+  runtime discovery.
+
+## Migration constraints
+
+- Migrations must continue to use live package discovery and must never depend
+  on stale compiled runtime metadata.
+- The canonical runtime model must be proven before deleting `ModuleRegistry`.
+- Compatibility scanning of old locations must not become permanent.

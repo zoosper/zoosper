@@ -23,6 +23,21 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ---
 
+## Architecture direction: Marko framework boundary (2026-07-31)
+
+- **[DECIDED] Marko is the framework; Zoosper is the CMS product.** Generic
+  framework mechanics must use Marko when an adequate package exists. Zoosper
+  owns CMS domains, policy, workflows and presentation.
+- **[DONE] Phase 1A architecture audit.** Added the Marko adoption matrix,
+  framework/module/configuration/CLI ADRs, and first-party package ownership
+  inventory under `docs/architecture/`.
+- **Next implementation:** configuration consolidation. Make the Marko config
+  contract canonical, establish one HTTP/CLI assembly path, preserve tested
+  precedence, and remove root-only CLI loading after behavioural parity is
+  proven. CLI runtime adoption follows configuration consolidation.
+
+---
+
 ## 0. TOP PRIORITY — next phase
 
 **Both items from the 2026-07-29 top-priority list are now confirmed and
@@ -699,3 +714,4 @@ replica.
 > Add a new dated bullet each day at wrap-up. Keep bullets to one or two lines;
 > the checklists above are the durable state. This file is the project's
 > actual continuity mechanism — keep it honest and current.
+
