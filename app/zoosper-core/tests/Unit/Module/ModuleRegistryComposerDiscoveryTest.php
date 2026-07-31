@@ -17,7 +17,7 @@ function moduleDiscoveryFixture(): string
     file_put_contents($root . '/vendor/zoosper/media/composer.json', json_encode([
         'name' => 'zoosper/media',
         'type' => 'zoosper-module',
-        'extra' => ['zoosper' => ['module' => 'module.php']],
+        'extra' => ['marko' => ['module' => true]],
     ], JSON_PRETTY_PRINT));
 
     return $root;
@@ -45,3 +45,4 @@ test('composer installed module exposes config path and source metadata', functi
     expect($media->source)->toBe('vendor');
     expect($media->configPath('services.php'))->toEndWith('/vendor/zoosper/media/config/services.php');
 });
+

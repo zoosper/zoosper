@@ -55,7 +55,7 @@ function createVendorModuleFixture(string $root, string $packagePath, string $pa
         'name' => $packageName,
         'type' => 'zoosper-module',
         'autoload' => ['psr-4' => [str_replace('_', '\\', $moduleName) . '\\' => 'src/']],
-        'extra' => ['zoosper' => ['module' => 'module.php', 'name' => $moduleName]],
+        'extra' => ['marko' => ['module' => true]],
     ], JSON_PRETTY_PRINT));
 
     $installPath = '../' . str_replace('/', '/', $packageName);
@@ -63,9 +63,10 @@ function createVendorModuleFixture(string $root, string $packagePath, string $pa
         'name' => $packageName,
         'type' => 'zoosper-module',
         'install_path' => $installPath,
-        'extra' => ['zoosper' => ['module' => 'module.php', 'name' => $moduleName]],
+        'extra' => ['marko' => ['module' => true]],
     ]];
 
     file_put_contents($root . '/vendor/composer/installed.json', json_encode(['packages' => $installed], JSON_PRETTY_PRINT));
-    file_put_contents($root . '/vendor/composer/installed.php', "<?php\nreturn ['versions' => ['{$packageName}' => ['type' => 'zoosper-module', 'install_path' => __DIR__ . '/{$installPath}', 'extra' => ['zoosper' => ['module' => 'module.php', 'name' => '{$moduleName}']]]]];\n");
+    file_put_contents($root . '/vendor/composer/installed.php', "<?php\nreturn ['versions' => ['{$packageName}' => ['type' => 'zoosper-module', 'install_path' => __DIR__ . '/{$installPath}', 'extra' => ['marko' => ['module' => true]]]]];\n");
 }
+

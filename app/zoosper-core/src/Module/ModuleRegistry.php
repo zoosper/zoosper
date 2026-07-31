@@ -250,18 +250,14 @@ final class ModuleRegistry
 
             $extra = is_array($json['extra'] ?? null) ? $json['extra'] : [];
             $marko = is_array($extra['marko'] ?? null) ? $extra['marko'] : [];
-            $zoosper = is_array($extra['zoosper'] ?? null) ? $extra['zoosper'] : [];
 
-            $isMarkoZoosperModule = ($json['type'] ?? null) === 'zoosper-module'
-                && ($marko['module'] ?? false) === true;
-            $legacyModulePath = (string) ($zoosper['module'] ?? '');
-
-            if (!$isMarkoZoosperModule && $legacyModulePath === '') {
+            if (($json['type'] ?? null) !== 'zoosper-module'
+                || ($marko['module'] ?? false) !== true
+            ) {
                 continue;
             }
 
-            $modulePath = $legacyModulePath !== '' ? $legacyModulePath : 'module.php';
-            $moduleFile = dirname($composerFile) . '/' . ltrim($modulePath, '/\\');
+            $moduleFile = dirname($composerFile) . '/module.php';
             if (is_file($moduleFile)) {
                 $result[] = ['moduleFile' => $moduleFile, 'source' => 'vendor'];
             }
