@@ -39,8 +39,13 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
   registered before connection attempts, and PDO is created once on demand.
   Help, list, compile, cache clearing and scaffolding remain available during a
   database outage.
-- **Next implementation:** evaluate and adopt the real `marko/cli` package so
-  command discovery and dispatch no longer remain a Zoosper framework concern.
+- **[DONE] Phase 1D Marko module identity readiness.** All 13 first-party
+  Composer packages now declare `extra.marko.module=true`, protected by an
+  architecture test. Existing Zoosper metadata remains only until runtime
+  discovery is migrated.
+- **Next implementation:** migrate runtime module discovery, deterministic
+  priority and loud same-layer conflicts toward Marko's peer-module model.
+  `marko/cli` adoption follows the canonical module graph.
 
 ---
 

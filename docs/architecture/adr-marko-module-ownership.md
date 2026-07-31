@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted as the target architecture. Implementation is staged.
+Accepted. First-party package identity implemented in Phase 1D; runtime discovery migration remains staged.
 
 ## Context
 
@@ -57,3 +57,23 @@ special extension rights merely because it boots early.
   on stale compiled runtime metadata.
 - The canonical runtime model must be proven before deleting `ModuleRegistry`.
 - Compatibility scanning of old locations must not become permanent.
+
+## Phase 1D implementation
+
+All first-party Composer packages now declare:
+
+```json
+"extra": {
+    "marko": {
+        "module": true
+    }
+}
+```
+
+Existing `extra.zoosper` metadata remains temporarily while the current
+`ModuleRegistry` is still the runtime discovery path. This is a bounded
+transition, not a permanent dual module system.
+
+An architecture test scans first-party `app/` and `packages/` Composer
+manifests and fails if Marko module identity is missing. The next module phase
+will compare and migrate runtime discovery, priority and conflict behaviour.

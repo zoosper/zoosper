@@ -1,19 +1,35 @@
 {
-  "name": "zoosper/core",
-  "description": "Zoosper_Core module for Zoosper CMS.",
-  "type": "zoosper-module",
-  "license": "MIT",
-  "require": {
-    "php": "^8.5",
-    "ext-pdo": "*",
-    "marko/cache": "^0.8",
-    "marko/cache-file": "^0.8",
-    "marko/cache-redis": "^0.8",
-    "marko/config": "^0.8",
-    "marko/encryption": "^0.8",
-    "zoosper/errors": "*@dev"
-  },
-  "autoload": {"psr-4": {"Zoosper\\Core\\": "src/"}},
-  "autoload-dev": {"psr-4": {"Zoosper\\Core\\Tests\\": "tests/"}},
-  "extra": {"zoosper": {"module": "module.php", "name": "Zoosper_Core"}}
+    "name": "zoosper/core",
+    "description": "Zoosper_Core module for Zoosper CMS.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "ext-pdo": "*",
+        "marko/cache": "^0.8",
+        "marko/cache-file": "^0.8",
+        "marko/cache-redis": "^0.8",
+        "marko/config": "^0.8",
+        "marko/encryption": "^0.8",
+        "zoosper/errors": "*@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\Core\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zoosper\\Core\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "zoosper": {
+            "module": "module.php",
+            "name": "Zoosper_Core"
+        },
+        "marko": {
+            "module": true
+        }
+    }
 }

@@ -18,5 +18,10 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "extra": {
+        "marko": {
+            "module": true
+        }
+    }
 }

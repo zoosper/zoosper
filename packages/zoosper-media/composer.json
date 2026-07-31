@@ -14,9 +14,36 @@
         "pestphp/pest-plugin": "^3.0",
         "phpunit/phpunit": "^11.0"
     },
-    "autoload": { "psr-4": { "Zoosper\\Media\\": "src/" } },
-    "autoload-dev": { "psr-4": { "Zoosper\\Media\\Tests\\": "tests/" } },
-    "scripts": { "test": "pest", "test:unit": "pest --testsuite=Unit" },
-    "extra": { "zoosper": { "module": "module.php", "name": "Zoosper_Media" } },
-    "config": { "sort-packages": true, "allow-plugins": { "pestphp/pest-plugin": true }, "platform": { "php": "8.5" } }
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\Media\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zoosper\\Media\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "test:unit": "pest --testsuite=Unit"
+    },
+    "extra": {
+        "zoosper": {
+            "module": "module.php",
+            "name": "Zoosper_Media"
+        },
+        "marko": {
+            "module": true
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "platform": {
+            "php": "8.5"
+        }
+    }
 }
