@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Grid;
+namespace Zoosper\AdminGrid;
 
 use JsonException;
 use PDO;

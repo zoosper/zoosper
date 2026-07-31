@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f0ce0327e27243c380675983f4c71de",
+    "content-hash": "f4feb3da1078c7a3f0263592c21d271b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -735,10 +735,11 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-admin",
-                "reference": "eaf46008d4394bcd4c9629b00e6f916ea535ab0a"
+                "reference": "9044aa5f17d9cfbceddbddbf36c928ff0fb559c5"
             },
             "require": {
                 "php": "^8.5",
+                "zoosper/admin-grid": "dev-dev",
                 "zoosper/auth": "dev-dev",
                 "zoosper/core": "dev-dev",
                 "zoosper/errors": "dev-dev",
@@ -760,6 +761,58 @@
                 "MIT"
             ],
             "description": "Zoosper_Admin module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/admin-grid",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "packages/zoosper-admin-grid",
+                "reference": "647445e3e9e76328846afa9f8b57f9d8af72e597"
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": "^8.5",
+                "zoosper/core": "dev-dev",
+                "zoosper/grid": "dev-dev"
+            },
+            "require-dev": {
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin": "^3.0",
+                "phpunit/phpunit": "^11.0"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\AdminGrid\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\AdminGrid\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ],
+                "test:unit": [
+                    "pest --testsuite=Unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Per-admin grid preferences, saved views and persistence integration for Zoosper.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -8286,6 +8339,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "zoosper/admin": 20,
+        "zoosper/admin-grid": 20,
         "zoosper/api": 20,
         "zoosper/auth": 20,
         "zoosper/core": 20,

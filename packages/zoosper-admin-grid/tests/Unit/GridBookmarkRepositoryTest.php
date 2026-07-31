@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Tests\Unit\Grid;
+namespace Zoosper\AdminGrid\Tests\Unit;
 
 use PDO;
-use Zoosper\Admin\Grid\GridBookmarkRepository;
+use Zoosper\AdminGrid\GridBookmarkRepository;
 
 function bookmarkDatabase(): PDO
 {
     $pdo = new PDO('sqlite::memory:');
-    $migration = require dirname(__DIR__, 5)
-        . '/app/zoosper-admin/database/migrations/202607310002_create_admin_grid_bookmarks.php';
+    $migration = require dirname(__DIR__, 2)
+        . '/database/migrations/202607310002_create_admin_grid_bookmarks.php';
     $migration($pdo, 'sqlite');
 
     return $pdo;

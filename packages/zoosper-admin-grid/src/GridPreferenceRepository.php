@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Zoosper\Admin\Grid;
+namespace Zoosper\AdminGrid;
 use PDO;
 final readonly class GridPreferenceRepository
 {
@@ -33,3 +33,4 @@ final readonly class GridPreferenceRepository
         $st->execute(['uid'=>$adminUserId,'grid'=>$gridKey]);
     }
 }
+
