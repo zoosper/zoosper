@@ -159,3 +159,4 @@ if (!function_exists('env')) {
         return $value !== false ? $value : $default;
     }
 }
+

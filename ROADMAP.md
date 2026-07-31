@@ -694,3 +694,5 @@ replica.
 > the checklists above are the durable state. This file is the project's
 > actual continuity mechanism — keep it honest and current.
 
+
+- [x] Environment bootstrap ownership consolidated in Phase 2D; duplicate class loaders retired.
