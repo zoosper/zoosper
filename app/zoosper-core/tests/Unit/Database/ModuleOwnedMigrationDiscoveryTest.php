@@ -51,8 +51,8 @@ it('discovers and applies migrations from each module\'s own database/migrations
         'site_domains',         // app/zoosper-site/database/migrations
         'pages',                // app/zoosper-page/database/migrations
         'page_revisions',       // app/zoosper-page/database/migrations
-        'admin_login_history',  // app/zoosper-admin/database/migrations
-        'admin_activity_log',   // app/zoosper-admin/database/migrations
+        'admin_login_history',  // app/zoosper-admin/config/db_schema.php
+        'admin_activity_log',   // app/zoosper-admin/config/db_schema.php
     ];
 
     foreach ($expectedTables as $table) {
@@ -97,3 +97,4 @@ it('no longer finds relocated migration files in the root database/migrations fo
     // The dead, never-executed .sql file should be gone entirely.
     expect($rootMigrations . '/20260710002400_create_url_rewrites_table.sql')->not->toBeFile();
 });
+
