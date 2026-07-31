@@ -11,7 +11,7 @@
         "marko/cache-redis": "^0.8",
         "marko/config": "^0.8",
         "marko/encryption": "^0.8",
-        "zoosper/errors": "*@dev"
+        "zoosper/errors": "dev-dev"
     },
     "autoload": {
         "psr-4": {

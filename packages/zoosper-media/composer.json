@@ -6,8 +6,8 @@
     "require": {
         "php": "^8.5",
         "ext-pdo": "*",
-        "zoosper/core": "*@dev",
-        "zoosper/auth": "*@dev"
+        "zoosper/core": "dev-dev",
+        "zoosper/auth": "dev-dev"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",

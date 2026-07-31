@@ -5,8 +5,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "zoosper/core": "*@dev",
-        "zoosper/auth": "*@dev"
+        "zoosper/core": "dev-dev",
+        "zoosper/auth": "dev-dev"
     },
     "autoload": {
         "psr-4": {
