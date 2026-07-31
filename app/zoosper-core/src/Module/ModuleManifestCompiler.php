@@ -50,7 +50,7 @@ final readonly class ModuleManifestCompiler
         $modules = $registry->discoverModulesLive();
 
         $this->ensureCacheDirectoryExists();
-        file_put_contents($this->cachePath, $this->renderCacheFile($modules));
+        $this->writeAtomically($this->renderCacheFile($modules));
 
         return $modules;
     }
@@ -69,7 +69,12 @@ final readonly class ModuleManifestCompiler
             return true;
         }
 
-        return unlink($this->cachePath);
+        $cleared = unlink($this->cachePath);
+        if ($cleared && function_exists('opcache_invalidate')) {
+            opcache_invalidate($this->cachePath, true);
+        }
+
+        return $cleared;
     }
 
     public function cachePath(): string
@@ -92,6 +97,40 @@ final readonly class ModuleManifestCompiler
 
         if (!mkdir($directory, 0775, true) && !is_dir($directory)) {
             throw new RuntimeException('Unable to create module cache directory: ' . $directory);
+        }
+    }
+
+    private function writeAtomically(string $contents): void
+    {
+        $directory = dirname($this->cachePath);
+        $temporaryPath = tempnam($directory, '.modules-');
+        if ($temporaryPath === false) {
+            throw new RuntimeException(
+                'Unable to create temporary module cache file in: ' . $directory,
+            );
+        }
+
+        try {
+            $bytes = file_put_contents($temporaryPath, $contents, LOCK_EX);
+            if ($bytes === false || $bytes !== strlen($contents)) {
+                throw new RuntimeException(
+                    'Unable to write complete module cache file: ' . $temporaryPath,
+                );
+            }
+
+            if (!rename($temporaryPath, $this->cachePath)) {
+                throw new RuntimeException(
+                    'Unable to atomically replace module cache file: ' . $this->cachePath,
+                );
+            }
+
+            if (function_exists('opcache_invalidate')) {
+                opcache_invalidate($this->cachePath, true);
+            }
+        } finally {
+            if (is_file($temporaryPath)) {
+                unlink($temporaryPath);
+            }
         }
     }
 
@@ -142,3 +181,4 @@ PHP;
         return var_export($export, true);
     }
 }
+
