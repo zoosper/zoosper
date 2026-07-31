@@ -12,9 +12,9 @@
 > wrap-up — the more accurate this file is, the less any single conversation
 > thread actually matters.
 
-**Last updated:** 2026-07-30 (Sydney)
+**Last updated:** 2026-07-31 (Sydney)
 **Framework baseline:** PHP 8.5 · Pest/PHPUnit · Psalm · Latte · **Marko packages
-(real, adopted usage — see §14) via `zoosper/errors`**
+(real, adopted usage — see §14) via zoosper/errors and zoosper/core**
 
 Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 `[R]` reported by external reviewer (Fable pass #1, 2026-07-29), verification status noted inline
@@ -49,7 +49,7 @@ fixed:**
   `ON CONFLICT DO UPDATE`), the same pattern already used correctly
   elsewhere (`EntityExtensionValueRepository::upsert()`).
 
-**New top priority, from a live production incident (2026-07-30):**
+**Fixed, from a live production incident (2026-07-30):**
 
 - **[FIXED] 2FA encryption key rotation caused a real admin lockout.**
   Confirmed via live `exception.log` + nginx access log: an admin who
@@ -64,8 +64,7 @@ fixed:**
   separately confirmed to have zero other consumers in the codebase and is
   now safe to rotate independently at any time.
 
-**New top priority, from a second Fable review pass (2026-07-30), one item
-already fixed today:**
+**Fixed, from a second Fable review pass (2026-07-30):**
 
 - **[FIXED] `bin/zoosper deploy` migrated against a stale cached module
   list.** Confirmed real: once module-list compilation was added, a release
@@ -78,16 +77,26 @@ already fixed today:**
   truth. Verified with a test that directly reproduces the exact scenario
   (compile a cache, add a module afterward, confirm its migration still
   runs).
+
+**Still open, from the second Fable review pass:**
+
 - **[R2] Every CLI command requires a live database**, even `help`,
   `compile`, `cache:clear` (a *recovery* tool, unavailable exactly when
   most needed) — confirmed present in `bin/zoosper`'s structure since
   before this session's involvement; not yet fixed. Fix: connect to the DB
-  lazily, only for commands that actually need it.
+  lazily, only for commands that actually need it. **Relevant Marko
+  package to check first, per this project's own "check Marko's catalog
+  before building" rule**: `marko/cli`.
 - **[R2] CLI and HTTP read different configuration** — web boot aggregates
   config via `ModuleConfigAggregator` (module configs + root); `bin/zoosper`
   uses `ConfigRepository::fromPath()` (root `config/` only). Any
   module-provided config default is invisible to console commands and
-  migrations. Pre-existing, not yet fixed.
+  migrations. Pre-existing, not yet fixed. **Relevant Marko package
+  already partly adopted for a different purpose (see §14)**:
+  `marko/config` — its own `ConfigDiscovery`/`ConfigServiceProvider`
+  already implement exactly this "merge module config + root config"
+  pattern; worth evaluating whether `bin/zoosper` should build its config
+  the same way `ApplicationFactory` does, using the same merged source.
 - **[R2] `bin/pest.sh` hides output on failure, and isn't even wired up** —
   `composer test` still resolves to `@php pest` (no `pest` file exists at
   root); `deploy`'s closing message tells users to run `composer test`
@@ -100,51 +109,87 @@ already fixed today:**
 
 ---
 
-## 14. Marko Framework Adoption Strategy (new section, 2026-07-30)
+## 14. Marko Framework Adoption Strategy
 
 The project's original architecture intent (see `README.md`: "...inspired
 by ... Marko PHP module conventions") was to build as much of Zoosper as
 possible on top of real Marko packages rather than reinventing them. That
-intent was not consistently followed prior to this session — `marko/core`,
+intent was not consistently followed prior to 2026-07-30 — `marko/core`,
 `marko/errors`, `marko/errors-simple` were installed in `vendor/` but
-completely unused until 2026-07-30. Going forward, the discipline is:
-**before writing any new subsystem from scratch, check Marko's real package
-catalog first** (by reading actual installed source / real docs — not
-guessing from package names).
+completely unused. The discipline going forward: **before writing any new
+subsystem from scratch, check Marko's real package catalog first** (by
+reading actual installed source / real docs — not guessing from package
+names), and this is now an explicit project rule in `AGENTS.md`.
 
 ### Adopted (real, verified integration)
+
 - **`marko/core` (`MarkoException`)** — `ZoosperException` now formally
   `extends MarkoException` (additive: `ZoosperException` was already a
-  strict superset — `docsUrl`/`details` have no Marko equivalent). Verified
-  via the actual installed source, not documentation alone.
+  strict superset — `docsUrl`/`details` have no Marko equivalent).
 - **`marko/errors` (`ErrorReport`, `Severity`)** — real error-reporting
   pipeline; `ZoosperException` is automatically recognised by
   `ErrorReport::fromThrowable()`'s own `instanceof MarkoException` check,
   with zero glue code.
 - **`marko/errors-simple` (`TextFormatter`, `BasicHtmlFormatter`,
   `CodeSnippetExtractor`, `Environment`)** — real CLI/web exception display,
-  wired via a new `Zoosper\Errors\ExceptionDisplayer` class (see below).
-  Deliberately NOT a wholesale replacement of `ErrorHandler` with Marko's
-  own `SimpleErrorHandler` — that class has no file-based logging at all;
+  wired via `Zoosper\Errors\ExceptionDisplayer`. Deliberately NOT a
+  wholesale replacement of `ErrorHandler` with Marko's own
+  `SimpleErrorHandler` — that class has no file-based logging at all;
   composing (log via existing `LocalLogger`, then display via Marko's
   formatters) preserves existing log output while adding real display.
+- **`marko/cache` + `marko/cache-file` + `marko/cache-redis`** — a real,
+  configurable (file or Redis, one config flag) cache backend, via
+  `Zoosper\Core\Cache\CacheDriverFactory`. Both drivers installed and
+  tested (the Redis test attempts a real connection and honestly skips —
+  never falsely passes/fails — if Redis isn't reachable).
+- **`marko/config` (`ConfigRepositoryInterface`)** — required transitively
+  by `marko/cache`'s `CacheConfig`/`marko/encryption`'s `EncryptionConfig`.
+  Satisfied via a new `Zoosper\Core\Config\MarkoConfigRepositoryAdapter`,
+  wrapping Zoosper's own `ConfigRepository`. Deliberately kept *inside*
+  `zoosper-core` rather than a new `zoosper/config` package: a separate
+  package wrapping `zoosper-core`'s own `ConfigRepository` would create a
+  circular dependency (`zoosper-core` needing the new package; the new
+  package needing `zoosper-core`). See "Deferred" below for the real,
+  larger extraction this points toward.
+- **`marko/encryption` (`EncryptionConfig`)** — backs
+  `Marko\Cache\Redis\Signer\CacheValueSigner`'s HMAC tamper-detection for
+  Redis-cached values. Uses a dedicated `CACHE_ENCRYPTION_KEY` — never a
+  reuse of `APP_KEY`/`TWO_FACTOR_ENCRYPTION_KEY`, matching the
+  single-purpose-key discipline already applied to 2FA.
 
 ### New package extracted: `zoosper/errors`
+
 First module extracted out of `zoosper-core` into its own standalone
 package (`packages/zoosper-errors`), following the same path-repository
 pattern already proven by `packages/zoosper-media`. Owns
 `ZoosperException`, `SensitiveValueRedactor`, `ConsoleExceptionFormatter`,
-and the new `ExceptionDisplayer` (which owns every direct `Marko\*` import
-— `zoosper-core` itself now has **zero** direct Marko dependency in its own
-`composer.json`, only `zoosper/errors`, which transitively provides
-`marko/errors`+`marko/errors-simple`). This is a clean architectural
-template: exception/error handling is a near-leaf dependency (depends on
-almost nothing else, but almost everything depends on it), making it the
-right first extraction candidate. **Next extraction candidate from
-zoosper-core is not yet chosen** — to be decided once the database/cache
-work below clarifies natural boundaries.
+`ExceptionDisplayer` (owns every direct `Marko\*` import — `zoosper-core`
+itself has **zero** direct Marko dependency in its own `composer.json` for
+error handling, only `zoosper/errors`, which transitively provides
+`marko/core`+`marko/errors`+`marko/errors-simple`). Has its own
+`.gitattributes` marking `tests/`/`phpunit.xml.dist` as `export-ignore`,
+matching Marko's own real package convention (confirmed by reading
+Marko's actual GitHub repos directly).
+
+**`.gitattributes` timing, settled**: only added at the moment a module is
+*actually extracted* into `packages/` as a real, separately-exportable
+package. `app/zoosper-*` modules are path-repository entries within the
+monorepo, not separately-exported packages — `export-ignore` would be
+inert for them today (there is no "export" event happening). Add it when
+each module gets extracted, not before.
+
+**Next extraction candidate: logger.** `LogManager`/`LocalLogger` (in
+`zoosper-core`) map almost one-to-one onto `marko/log` + `marko/log-file`
+(confirmed real via a targeted search: a PSR-3-compatible `LoggerInterface`,
+`LogLevel` enum, `LogRecord`, `LineFormatter`, file rotation) — genuinely
+the next-cleanest extraction candidate after errors, per the project
+owner's explicit request. **Not yet started** — needs the same
+read-real-source-first discipline applied before designing the extraction
+(check `marko/log`'s real constructor/interface shape, confirm no
+circular-dependency trap the way config nearly had one).
 
 ### Evaluated and explicitly deferred: `marko/database`, `marko/database-mysql`
+
 Real, attribute-driven entity mapper (`#[Table]`/`#[Column]` classes,
 auto-generated migrations, `QueryBuilderInterface`, `Repository` +
 `EntityCollection`) — genuinely comparable in ambition to this project's
@@ -163,26 +208,42 @@ SQLite driver was found in the docs reviewed, which would be a real
 concern given this project's dual-driver (SQLite test / MySQL prod)
 testing approach.
 
-### Newly relevant given the high-traffic + read-replica assumption (2026-07-30)
-- **`marko/database-readwrite`** — a small, genuinely additive decorator:
-  routes writes to one primary connection and reads to one or more
-  replicas (random or weighted), wrapping *any* existing driver connection
-  rather than requiring the full `marko/database` entity-mapper rewrite.
-  **This is the concrete next step for read-replica support** — does not
-  require adopting `marko/database` itself. Next action: read the actual
-  installed source/API directly (same discipline as every other adoption
-  this session) before designing the integration.
+**Root `composer.json` cleaned up accordingly (2026-07-31)**:
+`marko/database`, `marko/database-mysql`, and `marko/framework` (a
+metapackage that pulled in the above plus `marko/cli`/`marko/hashing`/
+`marko/routing`/`marko/validation`, none of which anything actually used)
+were all removed from the **root** `composer.json` — confirmed via a real
+`composer update` that all 7 transitively-unused packages were cleanly
+removed with zero breakage. Every Marko package Zoosper actually uses is
+now declared as a **direct dependency of the specific module that uses
+it** (`zoosper/errors` → `marko/core`+`marko/errors`+`marko/errors-simple`;
+`zoosper/core` → `marko/cache`+`marko/cache-file`+`marko/cache-redis`+
+`marko/config`+`marko/encryption`) — the root project itself now has zero
+direct Marko dependencies, matching the same "depend on what you actually
+use, at the module that actually uses it" discipline already applied
+throughout this session.
+
+### Adopted for read-replica support: `marko/database-readwrite` (queued, not yet built)
+
+A small, genuinely additive decorator: routes writes to one primary
+connection and reads to one or more replicas, wrapping *any* existing
+`marko/database`-compatible connection. **Important, honestly-flagged
+correction to earlier analysis**: this package requires a real
+`Marko\Database\ConnectionInterface`/`TransactionInterface`-compatible
+connection — i.e. it is NOT a generic wrapper around any PDO connection;
+it depends on the `marko/database` connection abstraction specifically.
+This means genuine read-replica support via this package is **not** fully
+decoupled from the `marko/database` adoption question above the way
+originally believed — needs the real `ConnectionInterface` source read
+directly before designing anything further here. Queued, not started.
 
 ### Not yet researched — queued for the next planning pass
-- **`marko/cache`** — relevant to §10's "wire the inert HTTP cache
-  subsystem, or remove it" decision, sharpened by the high-traffic
-  assumption.
-- **`marko/config`** — relevant to the CLI-vs-HTTP config divergence bug
-  (§0 [R2]) and the "~15 uncached per-request loops" performance item (§1).
+
 - **`marko/cli`** — relevant to the "every CLI command requires a live
   database" bug (§0 [R2]) and the broader `bin/zoosper` structure.
 
 ### Noted overlap, not being pursued now (bigger architectural decision)
+
 - **`marko/authentication`** (`AuthManager`, `SessionGuard`, `TokenGuard`,
   `AuthenticatableInterface`) and **`marko/authorization`**
   (`GateInterface`, Policies, `#[Can]` attribute) and **`marko/admin-auth`**
@@ -200,19 +261,36 @@ testing approach.
 
 ---
 
-## 15. High-Traffic & Read-Replica Readiness (new section, 2026-07-30)
+## 15. High-Traffic & Read-Replica Readiness
 
 Planning assumption, stated explicitly by the project owner: this CMS may
 need to support a high-traffic website and may require a database read
-replica. This reframes several existing roadmap items from "someday" to
-"soon":
+replica.
 
-- **Read replica support**: adopt `marko/database-readwrite` as a wrapping
-  decorator around the existing `ConnectionFactory` output — additive, not
-  a rewrite (see §14). Not yet started; needs the real API read first.
-- **Finish or remove the inert HTTP cache subsystem** (§10) — a
-  built-but-unwired cache is wasted effort at real traffic. Needs a
-  decision: wire it now, or explicitly remove it.
+- **[FIXED, foundation] HTTP cache subsystem is no longer inert.**
+  `CacheDriverFactory` (via `marko/cache` + file/Redis drivers) provides a
+  real, working, configurable cache backend. On top of it,
+  `Zoosper\Core\Routing\CachingFallbackHandler` provides a real, opt-in
+  frontend page cache (disabled by default via `config/page_cache.php`) —
+  decorates any `FallbackHandlerInterface`, fails open on every unsafe
+  condition (non-GET, no `SiteContext`, non-200 response, cache backend
+  errors), never breaks page rendering because of a caching problem. A
+  confirmed, real incompatibility was found and fixed while building this:
+  `CacheKeyBuilder`'s own key format (`:`-separated, `/`-permitting) is
+  explicitly rejected by Marko's own cache-key validation — fixed by
+  hashing the correctly-computed structured key into a guaranteed-safe
+  format, verified directly against the real, installed `FileCacheDriver`
+  (not just a fake). **Two honestly-stated, still-open limitations**: does
+  not vary the cache key by query string (no generic raw-query-string
+  accessor exists on `Request` yet — deliberately not reaching around that
+  via `$_SERVER`, matching the `Request::form()` immutability discipline);
+  assumes one theme per site (the decorator only has the `Request`, not
+  the resolved `Site` model).
+- **Read replica support**: see §14 — `marko/database-readwrite` requires
+  a `marko/database`-compatible connection, so this is not as fully
+  decoupled from the (deferred) `marko/database` adoption question as
+  first believed. Needs its real `ConnectionInterface` contract read
+  before any further design.
 - **Extend the compile step beyond just the module list** (§1, §13.2) —
   currently only `ModuleRegistry`'s module list is cached; ~14 other
   per-request loops (routes, services, controllers, events, ACL,
@@ -260,10 +338,10 @@ replica. This reframes several existing roadmap items from "someday" to
   discovered per-module via `ModuleConsoleCommandLoader`
 - [x] **Module manifest compile step** (`bin/zoosper compile`/`cache:clear`/
   `deploy`) — caches the module *list* to `var/cache/modules.php`, safe
-  fail-back to live scan if missing/corrupt. First of ~15 per-request
-  discovery loops to be cached (see §15 for continuing this).
+  fail-back to live scan if missing/corrupt.
 - [x] **[FIXED] Migrations always use live module discovery** — see §0,
   the stale-cache deploy bug.
+- [x] **[FIXED] Real, configurable page cache foundation** — see §15.
 - [~] Admin/module dependency decoupling (Phase 1.41): two-factor (full),
   media (full), page (partial — `AdminFormConfigAggregator` +
   `AdminConfigLayeredFileLoader` deliberately left in `zoosper-admin`).
@@ -452,10 +530,10 @@ replica. This reframes several existing roadmap items from "someday" to
 
 ## 10. Caching & Performance
 
-- [~] HTTP caching subsystem built but inert — **see §15: sharpened from
-  "someday" to "soon" by the high-traffic assumption**
-- [ ] Wire caching into responses OR remove it
-- [ ] Cache merged translation catalogue per locale
+- [x] **[FIXED] Real, configurable (file/Redis) cache foundation wired** —
+  see §14/§15. `CacheDriverFactory` + `Zoosper\Core\Routing\
+  CachingFallbackHandler` (opt-in frontend page cache, disabled by
+  default).
 - [x] **[FIXED] Unbounded `?page=` in `Pager::fromQuery()`** —
   `page_size` was clamped but `page` was not, allowing an arbitrarily huge
   `OFFSET`. Fixed with a fixed, generous safety ceiling (default 100,000),
@@ -465,11 +543,22 @@ replica. This reframes several existing roadmap items from "someday" to
   branch, preventing silently different collation behavior across
   environments running different MariaDB point releases. Only affects
   newly-created tables going forward, not existing live data.
+- [ ] Cache merged translation catalogue per locale
 - [ ] Rate-limit report sink rotation/retention (or DB store)
+- [ ] Vary page cache key by query string — needs a real
+  `Request::queryString()` accessor first (see §15's honestly-stated
+  limitation).
 
 ## 11. Quality, Tooling & Repo Hygiene
 
 - [x] Pest + PHPUnit harness; quality gate runner
+- [x] **`.gitattributes` (`export-ignore` for `tests/`/dev tooling) added
+  to both extracted packages** (`zoosper-errors`, `zoosper-media`),
+  matching Marko's own real package convention (confirmed by reading
+  Marko's actual GitHub repos). Deliberately NOT added to `app/zoosper-*`
+  modules yet — they are path-repository entries, not separately-exported
+  packages, so the mechanism would be inert there today; add at the
+  moment each module is actually extracted into `packages/`.
 - [ ] **[R] Durable-tool manifest exists purely to stop cleanup automation
   from deleting scripts a Pest test asserts exist** — "inverted," per
   reviewer framing. Worth sitting with, not a quick fix.
@@ -487,18 +576,23 @@ replica. This reframes several existing roadmap items from "someday" to
 - [ ] **[R] Test-suite signal-to-noise ratio** — a `LegacyVerify*Test`
   family and a 15+ file Page Momentum test cluster are largely
   file-content-assertion "tests," not behavioral ones. Real, good tests do
-  exist alongside them (named examples in the previous roadmap version) —
-  this is about ratio, not total absence.
+  exist alongside them — this is about ratio, not total absence.
 - [ ] **[R] No public/internal API boundary between feature modules** —
   `CoreDecouplingArchitectureTest` only enforces Core→feature; nothing
   enforces boundaries between feature modules.
-- [x] **New this session**: comment-verbosity self-correction needed. A
-  reviewer pass fairly noted that detailed "FIX (confirmed 2026-07-30...)"
-  narrative essays now live inside source files, and will go stale after
-  the next refactor — that history belongs in commit messages/CHANGELOG,
-  not permanently embedded in code comments. **Decision needed**: agree on
-  a lighter-weight in-code documentation convention going forward (see
-  "Open questions" below).
+- [x] **Comment-verbosity convention decided**: shift from detailed
+  narrative "FIX (confirmed date, reviewer pass)" essays in source
+  comments toward shorter, timeless doc-comments — full "why/when/who
+  found it" story lives in commit messages and this roadmap's daily log
+  instead. Documented as an explicit rule in `AGENTS.md`.
+- [ ] **Production deployment process does not exist yet.** Confirmed:
+  the project is still purely in local/dev-box development, with no build,
+  package, or deploy step defined. This is the right time to design test-
+  file exclusion from any deployable artifact (e.g. an `rsync --exclude`
+  step, or `git archive` on a tagged release once modules are real,
+  separate repos) directly into that process from day one — flagged as a
+  real, open item to design once deployment planning begins, not solved
+  yet.
 
 ## 12. Page Momentum (visible admin dashboard)
 
@@ -512,7 +606,7 @@ replica. This reframes several existing roadmap items from "someday" to
 1. Pick one canonical module-home convention (§1)
 2. Extend the compile step beyond just the module list (§1, §15)
 3. Real ALTER/removal support + FK declarations in the schema engine (§1, §2)
-4. **[Substantially advanced this session]** Real security hardening:
+4. **[Substantially advanced]** Real security hardening:
    `EMULATE_PREPARES` ✅, pinned collation ✅, rate-limit salt ✅, sanitizer
    driver guard ✅, privilege-escalation fix ✅, race-condition fix ✅, 2FA
    key rotation ✅. Still open: real rate-limit *enforcement*, account
@@ -529,25 +623,26 @@ replica. This reframes several existing roadmap items from "someday" to
 12. CI pipeline gated on Pest, static analysis, architecture-boundary tests
 13. Purge `tools/` to operational scripts only; resolve Page Momentum;
     remove AI-session tooling scripts from the repo (§0, §11)
-14. **[Done]** Reconciled the `marko/framework` roadmap claim — see §14;
-    real, verified Marko adoption now underway (`zoosper/errors`), with a
-    clear strategy for what's next vs. deliberately deferred
+14. **[Done]** Reconciled the `marko/framework` roadmap claim — root
+    `composer.json` cleaned of every unused Marko package; real, verified
+    adoption continues per-module (`zoosper/errors`, `zoosper/core`) — see §14
+15. **[New]** Extract logger (`marko/log`/`marko/log-file`) as the next
+    `zoosper-core` → standalone-package candidate — see §14
 
 ---
 
 ## Open questions for the next planning session
 
-1. **In-code comment verbosity**: shift from detailed narrative "FIX
-   (confirmed date, reviewer pass)" essays in source comments toward
-   shorter, timeless doc-comments — with the full "why/when/who found it"
-   story living only in commit messages and this roadmap? (Raised by a
-   reviewer pass, and fair.)
-2. **Build order confirmation** (see today's planning discussion): research
-   `marko/cache`/`config`/`cli` → design `marko/database-readwrite`
-   adoption → decide on the HTTP cache subsystem → pick the next
-   `zoosper-core` extraction candidate → remaining Fable pass #2 findings
-   (lazy CLI DB connection, CLI/HTTP config unification, `pest.sh`
-   wiring, removing AI-session tooling scripts).
+1. **Production deployment process design** — genuinely still to be
+   designed (see §11's new item). Key open question once ready: how will
+   code actually reach a production server (git-based deploy, build
+   artifact/zip, something else) — the right test-exclusion mechanism
+   depends entirely on the answer.
+2. **`marko/database-readwrite`'s real dependency on `marko/database`'s
+   connection interface** — needs the actual `ConnectionInterface`/
+   `TransactionInterface` source read before any further read-replica
+   design, now that the "fully decoupled from `marko/database`" assumption
+   has been corrected (see §14).
 3. Rate-limit enforcement timeline, given the high-traffic assumption
    sharpening urgency vs. the ADR's "collect real report-only data first"
    precondition.
@@ -556,6 +651,25 @@ replica. This reframes several existing roadmap items from "someday" to
 
 ## Daily log (most recent first)
 
+- **2026-07-31** — Cleaned up root `composer.json`: removed all 7
+  transitively-unused Marko packages (`marko/database`,
+  `marko/database-mysql`, `marko/framework`, and framework's own unused
+  transitive deps `marko/cli`/`marko/hashing`/`marko/routing`/
+  `marko/validation`), confirmed via a real `composer update` with zero
+  breakage. Every Marko package Zoosper actually uses is now a direct
+  dependency of the specific module that uses it, not the root project.
+  Built the real cache foundation: `Zoosper\Core\Cache\CacheDriverFactory`
+  (file or Redis, one config flag) and
+  `Zoosper\Core\Config\MarkoConfigRepositoryAdapter` (resolving a real
+  circular-dependency concern by keeping the adapter inside `zoosper-core`
+  rather than a new package). Built the actual page-cache consumer:
+  `Zoosper\Core\Routing\CachingFallbackHandler`, opt-in and disabled by
+  default, found and fixed a real cache-key-format incompatibility with
+  Marko's own validation while building it. Added `.gitattributes` to both
+  extracted packages, matching Marko's own real convention. Refreshed
+  README, AGENTS, SECURITY, and `.env.example` for accuracy; corrected an
+  over-optimistic earlier claim about `marko/database-readwrite` being
+  fully decoupled from `marko/database`.
 - **2026-07-30** — Major session: fixed both 2026-07-29 top-priority items
   (privilege escalation, rate-limit race condition). Fixed a live
   production incident (2FA key rotation causing a real admin lockout) with
@@ -569,15 +683,7 @@ replica. This reframes several existing roadmap items from "someday" to
   (migrations against a stale cached module list) once caught by a second
   reviewer pass. Extracted `zoosper/errors` as the first standalone
   package out of `zoosper-core`, with real (not just installed-but-unused)
-  Marko framework integration (`MarkoException`, `ErrorReport`,
-  `TextFormatter`/`BasicHtmlFormatter` via a new `ExceptionDisplayer`
-  boundary class) — confirmed `zoosper-core` itself now has zero direct
-  Marko dependency. Received and read a second Fable review pass; logged
-  new findings, most still open. Confirmed `marko/database`/
-  `database-mysql` are too large a rewrite to adopt now, but
-  `marko/database-readwrite` is genuinely relevant given a stated
-  high-traffic + read-replica planning assumption — queued as next
-  research target alongside `marko/cache`/`config`/`cli`.
+  Marko framework integration.
 - **2026-07-29 (reviews)** — Received two review passes (Fable pass #1,
   Sonnet). Logged findings, flagged privilege escalation and race
   condition as top priority. No code changes that day — deferred to
