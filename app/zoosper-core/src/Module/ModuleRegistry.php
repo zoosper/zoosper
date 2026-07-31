@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Module;
 
+use Composer\InstalledVersions;
 use Throwable;
 use Zoosper\Core\Composer\ModulePackageIdentity;
 
@@ -291,6 +292,30 @@ final class ModuleRegistry
         return $metadata;
     }
 
+    /** @param array<string, mixed>|null $package */
+    private function composerPackageVersion(?array $package): ?string
+    {
+        $packageName = $package['name'] ?? null;
+        if (!is_string($packageName) || $packageName === '') {
+            return null;
+        }
+
+        if (InstalledVersions::isInstalled($packageName)) {
+            $version = InstalledVersions::getPrettyVersion($packageName)
+                ?? InstalledVersions::getVersion($packageName);
+
+            if (is_string($version) && $version !== '') {
+                return $version;
+            }
+        }
+
+        $manifestVersion = $package['version'] ?? null;
+
+        return is_string($manifestVersion) && $manifestVersion !== ''
+            ? $manifestVersion
+            : null;
+    }
+
     private function moduleFromCandidate(string $moduleFile, string $source): ?Module
     {
         $metadata = require $moduleFile;
@@ -304,9 +329,8 @@ final class ModuleRegistry
         $name = isset($package['name']) && is_string($package['name'])
             ? str_replace('/', '-', $package['name'])
             : (string) ($metadata['name'] ?? $identity?->moduleName ?? basename($modulePath));
-        $version = isset($package['version']) && is_string($package['version'])
-            ? $package['version']
-            : (string) ($metadata['version'] ?? '0.1.0');
+        $version = $this->composerPackageVersion($package)
+            ?? (string) ($metadata['version'] ?? '0.1.0');
 
         return new Module(
             name: $name,
