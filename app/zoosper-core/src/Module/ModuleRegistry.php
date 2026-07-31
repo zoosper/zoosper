@@ -186,7 +186,6 @@ final class ModuleRegistry
         return $modules;
     }
 
-
     private static function sourcePriority(string $source): int
     {
         return match ($source) {
@@ -255,12 +254,19 @@ final class ModuleRegistry
                 continue;
             }
 
-            $extra = is_array($json['extra']['zoosper'] ?? null) ? $json['extra']['zoosper'] : [];
-            $modulePath = (string) ($extra['module'] ?? '');
-            if ($modulePath === '') {
+            $extra = is_array($json['extra'] ?? null) ? $json['extra'] : [];
+            $marko = is_array($extra['marko'] ?? null) ? $extra['marko'] : [];
+            $zoosper = is_array($extra['zoosper'] ?? null) ? $extra['zoosper'] : [];
+
+            $isMarkoZoosperModule = ($json['type'] ?? null) === 'zoosper-module'
+                && ($marko['module'] ?? false) === true;
+            $legacyModulePath = (string) ($zoosper['module'] ?? '');
+
+            if (!$isMarkoZoosperModule && $legacyModulePath === '') {
                 continue;
             }
 
+            $modulePath = $legacyModulePath !== '' ? $legacyModulePath : 'module.php';
             $moduleFile = dirname($composerFile) . '/' . ltrim($modulePath, '/\\');
             if (is_file($moduleFile)) {
                 $result[] = ['moduleFile' => $moduleFile, 'source' => 'vendor'];
