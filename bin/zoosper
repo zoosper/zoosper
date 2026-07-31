@@ -14,6 +14,7 @@ use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
 use Zoosper\Core\Database\ConnectionFactory;
 use Zoosper\Core\Database\Migrator;
+use Zoosper\Core\Database\PdoConnectionProvider;
 use Zoosper\Errors\ConsoleExceptionFormatter;
 use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Core\Log\LogManager;
@@ -28,13 +29,25 @@ require dirname(__DIR__) . '/bootstrap/autoload.php';
 $basePath = dirname(__DIR__);
 $modules = new ModuleRegistry($basePath);
 $config = (new ApplicationConfigLoader($basePath, $modules))->load();
-$pdo = (new ConnectionFactory($config, $basePath))->create();
 $command = $argv[1] ?? 'help';
 $options = parseOptions(array_slice($argv, 2));
 
+$logManager = new LogManager($config, $basePath);
+$errorHandler = new ErrorHandler($logManager->exceptions());
+$errorHandler->register();
+
+$connection = new PdoConnectionProvider(
+    static fn (): PDO => (new ConnectionFactory($config, $basePath))->create(),
+);
+
 try {
+    if ($command === 'help' || $command === 'list') {
+        $application = new ConsoleApplication(builtInCommands());
+
+        exit($application->run($command, [], new ConsoleOutput()));
+    }
     if ($command === 'migrate') {
-        (new Migrator($pdo, $basePath . '/database/migrations', $modules))->migrate();
+        (new Migrator($connection->get(), $basePath . '/database/migrations', $modules))->migrate();
         echo "Zoosper migrations completed.\n";
         exit(0);
     }
@@ -77,7 +90,7 @@ try {
         }
 
         echo "\n[2/3] Applying database migrations (bin/zoosper migrate)...\n";
-        (new Migrator($pdo, $basePath . '/database/migrations', $modules))->migrate();
+        (new Migrator($connection->get(), $basePath . '/database/migrations', $modules))->migrate();
         echo "Migrations applied.\n";
 
         echo "\n[3/3] Compiling module manifest (bin/zoosper compile)...\n";
@@ -141,7 +154,7 @@ try {
     }
 
     $output = new ConsoleOutput();
-    $moduleCommands = loadModuleCommands($basePath, $config, $pdo, $modules);
+    $moduleCommands = loadModuleCommands($basePath, $config, $connection->get(), $modules);
     $application = new ConsoleApplication(builtInCommands(), $moduleCommands);
 
     exit($application->run($command, array_slice($argv, 2), $output));

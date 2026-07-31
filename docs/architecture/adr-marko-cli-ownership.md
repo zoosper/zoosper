@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted direction. Implementation follows configuration consolidation.
+Accepted direction. Database-lazy bootstrap implemented in Phase 1C; Marko CLI adoption remains staged.
 
 ## Context
 
@@ -48,3 +48,19 @@ is not an acceptable permanent design.
 - The console stops acting as a second application kernel.
 - Existing Zoosper command classes may remain if their contract adapts cleanly;
   generic discovery and dispatch should not remain duplicated.
+
+## Phase 1C implementation
+
+- `bin/zoosper` registers console error handling before any database connection.
+- `PdoConnectionProvider` creates and memoizes PDO only when a database-backed
+  command requests it.
+- `help`, `list`, `compile`, `cache:clear`, `make:module`,
+  `make:package-module` and `make:command` dispatch without requesting PDO.
+- `migrate`, `deploy` and current module-owned data commands request the shared
+  connection on execution.
+- The existing command router remains transitional. Adoption of `marko/cli`
+  still requires adding and inspecting the locked package rather than guessing
+  its API.
+
+The database-lazy change intentionally does not alter HTTP bootstrap or the
+schema CLI, whose commands are database-oriented.

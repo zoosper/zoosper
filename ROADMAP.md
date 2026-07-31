@@ -35,8 +35,12 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
   `bin/zoosper-schema` now share `ApplicationConfigLoader`; module defaults are
   layered beneath root overrides, and the container exposes Marko's canonical
   configuration contract through the migration adapter.
-- **Next implementation:** Marko CLI ownership and lazy dependency resolution.
-  Database-free recovery commands must not construct PDO.
+- **[DONE] Phase 1C database-lazy CLI bootstrap.** Console error handling is
+  registered before connection attempts, and PDO is created once on demand.
+  Help, list, compile, cache clearing and scaffolding remain available during a
+  database outage.
+- **Next implementation:** evaluate and adopt the real `marko/cli` package so
+  command discovery and dispatch no longer remain a Zoosper framework concern.
 
 ---
 
