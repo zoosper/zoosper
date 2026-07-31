@@ -14,7 +14,8 @@ test('media package exposes standalone repository metadata', function () {
     expect($composer['require'])->not->toHaveKey('zoosper/admin');
     expect($composer['autoload']['psr-4']['Zoosper\\Media\\'])->toBe('src/');
     expect($composer['autoload-dev']['psr-4']['Zoosper\\Media\\Tests\\'])->toBe('tests/');
-    expect($composer['extra']['zoosper']['module'])->toBe('module.php');
+    expect($composer['extra']['marko']['module'])->toBeTrue();
+    expect($composer['extra'])->not->toHaveKey('zoosper');
 });
 
 test('media package includes standalone testing and repository support files', function () {
@@ -36,3 +37,4 @@ test('media standalone package audit tool checks required package boundaries', f
     expect($source)->toContain('phpunit.xml.dist');
     expect($source)->toContain('.github/workflows/tests.yml');
 });
+

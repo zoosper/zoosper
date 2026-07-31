@@ -21,10 +21,6 @@
         }
     },
     "extra": {
-        "zoosper": {
-            "module": "module.php",
-            "name": "Zoosper_Page"
-        },
         "marko": {
             "module": true
         }

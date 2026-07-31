@@ -29,10 +29,6 @@
         "test:unit": "pest --testsuite=Unit"
     },
     "extra": {
-        "zoosper": {
-            "module": "module.php",
-            "name": "Zoosper_Errors"
-        },
         "marko": {
             "module": true
         }

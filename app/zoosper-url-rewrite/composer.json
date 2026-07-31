@@ -13,10 +13,6 @@
         }
     },
     "extra": {
-        "zoosper": {
-            "module": "module.php",
-            "name": "Zoosper_UrlRewrite"
-        },
         "marko": {
             "module": true
         }

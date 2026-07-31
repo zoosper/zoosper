@@ -120,7 +120,7 @@ final readonly class PackageModuleScaffolder
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "zoosper/core": "*@dev"
+        "zoosper/core": "dev-dev"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",
@@ -138,9 +138,8 @@ final readonly class PackageModuleScaffolder
         }
     },
     "extra": {
-        "zoosper": {
-            "module": "module.php",
-            "name": "{$moduleName}"
+        "marko": {
+            "module": true
         }
     }
 }
@@ -276,3 +275,4 @@ YML,
         ];
     }
 }
+

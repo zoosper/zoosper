@@ -14,10 +14,6 @@
         }
     },
     "extra": {
-        "zoosper": {
-            "module": "module.php",
-            "name": "Zoosper_Theme"
-        },
         "marko": {
             "module": true
         }

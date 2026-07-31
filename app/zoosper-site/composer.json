@@ -18,10 +18,6 @@
         }
     },
     "extra": {
-        "zoosper": {
-            "module": "module.php",
-            "name": "Zoosper_Site"
-        },
         "marko": {
             "module": true
         }
