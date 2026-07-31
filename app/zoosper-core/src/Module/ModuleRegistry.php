@@ -190,9 +190,6 @@ final class ModuleRegistry
     {
         return match ($source) {
             'app' => 300,
-            // packages/ is a monorepo source layer until Composer-only runtime
-            // discovery replaces this transitional registry.
-            'packages' => 250,
             'modules' => 200,
             'vendor' => 100,
             default => 0,
@@ -207,9 +204,6 @@ final class ModuleRegistry
         $candidates = [];
 
         foreach ($this->globbedModuleFiles('app/*/module.php', 'app') as $candidate) {
-            $candidates[] = $candidate;
-        }
-        foreach ($this->globbedModuleFiles('packages/*/module.php', 'packages') as $candidate) {
             $candidates[] = $candidate;
         }
         foreach ($this->globbedModuleFiles('modules/*/module.php', 'modules') as $candidate) {
