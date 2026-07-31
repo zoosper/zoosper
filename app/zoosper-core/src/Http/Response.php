@@ -60,6 +60,32 @@ final readonly class Response
         return new self($body, $statusCode, $headers);
     }
 
+    /**
+     * ADDITIVE (2026-07-31, page-cache decorator): read accessors, needed so
+     * a decorator (Zoosper\Core\Routing\CachingFallbackHandler) can inspect
+     * an already-built Response to decide whether it's cacheable, and to
+     * actually serialize it for storage. Purely additive — no existing
+     * constructor, factory method, or behaviour changes. `final readonly`
+     * describes the class (cannot be subclassed) and its properties
+     * (cannot be reassigned after construction); it does not restrict
+     * adding new public read-only accessor methods.
+     */
+    public function statusCode(): int
+    {
+        return $this->statusCode;
+    }
+
+    /** @return array<string, string> */
+    public function headers(): array
+    {
+        return $this->headers;
+    }
+
+    public function body(): string
+    {
+        return $this->body;
+    }
+
     public function send(): void
     {
         http_response_code($this->statusCode);

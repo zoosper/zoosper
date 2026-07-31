@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Marko\Cache\Contracts\CacheInterface;
 use Zoosper\Core\App\CmsVersion;
+use Zoosper\Core\Cache\CacheDriverFactory;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
@@ -38,7 +40,6 @@ return [
         $services->get(CacheKeyBuilder::class),
     ),
     HtmlSanitizerFactory::class => static function (ServiceContainer $services): HtmlSanitizerFactory {
-        /** @var array<string, mixed> $config */
         $config = $services->get(ConfigRepository::class)->array('html_sanitizer');
         $paths = $services->get(ProjectPathResolver::class);
         $cachePath = (string) ($config['cache_path'] ?? 'var/cache/htmlpurifier');
@@ -49,11 +50,13 @@ return [
         return new HtmlSanitizerFactory($config);
     },
     HtmlSanitizerInterface::class => static fn (ServiceContainer $services): HtmlSanitizerInterface => $services->get(HtmlSanitizerFactory::class)->create(),
-
+    CacheDriverFactory::class => static fn (ServiceContainer $services): CacheDriverFactory => new CacheDriverFactory(
+        $services->get(ConfigRepository::class),
+        $services->get(ProjectPathResolver::class),
+    ),
+    CacheInterface::class => static fn (ServiceContainer $services): CacheInterface => $services->get(CacheDriverFactory::class)->create(),
     EntityExtensionValueRepository::class => static fn (ServiceContainer $services): EntityExtensionValueRepository => new EntityExtensionValueRepository($services->get(PDO::class)),
     EntityExtensionDataPersister::class => static fn (ServiceContainer $services): EntityExtensionDataPersister => new EntityExtensionDataPersister($services->get(EntityExtensionValueRepository::class)),
-
-    // Phase 1.30: general module event/observer bus.
     EventDispatcherInterface::class => static function (ServiceContainer $services): EventDispatcherInterface {
         $dispatcher = new EventDispatcher($services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null);
         (new ModuleEventListenerLoader($services->get(ModuleRegistry::class), $services))->attach($dispatcher);

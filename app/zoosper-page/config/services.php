@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
+use Marko\Cache\Contracts\CacheInterface;
 use Zoosper\Core\App\CmsVersion;
+use Zoosper\Core\Cache\CacheKeyBuilder;
+use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\Routing\CachingFallbackHandler;
 use Zoosper\Core\Routing\FallbackHandlerInterface;
 use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
@@ -39,6 +43,25 @@ return [
     // Phase 1.93: register the page module as the frontend fallback handler so
     // ApplicationFactory resolves FallbackHandlerInterface instead of falling
     // back to NullFallbackHandler. This is what makes frontend page views work.
-    FallbackHandlerInterface::class => static fn (ServiceContainer $services): FallbackHandlerInterface
-        => new PageFallbackHandler($services->get(PageController::class)),
+    //
+    // PAGE CACHE (new, 2026-07-31): the real PageFallbackHandler is now
+    // wrapped by CachingFallbackHandler — a generic decorator owned by
+    // zoosper-core (see that class's own docblock for the full safety
+    // model and honestly-stated limitations). Disabled by default via
+    // config/page_cache.php; when disabled, CachingFallbackHandler
+    // delegates every call straight through to PageFallbackHandler with
+    // zero behavioural change, so this wrapping is safe to ship even
+    // before the feature is ever turned on.
+    FallbackHandlerInterface::class => static function (ServiceContainer $services): FallbackHandlerInterface {
+        $pageFallbackHandler = new PageFallbackHandler($services->get(PageController::class));
+        $pageCacheConfig = $services->get(ConfigRepository::class)->array('page_cache');
+
+        return new CachingFallbackHandler(
+            inner: $pageFallbackHandler,
+            cache: $services->get(CacheInterface::class),
+            keyBuilder: $services->get(CacheKeyBuilder::class),
+            enabled: (bool) ($pageCacheConfig['enabled'] ?? false),
+            ttlSeconds: (int) ($pageCacheConfig['ttl'] ?? 300),
+        );
+    },
 ];

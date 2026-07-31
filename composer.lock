@@ -308,6 +308,98 @@
             "time": "2026-07-26T15:19:30+00:00"
         },
         {
+            "name": "marko/cache-file",
+            "version": "0.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-cache-file.git",
+                "reference": "11a07ce6984296f0d1f072877c8bab632d42a030"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-cache-file/zipball/11a07ce6984296f0d1f072877c8bab632d42a030",
+                "reference": "11a07ce6984296f0d1f072877c8bab632d42a030",
+                "shasum": ""
+            },
+            "require": {
+                "marko/cache": "self.version",
+                "marko/config": "self.version",
+                "marko/core": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "marko/testing": "self.version",
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Cache\\File\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "File-based cache driver for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-cache-file/tree/0.8.5"
+            },
+            "time": "2026-06-12T19:00:11+00:00"
+        },
+        {
+            "name": "marko/cache-redis",
+            "version": "0.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-cache-redis.git",
+                "reference": "0f5ac232e040582ba07e71adb0bbf1e6319d1916"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-cache-redis/zipball/0f5ac232e040582ba07e71adb0bbf1e6319d1916",
+                "reference": "0f5ac232e040582ba07e71adb0bbf1e6319d1916",
+                "shasum": ""
+            },
+            "require": {
+                "marko/cache": "self.version",
+                "marko/config": "self.version",
+                "marko/core": "self.version",
+                "marko/encryption": "self.version",
+                "php": "^8.5",
+                "predis/predis": "^2.0"
+            },
+            "require-dev": {
+                "marko/testing": "self.version",
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Cache\\Redis\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Redis cache driver for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-cache-redis/tree/0.8.5"
+            },
+            "time": "2026-06-12T18:20:25+00:00"
+        },
+        {
             "name": "marko/config",
             "version": "0.8.5",
             "source": {
@@ -389,6 +481,50 @@
             "description": "Marko Framework Core",
             "support": {
                 "source": "https://github.com/marko-php/marko-core/tree/0.8.5"
+            },
+            "time": "2026-07-26T15:19:30+00:00"
+        },
+        {
+            "name": "marko/encryption",
+            "version": "0.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-encryption.git",
+                "reference": "b3364c5e90376222151b21922d149c998a7f3141"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-encryption/zipball/b3364c5e90376222151b21922d149c998a7f3141",
+                "reference": "b3364c5e90376222151b21922d149c998a7f3141",
+                "shasum": ""
+            },
+            "require": {
+                "marko/config": "self.version",
+                "marko/core": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "marko/testing": "self.version",
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Encryption\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Encryption contracts for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-encryption/tree/0.8.5"
             },
             "time": "2026-07-26T15:19:30+00:00"
         },
@@ -477,6 +613,68 @@
                 "source": "https://github.com/marko-php/marko-errors-simple/tree/0.8.5"
             },
             "time": "2026-06-12T17:56:54+00:00"
+        },
+        {
+            "name": "predis/predis",
+            "version": "v2.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/predis/predis.git",
+                "reference": "07105e050622ed80bd60808367ced9e379f31530"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/predis/predis/zipball/07105e050622ed80bd60808367ced9e379f31530",
+                "reference": "07105e050622ed80bd60808367ced9e379f31530",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.3",
+                "phpstan/phpstan": "^1.9",
+                "phpunit/phpcov": "^6.0 || ^8.0",
+                "phpunit/phpunit": "^8.0 || ^9.4"
+            },
+            "suggest": {
+                "ext-relay": "Faster connection with in-memory caching (>=0.6.2)"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Predis\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Till Krüss",
+                    "homepage": "https://till.im",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "A flexible and feature-complete Redis/Valkey client for PHP.",
+            "homepage": "http://github.com/predis/predis",
+            "keywords": [
+                "nosql",
+                "predis",
+                "redis"
+            ],
+            "support": {
+                "issues": "https://github.com/predis/predis/issues",
+                "source": "https://github.com/predis/predis/tree/v2.4.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/tillkruss",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-11-12T18:00:11+00:00"
         },
         {
             "name": "psr/container",
@@ -647,11 +845,13 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-core",
-                "reference": "57a2ffd3220f1de8768e0c25bb9d322f965c46e0"
+                "reference": "8bd94c1b20548673b7215bf7159f0aab8d34f198"
             },
             "require": {
                 "ext-pdo": "*",
                 "marko/cache": "^0.8",
+                "marko/cache-file": "^0.8",
+                "marko/cache-redis": "^0.8",
                 "php": "^8.5",
                 "zoosper/errors": "*@dev"
             },
