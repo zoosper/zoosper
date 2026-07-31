@@ -26,6 +26,10 @@ test('scaffolds a package module under packages with composer metadata and tests
     expect($composer['extra']['marko']['module'])->toBeTrue();
     expect($composer['extra'])->not->toHaveKey('zoosper');
     expect($composer['autoload']['psr-4'])->toHaveKey('Acme\\MovieLibrary\\');
+    expect($composer['require']['zoosper/core'])->toBe('dev-dev');
+
+    $module = require $root . '/packages/acme-movie-library/module.php';
+    expect($module)->toBe([]);
 });
 
 test('rejects invalid package module names', function () {

@@ -54,11 +54,37 @@ final readonly class ModuleScaffolder
     private function files(ModuleName $name): array
     {
         $ns = $name->namespace;
+        $namespaceEscaped = str_replace('\\', '\\\\', $ns . '\\');
         $raw = $name->raw;
         $folder = $name->folderName;
+        $packageName = strtolower($name->vendor) . '/' . strtolower(
+            (string) preg_replace('/(?<!^)[A-Z]/', '-$0', $name->module),
+        );
 
         return [
-            'module.php' => "<?php\n\ndeclare(strict_types=1);\n\nreturn [\n    'name' => '{$raw}',\n    'enabled' => true,\n    'version' => '0.1.0',\n];\n",
+            'composer.json' => <<<JSON
+{
+    "name": "{$packageName}",
+    "description": "{$raw} application module for Zoosper CMS.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "zoosper/core": "dev-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "{$namespaceEscaped}": "src/"
+        }
+    },
+    "extra": {
+        "marko": {
+            "module": true
+        }
+    }
+}
+JSON,
+            'module.php' => "<?php\n\ndeclare(strict_types=1);\n\nreturn [\n];\n",
             'config/services.php' => "<?php\n\ndeclare(strict_types=1);\n\nuse Zoosper\\Core\\Container\\ServiceContainer;\n\nreturn [\n    // {$raw} service factories go here.\n];\n",
             'config/console.php' => "<?php\n\ndeclare(strict_types=1);\n\nreturn [\n    // ConsoleCommandClass::class,\n];\n",
             'config/controllers.php' => <<<'PHP'
@@ -87,3 +113,4 @@ final readonly class ModuleScaffolder
         ];
     }
 }
+

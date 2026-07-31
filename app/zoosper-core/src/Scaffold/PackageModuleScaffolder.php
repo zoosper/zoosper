@@ -150,10 +150,6 @@ JSON,
 declare(strict_types=1);
 
 return [
-    'name' => '{$moduleName}',
-    'enabled' => true,
-    'version' => '0.1.0',
-    'sort_order' => 100,
 ];
 PHP,
             'config/services.php' => <<<PHP
