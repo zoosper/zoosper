@@ -10,8 +10,10 @@ use Zoosper\Core\Asset\AssetModuleRegistry;
 use Zoosper\Core\Asset\AssetResolver;
 use Zoosper\Core\Asset\AssetRouteRegistrar;
 use Zoosper\Core\Asset\ModuleAssetManifestLoader;
+use Marko\Config\ConfigRepositoryInterface;
+use Zoosper\Core\Config\ApplicationConfigLoader;
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\ModuleConfigAggregator;
+use Zoosper\Core\Config\MarkoConfigRepositoryAdapter;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
 use Zoosper\Core\Database\ConnectionFactory;
@@ -53,9 +55,8 @@ final class ApplicationFactory
     public static function create(string $basePath): Application
     {
         $modules = new ModuleRegistry($basePath);
-        $config = ConfigRepository::fromArray(
-            (new ModuleConfigAggregator($modules, $basePath . '/config'))->aggregate()
-        );
+        $config = (new ApplicationConfigLoader($basePath, $modules))->load();
+        $markoConfig = new MarkoConfigRepositoryAdapter($config);
 
         $logManager = new LogManager($config, $basePath);
         $errorHandler = new ErrorHandler($logManager->exceptions());
@@ -67,6 +68,7 @@ final class ApplicationFactory
 
         $services = new ServiceContainer();
         $services->set(ConfigRepository::class, $config);
+        $services->set(ConfigRepositoryInterface::class, $markoConfig);
         $services->set(ModuleRegistry::class, $modules);
         $services->set(PDO::class, $pdo);
         $services->set(LogManager::class, $logManager);
@@ -144,3 +146,4 @@ final class ApplicationFactory
         );
     }
 }
+

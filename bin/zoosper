@@ -3,7 +3,10 @@
 
 declare(strict_types=1);
 
+use Marko\Config\ConfigRepositoryInterface;
+use Zoosper\Core\Config\ApplicationConfigLoader;
 use Zoosper\Core\Config\ConfigRepository;
+use Zoosper\Core\Config\MarkoConfigRepositoryAdapter;
 use Zoosper\Core\Console\ConsoleApplication;
 use Zoosper\Core\Console\ConsoleOutput;
 use Zoosper\Core\Console\ModuleConsoleCommandLoader;
@@ -23,14 +26,15 @@ use Zoosper\Core\Scaffold\PackageModuleScaffolder;
 require dirname(__DIR__) . '/bootstrap/autoload.php';
 
 $basePath = dirname(__DIR__);
-$config = ConfigRepository::fromPath($basePath . '/config');
+$modules = new ModuleRegistry($basePath);
+$config = (new ApplicationConfigLoader($basePath, $modules))->load();
 $pdo = (new ConnectionFactory($config, $basePath))->create();
 $command = $argv[1] ?? 'help';
 $options = parseOptions(array_slice($argv, 2));
 
 try {
     if ($command === 'migrate') {
-        (new Migrator($pdo, $basePath . '/database/migrations', new ModuleRegistry($basePath)))->migrate();
+        (new Migrator($pdo, $basePath . '/database/migrations', $modules))->migrate();
         echo "Zoosper migrations completed.\n";
         exit(0);
     }
@@ -73,7 +77,7 @@ try {
         }
 
         echo "\n[2/3] Applying database migrations (bin/zoosper migrate)...\n";
-        (new Migrator($pdo, $basePath . '/database/migrations', new ModuleRegistry($basePath)))->migrate();
+        (new Migrator($pdo, $basePath . '/database/migrations', $modules))->migrate();
         echo "Migrations applied.\n";
 
         echo "\n[3/3] Compiling module manifest (bin/zoosper compile)...\n";
@@ -137,7 +141,7 @@ try {
     }
 
     $output = new ConsoleOutput();
-    $moduleCommands = loadModuleCommands($basePath, $config, $pdo);
+    $moduleCommands = loadModuleCommands($basePath, $config, $pdo, $modules);
     $application = new ConsoleApplication(builtInCommands(), $moduleCommands);
 
     exit($application->run($command, array_slice($argv, 2), $output));
@@ -161,11 +165,16 @@ function builtInCommands(): array
 }
 
 /** @return array<string, \Zoosper\Core\Console\ConsoleCommandInterface> */
-function loadModuleCommands(string $basePath, ConfigRepository $config, PDO $pdo): array
+function loadModuleCommands(
+    string $basePath,
+    ConfigRepository $config,
+    PDO $pdo,
+    ModuleRegistry $modules,
+): array
 {
-    $modules = new ModuleRegistry($basePath);
     $services = new ServiceContainer();
     $services->set(ConfigRepository::class, $config);
+    $services->set(ConfigRepositoryInterface::class, new MarkoConfigRepositoryAdapter($config));
     $services->set(ModuleRegistry::class, $modules);
     $services->set(PDO::class, $pdo);
 
@@ -204,3 +213,4 @@ function required(array $options, string $key): string
     }
     return $options[$key];
 }
+

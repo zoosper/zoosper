@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Bootstrap\EnvLoader;
-use Zoosper\Core\Config\ConfigRepository;
+use Zoosper\Core\Config\ApplicationConfigLoader;
 use Zoosper\Core\Database\ConnectionFactory;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Schema\SchemaLoader;
@@ -32,10 +32,10 @@ if (class_exists(EnvLoader::class)) {
 }
 
 $command = $argv[1] ?? 'diff';
-$config = ConfigRepository::fromPath($basePath . '/config');
+$modules = new ModuleRegistry($basePath);
+$config = (new ApplicationConfigLoader($basePath, $modules))->load();
 $pdo = (new ConnectionFactory($config, $basePath))->create();
 $driver = (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
-$modules = new ModuleRegistry($basePath);
 $schema = (new SchemaLoader($modules))->load();
 $snapshots = new SchemaSnapshotRepository($pdo);
 $migrator = new SchemaMigrator($pdo, $driver, $snapshots);
@@ -74,3 +74,4 @@ if ($statements === []) {
 foreach ($statements as $statement) {
     echo $statement . ";\n";
 }
+

@@ -31,10 +31,12 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 - **[DONE] Phase 1A architecture audit.** Added the Marko adoption matrix,
   framework/module/configuration/CLI ADRs, and first-party package ownership
   inventory under `docs/architecture/`.
-- **Next implementation:** configuration consolidation. Make the Marko config
-  contract canonical, establish one HTTP/CLI assembly path, preserve tested
-  precedence, and remove root-only CLI loading after behavioural parity is
-  proven. CLI runtime adoption follows configuration consolidation.
+- **[DONE] Phase 1B configuration consolidation.** HTTP, `bin/zoosper` and
+  `bin/zoosper-schema` now share `ApplicationConfigLoader`; module defaults are
+  layered beneath root overrides, and the container exposes Marko's canonical
+  configuration contract through the migration adapter.
+- **Next implementation:** Marko CLI ownership and lazy dependency resolution.
+  Database-free recovery commands must not construct PDO.
 
 ---
 

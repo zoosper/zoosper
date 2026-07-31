@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted direction. First implementation candidate.
+Accepted and implemented for the shared HTTP/CLI assembly path in Phase 1B.
 
 ## Context
 
@@ -58,3 +58,14 @@ native, duplicate Zoosper repositories and root-only CLI loading are removed.
 
 Configuration consolidation precedes CLI replacement because command discovery
 and lazy service construction need one dependable configuration source.
+
+## Phase 1B implementation
+
+- `ApplicationConfigLoader` is now the single configuration assembly entry point.
+- HTTP, `bin/zoosper` and `bin/zoosper-schema` use the same module-default and
+  project-override path.
+- The application container exposes `Marko\Config\ConfigRepositoryInterface`
+  through the existing adapter while legacy consumers migrate.
+- The legacy `ConfigRepository` remains a compatibility implementation for this
+  phase; it is no longer loaded directly by the primary CLI entry points.
+- CLI database laziness is intentionally reserved for the CLI ownership phase.
