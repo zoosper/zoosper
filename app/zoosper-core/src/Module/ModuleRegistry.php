@@ -266,6 +266,31 @@ final class ModuleRegistry
         return $result;
     }
 
+    /** @return array<string, mixed>|null */
+    private function composerPackageMetadata(string $modulePath): ?array
+    {
+        $composerFile = rtrim($modulePath, '/\\') . '/composer.json';
+        if (!is_file($composerFile)) {
+            return null;
+        }
+
+        $metadata = json_decode((string) file_get_contents($composerFile), true);
+        if (!is_array($metadata)) {
+            return null;
+        }
+
+        $extra = is_array($metadata['extra'] ?? null) ? $metadata['extra'] : [];
+        $marko = is_array($extra['marko'] ?? null) ? $extra['marko'] : [];
+
+        if (($metadata['type'] ?? null) !== 'zoosper-module'
+            || ($marko['module'] ?? false) !== true
+        ) {
+            return null;
+        }
+
+        return $metadata;
+    }
+
     private function moduleFromCandidate(string $moduleFile, string $source): ?Module
     {
         $metadata = require $moduleFile;
@@ -274,14 +299,20 @@ final class ModuleRegistry
         }
 
         $modulePath = dirname($moduleFile);
+        $package = $this->composerPackageMetadata($modulePath);
         $identity = ModulePackageIdentity::fromModule($metadata, basename($modulePath));
-        $name = (string) ($metadata['name'] ?? $identity?->moduleName ?? basename($modulePath));
+        $name = isset($package['name']) && is_string($package['name'])
+            ? str_replace('/', '-', $package['name'])
+            : (string) ($metadata['name'] ?? $identity?->moduleName ?? basename($modulePath));
+        $version = isset($package['version']) && is_string($package['version'])
+            ? $package['version']
+            : (string) ($metadata['version'] ?? '0.1.0');
 
         return new Module(
             name: $name,
             path: $modulePath,
             enabled: (bool) ($metadata['enabled'] ?? true),
-            version: (string) ($metadata['version'] ?? '0.1.0'),
+            version: $version,
             sortOrder: (int) ($metadata['sort_order'] ?? 100),
             source: $source,
         );

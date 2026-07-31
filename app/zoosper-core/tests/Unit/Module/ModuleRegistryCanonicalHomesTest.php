@@ -37,7 +37,7 @@ test('packages is source layout only and vendor is the runtime package home', fu
     $modules = (new ModuleRegistry(canonicalHomesFixture()))->discoverModulesLive();
     $names = array_map(static fn ($module): string => $module->name, $modules);
 
-    expect($names)->toContain('installed');
+    expect($names)->toContain('acme-installed');
     expect($names)->not->toContain('source-only');
     expect($modules[0]->source)->toBe('vendor');
 });

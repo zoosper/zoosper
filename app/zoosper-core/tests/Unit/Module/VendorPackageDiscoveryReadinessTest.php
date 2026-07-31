@@ -19,7 +19,7 @@ test('module registry discovers a Composer vendor package module from installed 
     $modules = (new ModuleRegistry($root))->enabledModules();
     $match = null;
     foreach ($modules as $module) {
-        if (($module->name ?? null) === 'Acme_MovieLibrary') {
+        if (($module->name ?? null) === 'acme-movie-library') {
             $match = $module;
             break;
         }
@@ -41,7 +41,7 @@ test('vendor package discovery fixture keeps module source outside app and packa
     $modules = (new ModuleRegistry($root))->enabledModules();
     $names = array_map(static fn (object $module): string => (string) ($module->name ?? ''), $modules);
 
-    expect($names)->toContain('Acme_HealthData');
+    expect($names)->toContain('acme-health-data');
 });
 
 function createVendorModuleFixture(string $root, string $packagePath, string $packageName, string $moduleName): void
