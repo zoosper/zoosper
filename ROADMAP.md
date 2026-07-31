@@ -43,9 +43,15 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
   Composer packages now declare `extra.marko.module=true`, protected by an
   architecture test. Existing Zoosper metadata remains only until runtime
   discovery is migrated.
-- **Next implementation:** migrate runtime module discovery, deterministic
-  priority and loud same-layer conflicts toward Marko's peer-module model.
-  `marko/cli` adoption follows the canonical module graph.
+- **[DONE] Phase 1E loud module conflicts and deterministic priority.** The
+  transitional registry now fails on same-layer identity ambiguity and applies
+  explicit `vendor < modules < packages < app` priority while preserving
+  path-repository realpath deduplication.
+- **[NOTED] Composer validation still warns about internal `*@dev` constraints.**
+  Resolve this with one deliberate 0.x versioning phase rather than replacing
+  constraints piecemeal without regenerating the lock file.
+- **Next implementation:** migrate the remaining runtime discovery mechanism to
+  Marko's canonical module graph, then adopt `marko/cli` on that graph.
 
 ---
 

@@ -99,9 +99,9 @@ final class ModuleRegistry
      */
     public function discoverModulesLive(): array
     {
-        $modules = [];
+        /** @var array<string, Module> $modulesByName */
+        $modulesByName = [];
         $seenRealPaths = [];
-        $seenNames = [];
 
         foreach ($this->moduleCandidates() as $candidate) {
             $module = $this->moduleFromCandidate($candidate['moduleFile'], $candidate['source']);
@@ -110,17 +110,31 @@ final class ModuleRegistry
             }
 
             $realPath = realpath($module->path) ?: $module->path;
-            $dedupeKey = strtolower($module->name);
+            if (isset($seenRealPaths[$realPath])) {
+                continue;
+            }
+            $seenRealPaths[$realPath] = true;
 
-            if (isset($seenRealPaths[$realPath]) || isset($seenNames[$dedupeKey])) {
+            $identity = strtolower($module->name);
+            $existing = $modulesByName[$identity] ?? null;
+            if ($existing === null) {
+                $modulesByName[$identity] = $module;
                 continue;
             }
 
-            $seenRealPaths[$realPath] = true;
-            $seenNames[$dedupeKey] = true;
-            $modules[] = $module;
+            $existingPriority = self::sourcePriority($existing->source);
+            $candidatePriority = self::sourcePriority($module->source);
+
+            if ($existingPriority === $candidatePriority) {
+                throw DuplicateModuleException::sameLayer($existing, $module);
+            }
+
+            if ($candidatePriority > $existingPriority) {
+                $modulesByName[$identity] = $module;
+            }
         }
 
+        $modules = array_values($modulesByName);
         usort($modules, static function (Module $a, Module $b): int {
             return [$a->sortOrder, $a->name] <=> [$b->sortOrder, $b->name];
         });
@@ -170,6 +184,20 @@ final class ModuleRegistry
         }
 
         return $modules;
+    }
+
+
+    private static function sourcePriority(string $source): int
+    {
+        return match ($source) {
+            'app' => 300,
+            // packages/ is a monorepo source layer until Composer-only runtime
+            // discovery replaces this transitional registry.
+            'packages' => 250,
+            'modules' => 200,
+            'vendor' => 100,
+            default => 0,
+        };
     }
 
     /**
@@ -263,3 +291,4 @@ final class ModuleRegistry
         );
     }
 }
+

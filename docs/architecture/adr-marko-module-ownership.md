@@ -77,3 +77,22 @@ transition, not a permanent dual module system.
 An architecture test scans first-party `app/` and `packages/` Composer
 manifests and fails if Marko module identity is missing. The next module phase
 will compare and migrate runtime discovery, priority and conflict behaviour.
+
+## Phase 1E implementation
+
+The transitional registry now applies deterministic source priority:
+
+1. `vendor` (lowest)
+2. `modules`
+3. monorepo `packages` source
+4. `app` (highest)
+
+The same real path is still deduplicated so Composer path-repository symlinks do
+not produce false conflicts. Different modules claiming the same identity at
+the same priority now throw `DuplicateModuleException` with both paths and a
+remediation suggestion. A higher-priority identity explicitly replaces a lower-
+priority one.
+
+This closes the previous silent name-collision behaviour while runtime discovery
+is migrated to Marko. The `packages` priority is transitional and disappears
+when repository source layout is fully separated from runtime discovery.
