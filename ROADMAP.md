@@ -23,38 +23,6 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ---
 
-## Architecture direction: Marko framework boundary (2026-07-31)
-
-- **[DECIDED] Marko is the framework; Zoosper is the CMS product.** Generic
-  framework mechanics must use Marko when an adequate package exists. Zoosper
-  owns CMS domains, policy, workflows and presentation.
-- **[DONE] Phase 1A architecture audit.** Added the Marko adoption matrix,
-  framework/module/configuration/CLI ADRs, and first-party package ownership
-  inventory under `docs/architecture/`.
-- **[DONE] Phase 1B configuration consolidation.** HTTP, `bin/zoosper` and
-  `bin/zoosper-schema` now share `ApplicationConfigLoader`; module defaults are
-  layered beneath root overrides, and the container exposes Marko's canonical
-  configuration contract through the migration adapter.
-- **[DONE] Phase 1C database-lazy CLI bootstrap.** Console error handling is
-  registered before connection attempts, and PDO is created once on demand.
-  Help, list, compile, cache clearing and scaffolding remain available during a
-  database outage.
-- **[DONE] Phase 1D Marko module identity readiness.** All 13 first-party
-  Composer packages now declare `extra.marko.module=true`, protected by an
-  architecture test. Existing Zoosper metadata remains only until runtime
-  discovery is migrated.
-- **[DONE] Phase 1E loud module conflicts and deterministic priority.** The
-  transitional registry now fails on same-layer identity ambiguity and applies
-  explicit `vendor < modules < packages < app` priority while preserving
-  path-repository realpath deduplication.
-- **[NOTED] Composer validation still warns about internal `*@dev` constraints.**
-  Resolve this with one deliberate 0.x versioning phase rather than replacing
-  constraints piecemeal without regenerating the lock file.
-- **Next implementation:** migrate the remaining runtime discovery mechanism to
-  Marko's canonical module graph, then adopt `marko/cli` on that graph.
-
----
-
 ## 0. TOP PRIORITY — next phase
 
 **Both items from the 2026-07-29 top-priority list are now confirmed and
@@ -129,15 +97,10 @@ fixed:**
   already implement exactly this "merge module config + root config"
   pattern; worth evaluating whether `bin/zoosper` should build its config
   the same way `ApplicationFactory` does, using the same merged source.
-- **[R2] `bin/pest.sh` hides output on failure, and isn't even wired up** —
-  `composer test` still resolves to `@php pest` (no `pest` file exists at
-  root); `deploy`'s closing message tells users to run `composer test`
-  anyway. Pre-existing, not yet fixed.
-- **[R2] AI-session tooling scripts shouldn't be in the repo** —
-  `collect-and-run.sh` (reads arbitrary filenames and shell commands from
-  stdin, executes via `bash -lc`), `bin/cleanup-legacy-tooling.sh`,
-  `bin/cleanup-old-root-tests.sh`. Pre-existing (predates this session's
-  involvement), not yet removed.
+- **[RESOLVED] Redundant test/session and one-shot cleanup scripts retired** —
+  `composer test` remains the canonical Pest entry point. The unused
+  `bin/pest.sh`, interactive `collect-and-run.sh`, and completed one-shot
+  cleanup scripts were removed in Phase 2C.
 
 ---
 
@@ -598,13 +561,12 @@ replica.
 - [ ] **[R2] ~150+ single-purpose tooling scripts still in `tools/`**,
   several existing solely to plan/audit deletion of other scripts in the
   same directory. Not yet pruned further.
-- [ ] **[R2] AI-session tooling scripts should not be in the repo at
-  all** — `collect-and-run.sh`, `bin/cleanup-legacy-tooling.sh`,
-  `bin/cleanup-old-root-tests.sh`. Not yet removed.
+- [x] **[R2] AI-session and completed one-shot cleanup scripts removed**
+  in Phase 2C.
 - [ ] CI workflow (validate, Psalm, Pest+coverage, gate on every PR)
 - [ ] Fix composer `gate` script to `@php` (not hardcoded `php8.5`)
-- [ ] **[R2] `bin/pest.sh` hides output on failure and isn't wired up;
-  `composer test` is still broken `@php pest`** — see §0.
+- [x] **[R2] Redundant `bin/pest.sh` removed; `composer test` remains the
+  canonical test entry point.**
 - [ ] **[R] Test-suite signal-to-noise ratio** — a `LegacyVerify*Test`
   family and a 15+ file Page Momentum test cluster are largely
   file-content-assertion "tests," not behavioral ones. Real, good tests do

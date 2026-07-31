@@ -37,7 +37,7 @@ root cause that produced the historical hotfix churn.
 
 ## Tooling
 
-- `bin/cleanup-legacy-tooling.sh` - dry-run by default; `--force` to apply. Only
+- Historical cleanup was completed and its one-shot script retired in Phase 2C. Previously it only
   touches the dead one-shots; explicitly leaves verify-* and ops tools alone.
 - `bin/tools-inventory.php` - classifies every script into
   DELETE_NOW / MIGRATE_TO_PEST / KEEP_OPS / REVIEW and writes a progress report to
@@ -49,3 +49,4 @@ root cause that produced the historical hotfix churn.
 - Nothing is truly lost: `git` history retains every removed script.
 - See `docs/contributor/legacy-tooling-retirement-policy.md` for the precise
   bucket definitions and the retirement checklist.
+

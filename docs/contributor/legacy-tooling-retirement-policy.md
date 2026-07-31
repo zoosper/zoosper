@@ -33,8 +33,9 @@ Retire the `verify-*` net in this order, writing a Pest test before deleting eac
 
 ## Definition of done for tooling retirement
 
-- [ ] All DELETE_NOW artifacts removed (via `bin/cleanup-legacy-tooling.sh --force`).
+- [x] DELETE_NOW artifacts removed; the one-shot cleanup script was retired in Phase 2C.
 - [ ] `bin/tools-inventory.php` shows REVIEW = 0 (everything classified).
 - [ ] Each retired `verify-*` has a passing Pest equivalent committed first.
 - [ ] `MIGRATE_TO_PEST` count trends to 0 over subsequent phases.
 - [ ] Operational tools optionally relocated under `tools/ops/` (future, optional).
+
