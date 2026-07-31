@@ -13,7 +13,7 @@ function moduleDiscoveryFixture(): string
     mkdir($root . '/vendor/zoosper/media/config', 0775, true);
 
     file_put_contents($root . '/app/zoosper-page/module.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn ['name' => 'zoosper-page', 'enabled' => true, 'sort_order' => 20];\n");
-    file_put_contents($root . '/vendor/zoosper/media/module.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn ['name' => 'Zoosper_Media', 'enabled' => true, 'sort_order' => 25];\n");
+    file_put_contents($root . '/vendor/zoosper/media/module.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn ['name' => 'zoosper-media', 'enabled' => true, 'sort_order' => 25];\n");
     file_put_contents($root . '/vendor/zoosper/media/composer.json', json_encode([
         'name' => 'zoosper/media',
         'type' => 'zoosper-module',
@@ -28,14 +28,14 @@ test('module registry discovers app modules and composer installed modules', fun
     $names = array_map(static fn ($module): string => $module->name, $modules);
 
     expect($names)->toContain('zoosper-page');
-    expect($names)->toContain('Zoosper_Media');
+    expect($names)->toContain('zoosper-media');
 });
 
 test('composer installed module exposes config path and source metadata', function () {
     $modules = (new ModuleRegistry(moduleDiscoveryFixture()))->enabledModules();
     $media = null;
     foreach ($modules as $module) {
-        if ($module->name === 'Zoosper_Media') {
+        if ($module->name === 'zoosper-media') {
             $media = $module;
             break;
         }

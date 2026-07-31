@@ -11,7 +11,7 @@ print "========================================================\n\n";
 $media = null;
 foreach ($modules as $module) {
     print '- ' . $module->name . ' [' . $module->source . '] ' . ltrim(str_replace($basePath, '', $module->path), '/\\') . PHP_EOL;
-    if (in_array($module->name, ['Zoosper_Media', 'zoosper-media'], true)) {
+    if ($module->name === 'zoosper-media') {
         $media = $module;
     }
 }
@@ -33,3 +33,4 @@ foreach ($checks as $name => $ok) {
 
 print "\nResult: " . ($failed ? 'FAIL' : 'OK') . PHP_EOL;
 exit($failed ? 2 : 0);
+

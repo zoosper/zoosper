@@ -25,7 +25,7 @@ The package advertises the module through Composer metadata:
   "extra": {
     "zoosper": {
       "module": "module.php",
-      "name": "Zoosper_Media"
+      "name": "zoosper-media"
     }
   }
 }
@@ -67,3 +67,4 @@ The root project owns browser smoke because it includes the admin shell, auth mi
 ```text
 docs/operations/editorjs-media-browser-smoke.md
 ```
+

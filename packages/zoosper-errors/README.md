@@ -48,7 +48,7 @@ The package advertises the module through Composer metadata:
   "extra": {
     "zoosper": {
       "module": "module.php",
-      "name": "Zoosper_Errors"
+      "name": "zoosper-errors"
     }
   }
 }
@@ -79,3 +79,4 @@ README.md
 This package depends on `marko/core` only — no other Zoosper module —
 making it genuinely installable standalone today, without any path-repository
 workaround.
+
