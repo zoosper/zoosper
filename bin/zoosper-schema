@@ -3,9 +3,10 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Bootstrap\EnvLoader;
 use Zoosper\Core\Config\ApplicationConfigLoader;
 use Zoosper\Core\Database\ConnectionFactory;
+use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Log\LogManager;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Schema\SchemaLoader;
 use Zoosper\Core\Schema\SchemaMigrator;
@@ -13,32 +14,21 @@ use Zoosper\Core\Schema\SchemaSnapshotRepository;
 use Zoosper\Core\Schema\SchemaValidator;
 
 $basePath = dirname(__DIR__);
-require $basePath . '/vendor/autoload.php';
-
-if (!function_exists('env')) {
-    function env(string $key, mixed $default = null): mixed
-    {
-        if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
-            return $_ENV[$key];
-        }
-
-        $value = getenv($key);
-        return $value !== false && $value !== '' ? $value : $default;
-    }
-}
-
-if (class_exists(EnvLoader::class)) {
-    EnvLoader::load($basePath . '/.env');
-}
+require $basePath . '/bootstrap/autoload.php';
 
 $command = $argv[1] ?? 'diff';
 $modules = new ModuleRegistry($basePath);
 $config = (new ApplicationConfigLoader($basePath, $modules))->load();
-$pdo = (new ConnectionFactory($config, $basePath))->create();
-$driver = (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
-$schema = (new SchemaLoader($modules))->load();
-$snapshots = new SchemaSnapshotRepository($pdo);
-$migrator = new SchemaMigrator($pdo, $driver, $snapshots);
+$logManager = new LogManager($config, $basePath);
+$errorHandler = new ErrorHandler($logManager->exceptions());
+$errorHandler->register();
+
+try {
+    $pdo = (new ConnectionFactory($config, $basePath))->create();
+    $driver = (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+    $schema = (new SchemaLoader($modules))->load();
+    $snapshots = new SchemaSnapshotRepository($pdo);
+    $migrator = new SchemaMigrator($pdo, $driver, $snapshots);
 
 if ($command === 'validate') {
     $result = (new SchemaValidator())->validate($schema);
@@ -74,4 +64,7 @@ if ($statements === []) {
 foreach ($statements as $statement) {
     echo $statement . ";\n";
 }
-
+} catch (Throwable $exception) {
+    $errorHandler->logException($exception);
+    exit(1);
+}
