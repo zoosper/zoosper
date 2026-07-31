@@ -21,6 +21,7 @@ return [
         '/app/',
         '/config/',
         '/modules/',
+        '/packages/',
         '/themes/',
         '/tools/',
         '/logs/',
@@ -72,3 +73,4 @@ return [
      */
     'quarantine_path' => 'var/quarantine/public-webroot',
 ];
+

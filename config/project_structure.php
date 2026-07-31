@@ -5,13 +5,13 @@ declare(strict_types=1);
 return [
     'required_roots' => [
         'app', 'assets', 'bin', 'bootstrap', 'config', 'database', 'deploy', 'docs',
-        'modules', 'public', 'storage', 'tests', 'themes', 'tools', 'var',
+        'modules', 'packages', 'public', 'storage', 'tests', 'themes', 'tools', 'var',
     ],
     'optional_roots' => [
         'vendor', 'node_modules',
     ],
     'forbidden_public_roots' => [
-        'var', 'storage', 'vendor', 'node_modules', 'app', 'config', 'modules', 'themes',
+        'var', 'storage', 'vendor', 'node_modules', 'app', 'config', 'modules', 'packages', 'themes',
         'tools', 'database', 'deploy', 'docs', 'tests', 'private', 'tmp', 'cache', 'logs',
     ],
     'root_file_policy' => [
@@ -24,3 +24,4 @@ return [
         ],
     ],
 ];
+
