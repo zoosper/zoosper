@@ -6,8 +6,8 @@ namespace Zoosper\Admin\Audit;
 
 use PDO;
 use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
-use Zoosper\Core\Grid\GridCriteria;
-use Zoosper\Core\Grid\GridDataSourceInterface;
+use Zoosper\Grid\GridCriteria;
+use Zoosper\Grid\GridDataSourceInterface;
 use Zoosper\Core\Pagination\PaginationResult;
 
 /**
@@ -146,3 +146,4 @@ final readonly class LoginHistoryRepository implements GridDataSourceInterface, 
         return [$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params];
     }
 }
+

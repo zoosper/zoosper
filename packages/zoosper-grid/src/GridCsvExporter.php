@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Grid;
+namespace Zoosper\Grid;
 
 use RuntimeException;
 

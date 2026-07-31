@@ -14,7 +14,7 @@ use Zoosper\Auth\Service\AuthService;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
-use Zoosper\Core\Grid\GridColumnRegistry;
+use Zoosper\Grid\GridColumnRegistry;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeService;
 use Zoosper\TwoFactor\Service\AdminTwoFactorEnrollmentService;
@@ -57,3 +57,4 @@ return [
         new GridColumnRegistry($services->get(ModuleRegistry::class)),
     ),
 ];
+

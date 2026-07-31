@@ -21,7 +21,8 @@
         "zoosper/site": "dev-dev",
         "zoosper/theme": "dev-dev",
         "zoosper/two-factor": "dev-dev",
-        "zoosper/url-rewrite": "dev-dev"
+        "zoosper/url-rewrite": "dev-dev",
+        "zoosper/grid": "dev-dev"
     },
     "require-dev": {
         "icanhazstring/composer-unused": "^0.9.6",
@@ -39,7 +40,8 @@
             "Zoosper\\Media\\Tests\\": "packages/zoosper-media/tests/",
             "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/",
             "Zoosper\\Site\\Tests\\": "app/zoosper-site/tests/",
-            "Zoosper\\TwoFactor\\Tests\\": "app/zoosper-two-factor/tests/"
+            "Zoosper\\TwoFactor\\Tests\\": "app/zoosper-two-factor/tests/",
+            "Zoosper\\Grid\\Tests\\": "packages/zoosper-grid/tests/"
         }
     },
     "scripts": {
@@ -78,6 +80,13 @@
         {
             "type": "path",
             "url": "packages/zoosper-media",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/zoosper-grid",
             "options": {
                 "symlink": true
             }

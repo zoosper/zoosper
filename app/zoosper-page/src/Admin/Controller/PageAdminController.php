@@ -24,6 +24,8 @@ use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
 use Zoosper\Core\Form\AdminFormProcessorRegistry;
 use Zoosper\Core\Form\AdminFormProviderRegistry;
 use Zoosper\Core\Form\AdminFormRenderer;
+use Zoosper\Grid\GridCriteria;
+use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -35,7 +37,8 @@ use Zoosper\Page\Admin\Form\PageContentSectionProvider;
 use Zoosper\Page\Admin\Form\PageDetailsSectionProvider;
 use Zoosper\Page\Admin\Form\PagePublishingSectionProvider;
 use Zoosper\Page\Admin\Form\PageSeoSectionProvider;
-use Zoosper\Page\Admin\PageGridCriteria;
+use Zoosper\Page\Admin\PageGridDataSource;
+use Zoosper\Page\Admin\PageGridDefinition;
 use Zoosper\Page\Admin\PageGridRepository;
 use Zoosper\Page\Content\BlockJsonValidator;
 use Zoosper\Page\Event\PageEvents;
@@ -78,6 +81,9 @@ final readonly class PageAdminController
         private AdminLayoutRendererInterface     $layout,
         private AdminViewRendererInterface       $views,
         private ?PageGridRepository              $pageGrid = null,
+        private ?PageGridDefinition              $pageGridDefinition = null,
+        private ?PageGridDataSource              $pageGridDataSource = null,
+        private ?GridHtmlRenderer                $gridHtmlRenderer = null,
         private ?HtmlSanitizerInterface          $htmlSanitizer = null,
         private ?FlashMessageStoreInterface      $flashMessages = null,
         private ?ConfigRepository                $config = null,
@@ -100,8 +106,21 @@ final readonly class PageAdminController
     {
         $user = $this->currentAdminUser();
 
-        $criteria = PageGridCriteria::fromQuery($_GET);
-        $pagination = $this->pageGrid?->paginate($criteria);
+        $definition = $this->pageGridDefinition?->build();
+        $criteria = $definition !== null
+            ? GridCriteria::fromValues($_GET, $definition)
+            : null;
+        $pagination = $criteria !== null
+            ? $this->pageGridDataSource?->paginate($criteria)
+            : null;
+        $gridHtml = $definition !== null && $criteria !== null && $pagination !== null
+            ? $this->gridHtmlRenderer?->render(
+                $definition,
+                $pagination,
+                $criteria,
+                '/admin/pages',
+            )
+            : null;
         $pages = $pagination?->items ?? $this->pages->all();
         $sites = $this->sites->allActive();
 
@@ -113,6 +132,7 @@ final readonly class PageAdminController
                 'pagination' => $pagination,
                 'criteria' => $criteria,
                 'sites' => $sites,
+                'gridHtml' => $gridHtml,
             ],
             $user,
             'pages',
@@ -532,3 +552,4 @@ private function adminUrl(string $path): string
         return $user;
     }
 }
+

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Tests\Unit\Admin;
 
-use Zoosper\Core\Grid\GridDataSourceInterface;
+use Zoosper\Grid\GridDataSourceInterface;
 use Zoosper\Page\Admin\PageGridDataSource;
 use Zoosper\Page\Admin\PageGridDefinition;
 
@@ -13,12 +13,12 @@ test('page shared-grid foundation exposes stable contracts for final cutover', f
     expect(is_subclass_of(PageGridDataSource::class, GridDataSourceInterface::class))->toBeTrue();
 });
 
-test('final page template cutover remains explicit follow-up work', function (): void {
+test('page template cutover uses shared grid output', function (): void {
     $basePath = dirname(__DIR__, 5);
     $template = (string) file_get_contents(
         $basePath . '/app/zoosper-page/resources/views/admin/pages/index.php',
     );
 
-    expect($template)->toContain('<table>');
-    expect($template)->not->toContain('$gridHtml');
+    expect($template)->toContain('$gridHtml');
+    expect($template)->not->toContain('<table>');
 });

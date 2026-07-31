@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Grid;
+namespace Zoosper\Grid;
 
 use Zoosper\Core\Pagination\PaginationResult;
 
@@ -18,3 +18,4 @@ interface GridDataSourceInterface
      */
     public function paginate(GridCriteria $criteria): PaginationResult;
 }
+

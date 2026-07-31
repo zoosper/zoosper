@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Tests\Unit\Grid;
+namespace Zoosper\Grid\Tests\Unit;
 
-use Zoosper\Core\Grid\GridColumn;
-use Zoosper\Core\Grid\GridCsvExporter;
-use Zoosper\Core\Grid\GridDefinition;
+use Zoosper\Grid\GridColumn;
+use Zoosper\Grid\GridCsvExporter;
+use Zoosper\Grid\GridDefinition;
 
 function exportDefinition(): GridDefinition
 {

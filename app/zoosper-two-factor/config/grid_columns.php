@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Grid\GridColumn;
+use Zoosper\Grid\GridColumn;
 
 /**
  * Phase B2 PROOF-OF-CONCEPT: demonstrates the module-extends-another-module's-
@@ -41,3 +41,4 @@ return [
         'filters' => [],
     ],
 ];
+

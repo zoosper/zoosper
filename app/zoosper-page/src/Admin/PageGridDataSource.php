@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Admin;
 
-use Zoosper\Core\Grid\GridCriteria;
-use Zoosper\Core\Grid\GridDataSourceInterface;
+use Zoosper\Grid\GridCriteria;
+use Zoosper\Grid\GridDataSourceInterface;
 use Zoosper\Core\Pagination\PaginationResult;
 
 final readonly class PageGridDataSource implements GridDataSourceInterface
@@ -27,6 +27,8 @@ final readonly class PageGridDataSource implements GridDataSourceInterface
             query: trim((string) ($criteria->filters['q'] ?? '')),
             status: trim((string) ($criteria->filters['status'] ?? '')),
             siteId: $siteId,
+            sortBy: $criteria->sortBy,
+            sortDir: $criteria->sortDir,
         ));
     }
 }

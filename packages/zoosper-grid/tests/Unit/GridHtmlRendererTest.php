@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Grid\GridColumn;
-use Zoosper\Core\Grid\GridCriteria;
-use Zoosper\Core\Grid\GridDefinition;
-use Zoosper\Core\Grid\GridFilter;
-use Zoosper\Core\Grid\GridHtmlRenderer;
+use Zoosper\Grid\GridColumn;
+use Zoosper\Grid\GridCriteria;
+use Zoosper\Grid\GridDefinition;
+use Zoosper\Grid\GridFilter;
+use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\Core\Pagination\Pager;
 use Zoosper\Core\Pagination\PaginationResult;
 
@@ -129,3 +129,4 @@ it('shows an accurate "showing X-Y of Z" summary', function (): void {
 
     expect($html)->toContain('Showing 21&ndash;40 of 45');
 });
+

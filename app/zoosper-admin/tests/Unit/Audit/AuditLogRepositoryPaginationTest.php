@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\Admin\Audit\AuditLogGrid;
 use Zoosper\Admin\Audit\AuditLogRepository;
-use Zoosper\Core\Grid\GridCriteria;
+use Zoosper\Grid\GridCriteria;
 use Zoosper\Core\Pagination\Pager;
 
 /*
@@ -139,3 +139,4 @@ it('latest() is unchanged and still returns the raw top-N rows', function (): vo
 
     expect($repo->latest(3))->toHaveCount(3);
 });
+

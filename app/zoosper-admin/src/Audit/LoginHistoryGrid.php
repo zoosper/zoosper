@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Audit;
 
-use Zoosper\Core\Grid\GridColumn;
-use Zoosper\Core\Grid\GridDefinition;
-use Zoosper\Core\Grid\GridFilter;
+use Zoosper\Grid\GridColumn;
+use Zoosper\Grid\GridDefinition;
+use Zoosper\Grid\GridFilter;
 
 /**
  * Declarative Grid definition for the Login History admin screen.
@@ -50,3 +50,4 @@ final class LoginHistoryGrid
         );
     }
 }
+

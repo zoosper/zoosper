@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\Admin\Audit\LoginHistoryGrid;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
-use Zoosper\Core\Grid\GridCriteria;
+use Zoosper\Grid\GridCriteria;
 
 /*
  * Phase A hotfix: REPLACES the Phase 1.112 version of this test file, which
@@ -91,3 +91,4 @@ it('deleteOlderThan removes only rows before the cutoff', function (): void {
     $remainingEmail = $pdo->query('SELECT email FROM admin_login_history')->fetchColumn();
     expect($remainingEmail)->toBe('recent@example.test');
 });
+

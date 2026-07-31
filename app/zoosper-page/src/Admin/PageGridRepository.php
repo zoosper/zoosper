@@ -36,11 +36,13 @@ final readonly class PageGridRepository
         $count->execute();
         $total = (int) $count->fetchColumn();
 
+        $orderBy = $this->orderBy($criteria);
+
         $sql = 'SELECT p.*, s.name AS site_name
             FROM pages p
             LEFT JOIN sites s ON s.id = p.site_id
             ' . $where . '
-            ORDER BY p.updated_at DESC, p.id DESC
+            ORDER BY ' . $orderBy . '
             LIMIT :limit OFFSET :offset';
 
         $statement = $this->pdo->prepare($sql);
@@ -57,6 +59,20 @@ final readonly class PageGridRepository
             page: $criteria->pager->page,
             pageSize: $criteria->pager->pageSize,
         );
+    }
+
+    private function orderBy(PageGridCriteria $criteria): string
+    {
+        $columns = [
+            'id' => 'p.id',
+            'title' => 'p.title',
+            'slug' => 'p.slug',
+            'status' => 'p.status',
+        ];
+        $column = $columns[$criteria->sortBy ?? ''] ?? 'p.updated_at';
+        $direction = $criteria->sortDir === 'asc' ? 'ASC' : 'DESC';
+
+        return $column . ' ' . $direction . ', p.id DESC';
     }
 
     /**
@@ -87,3 +103,4 @@ final readonly class PageGridRepository
         return [$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params];
     }
 }
+

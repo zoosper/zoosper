@@ -8,7 +8,8 @@
         "zoosper/core": "dev-dev",
         "zoosper/auth": "dev-dev",
         "zoosper/theme": "dev-dev",
-        "zoosper/errors": "dev-dev"
+        "zoosper/errors": "dev-dev",
+        "zoosper/grid": "dev-dev"
     },
     "autoload": {
         "psr-4": {

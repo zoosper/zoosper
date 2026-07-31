@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Grid\GridColumn;
-use Zoosper\Core\Grid\GridCriteria;
-use Zoosper\Core\Grid\GridDefinition;
-use Zoosper\Core\Grid\GridFilter;
+use Zoosper\Grid\GridColumn;
+use Zoosper\Grid\GridCriteria;
+use Zoosper\Grid\GridDefinition;
+use Zoosper\Grid\GridFilter;
 
 /*
  * Grid Core (Phase A) behavioural tests: GridCriteria parsing, sort validation,
@@ -94,3 +94,4 @@ it('toggles sort direction only for the currently active column', function (): v
     expect($criteria->toggledSortDir('created_at'))->toBe('desc') // flips from current asc
         ->and($criteria->toggledSortDir('other_column', 'asc'))->toBe('asc'); // not active -> default
 });
+

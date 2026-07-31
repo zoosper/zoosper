@@ -10,10 +10,10 @@ use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\SessionGuard;
-use Zoosper\Core\Grid\GridColumnRegistry;
-use Zoosper\Core\Grid\GridCriteria;
-use Zoosper\Core\Grid\GridDefinition;
-use Zoosper\Core\Grid\GridHtmlRenderer;
+use Zoosper\Grid\GridColumnRegistry;
+use Zoosper\Grid\GridCriteria;
+use Zoosper\Grid\GridDefinition;
+use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 
@@ -91,3 +91,4 @@ final readonly class AuditLogController
         return $user;
     }
 }
+

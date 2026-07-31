@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Grid;
+namespace Zoosper\Grid;
 
 /**
  * Declarative filter definition for the shared admin Grid engine.
@@ -23,3 +23,4 @@ final readonly class GridFilter
     ) {
     }
 }
+

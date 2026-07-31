@@ -16,6 +16,8 @@ final readonly class PageGridCriteria
         public string $query = '',
         public string $status = '',
         public ?int $siteId = null,
+        public ?string $sortBy = null,
+        public string $sortDir = 'desc',
     ) {
     }
 
@@ -33,6 +35,8 @@ final readonly class PageGridCriteria
             query: trim((string) ($query['q'] ?? '')),
             status: trim((string) ($query['status'] ?? '')),
             siteId: $siteId,
+            sortBy: isset($query['sort']) ? trim((string) $query['sort']) : null,
+            sortDir: strtolower((string) ($query['dir'] ?? 'desc')) === 'asc' ? 'asc' : 'desc',
         );
     }
 
@@ -56,7 +60,12 @@ final readonly class PageGridCriteria
         if ($this->siteId !== null) {
             $params['site_id'] = $this->siteId;
         }
+        if ($this->sortBy !== null && $this->sortBy !== '') {
+            $params['sort'] = $this->sortBy;
+            $params['dir'] = $this->sortDir;
+        }
 
         return $params;
     }
 }
+

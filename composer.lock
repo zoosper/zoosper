@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18bde35a94970956a40c74528953852e",
+    "content-hash": "6f0ce0327e27243c380675983f4c71de",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -735,13 +735,14 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-admin",
-                "reference": "209bb871ae628eff9eae67a256b344da852090a1"
+                "reference": "eaf46008d4394bcd4c9629b00e6f916ea535ab0a"
             },
             "require": {
                 "php": "^8.5",
                 "zoosper/auth": "dev-dev",
                 "zoosper/core": "dev-dev",
                 "zoosper/errors": "dev-dev",
+                "zoosper/grid": "dev-dev",
                 "zoosper/theme": "dev-dev"
             },
             "type": "zoosper-module",
@@ -932,6 +933,51 @@
             }
         },
         {
+            "name": "zoosper/grid",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "packages/zoosper-grid",
+                "reference": "e2845c0807ac2d9a88aaca8d20d90a457732879c"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/core": "dev-dev"
+            },
+            "require-dev": {
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin": "^3.0",
+                "phpunit/phpunit": "^11.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Grid\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Grid\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ],
+                "test:unit": [
+                    "pest --testsuite=Unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Reusable grid definitions, criteria, rendering, extension registry and CSV export for Zoosper.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "zoosper/install",
             "version": "dev-dev",
             "dist": {
@@ -1058,12 +1104,13 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-page",
-                "reference": "e99c000e633dcc0847d47cc4528dd8018c26571f"
+                "reference": "aeba7cfc5035ae2caeacd3fd944f1a979e1d8f15"
             },
             "require": {
                 "php": "^8.5",
                 "zoosper/admin": "dev-dev",
                 "zoosper/core": "dev-dev",
+                "zoosper/grid": "dev-dev",
                 "zoosper/site": "dev-dev",
                 "zoosper/theme": "dev-dev"
             },
@@ -8243,6 +8290,7 @@
         "zoosper/auth": 20,
         "zoosper/core": 20,
         "zoosper/errors": 20,
+        "zoosper/grid": 20,
         "zoosper/install": 20,
         "zoosper/mail": 20,
         "zoosper/media": 20,

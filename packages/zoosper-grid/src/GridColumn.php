@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Zoosper\Core\Grid;
+namespace Zoosper\Grid;
 use Closure;
 final readonly class GridColumn
 {
@@ -25,3 +25,4 @@ final readonly class GridColumn
         return htmlspecialchars((string) ($value ?? ''), ENT_QUOTES, 'UTF-8');
     }
 }
+

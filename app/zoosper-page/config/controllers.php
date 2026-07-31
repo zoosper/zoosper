@@ -12,11 +12,15 @@ use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Event\EventDispatcherInterface;
+use Zoosper\Grid\GridColumnRegistry;
+use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Page\Admin\Controller\PageAdminController;
+use Zoosper\Page\Admin\PageGridDataSource;
+use Zoosper\Page\Admin\PageGridDefinition;
 use Zoosper\Page\Admin\PageGridRepository;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
@@ -35,7 +39,12 @@ return [
         renderer: $services->get(PageRenderer::class),
         layout: $services->get(AdminLayoutRendererInterface::class),
         views: $services->get(AdminViewRendererInterface::class),
-        pageGrid: new PageGridRepository($services->get(\PDO::class)),
+        pageGrid: $pageGrid = new PageGridRepository($services->get(\PDO::class)),
+        pageGridDefinition: new PageGridDefinition(
+            $services->has(GridColumnRegistry::class) ? $services->get(GridColumnRegistry::class) : null,
+        ),
+        pageGridDataSource: new PageGridDataSource($pageGrid),
+        gridHtmlRenderer: new GridHtmlRenderer(),
         htmlSanitizer: $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,
         flashMessages: $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         config: $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
@@ -47,3 +56,4 @@ return [
         events: $services->has(EventDispatcherInterface::class) ? $services->get(EventDispatcherInterface::class) : null,
     ),
 ];
+

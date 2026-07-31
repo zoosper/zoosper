@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Core\Database\Migrator;
-use Zoosper\Core\Grid\GridCriteria;
+use Zoosper\Grid\GridCriteria;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Pagination\Pager;
 
@@ -125,3 +125,4 @@ it('LoginHistoryRepository::paginate() safely falls back to the default column f
 
     expect($result->items)->toHaveCount(1);
 });
+

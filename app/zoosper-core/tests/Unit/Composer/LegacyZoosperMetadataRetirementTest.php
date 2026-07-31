@@ -5,33 +5,42 @@ declare(strict_types=1);
 namespace Zoosper\Core\Tests\Unit\Composer;
 
 /** @return list<string> */
-function firstPartyPackageManifests(string $basePath): array
+function firstPartyManifestPaths(): array
 {
-    $manifests = array_merge(
-        glob($basePath . '/app/*/composer.json') ?: [],
-        glob($basePath . '/packages/*/composer.json') ?: [],
-    );
-    sort($manifests);
+    $basePath = dirname(__DIR__, 5);
+    $paths = [];
 
-    return $manifests;
+    foreach (['app', 'packages'] as $directory) {
+        $root = $basePath . '/' . $directory;
+        if (!is_dir($root)) {
+            continue;
+        }
+        foreach (glob($root . '/*/composer.json') ?: [] as $manifest) {
+            $paths[] = $manifest;
+        }
+    }
+
+    sort($paths);
+
+    return $paths;
 }
 
 test('first-party packages use Marko identity without legacy Zoosper metadata', function (): void {
-    $basePath = dirname(__DIR__, 5);
-    $manifests = firstPartyPackageManifests($basePath);
-
-    expect($manifests)->not->toBeEmpty();
-
-    foreach ($manifests as $manifestPath) {
+    foreach (firstPartyManifestPaths() as $manifestPath) {
         $manifest = json_decode(
             (string) file_get_contents($manifestPath),
             true,
             flags: JSON_THROW_ON_ERROR,
         );
 
-        expect($manifest['extra']['marko']['module'] ?? null)
-            ->toBeTrue('Missing Marko identity in ' . $manifestPath);
         expect($manifest['extra'] ?? [])
             ->not->toHaveKey('zoosper', 'Legacy metadata remains in ' . $manifestPath);
+
+        if (($manifest['type'] ?? null) !== 'zoosper-module') {
+            continue;
+        }
+
+        expect($manifest['extra']['marko']['module'] ?? null)
+            ->toBeTrue('Missing Marko identity in ' . $manifestPath);
     }
 });

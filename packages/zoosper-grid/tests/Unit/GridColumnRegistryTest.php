@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Grid\GridColumn;
-use Zoosper\Core\Grid\GridColumnRegistry;
-use Zoosper\Core\Grid\GridDefinition;
-use Zoosper\Core\Grid\GridFilter;
+use Zoosper\Grid\GridColumn;
+use Zoosper\Grid\GridColumnRegistry;
+use Zoosper\Grid\GridDefinition;
+use Zoosper\Grid\GridFilter;
 use Zoosper\Core\Module\ModuleRegistry;
 
 /*
@@ -52,7 +52,7 @@ function makeGridContributorModule(string $moduleName, string $grid, string $col
 
     file_put_contents(
         $moduleDir . '/config/grid_columns.php',
-        "<?php\ndeclare(strict_types=1);\nuse Zoosper\\Core\\Grid\\GridColumn;\nuse Zoosper\\Core\\Grid\\GridFilter;\nreturn ['{$grid}' => {$columnsPhpSource}];\n",
+        "<?php\ndeclare(strict_types=1);\nuse Zoosper\\Grid\\GridColumn;\nuse Zoosper\\Grid\\GridFilter;\nreturn ['{$grid}' => {$columnsPhpSource}];\n",
     );
 
     return $base;
@@ -180,3 +180,4 @@ it('GridColumnRegistry caches discovery per instance, like ModuleRegistry itself
         removeGridFixtureDir($base);
     }
 });
+

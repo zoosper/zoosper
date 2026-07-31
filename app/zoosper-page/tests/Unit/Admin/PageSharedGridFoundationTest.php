@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Tests\Unit\Admin;
 
-use Zoosper\Core\Grid\GridColumn;
-use Zoosper\Core\Grid\GridColumnRegistry;
+use Zoosper\Grid\GridColumn;
+use Zoosper\Grid\GridColumnRegistry;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Page\Admin\PageGridDefinition;
 
@@ -45,7 +45,7 @@ test('module grid registry can add a page column by the stable page grid key', f
     file_put_contents($module . '/module.php', "<?php return [];\n");
     file_put_contents($module . '/config/grid_columns.php', <<<'PHP'
 <?php
-use Zoosper\Core\Grid\GridColumn;
+use Zoosper\Grid\GridColumn;
 return ['admin.pages' => ['columns' => [new GridColumn('updated_at', 'Updated')], 'filters' => []]];
 PHP);
 

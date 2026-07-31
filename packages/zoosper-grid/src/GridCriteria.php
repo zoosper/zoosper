@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Grid;
+namespace Zoosper\Grid;
 
 use Zoosper\Core\Pagination\Pager;
 
@@ -97,3 +97,4 @@ final readonly class GridCriteria
         return $this->sortDir === 'asc' ? 'desc' : 'asc';
     }
 }
+

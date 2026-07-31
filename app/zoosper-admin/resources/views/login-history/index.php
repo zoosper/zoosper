@@ -1,7 +1,7 @@
 <?php
 /**
  * Phase A (Grid Core): this template now simply echoes the pre-rendered grid
- * HTML built by the shared Zoosper\Core\Grid\GridHtmlRenderer. Column layout,
+ * HTML built by the shared Zoosper\Grid\GridHtmlRenderer. Column layout,
  * filters and sorting are declared once in
  * Zoosper\Admin\Audit\LoginHistoryGrid, not in this template.
  *
@@ -9,3 +9,4 @@
  */
 ?>
 <?= $gridHtml ?? '' ?>
+

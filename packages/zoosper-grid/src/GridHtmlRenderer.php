@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Grid;
+namespace Zoosper\Grid;
 
 use Zoosper\Core\Pagination\PaginationResult;
 
@@ -192,3 +192,4 @@ final class GridHtmlRenderer
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 }
+
