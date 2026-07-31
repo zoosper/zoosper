@@ -7,7 +7,7 @@ namespace Zoosper\Core\Tests\Unit\Module;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-test('first-party runtime module names match Composer package identities', function (): void {
+test('first-party module files do not duplicate Composer package identity', function (): void {
     $basePath = dirname(__DIR__, 5);
 
     foreach (['app', 'packages'] as $directory) {
@@ -24,11 +24,14 @@ test('first-party runtime module names match Composer package identities', funct
 
             $composer = json_decode((string) file_get_contents($file->getPathname()), true, flags: JSON_THROW_ON_ERROR);
             $module = require $moduleFile;
-            $expectedName = str_replace('/', '-', (string) ($composer['name'] ?? ''));
 
+            expect($composer['name'] ?? null)->toBeString()->not->toBe('');
+            expect($composer['extra']['marko']['module'] ?? null)->toBeTrue();
             expect($module)->toBeArray();
-            expect($module['name'] ?? null)
-                ->toBe($expectedName, 'Runtime/package identity mismatch in ' . $packageRoot);
+            expect($module)->not->toHaveKey(
+                'name',
+                'Composer owns package identity; remove duplicate name from ' . $moduleFile,
+            );
         }
     }
 });
