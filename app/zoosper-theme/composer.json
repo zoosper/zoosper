@@ -1,6 +1,6 @@
 {
     "name": "zoosper/theme",
-    "description": "Zoosper_Theme module for Zoosper CMS.",
+    "description": "Theme and template rendering foundation for Zoosper CMS.",
     "type": "zoosper-module",
     "license": "MIT",
     "require": {
