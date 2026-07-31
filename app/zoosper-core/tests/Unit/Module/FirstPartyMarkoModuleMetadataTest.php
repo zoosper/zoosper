@@ -4,28 +4,15 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Tests\Unit\Module;
 
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use RuntimeException;
 
 /** @return list<string> */
 function firstPartyComposerManifests(string $basePath): array
 {
-    $manifests = [];
-
-    foreach (['app', 'packages'] as $directory) {
-        $root = $basePath . '/' . $directory;
-        if (!is_dir($root)) {
-            continue;
-        }
-
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root)) as $file) {
-            if ($file->isFile() && $file->getFilename() === 'composer.json') {
-                $manifests[] = $file->getPathname();
-            }
-        }
-    }
-
+    $manifests = array_merge(
+        glob($basePath . '/app/*/composer.json') ?: [],
+        glob($basePath . '/packages/*/composer.json') ?: [],
+    );
     sort($manifests);
 
     return $manifests;

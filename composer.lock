@@ -735,7 +735,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-admin",
-                "reference": "7e60e42d7db1bcf6d4cade1a6e1a2a3835e4b4b7"
+                "reference": "209bb871ae628eff9eae67a256b344da852090a1"
             },
             "require": {
                 "php": "^8.5",
@@ -746,10 +746,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_Admin"
-                },
                 "marko": {
                     "module": true
                 }
@@ -774,7 +770,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-api",
-                "reference": "6c636aabb6534440c5b3634a0f5742dd06fa3e4d"
+                "reference": "97acabf103ff38be3972188189889565c0fe321d"
             },
             "require": {
                 "php": "^8.5",
@@ -785,10 +781,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_Api"
-                },
                 "marko": {
                     "module": true
                 }
@@ -813,7 +805,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-auth",
-                "reference": "9ce2432c95af107cccf40914a36e79d47e8a73f4"
+                "reference": "4f43fe06278cfd3a0b7a81c82f295f3f9fe8b3bd"
             },
             "require": {
                 "php": "^8.5",
@@ -821,10 +813,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_Auth"
-                },
                 "marko": {
                     "module": true
                 }
@@ -854,7 +842,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-core",
-                "reference": "751acd37503e8c785a80d43443bd285a978a9ac5"
+                "reference": "070f132968149f98e14c734683ed0f7ab2e6591b"
             },
             "require": {
                 "ext-pdo": "*",
@@ -868,10 +856,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_Core"
-                },
                 "marko": {
                     "module": true
                 }
@@ -901,7 +885,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-errors",
-                "reference": "3eab20f1f9163e3ec63aec77f79c43e9b562d1aa"
+                "reference": "c876b7b2d974bf106f1b3451423e72f501a523a9"
             },
             "require": {
                 "marko/core": "^0.8",
@@ -916,10 +900,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_Errors"
-                },
                 "marko": {
                     "module": true
                 }
@@ -994,7 +974,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-mail",
-                "reference": "465b78407fd167f47853847f5ec2ee4f49e7aa22"
+                "reference": "d4ad8089b0aaef4dcd2b33c2143e61675fe8bf5d"
             },
             "require": {
                 "php": "^8.5",
@@ -1002,10 +982,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_Mail"
-                },
                 "marko": {
                     "module": true
                 }
@@ -1030,7 +1006,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-media",
-                "reference": "b8200051569295f449a3f790e69f9d60cf7b1dd7"
+                "reference": "ecfe115e5ad5de1dd68854ed33b29624acea7087"
             },
             "require": {
                 "ext-pdo": "*",
@@ -1045,10 +1021,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_Media"
-                },
                 "marko": {
                     "module": true
                 }
@@ -1086,7 +1058,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-page",
-                "reference": "ba719974949f379bca7c5bbf579ded168c79baec"
+                "reference": "e99c000e633dcc0847d47cc4528dd8018c26571f"
             },
             "require": {
                 "php": "^8.5",
@@ -1097,10 +1069,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_Page"
-                },
                 "marko": {
                     "module": true
                 }
@@ -1130,7 +1098,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-site",
-                "reference": "7566fc1e81176a6c1ef913b4ccbcdd224c6f39ec"
+                "reference": "9f06d6f72dd31932ead9ca5dad3fa408c5cc4d21"
             },
             "require": {
                 "php": "^8.5",
@@ -1138,10 +1106,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_Site"
-                },
                 "marko": {
                     "module": true
                 }
@@ -1171,7 +1135,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-theme",
-                "reference": "6678d058f400c39a07f03b9ee78c446e63983e74"
+                "reference": "791c005e5dd2d27fecf2e11d6e8228165a15b126"
             },
             "require": {
                 "php": "^8.5",
@@ -1180,10 +1144,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_Theme"
-                },
                 "marko": {
                     "module": true
                 }
@@ -1196,7 +1156,7 @@
             "license": [
                 "MIT"
             ],
-            "description": "Zoosper_Theme module for Zoosper CMS.",
+            "description": "Theme and template rendering foundation for Zoosper CMS.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -1208,7 +1168,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-two-factor",
-                "reference": "059dee39938525a1d40d1215a203dee4cf050771"
+                "reference": "0cd28d8f1b1097f00d21ec6a712b58ffb55903fa"
             },
             "require": {
                 "php": "^8.5",
@@ -1217,10 +1177,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_TwoFactor"
-                },
                 "marko": {
                     "module": true
                 }
@@ -1245,7 +1201,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-url-rewrite",
-                "reference": "89535e10056770d31f868647634130b2392f4a73"
+                "reference": "752f020b2da39a8153dd6516ec571c6c8c429320"
             },
             "require": {
                 "php": "^8.5",
@@ -1253,10 +1209,6 @@
             },
             "type": "zoosper-module",
             "extra": {
-                "zoosper": {
-                    "module": "module.php",
-                    "name": "Zoosper_UrlRewrite"
-                },
                 "marko": {
                     "module": true
                 }
