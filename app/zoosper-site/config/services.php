@@ -8,7 +8,6 @@ use Zoosper\Site\Console\SiteCreateCommand;
 use Zoosper\Site\Infrastructure\DatabaseSiteLookup;
 use Zoosper\Site\Repository\SiteDomainRepository;
 use Zoosper\Site\Repository\SiteRepository;
-use Zoosper\Site\Service\SiteResolver;
 
 return [
     SiteLookupInterface::class => static function (ServiceContainer $services): DatabaseSiteLookup {
@@ -17,7 +16,6 @@ return [
         );
     },
     SiteRepository::class => static fn (ServiceContainer $services): SiteRepository => new SiteRepository($services->get(PDO::class)),
-    SiteResolver::class => static fn (ServiceContainer $services): SiteResolver => new SiteResolver($services->get(SiteRepository::class)),
     SiteDomainRepository::class => static fn (ServiceContainer $services): SiteDomainRepository => new SiteDomainRepository($services->get(PDO::class)),
 
     // Console/kernel decoupling phase: site:create console command,
@@ -26,3 +24,4 @@ return [
         $services->get(SiteRepository::class)
     ),
 ];
+
