@@ -137,7 +137,8 @@ final class ModuleRegistry
 
         $modules = array_values($modulesByName);
         usort($modules, static function (Module $a, Module $b): int {
-            return [$a->sortOrder, $a->name] <=> [$b->sortOrder, $b->name];
+            return [self::sourcePriority($a->source), $a->name]
+                <=> [self::sourcePriority($b->source), $b->name];
         });
 
         return $modules;
