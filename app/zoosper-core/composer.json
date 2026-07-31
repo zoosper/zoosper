@@ -6,6 +6,7 @@
   "require": {
     "php": "^8.5",
     "ext-pdo": "*",
+    "marko/cache": "^0.8",
     "zoosper/errors": "*@dev"
   },
   "autoload": {
