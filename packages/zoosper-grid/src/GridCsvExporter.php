@@ -6,6 +6,13 @@ namespace Zoosper\Grid;
 
 use RuntimeException;
 
+/**
+ * Converts GridDefinition-backed rows into standards-compliant CSV.
+ *
+ * Spreadsheet applications may interpret cells beginning with formula control
+ * characters as executable formulas. Every exported scalar therefore passes
+ * through neutraliseFormula() before fputcsv() performs delimiter escaping.
+ */
 final readonly class GridCsvExporter
 {
     /**
@@ -24,18 +31,26 @@ final readonly class GridCsvExporter
         }
 
         try {
-            fputcsv($stream, array_map(
-                static fn (GridColumn $column): string => $column->label,
-                $columns,
-            ), escape: '');
+            fputcsv(
+                $stream,
+                array_map(
+                    static fn (GridColumn $column): string => self::neutraliseFormula($column->label),
+                    $columns,
+                ),
+                escape: '',
+            );
 
             foreach ($rows as $row) {
-                fputcsv($stream, array_map(
-                    static fn (GridColumn $column): string => self::scalarValue(
-                        $row[$column->key] ?? null,
+                fputcsv(
+                    $stream,
+                    array_map(
+                        static fn (GridColumn $column): string => self::neutraliseFormula(
+                            self::scalarValue($row[$column->key] ?? null),
+                        ),
+                        $columns,
                     ),
-                    $columns,
-                ), escape: '');
+                    escape: '',
+                );
             }
 
             rewind($stream);
@@ -84,5 +99,24 @@ final readonly class GridCsvExporter
             $value,
             JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
         );
+    }
+
+    /**
+     * Prevent spreadsheet formula execution while preserving the displayed
+     * value. A leading apostrophe is the conventional literal-text marker used
+     * by spreadsheet applications and remains visible in raw CSV consumers.
+     */
+    private static function neutraliseFormula(string $value): string
+    {
+        if ($value === '') {
+            return '';
+        }
+
+        $first = $value[0];
+        if (in_array($first, ['=', '+', '-', '@', "\t", "\r", "\n"], true)) {
+            return "'" . $value;
+        }
+
+        return $value;
     }
 }
