@@ -7,11 +7,6 @@ namespace Zoosper\AdminGrid;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDefinition;
 
-/**
- * Validates persisted or submitted admin-grid state against the live grid
- * definition. Unknown contributed/retired fields are discarded rather than
- * leaking into queries, bookmarks or visible-column preferences.
- */
 final readonly class GridStateNormaliser
 {
     /**
@@ -21,7 +16,8 @@ final readonly class GridStateNormaliser
      *   sort_by: string|null,
      *   sort_dir: 'asc'|'desc',
      *   page_size: int,
-     *   visible_columns: list<string>
+     *   visible_columns: list<string>,
+     *   column_order: list<string>
      * }
      */
     public function normalise(array $state, GridDefinition $definition): array
@@ -43,18 +39,31 @@ final readonly class GridStateNormaliser
             ? 'asc'
             : 'desc';
         $pageSize = max(5, min(200, (int) ($state['page_size'] ?? 20)));
+        $allowed = array_fill_keys($definition->allColumnKeys(), true);
 
         $submittedColumns = is_array($state['visible_columns'] ?? null)
             ? array_values(array_unique(array_map('strval', $state['visible_columns'])))
             : $definition->defaultVisibleColumnKeys();
-        $allowedColumns = array_fill_keys($definition->allColumnKeys(), true);
         $visibleColumns = array_values(array_filter(
             $submittedColumns,
-            static fn (string $key): bool => isset($allowedColumns[$key]),
+            static fn (string $key): bool => isset($allowed[$key]),
         ));
         foreach ($definition->columns as $column) {
             if (!$column->toggleable && !in_array($column->key, $visibleColumns, true)) {
                 $visibleColumns[] = $column->key;
+            }
+        }
+
+        $submittedOrder = is_array($state['column_order'] ?? null)
+            ? array_values(array_unique(array_map('strval', $state['column_order'])))
+            : $definition->allColumnKeys();
+        $columnOrder = array_values(array_filter(
+            $submittedOrder,
+            static fn (string $key): bool => isset($allowed[$key]),
+        ));
+        foreach ($definition->allColumnKeys() as $key) {
+            if (!in_array($key, $columnOrder, true)) {
+                $columnOrder[] = $key;
             }
         }
 
@@ -64,6 +73,7 @@ final readonly class GridStateNormaliser
             'sort_dir' => $sortDir,
             'page_size' => $pageSize,
             'visible_columns' => $visibleColumns,
+            'column_order' => $columnOrder,
         ];
     }
 
@@ -71,13 +81,12 @@ final readonly class GridStateNormaliser
     public function criteria(array $state, GridDefinition $definition): GridCriteria
     {
         $normalised = $this->normalise($state, $definition);
-        $values = [
+
+        return GridCriteria::fromValues([
             ...$normalised['filters'],
             'sort' => $normalised['sort_by'],
             'dir' => $normalised['sort_dir'],
             'page_size' => $normalised['page_size'],
-        ];
-
-        return GridCriteria::fromValues($values, $definition);
+        ], $definition);
     }
 }

@@ -5,22 +5,33 @@ declare(strict_types=1);
 namespace Zoosper\Grid;
 
 /**
- * Declarative filter definition for the shared admin Grid engine.
+ * Declarative filter definition.
  *
- * type = 'text'   -> free-text input, matched with LIKE %term% by the data source
- * type = 'select' -> dropdown; $options are [value, label] pairs
+ * Supported types are text, select and multiselect. Options may be legacy
+ * value/label arrays or GridFilterOption objects.
  */
 final readonly class GridFilter
 {
-    /**
-     * @param list<array{value: string, label: string}> $options
-     */
+    /** @param list<array{value: string, label: string}|GridFilterOption> $options */
     public function __construct(
         public string $key,
         public string $label,
         public string $type = 'text',
         public array $options = [],
     ) {
+        if (!in_array($this->type, ['text', 'select', 'multiselect'], true)) {
+            throw new \InvalidArgumentException('Unsupported grid filter type: ' . $this->type);
+        }
+    }
+
+    /** @return list<GridFilterOption> */
+    public function normalisedOptions(): array
+    {
+        return array_map(
+            static fn (array|GridFilterOption $option): GridFilterOption => $option instanceof GridFilterOption
+                ? $option
+                : new GridFilterOption((string) $option['value'], (string) $option['label']),
+            $this->options,
+        );
     }
 }
-

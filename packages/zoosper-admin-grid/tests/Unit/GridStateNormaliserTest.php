@@ -40,6 +40,7 @@ test('saved state is constrained by the live grid definition', function (): void
         'sort_dir' => 'desc',
         'page_size' => 200,
         'visible_columns' => ['title', 'id', 'actions'],
+        'column_order' => ['id', 'title', 'status', 'actions'],
     ]);
 });
 
