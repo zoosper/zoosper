@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+use Zoosper\Auth\Admin\Grid\AdminUserGridIndex;
 use Zoosper\Auth\Admin\Grid\AdminUserGridPageBuilder;
 use Zoosper\Auth\Admin\Grid\AuthGridPageBuilderFactory;
+use Zoosper\Auth\Admin\Grid\AuthGridPagePresenter;
+use Zoosper\Auth\Admin\Grid\RoleGridIndex;
 use Zoosper\Auth\Admin\Grid\RoleGridPageBuilder;
 
 it('declares the complete Auth Grid read-side service fragment', function (): void {
@@ -11,10 +14,13 @@ it('declares the complete Auth Grid read-side service fragment', function (): vo
     $services = require $root . '/app/zoosper-auth/config/services_auth_grid.php';
 
     expect($services)->toBeArray()
-        ->and(array_keys($services))->toBe([
+        ->and($services)->toHaveKeys([
             AuthGridPageBuilderFactory::class,
             AdminUserGridPageBuilder::class,
             RoleGridPageBuilder::class,
+            AuthGridPagePresenter::class,
+            AdminUserGridIndex::class,
+            RoleGridIndex::class,
         ]);
 
     foreach ($services as $factory) {
@@ -30,6 +36,8 @@ it('keeps the service fragment read-side only', function (): void {
 
     expect($source)->toContain('GridViewStateResolver::class')
         ->toContain('AuthGridPageBuilderFactory::class')
+        ->toContain('AdminUserGridIndex::class')
+        ->toContain('RoleGridIndex::class')
         ->not->toContain('PasswordHasher')
         ->not->toContain('CsrfTokenManager')
         ->not->toContain('SessionGuard')

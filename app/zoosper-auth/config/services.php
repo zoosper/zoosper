@@ -15,6 +15,9 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
 
 return [
+    // Auth Grid read-side services. Existing manifest entries below retain precedence.
+    ...require __DIR__ . '/services_auth_grid.php',
+
     AdminUserRepository::class => static fn (ServiceContainer $services): AdminUserRepository => new AdminUserRepository($services->get(PDO::class)),
     RoleRepository::class => static fn (ServiceContainer $services): RoleRepository => new RoleRepository($services->get(PDO::class)),
     PasswordHasher::class => static fn (ServiceContainer $services): PasswordHasher => new PasswordHasher(),
