@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Zoosper\AdminGrid\GridBookmarkRepository;
 use Zoosper\AdminGrid\GridPreferenceRepository;
 use Zoosper\AdminGrid\GridStateNormaliser;
+use Zoosper\AdminGrid\GridViewMutationService;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Grid\GridColumnOrderer;
@@ -19,5 +20,10 @@ return [
         bookmarks: $services->get(GridBookmarkRepository::class),
         normaliser: $services->get(GridStateNormaliser::class),
         columnOrderer: $services->get(GridColumnOrderer::class),
+    ),
+    GridViewMutationService::class => static fn (ServiceContainer $services): GridViewMutationService => new GridViewMutationService(
+        preferences: $services->get(GridPreferenceRepository::class),
+        bookmarks: $services->get(GridBookmarkRepository::class),
+        normaliser: $services->get(GridStateNormaliser::class),
     ),
 ];
