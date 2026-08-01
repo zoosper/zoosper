@@ -6,41 +6,14 @@ namespace Zoosper\Core\Http;
 
 use Zoosper\Core\Site\SiteContext;
 
-/**
- * Immutable HTTP request value object.
- *
- * Phase 1.34a: the resolved site context is carried as an immutable property on
- * the request itself. Phase 1.35 adds immutable route parameters extracted by
- * the router from parameterised paths such as /admin/pages/{id}.
- *
- * CORRECTNESS FIX (confirmed 2026-07-30, flagged by an external reviewer
- * pass): form() previously read the live $_POST superglobal directly on
- * every call, unlike every other accessor on this class (host, path,
- * headers, query, siteContext, routeParams), which all read from an
- * immutable, constructor-injected property. This broke the entire point of
- * this being an immutable value object:
- * - A manually-constructed Request (tests, sub-requests, future queue
- *   workers) could never actually control its own form data — form()
- *   silently ignored whatever was passed in and read the global instead.
- * - Tests had to mutate global $_POST state around each call instead of
- *   simply constructing the object with the data they intended it to have
- *   (see the fixed CsrfMiddlewareTest for the before/after).
- *
- * form() now reads from a genuinely immutable $form property, captured
- * once in fromGlobals() from the live $_POST at the moment the real
- * top-level request is bootstrapped — exactly the same pattern already
- * used for every other property on this class. No backward-compatibility
- * shim was added (per explicit project decision: 100% AI-authored,
- * pre-launch, no external users yet — this is the correct long-term
- * behaviour, not a stopgap).
- */
+/** Immutable HTTP request value object. */
 final readonly class Request
 {
     /**
      * @param array<string, string> $headers
-     * @param array<string, string> $query
-     * @param array<string, mixed> $form
+     * @param array<string, mixed> $query
      * @param array<string, string> $routeParams
+     * @param array<string, mixed> $form
      */
     public function __construct(
         private string $method,
@@ -62,38 +35,26 @@ final readonly class Request
         $path = parse_url($uri, PHP_URL_PATH) ?: '/';
         $queryString = parse_url($uri, PHP_URL_QUERY) ?: '';
         parse_str($queryString, $query);
-        $headers = function_exists('getallheaders') ? array_change_key_case(getallheaders(), CASE_LOWER) : [];
+        $headers = function_exists('getallheaders')
+            ? array_change_key_case(getallheaders(), CASE_LOWER)
+            : [];
 
         return new self(
             method: strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')),
             path: '/' . trim($path, '/'),
             headers: $headers,
             body: file_get_contents('php://input') ?: '',
-            query: array_map(static fn (mixed $value): string => (string) $value, $query),
+            query: self::normaliseInputMap($query),
             host: strtolower((string) ($_SERVER['HTTP_HOST'] ?? 'localhost')),
             clientIp: (string) ($_SERVER['REMOTE_ADDR'] ?? ''),
-            // Captured ONCE here, at the true request boundary — the only
-            // place this class should ever read a superglobal. Every other
-            // construction path (manual, tests, sub-requests) provides
-            // $form explicitly through the constructor instead.
             form: $_POST,
         );
     }
 
     public function withSiteContext(SiteContext $siteContext): self
     {
-        return new self(
-            method: $this->method,
-            path: $this->path,
-            headers: $this->headers,
-            body: $this->body,
-            query: $this->query,
-            host: $this->host,
-            clientIp: $this->clientIp,
-            siteContext: $siteContext,
-            routeParams: $this->routeParams,
-            form: $this->form,
-        );
+        return new self($this->method, $this->path, $this->headers, $this->body, $this->query,
+            $this->host, $this->clientIp, $siteContext, $this->routeParams, $this->form);
     }
 
     /** @param array<string, scalar|null> $routeParams */
@@ -105,87 +66,47 @@ final readonly class Request
                 $normalised[$key] = (string) $value;
             }
         }
-
-        return new self(
-            method: $this->method,
-            path: $this->path,
-            headers: $this->headers,
-            body: $this->body,
-            query: $this->query,
-            host: $this->host,
-            clientIp: $this->clientIp,
-            siteContext: $this->siteContext,
-            routeParams: $normalised,
-            form: $this->form,
-        );
+        return new self($this->method, $this->path, $this->headers, $this->body, $this->query,
+            $this->host, $this->clientIp, $this->siteContext, $normalised, $this->form);
     }
 
-    /**
-     * Return a new Request carrying the given form data, leaving every
-     * other property unchanged. Additive — mirrors withSiteContext()/
-     * withRouteParams() so callers that build a base Request and then need
-     * to attach form data (e.g. a test, or a sub-request built from an
-     * existing one) have an explicit, immutable way to do so instead of
-     * touching $_POST.
-     *
-     * @param array<string, mixed> $form
-     */
+    /** @param array<string, mixed> $form */
     public function withForm(array $form): self
     {
-        return new self(
-            method: $this->method,
-            path: $this->path,
-            headers: $this->headers,
-            body: $this->body,
-            query: $this->query,
-            host: $this->host,
-            clientIp: $this->clientIp,
-            siteContext: $this->siteContext,
-            routeParams: $this->routeParams,
-            form: $form,
-        );
+        return new self($this->method, $this->path, $this->headers, $this->body, $this->query,
+            $this->host, $this->clientIp, $this->siteContext, $this->routeParams, $form);
     }
 
-    public function siteContext(): ?SiteContext
-    {
-        return $this->siteContext;
-    }
-
-    public function method(): string
-    {
-        return $this->method;
-    }
-
-    public function path(): string
-    {
-        return $this->path === '//' ? '/' : $this->path;
-    }
-
-    public function host(): string
-    {
-        return explode(':', $this->host)[0];
-    }
-
-    public function clientIp(): ?string
-    {
-        return $this->clientIp !== '' ? $this->clientIp : null;
-    }
+    public function siteContext(): ?SiteContext { return $this->siteContext; }
+    public function method(): string { return $this->method; }
+    public function path(): string { return $this->path === '//' ? '/' : $this->path; }
+    public function host(): string { return explode(':', $this->host)[0]; }
+    public function clientIp(): ?string { return $this->clientIp !== '' ? $this->clientIp : null; }
 
     public function header(string $name, ?string $default = null): ?string
     {
-        $key = strtolower($name);
-
-        return $this->headers[$key] ?? $default;
+        return $this->headers[strtolower($name)] ?? $default;
     }
 
-    public function userAgent(): ?string
-    {
-        return $this->header('user-agent');
-    }
+    public function userAgent(): ?string { return $this->header('user-agent'); }
 
+    /** Scalar query accessor. Array-valued parameters return the default. */
     public function query(string $key, ?string $default = null): ?string
     {
-        return $this->query[$key] ?? $default;
+        $value = $this->query[$key] ?? null;
+        return is_scalar($value) ? (string) $value : $default;
+    }
+
+    /** @return list<string> */
+    public function queryList(string $key): array
+    {
+        return self::stringList($this->query[$key] ?? []);
+    }
+
+    /** @return array<string, mixed> */
+    public function queryParams(): array
+    {
+        return $this->query;
     }
 
     public function routeParam(string $key, ?string $default = null): ?string
@@ -194,10 +115,7 @@ final readonly class Request
     }
 
     /** @return array<string, string> */
-    public function routeParams(): array
-    {
-        return $this->routeParams;
-    }
+    public function routeParams(): array { return $this->routeParams; }
 
     /** @return array<string, mixed> */
     public function json(): array
@@ -206,17 +124,38 @@ final readonly class Request
         return is_array($decoded) ? $decoded : [];
     }
 
-    /**
-     * Return this request's form data.
-     *
-     * FIXED: now reads the immutable $form property captured at
-     * construction time (see fromGlobals()/withForm()), instead of reading
-     * the live $_POST superglobal directly on every call.
-     *
-     * @return array<string, mixed>
-     */
-    public function form(): array
+    /** @return array<string, mixed> */
+    public function form(): array { return $this->form; }
+
+    /** @param array<string, mixed> $values @return array<string, mixed> */
+    private static function normaliseInputMap(array $values): array
     {
-        return $this->form;
+        $normalised = [];
+        foreach ($values as $key => $value) {
+            if (!is_string($key)) {
+                continue;
+            }
+            $normalised[$key] = is_array($value)
+                ? self::stringList($value)
+                : (is_scalar($value) ? (string) $value : '');
+        }
+        return $normalised;
+    }
+
+    /** @return list<string> */
+    private static function stringList(mixed $value): array
+    {
+        $result = [];
+        $append = static function (mixed $item) use (&$result): void {
+            if (!is_scalar($item)) {
+                return;
+            }
+            $item = trim((string) $item);
+            if ($item !== '' && !in_array($item, $result, true)) {
+                $result[] = $item;
+            }
+        };
+        is_array($value) ? array_walk_recursive($value, $append) : $append($value);
+        return $result;
     }
 }

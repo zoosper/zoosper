@@ -17,7 +17,7 @@ test('page grid definition uses the shared configurable grid contract', function
         'id', 'title', 'slug', 'status', 'site_name', 'actions',
     ]);
     expect($definition->sortableColumnKeys())->toBe(['id', 'title', 'slug', 'status']);
-    expect($definition->filterKeys())->toBe(['q', 'status', 'site_id']);
+    expect($definition->filterKeys())->toBe(['q', 'title', 'slug', 'status', 'site_id']);
     expect($definition->defaultSort)->toBe('id');
     expect($definition->defaultSortDir)->toBe('desc');
 });

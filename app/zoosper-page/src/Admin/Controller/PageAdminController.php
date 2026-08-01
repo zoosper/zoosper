@@ -40,6 +40,8 @@ use Zoosper\Page\Admin\Form\PageSeoSectionProvider;
 use Zoosper\Page\Admin\PageGridDataSource;
 use Zoosper\Page\Admin\PageGridDefinition;
 use Zoosper\Page\Admin\PageGridRepository;
+use Zoosper\Page\Admin\PageGridQueryState;
+use Zoosper\Page\Admin\PageGridWorkspace;
 use Zoosper\Page\Content\BlockJsonValidator;
 use Zoosper\Page\Event\PageEvents;
 use Zoosper\Page\Event\PagePublishedEvent;
@@ -84,6 +86,7 @@ final readonly class PageAdminController
         private ?PageGridDefinition              $pageGridDefinition = null,
         private ?PageGridDataSource              $pageGridDataSource = null,
         private ?GridHtmlRenderer                $gridHtmlRenderer = null,
+        private ?PageGridWorkspace               $pageGridWorkspace = null,
         private ?HtmlSanitizerInterface          $htmlSanitizer = null,
         private ?FlashMessageStoreInterface      $flashMessages = null,
         private ?ConfigRepository                $config = null,
@@ -106,21 +109,22 @@ final readonly class PageAdminController
     {
         $user = $this->currentAdminUser();
 
-        $definition = $this->pageGridDefinition?->build();
-        $criteria = $definition !== null
+        $resolved = $this->pageGridWorkspace?->resolve(
+            $user->id,
+            PageGridQueryState::fromQuery($_GET),
+            PageGridQueryState::bookmarkId($_GET),
+        );
+        $definition = $resolved['state']->definition ?? $this->pageGridDefinition?->build();
+        $criteria = $resolved['state']->criteria ?? ($definition !== null
             ? GridCriteria::fromValues($_GET, $definition)
-            : null;
+            : null);
         $pagination = $criteria !== null
             ? $this->pageGridDataSource?->paginate($criteria)
             : null;
-        $gridHtml = $definition !== null && $criteria !== null && $pagination !== null
-            ? $this->gridHtmlRenderer?->render(
-                $definition,
-                $pagination,
-                $criteria,
-                '/admin/pages',
-            )
+        $tableHtml = $definition !== null && $criteria !== null && $pagination !== null
+            ? $this->gridHtmlRenderer?->renderBody($definition, $pagination, $criteria, '/admin/pages')
             : null;
+        $gridHtml = ($resolved['html'] ?? '') . ($tableHtml ?? '');
         $pages = $pagination?->items ?? $this->pages->all();
         $sites = $this->sites->allActive();
 

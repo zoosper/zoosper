@@ -7,100 +7,46 @@ namespace Zoosper\Page\Admin;
 use PDO;
 use Zoosper\Core\Pagination\PaginationResult;
 
-/**
- * Query service for the Pages admin grid.
- *
- * This class is intentionally separate from the core page repository so the
- * admin grid can evolve filters, pagination and joins without polluting page
- * domain read/write operations.
- */
 final readonly class PageGridRepository
 {
-    public function __construct(private PDO $pdo)
-    {
-    }
+    public function __construct(private PDO $pdo) {}
 
-    /**
-     * Return a paginated set of page rows for the admin grid.
-     *
-     * @return PaginationResult<array<string, mixed>>
-     */
+    /** @return PaginationResult<array<string, mixed>> */
     public function paginate(PageGridCriteria $criteria): PaginationResult
     {
         [$where, $params] = $this->whereClause($criteria);
-
         $count = $this->pdo->prepare('SELECT COUNT(*) FROM pages p ' . $where);
-        foreach ($params as $name => $value) {
-            $count->bindValue($name, $value);
-        }
-        $count->execute();
-        $total = (int) $count->fetchColumn();
-
-        $orderBy = $this->orderBy($criteria);
-
-        $sql = 'SELECT p.*, s.name AS site_name
-            FROM pages p
-            LEFT JOIN sites s ON s.id = p.site_id
-            ' . $where . '
-            ORDER BY ' . $orderBy . '
-            LIMIT :limit OFFSET :offset';
-
-        $statement = $this->pdo->prepare($sql);
-        foreach ($params as $name => $value) {
-            $statement->bindValue($name, $value);
-        }
-        $statement->bindValue('limit', $criteria->pager->pageSize, PDO::PARAM_INT);
-        $statement->bindValue('offset', $criteria->pager->offset(), PDO::PARAM_INT);
+        $this->bind($count, $params); $count->execute();
+        $total=(int)$count->fetchColumn();
+        $sql='SELECT p.*, s.name AS site_name FROM pages p LEFT JOIN sites s ON s.id=p.site_id '
+            .$where.' ORDER BY '.$this->orderBy($criteria).' LIMIT :limit OFFSET :offset';
+        $statement=$this->pdo->prepare($sql); $this->bind($statement,$params);
+        $statement->bindValue(':limit',$criteria->pager->pageSize,PDO::PARAM_INT);
+        $statement->bindValue(':offset',$criteria->pager->offset(),PDO::PARAM_INT);
         $statement->execute();
-
-        return new PaginationResult(
-            items: $statement->fetchAll(),
-            total: $total,
-            page: $criteria->pager->page,
-            pageSize: $criteria->pager->pageSize,
-        );
+        return new PaginationResult(items:$statement->fetchAll(),total:$total,page:$criteria->pager->page,pageSize:$criteria->pager->pageSize);
     }
 
     private function orderBy(PageGridCriteria $criteria): string
     {
-        $columns = [
-            'id' => 'p.id',
-            'title' => 'p.title',
-            'slug' => 'p.slug',
-            'status' => 'p.status',
-        ];
-        $column = $columns[$criteria->sortBy ?? ''] ?? 'p.updated_at';
-        $direction = $criteria->sortDir === 'asc' ? 'ASC' : 'DESC';
-
-        return $column . ' ' . $direction . ', p.id DESC';
+        $columns=['id'=>'p.id','title'=>'p.title','slug'=>'p.slug','status'=>'p.status'];
+        return ($columns[$criteria->sortBy??'']??'p.updated_at').' '.($criteria->sortDir==='asc'?'ASC':'DESC').', p.id DESC';
     }
 
-    /**
-     * Build a safe WHERE clause and bound parameters for the page grid.
-     *
-     * @return array{0:string,1:array<string,string|int>}
-     */
+    /** @return array{0:string,1:array<string,string|int>} */
     private function whereClause(PageGridCriteria $criteria): array
     {
-        $conditions = [];
-        $params = [];
-
-        if ($criteria->query !== '') {
-            $conditions[] = '(p.title LIKE :query OR p.slug LIKE :query)';
-            $params['query'] = '%' . $criteria->query . '%';
-        }
-
-        if ($criteria->status !== '') {
-            $conditions[] = 'p.status = :status';
-            $params['status'] = $criteria->status;
-        }
-
-        if ($criteria->siteId !== null) {
-            $conditions[] = 'p.site_id = :site_id';
-            $params['site_id'] = $criteria->siteId;
-        }
-
-        return [$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params];
+        $conditions=[];$params=[];
+        if($criteria->query!==''){$conditions[]='(p.title LIKE :query OR p.slug LIKE :query)';$params['query']='%'.$criteria->query.'%';}
+        if($criteria->title!==''){$conditions[]='p.title LIKE :title';$params['title']='%'.$criteria->title.'%';}
+        if($criteria->slug!==''){$conditions[]='p.slug LIKE :slug';$params['slug']='%'.$criteria->slug.'%';}
+        if($criteria->status!==''){$conditions[]='p.status = :status';$params['status']=$criteria->status;}
+        $siteIds=$criteria->siteIds!==[]?$criteria->siteIds:($criteria->siteId!==null?[$criteria->siteId]:[]);
+        if($siteIds!==[]){$holders=[];foreach($siteIds as $i=>$id){$name='site_id_'.$i;$holders[]=':'.$name;$params[$name]=$id;}$conditions[]='p.site_id IN ('.implode(', ',$holders).')';}
+        return [$conditions===[]?'':'WHERE '.implode(' AND ',$conditions),$params];
     }
-}
 
+    /** @param array<string,string|int> $params */
+    private function bind(\PDOStatement $statement,array $params):void
+    {foreach($params as $name=>$value){$statement->bindValue(':'.$name,$value,is_int($value)?PDO::PARAM_INT:PDO::PARAM_STR);}}
+}

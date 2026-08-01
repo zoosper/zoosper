@@ -6,6 +6,18 @@ $assetVersion = '1.37l';
 
 return [
     'assets' => [
+        'zoosper-grid-compact-script' => [
+            'type' => 'script',
+            'path' => '/asset/zoosper-admin/js/zoosper-grid-compact.js?v=' . $assetVersion,
+            'sort_order' => 80,
+            'attributes' => ['defer' => true],
+        ],
+        'zoosper-grid-columns-script' => [
+            'type' => 'script',
+            'path' => '/asset/zoosper-admin/js/zoosper-grid-columns.js?v=' . $assetVersion,
+            'sort_order' => 81,
+            'attributes' => ['defer' => true],
+        ],
         'zoosper-admin-base' => [
             'type' => 'style',
             'path' => '/assets/admin/css/admin.css?v=' . $assetVersion,

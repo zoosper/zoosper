@@ -129,3 +129,236 @@
     gap: 6px;
     font-size: 0.85rem;
 }
+
+/* BEGIN ZOOSPER COMPACT GRID V2 */
+/* Zoosper Admin Grid compact layout v2. Module-owned, cache-busted asset. */
+.admin-content > [data-grid-workspace] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+    margin: -42px 0 10px !important;
+}
+
+.admin-content > .toolbar {
+    width: max-content;
+    margin: 0 0 16px !important;
+}
+
+[data-grid-workspace] .grid-compact-actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    min-height: 42px !important;
+    margin: 0 0 4px 150px !important;
+}
+
+[data-grid-workspace] .grid-compact-actions > button,
+[data-grid-workspace] .grid-compact-actions > .button {
+    width: auto !important;
+    min-height: 42px !important;
+    margin: 0 !important;
+    padding: 10px 15px !important;
+    border-radius: 9px !important;
+    white-space: nowrap !important;
+}
+
+[data-grid-workspace] .grid-compact-actions > [data-grid-toggle] {
+    color: #102a43 !important;
+    background: #fff !important;
+    border: 1px solid #cbd8e6 !important;
+}
+
+[data-grid-workspace] .grid-compact-state {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-height: 62px !important;
+    margin: 0 !important;
+    padding: 10px 14px !important;
+    background: #fff !important;
+    border: 1px solid #cfdae6 !important;
+    border-radius: 13px !important;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, .035) !important;
+}
+
+[data-grid-workspace] .grid-compact-state > strong {
+    margin: 0 !important;
+    line-height: 1.2 !important;
+}
+
+[data-grid-workspace] .grid-compact-status {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 4px 9px !important;
+    color: #08705e !important;
+    background: #e7f8f4 !important;
+    border-radius: 999px !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+}
+
+[data-grid-workspace] .grid-compact-state > label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: auto !important;
+    margin: 0 0 0 auto !important;
+    white-space: nowrap !important;
+}
+
+[data-grid-workspace] .grid-compact-state select {
+    width: 90px !important;
+    min-width: 90px !important;
+    height: 42px !important;
+    margin: 0 !important;
+    padding: 8px 34px 8px 12px !important;
+}
+
+[data-grid-workspace] .grid-compact-state > [data-grid-save-view] {
+    width: auto !important;
+    min-height: 42px !important;
+    margin: 0 !important;
+    padding: 9px 12px !important;
+    color: #087f72 !important;
+    background: transparent !important;
+}
+
+[data-grid-workspace] [data-grid-filter-form] {
+    display: contents !important;
+}
+
+[data-grid-workspace] .grid-compact-panel {
+    display: block !important;
+    margin: 0 !important;
+    padding: 14px !important;
+    background: #fff !important;
+    border: 1px solid #cfdae6 !important;
+    border-radius: 13px !important;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .06) !important;
+}
+
+[data-grid-workspace] .grid-compact-panel[hidden] {
+    display: none !important;
+}
+
+[data-grid-workspace] .grid-compact-panel__head {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    margin: 0 0 12px !important;
+}
+
+[data-grid-workspace] .grid-compact-panel__head button {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 2px 7px !important;
+    color: #526679 !important;
+    background: transparent !important;
+}
+
+[data-grid-workspace] .grid-compact-filters {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    align-items: end !important;
+}
+
+[data-grid-workspace] .grid-compact-filters > label {
+    display: grid !important;
+    gap: 5px !important;
+    width: auto !important;
+    margin: 0 !important;
+}
+
+[data-grid-workspace] .grid-compact-filters input,
+[data-grid-workspace] .grid-compact-filters select {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+[data-grid-workspace] .grid-compact-filters select[multiple] {
+    min-height: 88px !important;
+}
+
+[data-grid-workspace] .grid-compact-filters > div:last-child {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    grid-column: 1 / -1 !important;
+}
+
+[data-grid-workspace] .grid-compact-columns {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin: 0 0 14px !important;
+}
+
+[data-grid-workspace] .grid-compact-column {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 8px 12px !important;
+    background: #edf3f8 !important;
+    border: 1px solid #c8d6e4 !important;
+    border-radius: 9px !important;
+}
+
+[data-grid-workspace] .grid-compact-column input[type="checkbox"] {
+    width: auto !important;
+    margin: 0 !important;
+}
+
+[data-grid-workspace] .grid-filter-chips {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 7px !important;
+    min-height: 0 !important;
+}
+
+[data-grid-workspace] .grid-filter-chips:empty {
+    display: none !important;
+}
+
+.admin-content > .grid-summary {
+    margin: 10px 0 7px !important;
+}
+
+.admin-content > .grid-table {
+    margin-top: 0 !important;
+}
+
+@media (max-width: 800px) {
+    .admin-content > [data-grid-workspace] { margin-top: 0 !important; }
+    [data-grid-workspace] .grid-compact-actions { justify-content: flex-start !important; margin-left: 0 !important; }
+    [data-grid-workspace] .grid-compact-state { align-items: flex-start !important; flex-wrap: wrap !important; }
+    [data-grid-workspace] .grid-compact-state > label { margin-left: 0 !important; }
+    [data-grid-workspace] .grid-compact-filters { grid-template-columns: 1fr !important; }
+}
+/* END ZOOSPER COMPACT GRID V2 */
+
+/* BEGIN GRID COLUMN FILTER VISIBILITY */
+/*
+ * Column-specific filters follow their matching column checkbox immediately.
+ * Global Search has data-grid-filter-columns="" and remains independent.
+ */
+[data-grid-workspace]:has(
+    [name="visible_columns[]"][value="title"]:not(:checked)
+) [data-grid-filter-columns="title"],
+[data-grid-workspace]:has(
+    [name="visible_columns[]"][value="slug"]:not(:checked)
+) [data-grid-filter-columns="slug"],
+[data-grid-workspace]:has(
+    [name="visible_columns[]"][value="status"]:not(:checked)
+) [data-grid-filter-columns="status"],
+[data-grid-workspace]:has(
+    [name="visible_columns[]"][value="site_name"]:not(:checked)
+) [data-grid-filter-columns="site_name"] {
+    display: none !important;
+}
+/* END GRID COLUMN FILTER VISIBILITY */

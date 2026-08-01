@@ -6,61 +6,53 @@ namespace Zoosper\AdminGrid;
 
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDefinition;
+use Zoosper\Grid\GridFilterValue;
 
 final readonly class GridStateNormaliser
 {
-    /**
-     * @param array<string, mixed> $state
-     * @return array{
-     *   filters: array<string, string>,
-     *   sort_by: string|null,
-     *   sort_dir: 'asc'|'desc',
-     *   page_size: int,
-     *   visible_columns: list<string>,
-     *   column_order: list<string>
-     * }
-     */
+    /** @param array<string, mixed> $state @return array<string, mixed> */
     public function normalise(array $state, GridDefinition $definition): array
     {
         $filters = [];
-        $submittedFilters = is_array($state['filters'] ?? null) ? $state['filters'] : [];
-        foreach ($definition->filterKeys() as $key) {
-            $value = trim((string) ($submittedFilters[$key] ?? ''));
+        $submitted = is_array($state['filters'] ?? null) ? $state['filters'] : [];
+        foreach ($definition->filters as $filter) {
+            if ($filter->type === 'multiselect') {
+                $value = GridFilterValue::many($submitted[$filter->key] ?? []);
+                if ($value !== []) {
+                    $filters[$filter->key] = $value;
+                }
+                continue;
+            }
+            $value = GridFilterValue::one($submitted[$filter->key] ?? '');
             if ($value !== '') {
-                $filters[$key] = $value;
+                $filters[$filter->key] = $value;
             }
         }
 
-        $sortBy = is_string($state['sort_by'] ?? null)
-            && $definition->isSortable($state['sort_by'])
-            ? $state['sort_by']
-            : $definition->defaultSort;
-        $sortDir = strtolower((string) ($state['sort_dir'] ?? $definition->defaultSortDir)) === 'asc'
-            ? 'asc'
-            : 'desc';
-        $pageSize = max(5, min(200, (int) ($state['page_size'] ?? 20)));
+        $sortCandidate = GridFilterValue::one($state['sort_by'] ?? null);
+        $sortBy = $sortCandidate !== '' && $definition->isSortable($sortCandidate)
+            ? $sortCandidate : $definition->defaultSort;
+        $sortDir = strtolower(GridFilterValue::one($state['sort_dir'] ?? $definition->defaultSortDir)) === 'asc'
+            ? 'asc' : 'desc';
+        $pageSize = max(5, min(200, (int) GridFilterValue::one($state['page_size'] ?? 20)));
         $allowed = array_fill_keys($definition->allColumnKeys(), true);
 
-        $submittedColumns = is_array($state['visible_columns'] ?? null)
-            ? array_values(array_unique(array_map('strval', $state['visible_columns'])))
+        $submittedColumns = array_key_exists('visible_columns', $state)
+            ? GridFilterValue::many($state['visible_columns'])
             : $definition->defaultVisibleColumnKeys();
-        $visibleColumns = array_values(array_filter(
-            $submittedColumns,
-            static fn (string $key): bool => isset($allowed[$key]),
-        ));
+        $visibleColumns = array_values(array_filter($submittedColumns,
+            static fn (string $key): bool => isset($allowed[$key])));
         foreach ($definition->columns as $column) {
             if (!$column->toggleable && !in_array($column->key, $visibleColumns, true)) {
                 $visibleColumns[] = $column->key;
             }
         }
 
-        $submittedOrder = is_array($state['column_order'] ?? null)
-            ? array_values(array_unique(array_map('strval', $state['column_order'])))
+        $submittedOrder = array_key_exists('column_order', $state)
+            ? GridFilterValue::many($state['column_order'])
             : $definition->allColumnKeys();
-        $columnOrder = array_values(array_filter(
-            $submittedOrder,
-            static fn (string $key): bool => isset($allowed[$key]),
-        ));
+        $columnOrder = array_values(array_filter($submittedOrder,
+            static fn (string $key): bool => isset($allowed[$key])));
         foreach ($definition->allColumnKeys() as $key) {
             if (!in_array($key, $columnOrder, true)) {
                 $columnOrder[] = $key;
@@ -81,7 +73,6 @@ final readonly class GridStateNormaliser
     public function criteria(array $state, GridDefinition $definition): GridCriteria
     {
         $normalised = $this->normalise($state, $definition);
-
         return GridCriteria::fromValues([
             ...$normalised['filters'],
             'sort' => $normalised['sort_by'],

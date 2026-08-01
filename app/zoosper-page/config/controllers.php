@@ -3,6 +3,12 @@
 declare(strict_types=1);
 
 use Zoosper\Admin\Editor\ContentEditorInterface;
+use Zoosper\AdminGrid\GridCompactWorkspaceRenderer;
+use Zoosper\AdminGrid\GridViewStateResolver;
+use Zoosper\Page\Admin\PageGridSiteFilter;
+use Zoosper\Page\Admin\PageGridWorkspace;
+use Zoosper\Page\Admin\PageSiteFilterOptions;
+
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
@@ -40,11 +46,19 @@ return [
         layout: $services->get(AdminLayoutRendererInterface::class),
         views: $services->get(AdminViewRendererInterface::class),
         pageGrid: $pageGrid = new PageGridRepository($services->get(\PDO::class)),
-        pageGridDefinition: new PageGridDefinition(
+        pageGridDefinition: $pageGridDefinition = new PageGridDefinition(
             $services->has(GridColumnRegistry::class) ? $services->get(GridColumnRegistry::class) : null,
+            new PageGridSiteFilter(new PageSiteFilterOptions($services->get(SiteRepository::class))),
         ),
         pageGridDataSource: new PageGridDataSource($pageGrid),
         gridHtmlRenderer: new GridHtmlRenderer(),
+        pageGridWorkspace: $services->has(GridViewStateResolver::class)
+            ? new PageGridWorkspace(
+                $pageGridDefinition,
+                $services->get(GridViewStateResolver::class),
+                new GridCompactWorkspaceRenderer(),
+            )
+            : null,
         htmlSanitizer: $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,
         flashMessages: $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         config: $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,

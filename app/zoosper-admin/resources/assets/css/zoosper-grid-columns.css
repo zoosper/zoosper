@@ -1,0 +1,1 @@
+[data-grid-column][hidden],[data-grid-filter-columns][hidden]{display:none!important}.grid-compact-column:has(input:not(:checked)){opacity:.68;background:#f8fafc}.grid-filter-chip{white-space:nowrap}.grid-filter-chip button{min-width:1.25rem;min-height:1.25rem}

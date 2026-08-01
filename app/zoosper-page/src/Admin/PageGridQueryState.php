@@ -4,37 +4,39 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Admin;
 
-/** Converts the Pages GET request into the Admin Grid state shape. */
+/** Converts the Pages GET query into the canonical shared Grid state. */
 final class PageGridQueryState
 {
-    /**
-     * @param array<string, mixed> $query
-     * @return array<string, mixed>
-     */
+    /** @param array<string, mixed> $query @return array<string, mixed> */
     public static function fromQuery(array $query): array
     {
-        $filters = [];
-        foreach (['q', 'status', 'site_id'] as $key) {
-            if (array_key_exists($key, $query)) {
-                $filters[$key] = $query[$key];
-            }
+        $state = [
+            'filters' => [
+                'q' => trim((string) ($query['q'] ?? '')),
+                'title' => trim((string) ($query['title'] ?? '')),
+                'slug' => trim((string) ($query['slug'] ?? '')),
+                'status' => trim((string) ($query['status'] ?? '')),
+                'site_id' => is_array($query['site_id'] ?? null)
+                    ? array_values($query['site_id'])
+                    : (($query['site_id'] ?? '') === '' ? [] : [(string) $query['site_id']]),
+            ],
+            'sort_by' => trim((string) ($query['sort'] ?? '')),
+            'sort_dir' => trim((string) ($query['dir'] ?? '')),
+            'page_size' => (int) ($query['page_size'] ?? 20),
+        ];
+
+        // Presence is significant: an explicit empty selection means that all
+        // toggleable columns were hidden, not that defaults should be restored.
+        if (array_key_exists('visible_columns', $query)) {
+            $state['visible_columns'] = is_array($query['visible_columns'])
+                ? array_values($query['visible_columns'])
+                : [];
         }
 
-        $state = ['filters' => $filters];
-        if (isset($query['sort'])) {
-            $state['sort_by'] = (string) $query['sort'];
-        }
-        if (isset($query['dir'])) {
-            $state['sort_dir'] = (string) $query['dir'];
-        }
-        if (isset($query['page_size'])) {
-            $state['page_size'] = (int) $query['page_size'];
-        }
-        if (isset($query['visible_columns']) && is_array($query['visible_columns'])) {
-            $state['visible_columns'] = $query['visible_columns'];
-        }
-        if (isset($query['column_order']) && is_array($query['column_order'])) {
-            $state['column_order'] = $query['column_order'];
+        if (array_key_exists('column_order', $query)) {
+            $state['column_order'] = is_array($query['column_order'])
+                ? array_values($query['column_order'])
+                : [];
         }
 
         return $state;
@@ -43,7 +45,7 @@ final class PageGridQueryState
     /** @param array<string, mixed> $query */
     public static function bookmarkId(array $query): ?int
     {
-        $id = isset($query['bookmark_id']) ? (int) $query['bookmark_id'] : 0;
+        $id = (int) ($query['bookmark_id'] ?? 0);
         return $id > 0 ? $id : null;
     }
 }

@@ -28,6 +28,8 @@ test('Pages query becomes one resolved workspace state shape', function (): void
     expect($state)->toBe([
         'filters' => [
             'q' => 'landing',
+            'title' => '',
+            'slug' => '',
             'status' => 'published',
             'site_id' => ['4', '9'],
         ],
