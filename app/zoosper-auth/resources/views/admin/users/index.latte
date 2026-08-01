@@ -1,3 +1,6 @@
+{if isset($gridHtml)}
+{$gridHtml|noescape}
+{else}
 {* Admin users listing (Phase 1.26a). Latte auto-escapes all output. *}
 <div class="toolbar"><a class="button" href="/admin/users/create">Create admin user</a></div>
 <table>
@@ -10,3 +13,5 @@
     {/foreach}
     </tbody>
 </table>
+
+{/if}

@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use Zoosper\Auth\Admin\Grid\RoleGridIndex;
+
+use Zoosper\Auth\Admin\Grid\AdminUserGridIndex;
+
 /**
  * Auth module admin controller registrations.
  *
@@ -42,6 +46,7 @@ return [
         $services->get(AdminViewRenderer::class),
         $services->has(AdminTwoFactorResetService::class) ? $services->get(AdminTwoFactorResetService::class) : null,
         saveLifecycle: $services->get(EntitySaveLifecycleRunner::class),
+        gridIndex: $services->get(AdminUserGridIndex::class),
     ),
     RoleAdminController::class => static fn (ServiceContainer $services): RoleAdminController => new RoleAdminController(
         $services->get(SessionGuard::class),
@@ -51,5 +56,6 @@ return [
         $services->get(AdminUserRepository::class),
         $services->has(AuditLogger::class) ? $services->get(AuditLogger::class) : null,
         $services->get(ConfigRepository::class),
+        gridIndex: $services->get(RoleGridIndex::class),
     ),
 ];

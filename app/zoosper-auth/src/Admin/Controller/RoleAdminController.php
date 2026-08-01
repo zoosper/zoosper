@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Zoosper\Auth\Admin\Controller;
 
+use Zoosper\Auth\Admin\Grid\AuthGridQueryState;
+
+use Zoosper\Auth\Admin\Grid\RoleGridIndex;
+
 use RuntimeException;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Layout\AdminLayout;
@@ -54,16 +58,30 @@ final readonly class RoleAdminController
         private ?AdminUserRepository $users = null,
         private ?AuditLogger $auditLogger = null,
         private ?ConfigRepository $config = null,
+        private ?RoleGridIndex $gridIndex = null,
     ) {
     }
 
     public function index(Request $request): Response
     {
+        $user = $this->currentAdminUser();
+        if ($this->gridIndex !== null) {
+            return $this->html(
+                'Roles & Permissions',
+                $this->gridIndex->render(
+                    $user->id,
+                    AuthGridQueryState::fromQuery($_GET),
+                    AuthGridQueryState::bookmarkId($_GET),
+                ),
+            );
+        }
+
         $this->currentAdminUser();
 
         return $this->html('Roles & Permissions', $this->renderRoleView('index.php', [
             'roles' => $this->roles->allRoles(),
         ]));
+    
     }
 
     public function createForm(Request $request): Response

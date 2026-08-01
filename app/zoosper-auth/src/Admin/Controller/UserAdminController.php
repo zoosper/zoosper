@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Zoosper\Auth\Admin\Controller;
 
+use Zoosper\Auth\Admin\Grid\AuthGridQueryState;
+
+use Zoosper\Auth\Admin\Grid\AdminUserGridIndex;
+
 use RuntimeException;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Model\AdminUser;
@@ -84,11 +88,28 @@ final readonly class UserAdminController
         private ?AdminTwoFactorResetService $twoFactorReset = null,
         private ?EntitySaveLifecycleRunner $saveLifecycle = null,
         private ?PasswordPolicy $passwordPolicy = null,
+        private ?AdminUserGridIndex $gridIndex = null,
     ) {
     }
 
     public function index(Request $request): Response
     {
+        $user = $this->currentAdminUser();
+        if ($this->gridIndex !== null) {
+            $gridHtml = $this->gridIndex->render(
+                $user->id,
+                AuthGridQueryState::fromQuery($_GET),
+                AuthGridQueryState::bookmarkId($_GET),
+            );
+            return Response::html($this->views->render(
+                'Admin Users',
+                'zoosper-auth::admin/users/index',
+                ['gridHtml' => $gridHtml],
+                $user,
+                'admin-users',
+            ));
+        }
+
         $adminUser = $this->currentAdminUser();
 
         return Response::html($this->views->render(
@@ -98,6 +119,7 @@ final readonly class UserAdminController
             $adminUser,
             'admin-users',
         ));
+    
     }
 
     public function createForm(Request $request): Response
