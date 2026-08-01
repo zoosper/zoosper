@@ -859,11 +859,13 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-auth",
-                "reference": "4f43fe06278cfd3a0b7a81c82f295f3f9fe8b3bd"
+                "reference": "491c0f4f2f14a64222fa6aeaf4710310324679e3"
             },
             "require": {
                 "php": "^8.5",
-                "zoosper/core": "dev-dev"
+                "zoosper/admin-grid": "dev-dev",
+                "zoosper/core": "dev-dev",
+                "zoosper/grid": "dev-dev"
             },
             "type": "zoosper-module",
             "extra": {
