@@ -387,8 +387,8 @@ replica.
   ordering with locked ID/Actions anchors, and immediate live table reflection.
   `zoosper-admin-grid` now owns the canonical generic column runtime; the
   application bridge is parity-guarded compatibility wiring. Content-derived
-  asset versions and JavaScript syntax checks are enforced. Remaining: emit
-  keyed headers server-side, remove the compatibility copy, and add DOM coverage
+  asset versions and JavaScript syntax checks are enforced. Server-rendered header keys are now explicit and positional inference is
+  removed. Remaining: remove the compatibility copy and add DOM coverage
   before rolling the workspace out to every admin grid.
 
 - [x] Admin authentication + session guard
@@ -661,6 +661,11 @@ replica.
 ---
 
 ## Daily log (most recent first)
+- **2026-08-02 (Phase 4ZI)** — Completed the explicit grid-column identity
+  contract: all Grid table header branches now emit escaped
+  `data-grid-column` keys, positional browser inference was removed, package and
+  compatibility runtimes remain parity-guarded, and the browser asset digest is
+  refreshed from the new runtime content.
 - **2026-08-02 (Phase 4ZH)** — Consolidated column drag and live reflection into
   one package-owned runtime with a parity-guarded application bridge, keyboard
   movement, idempotent binding, content-derived asset versions, and JavaScript

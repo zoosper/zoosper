@@ -93,3 +93,10 @@ The browser-facing compatibility bridge now uses a SHA-256-derived twelve-charac
 The runtime is one idempotently-bound controller rather than separate drag and reflection observers. A successful movement performs one ordered transaction: synchronise hidden order inputs, reorder keyed table cells, mark the view dirty, then publish `zoosper:grid:columns-reordered`.
 
 Header-key inference remains a compatibility boundary for current server output. Removing it still requires every grid renderer to emit explicit `data-grid-column` attributes, including `site_name` and `actions`.
+
+
+## Phase 4ZI explicit header identity
+
+Every header branch in `GridHtmlRenderer` now emits an escaped `data-grid-column` key. The browser runtime no longer guesses missing header identities from numeric position. Table reflection is therefore fully key-driven for sortable and non-sortable columns, including `site_name` and `actions`.
+
+The compatibility application bridge remains byte-identical to the package runtime, and its content-derived version is refreshed whenever the runtime changes.

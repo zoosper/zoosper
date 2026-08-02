@@ -47,7 +47,8 @@ it('renders a non-sortable column header as plain text, not a link', function ()
 
     $html = (new GridHtmlRenderer())->render($definition, $result, $criteria, '/admin/sample');
 
-    expect($html)->toContain('<th>Action</th>');
+    expect($html)->toContain('<th data-grid-column="action">Action</th>')
+        ->not->toContain('<th data-grid-column="action" class="grid-sortable">');
 });
 
 it('uses the empty message when there are no rows', function (): void {

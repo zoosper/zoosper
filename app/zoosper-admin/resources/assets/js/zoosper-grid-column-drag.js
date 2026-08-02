@@ -41,24 +41,12 @@
         return content.querySelector('.grid-table');
     };
 
-    const ensureCompatibilityHeaderKeys = (table, keys) => {
-        const header = table.tHead?.rows?.[0];
-        if (!header) return;
-
-        Array.from(header.cells).forEach((cell, index) => {
-            if (!cell.dataset.gridColumn && keys[index]) {
-                cell.dataset.gridColumn = keys[index];
-            }
-        });
-    };
 
     const reflectTableOrder = (list) => {
         const keys = keysFrom(list);
         const table = tableFor(list);
         if (!table || keys.length === 0) return;
 
-        // Compatibility only. Server renderers should emit every header key.
-        ensureCompatibilityHeaderKeys(table, keys);
 
         Array.from(table.rows).forEach((row) => {
             const cells = new Map(Array.from(row.cells)

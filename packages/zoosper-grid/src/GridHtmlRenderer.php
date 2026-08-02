@@ -73,7 +73,7 @@ final class GridHtmlRenderer
 
     private function renderHeaderCell(GridColumn $column, GridCriteria $criteria, string $baseUrl): string
     {
-        $label=$this->e($column->label); if(!$column->sortable)return '<th>'.$label.'</th>';
+        $label=$this->e($column->label); if(!$column->sortable)return '<th data-grid-column="' . $this->e($column->key) . '">'.$label.'</th>';
         $active=$criteria->sortBy===$column->key;$params=array_merge($this->linkParameters($criteria),['sort'=>$column->key,'dir'=>$criteria->toggledSortDir($column->key)]);unset($params['page']);
         $indicator=$active?($criteria->sortDir==='asc'?' ▲':' ▼'):'';
         return '<th data-grid-column="' . $this->e($column->key) . '" class="grid-sortable'.($active?' grid-sort--active':'').'"><a href="'.$this->e($this->url($baseUrl,$params)).'">'.$label.$indicator.'</a></th>';

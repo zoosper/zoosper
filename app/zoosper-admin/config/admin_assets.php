@@ -100,7 +100,7 @@ return array (
     'zoosper-grid-column-drag-script' =>
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-admin/js/zoosper-grid-column-drag.js?v=22cd16930474',
+      'path' => '/asset/zoosper-admin/js/zoosper-grid-column-drag.js?v=ad26ae411791',
       'sort_order' => 92,
       'attributes' =>
       array (
