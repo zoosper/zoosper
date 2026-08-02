@@ -6,7 +6,7 @@ namespace Zoosper\AdminGrid;
 
 final readonly class GridCompactToolbarRenderer
 {
-    public function render(string $viewLabel, bool $dirty, int $pageSize, int $activeFilters): string
+    public function render(string $viewLabel, bool $dirty, int $pageSize, int $activeFilters, string $exportUrl = '/admin/pages/export'): string
     {
         $label = htmlspecialchars($viewLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         $status = $dirty ? 'Unsaved' : 'Saved';
@@ -19,7 +19,7 @@ final readonly class GridCompactToolbarRenderer
         return '<div class="grid-compact-actions">'
             . '<button type="button" data-grid-toggle="filters" aria-expanded="false">Filters' . $count . '</button>'
             . '<button type="button" data-grid-toggle="columns" aria-expanded="false">Columns</button>'
-            . '<a class="button" data-grid-export href="/admin/pages/export">Export CSV</a></div>'
+            . '<a class="button" data-grid-export href="' . htmlspecialchars($exportUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">Export current page</a></div>'
             . '<div class="grid-compact-state"><strong>' . $label . '</strong>'
             . '<span class="grid-compact-status' . ($dirty ? ' is-dirty' : '') . '">' . $status . '</span>'
             . '<label>Per page <select name="page_size" data-grid-page-size>' . $options . '</select></label>'

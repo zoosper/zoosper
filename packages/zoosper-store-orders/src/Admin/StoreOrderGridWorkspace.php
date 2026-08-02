@@ -51,7 +51,11 @@ final readonly class StoreOrderGridWorkspace
 
         return [
             'state' => $state,
-            'html' => $this->renderer->render($workspaceState, self::ACTION),
+            'html' => $this->renderer->render(
+                $workspaceState,
+                self::ACTION,
+                self::ACTION . '?grid_export=current',
+            ),
         ];
     }
 }

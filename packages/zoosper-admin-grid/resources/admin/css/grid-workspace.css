@@ -12,3 +12,40 @@
 .grid-workspace__drag{cursor:grab;user-select:none}
 @media (max-width:48rem){[data-column-key]{grid-template-columns:auto 1fr}[data-column-key] button{grid-column:auto}.grid-workspace__bar>*{flex:1 1 auto}}
 @media (prefers-reduced-motion:reduce){[data-column-key]{scroll-behavior:auto}}
+
+/* Phase 5J: compact persistence controls beneath the active workspace. */
+.grid-workspace__mutations {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .75rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid var(--z-border, #d9e2ec);
+    border-radius: 1rem;
+    background: var(--z-card, #fff);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, .04);
+}
+.grid-workspace__mutations-title {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.grid-workspace__mutations-title span {
+    color: var(--z-muted, #64748b);
+    font-size: .875rem;
+}
+.grid-workspace__mutation-form {
+    display: flex;
+    align-items: end;
+    gap: .5rem;
+    margin: 0;
+}
+.grid-workspace__mutation-form label { flex: 1; margin: 0; }
+.grid-workspace__mutation-form input { margin: .25rem 0 0; }
+.grid-workspace__mutation-form button { white-space: nowrap; margin: 0; }
+@media (max-width: 800px) {
+    .grid-workspace__mutations { grid-template-columns: 1fr; }
+    .grid-workspace__mutations-title { display: grid; }
+}

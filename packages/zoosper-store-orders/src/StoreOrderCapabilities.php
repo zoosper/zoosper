@@ -13,7 +13,15 @@ final class StoreOrderCapabilities
         return new GridDataSourceCapabilities(
             searchable: false,
             exportable: false,
-            sortableColumns: [],
+            sortableColumns: [
+                'order_id',
+                'order_date',
+                'customer_name',
+                'status',
+                'payment_type',
+                'total_paid',
+                'picked_up_at',
+            ],
             filterableFields: ['order_id', 'customer', 'status', 'placed_from', 'placed_to'],
         );
     }

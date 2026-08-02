@@ -62,6 +62,8 @@ final readonly class StoreOrderAdminController
             ])->fetch(new GridQuery(
                 page: $state->criteria->pager->page,
                 pageSize: $state->criteria->pager->pageSize,
+                sort: $state->criteria->sortBy,
+                direction: $state->criteria->sortDir,
                 filters: $state->criteria->filters,
             ));
             $pagination = new PaginationResult(

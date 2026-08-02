@@ -25,7 +25,7 @@ final readonly class GridWorkspaceMutationFormsRenderer
             );
         }
 
-        $html = '<div class="grid-workspace__mutations" data-grid-mutations>';
+        $html = '<section class="grid-workspace__mutations" data-grid-mutations aria-label="Saved Grid settings"><div class="grid-workspace__mutations-title"><strong>Saved Grid settings</strong><span>Persist columns or save this workspace as a named view.</span></div>';
         $html .= $this->saveColumnsForm($state, $actionPath, $csrfField, $csrfToken);
         $html .= $this->resetColumnsForm($actionPath, $csrfField, $csrfToken);
         $html .= $this->saveViewForm($state, $actionPath, $csrfField, $csrfToken, false);
@@ -40,7 +40,7 @@ final readonly class GridWorkspaceMutationFormsRenderer
             );
         }
 
-        return $html . '</div>';
+        return $html . '</section>';
     }
 
     private function saveColumnsForm(
@@ -125,7 +125,7 @@ final readonly class GridWorkspaceMutationFormsRenderer
         string $csrfField,
         string $csrfToken,
     ): string {
-        return '<form method="post" action="' . $this->escape($path) . '">' 
+        return '<form class="grid-workspace__mutation-form" method="post" action="' . $this->escape($path) . '">' 
             . $this->hidden($csrfField, $csrfToken)
             . $this->hidden('action', $action);
     }

@@ -26,6 +26,22 @@ final class StoreOrderRequestMapper implements ApiGridRequestMapperInterface
         $this->copyText($parameters, $query->filters, 'status', 64);
         $this->copyDate($parameters, $query->filters, 'placed_from');
         $this->copyDate($parameters, $query->filters, 'placed_to');
+        $sortable = [
+            'order_id',
+            'order_date',
+            'customer_name',
+            'status',
+            'payment_type',
+            'total_paid',
+            'picked_up_at',
+        ];
+        if ($query->sort !== null) {
+            if (!in_array($query->sort, $sortable, true)) {
+                throw new InvalidArgumentException('Unsupported Store Orders sort field.');
+            }
+            $parameters['sort'] = $query->sort;
+            $parameters['dir'] = $query->direction;
+        }
         if (isset($parameters['placed_from'], $parameters['placed_to'])
             && $parameters['placed_from'] > $parameters['placed_to']) {
             throw new InvalidArgumentException('Placed From must not be after Placed To.');

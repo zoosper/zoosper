@@ -17,14 +17,14 @@ final readonly class GridCompactWorkspaceRenderer
     ) {
     }
 
-    public function render(GridViewState $state, string $formAction): string
+    public function render(GridViewState $state, string $formAction, ?string $exportUrl = null): string
     {
         $filters=$state->criteria->filters;
         $active=0; foreach($filters as $value){if(is_array($value)?$value!==[]:trim((string)$value)!==''){$active++;}}
         $label='Default view';
         foreach($state->bookmarks as $bookmark){if((int)$bookmark['id']===$state->activeBookmarkId){$label=(string)$bookmark['name'];break;}}
         $html='<section data-grid-workspace>';
-        $html.=$this->toolbar->render($label,false,$state->criteria->pager->pageSize,$active);
+        $html.=$this->toolbar->render($label,false,$state->criteria->pager->pageSize,$active,$exportUrl ?? '/admin/pages/export');
         $html.='<form method="get" action="'.$this->e($formAction).'" data-grid-filter-form>';
         $html.='<input type="hidden" name="page" value="1">';
         $html.=$this->filters($state->definition,$filters);
