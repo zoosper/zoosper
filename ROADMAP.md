@@ -682,7 +682,7 @@ replica.
   contracts. Test with fake transports first; do not embed Orders-specific
   logic in the master package.
 
-- [ ] **Phase 4ZL — Declarative registration and reusable page composition.**
+- [x] **Phase 4ZL — Declarative registration and reusable page composition.**
   Add API Grid definitions, registry, data-source adapter and admin page builder
   so a feature module can register an API-backed Grid without writing a custom
   Grid controller. Render filters, sorting, search and export only when the
@@ -728,6 +728,10 @@ controls, saved views, column visibility and ordering, live reflection,
 controlled failures, export policy, tests and diagnostics.
 
 ## Daily log (most recent first)
+- **2026-08-02 (Phase 5C)** — Added immutable API Grid definitions, duplicate-safe
+  registry, capability-constrained query creation and reusable page composition.
+  Unsupported remote search, filters and sorting are removed before a data
+  source receives the query. Store Orders remains the first real integration.
 - **2026-08-02 (Phase 5B)** — Added `zoosper-api-grid` with replaceable
   read-only transport, request/response values, authentication, trusted context,
   reliability policy and request/response/row mapper contracts. Fake-transport
