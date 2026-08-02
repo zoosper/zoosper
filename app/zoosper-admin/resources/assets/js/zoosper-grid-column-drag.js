@@ -1,86 +1,47 @@
 (() => {
     'use strict';
 
-    const listSelector = '[data-grid-column-list]';
-    const itemSelector = '.grid-compact-column[data-column-key]';
-    const lockedKeys = new Set(['id', 'actions']);
-    const keyOf = (item) => (item.dataset.columnKey ?? '').trim();
-    const movable = (item) => item.matches(itemSelector) && !lockedKeys.has(keyOf(item));
+    const LIST_SELECTOR = '[data-grid-column-list]';
+    const ITEM_SELECTOR = '.grid-compact-column[data-column-key]';
+    const LOCKED_KEYS = new Set(['id', 'actions']);
+    const BOUND_ATTRIBUTE = 'data-zoosper-column-order-bound';
 
-    const sync = (list) => {
-        const form = list.closest('form');
+    const keyOf = (item) => (item.dataset.columnKey ?? '').trim();
+    const isMovable = (item) => item.matches(ITEM_SELECTOR) && !LOCKED_KEYS.has(keyOf(item));
+    const keysFrom = (list) => Array.from(list.querySelectorAll(ITEM_SELECTOR), keyOf).filter(Boolean);
+
+    const formFor = (list) => list.closest('form')
+        ?? list.closest('[data-grid-workspace]')?.querySelector('form')
+        ?? null;
+
+    const syncOrderInputs = (list) => {
+        const form = formFor(list);
         if (!(form instanceof HTMLFormElement)) return;
-        const keys = Array.from(list.querySelectorAll(itemSelector), keyOf).filter(Boolean);
+
+        const keys = keysFrom(list);
         const inputs = Array.from(form.querySelectorAll('input[name="column_order[]"]'));
+
+        while (inputs.length < keys.length) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'column_order[]';
+            form.appendChild(input);
+            inputs.push(input);
+        }
+
         inputs.forEach((input, index) => {
             if (index < keys.length) input.value = keys[index];
+            else input.remove();
         });
     };
 
-    document.querySelectorAll(listSelector).forEach((list) => {
-        let active = null;
-
-        list.querySelectorAll(itemSelector).forEach((item) => {
-            const enabled = movable(item);
-            item.draggable = enabled;
-            item.classList.toggle('is-grid-column-locked', !enabled);
-            item.setAttribute('aria-grabbed', 'false');
-            if (!enabled) return;
-
-            item.addEventListener('dragstart', (event) => {
-                active = item;
-                item.classList.add('is-grid-column-dragging');
-                item.setAttribute('aria-grabbed', 'true');
-                if (event.dataTransfer) {
-                    event.dataTransfer.effectAllowed = 'move';
-                    event.dataTransfer.setData('text/plain', keyOf(item));
-                }
-            });
-
-            item.addEventListener('dragover', (event) => {
-                if (active === null || active === item || !movable(item)) return;
-                event.preventDefault();
-                if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
-            });
-
-            item.addEventListener('drop', (event) => {
-                if (active === null || active === item || !movable(item)) return;
-                event.preventDefault();
-                const box = item.getBoundingClientRect();
-                const before = event.clientX < box.left + box.width / 2;
-                list.insertBefore(active, before ? item : item.nextElementSibling);
-                sync(list);
-            });
-
-            item.addEventListener('dragend', () => {
-                item.classList.remove('is-grid-column-dragging');
-                item.setAttribute('aria-grabbed', 'false');
-                active = null;
-                sync(list);
-            });
-        });
-
-        sync(list);
-    });
-})();
-
-
-/* Zoosper Phase 4ZE: live table reflection (bundled into loaded drag bridge). */
-(() => {
-    'use strict';
-
-    const marker = 'data-zoosper-live-reflection';
-
-    const keysFrom = (list) => Array.from(list.querySelectorAll('[data-column-key]'))
-        .map((item) => item.dataset.columnKey)
-        .filter(Boolean);
-
-    const tableFor = (workspace) => {
-        const content = workspace.closest('.admin-content') ?? document;
+    const tableFor = (list) => {
+        const workspace = list.closest('[data-grid-workspace]');
+        const content = workspace?.closest('.admin-content') ?? document;
         return content.querySelector('.grid-table');
     };
 
-    const keyMissingHeaders = (table, keys) => {
+    const ensureCompatibilityHeaderKeys = (table, keys) => {
         const header = table.tHead?.rows?.[0];
         if (!header) return;
 
@@ -91,12 +52,13 @@
         });
     };
 
-    const reflect = (workspace, list) => {
+    const reflectTableOrder = (list) => {
         const keys = keysFrom(list);
-        const table = tableFor(workspace);
+        const table = tableFor(list);
         if (!table || keys.length === 0) return;
 
-        keyMissingHeaders(table, keys);
+        // Compatibility only. Server renderers should emit every header key.
+        ensureCompatibilityHeaderKeys(table, keys);
 
         Array.from(table.rows).forEach((row) => {
             const cells = new Map(Array.from(row.cells)
@@ -108,40 +70,107 @@
                 if (cell) row.appendChild(cell);
             });
         });
-
-        const status = workspace.querySelector('.grid-compact-status');
-        if (status) {
-            status.textContent = 'Unsaved changes';
-            status.classList.add('grid-compact-status--dirty');
-        }
     };
 
-    const bind = (workspace) => {
-        const list = workspace.querySelector('[data-grid-column-list]');
-        if (!list || list.hasAttribute(marker)) return;
-        list.setAttribute(marker, 'true');
+    const markDirty = (list) => {
+        const workspace = list.closest('[data-grid-workspace]');
+        const status = workspace?.querySelector('.grid-compact-status');
+        if (!status) return;
 
-        let previous = keysFrom(list).join('|');
-        let pending = false;
-        const sync = () => {
-            if (pending) return;
-            pending = true;
-            requestAnimationFrame(() => {
-                pending = false;
-                const current = keysFrom(list).join('|');
-                if (current === previous) return;
-                previous = current;
-                reflect(workspace, list);
+        status.textContent = 'Unsaved changes';
+        status.classList.add('grid-compact-status--dirty');
+    };
+
+    const publishOrder = (list) => {
+        const order = keysFrom(list);
+        syncOrderInputs(list);
+        reflectTableOrder(list);
+        markDirty(list);
+        list.dispatchEvent(new CustomEvent('zoosper:grid:columns-reordered', {
+            bubbles: true,
+            detail: {order},
+        }));
+    };
+
+    const bind = (list) => {
+        if (list.hasAttribute(BOUND_ATTRIBUTE)) return;
+        list.setAttribute(BOUND_ATTRIBUTE, 'true');
+
+        let dragging = null;
+
+        list.querySelectorAll(ITEM_SELECTOR).forEach((item) => {
+            const movable = isMovable(item);
+            item.draggable = movable;
+            item.classList.toggle('is-grid-column-locked', !movable);
+            item.setAttribute('aria-grabbed', 'false');
+
+            if (!movable) return;
+
+            item.addEventListener('dragstart', (event) => {
+                dragging = item;
+                item.classList.add('is-grid-column-dragging');
+                item.setAttribute('aria-grabbed', 'true');
+                if (event.dataTransfer) {
+                    event.dataTransfer.effectAllowed = 'move';
+                    event.dataTransfer.setData('text/plain', keyOf(item));
+                }
             });
-        };
 
-        new MutationObserver(sync).observe(list, {childList: true});
-        list.addEventListener('drop', sync);
-        list.addEventListener('dragend', sync);
-        list.addEventListener('zoosper:grid:columns-reordered', sync);
+            item.addEventListener('dragover', (event) => {
+                if (dragging === null || dragging === item || !isMovable(item)) return;
+                event.preventDefault();
+                if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+            });
+
+            item.addEventListener('drop', (event) => {
+                if (dragging === null || dragging === item || !isMovable(item)) return;
+                event.preventDefault();
+                const box = item.getBoundingClientRect();
+                const horizontal = list.scrollWidth > list.clientWidth || box.width < list.clientWidth * 0.8;
+                const before = horizontal
+                    ? event.clientX < box.left + box.width / 2
+                    : event.clientY < box.top + box.height / 2;
+                list.insertBefore(dragging, before ? item : item.nextElementSibling);
+                publishOrder(list);
+            });
+
+            item.addEventListener('dragend', () => {
+                item.classList.remove('is-grid-column-dragging');
+                item.setAttribute('aria-grabbed', 'false');
+                dragging = null;
+            });
+        });
+
+        list.addEventListener('click', (event) => {
+            const button = event.target instanceof Element
+                ? event.target.closest('[data-grid-column-move]')
+                : null;
+            if (!(button instanceof HTMLButtonElement)) return;
+
+            const item = button.closest(ITEM_SELECTOR);
+            if (!(item instanceof HTMLElement) || !isMovable(item)) return;
+
+            const movableItems = Array.from(list.querySelectorAll(ITEM_SELECTOR)).filter(isMovable);
+            const index = movableItems.indexOf(item);
+            const direction = button.dataset.gridColumnMove;
+
+            if (direction === 'up' && index > 0) {
+                list.insertBefore(item, movableItems[index - 1]);
+            } else if (direction === 'down' && index >= 0 && index < movableItems.length - 1) {
+                list.insertBefore(movableItems[index + 1], item);
+            } else {
+                return;
+            }
+
+            publishOrder(list);
+            button.focus({preventScroll: true});
+        });
+
+        syncOrderInputs(list);
     };
 
-    const boot = () => document.querySelectorAll('[data-grid-workspace]').forEach(bind);
+    const boot = () => document.querySelectorAll(LIST_SELECTOR).forEach(bind);
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', boot, {once: true});
     } else {

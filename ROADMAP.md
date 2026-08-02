@@ -385,9 +385,10 @@ replica.
 - [~] **Unified admin grid workspace.** The Pages grid now supports configurable
   columns, filters, page size, CSV export, bookmark persistence, draggable
   ordering with locked ID/Actions anchors, and immediate live table reflection.
-  Remaining consolidation: make `zoosper-admin-grid` the sole owner of generic
-  grid runtime/assets, remove application bridge duplication, emit keyed headers
-  server-side, add content-hashed asset URLs, and add behavioural DOM coverage
+  `zoosper-admin-grid` now owns the canonical generic column runtime; the
+  application bridge is parity-guarded compatibility wiring. Content-derived
+  asset versions and JavaScript syntax checks are enforced. Remaining: emit
+  keyed headers server-side, remove the compatibility copy, and add DOM coverage
   before rolling the workspace out to every admin grid.
 
 - [x] Admin authentication + session guard
@@ -522,9 +523,8 @@ replica.
 
 ## 9. Modular Asset Pipeline
 - [~] **Module-owned admin grid assets are live through `/asset`.** Remaining:
-  eliminate any runtime dependency on vendor edits, establish one canonical
-  package source, add content-derived cache busting, and verify that rendered
-  URLs resolve to the exact source validated by CI.
+  eliminate any runtime dependency on vendor edits, retain the package as the canonical source, retire the compatibility copy
+  once package asset routing is live, and extend rendered-URL integration coverage.
 
 - [x] Asset registry / resolver / controller (path-safe, MIME allowlist, ETag)
 - [ ] Wire `/asset/{module}/{path}` route + `asset()` helper live
@@ -661,6 +661,11 @@ replica.
 ---
 
 ## Daily log (most recent first)
+- **2026-08-02 (Phase 4ZH)** — Consolidated column drag and live reflection into
+  one package-owned runtime with a parity-guarded application bridge, keyboard
+  movement, idempotent binding, content-derived asset versions, and JavaScript
+  syntax checks. Server-rendered header keys and direct package asset routing
+  remain the next closure steps.
 - **2026-08-02** — Completed the Pages admin grid workspace visual cutover:
   configurable visibility, page-size selection, filtering, CSV export,
   bookmark persistence, draggable column ordering with locked ID/Actions

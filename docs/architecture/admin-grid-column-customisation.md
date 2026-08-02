@@ -82,3 +82,14 @@ Source-string assertions may supplement these checks but must not replace behavi
 - Add content-hashed asset URLs.
 - Add browser/DOM behavioural coverage.
 - Roll the unified workspace out to remaining admin grids only after the Pages implementation is consolidated.
+
+
+## Phase 4ZH runtime consolidation
+
+The package-owned `grid-compact-column-order.js` is now the canonical source for drag, keyboard movement, hidden-order synchronisation and immediate table reflection. The application bridge is an intentionally identical compatibility copy while the current admin asset route remains application-owned. A parity test prevents the two physical files from drifting.
+
+The browser-facing compatibility bridge now uses a SHA-256-derived twelve-character asset version. Editing the runtime or stylesheet therefore requires updating the manifest version to the corresponding content digest; tests enforce this relationship.
+
+The runtime is one idempotently-bound controller rather than separate drag and reflection observers. A successful movement performs one ordered transaction: synchronise hidden order inputs, reorder keyed table cells, mark the view dirty, then publish `zoosper:grid:columns-reordered`.
+
+Header-key inference remains a compatibility boundary for current server output. Removing it still requires every grid renderer to emit explicit `data-grid-column` attributes, including `site_name` and `actions`.

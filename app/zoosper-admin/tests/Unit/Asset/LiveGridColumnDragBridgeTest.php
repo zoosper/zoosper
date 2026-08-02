@@ -31,6 +31,6 @@ it('binds the bridge to the exact live Pages column markup', function (): void {
     expect($js)->toContain("'[data-grid-column-list]'")
         ->toContain("'.grid-compact-column[data-column-key]'")
         ->toContain("new Set(['id', 'actions'])")
-        ->toContain('item.draggable = enabled')
+        ->toContain('item.draggable = movable')
         ->toContain("addEventListener('drop'");
 });
