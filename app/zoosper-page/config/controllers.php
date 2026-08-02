@@ -4,6 +4,16 @@ declare(strict_types=1);
 
 use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\AdminGrid\GridCompactWorkspaceRenderer;
+use Zoosper\AdminGrid\GridWorkspaceAuditedCsvExportService;
+use Zoosper\Page\Admin\Controller\PageCsvExportController;
+use Zoosper\Page\Admin\PageGridAuditedExportCoordinator;
+use Zoosper\Page\Admin\PageGridExportDataSource;
+use Zoosper\Page\Admin\PageGridExportRequestCoordinator;
+use Zoosper\Page\Admin\PageGridExportSqlBuilder;
+use Zoosper\Page\Admin\PageGridHttpCoordinator;
+use Zoosper\Page\Admin\PageGridMutationHandler;
+use Zoosper\Page\Admin\PdoPageGridExportRepository;
+use Zoosper\AdminGrid\GridWorkspaceMutationGuard;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Page\Admin\PageGridSiteFilter;
 use Zoosper\Page\Admin\PageGridWorkspace;
@@ -33,7 +43,29 @@ use Zoosper\Page\Service\PageRenderer;
 use Zoosper\Site\Repository\SiteRepository;
 
 return [
-    // Phase 1.41 (partial, round 3a): layout/views now resolved via
+    PageCsvExportController::class => static function (ServiceContainer $services): PageCsvExportController {
+        $definition = new PageGridDefinition(
+            $services->has(GridColumnRegistry::class) ? $services->get(GridColumnRegistry::class) : null,
+            new PageGridSiteFilter(new PageSiteFilterOptions($services->get(SiteRepository::class))),
+        );
+        $workspace = new PageGridWorkspace(
+            $definition,
+            $services->get(GridViewStateResolver::class),
+            new GridCompactWorkspaceRenderer(),
+        );
+        $http = new PageGridHttpCoordinator(
+            $workspace,
+            new PageGridMutationHandler($definition, $services->get(\Zoosper\AdminGrid\GridViewMutationService::class)),
+            $services->get(GridWorkspaceMutationGuard::class),
+        );
+        $repository = new PdoPageGridExportRepository($services->get(\PDO::class), new PageGridExportSqlBuilder());
+        $requestExports = new PageGridExportRequestCoordinator(
+            $http,
+            new PageGridExportDataSource($repository),
+            new PageGridAuditedExportCoordinator($services->get(GridWorkspaceAuditedCsvExportService::class)),
+        );
+        return new PageCsvExportController($services->get(SessionGuard::class), $requestExports);
+    },    // Phase 1.41 (partial, round 3a): layout/views now resolved via
     // AdminLayoutRendererInterface / AdminViewRendererInterface instead of
     // the concrete Zoosper\Admin\Layout\AdminLayout /
     // Zoosper\Admin\UI\AdminViewRenderer classes.

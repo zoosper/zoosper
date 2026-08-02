@@ -1,5 +1,22 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Zoosper\StoreOrders\Tests\Unit;
-it('uses feature owned current page export', function (): void { $root=dirname(__DIR__,4);$toolbar=file_get_contents($root.'/packages/zoosper-admin-grid/src/GridCompactToolbarRenderer.php');$workspace=file_get_contents($root.'/packages/zoosper-store-orders/src/Admin/StoreOrderGridWorkspace.php');$script=file_get_contents($root.'/packages/zoosper-admin-grid/resources/admin/js/grid-compact-workspace.js');expect($toolbar)->not->toBeFalse()->not->toContain('href="/admin/pages/export"')->and($workspace)->not->toBeFalse()->toContain('?grid_export=current')->and($script)->not->toBeFalse()->toContain('store-orders-current-page.csv'); });
+
+use Zoosper\StoreOrders\Admin\StoreOrderCsvExportController;
+
+it('uses a real Store Orders server endpoint for current-page export', function (): void {
+    $root = dirname(__DIR__, 4);
+    $workspace = file_get_contents($root . '/packages/zoosper-store-orders/src/Admin/StoreOrderGridWorkspace.php');
+    $routes = require $root . '/packages/zoosper-store-orders/config/admin_routes.php';
+
+    expect($workspace)->not->toBeFalse()
+        ->and($workspace)->toContain("self::ACTION . '/export'")
+        ->and($workspace)->not->toContain('?grid_export=current')
+        ->and($routes)->toContain([
+            'method' => 'GET', 'path' => '/admin/store-orders/export',
+            'controller' => StoreOrderCsvExportController::class,
+            'action' => 'export', 'permission' => 'store_order.export',
+        ]);
+});
