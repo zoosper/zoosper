@@ -838,3 +838,33 @@ controlled failures, export policy, tests and diagnostics.
 - Bookmark normalisation safely removes retired keys and merges newly declared columns.
 - Remote sorting and export remain disabled until Node exposes explicit contracts.
 - The next visible admin UX phase is the modern searchable Permission Explorer.
+## Priority after API Grid closure: modern Settings platform
+
+**Sequence gate:** complete and close the API Grid programme before beginning Settings implementation. Once API Grid is closed, Settings becomes the highest-priority product and architecture programme before unrelated new features.
+
+### Why this moves ahead of new features
+
+Existing and future features should consume declared, validated and scoped configuration rather than adding hard-coded values or unrelated environment variables. The Settings platform must be designed as shared infrastructure, not as a single hand-built admin screen.
+
+### Settings programme
+
+- **Phase S0 — inventory and ownership audit.** Catalogue hard-coded behaviour, root/module config, environment-only values, database-backed settings, secrets and per-admin preferences. Classify each value as build-time, environment, secret, deployable site configuration, runtime operational state or user preference.
+- **Phase S1 — typed settings contracts.** Add module-owned setting definitions, groups, field types, defaults, validation, normalisation, visibility rules, descriptions, ownership and deprecation metadata. Definitions remain code; editable non-secret values are stored separately.
+- **Phase S2 — scope and resolution.** Implement deterministic precedence for platform, environment, site, store/channel and user scopes. Expose resolved-value provenance so administrators can see whether a value is inherited, overridden or locked.
+- **Phase S3 — secure persistence and audit.** Add atomic writes, CSRF and permission enforcement, optimistic concurrency, secret references rather than plaintext secrets, redacted audit history, rollback and cache invalidation.
+- **Phase S4 — modern admin workspace.** Build searchable categories, deep links, unsaved-change protection, validation summaries, inherited-value indicators, reset-to-inherited controls, documentation links and accessible field rendering.
+- **Phase S5 — module extensibility and API.** Let modules contribute setting groups and processors without editing core. Provide typed read APIs for application code and controlled write APIs for authorised automation.
+- **Phase S6 — configuration portability.** Add reviewable import/export and environment promotion for deployable configuration while keeping secrets, local operational state and personal preferences out of portable bundles.
+- **Phase S7 — hard-coded configuration migration.** Move appropriate existing constants and ad hoc values behind the resolver in small, tested batches. Do not migrate database credentials, encryption keys or other bootstrap secrets into editable admin settings.
+- **Phase S8 — closure and developer experience.** Add scaffolding, examples, diagnostics, upgrade/deprecation policy, full documentation and behavioural coverage.
+
+### Non-negotiable boundaries
+
+- Secrets are referenced from environment or a secret provider and are never returned to the browser after storage.
+- Definitions, values, secrets, operational state and user preferences are distinct concepts and stores.
+- Module defaults sit below explicit deployment and runtime overrides.
+- Every editable value has a type, validator, permission, owner and audit policy.
+- Settings reads use one resolver rather than direct database, `$_ENV`, `getenv()` or scattered config-file access in feature code.
+- Runtime changes must not silently overwrite deployable configuration.
+- Unknown, retired and incompatible keys fail descriptively during import.
+
