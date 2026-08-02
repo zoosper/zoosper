@@ -668,7 +668,7 @@ replica.
 > suite is green, browser drag and live reflection are verified, and the Grid
 > closure commit is deployed.
 
-- [ ] **Phase 4ZJ — Data-source boundary.** Establish shared
+- [x] **Phase 4ZJ — Data-source boundary.** Establish shared
   `GridDataSourceInterface`, `GridQuery`, `GridResult` and
   `GridDataSourceCapabilities` contracts for database-backed and external
   collections. Support numbered and cursor pagination without coupling the
@@ -728,6 +728,10 @@ controls, saved views, column visibility and ordering, live reflection,
 controlled failures, export policy, tests and diagnostics.
 
 ## Daily log (most recent first)
+- **2026-08-02 (Phase 5A / API Grid foundation)** — Added the transport-neutral
+  Grid data-source boundary with immutable query, result, capability and
+  numbered/cursor pagination contracts. No HTTP, API envelope or Orders logic
+  entered `zoosper-grid`; `zoosper-api-grid` remains the next adapter layer.
 - **2026-08-02 (Phase 4ZJ Grid closure)** — Closed the current admin Grid asset
   ownership boundary: `zoosper-admin-grid` now serves its canonical column
   ordering runtime and stylesheet directly through the secured module asset
