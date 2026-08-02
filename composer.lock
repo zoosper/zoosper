@@ -859,9 +859,10 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-api-grid",
-                "reference": "6e045a7241db04bea56f8b17838ae6d65a42c416"
+                "reference": "f3b9547d968df5d5df3ba2080be17f150ee6e5cc"
             },
             "require": {
+                "ext-curl": "*",
                 "php": "^8.5",
                 "zoosper/grid": "dev-dev"
             },
@@ -1279,11 +1280,14 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-store-orders",
-                "reference": "74d62cea7601781c6995d87be3af73e07f7abe77"
+                "reference": "7b1ee0a624d4f7fe47ff02fee1468cc946d59dc5"
             },
             "require": {
                 "php": "^8.5",
+                "zoosper/admin-grid": "dev-dev",
                 "zoosper/api-grid": "dev-dev",
+                "zoosper/auth": "dev-dev",
+                "zoosper/core": "dev-dev",
                 "zoosper/grid": "dev-dev"
             },
             "require-dev": {

@@ -1,40 +1,43 @@
 {
-  "name": "zoosper/store-orders",
-  "description": "Store Orders API Grid integration for Zoosper.",
-  "type": "zoosper-module",
-  "license": "MIT",
-  "require": {
-    "php": "^8.5",
-    "zoosper/api-grid": "dev-dev",
-    "zoosper/grid": "dev-dev"
-  },
-  "require-dev": {
-    "pestphp/pest": "^3.0",
-    "pestphp/pest-plugin": "^3.0",
-    "phpunit/phpunit": "^11.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Zoosper\\StoreOrders\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Zoosper\\StoreOrders\\Tests\\": "tests/"
-    }
-  },
-  "extra": {
-    "marko": {
-      "module": true
-    }
-  },
-  "config": {
-    "sort-packages": true,
-    "allow-plugins": {
-      "pestphp/pest-plugin": true
+    "name": "zoosper/store-orders",
+    "description": "Store Orders API Grid integration for Zoosper.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "zoosper/admin-grid": "dev-dev",
+        "zoosper/api-grid": "dev-dev",
+        "zoosper/auth": "dev-dev",
+        "zoosper/core": "dev-dev",
+        "zoosper/grid": "dev-dev"
     },
-    "platform": {
-      "php": "8.5"
+    "require-dev": {
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin": "^3.0",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\StoreOrders\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zoosper\\StoreOrders\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "marko": {
+            "module": true
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "platform": {
+            "php": "8.5"
+        }
     }
-  }
 }

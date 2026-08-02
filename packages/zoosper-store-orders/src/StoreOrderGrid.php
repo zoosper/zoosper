@@ -7,6 +7,7 @@ namespace Zoosper\StoreOrders;
 use Zoosper\ApiGrid\Definition\ApiGridDefinition;
 use Zoosper\Grid\GridColumn;
 use Zoosper\Grid\GridDefinition;
+use Zoosper\Grid\GridFilter;
 
 final class StoreOrderGrid
 {
@@ -30,11 +31,14 @@ final class StoreOrderGrid
                     new GridColumn('picked_up_at', 'Picked up', false),
                     new GridColumn('actions', 'Actions', false),
                 ],
-                filters: [],
+                filters: [
+                    new GridFilter('store_code', 'Store Code'),
+                    new GridFilter('kiosk_website_id', 'Kiosk Website ID'),
+                ],
                 defaultSort: 'order_date',
                 defaultSortDir: 'desc',
             ),
-            pageSizes: [5, 20, 50, 100],
+            pageSizes: [5, 10, 20, 50, 100],
             exportPermission: 'store_order.export',
         );
     }
