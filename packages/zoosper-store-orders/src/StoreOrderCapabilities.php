@@ -14,7 +14,7 @@ final class StoreOrderCapabilities
             searchable: false,
             exportable: false,
             sortableColumns: [],
-            filterableFields: [],
+            filterableFields: ['order_id', 'customer', 'status', 'placed_from', 'placed_to'],
         );
     }
 }

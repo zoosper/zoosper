@@ -34,6 +34,11 @@ final class StoreOrderGrid
                 filters: [
                     new GridFilter('store_code', 'Store Code'),
                     new GridFilter('kiosk_website_id', 'Kiosk Website ID'),
+                    new GridFilter('order_id', 'Order Number'),
+                    new GridFilter('customer', 'Customer'),
+                    new GridFilter('status', 'Status'),
+                    new GridFilter('placed_from', 'Placed From', 'date'),
+                    new GridFilter('placed_to', 'Placed To', 'date'),
                 ],
                 defaultSort: 'order_date',
                 defaultSortDir: 'desc',

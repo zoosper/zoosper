@@ -74,9 +74,10 @@ final readonly class GridWorkspaceRenderer
     private function renderFilterControl(GridFilter $filter, mixed $value): string
     {
         $id = 'grid-filter-' . $this->escape($filter->key);
-        if ($filter->type === 'text') {
-            return '<input id="' . $id . '" name="' . $this->escape($filter->key)
-                . '" value="' . $this->escape((string) $value) . '">';
+        if (in_array($filter->type, ['text', 'date'], true)) {
+            return '<input type="' . $filter->type . '" id="' . $id . '" name="'
+                . $this->escape($filter->key) . '" value="'
+                . $this->escape((string) $value) . '">';
         }
 
         $multiple = $filter->type === 'multiselect';

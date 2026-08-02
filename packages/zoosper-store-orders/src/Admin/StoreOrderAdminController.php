@@ -41,13 +41,13 @@ final readonly class StoreOrderAdminController
         if (isset($values['page_size']) && !in_array((int) $values['page_size'], [5, 10, 20, 50, 100], true)) {
             $values['page_size'] = 20;
         }
-        $bookmarkId = (int) ($values['bookmark_id'] ?? 0);
+        $queryState = StoreOrderGridQueryState::fromQuery($values);
 
         try {
             $resolved = $this->workspace->resolve(
                 adminUserId: $user->id,
-                queryState: $values,
-                bookmarkId: $bookmarkId > 0 ? $bookmarkId : null,
+                queryState: $queryState,
+                bookmarkId: StoreOrderGridQueryState::bookmarkId($values),
             );
             $state = $resolved['state'];
             $result = $this->dataSources->create($this->config, $user->id, [
@@ -56,6 +56,7 @@ final readonly class StoreOrderAdminController
             ])->fetch(new GridQuery(
                 page: $state->criteria->pager->page,
                 pageSize: $state->criteria->pager->pageSize,
+                filters: $state->criteria->filters,
             ));
             $pagination = new PaginationResult(
                 items: $result->items,

@@ -7,7 +7,7 @@ namespace Zoosper\StoreOrders\Tests\Unit;
 use Zoosper\StoreOrders\StoreOrderCapabilities;
 use Zoosper\StoreOrders\StoreOrderGrid;
 
-it('defines the first API Grid without advertising unsupported remote controls', function (): void {
+it('defines the API Grid with explicit remote filter capabilities only', function (): void {
     $definition = StoreOrderGrid::definition();
     $capabilities = StoreOrderCapabilities::currentApi();
 
@@ -18,5 +18,11 @@ it('defines the first API Grid without advertising unsupported remote controls',
         ->and($capabilities->searchable)->toBeFalse()
         ->and($capabilities->exportable)->toBeFalse()
         ->and($capabilities->sortableColumns)->toBe([])
-        ->and($capabilities->filterableFields)->toBe([]);
+        ->and($capabilities->filterableFields)->toBe([
+            'order_id',
+            'customer',
+            'status',
+            'placed_from',
+            'placed_to',
+        ]);
 });

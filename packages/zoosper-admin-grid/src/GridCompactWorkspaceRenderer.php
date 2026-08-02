@@ -57,7 +57,7 @@ final readonly class GridCompactWorkspaceRenderer
     private function control(GridFilter $filter,mixed $value):string
     {
         $key=$this->e($filter->key);
-        if($filter->type==='text')return '<input name="'.$key.'" value="'.$this->e((string)$value).'">';
+        if(in_array($filter->type,['text','date'],true))return '<input type="'.$filter->type.'" name="'.$key.'" value="'.$this->e((string)$value).'">';
         $multi=$filter->type==='multiselect';$selected=$multi?array_fill_keys(GridFilterValue::many($value),true):[(string)$value=>true];
         $html='<select name="'.$key.($multi?'[]" multiple':'"').'>';
         if(!$multi)$html.='<option value="">All</option>';

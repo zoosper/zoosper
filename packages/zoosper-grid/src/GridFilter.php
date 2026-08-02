@@ -7,7 +7,7 @@ namespace Zoosper\Grid;
 /**
  * Declarative filter definition.
  *
- * Supported types are text, select and multiselect. Options may be legacy
+ * Supported types are text, date, select and multiselect. Options may be legacy
  * value/label arrays or GridFilterOption objects.
  */
 final readonly class GridFilter
@@ -19,7 +19,7 @@ final readonly class GridFilter
         public string $type = 'text',
         public array $options = [],
     ) {
-        if (!in_array($this->type, ['text', 'select', 'multiselect'], true)) {
+        if (!in_array($this->type, ['text', 'date', 'select', 'multiselect'], true)) {
             throw new \InvalidArgumentException('Unsupported grid filter type: ' . $this->type);
         }
     }
