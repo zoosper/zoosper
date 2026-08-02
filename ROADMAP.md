@@ -868,3 +868,4 @@ Existing and future features should consume declared, validated and scoped confi
 - Runtime changes must not silently overwrite deployable configuration.
 - Unknown, retired and incompatible keys fail descriptively during import.
 
+- **Phase 7B — API Grid reliability hardening source capture.** Capture the exact Grid/API Grid/Store Orders contracts and reliability seams before implementing second-pilot hardening; do not invent a production endpoint or credentials.
