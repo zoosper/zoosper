@@ -676,7 +676,7 @@ replica.
   existing Pages Grid behaviour while proving the renderer is data-source
   agnostic.
 
-- [ ] **Phase 4ZK — `zoosper-api-grid` transport and mapping kernel.** Add an
+- [x] **Phase 4ZK — `zoosper-api-grid` transport and mapping kernel.** Add an
   installable adapter package containing request, response, transport,
   authentication, row-mapping, reliability and descriptive exception
   contracts. Test with fake transports first; do not embed Orders-specific
@@ -728,6 +728,10 @@ controls, saved views, column visibility and ordering, live reflection,
 controlled failures, export policy, tests and diagnostics.
 
 ## Daily log (most recent first)
+- **2026-08-02 (Phase 5B)** — Added `zoosper-api-grid` with replaceable
+  read-only transport, request/response values, authentication, trusted context,
+  reliability policy and request/response/row mapper contracts. Fake-transport
+  tests prove external failures remain distinct from empty Grid results.
 - **2026-08-02 (Phase 5A / API Grid foundation)** — Added the transport-neutral
   Grid data-source boundary with immutable query, result, capability and
   numbered/cursor pagination contracts. No HTTP, API envelope or Orders logic

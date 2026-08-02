@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4feb3da1078c7a3f0263592c21d271b",
+    "content-hash": "aea82b19686127462e98845a4ab10691",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -848,6 +848,48 @@
                 "MIT"
             ],
             "description": "Zoosper_Api module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/api-grid",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "packages/zoosper-api-grid",
+                "reference": "6e045a7241db04bea56f8b17838ae6d65a42c416"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/grid": "dev-dev"
+            },
+            "require-dev": {
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin": "^3.0",
+                "phpunit/phpunit": "^11.0"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\ApiGrid\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\ApiGrid\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Transport and mapping adapters for external API-backed Zoosper grids.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -8343,6 +8385,7 @@
         "zoosper/admin": 20,
         "zoosper/admin-grid": 20,
         "zoosper/api": 20,
+        "zoosper/api-grid": 20,
         "zoosper/auth": 20,
         "zoosper/core": 20,
         "zoosper/errors": 20,
