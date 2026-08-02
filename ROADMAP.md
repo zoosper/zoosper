@@ -830,3 +830,11 @@ controlled failures, export policy, tests and diagnostics.
 
 
 - [x] Environment bootstrap ownership consolidated in Phase 2D; duplicate class loaders retired.
+
+### Phase 5I: Store Orders Grid closure (completed)
+
+- Completed the external API Grid pilot with CSRF-protected server-side column preferences and saved-view lifecycle.
+- Store Orders now persists visible columns, bookmarks, default views, filters, remote page size and column order through shared Admin Grid contracts.
+- Bookmark normalisation safely removes retired keys and merges newly declared columns.
+- Remote sorting and export remain disabled until Node exposes explicit contracts.
+- The next visible admin UX phase is the modern searchable Permission Explorer.

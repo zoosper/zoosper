@@ -7,11 +7,14 @@ use Zoosper\AdminGrid\GridPreferenceRepository;
 use Zoosper\AdminGrid\GridStateNormaliser;
 use Zoosper\AdminGrid\GridViewMutationService;
 use Zoosper\AdminGrid\GridViewStateResolver;
+use Zoosper\AdminGrid\GridWorkspaceMutationGuard;
+use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Grid\GridColumnOrderer;
 
 return [
-    GridPreferenceRepository::class => static fn (ServiceContainer $services): GridPreferenceRepository => new GridPreferenceRepository($services->get(PDO::class)),
+    GridWorkspaceMutationGuard::class => static fn (ServiceContainer $services): GridWorkspaceMutationGuard => new GridWorkspaceMutationGuard(),
+    GridWorkspaceMutationFormsRenderer::class => static fn (ServiceContainer $services): GridWorkspaceMutationFormsRenderer => new GridWorkspaceMutationFormsRenderer(),    GridPreferenceRepository::class => static fn (ServiceContainer $services): GridPreferenceRepository => new GridPreferenceRepository($services->get(PDO::class)),
     GridBookmarkRepository::class => static fn (ServiceContainer $services): GridBookmarkRepository => new GridBookmarkRepository($services->get(PDO::class)),
     GridStateNormaliser::class => static fn (ServiceContainer $services): GridStateNormaliser => new GridStateNormaliser(),
     GridColumnOrderer::class => static fn (ServiceContainer $services): GridColumnOrderer => new GridColumnOrderer(),

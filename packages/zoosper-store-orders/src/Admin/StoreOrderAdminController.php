@@ -7,7 +7,10 @@ namespace Zoosper\StoreOrders\Admin;
 use InvalidArgumentException;
 use Throwable;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
+use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
+use Zoosper\AdminGrid\GridWorkspaceRequest;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Pagination\PaginationResult;
@@ -20,9 +23,12 @@ final readonly class StoreOrderAdminController
     /** @param array<string, mixed> $config */
     public function __construct(
         private SessionGuard $guard,
+        private CsrfTokenManager $csrf,
         private AdminLayoutRendererInterface $layout,
         private StoreOrderDataSourceFactory $dataSources,
         private StoreOrderGridWorkspace $workspace,
+        private StoreOrderGridMutationCoordinator $mutations,
+        private GridWorkspaceMutationFormsRenderer $mutationForms,
         private array $config,
         private GridHtmlRenderer $gridRenderer = new GridHtmlRenderer(),
     ) {
@@ -66,6 +72,12 @@ final readonly class StoreOrderAdminController
             );
             $content = '<h1>Store Orders</h1>'
                 . $resolved['html']
+                . $this->mutationForms->render(
+                    $state,
+                    StoreOrderGridWorkspace::ACTION,
+                    '_csrf_token',
+                    $this->csrf->token(),
+                )
                 . $this->gridRenderer->renderBody(
                     $state->definition,
                     $pagination,
@@ -87,4 +99,28 @@ final readonly class StoreOrderAdminController
             return Response::html($this->layout->render('Store Orders', $content, $user, 'store-orders'), 503);
         }
     }
+    public function mutate(Request $request): Response
+    {
+        $user = $this->guard->user();
+        if ($user === null) {
+            return Response::redirect('/admin/login');
+        }
+        if (!$this->csrf->isValid(isset($_POST['_csrf_token']) ? (string) $_POST['_csrf_token'] : null)) {
+            return Response::html('Invalid CSRF token.', 419);
+        }
+
+        try {
+            $result = $this->mutations->mutate(
+                $user->id,
+                new GridWorkspaceRequest('POST', $_GET, $_POST),
+            );
+            return Response::redirect($result->redirectPath);
+        } catch (InvalidArgumentException $exception) {
+            return Response::html(
+                htmlspecialchars($exception->getMessage(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                422,
+            );
+        }
+    }
+
 }
