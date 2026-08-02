@@ -12,7 +12,7 @@
 > wrap-up — the more accurate this file is, the less any single conversation
 > thread actually matters.
 
-**Last updated:** 2026-07-31 (Sydney)
+**Last updated:** 2026-08-02 (Sydney)
 **Framework baseline:** PHP 8.5 · Pest/PHPUnit · Psalm · Latte · **Marko packages
 (real, adopted usage — see §14) via zoosper/errors and zoosper/core**
 
@@ -382,6 +382,13 @@ replica.
   all, so violation data isn't even being collected. Not yet fixed.
 
 ## 4. Admin & Auth
+- [~] **Unified admin grid workspace.** The Pages grid now supports configurable
+  columns, filters, page size, CSV export, bookmark persistence, draggable
+  ordering with locked ID/Actions anchors, and immediate live table reflection.
+  Remaining consolidation: make `zoosper-admin-grid` the sole owner of generic
+  grid runtime/assets, remove application bridge duplication, emit keyed headers
+  server-side, add content-hashed asset URLs, and add behavioural DOM coverage
+  before rolling the workspace out to every admin grid.
 
 - [x] Admin authentication + session guard
 - [x] Roles, permissions, ACL tree + admin users CRUD
@@ -514,6 +521,10 @@ replica.
 - [ ] ContentPage API exposes structured Editor.js JSON (not serialized HTML)
 
 ## 9. Modular Asset Pipeline
+- [~] **Module-owned admin grid assets are live through `/asset`.** Remaining:
+  eliminate any runtime dependency on vendor edits, establish one canonical
+  package source, add content-derived cache busting, and verify that rendered
+  URLs resolve to the exact source validated by CI.
 
 - [x] Asset registry / resolver / controller (path-safe, MIME allowlist, ETag)
 - [ ] Wire `/asset/{module}/{path}` route + `asset()` helper live
@@ -545,6 +556,12 @@ replica.
   limitation).
 
 ## 11. Quality, Tooling & Repo Hygiene
+- [ ] Add JavaScript syntax validation for every shipped admin asset.
+- [ ] Add DOM behavioural coverage for column drag, live reflection, locked
+  anchors, dirty state and bookmark reload.
+- [ ] Replace duplicate source-string tests with one behavioural contract.
+- [ ] Keep one canonical admin-grid column customisation guide rather than
+  phase/hotfix documentation fragments.
 
 - [x] Pest + PHPUnit harness; quality gate runner
 - [x] **`.gitattributes` (`export-ignore` for `tests/`/dev tooling) added
@@ -644,6 +661,13 @@ replica.
 ---
 
 ## Daily log (most recent first)
+- **2026-08-02** — Completed the Pages admin grid workspace visual cutover:
+  configurable visibility, page-size selection, filtering, CSV export,
+  bookmark persistence, draggable column ordering with locked ID/Actions
+  anchors, and immediate live grid reflection. The closure review identified
+  duplicate asset ownership, missing content-based cache busting, runtime
+  header-key repair, and overly source-oriented JavaScript tests. The next
+  phase is consolidation and behavioural verification, not new feature work.
 
 - **2026-07-31** — Cleaned up root `composer.json`: removed all 7
   transitively-unused Marko packages (`marko/database`,

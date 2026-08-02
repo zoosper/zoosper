@@ -95,14 +95,12 @@ return array (
     array (
       'type' => 'style',
       'path' => '/asset/zoosper-admin/css/zoosper-grid-column-drag.css',
-      'zoosper-grid-column-live-reflection.css',
       'sort_order' => 92,
     ),
     'zoosper-grid-column-drag-script' => 
     array (
       'type' => 'script',
       'path' => '/asset/zoosper-admin/js/zoosper-grid-column-drag.js',
-      'zoosper-grid-column-live-reflection.js',
       'sort_order' => 92,
       'defer' => true,
     ),
