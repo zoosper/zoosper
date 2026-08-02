@@ -1,12 +1,20 @@
 (() => {
     'use strict';
 
-    const treeSelector = '[data-permission-tree], .permission-tree';
     const checkboxSelector = 'input[type="checkbox"][name="permission_ids[]"]';
     const groupSelector = 'fieldset, details, .permission-group';
     const normalise = (value) => String(value || '').trim().toLocaleLowerCase();
 
-    const boot = () => document.querySelectorAll(treeSelector).forEach((tree) => {
+    const discoverTrees = () => {
+        const roots = Array.from(document.querySelectorAll('[data-permission-tree], .permission-tree'));
+        document.querySelectorAll(checkboxSelector).forEach((checkbox) => {
+            const form = checkbox.closest('form');
+            if (form && !roots.includes(form)) roots.push(form);
+        });
+        return roots;
+    };
+
+    const boot = () => discoverTrees().forEach((tree) => {
         if (tree.dataset.permissionExplorerBound === 'true') return;
         const checkboxes = Array.from(tree.querySelectorAll(checkboxSelector));
         if (checkboxes.length === 0) return;
@@ -14,11 +22,13 @@
         tree.dataset.permissionExplorerBound = 'true';
         tree.classList.add('permission-explorer');
         const rows = checkboxes.map((checkbox) => checkbox.closest('label, li, .permission-item, .form-check') || checkbox.parentElement);
-        const groups = Array.from(tree.querySelectorAll(groupSelector));
+        const groups = Array.from(tree.querySelectorAll(groupSelector)).filter((group) => group.querySelector(checkboxSelector));
         const toolbar = document.createElement('div');
         toolbar.className = 'permission-explorer__toolbar';
         toolbar.innerHTML = '<label class="permission-explorer__search-label"><span>Search permissions</span><input type="search" class="permission-explorer__search" placeholder="Code or permission name" autocomplete="off"></label><div class="permission-explorer__actions"><button type="button" data-action="expand">Expand all</button><button type="button" data-action="collapse">Collapse all</button><button type="button" data-action="select-visible">Select visible</button><button type="button" data-action="clear-visible">Clear visible</button></div><output class="permission-explorer__count" aria-live="polite"></output>';
-        tree.prepend(toolbar);
+        const firstGroup = groups[0] || rows.find(Boolean);
+        if (firstGroup) firstGroup.before(toolbar); else tree.prepend(toolbar);
+
         const search = toolbar.querySelector('.permission-explorer__search');
         const count = toolbar.querySelector('.permission-explorer__count');
         const groupRows = (group) => rows.filter((row) => row && group.contains(row));
