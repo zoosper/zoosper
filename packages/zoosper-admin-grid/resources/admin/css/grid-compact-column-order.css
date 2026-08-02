@@ -1,1 +1,23 @@
-.grid-compact-column[draggable="true"]{cursor:grab;user-select:none;touch-action:none}.grid-compact-column[draggable="true"]:active{cursor:grabbing}.grid-compact-column.is-dragging{opacity:.5;outline:2px dashed var(--z-primary,#0f766e);outline-offset:2px}.grid-compact-column.is-column-locked{cursor:default}
+[data-grid-column-list] .grid-compact-column[draggable="true"] {
+    cursor: grab;
+    user-select: none;
+}
+
+[data-grid-column-list] .grid-compact-column[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+[data-grid-column-list] .grid-compact-column.is-grid-column-dragging {
+    opacity: .55;
+    outline: 2px dashed var(--z-primary, #0f766e);
+    outline-offset: 2px;
+}
+
+[data-grid-column-list] .grid-compact-column.is-grid-column-locked {
+    cursor: default;
+}
+
+.grid-compact-status--dirty {
+    color: #9a6700;
+    font-weight: 600;
+}

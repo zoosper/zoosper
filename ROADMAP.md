@@ -388,7 +388,7 @@ replica.
   `zoosper-admin-grid` now owns the canonical generic column runtime; the
   application bridge is parity-guarded compatibility wiring. Content-derived
   asset versions and JavaScript syntax checks are enforced. Server-rendered header keys are now explicit and positional inference is
-  removed. Remaining: remove the compatibility copy and add DOM coverage
+  removed. Application compatibility assets are retired. Remaining: add DOM coverage
   before rolling the workspace out to every admin grid.
 
 - [x] Admin authentication + session guard
@@ -728,6 +728,13 @@ controls, saved views, column visibility and ordering, live reflection,
 controlled failures, export policy, tests and diagnostics.
 
 ## Daily log (most recent first)
+- **2026-08-02 (Phase 4ZJ Grid closure)** — Closed the current admin Grid asset
+  ownership boundary: `zoosper-admin-grid` now serves its canonical column
+  ordering runtime and stylesheet directly through the secured module asset
+  route. The application compatibility copies, registrations and parity-only
+  tests were removed. Content-derived versions and direct resolver coverage are
+  enforced. The external API-backed Grid programme may begin after deployment
+  and final browser verification.
 - **2026-08-02 (planned after Grid closure)** — Scheduled the external
   API-backed Grid programme. The sequence begins with a generic data-source
   boundary, then `zoosper-api-grid`, reusable API Grid page composition, Store

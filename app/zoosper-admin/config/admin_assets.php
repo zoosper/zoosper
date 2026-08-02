@@ -91,21 +91,5 @@ return array (
         'defer' => true,
       ),
     ),
-    'zoosper-grid-column-drag-style' =>
-    array (
-      'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/zoosper-grid-column-drag.css?v=6cd15d8f4e96',
-      'sort_order' => 92,
-    ),
-    'zoosper-grid-column-drag-script' =>
-    array (
-      'type' => 'script',
-      'path' => '/asset/zoosper-admin/js/zoosper-grid-column-drag.js?v=ad26ae411791',
-      'sort_order' => 92,
-      'attributes' =>
-      array (
-        'defer' => true,
-      ),
-    ),
   ),
 );

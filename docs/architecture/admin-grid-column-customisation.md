@@ -100,3 +100,10 @@ Header-key inference remains a compatibility boundary for current server output.
 Every header branch in `GridHtmlRenderer` now emits an escaped `data-grid-column` key. The browser runtime no longer guesses missing header identities from numeric position. Table reflection is therefore fully key-driven for sortable and non-sortable columns, including `site_name` and `actions`.
 
 The compatibility application bridge remains byte-identical to the package runtime, and its content-derived version is refreshed whenever the runtime changes.
+
+
+## Phase 4ZJ direct package asset closure
+
+`zoosper-admin-grid` serves the canonical column-order runtime and stylesheet directly through `/asset/zoosper-admin-grid/...`. The package declares its public asset root in `config/assets.php` and contributes browser assets through the standard `assets` section of `config/admin_assets.php`.
+
+The former `zoosper-admin` compatibility JavaScript, stylesheet, manifest entries and parity-only tests are removed. Content-derived URL versions are calculated from the package files, and resolver tests prove that the secured module asset route resolves the canonical package paths.
