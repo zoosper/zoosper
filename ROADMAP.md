@@ -660,7 +660,80 @@ replica.
 
 ---
 
+## External API-backed grids — start after current Grid closure
+
+> **Sequence gate:** Do not begin this programme until the current admin Grid is
+> completely closed. Grid closure means explicit keyed headers are shipped,
+> package/application runtime compatibility work is resolved, the full test
+> suite is green, browser drag and live reflection are verified, and the Grid
+> closure commit is deployed.
+
+- [ ] **Phase 4ZJ — Data-source boundary.** Establish shared
+  `GridDataSourceInterface`, `GridQuery`, `GridResult` and
+  `GridDataSourceCapabilities` contracts for database-backed and external
+  collections. Support numbered and cursor pagination without coupling the
+  generic Grid package to HTTP or a particular API response shape. Preserve
+  existing Pages Grid behaviour while proving the renderer is data-source
+  agnostic.
+
+- [ ] **Phase 4ZK — `zoosper-api-grid` transport and mapping kernel.** Add an
+  installable adapter package containing request, response, transport,
+  authentication, row-mapping, reliability and descriptive exception
+  contracts. Test with fake transports first; do not embed Orders-specific
+  logic in the master package.
+
+- [ ] **Phase 4ZL — Declarative registration and reusable page composition.**
+  Add API Grid definitions, registry, data-source adapter and admin page builder
+  so a feature module can register an API-backed Grid without writing a custom
+  Grid controller. Render filters, sorting, search and export only when the
+  remote source declares those capabilities.
+
+- [ ] **Phase 4ZM — Store Orders pilot.** Build `/admin/store-orders` as the
+  first real consumer using remote page and page-size parameters plus trusted
+  store and website scope. Reuse saved views, configurable columns, locked
+  anchors, live ordering and controlled error presentation. Do not implement
+  misleading current-page-only search, filtering or sorting.
+
+- [ ] **Phase 4ZN — Hardening and second pilot.** Prove the abstraction with a
+  materially different API envelope or pagination model. Cover invalid JSON,
+  timeouts, non-success responses, schema drift, response-size limits, secret
+  and personal-data redaction, bounded exports, diagnostics and cursor
+  pagination where available.
+
+- [ ] **Phase 4ZO — Developer experience.** After two integrations validate the
+  contracts, add `bin/zoosper make:api-grid`, readable scaffolding, reusable
+  fixtures, an example module, integration documentation and an upgrade policy.
+
+### API Grid architectural boundaries
+
+- `zoosper-grid` owns generic definitions, criteria, pagination and rendering.
+- `zoosper-admin-grid` owns the admin workspace, bookmarks, preferences,
+  filters, export policy and browser runtime.
+- `zoosper-api-grid` adapts external collection APIs into existing Grid data
+  source contracts; it does not introduce another Grid framework.
+- Feature modules own endpoint-specific request, response and row mapping,
+  permissions and trusted context such as store or website scope.
+- API base URLs and credentials never come from browser query parameters,
+  templates, bookmarks or Grid definitions.
+- Remote failures must remain distinguishable from valid empty results, and
+  external payloads containing personal or transactional data must not be
+  dumped into logs, exceptions, list HTML or default exports.
+
+### API Grid definition of success
+
+A module developer supplies an endpoint definition, authentication strategy,
+request mapper, response mapper, row mapper, Grid columns and permissions.
+Zoosper supplies route integration, admin layout, pagination, capability-aware
+controls, saved views, column visibility and ordering, live reflection,
+controlled failures, export policy, tests and diagnostics.
+
 ## Daily log (most recent first)
+- **2026-08-02 (planned after Grid closure)** — Scheduled the external
+  API-backed Grid programme. The sequence begins with a generic data-source
+  boundary, then `zoosper-api-grid`, reusable API Grid page composition, Store
+  Orders as the first pilot, a second materially different pilot, and finally
+  scaffolding and developer documentation. No API Grid implementation begins
+  until the current admin Grid closure gate is satisfied.
 - **2026-08-02 (Phase 4ZI)** — Completed the explicit grid-column identity
   contract: all Grid table header branches now emit escaped
   `data-grid-column` keys, positional browser inference was removed, package and
