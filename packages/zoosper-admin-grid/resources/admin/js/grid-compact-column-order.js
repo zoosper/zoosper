@@ -1,70 +1,82 @@
 (() => {
     'use strict';
 
+    const LIST = '.grid-compact-columns';
     const ITEM = '.grid-compact-column[data-column-key]';
-    const MOVABLE = `${ITEM}[draggable="true"]`;
+    const LOCKED_KEYS = new Set(['id', 'actions']);
 
-    const nearestList = (item) => item.closest('.grid-compact-columns');
+    const keyOf = (item) => (item.getAttribute('data-column-key') ?? '').trim();
+    const isMovable = (item) => item.matches(ITEM) && !LOCKED_KEYS.has(keyOf(item));
 
     const syncOrder = (list) => {
-        list.querySelectorAll(ITEM).forEach((item) => {
-            const key = item.getAttribute('data-column-key');
-            const input = item.querySelector('input[name="column_order[]"]');
-            if (key !== null && input instanceof HTMLInputElement) {
-                input.value = key;
-            }
+        const keys = Array.from(list.querySelectorAll(ITEM), keyOf).filter(Boolean);
+        const form = list.closest('form') ?? list.closest('[data-grid-workspace]')?.querySelector('form');
+        if (!(form instanceof HTMLFormElement)) return;
+
+        const inputs = Array.from(form.querySelectorAll('input[name="column_order[]"]'));
+        while (inputs.length < keys.length) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'column_order[]';
+            form.appendChild(input);
+            inputs.push(input);
+        }
+        inputs.forEach((input, index) => {
+            if (index < keys.length) input.value = keys[index];
+            else input.remove();
         });
-        list.dispatchEvent(new CustomEvent('grid:column-order-changed', { bubbles: true }));
+        list.dispatchEvent(new CustomEvent('grid:column-order-changed', {
+            bubbles: true,
+            detail: { order: keys },
+        }));
     };
 
-    const previousMovable = (item) => {
-        let candidate = item.previousElementSibling;
-        while (candidate !== null) {
-            if (candidate.matches(MOVABLE)) return candidate;
-            candidate = candidate.previousElementSibling;
-        }
-        return null;
-    };
-
-    const nextMovable = (item) => {
-        let candidate = item.nextElementSibling;
-        while (candidate !== null) {
-            if (candidate.matches(MOVABLE)) return candidate;
-            candidate = candidate.nextElementSibling;
-        }
-        return null;
-    };
-
-    document.querySelectorAll('.grid-compact-columns').forEach((list) => {
+    document.querySelectorAll(LIST).forEach((list) => {
         let dragging = null;
 
-        list.querySelectorAll(MOVABLE).forEach((item) => {
+        list.querySelectorAll(ITEM).forEach((item) => {
+            const movable = isMovable(item);
+            item.draggable = movable;
+            item.setAttribute('aria-grabbed', 'false');
+            item.classList.toggle('is-column-locked', !movable);
+
+            if (!movable) return;
+
             item.addEventListener('dragstart', (event) => {
                 dragging = item;
                 item.classList.add('is-dragging');
+                item.setAttribute('aria-grabbed', 'true');
                 if (event.dataTransfer !== null) {
                     event.dataTransfer.effectAllowed = 'move';
-                    event.dataTransfer.setData('text/plain', item.getAttribute('data-column-key') ?? '');
+                    event.dataTransfer.setData('text/plain', keyOf(item));
                 }
             });
 
             item.addEventListener('dragend', () => {
                 item.classList.remove('is-dragging');
+                item.setAttribute('aria-grabbed', 'false');
                 dragging = null;
                 syncOrder(list);
             });
 
+            item.addEventListener('dragenter', (event) => {
+                if (dragging !== null && dragging !== item) event.preventDefault();
+            });
+
             item.addEventListener('dragover', (event) => {
-                if (dragging === null || dragging === item) return;
+                if (dragging === null || dragging === item || !isMovable(item)) return;
                 event.preventDefault();
                 if (event.dataTransfer !== null) event.dataTransfer.dropEffect = 'move';
             });
 
             item.addEventListener('drop', (event) => {
-                if (dragging === null || dragging === item) return;
+                if (dragging === null || dragging === item || !isMovable(item)) return;
                 event.preventDefault();
                 const box = item.getBoundingClientRect();
-                const before = event.clientX < box.left + (box.width / 2);
+                const horizontal = list.scrollWidth > list.clientWidth || box.width < list.clientWidth * 0.8;
+                const before = horizontal
+                    ? event.clientX < box.left + box.width / 2
+                    : event.clientY < box.top + box.height / 2;
                 list.insertBefore(dragging, before ? item : item.nextSibling);
                 syncOrder(list);
             });
@@ -75,23 +87,23 @@
                 ? event.target.closest('[data-grid-column-move]')
                 : null;
             if (!(button instanceof HTMLButtonElement)) return;
-
             const item = button.closest(ITEM);
-            if (!(item instanceof HTMLElement) || item.getAttribute('draggable') !== 'true') return;
+            if (!(item instanceof HTMLElement) || !isMovable(item)) return;
 
+            const movable = Array.from(list.querySelectorAll(ITEM)).filter(isMovable);
+            const index = movable.indexOf(item);
             const direction = button.getAttribute('data-grid-column-move');
-            if (direction === 'up') {
-                const previous = previousMovable(item);
-                if (previous !== null) list.insertBefore(item, previous);
-            } else if (direction === 'down') {
-                const next = nextMovable(item);
-                if (next !== null) list.insertBefore(next, item);
+            if (direction === 'up' && index > 0) {
+                list.insertBefore(item, movable[index - 1]);
+            } else if (direction === 'down' && index >= 0 && index < movable.length - 1) {
+                list.insertBefore(movable[index + 1], item);
             } else {
                 return;
             }
-
             syncOrder(list);
-            item.focus({ preventScroll: true });
+            button.focus({ preventScroll: true });
         });
+
+        syncOrder(list);
     });
 })();

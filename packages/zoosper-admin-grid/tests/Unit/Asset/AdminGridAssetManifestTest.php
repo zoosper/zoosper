@@ -17,6 +17,7 @@ it('registers every shipped admin Grid runtime asset exactly once', function ():
         'resources/admin/css/grid-workspace-view-actions.css',
         'resources/admin/css/grid-workspace-live.css',
         'resources/admin/css/grid-compact-workspace.css',
+        'resources/admin/css/grid-compact-column-order.css',
     ])->and($scriptPaths)->toBe([
         'resources/admin/js/grid-workspace.js',
         'resources/admin/js/grid-workspace-view-actions.js',

@@ -1,0 +1,1 @@
+.grid-compact-column[draggable="true"]{cursor:grab;user-select:none;touch-action:none}.grid-compact-column[draggable="true"]:active{cursor:grabbing}.grid-compact-column.is-dragging{opacity:.5;outline:2px dashed var(--z-primary,#0f766e);outline-offset:2px}.grid-compact-column.is-column-locked{cursor:default}

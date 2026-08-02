@@ -30,6 +30,11 @@ return array (
       'path' => 'resources/admin/css/grid-compact-workspace.css',
       'priority' => 80,
     ),
+    5 => 
+    array (
+      'path' => 'resources/admin/css/grid-compact-column-order.css',
+      'priority' => 81,
+    ),
   ),
   'scripts' => 
   array (
