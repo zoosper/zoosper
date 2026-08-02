@@ -24,7 +24,8 @@
         "zoosper/url-rewrite": "dev-dev",
         "zoosper/grid": "dev-dev",
         "zoosper/admin-grid": "dev-dev",
-        "zoosper/api-grid": "dev-dev"
+        "zoosper/api-grid": "dev-dev",
+        "zoosper/store-orders": "dev-dev"
     },
     "require-dev": {
         "icanhazstring/composer-unused": "^0.9.6",
@@ -45,7 +46,8 @@
             "Zoosper\\TwoFactor\\Tests\\": "app/zoosper-two-factor/tests/",
             "Zoosper\\Grid\\Tests\\": "packages/zoosper-grid/tests/",
             "Zoosper\\AdminGrid\\Tests\\": "packages/zoosper-admin-grid/tests/",
-            "Zoosper\\ApiGrid\\Tests\\": "packages/zoosper-api-grid/tests/"
+            "Zoosper\\ApiGrid\\Tests\\": "packages/zoosper-api-grid/tests/",
+            "Zoosper\\StoreOrders\\Tests\\": "packages/zoosper-store-orders/tests/"
         }
     },
     "scripts": {
@@ -74,6 +76,13 @@
         }
     },
     "repositories": [
+        {
+            "type": "path",
+            "url": "packages/zoosper-store-orders",
+            "options": {
+                "symlink": true
+            }
+        },
         {
             "type": "path",
             "url": "packages/zoosper-api-grid",

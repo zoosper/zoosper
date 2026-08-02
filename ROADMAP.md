@@ -688,7 +688,7 @@ replica.
   Grid controller. Render filters, sorting, search and export only when the
   remote source declares those capabilities.
 
-- [ ] **Phase 4ZM — Store Orders pilot.** Build `/admin/store-orders` as the
+- [~] **Phase 4ZM — Store Orders pilot.** Build `/admin/store-orders` as the
   first real consumer using remote page and page-size parameters plus trusted
   store and website scope. Reuse saved views, configurable columns, locked
   anchors, live ordering and controlled error presentation. Do not implement
@@ -728,6 +728,10 @@ controls, saved views, column visibility and ordering, live reflection,
 controlled failures, export policy, tests and diagnostics.
 
 ## Daily log (most recent first)
+- **2026-08-02 (Phase 5D)** — Added the Store Orders API Grid feature adapter:
+  trusted-scope request mapping, strict response-envelope validation, privacy-
+  minimised row mapping, capability declaration and Grid definition. Live HTTP
+  transport and admin route wiring remain for the next pilot phase.
 - **2026-08-02 (Phase 5C)** — Added immutable API Grid definitions, duplicate-safe
   registry, capability-constrained query creation and reusable page composition.
   Unsupported remote search, filters and sorting are removed before a data

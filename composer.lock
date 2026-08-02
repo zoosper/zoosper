@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aea82b19686127462e98845a4ab10691",
+    "content-hash": "317a4000a5c64d1b5f06b6ea664e74f3",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1268,6 +1268,49 @@
                 "MIT"
             ],
             "description": "Zoosper_Site module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/store-orders",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "packages/zoosper-store-orders",
+                "reference": "74d62cea7601781c6995d87be3af73e07f7abe77"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/api-grid": "dev-dev",
+                "zoosper/grid": "dev-dev"
+            },
+            "require-dev": {
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin": "^3.0",
+                "phpunit/phpunit": "^11.0"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\StoreOrders\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\StoreOrders\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Store Orders API Grid integration for Zoosper.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -8395,6 +8438,7 @@
         "zoosper/media": 20,
         "zoosper/page": 20,
         "zoosper/site": 20,
+        "zoosper/store-orders": 20,
         "zoosper/theme": 20,
         "zoosper/two-factor": 20,
         "zoosper/url-rewrite": 20
