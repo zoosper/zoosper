@@ -129,12 +129,24 @@ return array (
     'zoosper-admin-grid-command-bar-script' => 
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-admin-grid/js/grid-workspace-command-bar.js?v=7f1',
-      'sort_order' => 86,
+      'path' => '/asset/zoosper-admin-grid/js/grid-workspace-command-bar.js?v=7f3',
+      'sort_order' => 88,
       'attributes' => 
       array (
         'defer' => true,
       ),
+    ),
+    'zoosper-admin-grid-command-bar-popup-style' => 
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin-grid/css/grid-workspace-command-bar-popup.css?v=7f2',
+      'sort_order' => 87,
+    ),
+    'zoosper-admin-grid-toolbar-ownership-style' => 
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin-grid/css/grid-workspace-toolbar-ownership.css?v=7f3',
+      'sort_order' => 88,
     ),
   ),
 );

@@ -21,9 +21,10 @@ final readonly class GridCompactToolbarRenderer
     ): string {
         $status = $dirty ? 'Unsaved' : 'Saved';
         $count = $activeFilters > 0 ? ' (' . $activeFilters . ')' : '';
-        $options = '';
+        $pageSizeOptions = '';
         foreach ([20, 50, 100, 200] as $value) {
-            $options .= '<option value="' . $value . '"' . ($value === $pageSize ? ' selected' : '') . '>' . $value . '</option>';
+            $pageSizeOptions .= '<option value="' . $value . '"'
+                . ($value === $pageSize ? ' selected' : '') . '>' . $value . '</option>';
         }
 
         $viewOptions = '<option value="' . $this->escape($viewAction) . '"'
@@ -46,16 +47,18 @@ final readonly class GridCompactToolbarRenderer
 
         return '<div class="grid-compact-actions">'
             . '<button type="button" data-grid-toggle="filters" aria-expanded="false">Filters' . $count . '</button>'
-            . '<button type="button" data-grid-toggle="columns" aria-expanded="false">Columns</button>'
-            . '<a class="button" data-grid-export href="' . $this->escape($exportUrl) . '">Export current page</a></div>'
-            . '<div class="grid-compact-state">'
             . '<span class="grid-compact-view-tools">'
-            . '<label class="grid-compact-view-selector">View <select data-grid-view-selector aria-label="Saved view">'
+            . '<label class="grid-compact-view-selector"><span class="sr-only">View</span>'
+            . '<select id="grid-workspace-view" name="bookmark_view" data-grid-view-selector aria-label="Saved view">'
             . $viewOptions . '</select></label>'
-            . '<button type="button" data-grid-settings-toggle aria-expanded="false" aria-controls="grid-workspace-settings" title="Manage saved views">&#8942;</button>'
+            . '<button type="button" data-grid-settings-toggle aria-expanded="false" aria-controls="grid-workspace-settings" title="Manage saved views" aria-label="Manage saved views">&#8942;</button>'
             . '</span>'
+            . '<button type="button" data-grid-toggle="columns" aria-expanded="false">Columns</button>'
+            . '<a class="button" data-grid-export href="' . $this->escape($exportUrl) . '">Export current page</a>'
+            . '</div>'
+            . '<div class="grid-compact-state">'
             . '<span class="grid-compact-status' . ($dirty ? ' is-dirty' : '') . '">' . $status . '</span>'
-            . '<label>Per page <select name="page_size" data-grid-page-size>' . $options . '</select></label>'
+            . '<label>Per page <select name="page_size" data-grid-page-size>' . $pageSizeOptions . '</select></label>'
             . '</div>';
     }
 

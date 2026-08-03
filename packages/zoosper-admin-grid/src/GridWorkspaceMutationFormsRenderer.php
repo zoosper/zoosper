@@ -28,6 +28,9 @@ final readonly class GridWorkspaceMutationFormsRenderer
 
         $html = '<details id="grid-workspace-settings" class="grid-workspace__settings" data-grid-settings hidden>';
         $html .= '<summary><strong>Grid settings</strong><span>Columns and saved views</span></summary>';
+        $html .= '<div class="grid-workspace__settings-header"><strong>Manage saved views</strong>';
+        $html .= '<span>Save or update the current workspace.</span>';
+        $html .= '<button type="button" class="grid-workspace__settings-close" data-grid-settings-close aria-label="Close saved-view management">&times;</button></div>';
         $html .= '<section class="grid-workspace__mutations" data-grid-mutations aria-label="Saved Grid settings">';
         $html .= '<div class="grid-workspace__mutations-title"><strong>Saved Grid settings</strong>';
         $html .= '<span>Persist columns or save this workspace as a named view.</span></div>';

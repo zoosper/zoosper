@@ -1,66 +1,73 @@
 (() => {
     'use strict';
 
-    const workspace = document.querySelector('[data-grid-workspace]');
-    if (!workspace) return;
-
-    const panels = Array.from(workspace.querySelectorAll('[data-grid-panel]'));
-    const toggles = Array.from(document.querySelectorAll('[data-grid-toggle]'));
     const settings = document.querySelector('[data-grid-settings]');
     const settingsToggle = document.querySelector('[data-grid-settings-toggle]');
+    const settingsClose = settings?.querySelector('[data-grid-settings-close]');
 
-    const closePanels = (except = null) => {
-        panels.forEach((panel) => {
-            if (panel === except) return;
-            panel.hidden = true;
-        });
-        toggles.forEach((button) => {
-            const target = workspace.querySelector(`[data-grid-panel="${button.dataset.gridToggle}"]`);
-            if (target !== except) button.setAttribute('aria-expanded', 'false');
-        });
+    // Pages may render the shared toolbar without mutation forms. Do not show a
+    // control that has no target on that page.
+    if (!settings) {
+        if (settingsToggle) settingsToggle.hidden = true;
+        return;
+    }
+
+    const closeSettings = (restoreFocus = false) => {
+        settings.hidden = true;
+        settings.open = false;
+        settings.removeAttribute('style');
+        settingsToggle?.setAttribute('aria-expanded', 'false');
+        if (restoreFocus) settingsToggle?.focus();
     };
 
-    toggles.forEach((button) => {
-        if (button.dataset.gridCommandBarBound === 'true') return;
-        button.dataset.gridCommandBarBound = 'true';
-        button.addEventListener('click', () => {
-            const panel = workspace.querySelector(`[data-grid-panel="${button.dataset.gridToggle}"]`);
-            if (!panel) return;
-            const willOpen = panel.hidden;
-            closePanels(panel);
-            if (settings) {
-                settings.hidden = true;
-                settings.open = false;
-            }
-            panel.hidden = !willOpen;
-            button.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-        });
-    });
+    const positionSettings = () => {
+        if (!settingsToggle || settings.hidden) return;
+        const trigger = settingsToggle.getBoundingClientRect();
+        const margin = 16;
+        const gap = 8;
+        const width = Math.min(680, Math.max(320, window.innerWidth - (margin * 2)));
+        const left = Math.min(
+            Math.max(margin, trigger.right - width),
+            window.innerWidth - width - margin,
+        );
+        settings.style.setProperty('--grid-settings-left', `${left}px`);
+        settings.style.setProperty('--grid-settings-top', `${trigger.bottom + gap}px`);
+        settings.style.setProperty('--grid-settings-width', `${width}px`);
+    };
 
     settingsToggle?.addEventListener('click', () => {
-        closePanels();
-        if (!settings) return;
         const willOpen = settings.hidden;
-        settings.hidden = !willOpen;
-        settings.open = willOpen;
-        settingsToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-        if (willOpen) settings.querySelector('input[name="view_name"]')?.focus();
+        if (!willOpen) {
+            closeSettings(true);
+            return;
+        }
+        // Let the established compact-workspace script continue to own Filters
+        // and Columns. This script owns only saved-view management.
+        document.querySelectorAll('[data-grid-panel]').forEach((panel) => {
+            panel.hidden = true;
+        });
+        document.querySelectorAll('[data-grid-toggle]').forEach((button) => {
+            button.setAttribute('aria-expanded', 'false');
+        });
+        settings.hidden = false;
+        settings.open = true;
+        settingsToggle.setAttribute('aria-expanded', 'true');
+        positionSettings();
+        settings.querySelector('input[name="view_name"]')?.focus();
     });
 
+    settingsClose?.addEventListener('click', () => closeSettings(true));
+    window.addEventListener('resize', positionSettings);
+    window.addEventListener('scroll', positionSettings, true);
+
     document.addEventListener('keydown', (event) => {
-        if (event.key !== 'Escape') return;
-        closePanels();
-        if (settings) {
-            settings.hidden = true;
-            settings.open = false;
-        }
-        settingsToggle?.setAttribute('aria-expanded', 'false');
+        if (event.key === 'Escape' && !settings.hidden) closeSettings(true);
     });
 
     document.addEventListener('click', (event) => {
         const target = event.target;
         if (!(target instanceof Node)) return;
-        if (workspace.contains(target) || settings?.contains(target) || settingsToggle?.contains(target)) return;
-        closePanels();
+        if (settings.contains(target) || settingsToggle?.contains(target)) return;
+        closeSettings();
     });
 })();

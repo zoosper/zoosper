@@ -1,0 +1,82 @@
+/* Phase 7F popup alignment and close-control refinement. */
+.grid-workspace__settings[hidden] { display: none !important; }
+
+.grid-workspace__settings:not([hidden]) {
+    position: fixed;
+    z-index: 1000;
+    top: var(--grid-settings-top, 5rem);
+    left: var(--grid-settings-left, 1rem);
+    right: auto;
+    width: var(--grid-settings-width, min(42.5rem, calc(100vw - 2rem)));
+    max-width: calc(100vw - 2rem);
+    max-height: min(34rem, calc(100vh - var(--grid-settings-top, 5rem) - 1rem));
+    overflow: auto;
+    margin: 0;
+    border: 1px solid #c8d5e3;
+    border-radius: .75rem;
+    background: #fff;
+    box-shadow: 0 1rem 2.5rem rgba(19, 49, 77, .22);
+}
+
+.grid-workspace__settings > summary { display: none; }
+
+.grid-workspace__settings-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem 1rem;
+    border-bottom: 1px solid #e3eaf1;
+    background: #fff;
+}
+
+.grid-workspace__settings-header strong { color: #14314d; }
+.grid-workspace__settings-header span { color: #60758a; font-size: .86rem; }
+
+.grid-workspace__settings-close {
+    margin-left: auto;
+    min-width: 2.25rem !important;
+    min-height: 2.25rem !important;
+    padding: .25rem !important;
+    border-color: transparent !important;
+    background: transparent !important;
+    color: #60758a !important;
+    font-size: 1.35rem !important;
+    line-height: 1 !important;
+}
+
+.grid-workspace__settings-close:hover {
+    border-color: #c8d5e3 !important;
+    background: #f4f7fa !important;
+    color: #14314d !important;
+}
+
+.grid-workspace__settings .grid-workspace__mutations {
+    grid-template-columns: auto auto;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.grid-workspace__settings .grid-workspace__mutations-title { display: none; }
+.grid-workspace__settings .grid-workspace__column-actions { grid-column: 1 / -1; }
+.grid-workspace__settings .grid-workspace__named-view-form { grid-column: 1 / -1; min-width: 0; }
+.grid-workspace__settings .grid-workspace__named-view-form label { min-width: 0; }
+.grid-workspace__settings .grid-workspace__named-view-actions { justify-content: flex-start; }
+
+@media (max-width: 720px) {
+    .grid-workspace__settings:not([hidden]) {
+        position: fixed;
+        inset: auto 0 0;
+        width: 100%;
+        max-width: none;
+        max-height: 82vh;
+        border-radius: .9rem .9rem 0 0;
+    }
+    .grid-workspace__settings .grid-workspace__named-view-form { grid-template-columns: 1fr; }
+}

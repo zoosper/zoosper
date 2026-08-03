@@ -1,0 +1,18 @@
+/* Phase 7F toolbar ownership correction. */
+.grid-compact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .65rem;
+}
+.grid-compact-actions .grid-compact-view-tools { margin: 0; }
+.grid-compact-state { justify-content: flex-end; min-height: 2.75rem; }
+.grid-compact-state .grid-compact-status { margin-right: auto; }
+.grid-compact-view-selector select { min-width: 10rem; }
+[data-grid-settings-toggle][hidden] { display: none !important; }
+@media (max-width:720px){
+  .grid-compact-actions{justify-content:flex-start}
+  .grid-compact-actions .grid-compact-view-tools{order:3;width:100%}
+  .grid-compact-view-selector{flex:1}.grid-compact-view-selector select{width:100%}
+}
