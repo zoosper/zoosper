@@ -24,7 +24,16 @@ final readonly class GridCompactWorkspaceRenderer
         $label='Default view';
         foreach($state->bookmarks as $bookmark){if((int)$bookmark['id']===$state->activeBookmarkId){$label=(string)$bookmark['name'];break;}}
         $html='<section data-grid-workspace>';
-        $html.=$this->toolbar->render($label,false,$state->criteria->pager->pageSize,$active,$exportUrl ?? '/admin/pages/export');
+        $html .= $this->toolbar->render(
+            $label,
+            false,
+            $state->criteria->pager->pageSize,
+            $active,
+            $exportUrl ?? '/admin/pages/export',
+            $state->bookmarks,
+            $state->activeBookmarkId,
+            $formAction,
+        );
         $html.='<form method="get" action="'.$this->e($formAction).'" data-grid-filter-form>';
         $html.='<input type="hidden" name="page" value="1">';
         $html.=$this->filters($state->definition,$filters);

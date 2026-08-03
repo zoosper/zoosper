@@ -26,7 +26,9 @@ final readonly class GridWorkspaceMutationFormsRenderer
             );
         }
 
-        $html = '<section class="grid-workspace__mutations" data-grid-mutations aria-label="Saved Grid settings">';
+        $html = '<details class="grid-workspace__settings" data-grid-settings>';
+        $html .= '<summary><strong>Grid settings</strong><span>Columns and saved views</span></summary>';
+        $html .= '<section class="grid-workspace__mutations" data-grid-mutations aria-label="Saved Grid settings">';
         $html .= '<div class="grid-workspace__mutations-title"><strong>Saved Grid settings</strong>';
         $html .= '<span>Persist columns or save this workspace as a named view.</span></div>';
         $html .= '<div class="grid-workspace__column-actions" aria-label="Column preferences">';
@@ -44,7 +46,7 @@ final readonly class GridWorkspaceMutationFormsRenderer
             );
         }
 
-        return $html . '</section>';
+        return $html . '</section></details>';
     }
 
     private function saveColumnsForm(

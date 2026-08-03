@@ -114,5 +114,11 @@ return array (
         'defer' => true,
       ),
     ),
+    'zoosper-admin-grid-progressive-disclosure-style' => 
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin-grid/css/grid-workspace-progressive-disclosure.css?v=7e1',
+      'sort_order' => 85,
+    ),
   ),
 );
