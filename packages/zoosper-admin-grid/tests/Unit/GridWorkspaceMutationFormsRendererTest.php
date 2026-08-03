@@ -40,8 +40,9 @@ test('every mutation form uses POST and carries the supplied CSRF token', functi
         'token-value',
     );
 
-    expect(substr_count($html, 'method="post"'))->toBe(5);
-    expect(substr_count($html, 'name="_csrf" value="token-value"'))->toBe(5);
+    expect(substr_count($html, 'method="post"'))->toBe(4);
+    expect(substr_count($html, 'name="_csrf" value="token-value"'))->toBe(4);
+    expect(substr_count($html, 'name="view_name"'))->toBe(1);
     expect($html)->not->toContain('admin_user_id');
     expect($html)->not->toContain('grid_key');
     expect($html)->not->toContain('redirect');

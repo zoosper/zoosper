@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Zoosper\ApiGrid;
 
-use RuntimeException;
 use Zoosper\ApiGrid\Authentication\ApiAuthenticationInterface;
 use Zoosper\ApiGrid\Mapping\ApiGridContext;
 use Zoosper\ApiGrid\Mapping\ApiGridRequestMapperInterface;
 use Zoosper\ApiGrid\Mapping\ApiGridResponseMapperInterface;
 use Zoosper\ApiGrid\Transport\ApiReliabilityPolicy;
+use Zoosper\ApiGrid\Transport\ApiTransportException;
 use Zoosper\ApiGrid\Transport\ApiTransportInterface;
 use Zoosper\Grid\DataSource\GridDataSourceCapabilities;
 use Zoosper\Grid\DataSource\GridDataSourceInterface;
@@ -39,8 +39,14 @@ final readonly class ApiGridDataSource implements GridDataSourceInterface
         $request = $this->authentication->apply($this->requestMapper->map($query, $this->context));
         $response = $this->transport->send($request, $this->policy);
 
+        // Keep this defensive boundary for custom/fake transports that return
+        // ApiResponse directly instead of using CurlJsonApiTransport.
         if (!$response->isSuccessful()) {
-            throw new RuntimeException('External Grid source returned a non-success response.');
+            throw new ApiTransportException(
+                'External Grid source returned a non-success response.',
+                category: ApiTransportException::NON_SUCCESS,
+                statusCode: $response->statusCode,
+            );
         }
 
         return $this->responseMapper->map($response, $query);

@@ -1,0 +1,173 @@
+/* Grid workspace action controls: compact, consistent, and responsive. */
+[data-grid-workspace] button,
+.grid-workspace__mutations button,
+.grid-workspace__view-actions button {
+    display: inline-flex;
+    min-height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    padding: .55rem .9rem;
+    border: 1px solid #c8d5e3;
+    border-radius: .55rem;
+    background: #fff;
+    color: #14314d;
+    font: inherit;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+[data-grid-workspace] button:hover,
+.grid-workspace__mutations button:hover,
+.grid-workspace__view-actions button:hover {
+    border-color: #0f8b7f;
+    background: #effaf8;
+    color: #096c64;
+}
+
+[data-grid-workspace] button:focus-visible,
+.grid-workspace__mutations button:focus-visible,
+.grid-workspace__view-actions button:focus-visible {
+    outline: 3px solid rgba(15, 139, 127, .25);
+    outline-offset: 2px;
+}
+
+[data-grid-workspace] button[type="submit"],
+.grid-workspace__mutations button[type="submit"],
+.grid-workspace__view-actions button.is-primary {
+    border-color: #0f8b7f;
+    background: #0f8b7f;
+    color: #fff;
+}
+
+[data-grid-workspace] button[type="submit"]:hover,
+.grid-workspace__mutations button[type="submit"]:hover,
+.grid-workspace__view-actions button.is-primary:hover {
+    border-color: #0a7168;
+    background: #0a7168;
+    color: #fff;
+}
+
+.grid-workspace__mutations {
+    display: grid;
+    grid-template-columns: max-content max-content minmax(15rem, 1fr) minmax(15rem, 1fr);
+    gap: .75rem;
+    align-items: end;
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid #d7e1eb;
+    border-radius: .75rem;
+    background: #fff;
+    box-shadow: 0 .25rem .8rem rgba(19, 49, 77, .05);
+}
+
+.grid-workspace__mutations-title {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .4rem .7rem;
+    color: #14314d;
+}
+
+.grid-workspace__mutations-title span {
+    color: #60758a;
+    font-size: .9rem;
+}
+
+.grid-workspace__mutation-form {
+    display: flex;
+    align-items: end;
+    gap: .55rem;
+    min-width: 0;
+    margin: 0;
+}
+
+.grid-workspace__mutation-form label {
+    display: grid;
+    flex: 1 1 12rem;
+    gap: .35rem;
+    margin: 0;
+    color: #29445f;
+    font-size: .9rem;
+    font-weight: 600;
+}
+
+.grid-workspace__mutation-form input:not([type="hidden"]) {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.5rem;
+    padding: .5rem .7rem;
+    border: 1px solid #c8d5e3;
+    border-radius: .5rem;
+    background: #fff;
+    color: #14314d;
+    font: inherit;
+}
+
+.grid-workspace__mutation-form:nth-of-type(2) button,
+.grid-workspace__mutation-form button.is-secondary {
+    border-color: #c8d5e3;
+    background: #fff;
+    color: #14314d;
+}
+
+.grid-workspace__mutation-form button.is-danger,
+.grid-workspace__view-actions button.is-danger {
+    border-color: #c43d4b;
+    background: #fff;
+    color: #a72534;
+}
+
+.grid-workspace__view-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem;
+    align-items: end;
+}
+
+.grid-workspace__view-name {
+    display: grid;
+    flex: 1 1 18rem;
+    gap: .35rem;
+}
+
+.grid-compact-panel > button[type="submit"] {
+    margin-top: .85rem;
+}
+
+.grid-compact-panel__head button[data-grid-panel-close] {
+    min-width: 2rem;
+    min-height: 2rem;
+    padding: .25rem;
+    border-color: transparent;
+    background: transparent;
+    color: #60758a;
+}
+
+@media (max-width: 1100px) {
+    .grid-workspace__mutations {
+        grid-template-columns: max-content max-content 1fr;
+    }
+
+    .grid-workspace__mutation-form:has(label) {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 720px) {
+    .grid-workspace__mutations {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .grid-workspace__mutation-form:has(label) {
+        display: grid;
+    }
+
+    .grid-workspace__mutation-form:has(label) button {
+        justify-self: start;
+    }
+}

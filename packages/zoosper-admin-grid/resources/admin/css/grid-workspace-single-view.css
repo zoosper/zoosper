@@ -1,0 +1,33 @@
+
+/* One named-view input with explicit save choices. */
+.grid-workspace__column-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .55rem;
+    align-items: center;
+}
+
+.grid-workspace__named-view-form {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(15rem, 1fr) auto;
+    gap: .65rem;
+    align-items: end;
+}
+
+.grid-workspace__named-view-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .55rem;
+    align-items: center;
+}
+
+@media (max-width: 800px) {
+    .grid-workspace__named-view-form {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-workspace__named-view-actions {
+        justify-content: flex-start;
+    }
+}

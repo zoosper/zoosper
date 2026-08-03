@@ -25,7 +25,10 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
 
         $handle = curl_init($url);
         if ($handle === false) {
-            throw new ApiTransportException('Unable to initialise the external Grid transport.');
+            throw new ApiTransportException(
+                'Unable to initialise the external Grid transport.',
+                category: ApiTransportException::INITIALISATION,
+            );
         }
 
         $headers = ['Accept: application/json'];
@@ -33,8 +36,10 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
             $headers[] = $name . ': ' . $value;
         }
 
+        $body = '';
+        $responseTooLarge = false;
         curl_setopt_array($handle, [
-            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_RETURNTRANSFER => false,
             CURLOPT_FOLLOWLOCATION => false,
             CURLOPT_CONNECTTIMEOUT_MS => $policy->connectTimeoutMilliseconds,
             CURLOPT_TIMEOUT_MS => $policy->requestTimeoutMilliseconds,
@@ -42,24 +47,60 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
             CURLOPT_CUSTOMREQUEST => $request->method,
             CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_REDIR_PROTOCOLS => 0,
+            CURLOPT_WRITEFUNCTION => static function ($handle, string $chunk) use (&$body, &$responseTooLarge, $policy): int {
+                if (strlen($body) + strlen($chunk) > $policy->maximumResponseBytes) {
+                    $responseTooLarge = true;
+                    return 0;
+                }
+                $body .= $chunk;
+                return strlen($chunk);
+            },
         ]);
 
-        $body = curl_exec($handle);
-            if (!is_string($body)) {
-                throw new ApiTransportException('External Grid request failed: ' . curl_error($handle));
+        $success = curl_exec($handle);
+        $status = (int) curl_getinfo($handle, CURLINFO_RESPONSE_CODE);
+        if ($success === false) {
+            if ($responseTooLarge) {
+                throw new ApiTransportException(
+                    'External Grid response exceeded the configured size limit.',
+                    category: ApiTransportException::RESPONSE_TOO_LARGE,
+                );
             }
-            if (strlen($body) > $policy->maximumResponseBytes) {
-                throw new ApiTransportException('External Grid response exceeded the configured size limit.');
-            }
-            $status = (int) curl_getinfo($handle, CURLINFO_RESPONSE_CODE);
-            try {
-                $decoded = $body === '' ? [] : json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-            } catch (JsonException $exception) {
-                throw new ApiTransportException('External Grid response was not valid JSON.', previous: $exception);
-            }
-            if (!is_array($decoded)) {
-                throw new ApiTransportException('External Grid JSON root must be an object or array.');
-            }
+            $errorNumber = curl_errno($handle);
+            $category = $errorNumber === CURLE_OPERATION_TIMEDOUT
+                ? ApiTransportException::TIMEOUT
+                : ApiTransportException::NETWORK;
+            throw new ApiTransportException(
+                $category === ApiTransportException::TIMEOUT
+                    ? 'External Grid request timed out.'
+                    : 'External Grid request failed.',
+                category: $category,
+            );
+        }
+
+        if ($status < 200 || $status >= 300) {
+            throw new ApiTransportException(
+                'External Grid source returned a non-success response.',
+                category: ApiTransportException::NON_SUCCESS,
+                statusCode: $status,
+            );
+        }
+
+        try {
+            $decoded = $body === '' ? [] : json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $exception) {
+            throw new ApiTransportException(
+                'External Grid response was not valid JSON.',
+                previous: $exception,
+                category: ApiTransportException::INVALID_JSON,
+            );
+        }
+        if (!is_array($decoded)) {
+            throw new ApiTransportException(
+                'External Grid JSON root must be an object or array.',
+                category: ApiTransportException::INVALID_JSON_ROOT,
+            );
+        }
 
         return new ApiResponse($status, $decoded);
     }
