@@ -164,5 +164,21 @@ return array (
         'defer' => true,
       ),
     ),
+    'zoosper-admin-grid-page-jump-style' => 
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin-grid/css/grid-page-jump.css?v=7i1',
+      'sort_order' => 90,
+    ),
+    'zoosper-admin-grid-page-jump-script' => 
+    array (
+      'type' => 'script',
+      'path' => '/asset/zoosper-admin-grid/js/grid-page-jump.js?v=7i1',
+      'sort_order' => 90,
+      'attributes' => 
+      array (
+        'defer' => true,
+      ),
+    ),
   ),
 );
