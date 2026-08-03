@@ -129,7 +129,7 @@ return array (
     'zoosper-admin-grid-command-bar-script' => 
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-admin-grid/js/grid-workspace-command-bar.js?v=7f3',
+      'path' => '/asset/zoosper-admin-grid/js/grid-workspace-command-bar.js?v=7g1',
       'sort_order' => 88,
       'attributes' => 
       array (

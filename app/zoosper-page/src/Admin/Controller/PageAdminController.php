@@ -6,6 +6,8 @@ namespace Zoosper\Page\Admin\Controller;
 
 use RuntimeException;
 use Zoosper\Admin\Editor\ContentEditorInterface;
+use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
+use Zoosper\AdminGrid\GridWorkspaceRequest;
 use Zoosper\Admin\Form\AdminFormConfigAggregator;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
@@ -41,6 +43,7 @@ use Zoosper\Page\Admin\PageGridDataSource;
 use Zoosper\Page\Admin\PageGridDefinition;
 use Zoosper\Page\Admin\PageGridRepository;
 use Zoosper\Page\Admin\PageGridQueryState;
+use Zoosper\Page\Admin\PageGridMutationCoordinator;
 use Zoosper\Page\Admin\PageGridWorkspace;
 use Zoosper\Page\Content\BlockJsonValidator;
 use Zoosper\Page\Event\PageEvents;
@@ -87,6 +90,8 @@ final readonly class PageAdminController
         private ?PageGridDataSource              $pageGridDataSource = null,
         private ?GridHtmlRenderer                $gridHtmlRenderer = null,
         private ?PageGridWorkspace               $pageGridWorkspace = null,
+        private ?GridWorkspaceMutationFormsRenderer $gridMutationForms = null,
+        private ?PageGridMutationCoordinator      $pageGridMutations = null,
         private ?HtmlSanitizerInterface          $htmlSanitizer = null,
         private ?FlashMessageStoreInterface      $flashMessages = null,
         private ?ConfigRepository                $config = null,
@@ -124,7 +129,16 @@ final readonly class PageAdminController
         $tableHtml = $definition !== null && $criteria !== null && $pagination !== null
             ? $this->gridHtmlRenderer?->renderBody($definition, $pagination, $criteria, '/admin/pages')
             : null;
-        $gridHtml = ($resolved['html'] ?? '') . ($tableHtml ?? '');
+        $workspaceHtml = $resolved['html'] ?? '';
+        if ($resolved !== null && $this->gridMutationForms !== null) {
+            $workspaceHtml .= $this->gridMutationForms->render(
+                $resolved['state'],
+                '/admin/pages/grid',
+                '_csrf',
+                $this->csrf->token(),
+            );
+        }
+        $gridHtml = $workspaceHtml . ($tableHtml ?? '');
         $pages = $pagination?->items ?? $this->pages->all();
         $sites = $this->sites->allActive();
 
@@ -142,6 +156,22 @@ final readonly class PageAdminController
             'pages',
         ));
     }
+public function gridMutation(Request $request): Response
+{
+    $user = $this->currentAdminUser();
+    if ($this->pageGridMutations === null) {
+        return Response::html('Pages Grid mutations are unavailable.', 503);
+    }
+
+    $result = $this->pageGridMutations->mutate(
+        $user->id,
+        new GridWorkspaceRequest('POST', $_GET, $request->form()),
+    );
+    $this->flashMessages?->success($result->message, 'pages.grid.' . $result->action);
+
+    return Response::redirect($result->redirectPath);
+}
+
 private function adminUrl(string $path): string
     {
         $adminConfig = $this->config?->array('admin') ?? [];

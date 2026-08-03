@@ -13,12 +13,12 @@ it('places saved views in the primary command row and fixes field identity', fun
 it('does not compete with the established Filters and Columns script', function (): void {
     $root=dirname(__DIR__,4);$script=file_get_contents($root.'/packages/zoosper-admin-grid/resources/admin/js/grid-workspace-command-bar.js');
     expect($script)->not->toBeFalse()
-        ->and($script)->not->toContain("toggles.forEach")
+        ->and($script)->not->toContain('toggles.forEach')
         ->and($script)->not->toContain('data-grid-command-bar-bound')
-        ->and($script)->toContain('This script owns only saved-view management');
+        ->and($script)->toContain("document.querySelectorAll('[data-grid-panel]')");
 });
 
 it('hides saved-view management when a page has no mutation form target', function (): void {
     $root=dirname(__DIR__,4);$script=file_get_contents($root.'/packages/zoosper-admin-grid/resources/admin/js/grid-workspace-command-bar.js');
-    expect($script)->toContain('settingsToggle.hidden = true');
+    expect($script)->toContain('if(!settings){if(toggle)toggle.hidden=true;return;}');
 });

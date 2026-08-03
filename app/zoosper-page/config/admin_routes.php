@@ -7,6 +7,7 @@ use Zoosper\Page\Admin\Controller\PageCsvExportController;
 
 return [
     ['method' => 'GET', 'path' => '/admin/pages', 'controller' => PageAdminController::class, 'action' => 'index', 'permission' => 'page.manage'],
+    ['method' => 'POST', 'path' => '/admin/pages/grid', 'controller' => PageAdminController::class, 'action' => 'gridMutation', 'permission' => 'page.manage'],
     ['method' => 'GET', 'path' => '/admin/pages/export', 'controller' => PageCsvExportController::class, 'action' => 'export', 'permission' => 'page.manage'],
     ['method' => 'GET', 'path' => '/admin/pages/create', 'controller' => PageAdminController::class, 'action' => 'createForm', 'permission' => 'page.manage'],
     ['method' => 'POST', 'path' => '/admin/pages/create', 'controller' => PageAdminController::class, 'action' => 'create', 'permission' => 'page.manage'],

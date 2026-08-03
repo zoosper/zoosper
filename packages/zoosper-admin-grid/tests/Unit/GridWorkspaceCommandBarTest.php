@@ -26,9 +26,9 @@ it('keeps saved-view management independently closable', function (): void {
     );
 
     expect($script)->not->toBeFalse()
-        ->and($script)->toContain('closeSettings')
-        ->and($script)->toContain("event.key === 'Escape'")
-        ->and($script)->toContain('settings.hidden = true')
+        ->and($script)->toContain('const dismiss=')
+        ->and($script)->toContain("e.key==='Escape'")
+        ->and($script)->toContain('settings.hidden=true')
         ->and($script)->not->toContain('closePanels')
         ->and($script)->not->toContain('data-grid-command-bar-bound');
 });
@@ -42,5 +42,5 @@ it('publishes command bar assets', function (): void {
         'zoosper-admin-grid-command-bar-script',
     ])
         ->and($assets['assets']['zoosper-admin-grid-command-bar-script']['path'])
-        ->toBe('/asset/zoosper-admin-grid/js/grid-workspace-command-bar.js?v=7f3');
+        ->toBe('/asset/zoosper-admin-grid/js/grid-workspace-command-bar.js?v=7g1');
 });
