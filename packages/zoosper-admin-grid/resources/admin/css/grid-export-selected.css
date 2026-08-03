@@ -1,0 +1,1 @@
+.grid-selection-bar select:not(:disabled){border-color:#0f8177;background-color:#fff}.grid-selection-bar select:not(:disabled):focus{outline:2px solid rgba(15,129,119,.2);outline-offset:2px}

@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+it('publishes shared current-page selection assets', function (): void {
+    $root=dirname(__DIR__,4);$assets=require $root.'/packages/zoosper-admin-grid/config/admin_assets.php';
+    expect($assets['assets'])->toHaveKeys(['zoosper-admin-grid-page-selection-style','zoosper-admin-grid-page-selection-script']);
+});
+
+it('requires unique non-empty row identities before enabling selection', function (): void {
+    $root=dirname(__DIR__,4);$script=file_get_contents($root.'/packages/zoosper-admin-grid/resources/admin/js/grid-page-selection.js');
+    expect($script)->not->toBeFalse()
+        ->and($script)->toContain("/^id(?:\\s*[▲▼])?$/i")
+        ->and($script)->toContain("identities.every((value) => value !== '')")
+        ->and($script)->toContain('new Set(identities).size === identities.length')
+        ->and($script)->toContain("checkbox.name = 'selected_ids[]'")
+        ->and($script)->toContain('selectAll.indeterminate')
+        ->and($script)->not->toContain('localStorage');
+});
+
+it('keeps executable bulk actions disabled in the selection foundation', function (): void {
+    $root=dirname(__DIR__,4);$script=file_get_contents($root.'/packages/zoosper-admin-grid/resources/admin/js/grid-page-selection.js');
+    expect($script)->toContain('action.disabled = true')->toContain("action.innerHTML = '<option>Bulk actions</option>'");
+});

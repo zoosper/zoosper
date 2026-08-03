@@ -180,5 +180,37 @@ return array (
         'defer' => true,
       ),
     ),
+    'zoosper-admin-grid-page-selection-style' => 
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin-grid/css/grid-page-selection.css?v=7j1',
+      'sort_order' => 91,
+    ),
+    'zoosper-admin-grid-page-selection-script' => 
+    array (
+      'type' => 'script',
+      'path' => '/asset/zoosper-admin-grid/js/grid-page-selection.js?v=7j1',
+      'sort_order' => 91,
+      'attributes' => 
+      array (
+        'defer' => true,
+      ),
+    ),
+    'zoosper-admin-grid-export-selected-style' => 
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin-grid/css/grid-export-selected.css?v=7k1',
+      'sort_order' => 92,
+    ),
+    'zoosper-admin-grid-export-selected-script' => 
+    array (
+      'type' => 'script',
+      'path' => '/asset/zoosper-admin-grid/js/grid-export-selected.js?v=7k1',
+      'sort_order' => 92,
+      'attributes' => 
+      array (
+        'defer' => true,
+      ),
+    ),
   ),
 );
