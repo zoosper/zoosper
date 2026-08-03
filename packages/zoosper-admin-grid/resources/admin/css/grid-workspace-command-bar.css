@@ -1,0 +1,66 @@
+/* Phase 7F: keep table content dominant and expose configuration only on demand. */
+.grid-compact-actions,
+.grid-compact-state {
+    min-height: 3.25rem;
+}
+
+.grid-compact-state {
+    padding: .5rem .75rem;
+}
+
+.grid-compact-view-tools {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    margin-right: auto;
+}
+
+[data-grid-settings-toggle] {
+    min-width: 2.5rem;
+    padding-inline: .65rem;
+}
+
+.grid-workspace__settings[hidden] {
+    display: none !important;
+}
+
+.grid-workspace__settings:not([hidden]) {
+    position: absolute;
+    z-index: 40;
+    right: 1.25rem;
+    width: min(48rem, calc(100vw - 3rem));
+    max-height: min(38rem, calc(100vh - 8rem));
+    overflow: auto;
+    margin-top: .35rem;
+    box-shadow: 0 1rem 2.5rem rgba(19, 49, 77, .2);
+}
+
+.grid-workspace__settings > summary {
+    display: none;
+}
+
+.grid-workspace__settings .grid-workspace__mutations {
+    border-top: 0;
+}
+
+.grid-compact-panel:not([hidden]) {
+    position: absolute;
+    z-index: 35;
+    right: 1.25rem;
+    width: min(52rem, calc(100vw - 3rem));
+    max-height: min(38rem, calc(100vh - 8rem));
+    overflow: auto;
+    box-shadow: 0 1rem 2.5rem rgba(19, 49, 77, .18);
+}
+
+@media (max-width: 720px) {
+    .grid-workspace__settings:not([hidden]),
+    .grid-compact-panel:not([hidden]) {
+        position: fixed;
+        inset: auto 0 0;
+        width: 100%;
+        max-height: 82vh;
+        margin: 0;
+        border-radius: .9rem .9rem 0 0;
+    }
+}

@@ -120,5 +120,21 @@ return array (
       'path' => '/asset/zoosper-admin-grid/css/grid-workspace-progressive-disclosure.css?v=7e1',
       'sort_order' => 85,
     ),
+    'zoosper-admin-grid-command-bar-style' => 
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin-grid/css/grid-workspace-command-bar.css?v=7f1',
+      'sort_order' => 86,
+    ),
+    'zoosper-admin-grid-command-bar-script' => 
+    array (
+      'type' => 'script',
+      'path' => '/asset/zoosper-admin-grid/js/grid-workspace-command-bar.js?v=7f1',
+      'sort_order' => 86,
+      'attributes' => 
+      array (
+        'defer' => true,
+      ),
+    ),
   ),
 );

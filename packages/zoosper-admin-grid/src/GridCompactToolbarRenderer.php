@@ -49,8 +49,11 @@ final readonly class GridCompactToolbarRenderer
             . '<button type="button" data-grid-toggle="columns" aria-expanded="false">Columns</button>'
             . '<a class="button" data-grid-export href="' . $this->escape($exportUrl) . '">Export current page</a></div>'
             . '<div class="grid-compact-state">'
+            . '<span class="grid-compact-view-tools">'
             . '<label class="grid-compact-view-selector">View <select data-grid-view-selector aria-label="Saved view">'
             . $viewOptions . '</select></label>'
+            . '<button type="button" data-grid-settings-toggle aria-expanded="false" aria-controls="grid-workspace-settings" title="Manage saved views">&#8942;</button>'
+            . '</span>'
             . '<span class="grid-compact-status' . ($dirty ? ' is-dirty' : '') . '">' . $status . '</span>'
             . '<label>Per page <select name="page_size" data-grid-page-size>' . $options . '</select></label>'
             . '</div>';
