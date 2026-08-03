@@ -1,0 +1,15 @@
+/* Shared trigger-centred positioning for Filters and Columns. */
+@media (min-width: 721px) {
+    [data-grid-workspace] .grid-compact-panel:not([hidden]) {
+        position: fixed;
+        z-index: 900;
+        top: var(--grid-command-panel-top, 5rem);
+        left: var(--grid-command-panel-left, 1rem);
+        right: auto;
+        width: var(--grid-command-panel-width, min(47.5rem, calc(100vw - 2rem)));
+        max-width: calc(100vw - 2rem);
+        max-height: min(38rem, calc(100vh - var(--grid-command-panel-top, 5rem) - 1rem));
+        overflow: auto;
+        margin: 0;
+    }
+}

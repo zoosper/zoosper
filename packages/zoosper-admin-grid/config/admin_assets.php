@@ -148,5 +148,21 @@ return array (
       'path' => '/asset/zoosper-admin-grid/css/grid-workspace-toolbar-ownership.css?v=7f3',
       'sort_order' => 88,
     ),
+    'zoosper-admin-grid-panel-position-style' => 
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin-grid/css/grid-workspace-panel-position.css?v=7h1',
+      'sort_order' => 89,
+    ),
+    'zoosper-admin-grid-panel-position-script' => 
+    array (
+      'type' => 'script',
+      'path' => '/asset/zoosper-admin-grid/js/grid-workspace-panel-position.js?v=7h1',
+      'sort_order' => 89,
+      'attributes' => 
+      array (
+        'defer' => true,
+      ),
+    ),
   ),
 );
