@@ -98,5 +98,21 @@ return array (
       'path' => '/asset/zoosper-admin-grid/css/grid-workspace-single-view.css?v=7c-ui2',
       'sort_order' => 83,
     ),
+    'zoosper-admin-grid-view-selector-style' => 
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin-grid/css/grid-workspace-view-selector.css?v=7d1',
+      'sort_order' => 84,
+    ),
+    'zoosper-admin-grid-view-selector-script' => 
+    array (
+      'type' => 'script',
+      'path' => '/asset/zoosper-admin-grid/js/grid-workspace-view-selector.js?v=7d1',
+      'sort_order' => 84,
+      'attributes' => 
+      array (
+        'defer' => true,
+      ),
+    ),
   ),
 );
