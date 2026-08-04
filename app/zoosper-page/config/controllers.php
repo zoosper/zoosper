@@ -37,6 +37,11 @@ use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Page\Admin\Controller\PageBulkActionController;
+use Zoosper\Page\Admin\BulkAction\PageBulkActionBackend;
+use Zoosper\AdminGrid\BulkAction\GridBulkHostBindings;
+use Zoosper\AdminGrid\BulkAction\GridBulkExecutionResultAdapter;
+use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Page\Admin\Controller\PageAdminController;
 use Zoosper\Page\Admin\PageGridDataSource;
 use Zoosper\Page\Admin\PageGridDefinition;
@@ -72,6 +77,15 @@ return [
     // AdminLayoutRendererInterface / AdminViewRendererInterface instead of
     // the concrete Zoosper\Admin\Layout\AdminLayout /
     // Zoosper\Admin\UI\AdminViewRenderer classes.
+    PageBulkActionController::class => static fn (ServiceContainer $services): PageBulkActionController => new PageBulkActionController(
+        guard: $services->get(SessionGuard::class),
+        csrf: $services->get(CsrfTokenManager::class),
+        pages: $services->get(PageRepository::class),
+        events: $services->get(EventDispatcherInterface::class),
+        audit: $services->get(AuditLoggerInterface::class),
+        flashMessages: $services->get(FlashMessageStoreInterface::class),
+        resultAdapter: new GridBulkExecutionResultAdapter(),
+    ),
     PageAdminController::class => static fn (ServiceContainer $services): PageAdminController => new PageAdminController(
         guard: $services->get(SessionGuard::class),
         csrf: $services->get(CsrfTokenManager::class),
