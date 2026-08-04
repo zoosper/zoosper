@@ -7,6 +7,8 @@ namespace Zoosper\Page\Admin\Controller;
 use RuntimeException;
 use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
+use Zoosper\AdminGrid\GridBulkActionManifestRenderer;
+use Zoosper\Grid\BulkAction\GridBulkActionManifest;
 use Zoosper\AdminGrid\GridWorkspaceRequest;
 use Zoosper\Admin\Form\AdminFormConfigAggregator;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
@@ -43,6 +45,7 @@ use Zoosper\Page\Admin\PageGridDataSource;
 use Zoosper\Page\Admin\PageGridDefinition;
 use Zoosper\Page\Admin\PageGridRepository;
 use Zoosper\Page\Admin\PageGridQueryState;
+use Zoosper\Page\Admin\PageGridBulkActions;
 use Zoosper\Page\Admin\PageGridMutationCoordinator;
 use Zoosper\Page\Admin\PageGridWorkspace;
 use Zoosper\Page\Content\BlockJsonValidator;
@@ -91,6 +94,7 @@ final readonly class PageAdminController
         private ?GridHtmlRenderer                $gridHtmlRenderer = null,
         private ?PageGridWorkspace               $pageGridWorkspace = null,
         private ?GridWorkspaceMutationFormsRenderer $gridMutationForms = null,
+        private ?GridBulkActionManifestRenderer   $gridBulkManifest = null,
         private ?PageGridMutationCoordinator      $pageGridMutations = null,
         private ?HtmlSanitizerInterface          $htmlSanitizer = null,
         private ?FlashMessageStoreInterface      $flashMessages = null,
@@ -136,6 +140,14 @@ final readonly class PageAdminController
                 '/admin/pages/grid',
                 '_csrf',
                 $this->csrf->token(),
+            );
+        }
+        if ($this->gridBulkManifest !== null) {
+            $workspaceHtml .= $this->gridBulkManifest->render(
+                new GridBulkActionManifest(
+                    PageGridWorkspace::GRID_KEY,
+                    PageGridBulkActions::definitions(),
+                ),
             );
         }
         $gridHtml = $workspaceHtml . ($tableHtml ?? '');

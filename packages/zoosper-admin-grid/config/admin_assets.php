@@ -205,7 +205,7 @@ return array (
     'zoosper-admin-grid-export-selected-script' => 
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-admin-grid/js/grid-export-selected.js?v=7k1',
+      'path' => '/asset/zoosper-admin-grid/js/grid-export-selected.js?v=7n1',
       'sort_order' => 92,
       'attributes' => 
       array (
@@ -215,7 +215,7 @@ return array (
     'zoosper-admin-grid-bulk-action-manifest-script' => 
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-admin-grid/js/grid-bulk-action-manifest.js?v=7m1',
+      'path' => '/asset/zoosper-admin-grid/js/grid-bulk-action-manifest.js?v=7n1',
       'sort_order' => 93,
       'attributes' => 
       array (

@@ -15,6 +15,7 @@ use Zoosper\Page\Admin\PageGridMutationHandler;
 use Zoosper\Page\Admin\PdoPageGridExportRepository;
 use Zoosper\AdminGrid\GridWorkspaceMutationGuard;
 use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
+use Zoosper\AdminGrid\GridBulkActionManifestRenderer;
 use Zoosper\Page\Admin\PageGridMutationCoordinator;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Page\Admin\PageGridSiteFilter;
@@ -87,6 +88,7 @@ return [
         pageGridDataSource: new PageGridDataSource($pageGrid),
         gridHtmlRenderer: new GridHtmlRenderer(),
         gridMutationForms: $services->get(GridWorkspaceMutationFormsRenderer::class),
+        gridBulkManifest: new GridBulkActionManifestRenderer(),
         pageGridMutations: new PageGridMutationCoordinator(
             new PageGridMutationHandler(
                 $pageGridDefinition,
