@@ -212,5 +212,15 @@ return array (
         'defer' => true,
       ),
     ),
+    'zoosper-admin-grid-bulk-action-manifest-script' => 
+    array (
+      'type' => 'script',
+      'path' => '/asset/zoosper-admin-grid/js/grid-bulk-action-manifest.js?v=7m1',
+      'sort_order' => 93,
+      'attributes' => 
+      array (
+        'defer' => true,
+      ),
+    ),
   ),
 );
