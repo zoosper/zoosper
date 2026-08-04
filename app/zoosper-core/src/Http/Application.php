@@ -22,7 +22,10 @@ final readonly class Application
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_name((string) env('SESSION_NAME', 'ZOOSPERSESSID'));
+            $sessionLifetime = max(300, min(604800, (int) env('SESSION_LIFETIME_SECONDS', 28800)));
+            ini_set('session.gc_maxlifetime', (string) $sessionLifetime);
             session_set_cookie_params([
+                'lifetime' => $sessionLifetime,
                 // Phase 1.100: the secure flag now DEFAULTS to whether the current
                 // request is served over HTTPS, instead of a hard-coded false.
                 //   - Local HTTP dev: default false (cookies still work).

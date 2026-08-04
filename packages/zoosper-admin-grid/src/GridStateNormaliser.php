@@ -34,6 +34,7 @@ final readonly class GridStateNormaliser
             ? $sortCandidate : $definition->defaultSort;
         $sortDir = strtolower(GridFilterValue::one($state['sort_dir'] ?? $definition->defaultSortDir)) === 'asc'
             ? 'asc' : 'desc';
+        $page = max(1, (int) GridFilterValue::one($state['page'] ?? 1));
         $pageSize = max(5, min(200, (int) GridFilterValue::one($state['page_size'] ?? 20)));
         $allowed = array_fill_keys($definition->allColumnKeys(), true);
 
@@ -63,6 +64,7 @@ final readonly class GridStateNormaliser
             'filters' => $filters,
             'sort_by' => $sortBy,
             'sort_dir' => $sortDir,
+            'page' => $page,
             'page_size' => $pageSize,
             'visible_columns' => $visibleColumns,
             'column_order' => $columnOrder,
@@ -77,6 +79,7 @@ final readonly class GridStateNormaliser
             ...$normalised['filters'],
             'sort' => $normalised['sort_by'],
             'dir' => $normalised['sort_dir'],
+            'page' => $normalised['page'],
             'page_size' => $normalised['page_size'],
         ], $definition);
     }
