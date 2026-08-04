@@ -33,11 +33,11 @@ PHP);
     expect($matches[0]['action'])->toBe('execute');
 });
 
-it('keeps the browser manifest inactive during endpoint activation', function (): void {
+it('exposes Publish selected after protected endpoint activation', function (): void {
     $ids = array_map(
         static fn ($definition): string => $definition->id,
         \Zoosper\Page\Admin\PageGridBulkActions::definitions(),
     );
 
-    expect($ids)->toBe(['export.selected']);
+    expect($ids)->toBe(['export.selected', 'page.publish']);
 });

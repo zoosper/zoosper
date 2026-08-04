@@ -6,11 +6,14 @@ namespace Zoosper\Page\Tests\Unit\Admin;
 
 use Zoosper\Page\Admin\PageGridBulkActions;
 
-it('declares the protected Page publish action separately from the browser manifest', function (): void {
-    $browserIds = array_map(static fn ($definition): string => $definition->id, PageGridBulkActions::definitions());
+it('keeps the protected Page publish action aligned across browser and server manifests', function (): void {
+    $browserIds = array_map(
+        static fn ($definition): string => $definition->id,
+        PageGridBulkActions::definitions(),
+    );
     $server = PageGridBulkActions::serverDefinitions();
 
-    expect($browserIds)->toBe(['export.selected']);
+    expect($browserIds)->toBe(['export.selected', 'page.publish']);
     expect($server)->toHaveCount(1);
     expect($server[0]->id)->toBe('page.publish');
     expect($server[0]->requiredPermission)->toBe('page.manage');

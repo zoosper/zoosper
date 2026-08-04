@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 return array (
@@ -217,6 +218,16 @@ return array (
       'type' => 'script',
       'path' => '/asset/zoosper-admin-grid/js/grid-bulk-action-manifest.js?v=7n1',
       'sort_order' => 93,
+      'attributes' => 
+      array (
+        'defer' => true,
+      ),
+    ),
+    'zoosper-admin-grid-server-mutation-script' => 
+    array (
+      'type' => 'script',
+      'path' => '/asset/zoosper-admin-grid/js/grid-server-mutation.js?v=7z1',
+      'sort_order' => 94,
       'attributes' => 
       array (
         'defer' => true,

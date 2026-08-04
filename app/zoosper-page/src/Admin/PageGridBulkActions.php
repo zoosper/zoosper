@@ -24,6 +24,16 @@ final class PageGridBulkActions
                 executionType: GridBulkExecutionType::CLIENT_DOWNLOAD,
                 maximumSelection: 100,
             ),
+            new GridBulkActionDefinition(
+                id: PagePublishSelectedExecutor::ACTION_ID,
+                label: 'Publish selected',
+                selectionScope: GridBulkSelectionScope::EXPLICIT_IDENTITIES,
+                executionType: GridBulkExecutionType::SERVER_MUTATION,
+                confirmationPolicy: GridBulkConfirmationPolicy::CONFIRM,
+                requiredPermission: 'page.manage',
+                maximumSelection: 100,
+                auditRequired: true,
+            ),
         ];
     }
 

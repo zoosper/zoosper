@@ -149,6 +149,13 @@ final readonly class PageAdminController
                     PageGridBulkActions::definitions(),
                 ),
             );
+            $workspaceHtml = str_replace(
+                ' data-grid-bulk-action-manifest>',
+                ' data-grid-bulk-action-manifest data-csrf-token="'
+                    . htmlspecialchars($this->csrf->token(), ENT_QUOTES, 'UTF-8')
+                    . '" data-server-action="/admin/pages/bulk-action">',
+                $workspaceHtml,
+            );
         }
         $gridHtml = $workspaceHtml . ($tableHtml ?? '');
         $pages = $pagination?->items ?? $this->pages->all();
