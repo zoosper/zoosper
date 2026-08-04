@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Zoosper\Grid\BulkAction\GridBulkActionDispatcher;
 use Zoosper\Grid\BulkAction\GridBulkActionExecutionResult;
 use Zoosper\Grid\BulkAction\GridBulkActionRegistry;
+use Zoosper\Grid\BulkAction\GridBulkExecutionContext;
 use Zoosper\Grid\BulkAction\GridBulkSelection;
 
 /** Enforces HTTP security gates before entering the shared dispatcher. */
@@ -24,10 +25,13 @@ final readonly class GridBulkHttpCoordinator
     ) {
     }
 
-    public function execute(string $gridKey, GridBulkHttpRequest $request): GridBulkActionExecutionResult
-    {
+    public function execute(
+        string $gridKey,
+        GridBulkHttpRequest $request,
+        ?GridBulkExecutionContext $executionContext = null,
+    ): GridBulkActionExecutionResult {
         $this->csrf->assertValid(trim((string) ($request->form['_csrf'] ?? '')));
-        $bulkRequest = $this->parser->parse($gridKey, $request);
+        $bulkRequest = $this->parser->parse($gridKey, $request, $executionContext);
         $definition = $this->definitions->require($gridKey, $bulkRequest->actionId);
 
         if ($definition->requiredPermission !== null

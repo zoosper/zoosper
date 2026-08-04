@@ -36,7 +36,7 @@ function protectedCoordinatorFixture(
     $executors->register(new class implements GridBulkActionExecutorInterface {
         public function gridKey(): string { return 'admin.pages'; }
         public function actionId(): string { return 'page.publish'; }
-        public function execute(GridBulkActionDefinition $definition, GridBulkSelection $selection): GridBulkActionExecutionResult
+        public function execute(GridBulkActionDefinition $definition, GridBulkSelection $selection, \Zoosper\Grid\BulkAction\GridBulkExecutionContext $context): GridBulkActionExecutionResult
         {
             return GridBulkActionExecutionResult::success(
                 'Published selected Pages.',
@@ -62,7 +62,7 @@ it('executes only after every protected HTTP gate passes', function (): void {
         'bulk_action' => 'page.publish',
         'confirmed_action' => 'page.publish',
         'selected_ids' => ['3', '3', '2'],
-    ]));
+    ]), new \Zoosper\Grid\BulkAction\GridBulkExecutionContext(new \Zoosper\Grid\BulkAction\GridBulkActor(1)));
 
     expect($result->successful)->toBeTrue()
         ->and($result->message)->toBe('Published selected Pages.')

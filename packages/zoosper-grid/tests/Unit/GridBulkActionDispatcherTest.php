@@ -19,7 +19,7 @@ function gridTestExecutor(): GridBulkActionExecutorInterface
     return new class implements GridBulkActionExecutorInterface {
         public function gridKey(): string { return 'admin.pages'; }
         public function actionId(): string { return 'page.publish'; }
-        public function execute(GridBulkActionDefinition $definition, GridBulkSelection $selection): GridBulkActionExecutionResult
+        public function execute(GridBulkActionDefinition $definition, GridBulkSelection $selection, \Zoosper\Grid\BulkAction\GridBulkExecutionContext $context): GridBulkActionExecutionResult
         {
             return GridBulkActionExecutionResult::success('Executed.', ['selected' => $selection->count()]);
         }
@@ -36,7 +36,7 @@ it('dispatches a validated explicit selection to the matching executor', functio
     $executors = new GridBulkActionExecutorRegistry();
     $executors->register(gridTestExecutor());
     $result = (new GridBulkActionDispatcher($definitions, $executors))->dispatch(
-        new GridBulkActionRequest('admin.pages', 'page.publish', [3, '3', 2]),
+        new GridBulkActionRequest('admin.pages', 'page.publish', [3, '3', 2], new \Zoosper\Grid\BulkAction\GridBulkExecutionContext(new \Zoosper\Grid\BulkAction\GridBulkActor(1))),
     );
     expect($result->successful)->toBeTrue()->and($result->context['selected'])->toBe(2);
 });
@@ -48,7 +48,7 @@ it('rejects client downloads at the server boundary', function (): void {
         GridBulkExecutionType::CLIENT_DOWNLOAD,
     ));
     expect(fn () => (new GridBulkActionDispatcher($definitions, new GridBulkActionExecutorRegistry()))
-        ->dispatch(new GridBulkActionRequest('admin.pages', 'export.selected', [1])))
+        ->dispatch(new GridBulkActionRequest('admin.pages', 'export.selected', [1])), new \Zoosper\Grid\BulkAction\GridBulkExecutionContext(new \Zoosper\Grid\BulkAction\GridBulkActor(1)))
         ->toThrow(InvalidArgumentException::class, 'not server executable');
 });
 
@@ -62,7 +62,14 @@ it('rejects selections above the declared maximum before execution', function ()
     $executors = new GridBulkActionExecutorRegistry();
     $executors->register(gridTestExecutor());
     expect(fn () => (new GridBulkActionDispatcher($definitions, $executors))
-        ->dispatch(new GridBulkActionRequest('admin.pages', 'page.publish', [1, 2])))
+        ->dispatch(new GridBulkActionRequest(
+            'admin.pages',
+            'page.publish',
+            [1, 2],
+            new \Zoosper\Grid\BulkAction\GridBulkExecutionContext(
+                new \Zoosper\Grid\BulkAction\GridBulkActor(1),
+            ),
+        )))
         ->toThrow(InvalidArgumentException::class, 'maximum');
 });
 

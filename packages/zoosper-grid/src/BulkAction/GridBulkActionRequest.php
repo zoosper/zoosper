@@ -14,6 +14,7 @@ final readonly class GridBulkActionRequest
         public string $gridKey,
         public string $actionId,
         public array $selectedIdentities,
+        public ?GridBulkExecutionContext $executionContext = null,
     ) {
         if (trim($gridKey) === '') {
             throw new InvalidArgumentException('Grid bulk-action request requires a Grid key.');

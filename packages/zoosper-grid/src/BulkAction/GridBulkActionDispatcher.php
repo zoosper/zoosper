@@ -32,6 +32,9 @@ final readonly class GridBulkActionDispatcher
                 sprintf('Grid bulk action "%s" requires an unsupported selection scope.', $definition->id),
             );
         }
+        if ($request->executionContext === null) {
+            throw new InvalidArgumentException('Server Grid bulk actions require an authenticated execution context.');
+        }
 
         $selection = new GridBulkSelection(
             $request->selectedIdentities,
@@ -40,6 +43,6 @@ final readonly class GridBulkActionDispatcher
 
         return $this->executors
             ->require($request->gridKey, $request->actionId)
-            ->execute($definition, $selection);
+            ->execute($definition, $selection, $request->executionContext);
     }
 }

@@ -6,12 +6,16 @@ namespace Zoosper\AdminGrid\BulkAction;
 
 use InvalidArgumentException;
 use Zoosper\Grid\BulkAction\GridBulkActionRequest;
+use Zoosper\Grid\BulkAction\GridBulkExecutionContext;
 
 /** Converts a protected POST form into the shared Grid request contract. */
 final readonly class GridBulkHttpRequestParser
 {
-    public function parse(string $gridKey, GridBulkHttpRequest $request): GridBulkActionRequest
-    {
+    public function parse(
+        string $gridKey,
+        GridBulkHttpRequest $request,
+        ?GridBulkExecutionContext $executionContext = null,
+    ): GridBulkActionRequest {
         if (strtoupper($request->method) !== 'POST') {
             throw new InvalidArgumentException('Grid bulk actions require POST.');
         }
@@ -22,6 +26,11 @@ final readonly class GridBulkHttpRequestParser
             throw new InvalidArgumentException('Grid selected identities must be an array.');
         }
 
-        return new GridBulkActionRequest($gridKey, $actionId, array_values($selected));
+        return new GridBulkActionRequest(
+            $gridKey,
+            $actionId,
+            array_values($selected),
+            $executionContext,
+        );
     }
 }

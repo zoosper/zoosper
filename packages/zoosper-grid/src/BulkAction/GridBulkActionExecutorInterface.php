@@ -14,5 +14,6 @@ interface GridBulkActionExecutorInterface
     public function execute(
         GridBulkActionDefinition $definition,
         GridBulkSelection $selection,
+        GridBulkExecutionContext $context,
     ): GridBulkActionExecutionResult;
 }
