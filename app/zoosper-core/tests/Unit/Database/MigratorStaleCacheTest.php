@@ -112,7 +112,7 @@ it('REPRODUCES THE REAL BUG SCENARIO: a migration for a module added after the c
         static fn ($m) => $m->name,
         (new ModuleRegistry($basePath, $cachePath))->enabledModules(),
     );
-    expect($stillStaleCacheNames)->not->toContain('zoosper-fake-c');
+    expect($stillStaleCacheNames)->toContain('zoosper-fake-c');
 
     // Step 3: run Migrator, constructed with a ModuleRegistry pointed at
     // that SAME stale cache path — exactly what `bin/zoosper migrate`

@@ -152,6 +152,9 @@ final readonly class ModuleManifestCompiler
         }
 
         $generatedAt = gmdate('c');
+        $stamps = (new ModuleManifestFreshness($this->basePath))->stamps();
+        $composerLockHash = $stamps['composerLock'];
+        $firstPartyModulesHash = $stamps['firstPartyModules'];
 
         return <<<PHP
 <?php
@@ -167,6 +170,8 @@ declare(strict_types=1);
  * effect, run `bin/zoosper compile` again (or `bin/zoosper cache:clear` to
  * delete this file and force live discovery until you next compile).
  *
+ * Composer-Lock-SHA256: {$composerLockHash}
+ * First-Party-Modules-SHA256: {$firstPartyModulesHash}
  * Generated: {$generatedAt}
  */
 

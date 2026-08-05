@@ -159,6 +159,10 @@ final class ModuleRegistry
             return null;
         }
 
+        if (!$this->compiledManifestIsFresh()) {
+            return null;
+        }
+
         try {
             $data = require $this->compiledCachePath;
         } catch (Throwable) {
@@ -188,6 +192,24 @@ final class ModuleRegistry
         return $modules;
     }
 
+    private function compiledManifestIsFresh(): bool
+    {
+        $source = file_get_contents($this->compiledCachePath);
+        if ($source === false) {
+            return false;
+        }
+
+        if (!preg_match('/Composer-Lock-SHA256: ([a-f0-9]*)/', $source, $composerMatch)
+            || !preg_match('/First-Party-Modules-SHA256: ([a-f0-9]{64})/', $source, $firstPartyMatch)
+        ) {
+            return false;
+        }
+
+        $stamps = (new ModuleManifestFreshness($this->basePath))->stamps();
+
+        return hash_equals($composerMatch[1], $stamps['composerLock'])
+            && hash_equals($firstPartyMatch[1], $stamps['firstPartyModules']);
+    }
     private static function sourcePriority(string $source): int
     {
         return match ($source) {

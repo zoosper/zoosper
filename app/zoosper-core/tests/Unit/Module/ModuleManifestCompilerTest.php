@@ -82,9 +82,9 @@ it('reads from the compiled cache, not the filesystem, once compiled (proven by 
     $modules = $registry->enabledModules();
     $names = array_map(static fn ($m) => $m->name, $modules);
 
-    // Still finds both — proves it read the compiled cache, not the
-    // (now-empty) filesystem.
-    expect($names)->toBe(['zoosper-fake-a', 'zoosper-fake-b']);
+    // Phase 8C detects that the first-party module set changed and rejects
+    // the compiled manifest, so live discovery sees the now-empty filesystem.
+    expect($names)->toBe([]);
 
     exec('rm -rf ' . escapeshellarg($tmp));
 });
@@ -115,7 +115,7 @@ it('reverts to live discovery after cache:clear, picking up a newly added module
     file_put_contents($tmp . '/app/zoosper-fake-c/module.php', "<?php\ndeclare(strict_types=1);\nreturn ['name' => 'zoosper-fake-c', 'enabled' => true, 'sort_order' => 30];\n");
 
     $stillCachedNames = array_map(static fn ($m) => $m->name, (new ModuleRegistry($tmp, $cachePath))->enabledModules());
-    expect($stillCachedNames)->not->toContain('zoosper-fake-c');
+    expect($stillCachedNames)->toContain('zoosper-fake-c');
 
     // Now clear the cache — the new module must become visible again.
     expect($compiler->clear())->toBeTrue();

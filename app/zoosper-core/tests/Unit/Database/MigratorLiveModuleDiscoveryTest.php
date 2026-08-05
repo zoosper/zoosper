@@ -50,9 +50,10 @@ test('migrations discover a newly installed module despite a stale compiled mani
     $root = staleCompiledMigrationFixture();
     $registry = new ModuleRegistry($root);
 
-    // Prove the fixture is meaningful: ordinary runtime discovery sees the
-    // previous release's valid, but stale, empty compiled manifest.
-    expect($registry->enabledModules())->toBe([]);
+    // Phase 8C rejects the previous release's stale compiled manifest, so
+    // ordinary runtime discovery immediately sees the newly installed module.
+    expect(array_map(static fn ($module) => $module->name, $registry->enabledModules()))
+        ->toContain('acme-fresh');
 
     $pdo = new PDO('sqlite::memory:');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
