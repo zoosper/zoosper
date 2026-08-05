@@ -19,6 +19,7 @@ use Zoosper\Errors\ConsoleExceptionFormatter;
 use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Core\Log\LogManager;
 use Zoosper\Core\Module\ModuleManifestCompiler;
+use Zoosper\Core\Module\ModuleManifestStatus;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Scaffold\ConsoleCommandScaffolder;
 use Zoosper\Core\Scaffold\ModuleScaffolder;
@@ -70,6 +71,16 @@ try {
         echo $wasCompiled
             ? "Compiled module manifest cache cleared.\n"
             : "No compiled module manifest cache was present (already using live discovery).\n";
+        exit(0);
+    }
+    if ($command === 'module:manifest:status') {
+        $status = (new ModuleManifestStatus($basePath))->inspect();
+        echo "Module manifest status: {$status['status']}\n";
+        echo "Cache path: {$status['cachePath']}\n";
+        echo 'Enabled modules: ' . $status['moduleCount'] . "\n";
+        if ($status['rejectionReason'] !== null) {
+            echo "Rejection reason: {$status['rejectionReason']}\n";
+        }
         exit(0);
     }
 
@@ -170,6 +181,7 @@ function builtInCommands(): array
         'migrate',
         'compile',
         'cache:clear',
+        'module:manifest:status',
         'deploy',
         'make:module Vendor_Module',
         'make:package-module Vendor/Module',
