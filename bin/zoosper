@@ -83,6 +83,21 @@ try {
         }
         exit(0);
     }
+    if ($command === 'module:manifest:check') {
+        $status = (new ModuleManifestStatus($basePath))->inspect();
+        if ($status['status'] === 'fresh') {
+            echo "Module manifest check passed: fresh ({$status['moduleCount']} module(s)).\n";
+            exit(0);
+        }
+
+        fwrite(STDERR, "Module manifest check failed: {$status['status']}.\n");
+        fwrite(STDERR, "Cache path: {$status['cachePath']}\n");
+        if ($status['rejectionReason'] !== null) {
+            fwrite(STDERR, "Rejection reason: {$status['rejectionReason']}\n");
+        }
+        fwrite(STDERR, "Run `php8.5 bin/zoosper compile` to generate a fresh manifest.\n");
+        exit(1);
+    }
 
     if ($command === 'deploy') {
         echo "== Zoosper deploy ==\n\n";
@@ -108,6 +123,14 @@ try {
         $compiledModules = (new ModuleManifestCompiler($basePath))->compile();
         echo 'Compiled ' . count($compiledModules) . " module(s) to var/cache/modules.php\n";
 
+        $manifestStatus = (new ModuleManifestStatus($basePath))->inspect();
+        if ($manifestStatus['status'] !== 'fresh') {
+            throw new RuntimeException(
+                'Compiled module manifest failed post-compile verification: '
+                . ($manifestStatus['rejectionReason'] ?? $manifestStatus['status']),
+            );
+        }
+        echo "Module manifest post-compile verification passed.\n";
         echo "\n== Deploy complete ==\n";
         echo "Reminder: this does NOT run your test suite. Run `composer test` (or your\n";
         echo "usual alias) to verify before considering this build done.\n";
@@ -182,6 +205,7 @@ function builtInCommands(): array
         'compile',
         'cache:clear',
         'module:manifest:status',
+        'module:manifest:check',
         'deploy',
         'make:module Vendor_Module',
         'make:package-module Vendor/Module',
