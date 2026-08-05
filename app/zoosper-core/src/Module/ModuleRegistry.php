@@ -51,6 +51,8 @@ final class ModuleRegistry
 
     private readonly string $compiledCachePath;
 
+    private ?string $compiledManifestRejectionReason = null;
+
     public function __construct(private readonly string $basePath, ?string $compiledCachePath = null)
     {
         $this->compiledCachePath = $compiledCachePath ?? rtrim($basePath, '/\\') . '/var/cache/modules.php';
@@ -166,16 +168,22 @@ final class ModuleRegistry
         try {
             $data = require $this->compiledCachePath;
         } catch (Throwable) {
+            $this->compiledManifestRejectionReason = 'manifest-load-failed';
+
             return null;
         }
 
         if (!is_array($data)) {
+            $this->compiledManifestRejectionReason = 'manifest-shape-invalid';
+
             return null;
         }
 
         $modules = [];
         foreach ($data as $entry) {
             if (!is_array($entry)) {
+                $this->compiledManifestRejectionReason = 'manifest-entry-invalid';
+
                 return null;
             }
 
@@ -196,19 +204,44 @@ final class ModuleRegistry
     {
         $source = file_get_contents($this->compiledCachePath);
         if ($source === false) {
+            $this->compiledManifestRejectionReason = 'manifest-unreadable';
+
             return false;
         }
 
         if (!preg_match('/Composer-Lock-SHA256: ([a-f0-9]*)/', $source, $composerMatch)
             || !preg_match('/First-Party-Modules-SHA256: ([a-f0-9]{64})/', $source, $firstPartyMatch)
         ) {
+            $this->compiledManifestRejectionReason = 'freshness-stamps-missing';
+
             return false;
         }
 
         $stamps = (new ModuleManifestFreshness($this->basePath))->stamps();
+        if (!hash_equals($composerMatch[1], $stamps['composerLock'])) {
+            $this->compiledManifestRejectionReason = 'composer-lock-changed';
 
-        return hash_equals($composerMatch[1], $stamps['composerLock'])
-            && hash_equals($firstPartyMatch[1], $stamps['firstPartyModules']);
+            return false;
+        }
+
+        if (!hash_equals($firstPartyMatch[1], $stamps['firstPartyModules'])) {
+            $this->compiledManifestRejectionReason = 'first-party-modules-changed';
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Return why a present compiled manifest was rejected during this registry lifetime.
+     *
+     * Null means no present manifest has been rejected. Values are stable,
+     * machine-readable diagnostics intended for health and console tooling.
+     */
+    public function compiledManifestRejectionReason(): ?string
+    {
+        return $this->compiledManifestRejectionReason;
     }
     private static function sourcePriority(string $source): int
     {
