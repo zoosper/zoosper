@@ -6,7 +6,8 @@ it('keeps text output as the default and adds explicit JSON status output', func
     $source = file_get_contents(dirname(__DIR__, 5) . '/bin/zoosper');
 
     expect($source)
-        ->toContain("(\$options['format'] ?? 'text') === 'json'")
+        ->toContain("\$format = \$options['format'] ?? 'text'")
+        ->toContain("if (\$format === 'json')")
         ->toContain('JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES')
         ->toContain('Module manifest status:');
 });

@@ -32,6 +32,13 @@ $modules = new ModuleRegistry($basePath);
 $config = (new ApplicationConfigLoader($basePath, $modules))->load();
 $command = $argv[1] ?? 'help';
 $options = parseOptions(array_slice($argv, 2));
+if (in_array($command, ['module:manifest:status', 'module:manifest:check'], true)) {
+    $format = $options['format'] ?? 'text';
+    if (!in_array($format, ['text', 'json'], true)) {
+        fwrite(STDERR, "Unsupported format '{$format}'. Expected text or json.\n");
+        exit(2);
+    }
+}
 
 $logManager = new LogManager($config, $basePath);
 $errorHandler = new ErrorHandler($logManager->exceptions());
@@ -75,7 +82,7 @@ try {
     }
     if ($command === 'module:manifest:status') {
         $status = (new ModuleManifestStatus($basePath))->inspect();
-        if (($options['format'] ?? 'text') === 'json') {
+        if ($format === 'json') {
             echo json_encode($status, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . "\n";
             exit(0);
         }
@@ -90,7 +97,7 @@ try {
     if ($command === 'module:manifest:check') {
         $status = (new ModuleManifestStatus($basePath))->inspect();
         $healthy = $status['status'] === 'fresh';
-        if (($options['format'] ?? 'text') === 'json') {
+        if ($format === 'json') {
             echo json_encode(
                 ['healthy' => $healthy] + $status,
                 JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES,
