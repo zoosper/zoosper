@@ -75,6 +75,10 @@ try {
     }
     if ($command === 'module:manifest:status') {
         $status = (new ModuleManifestStatus($basePath))->inspect();
+        if (($options['format'] ?? 'text') === 'json') {
+            echo json_encode($status, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . "\n";
+            exit(0);
+        }
         echo "Module manifest status: {$status['status']}\n";
         echo "Cache path: {$status['cachePath']}\n";
         echo 'Enabled modules: ' . $status['moduleCount'] . "\n";
@@ -85,7 +89,15 @@ try {
     }
     if ($command === 'module:manifest:check') {
         $status = (new ModuleManifestStatus($basePath))->inspect();
-        if ($status['status'] === 'fresh') {
+        $healthy = $status['status'] === 'fresh';
+        if (($options['format'] ?? 'text') === 'json') {
+            echo json_encode(
+                ['healthy' => $healthy] + $status,
+                JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES,
+            ) . "\n";
+            exit($healthy ? 0 : 1);
+        }
+        if ($healthy) {
             echo "Module manifest check passed: fresh ({$status['moduleCount']} module(s)).\n";
             exit(0);
         }

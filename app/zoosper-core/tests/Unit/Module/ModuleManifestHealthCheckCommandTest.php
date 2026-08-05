@@ -7,7 +7,8 @@ it('publishes a strict manifest health check with stable exit semantics', functi
 
     expect($source)
         ->toContain("if (\$command === 'module:manifest:check')")
-        ->toContain("if (\$status['status'] === 'fresh')")
+        ->toContain("\$healthy = \$status['status'] === 'fresh'")
+        ->toContain('if ($healthy)')
         ->toContain('Module manifest check passed: fresh')
         ->toContain('Module manifest check failed:')
         ->toContain('php8.5 bin/zoosper compile');
