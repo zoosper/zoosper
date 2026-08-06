@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "317a4000a5c64d1b5f06b6ea664e74f3",
+    "content-hash": "3d32b066c912391161416dd6b9d73c87",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1232,6 +1232,46 @@
                 "MIT"
             ],
             "description": "Zoosper_Page module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/settings",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "app/zoosper-settings",
+                "reference": "a46ada1466efb5461cee6e46cba25bcd812f62ce"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/admin": "dev-dev",
+                "zoosper/auth": "dev-dev",
+                "zoosper/core": "dev-dev",
+                "zoosper/site": "dev-dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Settings\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "App\\zoospersettings\\tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Module-owned settings catalogue and configuration management for Zoosper CMS.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -8441,6 +8481,7 @@
         "zoosper/mail": 20,
         "zoosper/media": 20,
         "zoosper/page": 20,
+        "zoosper/settings": 20,
         "zoosper/site": 20,
         "zoosper/store-orders": 20,
         "zoosper/theme": 20,

@@ -25,7 +25,8 @@
         "zoosper/grid": "dev-dev",
         "zoosper/admin-grid": "dev-dev",
         "zoosper/api-grid": "dev-dev",
-        "zoosper/store-orders": "dev-dev"
+        "zoosper/store-orders": "dev-dev",
+        "zoosper/settings": "dev-dev"
     },
     "require-dev": {
         "icanhazstring/composer-unused": "^0.9.6",
@@ -191,6 +192,13 @@
         {
             "type": "path",
             "url": "./app/zoosper-install",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "app/zoosper-settings",
             "options": {
                 "symlink": true
             }
