@@ -27,6 +27,8 @@ use Zoosper\Core\Log\ModuleLoggerProviderLoader;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Routing\ControllerProviderLoader;
 use Zoosper\Core\Routing\ModuleRouteLoader;
+use Zoosper\Core\Url\AdminPathCollectionTransformer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
 use Zoosper\Core\Routing\FallbackHandlerInterface;
@@ -85,7 +87,11 @@ final class ApplicationFactory
 
         // Phase 1.27: inject ErrorHandler so the router logs uncaught exceptions.
         $router = new Router($errorHandler);
-        $routeLoader = new ModuleRouteLoader($modules, $controllers);
+        $routeLoader = new ModuleRouteLoader(
+            $modules,
+            $controllers,
+            $services->get(AdminPathCollectionTransformer::class),
+        );
 
         // Phase 1.33: admin routes run through the module-contributed middleware
         // pipeline (auth guard + CSRF). API routes stay unwrapped/stateless.

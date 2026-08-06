@@ -47,6 +47,7 @@ use Zoosper\Core\Entity\Save\EntitySaveEventDispatcherInterface;
 use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Entity\Save\ModuleEntitySaveListenerLoader;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\Url\AdminPathCollectionTransformer;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 
 return [
@@ -86,7 +87,10 @@ return [
             $services->get(ContentEditorRuntimeConfig::class)->preferred(),
             $services->get(ContentEditorRuntimeConfig::class)->fallback(),
         ),
-    AdminMenu::class => static fn(ServiceContainer $services): AdminMenu => new AdminMenu(new AdminMenuLoader($services->get(ModuleRegistry::class))),
+    AdminMenu::class => static fn(ServiceContainer $services): AdminMenu => new AdminMenu(new AdminMenuLoader(
+        $services->get(ModuleRegistry::class),
+        $services->get(AdminPathCollectionTransformer::class),
+    )),
     AdminLayout::class => static fn(ServiceContainer $services): AdminLayout => new AdminLayout(
         $services->get(AdminMenu::class),
         $services->get(ConfigRepository::class),

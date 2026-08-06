@@ -12,6 +12,7 @@ use Zoosper\Core\Http\Middleware\RouteMiddleware;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\Url\AdminPathCollectionTransformer;
 
 final readonly class ModuleRouteLoader
 {
@@ -19,6 +20,7 @@ final readonly class ModuleRouteLoader
     public function __construct(
         private ModuleRegistry $modules,
         private array $controllers = [],
+        private ?AdminPathCollectionTransformer $adminPaths = null,
     ) {
     }
 
@@ -69,7 +71,11 @@ final readonly class ModuleRouteLoader
                 );
             }
 
-            foreach ($config as $route) {
+            $declarations = $configFile === 'admin_routes.php' && $this->adminPaths !== null
+                ? $this->adminPaths->routes($config)
+                : $config;
+
+            foreach ($declarations as $route) {
                 if (!is_array($route)) {
                     continue;
                 }

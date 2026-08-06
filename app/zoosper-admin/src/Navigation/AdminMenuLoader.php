@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Navigation;
 
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\Url\AdminPathCollectionTransformer;
 
 final readonly class AdminMenuLoader
 {
-    public function __construct(private ModuleRegistry $modules)
-    {
+    public function __construct(
+        private ModuleRegistry $modules,
+        private ?AdminPathCollectionTransformer $adminPaths = null,
+    ) {
     }
 
     /**
@@ -32,7 +35,9 @@ final readonly class AdminMenuLoader
                 continue;
             }
 
-            foreach ($config as $item) {
+            $declarations = $this->adminPaths?->menu($config) ?? $config;
+
+            foreach ($declarations as $item) {
                 if (!is_array($item)) {
                     continue;
                 }

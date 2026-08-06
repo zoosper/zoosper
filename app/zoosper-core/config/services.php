@@ -23,9 +23,17 @@ use Zoosper\Core\Site\SiteContextResolver;
 use Zoosper\Core\Site\SiteContextResolverFactory;
 use Zoosper\Core\Url\CdnUrlResolver;
 use Zoosper\Core\Url\CdnUrlResolverFactory;
+use Zoosper\Core\Url\AdminPathCollectionTransformer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Core\View\TemplateViewContextProvider;
 
 return [
+    AdminUrlGenerator::class => static fn (ServiceContainer $services): AdminUrlGenerator => new AdminUrlGenerator(
+        $services->get(ConfigRepository::class),
+    ),
+    AdminPathCollectionTransformer::class => static fn (ServiceContainer $services): AdminPathCollectionTransformer => new AdminPathCollectionTransformer(
+        $services->get(AdminUrlGenerator::class),
+    ),
     ProjectPathResolver::class => static fn (ServiceContainer $services): ProjectPathResolver => ProjectPathResolver::fromCoreModule(),
     JsonResponder::class => static fn (ServiceContainer $services): JsonResponder => new JsonResponder(),
     CmsVersion::class => static fn (ServiceContainer $services): CmsVersion => new CmsVersion($services->get(ConfigRepository::class)),
