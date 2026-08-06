@@ -11,6 +11,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeService;
 use Zoosper\TwoFactor\Service\AdminTwoFactorEnrollmentService;
 use Zoosper\TwoFactor\Service\AdminTwoFactorLoginRedirectService;
@@ -54,13 +55,14 @@ final readonly class LoginController
         private ?AdminTwoFactorLoginRedirectService $twoFactorRedirect = null,
         private ?AdminTwoFactorEnrollmentService $twoFactorEnrollment = null,
         private ?TwoFactorChallengeService $twoFactorChallenge = null,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
     public function show(Request $request): Response
     {
         if ($this->guard->user() !== null) {
-            return Response::redirect('/admin');
+            return Response::redirect($this->adminUrl());
         }
 
         return Response::html($this->page($this->form()));
@@ -94,7 +96,7 @@ final readonly class LoginController
             // real state rather than a premature "success".
             $this->recordLoginEvent($request, $user->id, $user->email, 'password_ok_pending_2fa');
 
-            return Response::redirect('/admin/2fa/challenge');
+            return Response::redirect($this->adminUrl('2fa/challenge'));
         }
 
         // No active 2FA: full login now (redirect service nudges to setup).
@@ -108,7 +110,7 @@ final readonly class LoginController
     {
         $this->guard->logout();
 
-        return Response::redirect('/admin/login');
+        return Response::redirect($this->adminUrl('login'));
     }
 
     /**
@@ -128,7 +130,7 @@ final readonly class LoginController
     private function postLoginPath(AdminUser $user): string
     {
         if ($this->twoFactorRedirect === null) {
-            return '/admin';
+            return $this->adminUrl();
         }
 
         return $this->twoFactorRedirect->pathFor($user);
@@ -158,10 +160,11 @@ final readonly class LoginController
         $token = $this->e($this->csrf->token());
         $email = $this->e($email);
         $errorHtml = $error !== null ? '<div class="notice notice-error">' . $this->e($error) . '</div>' : '';
+        $action = $this->e($this->adminUrl('login'));
 
         return <<<HTML
 {$errorHtml}
-<form method="post" action="/admin/login" class="login-form">
+<form method="post" action="{$action}" class="login-form">
     <input type="hidden" name="_csrf_token" value="{$token}">
     <label>Email <input type="email" name="email" value="{$email}" autocomplete="username" required autofocus></label>
 <label>Password <input type="password" name="password" autocomplete="current-password" required></label>
@@ -173,6 +176,15 @@ HTML;
     private function page(string $content): string
     {
         return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Zoosper Admin Login</title><style>body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f5f7fb;margin:0;display:grid;place-items:center;min-height:100vh}.login-card{background:#fff;border:1px solid #d8dee9;border-radius:14px;box-shadow:0 10px 30px rgba(15,23,42,.08);padding:28px;max-width:420px;width:92%}label{display:block;margin:14px 0}input{width:100%;box-sizing:border-box;padding:10px;border:1px solid #cbd5e1;border-radius:8px}button{margin-top:14px;width:100%;padding:11px;border:0;border-radius:8px;background:#0f172a;color:#fff;font-weight:700}.notice{padding:10px;border-radius:8px;margin-bottom:12px}.notice-error{background:#fee2e2;color:#991b1b}</style></head><body><main class="login-card"><h1>Zoosper Admin</h1>' . $content . '</main></body></html>';
+    }
+
+    private function adminUrl(string $path = ''): string
+    {
+        if ($this->adminUrls !== null) {
+            return $this->adminUrls->url($path);
+        }
+
+        return $path === '' ? '/admin' : '/admin/' . ltrim($path, '/');
     }
 
     private function e(string $value): string

@@ -22,8 +22,10 @@ final readonly class CsrfMiddleware implements RouteMiddleware
     /** @var list<string> */
     private const STATEFUL_METHODS = ['POST', 'PUT', 'PATCH', 'DELETE'];
 
-    public function __construct(private CsrfTokenManager $csrf)
-    {
+    public function __construct(
+        private CsrfTokenManager $csrf,
+        private string $adminHomePath = '/admin',
+    ) {
     }
 
     public function process(Request $request, RouteContext $context, callable $next): Response
@@ -51,6 +53,6 @@ final readonly class CsrfMiddleware implements RouteMiddleware
             . 'a{display:inline-block;margin-top:14px;padding:10px 18px;border-radius:8px;background:#0f172a;color:#fff;text-decoration:none;font-weight:600}</style>'
             . '</head><body><main class="card"><h1>Your session security token expired</h1>'
             . '<p>For your protection this action was blocked. Please go back, reload the page and try again.</p>'
-            . '<a href="/admin">Back to admin</a></main></body></html>';
+            . '<a href="' . htmlspecialchars($this->adminHomePath, ENT_QUOTES, 'UTF-8') . '">Back to admin</a></main></body></html>';
     }
 }

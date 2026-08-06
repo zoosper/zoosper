@@ -58,15 +58,16 @@ use Zoosper\Core\Security\RateLimit\StaticRateLimitPolicyResolver;
 final class RateLimitReportOnlyAdminMiddleware implements RouteMiddleware
 {
     private const POLICY_KEY = 'admin.login';
-    private const LOGIN_PATH = '/admin/login';
-
-    public function __construct(private readonly PDO $pdo, private readonly string $basePath)
-    {
+    public function __construct(
+        private readonly PDO $pdo,
+        private readonly string $basePath,
+        private readonly string $loginPath = '/admin/login',
+    ) {
     }
 
     public function process(Request $request, RouteContext $context, callable $next): Response
     {
-        if ($request->path() !== self::LOGIN_PATH || $request->method() !== 'POST') {
+        if ($request->path() !== $this->loginPath || $request->method() !== 'POST') {
             return $next($request);
         }
 

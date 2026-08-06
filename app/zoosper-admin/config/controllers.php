@@ -14,6 +14,7 @@ use Zoosper\Auth\Service\AuthService;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Grid\GridColumnRegistry;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeService;
@@ -29,6 +30,7 @@ return [
         $services->has(AdminTwoFactorLoginRedirectService::class) ? $services->get(AdminTwoFactorLoginRedirectService::class) : null,
         $services->has(AdminTwoFactorEnrollmentService::class) ? $services->get(AdminTwoFactorEnrollmentService::class) : null,
         $services->has(TwoFactorChallengeService::class) ? $services->get(TwoFactorChallengeService::class) : null,
+        $services->get(AdminUrlGenerator::class),
     ),
 
     DashboardController::class => static fn (ServiceContainer $services): DashboardController => new DashboardController(

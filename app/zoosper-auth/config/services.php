@@ -13,6 +13,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 
 return [
     // Auth Grid read-side services. Existing manifest entries below retain precedence.
@@ -29,13 +30,16 @@ return [
     CsrfTokenManager::class => static fn (ServiceContainer $services): CsrfTokenManager => new CsrfTokenManager(),
     AuthenticationMiddleware::class => static fn (ServiceContainer $services): AuthenticationMiddleware => new AuthenticationMiddleware(
         $services->get(SessionGuard::class),
+        $services->get(AdminUrlGenerator::class)->url('login'),
     ),
     CsrfMiddleware::class => static fn (ServiceContainer $services): CsrfMiddleware => new CsrfMiddleware(
         $services->get(CsrfTokenManager::class),
+        $services->get(AdminUrlGenerator::class)->basePath(),
     ),
     RateLimitReportOnlyAdminMiddleware::class => static fn (ServiceContainer $services): RateLimitReportOnlyAdminMiddleware => new RateLimitReportOnlyAdminMiddleware(
         $services->get(PDO::class),
         dirname(__DIR__, 3),
+        $services->get(AdminUrlGenerator::class)->url('login'),
     ),
     AdminCreateCommand::class => static fn (ServiceContainer $services): AdminCreateCommand => new AdminCreateCommand(
         $services->get(AdminUserRepository::class),
