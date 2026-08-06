@@ -29,26 +29,14 @@ use Zoosper\Core\Module\ModuleRegistry;
  * ConfigRepository — but Pest's own bootstrap does not load that file, so
  * env() is undefined when this test runs in isolation.
  *
- * Rather than requiring bootstrap/autoload.php directly (risky — if it
- * re-requires vendor/autoload.php, which Pest has already loaded, PHP would
- * fatal with "cannot redeclare class" across the WHOLE test suite, not just
- * this test), define a minimal, guarded fallback here instead. This test
- * only needs config loading to succeed without crashing — it never actually
- * connects using config/database.php's values, since it builds its own
- * in-memory SQLite PDO directly. A getenv()-based shim is sufficient and
- * completely safe.
+ * Load the canonical application bootstrap through require_once. A test-local
+ * global env() declaration cannot be removed after the test and changes how
+ * later application boot resolves environment-backed configuration.
  *
  * File placement: app/zoosper-core/tests/Unit/Console/ConsoleCommandModuleDiscoveryTest.php
  * — same depth (5 levels up) as ModuleOwnedMigrationDiscoveryTest.php.
  */
-if (!function_exists('env')) {
-    function env(string $key, mixed $default = null): mixed
-    {
-        $value = getenv($key);
-
-        return $value !== false ? $value : $default;
-    }
-}
+require_once dirname(__DIR__, 5) . '/bootstrap/autoload.php';
 
 it('discovers admin:create, site:create and page:create as module-owned console commands', function (): void {
     $basePath = dirname(__DIR__, 5);

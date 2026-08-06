@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once dirname(__DIR__, 5) . '/bootstrap/autoload.php';
+
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Database\ConnectionFactory;
 

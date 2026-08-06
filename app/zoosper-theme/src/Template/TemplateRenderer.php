@@ -182,7 +182,7 @@ final readonly class TemplateRenderer
 
     private function engines(): TemplateEngineRegistry
     {
-        return $this->engines ?? new TemplateEngineRegistry(new PhpTemplateEngine());
+        return $this->engines ?? (new TemplateEngineRegistry(new PhpTemplateEngine()))->prioritise(['php']);
     }
 
     /** @param list<string> $candidates */

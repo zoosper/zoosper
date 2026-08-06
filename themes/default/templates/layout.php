@@ -25,7 +25,7 @@ $stylesheetUrl = isset($cdn) ? $cdn->staticAsset('/static/themes/default/assets/
 <header class="site-header">
     <a href="/" class="site-logo">Zoosper</a>
 </header>
-<main class="site-main">
+<main class="site-main page-shell">
     <?= $content ?? '' ?>
 </main>
 <footer class="site-footer">

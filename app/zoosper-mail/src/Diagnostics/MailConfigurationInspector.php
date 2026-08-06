@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zoosper\Mail\Diagnostics;
 
-use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Mail\Config\SmtpConfig;
 
 /**
@@ -16,7 +15,7 @@ use Zoosper\Mail\Config\SmtpConfig;
  */
 final readonly class MailConfigurationInspector
 {
-    public function __construct(private ConfigRepository $config, private SmtpConfig $smtp)
+    public function __construct(private SmtpConfig $smtp)
     {
     }
 
@@ -26,7 +25,7 @@ final readonly class MailConfigurationInspector
     public function summary(): MailConfigurationSummary
     {
         return new MailConfigurationSummary(
-            transport: (string) ($this->config->get('mail.default', 'smtp') ?? 'smtp'),
+            transport: $this->smtp->transport(),
             host: $this->smtp->host(),
             port: $this->smtp->port(),
             username: $this->smtp->username(),

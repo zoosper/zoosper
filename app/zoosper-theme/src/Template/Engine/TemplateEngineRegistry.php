@@ -6,23 +6,31 @@ namespace Zoosper\Theme\Template\Engine;
 
 use Zoosper\Errors\ZoosperException;
 
-/**
- * Registry of available template engines by file extension.
- *
- * Modules can override or extend this registry through config/services.php. This
- * keeps the default engine flexible so Zoosper can ship with a recommended
- * engine while allowing developers to swap in Latte, Twig or custom engines.
- */
+/** Registry of available template engines by file extension. */
 final class TemplateEngineRegistry
 {
     /** @var array<string, TemplateEngineInterface> */
     private array $engines = [];
+
+    /** @var list<string> */
+    private array $priority = [];
 
     public function __construct(TemplateEngineInterface ...$engines)
     {
         foreach ($engines as $engine) {
             $this->register($engine);
         }
+    }
+
+    /** @param list<string> $priority */
+    public function prioritise(array $priority): self
+    {
+        $this->priority = array_values(array_unique(array_map(
+            static fn (string $extension): string => strtolower(ltrim($extension, '.')),
+            $priority,
+        )));
+
+        return $this;
     }
 
     public function register(TemplateEngineInterface $engine): void
@@ -32,7 +40,6 @@ final class TemplateEngineRegistry
             if ($extension === '') {
                 continue;
             }
-
             $this->engines[$extension] = $engine;
         }
     }
@@ -57,8 +64,10 @@ final class TemplateEngineRegistry
     public function extensions(): array
     {
         $extensions = array_keys($this->engines);
-        sort($extensions);
+        $ordered = array_values(array_intersect($this->priority, $extensions));
+        $remaining = array_values(array_diff($extensions, $ordered));
+        sort($remaining);
 
-        return $extensions;
+        return array_merge($ordered, $remaining);
     }
 }

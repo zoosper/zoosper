@@ -17,14 +17,14 @@ it('renders every Phase 9D1 editable type', function (): void {
     $root = dirname(__DIR__, 5);
     $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
 
-    expect($view)->toContain('$setting->type === \'boolean\'')
-        ->toContain('$setting->type === \'textarea\'')
-        ->toContain('$setting->type === \'select\'')
-        ->toContain('$setting->type === \'multiselect\'')
-        ->toContain("'integer' => 'number'")
-        ->toContain("'decimal' => 'number'")
-        ->toContain("'email' => 'email'")
-        ->toContain("'url' => 'url'");
+    expect($view)->toContain('$setting->type===\'boolean\'')
+        ->toContain('$setting->type===\'textarea\'')
+        ->toContain('$setting->type===\'select\'')
+        ->toContain('$setting->type===\'multiselect\'')
+        ->toContain("'integer'=>'number'")
+        ->toContain("'decimal'=>'number'")
+        ->toContain("'email'=>'email'")
+        ->toContain("'url'=>'url'");
 });
 
 it('keeps the boolean fallback before its checkbox value', function (): void {
