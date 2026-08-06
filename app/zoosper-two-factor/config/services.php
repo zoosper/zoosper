@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeRepository;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeService;
 use Zoosper\TwoFactor\Crypto\SecretProtector;
@@ -101,8 +102,7 @@ return [
         );
     },
     AdminTwoFactorLoginRedirectService::class => static function (ServiceContainer $services): AdminTwoFactorLoginRedirectService {
-        $adminConfig = $services->get(ConfigRepository::class)->array('admin');
-        $adminBasePath = (string) ($adminConfig['base_path'] ?? '/admin');
+        $adminBasePath = $services->get(AdminUrlGenerator::class)->basePath();
         return new AdminTwoFactorLoginRedirectService(
             $services->get(AdminTwoFactorEnrollmentService::class),
             $adminBasePath,

@@ -7,8 +7,8 @@ use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
-use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeService;
 use Zoosper\TwoFactor\Controller\AdminTwoFactorChallengeController;
 use Zoosper\TwoFactor\Controller\AdminTwoFactorSetupController;
@@ -17,8 +17,7 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorEnrollmentService;
 
 return [
     AdminTwoFactorSetupController::class => static function (ServiceContainer $services): AdminTwoFactorSetupController {
-        $adminConfig = $services->get(ConfigRepository::class)->array('admin');
-        $adminBasePath = (string) ($adminConfig['base_path'] ?? '/admin');
+        $adminBasePath = $services->get(AdminUrlGenerator::class)->basePath();
 
         return new AdminTwoFactorSetupController(
             $services->get(SessionGuard::class),
@@ -31,8 +30,7 @@ return [
     },
 
     AdminTwoFactorChallengeController::class => static function (ServiceContainer $services): AdminTwoFactorChallengeController {
-        $adminConfig = $services->get(ConfigRepository::class)->array('admin');
-        $adminBasePath = (string) ($adminConfig['base_path'] ?? '/admin');
+        $adminBasePath = $services->get(AdminUrlGenerator::class)->basePath();
 
         return new AdminTwoFactorChallengeController(
             $services->get(SessionGuard::class),

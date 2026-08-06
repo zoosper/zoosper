@@ -48,6 +48,7 @@ use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Entity\Save\ModuleEntitySaveListenerLoader;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Url\AdminPathCollectionTransformer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 
 return [
@@ -100,6 +101,7 @@ return [
         $services->get(FlashMessageStoreInterface::class),
         $services->get(FlashMessageRenderer::class),
         $services->get(CsrfTokenManager::class),
+        $services->get(AdminUrlGenerator::class),
     ),
     AdminViewRenderer::class => static fn(ServiceContainer $services): AdminViewRenderer => new AdminViewRenderer(
         $services->get('theme.admin_template_renderer'),

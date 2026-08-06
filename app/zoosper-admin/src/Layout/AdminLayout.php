@@ -13,6 +13,7 @@ use Zoosper\Admin\Navigation\AdminMenuItem;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Config\ConfigRepository;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Theme\Template\TemplateRenderer;
 use Zoosper\Theme\Theme\ThemeResolver;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
@@ -28,6 +29,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
         private ?FlashMessageStoreInterface $flashMessages = null,
         private ?FlashMessageRenderer $flashRenderer = null,
         private ?CsrfTokenManager $csrf = null,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -127,6 +129,10 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
      */
     private function adminUrl(string $path): string
     {
+        if ($this->adminUrls !== null) {
+            return $this->adminUrls->url($path);
+        }
+
         $adminConfig = $this->config?->array('admin') ?? [];
         $basePath = (string) ($adminConfig['base_path'] ?? '/admin');
 
