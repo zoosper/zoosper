@@ -23,6 +23,7 @@ use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Entity\Save\FieldDefinitionRegistry;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
 
 /**
@@ -89,6 +90,7 @@ final readonly class UserAdminController
         private ?EntitySaveLifecycleRunner $saveLifecycle = null,
         private ?PasswordPolicy $passwordPolicy = null,
         private ?AdminUserGridIndex $gridIndex = null,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -115,7 +117,7 @@ final readonly class UserAdminController
         return Response::html($this->views->render(
             'Admin Users',
             'zoosper-auth::admin/users/index',
-            ['users' => $this->users->all()],
+            ['users' => $this->users->all(), 'createUrl' => $this->adminUrl('users/create'), 'editBaseUrl' => $this->adminUrl('users/edit'), 'backUrl' => $this->adminUrl('users')],
             $adminUser,
             'admin-users',
         ));
@@ -126,7 +128,7 @@ final readonly class UserAdminController
     {
         $this->currentAdminUser();
 
-        return $this->renderUserForm('Create Admin User', '/admin/users/create', null, []);
+        return $this->renderUserForm('Create Admin User', $this->adminUrl('users/create'), null, []);
     }
 
     public function create(Request $request): Response
@@ -166,12 +168,12 @@ final readonly class UserAdminController
             });
 
             if ($context->hasErrors()) {
-                return $this->renderUserForm('Create Admin User', '/admin/users/create', null, $form, 422, $this->firstContextError($context));
+                return $this->renderUserForm('Create Admin User', $this->adminUrl('users/create'), null, $form, 422, $this->firstContextError($context));
             }
 
-            return Response::redirect('/admin/users/edit?id=' . $createdId . '&notice=created');
+            return Response::redirect($this->adminUrl('users/edit', ['id' => $createdId, 'notice' => 'created']));
         } catch (RuntimeException $exception) {
-            return $this->renderUserForm('Create Admin User', '/admin/users/create', null, $form, 422, $exception->getMessage());
+            return $this->renderUserForm('Create Admin User', $this->adminUrl('users/create'), null, $form, 422, $exception->getMessage());
         }
     }
 
@@ -186,7 +188,7 @@ final readonly class UserAdminController
 
         [$noticeType, $noticeMessage] = $this->noticeFor($request);
 
-        return $this->renderUserForm('Edit Admin User', '/admin/users/edit?id=' . $user->id, $user, [], 200, null, $noticeType, $noticeMessage);
+        return $this->renderUserForm('Edit Admin User', $this->adminUrl('users/edit', ['id' => $user->id]), $user, [], 200, null, $noticeType, $noticeMessage);
     }
 
     /**
@@ -249,12 +251,12 @@ final readonly class UserAdminController
             });
 
             if ($context->hasErrors()) {
-                return $this->renderUserForm('Edit Admin User', '/admin/users/edit?id=' . $user->id, $user, $form, 422, $this->firstContextError($context));
+                return $this->renderUserForm('Edit Admin User', $this->adminUrl('users/edit', ['id' => $user->id]), $user, $form, 422, $this->firstContextError($context));
             }
 
-            return Response::redirect('/admin/users/edit?id=' . $user->id . '&notice=saved');
+            return Response::redirect($this->adminUrl('users/edit', ['id' => $user->id, 'notice' => 'saved']));
         } catch (RuntimeException $exception) {
-            return $this->renderUserForm('Edit Admin User', '/admin/users/edit?id=' . $user->id, $user, $form, 422, $exception->getMessage());
+            return $this->renderUserForm('Edit Admin User', $this->adminUrl('users/edit', ['id' => $user->id]), $user, $form, 422, $exception->getMessage());
         }
     }
 
@@ -266,16 +268,16 @@ final readonly class UserAdminController
     private function resetTwoFactor(AdminUser $targetUser, AdminUser $actor): Response
     {
         if ($this->twoFactorReset === null) {
-            return Response::redirect('/admin/users/edit?id=' . $targetUser->id . '&notice=2fa_unavailable');
+            return Response::redirect($this->adminUrl('users/edit', ['id' => $targetUser->id, 'notice' => '2fa_unavailable']));
         }
 
         try {
             $this->twoFactorReset->reset($targetUser->id, $actor->id);
         } catch (\Throwable) {
-            return Response::redirect('/admin/users/edit?id=' . $targetUser->id . '&notice=2fa_failed');
+            return Response::redirect($this->adminUrl('users/edit', ['id' => $targetUser->id, 'notice' => '2fa_failed']));
         }
 
-        return Response::redirect('/admin/users/edit?id=' . $targetUser->id . '&notice=2fa_reset');
+        return Response::redirect($this->adminUrl('users/edit', ['id' => $targetUser->id, 'notice' => '2fa_reset']));
     }
 
     /**
@@ -408,6 +410,19 @@ final readonly class UserAdminController
      *
      * @param array<string, mixed> $submitted
      */
+    /** @param array<string, scalar|null> $query */
+    private function adminUrl(string $path = '', array $query = []): string
+    {
+        if ($this->adminUrls !== null) {
+            return $this->adminUrls->url($path, $query);
+        }
+
+        $url = $path === '' ? '/admin' : '/admin/' . ltrim($path, '/');
+        $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+
+        return $queryString === '' ? $url : $url . '?' . $queryString;
+    }
+
     private function renderUserForm(
         string $title,
         string $action,
@@ -446,6 +461,7 @@ final readonly class UserAdminController
             'error' => $error,
             'noticeType' => $noticeType,
             'noticeMessage' => $noticeMessage,
+            'backUrl' => $this->adminUrl('users'),
         ];
 
         return Response::html($this->views->render(

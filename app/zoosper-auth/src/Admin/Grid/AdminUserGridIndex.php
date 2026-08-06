@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Zoosper\Auth\Admin\Grid;
 
+use Zoosper\Core\Url\AdminUrlGenerator;
+
 /** Thin read-side façade prepared for UserAdminController::index(). */
 final readonly class AdminUserGridIndex
 {
     public function __construct(
         private AdminUserGridPageBuilder $builder,
         private AuthGridPagePresenter $presenter,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -18,7 +21,7 @@ final readonly class AdminUserGridIndex
     {
         return $this->presenter->present(
             $this->builder->build($authenticatedAdminUserId, $queryState, $bookmarkId),
-            '/admin/users/create',
+            $this->adminUrls?->url('users/create') ?? '/admin/users/create',
             'Create admin user',
         );
     }

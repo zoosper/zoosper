@@ -20,6 +20,7 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 
 /**
  * Admin CRUD controller for roles and permissions.
@@ -59,6 +60,7 @@ final readonly class RoleAdminController
         private ?AuditLogger $auditLogger = null,
         private ?ConfigRepository $config = null,
         private ?RoleGridIndex $gridIndex = null,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -80,6 +82,8 @@ final readonly class RoleAdminController
 
         return $this->html('Roles & Permissions', $this->renderRoleView('index.php', [
             'roles' => $this->roles->allRoles(),
+            'createUrl' => $this->adminUrl('roles/create'),
+            'editBaseUrl' => $this->adminUrl('roles/edit'),
         ]));
     
     }
@@ -87,7 +91,7 @@ final readonly class RoleAdminController
     public function createForm(Request $request): Response
     {
         $this->currentAdminUser();
-        return $this->html('Create Role', $this->form('/admin/roles/create'));
+        return $this->html('Create Role', $this->form($this->adminUrl('roles/create')));
     }
 
     public function create(Request $request): Response
@@ -98,9 +102,9 @@ final readonly class RoleAdminController
         try {
             $id = $this->roles->createRole((string) ($form['code'] ?? ''), trim((string) ($form['label'] ?? '')), $this->idsFromForm($form, 'permission_ids'));
             $this->auditLogger?->record($actor, 'role.created', 'admin_role', (string) $id, 'Created admin role', ['code' => (string) ($form['code'] ?? '')], $request);
-            return Response::redirect('/admin/roles/edit?id=' . $id);
+            return Response::redirect($this->adminUrl('roles/edit', ['id' => $id]));
         } catch (RuntimeException $exception) {
-            return $this->html('Create Role', $this->form('/admin/roles/create', null, $exception->getMessage(), $form), 422);
+            return $this->html('Create Role', $this->form($this->adminUrl('roles/create'), null, $exception->getMessage(), $form), 422);
         }
     }
 
@@ -109,7 +113,7 @@ final readonly class RoleAdminController
         $this->currentAdminUser();
         $role = $this->roleFromRequest($request);
         if ($role === null) { return $this->html('Role Not Found', '<p>Role not found.</p>', 404); }
-        return $this->html('Edit Role', $this->form('/admin/roles/edit?id=' . (int) $role['id'], $role));
+        return $this->html('Edit Role', $this->form($this->adminUrl('roles/edit', ['id' => (int) $role['id']]), $role));
     }
 
     public function update(Request $request): Response
@@ -124,9 +128,9 @@ final readonly class RoleAdminController
             $userIds = $this->idsFromForm($form, 'user_ids');
             $this->roles->updateRole((int) $role['id'], (string) ($form['code'] ?? ''), trim((string) ($form['label'] ?? '')), $permissionIds, $userIds);
             $this->auditLogger?->record($actor, 'role.updated', 'admin_role', (string) $role['id'], 'Updated role permissions and users', ['permission_ids' => $permissionIds, 'user_ids' => $userIds], $request);
-            return Response::redirect('/admin/roles/edit?id=' . (int) $role['id']);
+            return Response::redirect($this->adminUrl('roles/edit', ['id' => (int) $role['id']]));
         } catch (RuntimeException $exception) {
-            return $this->html('Edit Role', $this->form('/admin/roles/edit?id=' . (int) $role['id'], $role, $exception->getMessage(), $form), 422);
+            return $this->html('Edit Role', $this->form($this->adminUrl('roles/edit', ['id' => (int) $role['id']]), $role, $exception->getMessage(), $form), 422);
         }
     }
 
@@ -169,6 +173,7 @@ final readonly class RoleAdminController
             'error' => $error,
             'permissionTree' => $this->permissionTree($selectedPermissions),
             'userAssignment' => $this->userAssignment($selectedUsers),
+            'backUrl' => $this->adminUrl('roles'),
         ]);
     }
 
@@ -223,6 +228,19 @@ final readonly class RoleAdminController
         $ids = $form[$field] ?? [];
         if (!is_array($ids)) { return []; }
         return array_values(array_map(static fn (mixed $id): int => (int) $id, $ids));
+    }
+
+    /** @param array<string, scalar|null> $query */
+    private function adminUrl(string $path = '', array $query = []): string
+    {
+        if ($this->adminUrls !== null) {
+            return $this->adminUrls->url($path, $query);
+        }
+
+        $url = $path === '' ? '/admin' : '/admin/' . ltrim($path, '/');
+        $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+
+        return $queryString === '' ? $url : $url . '?' . $queryString;
     }
 
     private function html(string $title, string $content, int $statusCode = 200): Response

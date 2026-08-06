@@ -34,6 +34,7 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
 
 return [
@@ -47,6 +48,7 @@ return [
         $services->has(AdminTwoFactorResetService::class) ? $services->get(AdminTwoFactorResetService::class) : null,
         saveLifecycle: $services->get(EntitySaveLifecycleRunner::class),
         gridIndex: $services->get(AdminUserGridIndex::class),
+        adminUrls: $services->get(AdminUrlGenerator::class),
     ),
     RoleAdminController::class => static fn (ServiceContainer $services): RoleAdminController => new RoleAdminController(
         $services->get(SessionGuard::class),
@@ -57,5 +59,6 @@ return [
         $services->has(AuditLogger::class) ? $services->get(AuditLogger::class) : null,
         $services->get(ConfigRepository::class),
         gridIndex: $services->get(RoleGridIndex::class),
+        adminUrls: $services->get(AdminUrlGenerator::class),
     ),
 ];

@@ -32,5 +32,5 @@
     <?= $userAssignment ?>
 
     <button type="submit">Save role</button>
-    <a href="/admin/roles">Back</a>
+    <a href="<?= $escape($backUrl) ?>">Back</a>
 </form>

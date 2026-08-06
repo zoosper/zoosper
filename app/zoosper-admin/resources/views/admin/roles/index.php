@@ -2,7 +2,7 @@
 /** @var iterable<array<string,mixed>> $roles */
 /** @var callable $escape */
 ?>
-<a href="/admin/roles/create">Create role</a>
+<a href="<?= $escape($createUrl) ?>">Create role</a>
 <table>
     <tr>
         <th>ID</th>
@@ -16,7 +16,7 @@
             <td><?= $id ?></td>
             <td><?= $escape((string) $role['label']) ?></td>
             <td><code><?= $escape((string) $role['code']) ?></code></td>
-            <td><a href="/admin/roles/edit?id=<?= $id ?>">Edit</a></td>
+            <td><a href="<?= $escape($editBaseUrl) ?>?id=<?= $id ?>">Edit</a></td>
         </tr>
     <?php endforeach; ?>
 </table>

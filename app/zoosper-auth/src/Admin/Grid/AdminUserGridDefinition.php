@@ -8,13 +8,17 @@ use Zoosper\Grid\GridColumn;
 use Zoosper\Grid\GridColumnRegistry;
 use Zoosper\Grid\GridDefinition;
 use Zoosper\Grid\GridFilter;
+use Zoosper\Core\Url\AdminUrlGenerator;
 
 /** Defines the shared Grid contract for the Admin Users listing. */
 final readonly class AdminUserGridDefinition
 {
     public const KEY = 'admin.users';
 
-    public function __construct(private ?GridColumnRegistry $columns = null)
+    public function __construct(
+        private ?GridColumnRegistry $columns = null,
+        private ?AdminUrlGenerator $adminUrls = null,
+    )
     {
     }
 
@@ -31,10 +35,12 @@ final readonly class AdminUserGridDefinition
                     key: 'actions',
                     label: 'Actions',
                     toggleable: false,
-                    render: static function (mixed $value, array $row): string {
+                    render: function (mixed $value, array $row): string {
                         $id = (int) ($row['id'] ?? 0);
 
-                        return '<a href="/admin/users/edit?id=' . $id . '">Edit</a>';
+                        $url = $this->adminUrls?->url('users/edit', ['id' => $id]) ?? '/admin/users/edit?id=' . $id;
+
+                        return '<a href="' . htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">Edit</a>';
                     },
                 ),
             ],

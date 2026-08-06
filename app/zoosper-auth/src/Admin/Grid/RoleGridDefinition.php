@@ -8,13 +8,17 @@ use Zoosper\Grid\GridColumn;
 use Zoosper\Grid\GridColumnRegistry;
 use Zoosper\Grid\GridDefinition;
 use Zoosper\Grid\GridFilter;
+use Zoosper\Core\Url\AdminUrlGenerator;
 
 /** Defines the shared Grid contract for the Roles listing. */
 final readonly class RoleGridDefinition
 {
     public const KEY = 'admin.roles';
 
-    public function __construct(private ?GridColumnRegistry $columns = null)
+    public function __construct(
+        private ?GridColumnRegistry $columns = null,
+        private ?AdminUrlGenerator $adminUrls = null,
+    )
     {
     }
 
@@ -30,10 +34,12 @@ final readonly class RoleGridDefinition
                     key: 'actions',
                     label: 'Actions',
                     toggleable: false,
-                    render: static function (mixed $value, array $row): string {
+                    render: function (mixed $value, array $row): string {
                         $id = (int) ($row['id'] ?? 0);
 
-                        return '<a href="/admin/roles/edit?id=' . $id . '">Edit</a>';
+                        $url = $this->adminUrls?->url('roles/edit', ['id' => $id]) ?? '/admin/roles/edit?id=' . $id;
+
+                        return '<a href="' . htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">Edit</a>';
                     },
                 ),
             ],
