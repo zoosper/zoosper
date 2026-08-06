@@ -11,7 +11,8 @@ $env = static function (string $key, mixed $default = null): mixed {
     return $value !== false && $value !== '' ? $value : $default;
 };
 
-$basePath = '/' . trim((string) $env('ADMIN_BASE_PATH', '/admin'), '/');
+$configuredBasePath = trim((string) $env('ADMIN_BASE_PATH', '/admin'));
+$basePath = '/' . trim($configuredBasePath, '/');
 
 return [
     /*
