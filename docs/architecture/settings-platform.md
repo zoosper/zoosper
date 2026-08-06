@@ -327,3 +327,17 @@ Admin services construct the selected `ContentEditorInterface` from `ContentEdit
 
 ### 9F3H catalogue and package boundary
 Admin contributes read-only built-in editor choices to the Settings catalogue while remaining independent of `zoosper/settings`. Custom module editor codes remain configurable through project/runtime configuration and service registration.
+
+## Phase 9F3I-L Admin content-editor runtime closure
+
+### 9F3I explicit-scope configuration factory
+`ContentEditorRuntimeConfigFactory` creates immutable editor selection for a supplied `ScopeContext` and provides a Default-scope convenience method. Existing Admin service wiring derives its singleton runtime configuration through this factory.
+
+### 9F3J behavioural selection coverage
+Regression tests exercise the actual registry and editor adapters: Editor.js retains its hidden structured document and submitted textarea fallback, textarea remains the safe built-in selection, and a module-registered custom editor code remains selectable.
+
+### 9F3K integration boundaries
+Page continues to depend only on `ContentEditorInterface`. Media integration remains optional through nullable Editor.js image-tool configuration and CSRF collaborators; editor selection does not add a Page-to-Media or Admin-to-Settings dependency.
+
+### 9F3L closure
+Phase 9F3 is complete. Editor settings have scoped runtime consumers, explicit-scope construction is available, public registry compatibility is preserved, and behavioural integration is covered. Further editor work should be feature-driven, including eventual controlled editability and browser-level Editor.js validation.

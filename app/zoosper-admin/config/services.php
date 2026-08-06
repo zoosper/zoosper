@@ -21,6 +21,7 @@ use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\Admin\Editor\ContentEditorRegistry;
 use Zoosper\Admin\Editor\Config\ContentEditorRuntimeConfig;
+use Zoosper\Admin\Editor\Config\ContentEditorRuntimeConfigFactory;
 use Zoosper\Admin\Editor\EditorJsContentEditor;
 use Zoosper\Admin\Editor\TextareaContentEditor;
 use Zoosper\Admin\Form\AdminFormUiConfigLoader;
@@ -62,11 +63,13 @@ return [
     ScopeConfigRepository::class => static fn (ServiceContainer $services): ScopeConfigRepository => new ScopeConfigRepository(
         $services->get(PDO::class),
     ),
-    ContentEditorRuntimeConfig::class => static fn (ServiceContainer $services): ContentEditorRuntimeConfig => new ContentEditorRuntimeConfig(
+    ContentEditorRuntimeConfigFactory::class => static fn (ServiceContainer $services): ContentEditorRuntimeConfigFactory => new ContentEditorRuntimeConfigFactory(
         $services->get(ConfigRepository::class),
         $services->get(ScopeConfigRepository::class),
-        ScopeContext::default(),
     ),
+    ContentEditorRuntimeConfig::class => static fn (ServiceContainer $services): ContentEditorRuntimeConfig => $services
+        ->get(ContentEditorRuntimeConfigFactory::class)
+        ->forDefaultScope(),
     TextareaContentEditor::class => static fn(ServiceContainer $services): TextareaContentEditor => new TextareaContentEditor(),
     EditorJsContentEditor::class => static fn(ServiceContainer $services): EditorJsContentEditor => new EditorJsContentEditor(
         $services->get(TextareaContentEditor::class),
