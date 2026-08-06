@@ -313,3 +313,17 @@ The registry's original variadic constructor remains a permanent compatibility b
 
 ### 9F2L closure
 Phase 9F2 is complete. Both Theme-owned settings have runtime consumers, extension-based pluggability remains intact, and homepage markup is aligned with its existing visual shell contract. Further Theme work should be feature-driven rather than additional runtime-setting abstraction.
+
+## Phase 9F3E-H Admin content-editor runtime adoption
+
+### 9F3E runtime selection configuration
+`ContentEditorRuntimeConfig` resolves `editor.default_editor` and `editor.fallback_editor` with Default-scope database precedence over project configuration. Blank values fall back to `editorjs` and `textarea`; non-empty third-party editor codes are preserved.
+
+### 9F3F registry compatibility
+The public variadic `ContentEditorRegistry` constructor and additive `register()` API remain unchanged. Later registrations continue replacing an existing code, and selection remains the registry's responsibility.
+
+### 9F3G service adoption
+Admin services construct the selected `ContentEditorInterface` from `ContentEditorRuntimeConfig`. Editor.js retains its textarea submission fallback, optional Media image-tool integration and CSRF injection.
+
+### 9F3H catalogue and package boundary
+Admin contributes read-only built-in editor choices to the Settings catalogue while remaining independent of `zoosper/settings`. Custom module editor codes remain configurable through project/runtime configuration and service registration.

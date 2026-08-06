@@ -20,6 +20,7 @@ use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\Admin\Editor\ContentEditorRegistry;
+use Zoosper\Admin\Editor\Config\ContentEditorRuntimeConfig;
 use Zoosper\Admin\Editor\EditorJsContentEditor;
 use Zoosper\Admin\Editor\TextareaContentEditor;
 use Zoosper\Admin\Form\AdminFormUiConfigLoader;
@@ -37,6 +38,8 @@ use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
 use Zoosper\Core\Config\ConfigRepository;
+use Zoosper\Core\Config\Scope\ScopeConfigRepository;
+use Zoosper\Core\Config\Scope\ScopeContext;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Entity\Save\EntitySaveEventDispatcher;
 use Zoosper\Core\Entity\Save\EntitySaveEventDispatcherInterface;
@@ -56,6 +59,14 @@ return [
     AssetPathResolver::class => static fn(ServiceContainer $services): AssetPathResolver => new AssetPathResolver($services->get(ConfigRepository::class)),
     FlashMessageStoreInterface::class => static fn(ServiceContainer $services): FlashMessageStoreInterface => new SessionFlashMessageStore(),
     FlashMessageRenderer::class => static fn(ServiceContainer $services): FlashMessageRenderer => new FlashMessageRenderer(),
+    ScopeConfigRepository::class => static fn (ServiceContainer $services): ScopeConfigRepository => new ScopeConfigRepository(
+        $services->get(PDO::class),
+    ),
+    ContentEditorRuntimeConfig::class => static fn (ServiceContainer $services): ContentEditorRuntimeConfig => new ContentEditorRuntimeConfig(
+        $services->get(ConfigRepository::class),
+        $services->get(ScopeConfigRepository::class),
+        ScopeContext::default(),
+    ),
     TextareaContentEditor::class => static fn(ServiceContainer $services): TextareaContentEditor => new TextareaContentEditor(),
     EditorJsContentEditor::class => static fn(ServiceContainer $services): EditorJsContentEditor => new EditorJsContentEditor(
         $services->get(TextareaContentEditor::class),
@@ -66,13 +77,12 @@ return [
         $services->get(EditorJsContentEditor::class),
         $services->get(TextareaContentEditor::class),
     ),
-    ContentEditorInterface::class => static function (ServiceContainer $services): ContentEditorInterface {
-        $config = $services->get(ConfigRepository::class)->array('editor');
-        $preferred = (string)($config['default_editor'] ?? 'editorjs');
-        $fallback = (string)($config['fallback_editor'] ?? 'textarea');
-
-        return $services->get(ContentEditorRegistry::class)->preferred($preferred, $fallback);
-    },
+    ContentEditorInterface::class => static fn (ServiceContainer $services): ContentEditorInterface => $services
+        ->get(ContentEditorRegistry::class)
+        ->preferred(
+            $services->get(ContentEditorRuntimeConfig::class)->preferred(),
+            $services->get(ContentEditorRuntimeConfig::class)->fallback(),
+        ),
     AdminMenu::class => static fn(ServiceContainer $services): AdminMenu => new AdminMenu(new AdminMenuLoader($services->get(ModuleRegistry::class))),
     AdminLayout::class => static fn(ServiceContainer $services): AdminLayout => new AdminLayout(
         $services->get(AdminMenu::class),
