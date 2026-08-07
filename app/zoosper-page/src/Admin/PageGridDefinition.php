@@ -30,8 +30,8 @@ final readonly class PageGridDefinition
                 new GridColumn('site_name','Site'),
                 new GridColumn('actions', 'Actions', toggleable: false, render: function (mixed $value, array $row): string {
                     $id = (int) ($row['id'] ?? 0);
-                    $edit = $this->adminUrls?->url('pages/edit', ['id' => $id]) ?? '/admin/pages/edit?id=' . $id;
-                    $preview = $this->adminUrls?->url('pages/preview', ['id' => $id]) ?? '/admin/pages/preview?id=' . $id;
+                    $edit = $this->adminUrls?->url('pages/' . $id . '/edit') ?? '/admin/pages/' . $id . '/edit';
+                    $preview = $this->adminUrls?->url('pages/' . $id . '/preview') ?? '/admin/pages/' . $id . '/preview';
                     return '<a href="' . htmlspecialchars($edit, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">Edit</a> &nbsp;|&nbsp; <a href="' . htmlspecialchars($preview, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '" target="_blank" rel="noopener">Preview</a>';
                 })
             ],

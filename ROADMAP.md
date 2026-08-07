@@ -873,3 +873,8 @@ Existing and future features should consume declared, validated and scoped confi
 ## Phase 9FL closure note
 
 Media Admin implementation decoupling, Page Admin layout/view interface adoption and frontend structured-content rendering are complete and regression-guarded. Page now declares its Media runtime dependency honestly. Remaining Page work concerns narrower editor/form/Grid ownership cleanup and visible product improvements, not reimplementation of these completed foundations.
+
+## Phase 9FM route-parameter cutover
+
+Page edit, preview, publish and unpublish actions now expose constrained parameterised routes and resolve the Page identifier from immutable request route parameters. Existing query-string routes remain temporarily available for backwards compatibility, while newly generated Grid and edit-form links use canonical path URLs.
+

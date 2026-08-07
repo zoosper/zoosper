@@ -27,7 +27,8 @@ test('page actions renderer escapes the route surface by casting the id', functi
     $actions = $definition->columns[array_key_last($definition->columns)];
     $html = $actions->renderValue(null, ['id' => '7<script>alert(1)</script>']);
 
-    expect($html)->toContain('/admin/pages/edit?id=7');
+    expect($html)->toContain('/admin/pages/7/edit');
+    expect($html)->toContain('/admin/pages/7/preview');
     expect($html)->not->toContain('<script>');
     expect($html)->toContain('rel="noopener"');
 });

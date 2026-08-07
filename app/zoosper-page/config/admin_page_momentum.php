@@ -9,8 +9,8 @@ return [
         'description' => 'Launch-readiness status for visible page/admin improvements.',
         'items' => [
             'page_renderer_candidate' => [
-                'label' => 'PageRenderer report-only candidate planned',
-                'status' => 'planned',
+                'label' => 'PageRenderer structured-content runtime active',
+                'status' => 'complete',
             ],
             'page_admin_visible_slice' => [
                 'label' => 'Visible page admin momentum slice enabled for admin cutover',

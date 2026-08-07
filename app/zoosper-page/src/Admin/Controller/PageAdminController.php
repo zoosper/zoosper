@@ -350,7 +350,7 @@ public function gridMutation(Request $request): Response
 
             $this->flashMessages?->success($this->t('Page created successfully.'), 'page.created');
 
-            return Response::redirect($this->adminUrl('/pages/edit', ['id' => $createdId]));
+            return Response::redirect($this->adminUrl('/pages/' . $createdId . '/edit'));
         } catch (RuntimeException $exception) {
             $this->errorHandler?->logException($exception, ['controller' => 'PageAdminController', 'action' => 'create']);
             $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), 'page.create_failed');
@@ -485,14 +485,15 @@ public function gridMutation(Request $request): Response
             return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
         }
 
-        return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit', ['id' => $page->id]), $page));
+        return $this->html('Edit page', $this->form($this->adminUrl('/pages/' . $page->id . '/edit'), $page));
     }
 
     private function pageFromRequest(Request $request): ?Page
     {
-        $id = $request->query('id');
+        // Parameterised routes are canonical; the query value remains as a temporary compatibility fallback.
+        $id = $request->routeParam('id') ?? $request->query('id');
 
-        return $id !== null && ctype_digit($id) ? $this->pages->findById((int)$id) : null;
+        return $id !== null && ctype_digit($id) ? $this->pages->findById((int) $id) : null;
     }
 
     public function update(Request $request): Response
@@ -510,7 +511,7 @@ public function gridMutation(Request $request): Response
         if ($processorError !== null) {
             $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.processor_save_failed');
 
-            return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit', ['id' => $page->id]), $page, $processorError, $form), 422);
+            return $this->html('Edit page', $this->form($this->adminUrl('/pages/' . $page->id . '/edit'), $page, $processorError, $form), 422);
         }
 
         try {
@@ -538,17 +539,17 @@ public function gridMutation(Request $request): Response
             if ($context->hasErrors()) {
                 $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.save_failed');
 
-                return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit', ['id' => $page->id]), $page, $this->firstContextError($context), $form), 422);
+                return $this->html('Edit page', $this->form($this->adminUrl('/pages/' . $page->id . '/edit'), $page, $this->firstContextError($context), $form), 422);
             }
 
             $this->flashMessages?->success($this->t('Page saved successfully.'), 'page.saved');
 
-            return Response::redirect($this->adminUrl('/pages/edit', ['id' => $page->id]));
+            return Response::redirect($this->adminUrl('/pages/' . $page->id . '/edit'));
         } catch (RuntimeException $exception) {
             $this->errorHandler?->logException($exception, ['controller' => 'PageAdminController', 'action' => 'update']);
             $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.save_failed');
 
-            return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit', ['id' => $page->id]), $page, $exception->getMessage(), $form), 422);
+            return $this->html('Edit page', $this->form($this->adminUrl('/pages/' . $page->id . '/edit'), $page, $exception->getMessage(), $form), 422);
         }
     }
 

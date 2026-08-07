@@ -14,8 +14,8 @@ it('wires the canonical generator across Pages CRUD Grid bulk and export runtime
         ->toContain("\$this->adminUrl('/pages/bulk-action')")
         ->and($workspace)->toContain("\$this->adminUrls?->url('pages') ?? '/admin/pages'")
         ->toContain("public const ACTION = '/admin/pages'")
-        ->and($definition)->toContain("\$this->adminUrls?->url('pages/edit'")
-        ->toContain("\$this->adminUrls?->url('pages/preview'");
+        ->and($definition)->toContain("\$this->adminUrls?->url('pages/' . \$id . '/edit')")
+        ->toContain("\$this->adminUrls?->url('pages/' . \$id . '/preview')");
 });
 
 it('removes literal admin page links from migrated Pages fallback templates', function (): void {

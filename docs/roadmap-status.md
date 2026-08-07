@@ -7,3 +7,8 @@
 - Page structured `block_json` rendering with saved-HTML fallback is implemented and behaviourally tested.
 - Managed Editor.js image sanitisation is composed from Media; Page now declares that runtime dependency explicitly.
 - Active follow-up work is limited to remaining Page-specific concrete Admin editor/form/grid dependencies and further visible Page workspace improvements.
+
+## Phase 9FM route-parameter cutover
+
+Page edit, preview, publish and unpublish actions now expose constrained parameterised routes and resolve the Page identifier from immutable request route parameters. Existing query-string routes remain temporarily available for backwards compatibility, while newly generated Grid and edit-form links use canonical path URLs.
+
