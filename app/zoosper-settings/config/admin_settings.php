@@ -24,6 +24,20 @@ return [[
             'sort_order' => 100,
         ]],
     ], [
+        'id' => 'security',
+        'label' => 'Security',
+        'description' => 'Environment-controlled Admin session security.',
+        'sort_order' => 150,
+        'settings' => [[
+            'path' => 'admin.session_idle_timeout',
+            'label' => 'Session idle timeout (seconds)',
+            'type' => 'text',
+            'description' => 'Controlled by ADMIN_SESSION_IDLE_TIMEOUT. Default 7200 seconds; 0 disables idle expiry.',
+            'default' => 7200,
+            'read_only' => true,
+            'sort_order' => 100,
+        ]],
+    ], [
         'id' => 'routing',
         'label' => 'Routing',
         'description' => 'Administrative routing configuration.',

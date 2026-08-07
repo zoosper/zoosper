@@ -12,5 +12,5 @@ it('supports explicit groups and normalises legacy settings into General', funct
         ->toContain("label: 'General'")
         ->and($config[0])->toHaveKey('groups')
         ->not->toHaveKey('settings')
-        ->and($config[0]['groups'])->toHaveCount(2);
+        ->and($config[0]['groups'])->toHaveCount(3);
 });

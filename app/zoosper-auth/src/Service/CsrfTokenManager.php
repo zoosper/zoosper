@@ -15,6 +15,18 @@ final readonly class CsrfTokenManager
         return (string) $_SESSION['_csrf_token'];
     }
 
+    public function rotate(): string
+    {
+        $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+
+        return (string) $_SESSION['_csrf_token'];
+    }
+
+    public function clear(): void
+    {
+        unset($_SESSION['_csrf_token']);
+    }
+
     public function isValid(?string $token): bool
     {
         return is_string($token) && hash_equals($this->token(), $token);

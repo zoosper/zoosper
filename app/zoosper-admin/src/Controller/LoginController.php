@@ -85,6 +85,8 @@ final readonly class LoginController
             return Response::html($this->page($this->form('Invalid email or password.', $email)), 422);
         }
 
+        $this->csrf->rotate();
+
         // Phase 1.107: enrolled users must pass a login-time 2FA challenge BEFORE
         // the session is fully authenticated.
         if ($this->requiresTwoFactorChallenge($user)) {
@@ -108,6 +110,7 @@ final readonly class LoginController
 
     public function logout(Request $request): Response
     {
+        $this->csrf->clear();
         $this->guard->logout();
 
         return Response::redirect($this->adminUrl('login'));

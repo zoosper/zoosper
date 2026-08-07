@@ -109,6 +109,7 @@ final readonly class AdminTwoFactorChallengeController
         }
 
         unset($_SESSION[self::TOKEN_KEY]);
+        $this->csrf->rotate();
 
         // Phase 1.113: THIS is the fix — a login that required 2FA now records
         // its success here, since LoginController's own login() never reaches
