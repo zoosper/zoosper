@@ -58,7 +58,7 @@ README.md
 .github/workflows/tests.yml
 ```
 
-The package still depends on `zoosper/core`, `zoosper/admin` and `zoosper/auth`. Until those packages are separately published, standalone installs should use local path repositories or the root monorepo workflow.
+The package depends on `zoosper/core` and `zoosper/auth`; it does not require `zoosper/admin`. Until those packages are separately published, standalone installs should use local path repositories or the root monorepo workflow.
 
 ## Browser/editor smoke
 
@@ -68,3 +68,7 @@ The root project owns browser smoke because it includes the admin shell, auth mi
 docs/operations/editorjs-media-browser-smoke.md
 ```
 
+
+## Admin decoupling status
+
+Media rendering uses Auth-owned Admin rendering contracts and contains no direct `Zoosper\Admin\` imports in `src/`. The root application supplies the concrete Admin shell at composition time.

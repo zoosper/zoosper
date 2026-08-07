@@ -1202,13 +1202,14 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-page",
-                "reference": "aeba7cfc5035ae2caeacd3fd944f1a979e1d8f15"
+                "reference": "c30f937e5bf6fcadfbaff84936ad806c010eba39"
             },
             "require": {
                 "php": "^8.5",
                 "zoosper/admin": "dev-dev",
                 "zoosper/core": "dev-dev",
                 "zoosper/grid": "dev-dev",
+                "zoosper/media": "dev-dev",
                 "zoosper/site": "dev-dev",
                 "zoosper/theme": "dev-dev"
             },

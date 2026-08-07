@@ -869,3 +869,7 @@ Existing and future features should consume declared, validated and scoped confi
 - Unknown, retired and incompatible keys fail descriptively during import.
 
 - **Phase 7B — API Grid reliability hardening source capture.** Capture the exact Grid/API Grid/Store Orders contracts and reliability seams before implementing second-pilot hardening; do not invent a production endpoint or credentials.
+
+## Phase 9FL closure note
+
+Media Admin implementation decoupling, Page Admin layout/view interface adoption and frontend structured-content rendering are complete and regression-guarded. Page now declares its Media runtime dependency honestly. Remaining Page work concerns narrower editor/form/Grid ownership cleanup and visible product improvements, not reimplementation of these completed foundations.
