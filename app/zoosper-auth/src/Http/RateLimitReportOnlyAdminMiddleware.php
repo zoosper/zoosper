@@ -90,7 +90,7 @@ final class RateLimitReportOnlyAdminMiddleware implements RouteMiddleware
             );
         }
 
-        $email = trim((string) ($request->form()['email'] ?? ''));
+        $email = strtolower(trim((string) ($request->form()['email'] ?? '')));
         $ip = $request->clientIp() ?? '';
         $identityParts = array_values(array_filter([$email, $ip], static fn (string $part): bool => $part !== ''));
 

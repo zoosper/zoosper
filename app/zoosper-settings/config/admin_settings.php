@@ -52,6 +52,22 @@ return [[
             'default' => 'Lax',
             'read_only' => true,
             'sort_order' => 300,
+        ], [
+            'path' => 'security.trusted_proxies',
+            'label' => 'Trusted proxy addresses',
+            'type' => 'text',
+            'description' => 'Controlled by TRUSTED_PROXIES as a comma-separated list of immediate proxy IP addresses.',
+            'default' => '',
+            'read_only' => true,
+            'sort_order' => 400,
+        ], [
+            'path' => 'rate_limit.mode',
+            'label' => 'Login rate-limit mode',
+            'type' => 'text',
+            'description' => 'Current rate-limit mode from project configuration. Rate limiting remains disabled by default.',
+            'default' => 'report_only',
+            'read_only' => true,
+            'sort_order' => 500,
         ]],
     ], [
         'id' => 'routing',

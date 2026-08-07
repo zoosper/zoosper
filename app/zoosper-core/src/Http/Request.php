@@ -46,7 +46,7 @@ final readonly class Request
             body: file_get_contents('php://input') ?: '',
             query: self::normaliseInputMap($query),
             host: strtolower((string) ($_SERVER['HTTP_HOST'] ?? 'localhost')),
-            clientIp: (string) ($_SERVER['REMOTE_ADDR'] ?? ''),
+            clientIp: TrustedProxyResolver::fromEnvironment()->clientIp($_SERVER),
             form: $_POST,
         );
     }

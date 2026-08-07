@@ -19,4 +19,9 @@ The Settings catalogue exposes `admin.session_idle_timeout` as read-only because
 The HTTP `Application` is the sole production web-session bootstrap. It enables strict session identifiers, cookie-only transport, disables transparent session IDs, applies an HttpOnly cookie and validates SameSite to Lax, Strict or None. SameSite=None falls back to Lax when the cookie is not secure.
 
 `SESSION_LIFETIME_SECONDS` is bounded to 300..604800 seconds and controls both PHP garbage collection and the browser cookie lifetime. Logout expires the browser cookie with the active cookie parameters before destroying the server session.
+## Trusted proxy and client identity
+
+Forwarded scheme and client-address headers are accepted only when `REMOTE_ADDR` is listed in the comma-separated `TRUSTED_PROXIES` environment variable. Direct requests use the validated peer address. Untrusted peers cannot force HTTPS detection or replace the client identity used by security logging and rate-limit hashing.
+
+The current Admin login limiter remains disabled by default and report-only when enabled. Login email identity is normalised to lowercase before opaque salted hashing.
 

@@ -97,16 +97,6 @@ final readonly class Application
      */
     public static function requestIsHttps(): bool
     {
-        $https = strtolower((string) ($_SERVER['HTTPS'] ?? ''));
-        if ($https !== '' && $https !== 'off') {
-            return true;
-        }
-
-        $forwardedProto = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
-        if ($forwardedProto === 'https') {
-            return true;
-        }
-
-        return (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443;
+        return TrustedProxyResolver::fromEnvironment()->isHttps($_SERVER);
     }
 }
