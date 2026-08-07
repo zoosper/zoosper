@@ -20,6 +20,7 @@ return [
         stateResolver: $services->get(GridViewStateResolver::class),
         columnRegistry: $services->has(GridColumnRegistry::class) ? $services->get(GridColumnRegistry::class) : null,
         columnOrderer: $services->has(GridColumnOrderer::class) ? $services->get(GridColumnOrderer::class) : null,
+        adminUrls: $services->get(AdminUrlGenerator::class),
     ),
     AdminUserGridPageBuilder::class => static fn (ServiceContainer $services): AdminUserGridPageBuilder => $services->get(AuthGridPageBuilderFactory::class)->adminUsers(),
     RoleGridPageBuilder::class => static fn (ServiceContainer $services): RoleGridPageBuilder => $services->get(AuthGridPageBuilderFactory::class)->roles(),

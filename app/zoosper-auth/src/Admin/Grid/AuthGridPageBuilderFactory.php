@@ -10,6 +10,7 @@ use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Grid\GridColumnOrderer;
 use Zoosper\Grid\GridColumnRegistry;
 use Zoosper\Grid\GridHtmlRenderer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 
 /**
  * Builds the complete Auth Grid read-side object graph.
@@ -26,17 +27,19 @@ final readonly class AuthGridPageBuilderFactory
         private ?GridColumnOrderer $columnOrderer = null,
         private ?GridCompactWorkspaceRenderer $workspaceRenderer = null,
         private ?GridHtmlRenderer $gridRenderer = null,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
     public function adminUsers(): AdminUserGridPageBuilder
     {
-        $definition = new AdminUserGridDefinition($this->columnRegistry);
+        $definition = new AdminUserGridDefinition($this->columnRegistry, $this->adminUrls);
 
         return new AdminUserGridPageBuilder(
             workspace: new AdminUserGridWorkspace(
                 definition: $definition,
                 workspace: $this->workspace(),
+                adminUrls: $this->adminUrls,
             ),
             dataSource: new AdminUserGridDataSource(
                 new PdoAdminUserGridReadRepository(
@@ -50,12 +53,13 @@ final readonly class AuthGridPageBuilderFactory
 
     public function roles(): RoleGridPageBuilder
     {
-        $definition = new RoleGridDefinition($this->columnRegistry);
+        $definition = new RoleGridDefinition($this->columnRegistry, $this->adminUrls);
 
         return new RoleGridPageBuilder(
             workspace: new RoleGridWorkspace(
                 definition: $definition,
                 workspace: $this->workspace(),
+                adminUrls: $this->adminUrls,
             ),
             dataSource: new RoleGridDataSource(
                 new PdoRoleGridReadRepository(

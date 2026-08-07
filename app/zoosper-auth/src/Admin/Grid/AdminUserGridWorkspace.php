@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace Zoosper\Auth\Admin\Grid;
 
 use Zoosper\AdminGrid\GridViewState;
+use Zoosper\Core\Url\AdminUrlGenerator;
 
 final readonly class AdminUserGridWorkspace
 {
-    public const ACTION = '/admin/users';
-
     public function __construct(
         private AdminUserGridDefinition $definition,
         private AuthGridWorkspace $workspace,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
+    }
+
+    public function action(): string
+    {
+        return $this->adminUrls?->url('users') ?? '/admin/users';
     }
 
     /**
@@ -25,7 +30,7 @@ final readonly class AdminUserGridWorkspace
         return $this->workspace->resolve(
             adminUserId: $adminUserId,
             gridKey: AdminUserGridDefinition::KEY,
-            action: self::ACTION,
+            action: $this->action(),
             definition: $this->definition->build(),
             queryState: $queryState,
             bookmarkId: $bookmarkId,

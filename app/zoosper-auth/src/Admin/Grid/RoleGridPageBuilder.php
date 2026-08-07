@@ -37,7 +37,7 @@ final readonly class RoleGridPageBuilder
                 $state->definition,
                 $pagination,
                 $state->criteria,
-                RoleGridWorkspace::ACTION,
+                $this->workspace->action(),
             ),
             state: $state,
             pagination: $pagination,

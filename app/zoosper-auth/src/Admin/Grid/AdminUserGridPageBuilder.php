@@ -37,7 +37,7 @@ final readonly class AdminUserGridPageBuilder
                 $state->definition,
                 $pagination,
                 $state->criteria,
-                AdminUserGridWorkspace::ACTION,
+                $this->workspace->action(),
             ),
             state: $state,
             pagination: $pagination,
