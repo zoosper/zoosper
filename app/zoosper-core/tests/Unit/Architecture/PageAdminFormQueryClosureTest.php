@@ -15,8 +15,17 @@ it('moves Page form presentation out of the controller and removes Page runtime 
             $pageSource .= (string) file_get_contents($file->getPathname());
         }
     }
+    $gridResponder = (string) file_get_contents(
+        $root . '/app/zoosper-page/src/Admin/PageAdminGridResponder.php'
+    );
+    $csvController = (string) file_get_contents(
+        $root . '/app/zoosper-page/src/Admin/Controller/PageCsvExportController.php'
+    );
     expect($controller)->toContain('PageAdminFormRenderer')
-        ->toContain('$request->queryParams()')
+        ->not->toContain('$request->queryParams()')
+        ->and($gridResponder)->toContain('$request->queryParams()')
+        ->and($csvController)->toContain('$request->queryParams()')
+        ->and($controller)
         ->not->toContain('private function form(')
         ->not->toContain('private function renderContentEditor(')
         ->not->toContain('private function siteOptions(')

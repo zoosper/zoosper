@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 it('wires Pages to shared saved-view management without owning renderer logic',function():void{
- $root=dirname(__DIR__,5);$controller=file_get_contents($root.'/app/zoosper-page/src/Admin/Controller/PageAdminController.php');$routes=require $root.'/app/zoosper-page/config/admin_routes.php';
- expect($controller)->toContain('GridWorkspaceMutationFormsRenderer')->toContain("\$this->adminUrl('/pages/grid')")->toContain('PageGridMutationCoordinator');
+ $root=dirname(__DIR__,5);$controller=file_get_contents($root.'/app/zoosper-page/src/Admin/Controller/PageAdminController.php');$gridResponder=file_get_contents($root.'/app/zoosper-page/src/Admin/PageAdminGridResponder.php');$routes=require $root.'/app/zoosper-page/config/admin_routes.php';
+ expect($controller)->not->toContain('GridWorkspaceMutationFormsRenderer')->not->toContain('PageGridMutationCoordinator');
+ expect($gridResponder)->toContain('GridWorkspaceMutationFormsRenderer')->toContain("\$this->adminUrl('/pages/grid')")->toContain('PageGridMutationCoordinator');
  expect($routes)->toContain(['method'=>'POST','path'=>'/admin/pages/grid','controller'=>Zoosper\Page\Admin\Controller\PageAdminController::class,'action'=>'gridMutation','permission'=>'page.manage']);
  expect($controller)->not->toContain('function renderSavedView');
 });

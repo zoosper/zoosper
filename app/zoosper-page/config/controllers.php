@@ -22,6 +22,8 @@ use Zoosper\Page\Admin\PageGridSiteFilter;
 use Zoosper\Page\Admin\PageGridWorkspace;
 use Zoosper\Page\Admin\Save\PageSaveCoordinator;
 use Zoosper\Page\Admin\Form\PageAdminFormRenderer;
+use Zoosper\Page\Admin\PageAdminGridResponder;
+use Zoosper\Page\Admin\PageAdminPreviewResponder;
 use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
 use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
 use Zoosper\Page\Admin\PageSiteFilterOptions;
@@ -100,37 +102,44 @@ return [
     ),
     PageAdminController::class => static fn (ServiceContainer $services): PageAdminController => new PageAdminController(
         guard: $services->get(SessionGuard::class),
-        csrf: $services->get(CsrfTokenManager::class),
         pages: $services->get(PageRepository::class),
-        sites: $services->get(SiteRepository::class),
-        renderer: $services->get(PageRenderer::class),
         layout: $services->get(AdminLayoutRendererInterface::class),
-        views: $services->get(AdminViewRendererInterface::class),
-        pageGrid: $pageGrid = new PageGridRepository($services->get(\PDO::class)),
-        pageGridDefinition: $pageGridDefinition = new PageGridDefinition(
-            $services->has(GridColumnRegistry::class) ? $services->get(GridColumnRegistry::class) : null,
-            new PageGridSiteFilter(new PageSiteFilterOptions($services->get(SiteRepository::class))),
+        gridResponder: new PageAdminGridResponder(
+            $services->get(PageRepository::class),
+            $services->get(SiteRepository::class),
+            $services->get(AdminViewRendererInterface::class),
+            $services->get(CsrfTokenManager::class),
+            $pageGridDefinition = new PageGridDefinition(
+                $services->has(GridColumnRegistry::class) ? $services->get(GridColumnRegistry::class) : null,
+                new PageGridSiteFilter(new PageSiteFilterOptions($services->get(SiteRepository::class))),
+                $services->get(AdminUrlGenerator::class),
+            ),
+            new PageGridDataSource($pageGrid = new PageGridRepository($services->get(\PDO::class))),
+            new GridHtmlRenderer(),
+            $services->has(GridViewStateResolver::class)
+                ? new PageGridWorkspace(
+                    $pageGridDefinition,
+                    $services->get(GridViewStateResolver::class),
+                    new GridCompactWorkspaceRenderer(),
+                    adminUrls: $services->get(AdminUrlGenerator::class),
+                )
+                : null,
+            $services->get(GridWorkspaceMutationFormsRenderer::class),
+            new GridBulkActionManifestRenderer(),
+            new PageGridMutationCoordinator(
+                new PageGridMutationHandler(
+                    $pageGridDefinition,
+                    $services->get(\Zoosper\AdminGrid\GridViewMutationService::class),
+                ),
+                $services->get(GridWorkspaceMutationGuard::class),
+            ),
+            $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
             $services->get(AdminUrlGenerator::class),
         ),
-        pageGridDataSource: new PageGridDataSource($pageGrid),
-        gridHtmlRenderer: new GridHtmlRenderer(),
-        gridMutationForms: $services->get(GridWorkspaceMutationFormsRenderer::class),
-        gridBulkManifest: new GridBulkActionManifestRenderer(),
-        pageGridMutations: new PageGridMutationCoordinator(
-            new PageGridMutationHandler(
-                $pageGridDefinition,
-                $services->get(\Zoosper\AdminGrid\GridViewMutationService::class),
-            ),
-            $services->get(GridWorkspaceMutationGuard::class),
+        previewResponder: new PageAdminPreviewResponder(
+            $services->get(SiteRepository::class),
+            $services->get(PageRenderer::class),
         ),
-        pageGridWorkspace: $services->has(GridViewStateResolver::class)
-            ? new PageGridWorkspace(
-                $pageGridDefinition,
-                $services->get(GridViewStateResolver::class),
-                new GridCompactWorkspaceRenderer(),
-                adminUrls: $services->get(AdminUrlGenerator::class),
-            )
-            : null,
         flashMessages: $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         translator: $services->has(TranslatorInterface::class) ? $services->get(TranslatorInterface::class) : null,
         adminContextTranslatorResolver: $services->has(AdminContextTranslatorResolver::class) ? $services->get(AdminContextTranslatorResolver::class) : null,

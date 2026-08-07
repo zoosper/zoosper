@@ -5,38 +5,23 @@ declare(strict_types=1);
 namespace Zoosper\Page\Admin\Controller;
 
 use RuntimeException;
-use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
-use Zoosper\AdminGrid\GridBulkActionManifestRenderer;
-use Zoosper\Grid\BulkAction\GridBulkActionManifest;
-use Zoosper\AdminGrid\GridWorkspaceRequest;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
-use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Auth\Model\AdminUser;
-use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
-use Zoosper\Grid\GridCriteria;
-use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\IdentityTranslator;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Url\AdminUrlGenerator;
-use Zoosper\Page\Admin\PageGridDataSource;
-use Zoosper\Page\Admin\PageGridDefinition;
-use Zoosper\Page\Admin\PageGridRepository;
-use Zoosper\Page\Admin\PageGridQueryState;
-use Zoosper\Page\Admin\PageGridBulkActions;
-use Zoosper\Page\Admin\PageGridMutationCoordinator;
-use Zoosper\Page\Admin\PageGridWorkspace;
 use Zoosper\Page\Admin\Save\PageSaveCoordinator;
 use Zoosper\Page\Admin\Form\PageAdminFormRenderer;
+use Zoosper\Page\Admin\PageAdminGridResponder;
+use Zoosper\Page\Admin\PageAdminPreviewResponder;
 use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
-use Zoosper\Page\Service\PageRenderer;
-use Zoosper\Site\Repository\SiteRepository;
 
 /**
  * Admin CRUD controller for CMS pages.
@@ -63,20 +48,10 @@ final readonly class PageAdminController
 {
     public function __construct(
         private SessionGuard                     $guard,
-        private CsrfTokenManager                 $csrf,
         private PageRepository                   $pages,
-        private SiteRepository                   $sites,
-        private PageRenderer                     $renderer,
         private AdminLayoutRendererInterface     $layout,
-        private AdminViewRendererInterface       $views,
-        private ?PageGridRepository              $pageGrid = null,
-        private ?PageGridDefinition              $pageGridDefinition = null,
-        private ?PageGridDataSource              $pageGridDataSource = null,
-        private ?GridHtmlRenderer                $gridHtmlRenderer = null,
-        private ?PageGridWorkspace               $pageGridWorkspace = null,
-        private ?GridWorkspaceMutationFormsRenderer $gridMutationForms = null,
-        private ?GridBulkActionManifestRenderer   $gridBulkManifest = null,
-        private ?PageGridMutationCoordinator      $pageGridMutations = null,
+        private ?PageAdminGridResponder           $gridResponder = null,
+        private ?PageAdminPreviewResponder        $previewResponder = null,
         private ?FlashMessageStoreInterface      $flashMessages = null,
         private ?TranslatorInterface             $translator = null,
         private ?AdminContextTranslatorResolver  $adminContextTranslatorResolver = null,
@@ -90,82 +65,20 @@ final readonly class PageAdminController
 
     public function index(Request $request): Response
     {
-        $user = $this->currentAdminUser();
-
-        $resolved = $this->pageGridWorkspace?->resolve(
-            $user->id,
-            PageGridQueryState::fromQuery($request->queryParams()),
-            PageGridQueryState::bookmarkId($request->queryParams()),
-        );
-        $definition = $resolved['state']->definition ?? $this->pageGridDefinition?->build();
-        $criteria = $resolved['state']->criteria ?? ($definition !== null
-            ? GridCriteria::fromValues($request->queryParams(), $definition)
-            : null);
-        $pagination = $criteria !== null
-            ? $this->pageGridDataSource?->paginate($criteria)
-            : null;
-        $tableHtml = $definition !== null && $criteria !== null && $pagination !== null
-            ? $this->gridHtmlRenderer?->renderBody($definition, $pagination, $criteria, $this->adminUrl('/pages'))
-            : null;
-        $workspaceHtml = $resolved['html'] ?? '';
-        if ($resolved !== null && $this->gridMutationForms !== null) {
-            $workspaceHtml .= $this->gridMutationForms->render(
-                $resolved['state'],
-                $this->adminUrl('/pages/grid'),
-                '_csrf',
-                $this->csrf->token(),
-            );
+        if ($this->gridResponder === null) {
+            throw new RuntimeException('Page Admin Grid responder is unavailable.');
         }
-        if ($this->gridBulkManifest !== null) {
-            $workspaceHtml .= $this->gridBulkManifest->render(
-                new GridBulkActionManifest(
-                    PageGridWorkspace::GRID_KEY,
-                    PageGridBulkActions::definitions(),
-                ),
-            );
-            $workspaceHtml = str_replace(
-                ' data-grid-bulk-action-manifest>',
-                ' data-grid-bulk-action-manifest data-csrf-token="'
-                    . htmlspecialchars($this->csrf->token(), ENT_QUOTES, 'UTF-8')
-                    . '" data-server-action="' . $this->e($this->adminUrl('/pages/bulk-action')) . '">',
-                $workspaceHtml,
-            );
-        }
-        $gridHtml = $workspaceHtml . ($tableHtml ?? '');
-        $pages = $pagination?->items ?? $this->pages->all();
-        $sites = $this->sites->allActive();
-
-        return Response::html($this->views->render(
-            'Pages',
-            'zoosper-page::admin/pages/index',
-            [
-                'pages' => $pages,
-                'pagination' => $pagination,
-                'criteria' => $criteria,
-                'sites' => $sites,
-                'gridHtml' => $gridHtml,
-                'createUrl' => $this->adminUrl('/pages/create'),
-            ],
-            $user,
-            'pages',
-        ));
-    }
-public function gridMutation(Request $request): Response
-{
-    $user = $this->currentAdminUser();
-    if ($this->pageGridMutations === null) {
-        return Response::html('Pages Grid mutations are unavailable.', 503);
+        return $this->gridResponder->index($request, $this->currentAdminUser());
     }
 
-    $result = $this->pageGridMutations->mutate(
-        $user->id,
-        new GridWorkspaceRequest('POST', $request->queryParams(), $request->form()),
-    );
-    $this->flashMessages?->success($result->message, 'pages.grid.' . $result->action);
+    public function gridMutation(Request $request): Response
+    {
+        if ($this->gridResponder === null) {
+            throw new RuntimeException('Page Admin Grid responder is unavailable.');
+        }
+        return $this->gridResponder->mutate($request, $this->currentAdminUser());
+    }
 
-    return Response::redirect($result->redirectPath);
-}
-    /** @param array<string, scalar|null> $query */
     private function adminUrl(string $path = '', array $query = []): string
     {
         if ($this->adminUrls !== null) {
@@ -309,18 +222,10 @@ public function gridMutation(Request $request): Response
     public function preview(Request $request): Response
     {
         $this->currentAdminUser();
-
-        $page = $this->pageFromRequest($request);
-        if ($page === null) {
-            return Response::html('<h1>Page not found</h1>', 404);
+        if ($this->previewResponder === null) {
+            throw new RuntimeException('Page Admin preview responder is unavailable.');
         }
-
-        $site = $this->sites->findById($page->siteId);
-        if ($site === null) {
-            return Response::html('<h1>Site not found</h1>', 404);
-        }
-
-        return Response::html($this->renderer->render($page, $site));
+        return $this->previewResponder->respond($this->pageFromRequest($request));
     }
 
     private function currentAdminUser(): AdminUser

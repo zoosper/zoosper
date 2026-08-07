@@ -8,8 +8,10 @@ test('live Page controller is wired to compact workspace instead of legacy filte
     $root=dirname(__DIR__,5);
     $controller=(string)file_get_contents($root.'/app/zoosper-page/src/Admin/Controller/PageAdminController.php');
     $factory=(string)file_get_contents($root.'/app/zoosper-page/config/controllers.php');
+    $gridResponder=(string)file_get_contents($root.'/app/zoosper-page/src/Admin/PageAdminGridResponder.php');
     $assets=require $root.'/packages/zoosper-admin-grid/config/admin_assets.php';
-    expect($controller)->toContain('PageGridWorkspace')->toContain('renderBody(');
+    expect($controller)->not->toContain('PageGridWorkspace')->not->toContain('renderBody(');
+    expect($gridResponder)->toContain('PageGridWorkspace')->toContain('renderBody(');
     expect($factory)->toContain('GridCompactWorkspaceRenderer')->toContain('PageGridSiteFilter');
     expect(array_column($assets['stylesheets'],'path'))->toContain('resources/admin/css/grid-compact-workspace.css');
     expect(array_column($assets['scripts'],'path'))->toContain('resources/admin/js/grid-compact-workspace.js');

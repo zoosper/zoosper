@@ -8,10 +8,11 @@ it('wires the canonical generator across Pages CRUD Grid bulk and export runtime
     $controller = (string) file_get_contents($root . '/app/zoosper-page/src/Admin/Controller/PageAdminController.php');
     $workspace = (string) file_get_contents($root . '/app/zoosper-page/src/Admin/PageGridWorkspace.php');
     $definition = (string) file_get_contents($root . '/app/zoosper-page/src/Admin/PageGridDefinition.php');
+    $gridResponder = (string) file_get_contents($root . '/app/zoosper-page/src/Admin/PageAdminGridResponder.php');
 
     expect($wiring)->toContain('$services->get(AdminUrlGenerator::class)')
         ->and($controller)->toContain('private ?AdminUrlGenerator')
-        ->toContain("\$this->adminUrl('/pages/bulk-action')")
+        ->and($gridResponder)->toContain("\$this->adminUrl('/pages/bulk-action')")
         ->and($workspace)->toContain("\$this->adminUrls?->url('pages') ?? '/admin/pages'")
         ->toContain("public const ACTION = '/admin/pages'")
         ->and($definition)->toContain("\$this->adminUrls?->url('pages/' . \$id . '/edit')")

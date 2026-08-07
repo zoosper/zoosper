@@ -35,8 +35,8 @@ it('confirms PageAdminController depends on AdminLayoutRendererInterface, not th
     expect((string) $param->getType())->toContain(AdminLayoutRendererInterface::class);
 });
 
-it('confirms PageAdminController depends on AdminViewRendererInterface, not the concrete AdminViewRenderer', function (): void {
-    $constructor = (new ReflectionClass(PageAdminController::class))->getConstructor();
+it('confirms Page Grid response depends on AdminViewRendererInterface, not the concrete AdminViewRenderer', function (): void {
+    $constructor = (new ReflectionClass(\Zoosper\Page\Admin\PageAdminGridResponder::class))->getConstructor();
     $param = null;
     foreach ($constructor->getParameters() as $parameter) {
         if ($parameter->getName() === 'views') {
