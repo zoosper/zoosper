@@ -49,6 +49,7 @@ return [
         // registered by ApplicationFactory) rather than requiring a new
         // registration in zoosper-core's services.php.
         new GridColumnRegistry($services->get(ModuleRegistry::class)),
+        $services->get(AdminUrlGenerator::class),
     ),
 
     LoginHistoryController::class => static fn (ServiceContainer $services): LoginHistoryController => new LoginHistoryController(
@@ -57,6 +58,7 @@ return [
         $services->get(AdminLayout::class),
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
         new GridColumnRegistry($services->get(ModuleRegistry::class)),
+        $services->get(AdminUrlGenerator::class),
     ),
 ];
 

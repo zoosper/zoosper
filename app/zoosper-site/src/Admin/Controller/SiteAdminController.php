@@ -11,6 +11,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Site\Model\Site;
 use Zoosper\Site\Repository\SiteRepository;
 
@@ -28,6 +29,7 @@ final readonly class SiteAdminController
         private CsrfTokenManager $csrf,
         private SiteRepository $sites,
         private AdminLayout $layout,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -37,7 +39,7 @@ final readonly class SiteAdminController
         $rows = $this->sites->all();
 
         $html = '<section class="card">'
-            . '<div class="admin-page-heading"><h2>Sites</h2><a class="button" href="/admin/sites/create">Create site</a></div>';
+            . '<div class="admin-page-heading"><h2>Sites</h2><a class="button" href="' . $this->adminUrl('sites/create') . '">Create site</a></div>';
 
         if ($rows === []) {
             $html .= '<p class="muted">No sites exist yet. Create your first site to start publishing.</p>';
@@ -68,7 +70,7 @@ final readonly class SiteAdminController
     {
         $user = $this->currentAdminUser();
 
-        return $this->html('Create site', $this->form('/admin/sites/create'), $user);
+        return $this->html('Create site', $this->form('' . $this->adminUrl('sites/create') . ''), $user);
     }
 
     public function store(Request $request): Response
@@ -92,9 +94,9 @@ final readonly class SiteAdminController
                 pathPrefix: $this->normalisePathPrefix((string) ($form['path_prefix'] ?? '')),
             );
 
-            return Response::redirect('/admin/sites');
+            return Response::redirect($this->adminUrl('sites'));
         } catch (RuntimeException $exception) {
-            return $this->html('Create site', $this->form('/admin/sites/create', null, $exception->getMessage(), $form), $user, 422);
+            return $this->html('Create site', $this->form('' . $this->adminUrl('sites/create') . '', null, $exception->getMessage(), $form), $user, 422);
         }
     }
 
@@ -106,7 +108,7 @@ final readonly class SiteAdminController
             return $this->html('Site not found', '<section class="card"><p class="error">Site not found.</p></section>', $user, 404);
         }
 
-        return $this->html('Edit site', $this->form('/admin/sites/edit?id=' . $site->id, $site), $user);
+        return $this->html('Edit site', $this->form($this->adminUrl('sites/edit', ['id' => $site->id]), $site), $user);
     }
 
     public function update(Request $request): Response
@@ -135,9 +137,9 @@ final readonly class SiteAdminController
                 pathPrefix: $this->normalisePathPrefix((string) ($form['path_prefix'] ?? '')),
             );
 
-            return Response::redirect('/admin/sites');
+            return Response::redirect($this->adminUrl('sites'));
         } catch (RuntimeException $exception) {
-            return $this->html('Edit site', $this->form('/admin/sites/edit?id=' . $site->id, $site, $exception->getMessage(), $form), $user, 422);
+            return $this->html('Edit site', $this->form($this->adminUrl('sites/edit', ['id' => $site->id]), $site, $exception->getMessage(), $form), $user, 422);
         }
     }
 
@@ -165,7 +167,7 @@ final readonly class SiteAdminController
             . $this->field('Store code', 'store_code', $value('store_code', $site?->storeCode ?? 'main'))
             . $this->field('Store view code', 'store_view_code', $value('store_view_code', $site?->storeViewCode ?? 'default'))
             . $this->field('Path prefix', 'path_prefix', $value('path_prefix', $site?->pathPrefix ?? ''))
-            . '<p><button type="submit">Save site</button> <a href="/admin/sites">Cancel</a></p>'
+            . '<p><button type="submit">Save site</button> <a href="' . $this->e($this->adminUrl('sites')) . '">Cancel</a></p>'
             . '</form></section>';
     }
 
@@ -205,6 +207,19 @@ final readonly class SiteAdminController
         }
 
         return $user;
+    }
+
+    /** @param array<string, scalar|null> $query */
+    private function adminUrl(string $path, array $query = []): string
+    {
+        if ($this->adminUrls !== null) {
+            return $this->adminUrls->url($path, $query);
+        }
+
+        $url = '/admin/' . ltrim($path, '/');
+        $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+
+        return $queryString === '' ? $url : $url . '?' . $queryString;
     }
 
     private function e(string $value): string

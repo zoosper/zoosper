@@ -9,6 +9,7 @@ use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Theme\Theme\ThemeRepository;
 
@@ -21,5 +22,6 @@ return [
         $services->get(SiteRepository::class),
         $services->has(AuditLogger::class) ? $services->get(AuditLogger::class) : null,
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
+        $services->get(AdminUrlGenerator::class),
     ),
 ];

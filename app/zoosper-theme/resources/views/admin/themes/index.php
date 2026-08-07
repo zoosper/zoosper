@@ -4,6 +4,7 @@
  * @var list<array<string, string>> $themes
  * @var list<\Zoosper\Site\Model\Site> $sites
  * @var string $csrfToken
+ * @var string $assignUrl
  */
 ?>
 <h2>Installed Themes</h2>
@@ -30,7 +31,7 @@
     <p>No active sites found.</p>
 <?php else: ?>
     <?php foreach ($sites as $site): ?>
-        <form method="post" action="/admin/themes/assign" class="card">
+        <form method="post" action="<?= $e($assignUrl) ?>" class="card">
             <input type="hidden" name="_csrf_token" value="<?= $e($csrfToken) ?>">
             <input type="hidden" name="site_id" value="<?= $e($site->id) ?>">
             <h3><?= $e($site->name) ?></h3>

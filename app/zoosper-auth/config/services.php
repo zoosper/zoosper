@@ -13,6 +13,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Url\AdminUrlGenerator;
 
 return [
@@ -26,7 +27,10 @@ return [
         $services->get(AdminUserRepository::class),
         $services->get(PasswordHasher::class),
     ),
-    SessionGuard::class => static fn (ServiceContainer $services): SessionGuard => new SessionGuard($services->get(AdminUserRepository::class)),
+    SessionGuard::class => static fn (ServiceContainer $services): SessionGuard => new SessionGuard(
+        $services->get(AdminUserRepository::class),
+        max(0, (int) $services->get(ConfigRepository::class)->get('admin.session_idle_timeout', 7200)),
+    ),
     CsrfTokenManager::class => static fn (ServiceContainer $services): CsrfTokenManager => new CsrfTokenManager(),
     AuthenticationMiddleware::class => static fn (ServiceContainer $services): AuthenticationMiddleware => new AuthenticationMiddleware(
         $services->get(SessionGuard::class),

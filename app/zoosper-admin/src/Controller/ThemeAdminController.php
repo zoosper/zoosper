@@ -12,6 +12,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Theme\Theme\ThemeRepository;
 
@@ -25,6 +26,7 @@ final readonly class ThemeAdminController
         private SiteRepository $sites,
         private ?AuditLogger $auditLogger = null,
         private ?AdminViewRenderer $views = null,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -40,6 +42,7 @@ final readonly class ThemeAdminController
                     'themes' => $this->themes->all(),
                     'sites' => $this->sites->allActive(),
                     'csrfToken' => $this->csrf->token(),
+                    'assignUrl' => $this->adminUrls?->url('themes/assign') ?? '/admin/themes/assign',
                 ],
                 user: $user,
                 active: 'themes',
@@ -69,11 +72,11 @@ final readonly class ThemeAdminController
             $this->sites->updateTheme($siteId, $themeCode);
             $this->auditLogger?->record($user, 'site.theme.updated', 'site', (string) $siteId, 'Updated site theme', ['theme_code' => $themeCode], $request);
 
-            return Response::redirect('/admin/themes');
+            return Response::redirect($this->adminUrls?->url('themes') ?? '/admin/themes');
         } catch (RuntimeException $exception) {
             return Response::html($this->layout->render(
                 'Theme Error',
-                '<p class="error">' . htmlspecialchars($exception->getMessage(), ENT_QUOTES, 'UTF-8') . '</p><p><a href="/admin/themes">Back to themes</a></p>',
+                '<p class="error">' . htmlspecialchars($exception->getMessage(), ENT_QUOTES, 'UTF-8') . '</p><p><a href="' . htmlspecialchars($this->adminUrls?->url('themes') ?? '/admin/themes', ENT_QUOTES, 'UTF-8') . '">Back to themes</a></p>',
                 $user,
                 'themes',
             ), 422);

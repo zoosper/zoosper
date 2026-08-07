@@ -9,6 +9,7 @@ use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Mail\Log\EmailLogRepository;
 
 /**
@@ -22,7 +23,12 @@ use Zoosper\Mail\Log\EmailLogRepository;
  */
 final readonly class EmailLogAdminController
 {
-    public function __construct(private SessionGuard $guard, private AdminLayout $layout, private EmailLogRepository $logs)
+    public function __construct(
+        private SessionGuard $guard,
+        private AdminLayout $layout,
+        private EmailLogRepository $logs,
+        private ?AdminUrlGenerator $adminUrls = null,
+    )
     {
     }
 
@@ -60,7 +66,7 @@ final readonly class EmailLogAdminController
             return Response::html($this->layout->render('Email Log Not Found', '<p>Email log not found.</p>', $user, 'mail-logs'), 404);
         }
 
-        $html = '<div class="toolbar"><a class="button secondary" href="/admin/mail-logs">Back</a></div>'
+        $html = '<div class="toolbar"><a class="button secondary" href="' . $this->e($this->adminUrls?->url('mail-logs') ?? '/admin/mail-logs') . '">Back</a></div>'
             . '<div class="notice notice-info">This log proves the configured SMTP endpoint accepted or rejected the message. It does not prove recipient inbox delivery.</div>'
             . '<div class="card"><h2>' . $this->e((string) $row['subject']) . '</h2>'
             . '<p><strong>Status:</strong> ' . $this->badge((string) $row['status']) . '</p>'
@@ -78,7 +84,7 @@ final readonly class EmailLogAdminController
 
     private function filters(array $filters): string
     {
-        return '<form method="get" action="/admin/mail-logs" class="toolbar">'
+        return '<form method="get" action="' . $this->e($this->adminUrls?->url('mail-logs') ?? '/admin/mail-logs') . '" class="toolbar">'
             . '<label>Status <select name="status"><option value="">Any</option>'
             . $this->option('sent', $filters['status'])
             . $this->option('failed', $filters['status'])

@@ -6,6 +6,7 @@ use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Site\Admin\Controller\SiteAdminController;
 use Zoosper\Site\Admin\Controller\SiteDomainAdminController;
 use Zoosper\Site\Repository\SiteDomainRepository;
@@ -17,6 +18,7 @@ return [
         $services->get(CsrfTokenManager::class),
         $services->get(SiteRepository::class),
         $services->get(AdminLayout::class),
+        $services->get(AdminUrlGenerator::class),
     ),
 
     SiteDomainAdminController::class => static fn (ServiceContainer $services): SiteDomainAdminController => new SiteDomainAdminController(
@@ -25,5 +27,6 @@ return [
         $services->get(SiteDomainRepository::class),
         $services->get(SiteRepository::class),
         $services->get(AdminLayout::class),
+        $services->get(AdminUrlGenerator::class),
     ),
 ];

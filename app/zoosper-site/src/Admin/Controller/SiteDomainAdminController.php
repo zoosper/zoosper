@@ -11,6 +11,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Site\Model\SiteDomain;
 use Zoosper\Site\Repository\SiteDomainRepository;
 use Zoosper\Site\Repository\SiteRepository;
@@ -24,6 +25,7 @@ final readonly class SiteDomainAdminController
         private SiteDomainRepository $domains,
         private SiteRepository $sites,
         private AdminLayout $layout,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -33,7 +35,7 @@ final readonly class SiteDomainAdminController
         $domains = $this->domains->all();
         $siteNames = $this->siteNames();
 
-        $html = '<section class="card"><div class="admin-page-heading"><h2>Site Domains</h2><a class="button" href="/admin/site-domains/create">Add domain</a></div>';
+        $html = '<section class="card"><div class="admin-page-heading"><h2>Site Domains</h2><a class="button" href="' . $this->adminUrl('site-domains/create') . '">Add domain</a></div>';
         if ($domains === []) {
             $html .= '<p class="muted">No site domains exist yet. Add a domain to route requests to a site.</p>';
         } else {
@@ -58,7 +60,7 @@ final readonly class SiteDomainAdminController
     {
         $user = $this->currentAdminUser();
 
-        return $this->html('Add site domain', $this->form('/admin/site-domains/create'), $user);
+        return $this->html('Add site domain', $this->form('' . $this->adminUrl('site-domains/create') . ''), $user);
     }
 
     public function store(Request $request): Response
@@ -73,9 +75,9 @@ final readonly class SiteDomainAdminController
                 isPrimary: isset($form['is_primary']),
             );
 
-            return Response::redirect('/admin/site-domains');
+            return Response::redirect($this->adminUrl('site-domains'));
         } catch (RuntimeException $exception) {
-            return $this->html('Add site domain', $this->form('/admin/site-domains/create', null, $exception->getMessage(), $form), $user, 422);
+            return $this->html('Add site domain', $this->form('' . $this->adminUrl('site-domains/create') . '', null, $exception->getMessage(), $form), $user, 422);
         }
     }
 
@@ -87,7 +89,7 @@ final readonly class SiteDomainAdminController
             return $this->html('Domain not found', '<section class="card"><p class="error">Site domain not found.</p></section>', $user, 404);
         }
 
-        return $this->html('Edit site domain', $this->form('/admin/site-domains/edit?id=' . $domain->id, $domain), $user);
+        return $this->html('Edit site domain', $this->form($this->adminUrl('site-domains/edit', ['id' => $domain->id]), $domain), $user);
     }
 
     public function update(Request $request): Response
@@ -107,9 +109,9 @@ final readonly class SiteDomainAdminController
                 isPrimary: isset($form['is_primary']),
             );
 
-            return Response::redirect('/admin/site-domains');
+            return Response::redirect($this->adminUrl('site-domains'));
         } catch (RuntimeException $exception) {
-            return $this->html('Edit site domain', $this->form('/admin/site-domains/edit?id=' . $domain->id, $domain, $exception->getMessage(), $form), $user, 422);
+            return $this->html('Edit site domain', $this->form($this->adminUrl('site-domains/edit', ['id' => $domain->id]), $domain, $exception->getMessage(), $form), $user, 422);
         }
     }
 
@@ -128,7 +130,7 @@ final readonly class SiteDomainAdminController
             . '<label>Site<select name="site_id">' . $this->siteOptions($selectedSiteId) . '</select></label>'
             . '<label>Host<input type="text" name="host" value="' . $host . '"></label>'
             . '<label><input type="checkbox" name="is_primary" value="1"' . $checked . '> Primary domain</label>'
-            . '<p><button type="submit">Save domain</button> <a href="/admin/site-domains">Cancel</a></p>'
+            . '<p><button type="submit">Save domain</button> <a href="' . $this->e($this->adminUrl('site-domains')) . '">Cancel</a></p>'
             . '</form></section>';
     }
 
@@ -195,6 +197,19 @@ final readonly class SiteDomainAdminController
         }
 
         return $host;
+    }
+
+    /** @param array<string, scalar|null> $query */
+    private function adminUrl(string $path, array $query = []): string
+    {
+        if ($this->adminUrls !== null) {
+            return $this->adminUrls->url($path, $query);
+        }
+
+        $url = '/admin/' . ltrim($path, '/');
+        $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+
+        return $queryString === '' ? $url : $url . '?' . $queryString;
     }
 
     private function e(string $value): string

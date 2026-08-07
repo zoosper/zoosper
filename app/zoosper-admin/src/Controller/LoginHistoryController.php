@@ -16,6 +16,7 @@ use Zoosper\Grid\GridDefinition;
 use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 
 /**
  * Phase B2: index() now runs the base LoginHistoryGrid definition through
@@ -33,6 +34,7 @@ final readonly class LoginHistoryController
         private AdminLayout $layout,
         private ?AdminViewRenderer $views = null,
         private ?GridColumnRegistry $columnRegistry = null,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -46,7 +48,7 @@ final readonly class LoginHistoryController
 
         $criteria = GridCriteria::fromValues($this->queryValues($request, $definition), $definition);
         $result = $this->history->paginate($criteria);
-        $gridHtml = (new GridHtmlRenderer())->render($definition, $result, $criteria, '/admin/login-history');
+        $gridHtml = (new GridHtmlRenderer())->render($definition, $result, $criteria, $this->adminUrls?->url('login-history') ?? '/admin/login-history');
 
         if ($this->views !== null) {
             return Response::html($this->views->render(

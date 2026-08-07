@@ -31,12 +31,16 @@ final class SessionGuard
 {
     private const SESSION_USER_KEY = 'admin_user_id';
     private const SESSION_PENDING_2FA_KEY = 'pending_2fa_user_id';
+    private const SESSION_LAST_ACTIVITY_KEY = 'admin_last_activity_at';
 
     /** Per-request cache of the resolved user (false = not yet resolved). */
     private AdminUser|false|null $cachedUser = false;
 
-    public function __construct(private readonly AdminUserRepository $users)
-    {
+    public function __construct(
+        private readonly AdminUserRepository $users,
+        private readonly int $idleTimeoutSeconds = 7200,
+        private readonly ?\Closure $clock = null,
+    ) {
     }
 
     /**
@@ -47,6 +51,7 @@ final class SessionGuard
         session_regenerate_id(true);
         unset($_SESSION[self::SESSION_PENDING_2FA_KEY]);
         $_SESSION[self::SESSION_USER_KEY] = $user->id;
+        $this->touch();
 
         // Prime the per-request cache; no need to re-query immediately.
         $this->cachedUser = $user;
@@ -69,12 +74,20 @@ final class SessionGuard
      */
     public function user(): ?AdminUser
     {
+        if ($this->expireIfIdle()) {
+            return null;
+        }
+
         if ($this->cachedUser !== false) {
+            $this->touch();
             return $this->cachedUser;
         }
 
         $id = $_SESSION[self::SESSION_USER_KEY] ?? null;
         $this->cachedUser = is_numeric($id) ? $this->users->findById((int) $id) : null;
+        if ($this->cachedUser !== null) {
+            $this->touch();
+        }
 
         return $this->cachedUser;
     }
@@ -101,6 +114,7 @@ final class SessionGuard
         session_regenerate_id(true);
         unset($_SESSION[self::SESSION_USER_KEY]);
         $_SESSION[self::SESSION_PENDING_2FA_KEY] = $user->id;
+        $this->touch();
         $this->cachedUser = null;
     }
 
@@ -109,7 +123,14 @@ final class SessionGuard
      */
     public function pendingTwoFactorUserId(): ?int
     {
+        if ($this->expireIfIdle()) {
+            return null;
+        }
+
         $id = $_SESSION[self::SESSION_PENDING_2FA_KEY] ?? null;
+        if (is_numeric($id)) {
+            $this->touch();
+        }
 
         return is_numeric($id) ? (int) $id : null;
     }
@@ -138,5 +159,41 @@ final class SessionGuard
     public function clearPendingTwoFactorChallenge(): void
     {
         unset($_SESSION[self::SESSION_PENDING_2FA_KEY]);
+        if (!isset($_SESSION[self::SESSION_USER_KEY])) {
+            unset($_SESSION[self::SESSION_LAST_ACTIVITY_KEY]);
+        }
+    }
+
+    private function expireIfIdle(): bool
+    {
+        if ($this->idleTimeoutSeconds === 0) {
+            return false;
+        }
+
+        $lastActivity = $_SESSION[self::SESSION_LAST_ACTIVITY_KEY] ?? null;
+        if (!is_numeric($lastActivity) || $this->now() - (int) $lastActivity <= $this->idleTimeoutSeconds) {
+            return false;
+        }
+
+        unset(
+            $_SESSION[self::SESSION_USER_KEY],
+            $_SESSION[self::SESSION_PENDING_2FA_KEY],
+            $_SESSION[self::SESSION_LAST_ACTIVITY_KEY],
+        );
+        $this->cachedUser = null;
+
+        return true;
+    }
+
+    private function touch(): void
+    {
+        if ($this->idleTimeoutSeconds > 0) {
+            $_SESSION[self::SESSION_LAST_ACTIVITY_KEY] = $this->now();
+        }
+    }
+
+    private function now(): int
+    {
+        return $this->clock !== null ? (int) ($this->clock)() : time();
     }
 }

@@ -16,6 +16,7 @@ use Zoosper\Grid\GridDefinition;
 use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 
 /**
  * Phase B2: index() now runs the base AuditLogGrid definition through
@@ -32,6 +33,7 @@ final readonly class AuditLogController
         private AdminLayout $layout,
         private ?AdminViewRenderer $views = null,
         private ?GridColumnRegistry $columnRegistry = null,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -45,7 +47,7 @@ final readonly class AuditLogController
 
         $criteria = GridCriteria::fromValues($this->queryValues($request, $definition), $definition);
         $result = $this->logs->paginate($criteria);
-        $gridHtml = (new GridHtmlRenderer())->render($definition, $result, $criteria, '/admin/audit-log');
+        $gridHtml = (new GridHtmlRenderer())->render($definition, $result, $criteria, $this->adminUrls?->url('audit-log') ?? '/admin/audit-log');
 
         if ($this->views !== null) {
             return Response::html($this->views->render(
