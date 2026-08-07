@@ -84,6 +84,27 @@ return [[
             'default' => 300,
             'read_only' => true,
             'sort_order' => 700,
+        ], [
+            'path' => 'rate_limit.enabled',
+            'label' => 'Authentication rate limiting enabled',
+            'type' => 'text',
+            'default' => false,
+            'read_only' => true,
+            'sort_order' => 800,
+        ], [
+            'path' => 'rate_limit.admin_two_factor.max_attempts',
+            'label' => 'Two-factor maximum attempts',
+            'type' => 'text',
+            'default' => 5,
+            'read_only' => true,
+            'sort_order' => 900,
+        ], [
+            'path' => 'rate_limit.admin_two_factor.window_seconds',
+            'label' => 'Two-factor attempt window (seconds)',
+            'type' => 'text',
+            'default' => 300,
+            'read_only' => true,
+            'sort_order' => 1000,
         ]],
     ], [
         'id' => 'routing',

@@ -8,6 +8,8 @@ use Zoosper\Auth\Http\CsrfMiddleware;
 use Zoosper\Auth\Http\RateLimitReportOnlyAdminMiddleware;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
+use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiter;
+use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Service\AuthService;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\PasswordHasher;
@@ -39,6 +41,10 @@ return [
     CsrfMiddleware::class => static fn (ServiceContainer $services): CsrfMiddleware => new CsrfMiddleware(
         $services->get(CsrfTokenManager::class),
         $services->get(AdminUrlGenerator::class)->basePath(),
+    ),
+    AdminAuthenticationRateLimiterInterface::class => static fn (ServiceContainer $services): AdminAuthenticationRateLimiterInterface => new AdminAuthenticationRateLimiter(
+        $services->get(PDO::class),
+        dirname(__DIR__, 3),
     ),
     RateLimitReportOnlyAdminMiddleware::class => static fn (ServiceContainer $services): RateLimitReportOnlyAdminMiddleware => new RateLimitReportOnlyAdminMiddleware(
         $services->get(PDO::class),

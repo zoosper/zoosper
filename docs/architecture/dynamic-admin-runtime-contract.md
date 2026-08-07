@@ -29,4 +29,7 @@ The current Admin login limiter remains disabled by default and report-only when
 Login throttling remains disabled by default. When enabled, `report_only` records decisions and always continues; `enforce` returns HTTP 429 with `Retry-After` and `Cache-Control: no-store` after the configured database-backed policy limit. The response is generic and does not expose account existence, submitted identity, counters or hashes.
 
 A stable operator-provided `RATE_LIMIT_IDENTITY_SALT` is mandatory whenever rate limiting is enabled. Maximum attempts are bounded to 1..100 and the window is bounded to 1..86400 seconds.
+## Authentication rate-limit lifecycle
+
+Successful password authentication resets only the `admin.login` bucket. Two-factor verification uses the separate `admin.two_factor` policy keyed from the pending Admin user and canonical client IP; failed verification accumulates independently, enforce-mode denial returns HTTP 429, and successful completion resets only the Two Factor bucket. Controllers consume the Auth-owned lifecycle interface rather than the database store.
 

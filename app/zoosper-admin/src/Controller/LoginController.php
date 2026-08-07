@@ -6,6 +6,7 @@ namespace Zoosper\Admin\Controller;
 
 use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Auth\Model\AdminUser;
+use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Service\AuthService;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
@@ -56,6 +57,7 @@ final readonly class LoginController
         private ?AdminTwoFactorEnrollmentService $twoFactorEnrollment = null,
         private ?TwoFactorChallengeService $twoFactorChallenge = null,
         private ?AdminUrlGenerator $adminUrls = null,
+        private ?AdminAuthenticationRateLimiterInterface $rateLimiter = null,
     ) {
     }
 
@@ -85,6 +87,7 @@ final readonly class LoginController
             return Response::html($this->page($this->form('Invalid email or password.', $email)), 422);
         }
 
+        $this->rateLimiter?->resetPasswordLogin($user->email, $request->clientIp());
         $this->csrf->rotate();
 
         // Phase 1.107: enrolled users must pass a login-time 2FA challenge BEFORE

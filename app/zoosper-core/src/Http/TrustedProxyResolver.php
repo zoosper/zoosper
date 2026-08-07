@@ -14,8 +14,11 @@ final readonly class TrustedProxyResolver
 
     public static function fromEnvironment(): self
     {
-        $raw = $_ENV['TRUSTED_PROXIES'] ?? getenv('TRUSTED_PROXIES');
-        $raw = trim($raw === false ? '' : (string) $raw);
+        $environmentValue = trim((string) ($_ENV['TRUSTED_PROXIES'] ?? ''));
+        $processValue = getenv('TRUSTED_PROXIES');
+        $raw = $environmentValue !== ''
+            ? $environmentValue
+            : trim($processValue === false ? '' : (string) $processValue);
         $trusted = array_values(array_filter(
             array_map('trim', explode(',', $raw)),
             static fn (string $value): bool => filter_var($value, FILTER_VALIDATE_IP) !== false,

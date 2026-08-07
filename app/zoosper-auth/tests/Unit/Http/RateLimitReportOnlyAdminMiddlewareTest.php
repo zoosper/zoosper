@@ -142,7 +142,7 @@ it('passes through untouched for any path other than the admin login POST', func
     expect(is_file($basePath . '/var/reports/rate-limit-events.jsonl'))->toBeFalse();
 });
 
-it('does not touch the request when enabled but mode is enforce (not yet built, per the ADR)', function (): void {
+it('leaves enforce mode to the dedicated enforcement branch', function (): void {
     $basePath = rateLimitMiddlewareTestBasePath([
         'enabled' => true,
         'mode' => 'enforce',

@@ -10,6 +10,7 @@ use Zoosper\Admin\Controller\LoginController;
 use Zoosper\Admin\Controller\LoginHistoryController;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
+use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Service\AuthService;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
@@ -31,6 +32,7 @@ return [
         $services->has(AdminTwoFactorEnrollmentService::class) ? $services->get(AdminTwoFactorEnrollmentService::class) : null,
         $services->has(TwoFactorChallengeService::class) ? $services->get(TwoFactorChallengeService::class) : null,
         $services->get(AdminUrlGenerator::class),
+        $services->has(AdminAuthenticationRateLimiterInterface::class) ? $services->get(AdminAuthenticationRateLimiterInterface::class) : null,
     ),
 
     DashboardController::class => static fn (ServiceContainer $services): DashboardController => new DashboardController(

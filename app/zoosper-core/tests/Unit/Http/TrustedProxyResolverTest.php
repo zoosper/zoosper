@@ -35,3 +35,29 @@ it('supports ipv6 peers and rejects malformed addresses', function (): void {
         ->toBe('2001:db8::20')
         ->and($resolver->clientIp(['REMOTE_ADDR' => 'not-an-ip']))->toBeNull();
 });
+
+it('uses the process value when dotenv exposes only an empty environment placeholder', function (): void {
+    $originalEnvironment = $_ENV['TRUSTED_PROXIES'] ?? null;
+    $hadEnvironment = array_key_exists('TRUSTED_PROXIES', $_ENV);
+    $originalProcess = getenv('TRUSTED_PROXIES');
+
+    try {
+        $_ENV['TRUSTED_PROXIES'] = '';
+        putenv('TRUSTED_PROXIES=10.0.0.10');
+        $resolver = TrustedProxyResolver::fromEnvironment();
+
+        expect($resolver->isHttps([
+            'REMOTE_ADDR' => '10.0.0.10',
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+        ]))->toBeTrue();
+    } finally {
+        if ($hadEnvironment) {
+            $_ENV['TRUSTED_PROXIES'] = $originalEnvironment;
+        } else {
+            unset($_ENV['TRUSTED_PROXIES']);
+        }
+        $originalProcess === false
+            ? putenv('TRUSTED_PROXIES')
+            : putenv('TRUSTED_PROXIES=' . $originalProcess);
+    }
+});

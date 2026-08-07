@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\TwoFactor\Controller;
 
 use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
+use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
@@ -45,6 +46,7 @@ final readonly class AdminTwoFactorChallengeController
         private AdminUserRepository $users,
         private string $adminBasePath = '/admin',
         private ?LoginHistoryRecorderInterface $loginHistory = null,
+        private ?AdminAuthenticationRateLimiterInterface $rateLimiter = null,
     ) {
     }
 
@@ -74,6 +76,15 @@ final readonly class AdminTwoFactorChallengeController
         $userId = $this->guard->pendingTwoFactorUserId();
         if ($userId === null) {
             return Response::redirect($this->path('/login'));
+        }
+
+        $decision = $this->rateLimiter?->checkTwoFactor($userId, $request->clientIp());
+        if ($decision !== null && !$decision->allowed) {
+            return Response::raw(
+                '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Too many requests</title></head><body><main><h1>Too many verification attempts</h1><p>Please wait before trying again.</p></main></body></html>',
+                429,
+                ['Content-Type' => 'text/html; charset=utf-8', 'Retry-After' => (string) max(1, $decision->retryAfterSeconds), 'Cache-Control' => 'no-store'],
+            );
         }
 
         $token = (string) ($_SESSION[self::TOKEN_KEY] ?? '');
@@ -109,6 +120,7 @@ final readonly class AdminTwoFactorChallengeController
         }
 
         unset($_SESSION[self::TOKEN_KEY]);
+        $this->rateLimiter?->resetTwoFactor($user->id, $request->clientIp());
         $this->csrf->rotate();
 
         // Phase 1.113: THIS is the fix — a login that required 2FA now records
