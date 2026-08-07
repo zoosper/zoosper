@@ -33,7 +33,7 @@ final readonly class PageCsvExportController
         try {
             $result = $this->exports->export(
                 $user->id,
-                new GridWorkspaceRequest('GET', $_GET, []),
+                new GridWorkspaceRequest('GET', $request->queryParams(), []),
             );
             return Response::raw("\xEF\xBB\xBF" . $result->csv, 200, $result->headers());
         } catch (Throwable) {

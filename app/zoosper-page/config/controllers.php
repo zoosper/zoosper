@@ -21,6 +21,7 @@ use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Page\Admin\PageGridSiteFilter;
 use Zoosper\Page\Admin\PageGridWorkspace;
 use Zoosper\Page\Admin\Save\PageSaveCoordinator;
+use Zoosper\Page\Admin\Form\PageAdminFormRenderer;
 use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
 use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
 use Zoosper\Page\Admin\PageSiteFilterOptions;
@@ -131,10 +132,19 @@ return [
             )
             : null,
         flashMessages: $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
-        config: $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
-        contentEditor: $services->has(ContentEditorInterface::class) ? $services->get(ContentEditorInterface::class) : null,
         translator: $services->has(TranslatorInterface::class) ? $services->get(TranslatorInterface::class) : null,
         adminContextTranslatorResolver: $services->has(AdminContextTranslatorResolver::class) ? $services->get(AdminContextTranslatorResolver::class) : null,
+        formRenderer: new PageAdminFormRenderer(
+            $services->get(CsrfTokenManager::class),
+            $services->get(SiteRepository::class),
+            $services->has(ContentEditorInterface::class) ? $services->get(ContentEditorInterface::class) : null,
+            null,
+            null,
+            null,
+            $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
+            $services->get(AdminUrlGenerator::class),
+            dirname(__DIR__, 3),
+        ),
         pageSaver: new PageSaveCoordinator(
             $services->get(PageRepository::class),
             $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,

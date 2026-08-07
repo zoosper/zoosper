@@ -5,22 +5,16 @@ declare(strict_types=1);
 namespace Zoosper\Page\Admin\Controller;
 
 use RuntimeException;
-use Zoosper\Admin\Editor\ContentEditorInterface;
 use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
 use Zoosper\AdminGrid\GridBulkActionManifestRenderer;
 use Zoosper\Grid\BulkAction\GridBulkActionManifest;
 use Zoosper\AdminGrid\GridWorkspaceRequest;
-use Zoosper\Admin\Form\AdminFormConfigAggregator;
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
-use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Form\AdminFormConfigProviderFactory;
-use Zoosper\Core\Form\AdminFormProviderRegistry;
-use Zoosper\Core\Form\AdminFormRenderer;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\Core\Http\Request;
@@ -29,10 +23,6 @@ use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\IdentityTranslator;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Url\AdminUrlGenerator;
-use Zoosper\Page\Admin\Form\PageContentSectionProvider;
-use Zoosper\Page\Admin\Form\PageDetailsSectionProvider;
-use Zoosper\Page\Admin\Form\PagePublishingSectionProvider;
-use Zoosper\Page\Admin\Form\PageSeoSectionProvider;
 use Zoosper\Page\Admin\PageGridDataSource;
 use Zoosper\Page\Admin\PageGridDefinition;
 use Zoosper\Page\Admin\PageGridRepository;
@@ -41,6 +31,7 @@ use Zoosper\Page\Admin\PageGridBulkActions;
 use Zoosper\Page\Admin\PageGridMutationCoordinator;
 use Zoosper\Page\Admin\PageGridWorkspace;
 use Zoosper\Page\Admin\Save\PageSaveCoordinator;
+use Zoosper\Page\Admin\Form\PageAdminFormRenderer;
 use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
@@ -87,13 +78,9 @@ final readonly class PageAdminController
         private ?GridBulkActionManifestRenderer   $gridBulkManifest = null,
         private ?PageGridMutationCoordinator      $pageGridMutations = null,
         private ?FlashMessageStoreInterface      $flashMessages = null,
-        private ?ConfigRepository                $config = null,
-        private ?ContentEditorInterface          $contentEditor = null,
         private ?TranslatorInterface             $translator = null,
         private ?AdminContextTranslatorResolver  $adminContextTranslatorResolver = null,
-        private ?AdminFormProviderRegistry       $pageFormSections = null,
-        private ?AdminFormRenderer               $adminFormRenderer = null,
-        private ?AdminFormConfigProviderFactory  $adminFormConfigProviderFactory = null,
+        private ?PageAdminFormRenderer           $formRenderer = null,
         private ?PageSaveCoordinator              $pageSaver = null,
         private ?PagePublicationCoordinator       $publication = null,
         private ?AdminUrlGenerator                 $adminUrls = null,
@@ -107,12 +94,12 @@ final readonly class PageAdminController
 
         $resolved = $this->pageGridWorkspace?->resolve(
             $user->id,
-            PageGridQueryState::fromQuery($_GET),
-            PageGridQueryState::bookmarkId($_GET),
+            PageGridQueryState::fromQuery($request->queryParams()),
+            PageGridQueryState::bookmarkId($request->queryParams()),
         );
         $definition = $resolved['state']->definition ?? $this->pageGridDefinition?->build();
         $criteria = $resolved['state']->criteria ?? ($definition !== null
-            ? GridCriteria::fromValues($_GET, $definition)
+            ? GridCriteria::fromValues($request->queryParams(), $definition)
             : null);
         $pagination = $criteria !== null
             ? $this->pageGridDataSource?->paginate($criteria)
@@ -172,7 +159,7 @@ public function gridMutation(Request $request): Response
 
     $result = $this->pageGridMutations->mutate(
         $user->id,
-        new GridWorkspaceRequest('POST', $_GET, $request->form()),
+        new GridWorkspaceRequest('POST', $request->queryParams(), $request->form()),
     );
     $this->flashMessages?->success($result->message, 'pages.grid.' . $result->action);
 
@@ -202,97 +189,16 @@ public function gridMutation(Request $request): Response
     {
         $this->currentAdminUser();
 
-        return $this->html('Create page', $this->form($this->adminUrl('/pages/create')));
+        return $this->html('Create page', $this->renderForm($this->adminUrl('/pages/create')));
     }
 
     /** @param array<string, mixed> $submitted */
-    private function form(string $action, ?Page $page = null, ?string $error = null, array $submitted = []): string
+    private function renderForm(string $action, ?Page $page = null, ?string $error = null, array $submitted = []): string
     {
-        $token = $this->csrf->token();
-        $siteId = (int)($submitted['site_id'] ?? $page?->siteId ?? 0);
-        $content = $this->e((string)($submitted['content'] ?? $page?->content ?? ''));
-        $contentJson = $this->e((string)($submitted['content_json'] ?? $page?->contentJson ?? ''));
-        $editorHtml = $this->renderContentEditor($content, $page, $contentJson);
-        $errorHtml = $error !== null ? '<p class="error">' . $this->e($error) . '</p>' : '';
-
-        $context = [
-            'page' => $page,
-            'submitted' => $submitted,
-            'siteOptions' => $this->siteOptions($siteId),
-            'title' => $this->e((string)($submitted['title'] ?? $page?->title ?? '')),
-            'slug' => $this->e((string)($submitted['slug'] ?? $page?->slug ?? '')),
-            'editorHtml' => $editorHtml,
-            'contentJson' => $contentJson,
-            'metaTitle' => $this->e((string)($submitted['meta_title'] ?? $page?->metaTitle ?? '')),
-            'metaDescription' => $this->e((string)($submitted['meta_description'] ?? $page?->metaDescription ?? '')),
-            'metaKeywords' => $this->e((string)($submitted['meta_keywords'] ?? $page?->metaKeywords ?? '')),
-            'canonicalUrl' => $this->e((string)($submitted['canonical_url'] ?? $page?->canonicalUrl ?? '')),
-            'publishChecked' => (isset($submitted['publish']) || $page?->isPublished()) ? ' checked' : '',
-            'backUrl' => $this->e($this->adminUrl('/pages')),
-        ];
-
-        $registry = $this->pageFormSections ?? $this->defaultPageFormSectionRegistry();
-        $renderer = $this->adminFormRenderer ?? new AdminFormRenderer();
-        $sections = $registry->sectionsFor('page.form', $context);
-
-        return $errorHtml . $renderer->render($action, $token, $sections);
-    }
-
-    private function e(string $value): string
-    {
-        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-    }
-
-    private function renderContentEditor(string $escapedContent, ?Page $page = null, string $escapedContentJson = ''): string
-    {
-        $content = html_entity_decode($escapedContent, ENT_QUOTES, 'UTF-8');
-        $contentJson = html_entity_decode($escapedContentJson, ENT_QUOTES, 'UTF-8');
-
-        if ($this->contentEditor === null) {
-            return '<input type="hidden" name="content_json" value="' . $escapedContentJson . '">'
-                . '<textarea name="content" rows="14" required>' . $escapedContent . '</textarea>';
+        if ($this->formRenderer === null) {
+            throw new RuntimeException('Page Admin form renderer is unavailable.');
         }
-
-        return $this->contentEditor->render('content', $content, [
-            'label' => 'Content',
-            'rows' => 14,
-            'required' => true,
-            'page' => $page,
-            'content_json' => $contentJson,
-        ]);
-    }
-
-    private function siteOptions(int $selectedSiteId): string
-    {
-        $html = '';
-        foreach ($this->sites->allActive() as $site) {
-            $selected = $site->id === $selectedSiteId ? ' selected' : '';
-            $label = $this->e($site->name . ' (' . $site->code . ')');
-            $html .= '<option value="' . $site->id . '"' . $selected . '>' . $label . '</option>';
-        }
-
-        return $html;
-    }
-
-    private function defaultPageFormSectionRegistry(): AdminFormProviderRegistry
-    {
-        $factory = $this->adminFormConfigProviderFactory ?? new AdminFormConfigProviderFactory();
-        $rootConfig = $this->config?->array('admin_forms') ?? [];
-        $moduleConfig = (new AdminFormConfigAggregator($this->projectRootPath()))->aggregate($rootConfig);
-
-        return $factory->create($moduleConfig, [
-            'page.form' => [
-                PageDetailsSectionProvider::class,
-                PageContentSectionProvider::class,
-                PageSeoSectionProvider::class,
-                PagePublishingSectionProvider::class,
-            ],
-        ]);
-    }
-
-    private function projectRootPath(): string
-    {
-        return dirname(__DIR__, 5);
+        return $this->formRenderer->render($action, $page, $error, $submitted);
     }
 
     public function create(Request $request): Response
@@ -306,7 +212,7 @@ public function gridMutation(Request $request): Response
         if (!$result->successful) {
             $key = $result->processorRejected ? 'page.processor_create_failed' : 'page.create_failed';
             $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), $key);
-            return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $result->error, submitted: $form), 422);
+            return $this->html('Create page', $this->renderForm($this->adminUrl('/pages/create'), error: $result->error, submitted: $form), 422);
         }
         $this->flashMessages?->success($this->t('Page created successfully.'), 'page.created');
         return Response::redirect($this->adminUrl('/pages/' . $result->pageId . '/edit'));
@@ -338,7 +244,7 @@ public function gridMutation(Request $request): Response
             return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
         }
 
-        return $this->html('Edit page', $this->form($this->adminUrl('/pages/' . $page->id . '/edit'), $page));
+        return $this->html('Edit page', $this->renderForm($this->adminUrl('/pages/' . $page->id . '/edit'), $page));
     }
 
     private function pageFromRequest(Request $request): ?Page
@@ -364,7 +270,7 @@ public function gridMutation(Request $request): Response
         if (!$result->successful) {
             $key = $result->processorRejected ? 'page.processor_save_failed' : 'page.save_failed';
             $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), $key);
-            return $this->html('Edit page', $this->form($this->adminUrl('/pages/' . $page->id . '/edit'), $page, $result->error, $form), 422);
+            return $this->html('Edit page', $this->renderForm($this->adminUrl('/pages/' . $page->id . '/edit'), $page, $result->error, $form), 422);
         }
         $this->flashMessages?->success($this->t('Page saved successfully.'), 'page.saved');
         return Response::redirect($this->adminUrl('/pages/' . $page->id . '/edit'));

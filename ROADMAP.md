@@ -882,3 +882,7 @@ Page edit, preview, publish and unpublish actions now expose constrained paramet
 
 Page create/update normalisation, extensible form processing, entity-save lifecycle execution and persistence now run through a Page-owned save coordinator. Single-Page publish/unpublish mutations and events run through a Page-owned publication coordinator. The Admin controller remains responsible for HTTP responses, flash presentation and redirects.
 
+## Phase 9FO form and request-query closure
+
+Page Admin form context, Site options, content-editor fallback, SEO fields, structured-content fields, CSRF token and extensible `page.form` section rendering now live in a Page-owned form renderer. Page Grid reads query state from the immutable Request query map rather than `$_GET`.
+
