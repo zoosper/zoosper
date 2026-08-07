@@ -9,7 +9,7 @@ it('publishes the environment-owned session timeout as read-only security metada
     $security = array_values(array_filter($groups, static fn (array $group): bool => $group['id'] === 'security'));
 
     expect($security)->toHaveCount(1)
-        ->and($security[0]['settings'])->toHaveCount(5)
+        ->and($security[0]['settings'])->toHaveCount(7)
         ->and($security[0]['settings'][0]['path'])->toBe('admin.session_idle_timeout')
         ->and($security[0]['settings'][0]['default'])->toBe(7200)
         ->and($security[0]['settings'][0]['read_only'])->toBeTrue()
@@ -20,5 +20,9 @@ it('publishes the environment-owned session timeout as read-only security metada
         ->and($security[0]['settings'][3]['path'])->toBe('security.trusted_proxies')
         ->and($security[0]['settings'][3]['read_only'])->toBeTrue()
         ->and($security[0]['settings'][4]['path'])->toBe('rate_limit.mode')
-        ->and($security[0]['settings'][4]['read_only'])->toBeTrue();
+        ->and($security[0]['settings'][4]['read_only'])->toBeTrue()
+        ->and($security[0]['settings'][5]['path'])->toBe('rate_limit.admin_login.max_attempts')
+        ->and($security[0]['settings'][5]['read_only'])->toBeTrue()
+        ->and($security[0]['settings'][6]['path'])->toBe('rate_limit.admin_login.window_seconds')
+        ->and($security[0]['settings'][6]['read_only'])->toBeTrue();
 });

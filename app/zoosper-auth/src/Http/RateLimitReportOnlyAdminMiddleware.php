@@ -72,7 +72,7 @@ final class RateLimitReportOnlyAdminMiddleware implements RouteMiddleware
         }
 
         $config = $this->loadRuntimeConfig();
-        if (!$config->enabled || !$config->isReportOnly()) {
+        if (!$config->enabled) {
             return $next($request);
         }
 
@@ -104,15 +104,34 @@ final class RateLimitReportOnlyAdminMiddleware implements RouteMiddleware
         $store = new DatabaseRateLimitStore($this->pdo);
         $store->ensureSchema();
 
-        $middleware = new ReportOnlyRateLimitMiddleware(
-            new RateLimitGuard(
-                new StaticRateLimitPolicyResolver($config->policies),
-                new RateLimitEnforcer($store),
-            ),
-            new FileRateLimitReportSink($this->basePath . '/' . ltrim($config->reportPath, '/')),
+        $guard = new RateLimitGuard(
+            new StaticRateLimitPolicyResolver($config->policies),
+            new RateLimitEnforcer($store),
         );
 
-        return $middleware->handle($rateLimitContext, static fn (): Response => $next($request));
+        if ($config->isReportOnly()) {
+            return (new ReportOnlyRateLimitMiddleware(
+                $guard,
+                new FileRateLimitReportSink($this->basePath . '/' . ltrim($config->reportPath, '/')),
+            ))->handle($rateLimitContext, static fn (): Response => $next($request));
+        }
+
+        $decision = $guard->check($rateLimitContext);
+        if ($decision->allowed) {
+            return $next($request);
+        }
+
+        $retryAfter = max(1, $decision->retryAfterSeconds);
+        return Response::raw(
+            '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Too many requests</title></head>'
+            . '<body><main><h1>Too many sign-in attempts</h1><p>Please wait before trying again.</p></main></body></html>',
+            429,
+            [
+                'Content-Type' => 'text/html; charset=utf-8',
+                'Retry-After' => (string) $retryAfter,
+                'Cache-Control' => 'no-store',
+            ],
+        );
     }
 
     private function loadRuntimeConfig(): RateLimitRuntimeConfig

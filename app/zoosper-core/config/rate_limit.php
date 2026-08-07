@@ -34,9 +34,15 @@ $env = static function (string $key, mixed $default = null): mixed {
     return $value !== false && $value !== '' ? $value : $default;
 };
 
+$enabled = filter_var($env('RATE_LIMIT_ENABLED', false), FILTER_VALIDATE_BOOLEAN);
+$mode = strtolower(trim((string) $env('RATE_LIMIT_MODE', 'report_only')));
+$mode = in_array($mode, ['report_only', 'enforce'], true) ? $mode : 'report_only';
+$loginMaxAttempts = max(1, min(100, (int) $env('RATE_LIMIT_ADMIN_LOGIN_MAX_ATTEMPTS', 5)));
+$loginWindowSeconds = max(1, min(86400, (int) $env('RATE_LIMIT_ADMIN_LOGIN_WINDOW_SECONDS', 300)));
+
 return [
-    'enabled' => false,
-    'mode' => 'report_only',
+    'enabled' => $enabled,
+    'mode' => $mode,
     'report_path' => 'var/reports/rate-limit-events.jsonl',
     /*
      * RATE_LIMIT_IDENTITY_SALT should be a strong, random secret before
@@ -50,8 +56,8 @@ return [
     'policies' => [
         'admin.login' => [
             'scope' => 'admin',
-            'max_attempts' => 5,
-            'window_seconds' => 300,
+            'max_attempts' => $loginMaxAttempts,
+            'window_seconds' => $loginWindowSeconds,
         ],
         // Example future policy shape:
         // 'admin.login' => [

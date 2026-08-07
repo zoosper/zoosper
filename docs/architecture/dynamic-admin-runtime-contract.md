@@ -24,4 +24,9 @@ The HTTP `Application` is the sole production web-session bootstrap. It enables 
 Forwarded scheme and client-address headers are accepted only when `REMOTE_ADDR` is listed in the comma-separated `TRUSTED_PROXIES` environment variable. Direct requests use the validated peer address. Untrusted peers cannot force HTTPS detection or replace the client identity used by security logging and rate-limit hashing.
 
 The current Admin login limiter remains disabled by default and report-only when enabled. Login email identity is normalised to lowercase before opaque salted hashing.
+## Admin login rate-limit enforcement
+
+Login throttling remains disabled by default. When enabled, `report_only` records decisions and always continues; `enforce` returns HTTP 429 with `Retry-After` and `Cache-Control: no-store` after the configured database-backed policy limit. The response is generic and does not expose account existence, submitted identity, counters or hashes.
+
+A stable operator-provided `RATE_LIMIT_IDENTITY_SALT` is mandatory whenever rate limiting is enabled. Maximum attempts are bounded to 1..100 and the window is bounded to 1..86400 seconds.
 

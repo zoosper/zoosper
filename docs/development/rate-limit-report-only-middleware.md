@@ -52,3 +52,7 @@ A callable adapter that:
 ## Future enforcement phase
 
 The next phase can add an enforcing adapter or a mode flag, but only for targeted route keys such as `admin.login`. Public/content routes should remain disabled unless explicitly configured.
+## Runtime enforcement mode
+
+The Admin adapter now also supports `mode=enforce`. Report-only behaviour remains unchanged. Enforce mode returns a generic HTTP 429 response with a decision-derived `Retry-After` header and does not execute the downstream login controller after denial.
+
