@@ -11,6 +11,8 @@ it('adds central idle timeout enforcement without weakening pending 2FA isolatio
     expect($guard)->toContain("SESSION_LAST_ACTIVITY_KEY = 'admin_last_activity_at'")
         ->toContain('private function expireIfIdle(): bool')
         ->toContain('private function touch(): void')
+        ->toContain('private function clearAuthenticationState(): void')
+        ->toContain('$lastActivity <= $now')
         ->toContain('unset($_SESSION[self::SESSION_PENDING_2FA_KEY])')
         ->and($config)->toContain("ADMIN_SESSION_IDLE_TIMEOUT")
         ->toContain("'session_idle_timeout' => \$idleTimeout")

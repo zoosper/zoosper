@@ -32,6 +32,7 @@ Static assets should live under `/assets/...` rather than application route name
 ```text
 ASSET_BASE_PATH=/assets
 ADMIN_ASSET_PATH=/assets/admin
+ADMIN_SESSION_IDLE_TIMEOUT=7200
 FRONTEND_ASSET_PATH=/assets/frontend
 MODULE_ASSET_PATH=/assets/modules
 ```

@@ -170,19 +170,38 @@ final class SessionGuard
             return false;
         }
 
-        $lastActivity = $_SESSION[self::SESSION_LAST_ACTIVITY_KEY] ?? null;
-        if (!is_numeric($lastActivity) || $this->now() - (int) $lastActivity <= $this->idleTimeoutSeconds) {
+        $hasProtectedState = isset(
+            $_SESSION[self::SESSION_USER_KEY],
+        ) || isset($_SESSION[self::SESSION_PENDING_2FA_KEY]);
+        if (!$hasProtectedState) {
+            unset($_SESSION[self::SESSION_LAST_ACTIVITY_KEY]);
             return false;
         }
 
+        $lastActivity = $_SESSION[self::SESSION_LAST_ACTIVITY_KEY] ?? null;
+        $now = $this->now();
+        if (!is_numeric($lastActivity)) {
+            $this->clearAuthenticationState();
+            return true;
+        }
+
+        $lastActivity = (int) $lastActivity;
+        if ($lastActivity <= $now && $now - $lastActivity <= $this->idleTimeoutSeconds) {
+            return false;
+        }
+
+        $this->clearAuthenticationState();
+        return true;
+    }
+
+    private function clearAuthenticationState(): void
+    {
         unset(
             $_SESSION[self::SESSION_USER_KEY],
             $_SESSION[self::SESSION_PENDING_2FA_KEY],
             $_SESSION[self::SESSION_LAST_ACTIVITY_KEY],
         );
         $this->cachedUser = null;
-
-        return true;
     }
 
     private function touch(): void
