@@ -9,8 +9,12 @@ it('publishes the environment-owned session timeout as read-only security metada
     $security = array_values(array_filter($groups, static fn (array $group): bool => $group['id'] === 'security'));
 
     expect($security)->toHaveCount(1)
-        ->and($security[0]['settings'])->toHaveCount(1)
+        ->and($security[0]['settings'])->toHaveCount(3)
         ->and($security[0]['settings'][0]['path'])->toBe('admin.session_idle_timeout')
         ->and($security[0]['settings'][0]['default'])->toBe(7200)
-        ->and($security[0]['settings'][0]['read_only'])->toBeTrue();
+        ->and($security[0]['settings'][0]['read_only'])->toBeTrue()
+        ->and($security[0]['settings'][1]['path'])->toBe('session.lifetime_seconds')
+        ->and($security[0]['settings'][1]['read_only'])->toBeTrue()
+        ->and($security[0]['settings'][2]['path'])->toBe('session.samesite')
+        ->and($security[0]['settings'][2]['read_only'])->toBeTrue();
 });

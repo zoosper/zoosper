@@ -36,6 +36,22 @@ return [[
             'default' => 7200,
             'read_only' => true,
             'sort_order' => 100,
+        ], [
+            'path' => 'session.lifetime_seconds',
+            'label' => 'Session cookie lifetime (seconds)',
+            'type' => 'text',
+            'description' => 'Controlled by SESSION_LIFETIME_SECONDS. Bounded from 300 to 604800 seconds.',
+            'default' => 28800,
+            'read_only' => true,
+            'sort_order' => 200,
+        ], [
+            'path' => 'session.samesite',
+            'label' => 'Session SameSite policy',
+            'type' => 'text',
+            'description' => 'Controlled by SESSION_SAMESITE. Accepted values are Lax, Strict and None; invalid values fall back to Lax.',
+            'default' => 'Lax',
+            'read_only' => true,
+            'sort_order' => 300,
         ]],
     ], [
         'id' => 'routing',

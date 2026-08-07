@@ -24,6 +24,17 @@ final readonly class Application
             session_name((string) env('SESSION_NAME', 'ZOOSPERSESSID'));
             $sessionLifetime = max(300, min(604800, (int) env('SESSION_LIFETIME_SECONDS', 28800)));
             ini_set('session.gc_maxlifetime', (string) $sessionLifetime);
+            ini_set('session.use_strict_mode', '1');
+            ini_set('session.use_only_cookies', '1');
+            ini_set('session.use_trans_sid', '0');
+            ini_set('session.cookie_httponly', '1');
+
+            $sameSite = self::normaliseSameSite((string) env('SESSION_SAMESITE', 'Lax'));
+            $secure = filter_var(env('SESSION_SECURE', self::requestIsHttps()), FILTER_VALIDATE_BOOLEAN);
+            if ($sameSite === 'None' && !$secure) {
+                $sameSite = 'Lax';
+            }
+
             session_set_cookie_params([
                 'lifetime' => $sessionLifetime,
                 // Phase 1.100: the secure flag now DEFAULTS to whether the current
@@ -33,9 +44,9 @@ final readonly class Application
                 //     footgun where forgetting SESSION_SECURE=true leaked the
                 //     session cookie over plain HTTP.
                 // An explicit SESSION_SECURE env value always wins.
-                'secure' => filter_var(env('SESSION_SECURE', self::requestIsHttps()), FILTER_VALIDATE_BOOLEAN),
+                'secure' => $secure,
                 'httponly' => true,
-                'samesite' => (string) env('SESSION_SAMESITE', 'Lax'),
+                'samesite' => $sameSite,
                 'path' => '/',
             ]);
             session_start();
@@ -66,6 +77,15 @@ final readonly class Application
         }
 
         $response->send();
+    }
+
+    public static function normaliseSameSite(string $value): string
+    {
+        return match (strtolower(trim($value))) {
+            'strict' => 'Strict',
+            'none' => 'None',
+            default => 'Lax',
+        };
     }
 
     /**

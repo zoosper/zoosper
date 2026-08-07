@@ -14,4 +14,9 @@ The timeout applies to authenticated Admin sessions and pending two-factor chall
 A successful password check rotates the CSRF token before entering pending two-factor or fully authenticated state. Successful two-factor promotion rotates it again. Logout clears it. Invalid credentials and failed one-time codes do not rotate the token, so the current form can be corrected and resubmitted safely.
 
 The Settings catalogue exposes `admin.session_idle_timeout` as read-only because the active guard is composed from environment configuration during application bootstrap.
+## Session bootstrap and cookie policy
+
+The HTTP `Application` is the sole production web-session bootstrap. It enables strict session identifiers, cookie-only transport, disables transparent session IDs, applies an HttpOnly cookie and validates SameSite to Lax, Strict or None. SameSite=None falls back to Lax when the cookie is not secure.
+
+`SESSION_LIFETIME_SECONDS` is bounded to 300..604800 seconds and controls both PHP garbage collection and the browser cookie lifetime. Logout expires the browser cookie with the active cookie parameters before destroying the server session.
 

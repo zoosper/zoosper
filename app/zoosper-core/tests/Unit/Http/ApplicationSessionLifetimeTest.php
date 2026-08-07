@@ -18,7 +18,11 @@ ini_set('session.gc_maxlifetime', (string) $sessionLifetime)
 PHP);
     expect($source)->toContain(<<<'PHP'
 'lifetime' => $sessionLifetime
-PHP);
+PHP)
+        ->toContain("ini_set('session.use_strict_mode', '1')")
+        ->toContain("ini_set('session.use_only_cookies', '1')")
+        ->toContain("ini_set('session.use_trans_sid', '0')")
+        ->toContain("ini_set('session.cookie_httponly', '1')");
 
     $configurationPosition = strpos(
         $source,
