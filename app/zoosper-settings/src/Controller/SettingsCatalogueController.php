@@ -13,6 +13,7 @@ use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Config\Scope\ScopeType;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Settings\Audit\SettingsAuditLogger;
 use Zoosper\Settings\Catalogue\ModuleSettingsCatalogueLoader;
 use Zoosper\Settings\Definition\SettingsSection;
@@ -35,6 +36,7 @@ final readonly class SettingsCatalogueController
         private SettingsAuditLogger $audit,
         private CsrfTokenManager $csrf,
         private FlashMessageStoreInterface $flash,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -67,6 +69,9 @@ final readonly class SettingsCatalogueController
                 'siteOptions' => $selection['sites'],
                 'csrfToken' => $this->csrf->token(),
                 'showPaths' => $this->isEnabled($effectiveValues['settings.catalogue.show_paths']->value ?? true),
+                'indexUrl' => $this->adminUrl('settings'),
+                'saveUrl' => $this->adminUrl('settings/save'),
+                'clearUrl' => $this->adminUrl('settings/clear'),
             ],
             user: $user,
             active: 'settings',
@@ -167,7 +172,20 @@ final readonly class SettingsCatalogueController
     private function scopeUrl(string $type, string $key): string
     {
         return $type === 'default'
-            ? '/admin/settings'
-            : '/admin/settings?scope=' . rawurlencode($type) . '&scope_key=' . rawurlencode($key);
+            ? $this->adminUrl('settings')
+            : $this->adminUrl('settings', ['scope' => $type, 'scope_key' => $key]);
+    }
+
+    /** @param array<string, scalar|null> $query */
+    private function adminUrl(string $path = '', array $query = []): string
+    {
+        if ($this->adminUrls !== null) {
+            return $this->adminUrls->url($path, $query);
+        }
+
+        $url = $path === '' ? '/admin' : '/admin/' . ltrim($path, '/');
+        $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+
+        return $queryString === '' ? $url : $url . '?' . $queryString;
     }
 }

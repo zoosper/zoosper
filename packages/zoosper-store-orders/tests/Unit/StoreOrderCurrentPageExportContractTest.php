@@ -12,7 +12,7 @@ it('uses a real Store Orders server endpoint for current-page export', function 
     $routes = require $root . '/packages/zoosper-store-orders/config/admin_routes.php';
 
     expect($workspace)->not->toBeFalse()
-        ->and($workspace)->toContain("self::ACTION . '/export'")
+        ->and($workspace)->toContain('$this->exportUrl()')
         ->and($workspace)->not->toContain('?grid_export=current')
         ->and($routes)->toContain([
             'method' => 'GET', 'path' => '/admin/store-orders/export',

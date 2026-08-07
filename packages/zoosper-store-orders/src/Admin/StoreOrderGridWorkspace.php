@@ -8,6 +8,7 @@ use Zoosper\AdminGrid\GridCompactWorkspaceRenderer;
 use Zoosper\AdminGrid\GridViewState;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Grid\GridColumnOrderer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\StoreOrders\StoreOrderGrid;
 
 /** Store Orders integration seam for the shared per-admin Grid workspace. */
@@ -20,7 +21,18 @@ final readonly class StoreOrderGridWorkspace
         private GridViewStateResolver $resolver,
         private GridCompactWorkspaceRenderer $renderer = new GridCompactWorkspaceRenderer(),
         private GridColumnOrderer $columnOrderer = new GridColumnOrderer(),
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
+    }
+
+    public function action(): string
+    {
+        return $this->adminUrls?->url('store-orders') ?? self::ACTION;
+    }
+
+    public function exportUrl(): string
+    {
+        return $this->adminUrls?->url('store-orders/export') ?? self::ACTION . '/export';
     }
 
     /**
@@ -53,8 +65,8 @@ final readonly class StoreOrderGridWorkspace
             'state' => $state,
             'html' => $this->renderer->render(
                 $workspaceState,
-                self::ACTION,
-                self::ACTION . '/export',
+                $this->action(),
+                $this->exportUrl(),
             ),
         ];
     }

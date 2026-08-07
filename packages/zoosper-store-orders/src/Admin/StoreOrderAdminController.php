@@ -13,6 +13,7 @@ use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
 use Zoosper\AdminGrid\GridWorkspaceRequest;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Core\Pagination\PaginationResult;
 use Zoosper\Grid\DataSource\GridQuery;
 use Zoosper\Grid\GridHtmlRenderer;
@@ -31,6 +32,7 @@ final readonly class StoreOrderAdminController
         private GridWorkspaceMutationFormsRenderer $mutationForms,
         private array $config,
         private GridHtmlRenderer $gridRenderer = new GridHtmlRenderer(),
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -38,7 +40,7 @@ final readonly class StoreOrderAdminController
     {
         $user = $this->guard->user();
         if ($user === null) {
-            return Response::redirect('/admin/login');
+            return Response::redirect($this->adminUrls?->url('login') ?? '/admin/login');
         }
 
         $values = $_GET;
@@ -76,7 +78,7 @@ final readonly class StoreOrderAdminController
                 . $resolved['html']
                 . $this->mutationForms->render(
                     $state,
-                    StoreOrderGridWorkspace::ACTION,
+                    $this->workspace->action(),
                     '_csrf_token',
                     $this->csrf->token(),
                 )
@@ -84,7 +86,7 @@ final readonly class StoreOrderAdminController
                     $state->definition,
                     $pagination,
                     $state->criteria,
-                    StoreOrderGridWorkspace::ACTION,
+                    $this->workspace->action(),
                 );
 
             return Response::html($this->layout->render('Store Orders', $content, $user, 'store-orders'));
@@ -105,7 +107,7 @@ final readonly class StoreOrderAdminController
     {
         $user = $this->guard->user();
         if ($user === null) {
-            return Response::redirect('/admin/login');
+            return Response::redirect($this->adminUrls?->url('login') ?? '/admin/login');
         }
         if (!$this->csrf->isValid(isset($_POST['_csrf_token']) ? (string) $_POST['_csrf_token'] : null)) {
             return Response::html('Invalid CSRF token.', 419);

@@ -6,8 +6,8 @@ it('uses one section form with non-nested clear controls', function (): void {
     $root = dirname(__DIR__, 5);
     $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
 
-    expect($view)->toContain('action="/admin/settings/save"')
-        ->toContain('formaction="/admin/settings/clear"')
+    expect($view)->toContain('action="<?= $e($saveUrl) ?>"')
+        ->toContain('formaction="<?= $e($clearUrl) ?>"')
         ->toContain('formmethod="post"')
         ->toContain('name="path"')
         ->not->toContain('<form method="post" action="/admin/settings/clear"');

@@ -7,6 +7,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Settings\Catalogue\ModuleSettingsCatalogueLoader;
 use Zoosper\Settings\Audit\SettingsAuditLogger;
 use Zoosper\Settings\Controller\SettingsCatalogueController;
@@ -28,5 +29,6 @@ return [
         $services->get(SettingsAuditLogger::class),
         $services->get(CsrfTokenManager::class),
         $services->get(FlashMessageStoreInterface::class),
+        $services->get(AdminUrlGenerator::class),
     ),
 ];

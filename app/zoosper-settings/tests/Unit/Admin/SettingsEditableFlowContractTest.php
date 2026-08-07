@@ -14,7 +14,7 @@ it('declares a protected save route and CSRF-protected scoped section form', fun
         'action' => 'save',
         'permission' => 'settings.manage',
     ])->and($view)->toContain('method="post"')
-        ->toContain('action="/admin/settings/save"')
+        ->toContain('action="<?= $e($saveUrl) ?>"')
         ->toContain('name="_csrf_token"')
         ->toContain('name="section"')
         ->toContain('name="scope"')

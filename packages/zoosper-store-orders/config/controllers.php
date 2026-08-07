@@ -9,6 +9,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\StoreOrders\Admin\StoreOrderAdminController;
 use Zoosper\StoreOrders\Admin\StoreOrderCsvExportController;
 use Zoosper\StoreOrders\Admin\StoreOrderGridMutationCoordinator;
@@ -22,6 +23,7 @@ return [
         dataSources: new StoreOrderDataSourceFactory(),
         exports: $services->get(GridWorkspaceCsvExportService::class),
         config: $services->get(ConfigRepository::class)->array('store_orders'),
+        adminUrls: $services->get(AdminUrlGenerator::class),
     ),    StoreOrderAdminController::class => static fn (ServiceContainer $services): StoreOrderAdminController => new StoreOrderAdminController(
         guard: $services->get(SessionGuard::class),
         csrf: $services->get(CsrfTokenManager::class),
@@ -31,5 +33,6 @@ return [
         mutations: $services->get(StoreOrderGridMutationCoordinator::class),
         mutationForms: $services->get(GridWorkspaceMutationFormsRenderer::class),
         config: $services->get(ConfigRepository::class)->array('store_orders'),
+        adminUrls: $services->get(AdminUrlGenerator::class),
     ),
 ];

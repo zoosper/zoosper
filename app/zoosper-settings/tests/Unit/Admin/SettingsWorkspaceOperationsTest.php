@@ -31,6 +31,6 @@ it('provides expand-all and collapse-all operations without changing persistence
         ->toContain('id="settings-collapse-all"')
         ->toContain("expandAll.addEventListener('click'")
         ->toContain("collapseAll.addEventListener('click'")
-        ->toContain('action="/admin/settings/save"')
-        ->toContain('formaction="/admin/settings/clear"');
+        ->toContain('action="<?= $e($saveUrl) ?>"')
+        ->toContain('formaction="<?= $e($clearUrl) ?>"');
 });

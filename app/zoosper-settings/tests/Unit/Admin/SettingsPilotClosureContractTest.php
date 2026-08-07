@@ -14,7 +14,7 @@ it('honours path visibility and exposes the protected clear action', function ()
         'action' => 'clear',
         'permission' => 'settings.manage',
     ])->and($view)->toContain('if($showPaths)')
-        ->toContain('formaction="/admin/settings/clear"')
+        ->toContain('formaction="<?= $e($clearUrl) ?>"')
         ->toContain('Use inherited value');
 });
 

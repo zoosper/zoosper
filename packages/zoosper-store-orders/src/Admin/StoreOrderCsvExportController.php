@@ -10,6 +10,7 @@ use Zoosper\AdminGrid\GridWorkspaceCsvExportService;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Grid\DataSource\GridQuery;
 use Zoosper\StoreOrders\StoreOrderDataSourceFactory;
 
@@ -23,6 +24,7 @@ final readonly class StoreOrderCsvExportController
         private StoreOrderDataSourceFactory $dataSources,
         private GridWorkspaceCsvExportService $exports,
         private array $config,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -30,7 +32,7 @@ final readonly class StoreOrderCsvExportController
     {
         $user = $this->guard->user();
         if ($user === null) {
-            return Response::redirect('/admin/login');
+            return Response::redirect($this->adminUrls?->url('login') ?? '/admin/login');
         }
 
         $values = $_GET;
