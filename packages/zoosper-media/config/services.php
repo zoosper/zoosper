@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
@@ -28,7 +29,9 @@ return [
         cleanup: $services->get(MediaStoredFileCleanupService::class),
     ),
     EditorJsImageUploadResponseFactory::class => static fn (ServiceContainer $services): EditorJsImageUploadResponseFactory => new EditorJsImageUploadResponseFactory(),
-    EditorJsImageToolConfig::class => static fn (ServiceContainer $services): EditorJsImageToolConfig => new EditorJsImageToolConfig(),
+    EditorJsImageToolConfig::class => static fn (ServiceContainer $services): EditorJsImageToolConfig => new EditorJsImageToolConfig(
+        $services->get(AdminUrlGenerator::class)->url('media/editorjs/upload'),
+    ),
     EditorJsImageBlockSanitizer::class => static fn (ServiceContainer $services): EditorJsImageBlockSanitizer => new EditorJsImageBlockSanitizer(),
     MediaProcessingPolicy::class => static fn (ServiceContainer $services): MediaProcessingPolicy => new MediaProcessingPolicy(),
 ];

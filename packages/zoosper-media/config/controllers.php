@@ -7,6 +7,7 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\Controller\MediaAdminController;
 use Zoosper\Media\Controller\MediaEditorJsUploadController;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
@@ -23,6 +24,7 @@ return [
         validator: $services->get(MediaUploadValidator::class),
         storage: $services->get(MediaStorage::class),
         errorHandler: $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
+        adminUrls: $services->get(AdminUrlGenerator::class),
     ),
     MediaEditorJsUploadController::class => static fn (ServiceContainer $services): MediaEditorJsUploadController => new MediaEditorJsUploadController(
         guard: $services->get(SessionGuard::class),

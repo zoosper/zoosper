@@ -4,9 +4,10 @@
  * @var string $action
  * @var string $csrfToken
  * @var list<string> $errors
+ * @var string $backUrl
  */
 ?>
-<div class="toolbar"><a class="button secondary" href="/admin/media">Back</a></div>
+<div class="toolbar"><a class="button secondary" href="<?= $e($backUrl) ?>">Back</a></div>
 
 <?php if (($errors ?? []) !== []): ?>
     <div class="notice notice-error">

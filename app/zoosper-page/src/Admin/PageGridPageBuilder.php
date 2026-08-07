@@ -8,6 +8,7 @@ use Zoosper\AdminGrid\GridWorkspaceCsrf;
 use Zoosper\AdminGrid\GridWorkspacePage;
 use Zoosper\AdminGrid\GridWorkspacePageRenderer;
 use Zoosper\AdminGrid\GridWorkspaceRequest;
+use Zoosper\Core\Url\AdminUrlGenerator;
 
 /** Builds the complete Pages workspace and matching paginated Grid. */
 final readonly class PageGridPageBuilder
@@ -18,6 +19,7 @@ final readonly class PageGridPageBuilder
         private PageGridHttpCoordinator $coordinator,
         private PageGridDataSource $dataSource,
         private GridWorkspacePageRenderer $renderer,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -37,8 +39,8 @@ final readonly class PageGridPageBuilder
             state: $state,
             result: $result,
             workspaceHtml: $resolved['html'],
-            baseUrl: PageGridWorkspace::ACTION,
-            mutationUrl: self::MUTATION_PATH,
+            baseUrl: $this->adminUrls?->url('pages') ?? PageGridWorkspace::ACTION,
+            mutationUrl: $this->adminUrls?->url('pages/grid') ?? self::MUTATION_PATH,
             csrf: $csrf,
         );
     }

@@ -12,6 +12,7 @@ use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Service\MediaStorage;
 use Zoosper\Media\Service\MediaUploadService;
@@ -55,6 +56,7 @@ final readonly class MediaAdminController
         private MediaStorage $storage,
         private ?ErrorHandler $errorHandler = null,
         ?MediaUploadService $uploads = null,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
         $this->uploads = $uploads ?? new MediaUploadService(
             assets: $assets,
@@ -74,7 +76,7 @@ final readonly class MediaAdminController
             'zoosper-media::admin/media/index',
             [
                 'assets' => $this->assets->latest(),
-                'uploadUrl' => '/admin/media/upload',
+                'uploadUrl' => $this->adminUrl('media/upload'),
             ],
             $user,
             'media',
@@ -89,9 +91,10 @@ final readonly class MediaAdminController
             'Upload media',
             'zoosper-media::admin/media/upload',
             [
-                'action' => '/admin/media/upload',
+                'action' => $this->adminUrl('media/upload'),
                 'csrfToken' => $this->csrf->token(),
                 'errors' => [],
+                'backUrl' => $this->adminUrl('media'),
             ],
             $user,
             'media',
@@ -108,7 +111,7 @@ final readonly class MediaAdminController
             return $this->uploadErrorResponse($user, [$result->message], $result->statusCode);
         }
 
-        return Response::redirect('/admin/media');
+        return Response::redirect($this->adminUrl('media'));
     }
 
     private function uploadErrorResponse(AdminUser $user, array $errors, int $status): Response
@@ -117,15 +120,25 @@ final readonly class MediaAdminController
             'Upload media',
             'zoosper-media::admin/media/upload',
             [
-                'action' => '/admin/media/upload',
+                'action' => $this->adminUrl('media/upload'),
                 'csrfToken' => $this->csrf->token(),
                 'errors' => $errors,
+                'backUrl' => $this->adminUrl('media'),
             ],
             $user,
             'media',
         ), $status);
     }
 
+
+    private function adminUrl(string $path = ''): string
+    {
+        if ($this->adminUrls !== null) {
+            return $this->adminUrls->url($path);
+        }
+
+        return $path === '' ? '/admin' : '/admin/' . ltrim($path, '/');
+    }
 
     private function currentAdminUser(): AdminUser
     {
