@@ -10,6 +10,7 @@ use Zoosper\AdminGrid\GridWorkspaceRequest;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Page\Admin\PageGridExportRequestCoordinator;
 
 /** Thin HTTP adapter for the already-built Pages export pipeline. */
@@ -18,6 +19,7 @@ final readonly class PageCsvExportController
     public function __construct(
         private SessionGuard $guard,
         private PageGridExportRequestCoordinator $exports,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -25,7 +27,7 @@ final readonly class PageCsvExportController
     {
         $user = $this->guard->user();
         if ($user === null) {
-            return Response::redirect('/admin/login');
+            return Response::redirect($this->adminUrls?->url('login') ?? '/admin/login');
         }
 
         try {

@@ -37,6 +37,7 @@ use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Page\Admin\Controller\PageBulkActionController;
 use Zoosper\Page\Admin\BulkAction\PageBulkActionBackend;
 use Zoosper\AdminGrid\BulkAction\GridBulkHostBindings;
@@ -55,11 +56,13 @@ return [
         $definition = new PageGridDefinition(
             $services->has(GridColumnRegistry::class) ? $services->get(GridColumnRegistry::class) : null,
             new PageGridSiteFilter(new PageSiteFilterOptions($services->get(SiteRepository::class))),
+            $services->get(AdminUrlGenerator::class),
         );
         $workspace = new PageGridWorkspace(
             $definition,
             $services->get(GridViewStateResolver::class),
             new GridCompactWorkspaceRenderer(),
+            adminUrls: $services->get(AdminUrlGenerator::class),
         );
         $http = new PageGridHttpCoordinator(
             $workspace,
@@ -72,7 +75,11 @@ return [
             new PageGridExportDataSource($repository),
             new PageGridAuditedExportCoordinator($services->get(GridWorkspaceAuditedCsvExportService::class)),
         );
-        return new PageCsvExportController($services->get(SessionGuard::class), $requestExports);
+        return new PageCsvExportController(
+            $services->get(SessionGuard::class),
+            $requestExports,
+            $services->get(AdminUrlGenerator::class),
+        );
     },    // Phase 1.41 (partial, round 3a): layout/views now resolved via
     // AdminLayoutRendererInterface / AdminViewRendererInterface instead of
     // the concrete Zoosper\Admin\Layout\AdminLayout /
@@ -85,6 +92,7 @@ return [
         audit: $services->get(AuditLoggerInterface::class),
         flashMessages: $services->get(FlashMessageStoreInterface::class),
         resultAdapter: new GridBulkExecutionResultAdapter(),
+        adminUrls: $services->get(AdminUrlGenerator::class),
     ),
     PageAdminController::class => static fn (ServiceContainer $services): PageAdminController => new PageAdminController(
         guard: $services->get(SessionGuard::class),
@@ -98,6 +106,7 @@ return [
         pageGridDefinition: $pageGridDefinition = new PageGridDefinition(
             $services->has(GridColumnRegistry::class) ? $services->get(GridColumnRegistry::class) : null,
             new PageGridSiteFilter(new PageSiteFilterOptions($services->get(SiteRepository::class))),
+            $services->get(AdminUrlGenerator::class),
         ),
         pageGridDataSource: new PageGridDataSource($pageGrid),
         gridHtmlRenderer: new GridHtmlRenderer(),
@@ -115,6 +124,7 @@ return [
                 $pageGridDefinition,
                 $services->get(GridViewStateResolver::class),
                 new GridCompactWorkspaceRenderer(),
+                adminUrls: $services->get(AdminUrlGenerator::class),
             )
             : null,
         htmlSanitizer: $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,
@@ -126,6 +136,7 @@ return [
         saveLifecycle: $services->get(EntitySaveLifecycleRunner::class),
         errorHandler: $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
         events: $services->has(EventDispatcherInterface::class) ? $services->get(EventDispatcherInterface::class) : null,
+        adminUrls: $services->get(AdminUrlGenerator::class),
     ),
 ];
 

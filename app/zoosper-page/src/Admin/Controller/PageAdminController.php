@@ -37,6 +37,7 @@ use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\IdentityTranslator;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Page\Admin\Form\PageContentSectionProvider;
 use Zoosper\Page\Admin\Form\PageDetailsSectionProvider;
 use Zoosper\Page\Admin\Form\PagePublishingSectionProvider;
@@ -110,6 +111,7 @@ final readonly class PageAdminController
         private ?EntitySaveLifecycleRunner       $saveLifecycle = null,
         private ?ErrorHandler                    $errorHandler = null,
         private ?EventDispatcherInterface        $events = null,
+        private ?AdminUrlGenerator                 $adminUrls = null,
     )
     {
     }
@@ -131,13 +133,13 @@ final readonly class PageAdminController
             ? $this->pageGridDataSource?->paginate($criteria)
             : null;
         $tableHtml = $definition !== null && $criteria !== null && $pagination !== null
-            ? $this->gridHtmlRenderer?->renderBody($definition, $pagination, $criteria, '/admin/pages')
+            ? $this->gridHtmlRenderer?->renderBody($definition, $pagination, $criteria, $this->adminUrl('/pages'))
             : null;
         $workspaceHtml = $resolved['html'] ?? '';
         if ($resolved !== null && $this->gridMutationForms !== null) {
             $workspaceHtml .= $this->gridMutationForms->render(
                 $resolved['state'],
-                '/admin/pages/grid',
+                $this->adminUrl('/pages/grid'),
                 '_csrf',
                 $this->csrf->token(),
             );
@@ -153,7 +155,7 @@ final readonly class PageAdminController
                 ' data-grid-bulk-action-manifest>',
                 ' data-grid-bulk-action-manifest data-csrf-token="'
                     . htmlspecialchars($this->csrf->token(), ENT_QUOTES, 'UTF-8')
-                    . '" data-server-action="/admin/pages/bulk-action">',
+                    . '" data-server-action="' . $this->e($this->adminUrl('/pages/bulk-action')) . '">',
                 $workspaceHtml,
             );
         }
@@ -170,6 +172,7 @@ final readonly class PageAdminController
                 'criteria' => $criteria,
                 'sites' => $sites,
                 'gridHtml' => $gridHtml,
+                'createUrl' => $this->adminUrl('/pages/create'),
             ],
             $user,
             'pages',
@@ -190,13 +193,19 @@ public function gridMutation(Request $request): Response
 
     return Response::redirect($result->redirectPath);
 }
-
-private function adminUrl(string $path): string
+    /** @param array<string, scalar|null> $query */
+    private function adminUrl(string $path = '', array $query = []): string
     {
-        $adminConfig = $this->config?->array('admin') ?? [];
-        $basePath = (string)($adminConfig['base_path'] ?? '/admin');
+        if ($this->adminUrls !== null) {
+            return $this->adminUrls->url($path, $query);
+        }
 
-        return rtrim($basePath, '/') . '/' . ltrim($path, '/');
+        $adminConfig = $this->config?->array('admin') ?? [];
+        $basePath = rtrim((string) ($adminConfig['base_path'] ?? '/admin'), '/');
+        $url = $path === '' ? $basePath : $basePath . '/' . ltrim($path, '/');
+        $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+
+        return $queryString === '' ? $url : $url . '?' . $queryString;
     }
 
     private function html(string $title, string $content, int $statusCode = 200): Response
@@ -341,7 +350,7 @@ private function adminUrl(string $path): string
 
             $this->flashMessages?->success($this->t('Page created successfully.'), 'page.created');
 
-            return Response::redirect($this->adminUrl('/pages/edit?id=' . $createdId));
+            return Response::redirect($this->adminUrl('/pages/edit', ['id' => $createdId]));
         } catch (RuntimeException $exception) {
             $this->errorHandler?->logException($exception, ['controller' => 'PageAdminController', 'action' => 'create']);
             $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), 'page.create_failed');
@@ -476,7 +485,7 @@ private function adminUrl(string $path): string
             return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
         }
 
-        return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page));
+        return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit', ['id' => $page->id]), $page));
     }
 
     private function pageFromRequest(Request $request): ?Page
@@ -501,7 +510,7 @@ private function adminUrl(string $path): string
         if ($processorError !== null) {
             $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.processor_save_failed');
 
-            return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, $processorError, $form), 422);
+            return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit', ['id' => $page->id]), $page, $processorError, $form), 422);
         }
 
         try {
@@ -529,17 +538,17 @@ private function adminUrl(string $path): string
             if ($context->hasErrors()) {
                 $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.save_failed');
 
-                return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, $this->firstContextError($context), $form), 422);
+                return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit', ['id' => $page->id]), $page, $this->firstContextError($context), $form), 422);
             }
 
             $this->flashMessages?->success($this->t('Page saved successfully.'), 'page.saved');
 
-            return Response::redirect($this->adminUrl('/pages/edit?id=' . $page->id));
+            return Response::redirect($this->adminUrl('/pages/edit', ['id' => $page->id]));
         } catch (RuntimeException $exception) {
             $this->errorHandler?->logException($exception, ['controller' => 'PageAdminController', 'action' => 'update']);
             $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.save_failed');
 
-            return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit?id=' . $page->id), $page, $exception->getMessage(), $form), 422);
+            return $this->html('Edit page', $this->form($this->adminUrl('/pages/edit', ['id' => $page->id]), $page, $exception->getMessage(), $form), 422);
         }
     }
 

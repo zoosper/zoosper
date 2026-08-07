@@ -19,7 +19,7 @@ PHP);
     expect($controller)->toContain(<<<'PHP'
 new GridBulkActor($user->id, $user->email)
 PHP);
-    expect($controller)->toContain("Response::redirect('/admin/pages', 303)");
+    expect($controller)->toContain("\$this->adminUrls?->url('pages') ?? '/admin/pages'");
 
     $matches = array_values(array_filter(
         $routes,

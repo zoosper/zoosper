@@ -6,12 +6,14 @@ namespace Zoosper\Page\Admin;
 
 use Zoosper\AdminGrid\GridViewState;
 use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 
 /** Combines the Pages workspace GET controls with protected POST controls. */
 final readonly class PageGridPresentation
 {
     public function __construct(
         private GridWorkspaceMutationFormsRenderer $mutations,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -23,7 +25,7 @@ final readonly class PageGridPresentation
     ): string {
         return $workspaceHtml . $this->mutations->render(
             $state,
-            '/admin/pages/grid',
+            $this->adminUrls?->url('pages/grid') ?? '/admin/pages/grid',
             $csrfField,
             $csrfToken,
         );

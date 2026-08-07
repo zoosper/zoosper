@@ -34,5 +34,5 @@ $get = static function (mixed $item, string $key, mixed $default = ''): mixed {
     </label>
     <label>Content <textarea name="content" rows="12"><?= $e((string) $get($page ?? [], 'content')) ?></textarea></label>
     <label>Meta title <input type="text" name="meta_title" value="<?= $e((string) $get($page ?? [], 'metaTitle', $get($page ?? [], 'meta_title', ''))) ?>"></label>
-    <div class="toolbar"><button type="submit">Save page</button><a class="button secondary" href="/admin/pages">Back</a></div>
+    <div class="toolbar"><button type="submit">Save page</button><a class="button secondary" href="<?= $e($backUrl) ?>">Back</a></div>
 </form>

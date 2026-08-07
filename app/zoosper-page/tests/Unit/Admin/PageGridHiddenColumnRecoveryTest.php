@@ -15,5 +15,5 @@ test('hidden columns remain available in the Columns chooser for recovery', func
         ->toContain('->apply($this->definition->build(), $state->columnOrder)')
         ->toContain('definition: $workspaceDefinition')
         ->toContain("'state' => \$state")
-        ->toContain("'html' => \$this->renderer->render(\$workspaceState, self::ACTION)");
+        ->toContain("'html' => \$this->renderer->render(\$workspaceState, \$this->action())");
 });

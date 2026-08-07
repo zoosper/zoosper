@@ -9,6 +9,7 @@ use Zoosper\AdminGrid\GridViewState;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\AdminGrid\GridWorkspaceRenderer;
 use Zoosper\Grid\GridColumnOrderer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 
 /** Pages-specific integration seam for the shared Admin Grid workspace. */
 final readonly class PageGridWorkspace
@@ -21,6 +22,7 @@ final readonly class PageGridWorkspace
         private GridViewStateResolver $resolver,
         private GridWorkspaceRenderer|GridCompactWorkspaceRenderer $renderer,
         private ?GridColumnOrderer $columnOrderer = null,
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -69,8 +71,13 @@ final readonly class PageGridWorkspace
             'state' => $state,
             // Render controls from the complete definition so hidden columns
             // remain available as unchecked choices.
-            'html' => $this->renderer->render($workspaceState, self::ACTION),
+            'html' => $this->renderer->render($workspaceState, $this->action()),
         ];
+    }
+
+    public function action(): string
+    {
+        return $this->adminUrls?->url('pages') ?? '/admin/pages';
     }
 
     /** @param array<string, mixed> $queryState */

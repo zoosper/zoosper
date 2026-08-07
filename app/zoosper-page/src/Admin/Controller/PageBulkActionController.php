@@ -15,6 +15,7 @@ use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Core\Event\EventDispatcherInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Grid\BulkAction\GridBulkActor;
 use Zoosper\Grid\BulkAction\GridBulkExecutionContext;
 use Zoosper\Page\Admin\BulkAction\PageBulkActionBackend;
@@ -32,6 +33,7 @@ final readonly class PageBulkActionController
         private AuditLoggerInterface $audit,
         private FlashMessageStoreInterface $flashMessages,
         private GridBulkExecutionResultAdapter $resultAdapter = new GridBulkExecutionResultAdapter(),
+        private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }
 
@@ -57,14 +59,15 @@ final readonly class PageBulkActionController
                 new GridBulkHttpRequest($request->method(), $form),
                 new GridBulkExecutionContext(new GridBulkActor($user->id, $user->email)),
             );
-            $http = $this->resultAdapter->adapt($result, '/admin/pages');
+            $pagesUrl = $this->adminUrls?->url('pages') ?? '/admin/pages';
+            $http = $this->resultAdapter->adapt($result, $pagesUrl);
             $this->flashMessages->success($http->message, 'page.bulk_action.success');
 
-            return Response::redirect($http->redirectPath ?? '/admin/pages', $http->status);
+            return Response::redirect($http->redirectPath ?? $pagesUrl, $http->status);
         } catch (Throwable $exception) {
             $this->flashMessages->error($exception->getMessage(), 'page.bulk_action.failed');
 
-            return Response::redirect('/admin/pages', 303);
+            return Response::redirect($this->adminUrls?->url('pages') ?? '/admin/pages', 303);
         }
     }
 }
