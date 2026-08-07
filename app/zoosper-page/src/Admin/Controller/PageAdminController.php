@@ -24,25 +24,12 @@ use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 
 /**
- * Admin CRUD controller for CMS pages.
+ * Thin Admin HTTP adapter for CMS Pages.
  *
- * Phase 1.41 (partial, round 3a): `layout` and `views` typed to
- * Zoosper\Auth\Layout\AdminLayoutRendererInterface and
- * Zoosper\Auth\UI\AdminViewRendererInterface.
- *
- * Phase 1.41 (page decoupling, part A): AdminFormSection,
- * AdminFormSectionProviderInterface (used transitively via the four
- * Page*SectionProvider classes), AdminFormProviderRegistry,
- * AdminFormRenderer, AdminFormConfigProviderFactory,
- * AdminFormProcessorRegistry, AdminFormProcessorConfigFactory,
- * AdminFormProcessorInterface, AdminFormProcessingResult all relocated to
- * Zoosper\Core\Form. Only import/type references changed; behaviour is
- * identical.
- *
- * NOTE: this controller still imports and, as a fallback, instantiates
- * AdminFormConfigAggregator (this class stays in the admin module for now,
- * pending a follow-up phase — it is protected by tests with hardcoded
- * assertions that need separate, careful updating).
+ * Runtime ownership is delegated to Page-owned Grid, form, save, publication
+ * and preview collaborators. Shared Admin presentation contracts remain
+ * intentionally package-owned until their complete cross-module migration is
+ * performed as a dedicated compatibility phase.
  */
 final readonly class PageAdminController
 {

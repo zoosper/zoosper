@@ -890,3 +890,6 @@ Page Admin form context, Site options, content-editor fallback, SEO fields, stru
 
 Pages Grid screen composition and protected Grid mutations now run through a Page-owned Grid responder. Read-only Admin preview resolution now runs through a Page-owned preview responder while retaining the single `PageRenderer` path. `PageAdminController` is reduced to authentication, entity lookup, delegation, flash/redirect selection and HTTP response selection.
 
+## Phase 9FQ Page dependency-honesty closure
+
+Page runtime cleanup is complete. `zoosper/admin` remains an explicit and justified dependency for `ContentEditorInterface`, `FlashMessageStoreInterface`, and `AdminFormConfigAggregator`. Future removal requires a coordinated cross-module contract migration and is not part of the completed Page thin-controller arc.
