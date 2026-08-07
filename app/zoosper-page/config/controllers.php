@@ -20,6 +20,9 @@ use Zoosper\Page\Admin\PageGridMutationCoordinator;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Page\Admin\PageGridSiteFilter;
 use Zoosper\Page\Admin\PageGridWorkspace;
+use Zoosper\Page\Admin\Save\PageSaveCoordinator;
+use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
+use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
 use Zoosper\Page\Admin\PageSiteFilterOptions;
 
 use Zoosper\Admin\Message\FlashMessageStoreInterface;
@@ -127,15 +130,27 @@ return [
                 adminUrls: $services->get(AdminUrlGenerator::class),
             )
             : null,
-        htmlSanitizer: $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,
         flashMessages: $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         config: $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
         contentEditor: $services->has(ContentEditorInterface::class) ? $services->get(ContentEditorInterface::class) : null,
         translator: $services->has(TranslatorInterface::class) ? $services->get(TranslatorInterface::class) : null,
         adminContextTranslatorResolver: $services->has(AdminContextTranslatorResolver::class) ? $services->get(AdminContextTranslatorResolver::class) : null,
-        saveLifecycle: $services->get(EntitySaveLifecycleRunner::class),
-        errorHandler: $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
-        events: $services->has(EventDispatcherInterface::class) ? $services->get(EventDispatcherInterface::class) : null,
+        pageSaver: new PageSaveCoordinator(
+            $services->get(PageRepository::class),
+            $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,
+            $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
+            $services->has(AdminFormProcessorConfigFactory::class)
+                ? $services->get(AdminFormProcessorConfigFactory::class)->create(
+                    $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class)->array('admin_forms') : [],
+                )
+                : null,
+            $services->get(EntitySaveLifecycleRunner::class),
+            $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
+        ),
+        publication: new PagePublicationCoordinator(
+            $services->get(PageRepository::class),
+            $services->has(EventDispatcherInterface::class) ? $services->get(EventDispatcherInterface::class) : null,
+        ),
         adminUrls: $services->get(AdminUrlGenerator::class),
     ),
 ];

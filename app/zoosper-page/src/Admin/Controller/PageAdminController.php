@@ -18,25 +18,16 @@ use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Entity\Save\EntityDataObject;
-use Zoosper\Core\Entity\Save\EntitySaveContext;
-use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
-use Zoosper\Core\Entity\Save\FieldDefinitionRegistry;
-use Zoosper\Core\Event\EventDispatcherInterface;
 use Zoosper\Core\Form\AdminFormConfigProviderFactory;
-use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
-use Zoosper\Core\Form\AdminFormProcessorRegistry;
 use Zoosper\Core\Form\AdminFormProviderRegistry;
 use Zoosper\Core\Form\AdminFormRenderer;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridHtmlRenderer;
-use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\IdentityTranslator;
 use Zoosper\Core\I18n\TranslatorInterface;
-use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Page\Admin\Form\PageContentSectionProvider;
 use Zoosper\Page\Admin\Form\PageDetailsSectionProvider;
@@ -49,10 +40,8 @@ use Zoosper\Page\Admin\PageGridQueryState;
 use Zoosper\Page\Admin\PageGridBulkActions;
 use Zoosper\Page\Admin\PageGridMutationCoordinator;
 use Zoosper\Page\Admin\PageGridWorkspace;
-use Zoosper\Page\Content\BlockJsonValidator;
-use Zoosper\Page\Event\PageEvents;
-use Zoosper\Page\Event\PagePublishedEvent;
-use Zoosper\Page\Event\PageUnpublishedEvent;
+use Zoosper\Page\Admin\Save\PageSaveCoordinator;
+use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
@@ -97,7 +86,6 @@ final readonly class PageAdminController
         private ?GridWorkspaceMutationFormsRenderer $gridMutationForms = null,
         private ?GridBulkActionManifestRenderer   $gridBulkManifest = null,
         private ?PageGridMutationCoordinator      $pageGridMutations = null,
-        private ?HtmlSanitizerInterface          $htmlSanitizer = null,
         private ?FlashMessageStoreInterface      $flashMessages = null,
         private ?ConfigRepository                $config = null,
         private ?ContentEditorInterface          $contentEditor = null,
@@ -106,11 +94,8 @@ final readonly class PageAdminController
         private ?AdminFormProviderRegistry       $pageFormSections = null,
         private ?AdminFormRenderer               $adminFormRenderer = null,
         private ?AdminFormConfigProviderFactory  $adminFormConfigProviderFactory = null,
-        private ?AdminFormProcessorRegistry      $pageFormProcessors = null,
-        private ?AdminFormProcessorConfigFactory $adminFormProcessorConfigFactory = null,
-        private ?EntitySaveLifecycleRunner       $saveLifecycle = null,
-        private ?ErrorHandler                    $errorHandler = null,
-        private ?EventDispatcherInterface        $events = null,
+        private ?PageSaveCoordinator              $pageSaver = null,
+        private ?PagePublicationCoordinator       $publication = null,
         private ?AdminUrlGenerator                 $adminUrls = null,
     )
     {
@@ -313,50 +298,18 @@ public function gridMutation(Request $request): Response
     public function create(Request $request): Response
     {
         $user = $this->currentAdminUser();
-
         $form = $request->form();
-
-        $processorError = $this->processPageForm('create', $form, null, $user);
-        if ($processorError !== null) {
-            $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), 'page.processor_create_failed');
-
-            return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $processorError, submitted: $form), 422);
+        $result = $this->pageSaver?->create($form, $user);
+        if ($result === null) {
+            throw new RuntimeException('Page save coordinator is unavailable.');
         }
-
-        try {
-            $createdId = null;
-            $context = $this->runEntitySave('page', $form, null, function (EntitySaveContext $c) use ($form, $user, &$createdId): void {
-                $createdId = $this->pages->create(
-                    siteId: (int)($form['site_id'] ?? 0),
-                    title: trim((string)($form['title'] ?? '')),
-                    slug: $this->normaliseSlug((string)($form['slug'] ?? '')),
-                    content: $this->sanitiseContent((string)($form['content'] ?? '')),
-                    status: isset($form['publish']) ? 'published' : 'draft',
-                    userId: $user->id,
-                    contentFormat: 'html',
-                    contentJson: $this->normaliseContentJson($form['content_json'] ?? null),
-                    metaTitle: $this->normaliseOptionalString($form['meta_title'] ?? null),
-                    metaDescription: $this->normaliseOptionalString($form['meta_description'] ?? null),
-                    metaKeywords: $this->normaliseOptionalString($form['meta_keywords'] ?? null),
-                    canonicalUrl: $this->normaliseOptionalString($form['canonical_url'] ?? null),
-                );
-            });
-
-            if ($context->hasErrors()) {
-                $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), 'page.create_failed');
-
-                return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $this->firstContextError($context), submitted: $form), 422);
-            }
-
-            $this->flashMessages?->success($this->t('Page created successfully.'), 'page.created');
-
-            return Response::redirect($this->adminUrl('/pages/' . $createdId . '/edit'));
-        } catch (RuntimeException $exception) {
-            $this->errorHandler?->logException($exception, ['controller' => 'PageAdminController', 'action' => 'create']);
-            $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), 'page.create_failed');
-
-            return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $exception->getMessage(), submitted: $form), 422);
+        if (!$result->successful) {
+            $key = $result->processorRejected ? 'page.processor_create_failed' : 'page.create_failed';
+            $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), $key);
+            return $this->html('Create page', $this->form($this->adminUrl('/pages/create'), error: $result->error, submitted: $form), 422);
         }
+        $this->flashMessages?->success($this->t('Page created successfully.'), 'page.created');
+        return Response::redirect($this->adminUrl('/pages/' . $result->pageId . '/edit'));
     }
 
     /**
@@ -374,106 +327,6 @@ public function gridMutation(Request $request): Response
     private function defaultTranslator(): TranslatorInterface
     {
         return new IdentityTranslator();
-    }
-
-    /**
-     * @param array<string, mixed> $form
-     */
-    private function processPageForm(string $action, array $form, ?Page $page, AdminUser $user): ?string
-    {
-        $registry = $this->pageFormProcessors ?? $this->defaultPageFormProcessorRegistry();
-        $result = $registry->process('page.form', $form, [
-            'action' => $action,
-            'page' => $page,
-            'user' => $user,
-        ]);
-
-        if ($result->valid) {
-            return null;
-        }
-
-        return implode(' ', $result->errors);
-    }
-
-    private function defaultPageFormProcessorRegistry(): AdminFormProcessorRegistry
-    {
-        $factory = $this->adminFormProcessorConfigFactory ?? new AdminFormProcessorConfigFactory();
-        $rootConfig = $this->config?->array('admin_forms') ?? [];
-        $moduleConfig = (new AdminFormConfigAggregator($this->projectRootPath()))->aggregate($rootConfig);
-
-        return $factory->create($moduleConfig);
-    }
-
-    /**
-     * @param array<string, mixed> $form
-     * @param callable(EntitySaveContext): void $save
-     */
-    private function runEntitySave(string $entityType, array $form, int|string|null $entityId, callable $save): EntitySaveContext
-    {
-        $data = (new EntityDataObject())->addData($form);
-        $context = new EntitySaveContext($entityType, $data, new FieldDefinitionRegistry(), $entityId);
-
-        if ($this->saveLifecycle !== null) {
-            return $this->saveLifecycle->run($context, $save);
-        }
-
-        $save($context);
-
-        return $context;
-    }
-
-    private function normaliseSlug(string $slug): string
-    {
-        $slug = strtolower(trim($slug));
-        $slug = preg_replace('/[^a-z0-9]+/i', '-', $slug) ?: '';
-
-        return trim($slug, '-');
-    }
-
-    private function sanitiseContent(string $content): string
-    {
-        return $this->htmlSanitizer?->sanitise($content)->toString() ?? $content;
-    }
-
-    private function normaliseContentJson(mixed $value): ?string
-    {
-        $json = trim((string)($value ?? ''));
-        if ($json === '') {
-            return null;
-        }
-
-        $decoded = json_decode($json, true);
-        if (!is_array($decoded)) {
-            throw new RuntimeException('Invalid Editor.js JSON payload.');
-        }
-
-        $contentModelConfig = $this->config?->array('content_model') ?? [];
-        $validator = new BlockJsonValidator($contentModelConfig['block_json'] ?? []);
-        $result = $validator->validate($decoded);
-        if (!$result->valid) {
-            throw new RuntimeException('Invalid Editor.js JSON payload: ' . implode(' ', $result->errors));
-        }
-
-        return json_encode($decoded, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: null;
-    }
-
-    private function normaliseOptionalString(mixed $value): ?string
-    {
-        $value = trim((string)($value ?? ''));
-
-        return $value === '' ? null : $value;
-    }
-
-    private function firstContextError(EntitySaveContext $context): string
-    {
-        $messages = [];
-        foreach ($context->errors() as $fieldErrors) {
-            foreach ($fieldErrors as $message) {
-                $messages[] = (string)$message;
-            }
-        }
-
-        return $messages === [] ? $this->t('Please review the form.') : implode(' ', $messages);
     }
 
     public function editForm(Request $request): Response
@@ -499,58 +352,22 @@ public function gridMutation(Request $request): Response
     public function update(Request $request): Response
     {
         $user = $this->currentAdminUser();
-
         $page = $this->pageFromRequest($request);
         if ($page === null) {
             return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
         }
-
         $form = $request->form();
-
-        $processorError = $this->processPageForm('update', $form, $page, $user);
-        if ($processorError !== null) {
-            $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.processor_save_failed');
-
-            return $this->html('Edit page', $this->form($this->adminUrl('/pages/' . $page->id . '/edit'), $page, $processorError, $form), 422);
+        $result = $this->pageSaver?->update($form, $page, $user);
+        if ($result === null) {
+            throw new RuntimeException('Page save coordinator is unavailable.');
         }
-
-        try {
-            $context = $this->runEntitySave('page', $form, $page->id, function (EntitySaveContext $c) use ($form, $page, $user): void {
-                $this->pages->update(
-                    id: $page->id,
-                    siteId: (int)($form['site_id'] ?? 0),
-                    title: trim((string)($form['title'] ?? '')),
-                    slug: $this->normaliseSlug((string)($form['slug'] ?? '')),
-                    content: $this->sanitiseContent((string)($form['content'] ?? '')),
-                    userId: $user->id,
-                    contentFormat: 'html',
-                    contentJson: $this->normaliseContentJson($form['content_json'] ?? null),
-                    metaTitle: $this->normaliseOptionalString($form['meta_title'] ?? null),
-                    metaDescription: $this->normaliseOptionalString($form['meta_description'] ?? null),
-                    metaKeywords: $this->normaliseOptionalString($form['meta_keywords'] ?? null),
-                    canonicalUrl: $this->normaliseOptionalString($form['canonical_url'] ?? null),
-                );
-
-                if (isset($form['publish'])) {
-                    $this->pages->publish($page->id, $user->id);
-                }
-            });
-
-            if ($context->hasErrors()) {
-                $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.save_failed');
-
-                return $this->html('Edit page', $this->form($this->adminUrl('/pages/' . $page->id . '/edit'), $page, $this->firstContextError($context), $form), 422);
-            }
-
-            $this->flashMessages?->success($this->t('Page saved successfully.'), 'page.saved');
-
-            return Response::redirect($this->adminUrl('/pages/' . $page->id . '/edit'));
-        } catch (RuntimeException $exception) {
-            $this->errorHandler?->logException($exception, ['controller' => 'PageAdminController', 'action' => 'update']);
-            $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), 'page.save_failed');
-
-            return $this->html('Edit page', $this->form($this->adminUrl('/pages/' . $page->id . '/edit'), $page, $exception->getMessage(), $form), 422);
+        if (!$result->successful) {
+            $key = $result->processorRejected ? 'page.processor_save_failed' : 'page.save_failed';
+            $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), $key);
+            return $this->html('Edit page', $this->form($this->adminUrl('/pages/' . $page->id . '/edit'), $page, $result->error, $form), 422);
         }
+        $this->flashMessages?->success($this->t('Page saved successfully.'), 'page.saved');
+        return Response::redirect($this->adminUrl('/pages/' . $page->id . '/edit'));
     }
 
     public function publish(Request $request): Response
@@ -561,25 +378,20 @@ public function gridMutation(Request $request): Response
     private function changeStatus(Request $request, bool $publish): Response
     {
         $user = $this->currentAdminUser();
-
         $page = $this->pageFromRequest($request);
         if ($page === null) {
             return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
         }
-
-        if ($publish) {
-            $this->pages->publish($page->id, $user->id);
-            $this->events?->dispatch(PageEvents::PUBLISHED, new PagePublishedEvent($page->id, $user->id));
-        } else {
-            $this->pages->unpublish($page->id, $user->id);
-            $this->events?->dispatch(PageEvents::UNPUBLISHED, new PageUnpublishedEvent($page->id, $user->id));
+        if ($this->publication === null) {
+            throw new RuntimeException('Page publication coordinator is unavailable.');
         }
-
+        $publish
+            ? $this->publication->publish($page, $user->id)
+            : $this->publication->unpublish($page, $user->id);
         $this->flashMessages?->success(
             $publish ? $this->t('Page published successfully.') : $this->t('Page unpublished successfully.'),
             $publish ? 'page.published' : 'page.unpublished',
         );
-
         return Response::redirect($this->adminUrl('/pages'));
     }
 
