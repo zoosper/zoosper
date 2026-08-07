@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Page\Admin\Controller;
 
 use RuntimeException;
-use Zoosper\Admin\Message\FlashMessageStoreInterface;
+use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\SessionGuard;

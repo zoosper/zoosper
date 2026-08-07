@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Editor;
 
-use Zoosper\Auth\Service\CsrfTokenManager;
+use Zoosper\Core\Editor\ContentEditorInterface;use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 
 /**

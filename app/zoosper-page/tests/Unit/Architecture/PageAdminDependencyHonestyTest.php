@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-it('declares the remaining Admin dependency honestly and limits Page to approved shared contracts', function (): void {
+it('removes the Page dependency on Admin after shared contracts migrate to Core', function (): void {
     $root = dirname(__DIR__, 5);
     $composer = json_decode(
         (string) file_get_contents($root . '/app/zoosper-page/composer.json'),
@@ -10,13 +10,8 @@ it('declares the remaining Admin dependency honestly and limits Page to approved
         512,
         JSON_THROW_ON_ERROR,
     );
-    expect($composer['require'])->toHaveKey('zoosper/admin', 'dev-dev');
+    expect($composer['require'])->not->toHaveKey('zoosper/admin');
 
-    $approved = [
-        'Zoosper\\Admin\\Editor\\ContentEditorInterface',
-        'Zoosper\\Admin\\Form\\AdminFormConfigAggregator',
-        'Zoosper\\Admin\\Message\\FlashMessageStoreInterface',
-    ];
     $unexpected = [];
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
         $root . '/app/zoosper-page', FilesystemIterator::SKIP_DOTS,
@@ -26,11 +21,8 @@ it('declares the remaining Admin dependency honestly and limits Page to approved
             continue;
         }
         $source = (string) file_get_contents($file->getPathname());
-        preg_match_all('/^use (Zoosper\\\\Admin\\\\[^;]+);/m', $source, $matches);
-        foreach ($matches[1] as $import) {
-            if (!in_array($import, $approved, true)) {
-                $unexpected[] = $file->getPathname() . ': ' . $import;
-            }
+        if (str_contains($source, 'use Zoosper' . chr(92) . 'Admin' . chr(92))) {
+            $unexpected[] = $file->getPathname();
         }
     }
     expect($unexpected)->toBe([]);

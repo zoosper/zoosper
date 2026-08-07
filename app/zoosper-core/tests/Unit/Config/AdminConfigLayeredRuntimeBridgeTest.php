@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Form\AdminConfigLayeredFileLoader;
+use Zoosper\Core\Form\AdminConfigLayeredFileLoader;
 
 it('loads admin config through the layered runtime bridge', function (): void {
     $dir = sys_get_temp_dir() . '/zoosper-admin-layered-runtime-bridge-' . bin2hex(random_bytes(6));

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Message\FlashMessageStoreInterface;
+use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\UI\AdminViewRendererInterface;

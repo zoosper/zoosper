@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Admin\Form;
 
-use Zoosper\Admin\Editor\ContentEditorInterface;
-use Zoosper\Admin\Form\AdminFormConfigAggregator;
+use Zoosper\Core\Editor\ContentEditorInterface;
+use Zoosper\Core\Form\AdminFormConfigAggregator;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Form\AdminFormConfigProviderFactory;

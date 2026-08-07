@@ -26,3 +26,7 @@ Pages Grid screen composition and protected Grid mutations now run through a Pag
 ## Admin dependency honesty
 
 The Page package intentionally retains `zoosper/admin` because its Admin UI uses three shared Admin-owned contracts: `ContentEditorInterface`, `FlashMessageStoreInterface`, and the `AdminFormConfigAggregator` compatibility bridge. Page does not import concrete Admin editors, layouts, or view renderers. Removing the package dependency is deferred until those contracts and all cross-module consumers are migrated together.
+
+## Admin package decoupling
+
+Page now consumes shared presentation contracts from Core and no longer requires `zoosper/admin`. Concrete editor, flash-message, layout, and view implementations remain outside the Page package.

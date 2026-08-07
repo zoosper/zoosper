@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Page\Admin\Controller;
 
 use Throwable;
-use Zoosper\Admin\Message\FlashMessageStoreInterface;
+use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\AdminGrid\BulkAction\GridBulkExecutionResultAdapter;
 use Zoosper\AdminGrid\BulkAction\GridBulkHostBindings;
 use Zoosper\AdminGrid\BulkAction\GridBulkHttpRequest;

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 it('keeps admin form config aggregator layered wiring ready for functional parity', function (): void {
     $root = dirname(__DIR__, 5);
-    $target = $root . '/app/zoosper-admin/src/Form/AdminFormConfigAggregator.php';
+    $target = $root . '/app/zoosper-core/src/Form/AdminFormConfigAggregator.php';
 
-    expect(class_exists(Zoosper\Admin\Form\AdminFormConfigAggregator::class))->toBeTrue();
-    expect(class_exists(Zoosper\Admin\Form\AdminConfigLayeredFileLoader::class))->toBeTrue();
+    expect(class_exists(Zoosper\Core\Form\AdminFormConfigAggregator::class))->toBeTrue();
+    expect(class_exists(Zoosper\Core\Form\AdminConfigLayeredFileLoader::class))->toBeTrue();
     expect($target)->toBeFile();
 
     $source = (string) file_get_contents($target);

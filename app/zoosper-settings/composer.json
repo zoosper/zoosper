@@ -6,7 +6,6 @@
     "require": {
         "php": "^8.5",
         "zoosper/core": "dev-dev",
-        "zoosper/admin": "dev-dev",
         "zoosper/auth": "dev-dev",
         "zoosper/site": "dev-dev"
     },

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Message;
 
+use Zoosper\Core\Message\FlashMessage;
+use Zoosper\Core\Message\FlashMessageStoreInterface;
+
 /**
  * Session-backed admin flash message store.
  *

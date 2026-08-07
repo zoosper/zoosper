@@ -7,7 +7,7 @@ namespace Zoosper\Admin\Layout;
 use Zoosper\Admin\Asset\AdminAssetTemplateRenderer;
 use Zoosper\Admin\Asset\AdminAssetViewDataProvider;
 use Zoosper\Admin\Message\FlashMessageRenderer;
-use Zoosper\Admin\Message\FlashMessageStoreInterface;
+use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuItem;
 use Zoosper\Auth\Model\AdminUser;

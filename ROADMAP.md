@@ -893,3 +893,7 @@ Pages Grid screen composition and protected Grid mutations now run through a Pag
 ## Phase 9FQ Page dependency-honesty closure
 
 Page runtime cleanup is complete. `zoosper/admin` remains an explicit and justified dependency for `ContentEditorInterface`, `FlashMessageStoreInterface`, and `AdminFormConfigAggregator`. Future removal requires a coordinated cross-module contract migration and is not part of the completed Page thin-controller arc.
+
+## Phase 9FR shared presentation-contract migration
+
+Shared content-editor and flash-message interfaces plus Admin form configuration aggregation now belong to Core. Admin retains concrete editor and session-backed flash implementations. Page and Settings no longer require `zoosper/admin`, completing their package-boundary migration.

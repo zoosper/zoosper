@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Message;
+namespace Zoosper\Core\Message;
 
 /**
  * Immutable admin flash/toast message value object.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Editor\ContentEditorInterface;
+use Zoosper\Core\Editor\ContentEditorInterface;
 use Zoosper\Admin\Editor\ContentEditorRegistry;
 use Zoosper\Admin\Editor\TextareaContentEditor;
 

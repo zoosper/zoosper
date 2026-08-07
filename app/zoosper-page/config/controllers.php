@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Editor\ContentEditorInterface;
+use Zoosper\Core\Editor\ContentEditorInterface;
 use Zoosper\AdminGrid\GridCompactWorkspaceRenderer;
 use Zoosper\AdminGrid\GridWorkspaceAuditedCsvExportService;
 use Zoosper\Page\Admin\Controller\PageCsvExportController;
@@ -28,7 +28,7 @@ use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
 use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
 use Zoosper\Page\Admin\PageSiteFilterOptions;
 
-use Zoosper\Admin\Message\FlashMessageStoreInterface;
+use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Auth\Service\CsrfTokenManager;

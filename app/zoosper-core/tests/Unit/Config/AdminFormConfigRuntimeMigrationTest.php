@@ -12,7 +12,7 @@ it('keeps admin form config runtime migration tooling available', function (): v
 it('ensures migrated admin config loaders reference the layered loader', function (): void {
     $root = dirname(__DIR__, 5);
     $targets = [
-        $root . '/app/zoosper-admin/src/Form/AdminFormConfigAggregator.php',
+        $root . '/app/zoosper-core/src/Form/AdminFormConfigAggregator.php',
         $root . '/app/zoosper-admin/src/Form/AdminFormUiConfigLoader.php',
     ];
 

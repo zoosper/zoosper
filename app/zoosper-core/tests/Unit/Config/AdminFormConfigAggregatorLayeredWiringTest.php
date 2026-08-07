@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 it('wires AdminFormConfigAggregator to the admin config layered runtime bridge', function (): void {
     $root = dirname(__DIR__, 5);
-    $target = $root . '/app/zoosper-admin/src/Form/AdminFormConfigAggregator.php';
+    $target = $root . '/app/zoosper-core/src/Form/AdminFormConfigAggregator.php';
 
     expect($target)->toBeFile();
 

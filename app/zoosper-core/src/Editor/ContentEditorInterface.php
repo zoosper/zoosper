@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Editor;
+namespace Zoosper\Core\Editor;
 
 /**
  * Renders an admin content editor for CMS body fields.

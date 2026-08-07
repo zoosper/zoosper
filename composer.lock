@@ -1202,11 +1202,10 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-page",
-                "reference": "c30f937e5bf6fcadfbaff84936ad806c010eba39"
+                "reference": "ae02909ecd6e5f0a64ee4a41394adfadd6c1c408"
             },
             "require": {
                 "php": "^8.5",
-                "zoosper/admin": "dev-dev",
                 "zoosper/core": "dev-dev",
                 "zoosper/grid": "dev-dev",
                 "zoosper/media": "dev-dev",
@@ -1244,11 +1243,10 @@
             "dist": {
                 "type": "path",
                 "url": "app/zoosper-settings",
-                "reference": "a46ada1466efb5461cee6e46cba25bcd812f62ce"
+                "reference": "5f83fd2dfaed4cf47a367d287dbca4427f86d329"
             },
             "require": {
                 "php": "^8.5",
-                "zoosper/admin": "dev-dev",
                 "zoosper/auth": "dev-dev",
                 "zoosper/core": "dev-dev",
                 "zoosper/site": "dev-dev"

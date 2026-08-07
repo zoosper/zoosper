@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Message;
 
+use Zoosper\Core\Message\FlashMessage;
+
 /**
  * Renders admin flash messages into a small accessible message region.
  */

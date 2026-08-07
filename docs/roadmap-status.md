@@ -27,3 +27,7 @@ Pages Grid screen composition and protected Grid mutations now run through a Pag
 ## Phase 9FQ dependency-honesty closure
 
 Page package decoupling is closed at the honest compatibility boundary. The package keeps `zoosper/admin` while three Admin-owned shared contracts remain in active use. Runtime ownership guards prevent expansion beyond that allow-list. Contract relocation remains a separate cross-module compatibility project rather than unfinished Page controller work.
+
+## Phase 9FR shared presentation-contract migration
+
+The cross-module presentation-contract migration is complete: shared contracts moved to Core, all consumers and service registrations use the Core namespaces, obsolete Admin-owned contract files were retired, and Page/Settings removed their Admin Composer dependency.

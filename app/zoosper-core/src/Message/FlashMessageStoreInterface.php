@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Message;
+namespace Zoosper\Core\Message;
 
 /**
  * Stores short-lived admin UI messages for redirect and future AJAX flows.

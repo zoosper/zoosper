@@ -12,7 +12,7 @@ it('keeps admin form config root override proof tooling available', function ():
 it('keeps admin config runtime migration markers in place', function (): void {
     $root = dirname(__DIR__, 5);
     $targets = [
-        $root . '/app/zoosper-admin/src/Form/AdminFormConfigAggregator.php',
+        $root . '/app/zoosper-core/src/Form/AdminFormConfigAggregator.php',
         $root . '/app/zoosper-admin/src/Form/AdminFormUiConfigLoader.php',
     ];
 

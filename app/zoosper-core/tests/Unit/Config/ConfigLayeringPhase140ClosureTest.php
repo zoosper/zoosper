@@ -7,12 +7,12 @@ it('keeps the Phase 1.40 config layering runtime classes available', function ()
     expect(class_exists(Zoosper\Core\Config\ConfigFileLayeredLoader::class))->toBeTrue();
     expect(class_exists(Zoosper\Core\Config\LayeredConfigLoader::class))->toBeTrue();
     expect(class_exists(Zoosper\Core\Config\LayeredConfigResult::class))->toBeTrue();
-    expect(class_exists(Zoosper\Admin\Form\AdminConfigLayeredFileLoader::class))->toBeTrue();
+    expect(class_exists(Zoosper\Core\Form\AdminConfigLayeredFileLoader::class))->toBeTrue();
 });
 
 it('keeps AdminFormConfigAggregator wired to the layered bridge', function (): void {
     $root = dirname(__DIR__, 5);
-    $aggregator = $root . '/app/zoosper-admin/src/Form/AdminFormConfigAggregator.php';
+    $aggregator = $root . '/app/zoosper-core/src/Form/AdminFormConfigAggregator.php';
 
     expect($aggregator)->toBeFile();
 

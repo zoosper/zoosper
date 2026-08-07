@@ -6,7 +6,7 @@ namespace Zoosper\Settings\Controller;
 
 use InvalidArgumentException;
 use RuntimeException;
-use Zoosper\Admin\Message\FlashMessageStoreInterface;
+use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\UI\AdminViewRendererInterface;

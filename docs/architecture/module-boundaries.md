@@ -9,3 +9,7 @@
 ## Page to Admin compatibility boundary
 
 `zoosper-page` retains an explicit dependency on `zoosper/admin`. The approved runtime boundary is limited to the content-editor contract, flash-message contract, and Admin form-configuration aggregation bridge. Concrete Admin editor, layout, and view implementations are not permitted in Page runtime. This is an intentional compatibility boundary, not hidden package coupling.
+
+## Shared presentation contracts
+
+Core owns `ContentEditorInterface`, `FlashMessageStoreInterface`, `AdminFormConfigAggregator`, and `AdminConfigLayeredFileLoader`. Admin owns concrete editor selection and the session-backed flash store. Feature modules consume only the Core contracts and do not require Admin for these abstractions.

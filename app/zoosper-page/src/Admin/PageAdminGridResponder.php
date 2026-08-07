@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Admin;
 
-use Zoosper\Admin\Message\FlashMessageStoreInterface;
+use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\AdminGrid\GridBulkActionManifestRenderer;
 use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
 use Zoosper\AdminGrid\GridWorkspaceRequest;
