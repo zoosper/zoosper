@@ -207,7 +207,7 @@ try {
     }
 
     $output = new ConsoleOutput();
-    $moduleCommands = loadModuleCommands($basePath, $config, $connection->get(), $modules);
+    $moduleCommands = loadModuleCommands($basePath, $config, $connection, $modules);
     $application = new ConsoleApplication(builtInCommands(), $moduleCommands);
 
     exit($application->run($command, array_slice($argv, 2), $output));
@@ -236,7 +236,7 @@ function builtInCommands(): array
 function loadModuleCommands(
     string $basePath,
     ConfigRepository $config,
-    PDO $pdo,
+    PdoConnectionProvider $connection,
     ModuleRegistry $modules,
 ): array
 {
@@ -244,7 +244,7 @@ function loadModuleCommands(
     $services->set(ConfigRepository::class, $config);
     $services->set(ConfigRepositoryInterface::class, new MarkoConfigRepositoryAdapter($config));
     $services->set(ModuleRegistry::class, $modules);
-    $services->set(PDO::class, $pdo);
+    $services->factory(PDO::class, static fn (): PDO => $connection->get());
 
     $logManager = new LogManager($config, $basePath);
     $errorHandler = new ErrorHandler($logManager->exceptions());

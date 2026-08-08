@@ -80,23 +80,8 @@ fixed:**
 
 **Still open, from the second Fable review pass:**
 
-- **[R2] Every CLI command requires a live database**, even `help`,
-  `compile`, `cache:clear` (a *recovery* tool, unavailable exactly when
-  most needed) — confirmed present in `bin/zoosper`'s structure since
-  before this session's involvement; not yet fixed. Fix: connect to the DB
-  lazily, only for commands that actually need it. **Relevant Marko
-  package to check first, per this project's own "check Marko's catalog
-  before building" rule**: `marko/cli`.
-- **[R2] CLI and HTTP read different configuration** — web boot aggregates
-  config via `ModuleConfigAggregator` (module configs + root); `bin/zoosper`
-  uses `ConfigRepository::fromPath()` (root `config/` only). Any
-  module-provided config default is invisible to console commands and
-  migrations. Pre-existing, not yet fixed. **Relevant Marko package
-  already partly adopted for a different purpose (see §14)**:
-  `marko/config` — its own `ConfigDiscovery`/`ConfigServiceProvider`
-  already implement exactly this "merge module config + root config"
-  pattern; worth evaluating whether `bin/zoosper` should build its config
-  the same way `ApplicationFactory` does, using the same merged source.
+- **[FIXED, Phase 9GE] CLI recovery commands are database-independent.** `help`, `list`, `compile`, `cache:clear` and manifest inspection execute without resolving PDO. The shared `PdoConnectionProvider` remains lazy and module command services receive PDO through a lazy container factory.
+- **[FIXED, Phase 9GE] CLI and HTTP share layered configuration.** Both boot paths use `ApplicationConfigLoader` with module defaults below root overrides; the remaining console discovery regression fixture was migrated off the obsolete root-only loader.
 - **[RESOLVED] Redundant test/session and one-shot cleanup scripts retired** —
   `composer test` remains the canonical Pest entry point. The unused
   `bin/pest.sh`, interactive `collect-and-run.sh`, and completed one-shot
@@ -924,3 +909,7 @@ Cross-layer module identity collisions now fail descriptively instead of allowin
 ## Phase 9GD HTTP exception presentation closure
 
 Exceptions caught by Router and Application now use one environment-aware ErrorHandler boundary. Development web requests render Marko HTML from `zoosper-errors`; production web requests and all API requests stay generic. Both catch boundaries retain single-shot logging, HTTP status and content type.
+
+## Phase 9GE CLI recovery bootstrap closure
+
+The console already had the correct shared configuration loader and a lazy PDO provider; Phase 9GE completed the boundary by carrying the provider into module-command composition, registering PDO lazily, migrating the stale root-only test fixture and adding real subprocess coverage proving recovery commands operate with an unreachable database.

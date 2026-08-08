@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Zoosper\Core\Config\ApplicationConfigLoader;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Console\ModuleConsoleCommandLoader;
 use Zoosper\Core\Container\ServiceContainer;
@@ -46,7 +47,7 @@ it('discovers admin:create, site:create and page:create as module-owned console 
     $modules = new ModuleRegistry($basePath);
     (new Migrator($pdo, $basePath, $modules))->migrate();
 
-    $config = ConfigRepository::fromPath($basePath . '/config');
+    $config = (new ApplicationConfigLoader($basePath, $modules))->load();
 
     $services = new ServiceContainer();
     $services->set(ConfigRepository::class, $config);

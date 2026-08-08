@@ -78,3 +78,7 @@ Module discovery now rejects cross-layer identity collisions with both paths and
 ## Phase 9GD HTTP exception presentation closure
 
 The Marko renderer now serves caught development HTTP exceptions as well as truly uncaught exceptions. `app.debug` from merged application configuration controls web detail exposure, while production and API responses remain safe and generic.
+
+## Phase 9GE CLI recovery bootstrap closure
+
+`help`, `list`, `compile` and `cache:clear` are regression-tested against an unreachable database. CLI uses the same `ApplicationConfigLoader` as HTTP, and module command composition now retains `PdoConnectionProvider` laziness through the service container rather than forcing PDO before command resolution.
