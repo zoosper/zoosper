@@ -62,3 +62,7 @@ Scoped resolution, atomic section writes and reset-to-inherited operations now s
 ## Phase 9FZ Media upload runtime composition closure
 
 The Media library and Editor.js upload paths now share the container-configured `MediaUploadService`; controller fallback construction was removed and cleanup wiring is no longer bypassed. Derivative execution remains separately gated on explicit processor and policy registration.
+
+## Phase 9GA CSP and roadmap truth closure
+
+The Admin user Reset 2FA control no longer uses inline JavaScript; a registered Auth asset preserves submit confirmation under an enforcing `script-src 'self'` policy. Roadmap summaries were reconciled with verified runtime and regression-test evidence for 2FA cleanup, module collision behaviour, Page/Settings decoupling, AssetResolver containment and Media upload composition.

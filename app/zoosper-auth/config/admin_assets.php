@@ -13,4 +13,9 @@ return [
         'path' => '/assets/admin/js/permission-explorer.js',
         'sort_order' => 86,
     ],
+    'zoosper-admin-user-two-factor-reset-runtime' => [
+        'type' => 'script',
+        'path' => '/assets/admin/js/admin-user-two-factor-reset.js',
+        'sort_order' => 87,
+    ],
 ];

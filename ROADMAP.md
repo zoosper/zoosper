@@ -337,14 +337,8 @@ replica.
 - [x] **[FIXED] Migrations always use live module discovery** — see §0,
   the stale-cache deploy bug.
 - [x] **[FIXED] Real, configurable page cache foundation** — see §15.
-- [~] Admin/module dependency decoupling (Phase 1.41): two-factor (full),
-  media (full), page (partial — `AdminFormConfigAggregator` +
-  `AdminConfigLayeredFileLoader` deliberately left in `zoosper-admin`).
-  Independently confirmed complete for two-factor/media by a reviewer pass.
-- [ ] **[R] Five simultaneously-active module-home conventions**
-  (`app/*`, `packages/*`, `modules/*`, `modules/*/*`, Composer `vendor/*/*`)
-  — reviewer calls this a footgun; `ModuleRegistry::enabledModules()`
-  silently dedupes name collisions with zero error/log line. Not yet fixed.
+- [x] Admin/module dependency decoupling: two-factor and media are complete; shared presentation contracts moved to Core in Phase 9FR, and Page and Settings no longer require `zoosper/admin`.
+- [ ] **[R] Layered module discovery collision diagnostics.** `ModuleRegistry` scans four runtime patterns: `app/*/module.php`, `modules/*/module.php`, `modules/*/*/module.php`, and Composer packages under `vendor/*/*`. Same-layer duplicate identities throw `DuplicateModuleException`; cross-layer identities resolve silently by app > modules > vendor priority. Add an explicit diagnostic for cross-layer overrides before further package extractions.
 - [ ] **[R] No FK support in the declarative schema engine, no
   down-migrations.** Zero referential integrity on any table built through
   it. Low blast-radius today only because no admin screen supports
@@ -376,10 +370,7 @@ replica.
 - [x] Module/theme template overrides (path-safe) + layout update system
 - [~] RoleAdmin → Latte cutover (users on Latte; roles still PHP views)
 - [ ] Adopter theme override story documented end-to-end
-- [ ] **[R] CSP will break real markup the moment report-only → enforce.**
-  No `'unsafe-inline'`, but `admin/users/form.latte` reportedly has an
-  inline `onclick` handler; also no `report-uri`/`report-to` configured at
-  all, so violation data isn't even being collected. Not yet fixed.
+- [~] **CSP enforcement readiness.** Phase 9GA removed the verified inline Reset 2FA handler and moved confirmation behaviour into a registered Auth asset. CSP remains report-only; reporting endpoint configuration and broader browser verification remain before enforcement.
 
 ## 4. Admin & Auth
 - [~] **Unified admin grid workspace.** The Pages grid now supports configurable
@@ -405,13 +396,7 @@ replica.
 - [x] Login history recording bug fixed (Phase 1.113)
 - [x] **[FIXED] 2FA encryption key rotation support** — see §0, the real
   production lockout incident.
-- [ ] **[R] Two parallel 2FA crypto implementations reportedly exist**
-  (`TwoFactor\Crypto\SecretProtector` — the live, confirmed-wired one — vs.
-  `TwoFactor\Service\TwoFactorSecretProtector` + a whole parallel
-  British-spelling `Enrolment` family). **Still not independently
-  verified** — needs a direct `grep -r "TwoFactorSecretProtector\|
-  AdminTwoFactorRepository" app/` before assuming real; if confirmed,
-  delete whichever stack is genuinely dead.
+- [x] **[RESOLVED] Parallel 2FA stack concern verified as already retired.** Regression coverage confirms the obsolete `TwoFactorSecretProtector`, `AdminTwoFactorRepository`, and British-spelling enrolment service are absent; the live Crypto/Totp/Recovery/Enrollment stack is the only implementation.
 - [x] **[FIXED] `bin/zoosper key:generate` / insecure default key** —
   `config/two_factor.php`'s literal-default fallback removed entirely;
   `SecretProtector`'s service factory now fails loudly if no real key is
@@ -529,10 +514,7 @@ replica.
 - [x] Asset registry / resolver / controller (path-safe, MIME allowlist, ETag)
 - [ ] Wire `/asset/{module}/{path}` route + `asset()` helper live
 - [ ] Cache asset-registry scans per request
-- [ ] **[R] Asset pipeline route is deliberately unauthenticated** — all
-  security rests on `AssetResolver`'s path-traversal checks. Recommend
-  fuzz-testing (encoded traversal, null bytes, symlinks) + a realpath
-  containment check as a second layer.
+- [~] **Asset resolver adversarial coverage.** Core's `AssetResolver` already has traversal rejection and realpath containment, with direct and URL-encoded traversal tests. Extend coverage for null bytes and symlink edge cases; the containment layer itself is not missing.
 
 ## 10. Caching & Performance
 
@@ -623,10 +605,8 @@ replica.
    key rotation ✅. Still open: real rate-limit *enforcement*, account
    lockout, password reset.
 5. **[Done]** Fixed the `role.manage`/`user.manage` privilege boundary
-6. Delete one of the two 2FA crypto/TOTP implementation families — **still
-   not independently verified as real**, see §4
-7. Finish admin-decoupling: relocate the last 2 classes so `zoosper-page`
-   can drop `zoosper/admin`
+6. **[Done]** Verified the obsolete parallel 2FA family is already retired
+7. **[Done]** Shared presentation contracts moved to Core; Page and Settings dropped `zoosper/admin`
 8. Consolidate the two Grid systems and two AdminForm systems into one
 9. Standardize module naming; real semver constraints instead of `*@dev`
 10. Add delete/archive to every admin CRUD screen
@@ -928,3 +908,7 @@ Settings scoped reads, atomic writes and clear operations now use a Settings-own
 ## Phase 9FZ Media upload runtime composition closure
 
 Confirmed and fixed the shared root cause behind private upload orchestration: both production upload controllers now resolve the registered `MediaUploadService`, so explicit cleanup wiring is used consistently. Derivative processing remains an explicit follow-up because no production processor and enablement policy are registered yet.
+
+## Phase 9GA CSP and roadmap truth closure
+
+Reset 2FA confirmation is now provided by a registered Auth JavaScript asset with no inline event handler. Roadmap claims now match the verified 2FA, module-discovery, Page/Settings dependency, asset-containment and Media composition states.
