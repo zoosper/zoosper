@@ -912,3 +912,7 @@ Confirmed and fixed the shared root cause behind private upload orchestration: b
 ## Phase 9GA CSP and roadmap truth closure
 
 Reset 2FA confirmation is now provided by a registered Auth JavaScript asset with no inline event handler. Roadmap claims now match the verified 2FA, module-discovery, Page/Settings dependency, asset-containment and Media composition states.
+
+## Phase 9GB CI quality-gate closure
+
+The `dev` branch now has a least-privilege, concurrency-controlled PHP 8.5 workflow with Composer caching, strict validation and audit, JavaScript checks, strict gate, full Pest and compile enforcement. Psalm records its existing static-analysis debt as an explicit advisory signal rather than falsely blocking all changes.

@@ -1,32 +1,61 @@
 name: Quality Gate
-
 on:
   push:
-    branches: [ "**" ]
+    branches: [dev]
   pull_request:
-    branches: [ "**" ]
-
+    branches: [dev]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: quality-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  COMPOSER_NO_INTERACTION: "1"
+  COMPOSER_CACHE_DIR: ${{ github.workspace }}/.cache/composer
+  DB_DRIVER: sqlite
+  DB_DATABASE: ${{ github.workspace }}/var/ci.sqlite
 jobs:
-  gate:
+  quality:
+    name: PHP 8.5 quality contract
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Setup PHP 8.5
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.5"
+          extensions: curl, pdo_sqlite
           coverage: none
-
-      - name: Validate Composer files
-        run: composer validate --no-check-publish
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
-
-      - name: Run strict quality gate
-        run: php tools/gate.php --strict
-
-      - name: Run Pest
-        run: php vendor/bin/pest
+          tools: composer:v2
+      - name: Cache Composer downloads
+        uses: actions/cache@v4
+        with:
+          path: .cache/composer
+          key: composer-${{ runner.os }}-php85-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-php85-
+      - name: Validate Composer metadata
+        run: composer validate --no-check-publish --strict
+      - name: Install locked dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress --no-ansi
+      - name: Audit locked dependencies
+        run: composer audit --locked --no-interaction
+      - name: Prepare CI runtime
+        run: mkdir -p var && touch var/ci.sqlite
+      - name: Validate shipped JavaScript syntax
+        run: composer ci:js
+      - name: Run strict repository gate
+        run: composer gate:strict
+      - name: Run Psalm advisory baseline
+        id: psalm
+        continue-on-error: true
+        run: composer analyse
+      - name: Report Psalm baseline status
+        if: always()
+        run: echo "Psalm advisory outcome ${{ steps.psalm.outcome }}"
+      - name: Run full Pest suite
+        run: composer test
+      - name: Compile module manifest
+        run: composer compile

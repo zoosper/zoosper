@@ -85,3 +85,7 @@ See [ROADMAP.md](ROADMAP.md) — kept genuinely current, not just at
 milestones. It is the project's actual continuity mechanism: a fresh
 conversation or a new contributor should be able to reconstruct full
 project state from this file alone.
+
+## Continuous integration
+
+Changes targeting `dev` run strict Composer validation, locked dependency audit, shipped JavaScript syntax validation, the strict repository gate, an explicitly advisory Psalm baseline, the full Pest suite and module compilation. Psalm remains visible but non-blocking until its pre-existing baseline is reduced to zero.

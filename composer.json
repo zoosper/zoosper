@@ -65,7 +65,10 @@
         "test:unit": "@php pest --testsuite=Unit",
         "test:feature": "@php pest --testsuite=Feature",
         "test:coverage": "@php pest --coverage --min=60",
-        "gate": "@php tools/gate.php"
+        "gate": "@php tools/gate.php",
+        "analyse": "@php vendor/bin/psalm --no-cache --output-format=console",
+        "gate:strict": "@php tools/gate.php --strict",
+        "ci:js": "@php -r '$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(\".\", FilesystemIterator::SKIP_DOTS)); foreach ($it as $file) { $path = $file->getPathname(); if ($file->isFile() && $file->getExtension() === \"js\" && (str_starts_with($path, \"./app/\") || str_starts_with($path, \"./packages/\") || str_starts_with($path, \"./public/\")) && !str_contains($path, \"/vendor/\") && !str_contains($path, \"/node_modules/\")) { passthru(\"node --check \" . escapeshellarg($path), $code); if ($code !== 0) exit($code); }}'"
     },
     "config": {
         "sort-packages": true,

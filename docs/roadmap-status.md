@@ -66,3 +66,7 @@ The Media library and Editor.js upload paths now share the container-configured 
 ## Phase 9GA CSP and roadmap truth closure
 
 The Admin user Reset 2FA control no longer uses inline JavaScript; a registered Auth asset preserves submit confirmation under an enforcing `script-src 'self'` policy. Roadmap summaries were reconciled with verified runtime and regression-test evidence for 2FA cleanup, module collision behaviour, Page/Settings decoupling, AssetResolver containment and Media upload composition.
+
+## Phase 9GB CI quality-gate closure
+
+CI enforcement now covers Composer metadata and audit, JavaScript syntax, the repository gate, full Pest and compile. Psalm runs visibly in advisory mode because the captured legacy baseline is non-zero; promotion to blocking is gated on reducing that baseline to zero.
