@@ -11,12 +11,9 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
-use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\Repository\MediaAssetRepository;
-use Zoosper\Media\Service\MediaStorage;
 use Zoosper\Media\Service\MediaUploadService;
-use Zoosper\Media\Service\MediaUploadValidator;
 
 /**
  * Admin controller for the media library foundation.
@@ -45,26 +42,15 @@ use Zoosper\Media\Service\MediaUploadValidator;
  */
 final readonly class MediaAdminController
 {
-    private MediaUploadService $uploads;
 
     public function __construct(
         private SessionGuard $guard,
         private CsrfTokenManager $csrf,
         private AdminViewRendererInterface $views,
         private MediaAssetRepository $assets,
-        private MediaUploadValidator $validator,
-        private MediaStorage $storage,
-        private ?ErrorHandler $errorHandler = null,
-        ?MediaUploadService $uploads = null,
+        private MediaUploadService $uploads,
         private ?AdminUrlGenerator $adminUrls = null,
     ) {
-        $this->uploads = $uploads ?? new MediaUploadService(
-            assets: $assets,
-            validator: $validator,
-            storage: $storage,
-            basePath: dirname(__DIR__, 5),
-            errorHandler: $errorHandler ?? null,
-        );
     }
 
     public function index(Request $request): Response

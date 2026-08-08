@@ -12,8 +12,8 @@ test('editorjs upload controller delegates upload persistence to shared service'
 
     expect($source)->toContain(MediaUploadService::class);
     expect($source)->toContain('$this->uploads->upload');
-    expect($source)->toContain('MediaUploadService $uploads = null');
-    expect($source)->toContain('new MediaUploadService(');
+    expect($source)->toContain('private MediaUploadService $uploads');
+    expect($source)->not->toContain('new MediaUploadService(');
     expect($source)->not->toContain('$this->storage->store($file');
     expect($source)->not->toContain('$this->assets->create(');
 });

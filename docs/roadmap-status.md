@@ -58,3 +58,7 @@ The post-asset-cutover Settings test suite now uses `settingsPresentationBundle(
 ## Phase 9FY Settings persistence contract closure
 
 Scoped resolution, atomic section writes and reset-to-inherited operations now share `ScopedSettingStoreInterface`; `ScopeConfigSettingStore` contains the Core repository and transaction implementation details.
+
+## Phase 9FZ Media upload runtime composition closure
+
+The Media library and Editor.js upload paths now share the container-configured `MediaUploadService`; controller fallback construction was removed and cleanup wiring is no longer bypassed. Derivative execution remains separately gated on explicit processor and policy registration.

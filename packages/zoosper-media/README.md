@@ -72,3 +72,7 @@ docs/operations/editorjs-media-browser-smoke.md
 ## Admin decoupling status
 
 Media rendering uses Auth-owned Admin rendering contracts and contains no direct `Zoosper\Admin\` imports in `src/`. The root application supplies the concrete Admin shell at composition time.
+
+## Upload runtime composition
+
+Both the Media library and Editor.js upload controllers receive the same container-configured `MediaUploadService`. Controllers do not reconstruct upload orchestration, so the registered cleanup service is active on both production paths. Upload-time derivatives remain disabled until a concrete processor and explicit enablement policy are registered.

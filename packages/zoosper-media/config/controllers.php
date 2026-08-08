@@ -6,14 +6,12 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Container\ServiceContainer;
-use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\Controller\MediaAdminController;
 use Zoosper\Media\Controller\MediaEditorJsUploadController;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
 use Zoosper\Media\Repository\MediaAssetRepository;
-use Zoosper\Media\Service\MediaStorage;
-use Zoosper\Media\Service\MediaUploadValidator;
+use Zoosper\Media\Service\MediaUploadService;
 
 return [
     MediaAdminController::class => static fn (ServiceContainer $services): MediaAdminController => new MediaAdminController(
@@ -21,17 +19,12 @@ return [
         csrf: $services->get(CsrfTokenManager::class),
         views: $services->get(AdminViewRendererInterface::class),
         assets: $services->get(MediaAssetRepository::class),
-        validator: $services->get(MediaUploadValidator::class),
-        storage: $services->get(MediaStorage::class),
-        errorHandler: $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
+        uploads: $services->get(MediaUploadService::class),
         adminUrls: $services->get(AdminUrlGenerator::class),
     ),
     MediaEditorJsUploadController::class => static fn (ServiceContainer $services): MediaEditorJsUploadController => new MediaEditorJsUploadController(
         guard: $services->get(SessionGuard::class),
-        assets: $services->get(MediaAssetRepository::class),
-        validator: $services->get(MediaUploadValidator::class),
-        storage: $services->get(MediaStorage::class),
+        uploads: $services->get(MediaUploadService::class),
         responses: $services->get(EditorJsImageUploadResponseFactory::class),
-        errorHandler: $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
     ),
 ];

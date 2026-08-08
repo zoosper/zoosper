@@ -924,3 +924,7 @@ Settings presentation, scope-selection and canonical-URL collaborators are regis
 ## Phase 9FY Settings persistence contract closure
 
 Settings scoped reads, atomic writes and clear operations now use a Settings-owned persistence contract backed by a Core scope-config adapter. Application services no longer depend directly on PDO or ScopeConfigRepository.
+
+## Phase 9FZ Media upload runtime composition closure
+
+Confirmed and fixed the shared root cause behind private upload orchestration: both production upload controllers now resolve the registered `MediaUploadService`, so explicit cleanup wiring is used consistently. Derivative processing remains an explicit follow-up because no production processor and enablement policy are registered yet.

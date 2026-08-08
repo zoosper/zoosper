@@ -11,10 +11,7 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
-use Zoosper\Media\Repository\MediaAssetRepository;
-use Zoosper\Media\Service\MediaStorage;
 use Zoosper\Media\Service\MediaUploadService;
-use Zoosper\Media\Service\MediaUploadValidator;
 
 /**
  * Handles async image uploads from the Editor.js Image Tool.
@@ -41,24 +38,13 @@ use Zoosper\Media\Service\MediaUploadValidator;
  */
 final readonly class MediaEditorJsUploadController
 {
-    private MediaUploadService $uploads;
 
     public function __construct(
         private SessionGuard $guard,
-        MediaAssetRepository $assets,
-        MediaUploadValidator $validator,
-        MediaStorage $storage,
+        private MediaUploadService $uploads,
         private EditorJsImageUploadResponseFactory $responses,
         private ?ErrorHandler $errorHandler = null,
-        ?MediaUploadService $uploads = null,
     ) {
-        $this->uploads = $uploads ?? new MediaUploadService(
-            assets: $assets,
-            validator: $validator,
-            storage: $storage,
-            basePath: dirname(__DIR__, 5),
-            errorHandler: $errorHandler,
-        );
     }
 
     public function upload(Request $request): Response

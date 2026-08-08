@@ -14,6 +14,7 @@ use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Media\Controller\MediaAdminController;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Service\MediaStorage;
+use Zoosper\Media\Service\MediaUploadService;
 use Zoosper\Media\Service\MediaUploadValidator;
 
 /**
@@ -118,9 +119,13 @@ it('shows the real validation error message instead of silently redirecting on a
         guard: $guard,
         csrf: new CsrfTokenManager(),
         views: $views,
-        assets: new MediaAssetRepository($pdo),
-        validator: new MediaUploadValidator(),
-        storage: new MediaStorage(sys_get_temp_dir() . '/zoosper-media-upload-test-' . bin2hex(random_bytes(4))),
+        assets: $assets = new MediaAssetRepository($pdo),
+        uploads: new MediaUploadService(
+            assets: $assets,
+            validator: new MediaUploadValidator(),
+            storage: new MediaStorage(sys_get_temp_dir() . '/zoosper-media-upload-test-' . bin2hex(random_bytes(4))),
+            basePath: sys_get_temp_dir(),
+        ),
     );
 
     // Genuinely invalid: a real temp file with a disallowed .txt extension.
@@ -179,9 +184,13 @@ it('still redirects to the media library on a successful upload', function (): v
         guard: $guard,
         csrf: new CsrfTokenManager(),
         views: $views,
-        assets: new MediaAssetRepository($pdo),
-        validator: new MediaUploadValidator(),
-        storage: new MediaStorage($storageDir),
+        assets: $assets = new MediaAssetRepository($pdo),
+        uploads: new MediaUploadService(
+            assets: $assets,
+            validator: new MediaUploadValidator(),
+            storage: new MediaStorage($storageDir),
+            basePath: $storageDir,
+        ),
     );
 
     // A genuinely valid 1x1 PNG (smallest possible real image the real
