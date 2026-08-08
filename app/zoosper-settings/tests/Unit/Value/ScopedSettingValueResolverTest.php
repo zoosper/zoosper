@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Config\Scope\ScopeConfigRepository;
+use Zoosper\Settings\Persistence\ScopeConfigSettingStore;
 use Zoosper\Core\Config\Scope\ScopeContext;
 use Zoosper\Core\Config\Scope\ScopeType;
 use Zoosper\Settings\Definition\SettingDefinition;
@@ -15,7 +16,7 @@ function scopeResolver(): array
     $pdo = new PDO('sqlite::memory:');
     $pdo->exec('CREATE TABLE config_scope_values (id INTEGER PRIMARY KEY AUTOINCREMENT, scope_type TEXT NOT NULL, scope_key TEXT NULL, config_path TEXT NOT NULL, config_value TEXT NULL, updated_at TEXT NOT NULL, UNIQUE(scope_type, scope_key, config_path))');
     $repo = new ScopeConfigRepository($pdo);
-    $resolver = new ScopedSettingValueResolver($repo, new SettingValueResolver(ConfigRepository::fromArray([])));
+    $resolver = new ScopedSettingValueResolver(new ScopeConfigSettingStore($pdo, $repo), new SettingValueResolver(ConfigRepository::fromArray([])));
 
     return [$resolver, $repo];
 }

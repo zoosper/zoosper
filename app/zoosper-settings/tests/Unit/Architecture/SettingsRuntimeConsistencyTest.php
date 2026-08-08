@@ -7,8 +7,8 @@ it('resolves scoped values directly from the scoped repository after redirects',
     $resolver = file_get_contents($root . '/app/zoosper-settings/src/Value/ScopedSettingValueResolver.php');
     $mutations = file_get_contents($root . '/app/zoosper-settings/src/Admin/SettingsMutationCoordinator.php');
 
-    expect($resolver)->toContain('private ScopeConfigRepository $scoped')
-        ->toContain('$this->scoped->getWithSource($definition->path, $context)')
+    expect($resolver)->toContain('private ScopedSettingStoreInterface $scoped')
+        ->toContain('$this->scoped->resolve($definition->path, $context)')
         ->and($mutations)->toContain('Response::redirect($this->urls->scope(');
 });
 
@@ -33,6 +33,8 @@ it('keeps project configuration immutable and scoped database configuration sepa
 
     expect($static)->toContain('final readonly class ConfigRepository')
         ->not->toContain('public function set(')
-        ->and($writer)->toContain('ScopeConfigRepository')
-        ->toContain('$this->repository->set($path, $scope, $scopeKey, $value)');
+        ->and($writer)->toContain('ScopedSettingStoreInterface')
+        ->toContain('$this->store->writeMany($normalised, $scope, $scopeKey)')
+        ->not->toContain('ScopeConfigRepository')
+        ->not->toContain('private PDO ');
 });

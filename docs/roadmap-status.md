@@ -54,3 +54,7 @@ The post-asset-cutover Settings test suite now uses `settingsPresentationBundle(
 ## Phase 9FX Settings composition closure
 
 `SettingsPresentationBuilder`, `SettingsScopeSelection` and `SettingsAdminUrls` now resolve through Settings-owned service registrations. Controller wiring composes responders and mutation coordinators from those registered collaborators without constructing the shared services directly.
+
+## Phase 9FY Settings persistence contract closure
+
+Scoped resolution, atomic section writes and reset-to-inherited operations now share `ScopedSettingStoreInterface`; `ScopeConfigSettingStore` contains the Core repository and transaction implementation details.

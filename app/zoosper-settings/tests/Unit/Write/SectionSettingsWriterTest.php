@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Config\Scope\ScopeConfigRepository;
+use Zoosper\Settings\Persistence\ScopeConfigSettingStore;
 use Zoosper\Core\Config\Scope\ScopeContext;
 use Zoosper\Core\Config\Scope\ScopeType;
 use Zoosper\Settings\Definition\SettingDefinition;
@@ -16,7 +17,7 @@ function sectionWriterFixture(): array
     $pdo = new \PDO('sqlite::memory:');
     $pdo->exec('CREATE TABLE config_scope_values (id INTEGER PRIMARY KEY AUTOINCREMENT, scope_type TEXT NOT NULL, scope_key TEXT NULL, config_path TEXT NOT NULL, config_value TEXT NULL, updated_at TEXT NOT NULL, UNIQUE(scope_type, scope_key, config_path))');
     $repository = new ScopeConfigRepository($pdo);
-    return [new SectionSettingsWriter($pdo, $repository, new SettingValueNormaliser()), $repository];
+    return [new SectionSettingsWriter(new ScopeConfigSettingStore($pdo, $repository), new SettingValueNormaliser()), $repository];
 }
 
 it('writes only declared editable settings at the requested scope', function (): void {

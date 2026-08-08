@@ -920,3 +920,7 @@ Category ordering, module options, section search metadata, field editability, i
 ## Phase 9FX Settings composition closure
 
 Settings presentation, scope-selection and canonical-URL collaborators are registered through the module service manifest and resolved by controller wiring. Direct construction of these shared Settings composition services is regression-guarded.
+
+## Phase 9FY Settings persistence contract closure
+
+Settings scoped reads, atomic writes and clear operations now use a Settings-owned persistence contract backed by a Core scope-config adapter. Application services no longer depend directly on PDO or ScopeConfigRepository.

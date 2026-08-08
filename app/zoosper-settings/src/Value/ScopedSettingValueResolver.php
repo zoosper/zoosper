@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Settings\Value;
 
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
+use Zoosper\Settings\Persistence\ScopedSettingStoreInterface;
 use Zoosper\Core\Config\Scope\ScopeContext;
 use Zoosper\Core\Config\Scope\ScopeType;
 use Zoosper\Settings\Definition\SettingDefinition;
@@ -13,14 +13,14 @@ use Zoosper\Settings\Definition\SettingDefinition;
 final readonly class ScopedSettingValueResolver
 {
     public function __construct(
-        private ScopeConfigRepository $scoped,
+        private ScopedSettingStoreInterface $scoped,
         private SettingValueResolver $fallback,
     ) {
     }
 
     public function resolve(SettingDefinition $definition, ScopeContext $context): SettingValue
     {
-        $resolved = $this->scoped->getWithSource($definition->path, $context);
+        $resolved = $this->scoped->resolve($definition->path, $context);
         /** @var ScopeType|null $resolvedScope */
         $resolvedScope = $resolved['resolvedScope'];
         if ($resolvedScope === null) {

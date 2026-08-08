@@ -17,3 +17,7 @@ Cross-layer Settings UI tests use the shared `settingsPresentationBundle()` fixt
 ## Composition services
 
 `SettingsPresentationBuilder`, `SettingsScopeSelection` and `SettingsAdminUrls` are Settings-owned container services. Controller wiring resolves them from the service container while retaining responder and mutation-coordinator composition at the controller factory boundary.
+
+## Persistence boundary
+
+`ScopedSettingStoreInterface` is the Settings-owned boundary for scoped resolution, atomic writes and override clearing. `ScopeConfigSettingStore` adapts Core scope configuration without exposing PDO or the concrete repository to Settings application services.

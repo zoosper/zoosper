@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Settings\Write;
 
-use PDO;
-use Throwable;
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
+use Zoosper\Settings\Persistence\ScopedSettingStoreInterface;
 use Zoosper\Core\Config\Scope\ScopeType;
 use Zoosper\Settings\Definition\SettingsSection;
 
@@ -14,8 +12,7 @@ use Zoosper\Settings\Definition\SettingsSection;
 final readonly class SectionSettingsWriter
 {
     public function __construct(
-        private PDO $pdo,
-        private ScopeConfigRepository $repository,
+        private ScopedSettingStoreInterface $store,
         private SettingValueNormaliser $normaliser,
     ) {
     }
@@ -43,17 +40,6 @@ final readonly class SectionSettingsWriter
             throw new SettingValidationException($errors);
         }
 
-        $this->pdo->beginTransaction();
-        try {
-            foreach ($normalised as $path => $value) {
-                $this->repository->set($path, $scope, $scopeKey, $value);
-            }
-            $this->pdo->commit();
-        } catch (Throwable $exception) {
-            if ($this->pdo->inTransaction()) {
-                $this->pdo->rollBack();
-            }
-            throw $exception;
-        }
+        $this->store->writeMany($normalised, $scope, $scopeKey);
     }
 }
