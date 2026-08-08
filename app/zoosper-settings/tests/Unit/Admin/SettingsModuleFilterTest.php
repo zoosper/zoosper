@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 it('derives the module filter from discovered module-owned sections', function (): void {
     $root=dirname(__DIR__,5);$view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
     expect($view)->toContain('$settingsModules[$moduleSection->module] = $moduleSection->module')
         ->toContain('ksort($settingsModules)')
         ->toContain('id="settings-module-filter"')
@@ -13,6 +15,8 @@ it('derives the module filter from discovered module-owned sections', function (
 
 it('composes remembered module filtering with search and source views', function (): void {
     $root=dirname(__DIR__,5);$view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
     expect($view)->toContain("moduleMatch=module==='all'||section.dataset.settingsModule===module")
         ->toContain("localStorage.setItem('zoosper.settings.moduleFilter',moduleFilter.value)")
         ->toContain("localStorage.getItem('zoosper.settings.moduleFilter')")

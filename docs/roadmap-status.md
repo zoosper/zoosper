@@ -38,3 +38,7 @@ Post-migration cleanup removed three unused Page Grid integration abstractions a
 ## Phase 9FT Settings Admin runtime closure
 
 Settings screen composition moved to `SettingsCatalogueResponder`; save and inherited-value restoration moved to `SettingsMutationCoordinator`; canonical Settings URLs are shared through `SettingsAdminUrls`. The controller retains only authentication, delegation and response return.
+
+## Phase 9FU Settings presentation asset closure
+
+Settings presentation was split into a semantic PHP template, a module-owned stylesheet and a deferred module-owned browser runtime. Existing workspace, saved-view, keyboard, print, accessibility and form contracts remain covered against the complete presentation bundle.

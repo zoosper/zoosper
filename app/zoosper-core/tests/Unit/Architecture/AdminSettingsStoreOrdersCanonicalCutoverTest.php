@@ -6,6 +6,8 @@ it('wires Settings forms scope redirects and template navigation through canonic
     $root = dirname(__DIR__, 5);
     $urls = (string) file_get_contents($root . '/app/zoosper-settings/src/Admin/SettingsAdminUrls.php');
     $view = (string) file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
     $wiring = (string) file_get_contents($root . '/app/zoosper-settings/config/controllers.php');
 
     expect($urls)->toContain('private ?AdminUrlGenerator $adminUrls = null')

@@ -5,6 +5,8 @@ declare(strict_types=1);
 it('provides remembered comfortable and compact density modes', function (): void {
     $root = dirname(__DIR__, 5);
     $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
 
     expect($view)->toContain('id="settings-density"')
         ->toContain('<option value="comfortable">Comfortable</option>')
@@ -17,6 +19,8 @@ it('provides remembered comfortable and compact density modes', function (): voi
 it('resets density with the existing Reset view operation', function (): void {
     $root = dirname(__DIR__, 5);
     $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
 
     expect($view)->toContain("density.value='comfortable'")
         ->toContain("workspace.dataset.density='comfortable'")
@@ -26,6 +30,8 @@ it('resets density with the existing Reset view operation', function (): void {
 it('provides a print view without settings mutation controls', function (): void {
     $root = dirname(__DIR__, 5);
     $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
 
     expect($view)->toContain('id="settings-print"')
         ->toContain("printView.addEventListener('click',()=>window.print())")

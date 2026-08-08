@@ -904,3 +904,7 @@ Superseded complete-page and framework-neutral controller scaffolding was remove
 ## Phase 9FT Settings Admin runtime closure
 
 The Settings controller is now a thin authenticated HTTP adapter. Settings-owned collaborators handle catalogue rendering, scoped save and clear workflows, audit logging, flash messages and canonical URLs without changing the existing routes or template contract.
+
+## Phase 9FU Settings presentation asset closure
+
+The Settings workspace stylesheet and browser runtime are now module-owned assets served through the secured asset route and registered through the Admin asset manifest. The template retains semantic markup and its JSON bootstrap payload but no executable inline CSS or JavaScript.

@@ -6,6 +6,8 @@ it('declares a protected save route and CSRF-protected scoped section form', fun
     $root = dirname(__DIR__, 5);
     $routes = require $root . '/app/zoosper-settings/config/admin_routes.php';
     $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
 
     expect($routes)->toContain([
         'method' => 'POST',

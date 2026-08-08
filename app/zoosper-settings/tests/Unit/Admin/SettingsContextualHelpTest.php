@@ -5,6 +5,8 @@ declare(strict_types=1);
 it('moves persistent explanatory text into an accessible help disclosure', function (): void {
     $root=dirname(__DIR__,5);
     $view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
 
     expect($view)->toContain('<details class="settings-help">')
         ->toContain('<summary id="settings-help-summary" aria-controls="settings-help-panel" aria-label="About Settings">?</summary>')
@@ -17,6 +19,8 @@ it('moves persistent explanatory text into an accessible help disclosure', funct
 it('keeps scope compact and shows reset only outside Default scope', function (): void {
     $root=dirname(__DIR__,5);
     $view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
 
     expect($view)->toContain('aria-label="Settings scope"')
         ->toContain('scopeType!==')
@@ -27,6 +31,8 @@ it('keeps scope compact and shows reset only outside Default scope', function ()
 it('consolidates visible workspace feedback into one compact status line', function (): void {
     $root=dirname(__DIR__,5);
     $view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
+    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
 
     expect($view)->toContain('id="settings-workspace-status"')
         ->toContain('id="settings-active-state"')
