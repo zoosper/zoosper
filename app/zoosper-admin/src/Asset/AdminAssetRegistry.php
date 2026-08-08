@@ -49,7 +49,7 @@ final readonly class AdminAssetRegistry
                 continue;
             }
 
-            $config = require $file;
+            $config = $this->loadConfig($file);
             if (!is_array($config)) {
                 throw new RuntimeException('Admin asset config must return an array: ' . $file);
             }
@@ -71,6 +71,20 @@ final readonly class AdminAssetRegistry
         usort($assets, static fn (AdminAsset $a, AdminAsset $b): int => [$a->sortOrder, $a->handle] <=> [$b->sortOrder, $b->handle]);
 
         return $this->deduplicateByPhysicalPath($assets);
+    }
+
+    /**
+     * Load a module manifest in an isolated function scope.
+     *
+     * A required PHP file inherits local variables from its caller. Several
+     * module manifests use `$assets` while building their return value, which
+     * must not overwrite all()'s asset accumulator.
+     *
+     * @return mixed
+     */
+    private function loadConfig(string $file): mixed
+    {
+        return (static fn (string $manifest): mixed => require $manifest)($file);
     }
 
     /**
