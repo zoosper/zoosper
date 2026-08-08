@@ -114,7 +114,10 @@ final class Router
                 ], 500);
             }
 
-            return Response::html('<h1>500</h1><p>An unexpected error occurred. The details have been logged.</p>', 500);
+            return $this->errorHandler?->httpResponse(
+                $exception,
+                str_starts_with($request->path(), '/api/'),
+            ) ?? Response::html('<h1>500</h1><p>An unexpected error occurred. The details have been logged.</p>', 500);
         }
     }
 

@@ -80,3 +80,6 @@ This package depends on `marko/core` only — no other Zoosper module —
 making it genuinely installable standalone today, without any path-repository
 workaround.
 
+## HTTP exception presentation
+
+`ExceptionDisplayer::formatHtml()` provides side-effect-free Marko HTML for caught HTTP exceptions. Core selects this only when the authoritative merged `app.debug` setting is true; production web and all API failures retain generic responses.

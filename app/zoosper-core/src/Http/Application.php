@@ -8,6 +8,7 @@ use Throwable;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
 use Zoosper\Core\Site\SiteContextResolver;
+use Zoosper\Core\Log\ErrorHandler;
 
 final readonly class Application
 {
@@ -15,6 +16,7 @@ final readonly class Application
         private Router $router,
         private SecurityHeaders $securityHeaders,
         private ?SiteContextResolver $siteResolver = null,
+        private ?ErrorHandler $errorHandler = null,
     ) {
     }
 
@@ -67,7 +69,15 @@ final readonly class Application
         try {
             $response = $this->router->dispatch($request);
         } catch (Throwable $exception) {
-            $response = Response::json([
+            $this->errorHandler?->logException($exception, [
+                'path' => $request->path(),
+                'method' => $request->method(),
+                'boundary' => 'application',
+            ]);
+            $response = $this->errorHandler?->httpResponse(
+                $exception,
+                str_starts_with($request->path(), '/api/'),
+            ) ?? Response::json([
                 'success' => false,
                 'error' => [
                     'code' => 'internal_error',

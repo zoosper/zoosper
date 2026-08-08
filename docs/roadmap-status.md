@@ -74,3 +74,7 @@ CI enforcement now covers Composer metadata and audit, JavaScript syntax, the re
 ## Phase 9GC Runtime boundary hardening
 
 Module discovery now rejects cross-layer identity collisions with both paths and sources in the exception, preventing stale app/modules copies from silently masking vendor packages. Asset containment is behaviourally guarded against null bytes, encoded traversal and symlink escapes.
+
+## Phase 9GD HTTP exception presentation closure
+
+The Marko renderer now serves caught development HTTP exceptions as well as truly uncaught exceptions. `app.debug` from merged application configuration controls web detail exposure, while production and API responses remain safe and generic.

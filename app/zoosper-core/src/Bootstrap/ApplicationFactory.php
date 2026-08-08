@@ -61,7 +61,10 @@ final class ApplicationFactory
         $markoConfig = new MarkoConfigRepositoryAdapter($config);
 
         $logManager = new LogManager($config, $basePath);
-        $errorHandler = new ErrorHandler($logManager->exceptions());
+        $errorHandler = new ErrorHandler(
+            $logManager->exceptions(),
+            (bool) ($config->get('app.debug', false) ?? false),
+        );
         $errorHandler->register();
 
         // BOOT-ORDER FIX: this now runs AFTER error-handler registration
@@ -149,6 +152,7 @@ final class ApplicationFactory
             $router,
             new SecurityHeaders($config->array('security.headers'), $config->array('security.csp'), $config->array('security.hsts')),
             $services->get(\Zoosper\Core\Site\SiteContextResolver::class),
+            $errorHandler,
         );
     }
 }

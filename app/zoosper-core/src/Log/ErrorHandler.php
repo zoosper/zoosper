@@ -8,6 +8,7 @@ use Throwable;
 use Zoosper\Errors\ExceptionDisplayer;
 use Zoosper\Errors\SensitiveValueRedactor;
 use Zoosper\Errors\ZoosperException;
+use Zoosper\Core\Http\Response;
 
 /**
  * BUG FOUND AND FIXED (confirmed 2026-07-30, while wiring Marko for real):
@@ -65,8 +66,10 @@ use Zoosper\Errors\ZoosperException;
  */
 final readonly class ErrorHandler
 {
-    public function __construct(private LocalLogger $logger)
-    {
+    public function __construct(
+        private LocalLogger $logger,
+        private bool $debug = false,
+    ) {
     }
 
     public function register(): void
@@ -113,6 +116,31 @@ final readonly class ErrorHandler
     {
         $this->logException($exception);
         (new ExceptionDisplayer())->display($exception);
+    }
+
+    public function httpResponse(Throwable $exception, bool $api = false): Response
+    {
+        if ($api) {
+            return Response::json([
+                'success' => false,
+                'error' => [
+                    'code' => 'internal_error',
+                    'message' => 'Zoosper encountered an unexpected error.',
+                ],
+            ], 500);
+        }
+
+        if (!$this->debug) {
+            return Response::html('<h1>500</h1><p>An unexpected error occurred. The details have been logged.</p>', 500);
+        }
+
+        try {
+            return Response::html((new ExceptionDisplayer())->formatHtml($exception), 500);
+        } catch (Throwable $displayFailure) {
+            $this->logger->exception($displayFailure, ['component' => 'exception_displayer']);
+
+            return Response::html('<h1>500</h1><p>An unexpected error occurred. The details have been logged.</p>', 500);
+        }
     }
 
     /** @param array<string, mixed> $context */

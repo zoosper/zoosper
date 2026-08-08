@@ -39,6 +39,16 @@ use Throwable;
  */
 final readonly class ExceptionDisplayer
 {
+    public function formatHtml(Throwable $exception): string
+    {
+        $report = ErrorReport::fromThrowable($exception, Severity::Error);
+        $environment = new Environment();
+        $extractor = new CodeSnippetExtractor();
+        $formatter = new BasicHtmlFormatter($environment, $extractor);
+
+        return $formatter->format($report);
+    }
+
     public function display(Throwable $exception): void
     {
         $report = ErrorReport::fromThrowable($exception, Severity::Error);
@@ -56,7 +66,6 @@ final readonly class ExceptionDisplayer
             http_response_code(500);
         }
 
-        $formatter = new BasicHtmlFormatter($environment, $extractor);
-        echo $formatter->format($report);
+        echo $this->formatHtml($exception);
     }
 }

@@ -920,3 +920,7 @@ The `dev` branch now has a least-privilege, concurrency-controlled PHP 8.5 workf
 ## Phase 9GC Runtime boundary hardening
 
 Cross-layer module identity collisions now fail descriptively instead of allowing a stale higher-priority copy to shadow an extracted package. Same-layer duplicate handling remains intact. Asset resolution gained explicit null-byte, encoded traversal and symlink-escape regression coverage while retaining valid asset behaviour.
+
+## Phase 9GD HTTP exception presentation closure
+
+Exceptions caught by Router and Application now use one environment-aware ErrorHandler boundary. Development web requests render Marko HTML from `zoosper-errors`; production web requests and all API requests stay generic. Both catch boundaries retain single-shot logging, HTTP status and content type.

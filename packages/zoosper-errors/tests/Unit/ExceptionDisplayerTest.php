@@ -47,3 +47,9 @@ it('includes context and suggestion for a ZoosperException, via the REAL Marko f
     expect($output)->toContain('Loading config/example.php');
     expect($output)->toContain('Create the missing config file.');
 });
+it('returns Marko web HTML without emitting it', function (): void {
+    $html = (new ExceptionDisplayer())->formatHtml(new RuntimeException('Web formatter contract.'));
+
+    expect($html)->toContain('RuntimeException')
+        ->toContain('Web formatter contract.');
+});
