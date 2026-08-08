@@ -9,13 +9,15 @@ it('wires Settings forms scope redirects and template navigation through canonic
     $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
     $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
     $wiring = (string) file_get_contents($root . '/app/zoosper-settings/config/controllers.php');
+    $services = (string) file_get_contents($root . '/app/zoosper-settings/config/services.php');
 
     expect($urls)->toContain('private ?AdminUrlGenerator $adminUrls = null')
         ->toContain("\$this->url('settings', ['scope' => \$type, 'scope_key' => \$key])")
         ->and($view)->toContain('action="<?= $e($saveUrl) ?>"')
         ->toContain('formaction="<?= $e($clearUrl) ?>"')
         ->not->toContain('action="/admin/settings')
-        ->and($wiring)->toContain('$services->get(AdminUrlGenerator::class)')
+        ->and($wiring)->toContain('$services->get(SettingsAdminUrls::class)')
+        ->and($services)->toContain('$services->get(AdminUrlGenerator::class)')
         ->toContain('new SettingsAdminUrls(');
 });
 

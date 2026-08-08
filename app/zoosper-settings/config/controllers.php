@@ -7,7 +7,6 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
-use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Settings\Admin\SettingsAdminUrls;
 use Zoosper\Settings\Admin\SettingsCatalogueResponder;
 use Zoosper\Settings\Admin\SettingsMutationCoordinator;
@@ -19,12 +18,11 @@ use Zoosper\Settings\Scope\SettingsScopeSelection;
 use Zoosper\Settings\Value\ScopedSettingValueResolver;
 use Zoosper\Settings\Write\ScopedSettingClearer;
 use Zoosper\Settings\Write\SectionSettingsWriter;
-use Zoosper\Site\Repository\SiteRepository;
 
 return [
     SettingsCatalogueController::class => static function (ServiceContainer $services): SettingsCatalogueController {
-        $scopeSelection = new SettingsScopeSelection($services->get(SiteRepository::class));
-        $urls = new SettingsAdminUrls($services->get(AdminUrlGenerator::class));
+        $scopeSelection = $services->get(SettingsScopeSelection::class);
+        $urls = $services->get(SettingsAdminUrls::class);
 
         return new SettingsCatalogueController(
             $services->get(SessionGuard::class),
@@ -35,7 +33,7 @@ return [
                 $scopeSelection,
                 $services->get(CsrfTokenManager::class),
                 $urls,
-                new SettingsPresentationBuilder(),
+                $services->get(SettingsPresentationBuilder::class),
             ),
             new SettingsMutationCoordinator(
                 $services->get(ModuleSettingsCatalogueLoader::class),

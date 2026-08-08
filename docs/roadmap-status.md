@@ -50,3 +50,7 @@ The post-asset-cutover Settings test suite now uses `settingsPresentationBundle(
 ## Phase 9FW Settings presentation model closure
 
 `SettingsPresentationBuilder` now prepares stable view metadata while the template retains semantic iteration and markup.
+
+## Phase 9FX Settings composition closure
+
+`SettingsPresentationBuilder`, `SettingsScopeSelection` and `SettingsAdminUrls` now resolve through Settings-owned service registrations. Controller wiring composes responders and mutation coordinators from those registered collaborators without constructing the shared services directly.

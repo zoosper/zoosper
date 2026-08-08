@@ -916,3 +916,7 @@ Settings Admin presentation-contract tests now load the semantic template, style
 ## Phase 9FW Settings presentation model closure
 
 Category ordering, module options, section search metadata, field editability, input metadata, display values and scope bootstrap JSON now come from one Settings-owned presentation builder.
+
+## Phase 9FX Settings composition closure
+
+Settings presentation, scope-selection and canonical-URL collaborators are registered through the module service manifest and resolved by controller wiring. Direct construction of these shared Settings composition services is regression-guarded.

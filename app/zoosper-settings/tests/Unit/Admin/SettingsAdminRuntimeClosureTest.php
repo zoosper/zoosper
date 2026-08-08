@@ -26,7 +26,7 @@ it('wires Settings screen and mutation ownership through Settings collaborators'
 
     expect($factory)->toContain('new SettingsCatalogueResponder(')
         ->toContain('new SettingsMutationCoordinator(')
-        ->toContain('new SettingsAdminUrls(')
+        ->toContain('$services->get(SettingsAdminUrls::class)')
         ->and($responder)->toContain("template: 'zoosper-settings::admin/settings/index'")
         ->toContain("'csrfToken' => \$this->csrf->token()")
         ->and($mutations)->toContain("->sectionSaved(")

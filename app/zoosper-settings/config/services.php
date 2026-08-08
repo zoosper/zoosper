@@ -7,15 +7,27 @@ use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Config\Scope\ScopeConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Settings\Admin\SettingsAdminUrls;
+use Zoosper\Settings\Admin\SettingsPresentationBuilder;
 use Zoosper\Settings\Audit\SettingsAuditLogger;
 use Zoosper\Settings\Catalogue\ModuleSettingsCatalogueLoader;
 use Zoosper\Settings\Value\ScopedSettingValueResolver;
 use Zoosper\Settings\Value\SettingValueResolver;
+use Zoosper\Settings\Scope\SettingsScopeSelection;
+use Zoosper\Site\Repository\SiteRepository;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Settings\Write\SectionSettingsWriter;
 use Zoosper\Settings\Write\ScopedSettingClearer;
 use Zoosper\Settings\Write\SettingValueNormaliser;
 
 return [
+    SettingsPresentationBuilder::class => static fn (): SettingsPresentationBuilder => new SettingsPresentationBuilder(),
+    SettingsScopeSelection::class => static fn (ServiceContainer $services): SettingsScopeSelection => new SettingsScopeSelection(
+        $services->get(SiteRepository::class),
+    ),
+    SettingsAdminUrls::class => static fn (ServiceContainer $services): SettingsAdminUrls => new SettingsAdminUrls(
+        $services->get(AdminUrlGenerator::class),
+    ),
     ModuleSettingsCatalogueLoader::class => static fn (ServiceContainer $services): ModuleSettingsCatalogueLoader => new ModuleSettingsCatalogueLoader(
         $services->get(ModuleRegistry::class),
     ),

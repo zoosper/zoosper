@@ -13,3 +13,7 @@ Cross-layer Settings UI tests use the shared `settingsPresentationBundle()` fixt
 ## Presentation model
 
 `SettingsPresentationBuilder` owns category, module, section, field, input, display-value and scope-bootstrap presentation metadata.
+
+## Composition services
+
+`SettingsPresentationBuilder`, `SettingsScopeSelection` and `SettingsAdminUrls` are Settings-owned container services. Controller wiring resolves them from the service container while retaining responder and mutation-coordinator composition at the controller factory boundary.
