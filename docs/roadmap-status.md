@@ -35,3 +35,6 @@ The cross-module presentation-contract migration is complete: shared contracts m
 ## Phase 9FS dead-runtime and compatibility closure
 
 Post-migration cleanup removed three unused Page Grid integration abstractions and their isolated tests. Core presentation contracts, Admin concrete implementations, Page Grid runtime composition, export, saved views, mutations, bulk actions and frontend boot remain regression-guarded.
+## Phase 9FT Settings Admin runtime closure
+
+Settings screen composition moved to `SettingsCatalogueResponder`; save and inherited-value restoration moved to `SettingsMutationCoordinator`; canonical Settings URLs are shared through `SettingsAdminUrls`. The controller retains only authentication, delegation and response return.

@@ -24,10 +24,10 @@ it('declares a protected save route and CSRF-protected scoped section form', fun
 
 it('keeps section and scope authority on the server', function (): void {
     $root = dirname(__DIR__, 5);
-    $source = file_get_contents($root . '/app/zoosper-settings/src/Controller/SettingsCatalogueController.php');
+    $source = file_get_contents($root . '/app/zoosper-settings/src/Admin/SettingsMutationCoordinator.php');
 
     expect($source)->toContain('private function findSection')
-        ->toContain('$this->scopeSelection->select($scope, $scopeKey)')
+        ->toContain('$this->scopeSelection->select(')
         ->toContain('$this->writer->write($section, $scopeType, $resolvedKey, $settings)')
         ->toContain('$effective->source === \'project\'')
         ->not->toContain('$_POST');

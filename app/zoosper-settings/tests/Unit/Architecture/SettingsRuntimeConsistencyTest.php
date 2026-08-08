@@ -5,11 +5,11 @@ declare(strict_types=1);
 it('resolves scoped values directly from the scoped repository after redirects', function (): void {
     $root = dirname(__DIR__, 5);
     $resolver = file_get_contents($root . '/app/zoosper-settings/src/Value/ScopedSettingValueResolver.php');
-    $controller = file_get_contents($root . '/app/zoosper-settings/src/Controller/SettingsCatalogueController.php');
+    $mutations = file_get_contents($root . '/app/zoosper-settings/src/Admin/SettingsMutationCoordinator.php');
 
     expect($resolver)->toContain('private ScopeConfigRepository $scoped')
         ->toContain('$this->scoped->getWithSource($definition->path, $context)')
-        ->and($controller)->toContain('Response::redirect($this->scopeUrl(');
+        ->and($mutations)->toContain('Response::redirect($this->urls->scope(');
 });
 
 it('does not flush the unrelated application cache from settings writes', function (): void {

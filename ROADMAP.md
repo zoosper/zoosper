@@ -901,3 +901,6 @@ Shared content-editor and flash-message interfaces plus Admin form configuration
 ## Phase 9FS Page Grid dead-runtime closure
 
 Superseded complete-page and framework-neutral controller scaffolding was removed after repository-wide reference analysis proved it was isolated to self-tests. The deployed Page Grid remains owned by `PageAdminGridResponder`, `PageGridWorkspace`, and `PageGridMutationCoordinator`.
+## Phase 9FT Settings Admin runtime closure
+
+The Settings controller is now a thin authenticated HTTP adapter. Settings-owned collaborators handle catalogue rendering, scoped save and clear workflows, audit logging, flash messages and canonical URLs without changing the existing routes or template contract.

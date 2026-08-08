@@ -11,7 +11,7 @@ it('keeps migrated runtime consumers on the canonical Admin URL boundary', funct
         '/app/zoosper-mail/src/Controller/EmailLogAdminController.php' => "->url('mail-logs')",
         '/app/zoosper-site/src/Admin/Controller/SiteAdminController.php' => 'private function adminUrl(',
         '/app/zoosper-site/src/Admin/Controller/SiteDomainAdminController.php' => 'private function adminUrl(',
-        '/app/zoosper-settings/src/Controller/SettingsCatalogueController.php' => "adminUrl('settings'",
+        '/app/zoosper-settings/src/Admin/SettingsAdminUrls.php' => "url('settings'",
         '/packages/zoosper-store-orders/src/Admin/StoreOrderGridWorkspace.php' => "->url('store-orders')",
         '/packages/zoosper-media/src/Controller/MediaAdminController.php' => "adminUrl('media'",
     ];

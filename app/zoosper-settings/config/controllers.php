@@ -2,33 +2,49 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Core\Url\AdminUrlGenerator;
-use Zoosper\Settings\Catalogue\ModuleSettingsCatalogueLoader;
+use Zoosper\Settings\Admin\SettingsAdminUrls;
+use Zoosper\Settings\Admin\SettingsCatalogueResponder;
+use Zoosper\Settings\Admin\SettingsMutationCoordinator;
 use Zoosper\Settings\Audit\SettingsAuditLogger;
+use Zoosper\Settings\Catalogue\ModuleSettingsCatalogueLoader;
 use Zoosper\Settings\Controller\SettingsCatalogueController;
 use Zoosper\Settings\Scope\SettingsScopeSelection;
-use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Settings\Value\ScopedSettingValueResolver;
-use Zoosper\Settings\Write\SectionSettingsWriter;
 use Zoosper\Settings\Write\ScopedSettingClearer;
+use Zoosper\Settings\Write\SectionSettingsWriter;
+use Zoosper\Site\Repository\SiteRepository;
 
 return [
-    SettingsCatalogueController::class => static fn (ServiceContainer $services): SettingsCatalogueController => new SettingsCatalogueController(
-        $services->get(SessionGuard::class),
-        $services->get(AdminViewRendererInterface::class),
-        $services->get(ModuleSettingsCatalogueLoader::class),
-        $services->get(ScopedSettingValueResolver::class),
-        new SettingsScopeSelection($services->get(SiteRepository::class)),
-        $services->get(SectionSettingsWriter::class),
-        $services->get(ScopedSettingClearer::class),
-        $services->get(SettingsAuditLogger::class),
-        $services->get(CsrfTokenManager::class),
-        $services->get(FlashMessageStoreInterface::class),
-        $services->get(AdminUrlGenerator::class),
-    ),
+    SettingsCatalogueController::class => static function (ServiceContainer $services): SettingsCatalogueController {
+        $scopeSelection = new SettingsScopeSelection($services->get(SiteRepository::class));
+        $urls = new SettingsAdminUrls($services->get(AdminUrlGenerator::class));
+
+        return new SettingsCatalogueController(
+            $services->get(SessionGuard::class),
+            new SettingsCatalogueResponder(
+                $services->get(AdminViewRendererInterface::class),
+                $services->get(ModuleSettingsCatalogueLoader::class),
+                $services->get(ScopedSettingValueResolver::class),
+                $scopeSelection,
+                $services->get(CsrfTokenManager::class),
+                $urls,
+            ),
+            new SettingsMutationCoordinator(
+                $services->get(ModuleSettingsCatalogueLoader::class),
+                $services->get(ScopedSettingValueResolver::class),
+                $scopeSelection,
+                $services->get(SectionSettingsWriter::class),
+                $services->get(ScopedSettingClearer::class),
+                $services->get(SettingsAuditLogger::class),
+                $services->get(FlashMessageStoreInterface::class),
+                $urls,
+            ),
+        );
+    },
 ];
