@@ -46,3 +46,7 @@ Settings presentation was split into a semantic PHP template, a module-owned sty
 ## Phase 9FV Settings presentation test consolidation
 
 The post-asset-cutover Settings test suite now uses `settingsPresentationBundle()` as its single complete-presentation fixture. Existing accessibility, saved-view, search, print, keyboard and workspace assertions remain separate and unchanged.
+
+## Phase 9FW Settings presentation model closure
+
+`SettingsPresentationBuilder` now prepares stable view metadata while the template retains semantic iteration and markup.

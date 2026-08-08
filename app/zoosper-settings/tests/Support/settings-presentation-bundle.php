@@ -14,6 +14,7 @@ if (!function_exists('settingsPresentationBundle')) {
     {
         return (string) file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php')
             . (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css')
-            . (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+            . (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js')
+            . (string) file_get_contents($root . '/app/zoosper-settings/src/Admin/SettingsPresentationBuilder.php');
     }
 }

@@ -16,7 +16,7 @@ it('uses print-only values instead of editable controls', function (): void {
 
 it('keeps secret masking authoritative in print and screen views', function (): void {
     $root=dirname(__DIR__,5);$view = settingsPresentationBundle($root);
-    expect($view)->toContain('$effective->secret?\'••••••••\'')
+    expect($view)->toContain('\'displayValue\' => $effective->secret')
         ->not->toContain('type="password"')
         ->not->toContain('data-copy-setting-value');
 });

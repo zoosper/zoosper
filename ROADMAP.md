@@ -912,3 +912,7 @@ The Settings workspace stylesheet and browser runtime are now module-owned asset
 ## Phase 9FV Settings presentation test consolidation
 
 Settings Admin presentation-contract tests now load the semantic template, stylesheet and browser runtime through one guarded test helper. Behavioural test files remain focused while repeated three-file setup introduced during the asset cutover is retired.
+
+## Phase 9FW Settings presentation model closure
+
+Category ordering, module options, section search metadata, field editability, input metadata, display values and scope bootstrap JSON now come from one Settings-owned presentation builder.

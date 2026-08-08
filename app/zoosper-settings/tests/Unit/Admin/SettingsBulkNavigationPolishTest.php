@@ -8,7 +8,7 @@ it('uses canonical category order and remembers category navigation', function (
     $root = dirname(__DIR__, 5);
     $view = settingsPresentationBundle($root);
 
-    expect($view)->toContain('$categoryOrder = [\'general\', \'communication\', \'content\', \'design\', \'commerce\', \'security\', \'advanced\']')
+    expect($view)->toContain('private const CATEGORY_ORDER = [\'general\', \'communication\', \'content\', \'design\', \'commerce\', \'security\', \'advanced\']')
         ->toContain("localStorage.setItem('zoosper.settings.category',category)")
         ->toContain("localStorage.getItem('zoosper.settings.category')")
         ->toContain('settings-nav-title');

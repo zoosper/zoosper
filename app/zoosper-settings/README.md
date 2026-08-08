@@ -9,3 +9,7 @@ The Settings workspace CSS and JavaScript live under `resources/assets` and are 
 ## Presentation contract tests
 
 Cross-layer Settings UI tests use the shared `settingsPresentationBundle()` fixture to inspect the semantic template, module stylesheet and deferred browser runtime as one contract without duplicating file-loading setup.
+
+## Presentation model
+
+`SettingsPresentationBuilder` owns category, module, section, field, input, display-value and scope-bootstrap presentation metadata.

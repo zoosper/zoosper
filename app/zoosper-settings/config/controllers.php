@@ -11,6 +11,7 @@ use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Settings\Admin\SettingsAdminUrls;
 use Zoosper\Settings\Admin\SettingsCatalogueResponder;
 use Zoosper\Settings\Admin\SettingsMutationCoordinator;
+use Zoosper\Settings\Admin\SettingsPresentationBuilder;
 use Zoosper\Settings\Audit\SettingsAuditLogger;
 use Zoosper\Settings\Catalogue\ModuleSettingsCatalogueLoader;
 use Zoosper\Settings\Controller\SettingsCatalogueController;
@@ -34,6 +35,7 @@ return [
                 $scopeSelection,
                 $services->get(CsrfTokenManager::class),
                 $urls,
+                new SettingsPresentationBuilder(),
             ),
             new SettingsMutationCoordinator(
                 $services->get(ModuleSettingsCatalogueLoader::class),

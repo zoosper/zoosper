@@ -23,6 +23,7 @@ final readonly class SettingsCatalogueResponder
         private SettingsScopeSelection $scopeSelection,
         private CsrfTokenManager $csrf,
         private SettingsAdminUrls $urls,
+        private SettingsPresentationBuilder $presentation = new SettingsPresentationBuilder(),
     ) {
     }
 
@@ -30,21 +31,25 @@ final readonly class SettingsCatalogueResponder
     {
         $selection = $this->scopeSelection->fromRequest($request);
         $sections = $this->catalogue->load()->all();
-        $categories = [];
         $effectiveValues = [];
-
         foreach ($sections as $section) {
-            $categories[$section->category][] = $section;
             foreach ($section->settings as $setting) {
                 $effectiveValues[$setting->path] = $this->values->resolve($setting, $selection['context']);
             }
         }
+        $presentation = $this->presentation->build(
+            $sections,
+            $effectiveValues,
+            $selection['websites'],
+            $selection['stores'],
+            $selection['sites'],
+        );
 
         return Response::html($this->views->render(
             title: 'Settings',
             template: 'zoosper-settings::admin/settings/index',
             data: [
-                'categories' => $categories,
+                ...$presentation,
                 'sectionCount' => count($sections),
                 'effectiveValues' => $effectiveValues,
                 'scopeLabel' => $selection['label'],

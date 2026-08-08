@@ -8,8 +8,8 @@ it('provides stable field links and value-free copy-path controls', function ():
     $root = dirname(__DIR__, 5);
     $view = settingsPresentationBundle($root);
 
-    expect($view)->toContain('id="setting-<?= $e(str_replace([\'.\', \'_\'], \'-\', $setting->path)) ?>"')
-        ->toContain('href="#setting-')
+    expect($view)->toContain('\'id\' => \'setting-\' . str_replace')
+        ->toContain('href="#<?= $e($fieldView[\'id\']) ?>"')
         ->toContain('data-copy-setting-path="<?= $e($setting->path) ?>"')
         ->toContain('navigator.clipboard.writeText(path)')
         ->not->toContain('data-copy-setting-value');
