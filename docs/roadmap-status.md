@@ -82,3 +82,7 @@ The Marko renderer now serves caught development HTTP exceptions as well as trul
 ## Phase 9GE CLI recovery bootstrap closure
 
 `help`, `list`, `compile` and `cache:clear` are regression-tested against an unreachable database. CLI uses the same `ApplicationConfigLoader` as HTTP, and module command composition now retains `PdoConnectionProvider` laziness through the service container rather than forcing PDO before command resolution.
+
+## Phase 9GF Console kernel decomposition
+
+Core now owns operational command objects for migrate, compile, cache clear and manifest diagnostics, plus reusable `ConsoleServiceFactory` and `ConsoleKernel` boundaries. The executable retains deployment and scaffolding orchestration as an explicit follow-up.

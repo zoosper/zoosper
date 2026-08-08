@@ -13,8 +13,11 @@ it('validates manifest output format once before command dispatch', function ():
         ->toContain('exit(2);');
 });
 
-it('reuses the validated format for both JSON branches', function (): void {
-    $source = file_get_contents(dirname(__DIR__, 5) . '/bin/zoosper');
+it('keeps explicit JSON branches in both manifest command objects', function (): void {
+    $root = dirname(__DIR__, 5);
+    $status = file_get_contents($root . '/app/zoosper-core/src/Console/BuiltIn/ManifestStatusCommand.php');
+    $check = file_get_contents($root . '/app/zoosper-core/src/Console/BuiltIn/ManifestCheckCommand.php');
 
-    expect(substr_count($source, 'if ($format === \'json\')'))->toBe(2);
+    expect($status)->toContain("if (\$format === 'json')")
+        ->and($check)->toContain("if (\$format === 'json')");
 });

@@ -913,3 +913,7 @@ Exceptions caught by Router and Application now use one environment-aware ErrorH
 ## Phase 9GE CLI recovery bootstrap closure
 
 The console already had the correct shared configuration loader and a lazy PDO provider; Phase 9GE completed the boundary by carrying the provider into module-command composition, registering PDO lazily, migrating the stale root-only test fixture and adding real subprocess coverage proving recovery commands operate with an unreachable database.
+
+## Phase 9GF Console kernel decomposition
+
+Five operational commands moved into Core-owned command classes, reusable console service composition and kernel boundaries were introduced, and `bin/zoosper` stopped owning migration, compilation, cache-clear and manifest diagnostic implementations. Deployment and scaffolding extraction remain the next bulk slice.

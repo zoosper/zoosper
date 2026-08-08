@@ -9,6 +9,11 @@ use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Config\MarkoConfigRepositoryAdapter;
 use Zoosper\Core\Console\ConsoleApplication;
 use Zoosper\Core\Console\ConsoleOutput;
+use Zoosper\Core\Console\BuiltIn\CacheClearCommand;
+use Zoosper\Core\Console\BuiltIn\CompileCommand;
+use Zoosper\Core\Console\BuiltIn\ManifestCheckCommand;
+use Zoosper\Core\Console\BuiltIn\ManifestStatusCommand;
+use Zoosper\Core\Console\BuiltIn\MigrateCommand;
 use Zoosper\Core\Console\ModuleConsoleCommandLoader;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
@@ -49,75 +54,22 @@ $connection = new PdoConnectionProvider(
 );
 
 try {
+    $operationalCommands = [
+        'migrate' => new MigrateCommand(new Migrator($connection->get(), $basePath . '/database/migrations', $modules)),
+        'compile' => new CompileCommand(new ModuleManifestCompiler($basePath)),
+        'cache:clear' => new CacheClearCommand(new ModuleManifestCompiler($basePath)),
+        'module:manifest:status' => new ManifestStatusCommand(new ModuleManifestStatus($basePath)),
+        'module:manifest:check' => new ManifestCheckCommand(new ModuleManifestStatus($basePath)),
+    ];
+    if (isset($operationalCommands[$command])) {
+        exit($operationalCommands[$command]->run(array_slice($argv, 2), new ConsoleOutput()));
+    }
+
     if ($command === 'help' || $command === 'list') {
         $application = new ConsoleApplication(builtInCommands());
 
         exit($application->run($command, [], new ConsoleOutput()));
     }
-    if ($command === 'migrate') {
-        (new Migrator($connection->get(), $basePath . '/database/migrations', $modules))->migrate();
-        echo "Zoosper migrations completed.\n";
-        exit(0);
-    }
-
-    if ($command === 'compile') {
-        $compiledModules = (new ModuleManifestCompiler($basePath))->compile();
-        echo 'Compiled module manifest: ' . count($compiledModules) . " module(s).\n";
-        foreach ($compiledModules as $module) {
-            echo "  - {$module->name} ({$module->source})\n";
-        }
-        echo "\nCache written to: var/cache/modules.php\n";
-        echo "Run `bin/zoosper cache:clear` at any time to force live discovery again.\n";
-        exit(0);
-    }
-
-    if ($command === 'cache:clear') {
-        $compiler = new ModuleManifestCompiler($basePath);
-        $wasCompiled = $compiler->isCompiled();
-        $compiler->clear();
-        echo $wasCompiled
-            ? "Compiled module manifest cache cleared.\n"
-            : "No compiled module manifest cache was present (already using live discovery).\n";
-        exit(0);
-    }
-    if ($command === 'module:manifest:status') {
-        $status = (new ModuleManifestStatus($basePath))->inspect();
-        if ($format === 'json') {
-            echo json_encode($status, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . "\n";
-            exit(0);
-        }
-        echo "Module manifest status: {$status['status']}\n";
-        echo "Cache path: {$status['cachePath']}\n";
-        echo 'Enabled modules: ' . $status['moduleCount'] . "\n";
-        if ($status['rejectionReason'] !== null) {
-            echo "Rejection reason: {$status['rejectionReason']}\n";
-        }
-        exit(0);
-    }
-    if ($command === 'module:manifest:check') {
-        $status = (new ModuleManifestStatus($basePath))->inspect();
-        $healthy = $status['status'] === 'fresh';
-        if ($format === 'json') {
-            echo json_encode(
-                ['healthy' => $healthy] + $status,
-                JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES,
-            ) . "\n";
-            exit($healthy ? 0 : 1);
-        }
-        if ($healthy) {
-            echo "Module manifest check passed: fresh ({$status['moduleCount']} module(s)).\n";
-            exit(0);
-        }
-
-        fwrite(STDERR, "Module manifest check failed: {$status['status']}.\n");
-        fwrite(STDERR, "Cache path: {$status['cachePath']}\n");
-        if ($status['rejectionReason'] !== null) {
-            fwrite(STDERR, "Rejection reason: {$status['rejectionReason']}\n");
-        }
-        fwrite(STDERR, "Run `php8.5 bin/zoosper compile` to generate a fresh manifest.\n");
-        exit(1);
-    }
-
     if ($command === 'deploy') {
         echo "== Zoosper deploy ==\n\n";
 
