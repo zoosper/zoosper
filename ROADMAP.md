@@ -916,3 +916,7 @@ Reset 2FA confirmation is now provided by a registered Auth JavaScript asset wit
 ## Phase 9GB CI quality-gate closure
 
 The `dev` branch now has a least-privilege, concurrency-controlled PHP 8.5 workflow with Composer caching, strict validation and audit, JavaScript checks, strict gate, full Pest and compile enforcement. Psalm records its existing static-analysis debt as an explicit advisory signal rather than falsely blocking all changes.
+
+## Phase 9GC Runtime boundary hardening
+
+Cross-layer module identity collisions now fail descriptively instead of allowing a stale higher-priority copy to shadow an extracted package. Same-layer duplicate handling remains intact. Asset resolution gained explicit null-byte, encoded traversal and symlink-escape regression coverage while retaining valid asset behaviour.

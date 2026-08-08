@@ -8,6 +8,23 @@ use Zoosper\Errors\ZoosperException;
 
 final class DuplicateModuleException extends ZoosperException
 {
+    public static function crossLayer(Module $first, Module $second): self
+    {
+        $winner = ModuleRegistry::sourcePriority($first->source) > ModuleRegistry::sourcePriority($second->source)
+            ? $first
+            : $second;
+        $shadowed = $winner === $first ? $second : $first;
+
+        return new self(sprintf(
+            "Module identity '%s' is declared across discovery layers. '%s' (%s) would shadow '%s' (%s). Remove the stale copy before continuing.",
+            $winner->name,
+            $winner->path,
+            $winner->source,
+            $shadowed->path,
+            $shadowed->source,
+        ));
+    }
+
     public static function sameLayer(Module $first, Module $second): self
     {
         return new self(

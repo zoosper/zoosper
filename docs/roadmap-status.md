@@ -70,3 +70,7 @@ The Admin user Reset 2FA control no longer uses inline JavaScript; a registered 
 ## Phase 9GB CI quality-gate closure
 
 CI enforcement now covers Composer metadata and audit, JavaScript syntax, the repository gate, full Pest and compile. Psalm runs visibly in advisory mode because the captured legacy baseline is non-zero; promotion to blocking is gated on reducing that baseline to zero.
+
+## Phase 9GC Runtime boundary hardening
+
+Module discovery now rejects cross-layer identity collisions with both paths and sources in the exception, preventing stale app/modules copies from silently masking vendor packages. Asset containment is behaviourally guarded against null bytes, encoded traversal and symlink escapes.

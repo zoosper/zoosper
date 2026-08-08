@@ -132,9 +132,7 @@ final class ModuleRegistry
                 throw DuplicateModuleException::sameLayer($existing, $module);
             }
 
-            if ($candidatePriority > $existingPriority) {
-                $modulesByName[$identity] = $module;
-            }
+            throw DuplicateModuleException::crossLayer($existing, $module);
         }
 
         $modules = array_values($modulesByName);
@@ -243,7 +241,7 @@ final class ModuleRegistry
     {
         return $this->compiledManifestRejectionReason;
     }
-    private static function sourcePriority(string $source): int
+    public static function sourcePriority(string $source): int
     {
         return match ($source) {
             'app' => 300,

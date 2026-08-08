@@ -61,6 +61,36 @@ it('blocks path traversal outside the module base', function (): void {
         ->toThrow(AssetNotFoundException::class);
 });
 
+it('rejects null bytes and encoded traversal variants', function (): void {
+    foreach (["css/sample.css\0.png", '%2e%2e/secret.css', '..%2fsecret.css', '%252e%252e/secret.css'] as $path) {
+        expect(fn () => makeResolver()->resolve('demo-module', $path))
+            ->toThrow(AssetNotFoundException::class);
+    }
+});
+
+it('rejects symlink escapes when symlinks are available', function (): void {
+    if (!function_exists('symlink')) {
+        $this->markTestSkipped('Symlinks are unavailable.');
+    }
+
+    $base = assetFixtureBase();
+    $outside = sys_get_temp_dir() . '/zoosper-asset-outside-' . bin2hex(random_bytes(4)) . '.css';
+    $link = $base . '/css/escape-' . bin2hex(random_bytes(4)) . '.css';
+    file_put_contents($outside, 'secret');
+    if (!@symlink($outside, $link)) {
+        @unlink($outside);
+        $this->markTestSkipped('Symlink creation is not permitted.');
+    }
+
+    try {
+        expect(fn () => makeResolver()->resolve('demo-module', basename($link)))
+            ->toThrow(AssetNotFoundException::class);
+    } finally {
+        @unlink($link);
+        @unlink($outside);
+    }
+});
+
 it('rejects unknown modules', function (): void {
     expect(fn () => makeResolver()->resolve('nope', 'css/sample.css'))
         ->toThrow(AssetNotFoundException::class);
