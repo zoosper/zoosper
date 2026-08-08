@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Editor;
 
-use Zoosper\Core\Editor\ContentEditorInterface;/**
+use Zoosper\Core\Editor\ContentEditorInterface;
+
+/**
  * Safe baseline content editor backed by a standard textarea.
  */
 final readonly class TextareaContentEditor implements ContentEditorInterface

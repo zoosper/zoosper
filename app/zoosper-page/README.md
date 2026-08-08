@@ -30,3 +30,7 @@ The Page package intentionally retains `zoosper/admin` because its Admin UI uses
 ## Admin package decoupling
 
 Page now consumes shared presentation contracts from Core and no longer requires `zoosper/admin`. Concrete editor, flash-message, layout, and view implementations remain outside the Page package.
+
+## Page Grid runtime ownership
+
+The active Admin Grid path is `PageAdminGridResponder` with `PageGridWorkspace` and `PageGridMutationCoordinator`. Earlier complete-page builder and generic controller-adapter scaffolding has been retired.

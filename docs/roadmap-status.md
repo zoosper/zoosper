@@ -31,3 +31,7 @@ Page package decoupling is closed at the honest compatibility boundary. The pack
 ## Phase 9FR shared presentation-contract migration
 
 The cross-module presentation-contract migration is complete: shared contracts moved to Core, all consumers and service registrations use the Core namespaces, obsolete Admin-owned contract files were retired, and Page/Settings removed their Admin Composer dependency.
+
+## Phase 9FS dead-runtime and compatibility closure
+
+Post-migration cleanup removed three unused Page Grid integration abstractions and their isolated tests. Core presentation contracts, Admin concrete implementations, Page Grid runtime composition, export, saved views, mutations, bulk actions and frontend boot remain regression-guarded.

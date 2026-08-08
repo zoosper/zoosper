@@ -897,3 +897,7 @@ Page runtime cleanup is complete. `zoosper/admin` remains an explicit and justif
 ## Phase 9FR shared presentation-contract migration
 
 Shared content-editor and flash-message interfaces plus Admin form configuration aggregation now belong to Core. Admin retains concrete editor and session-backed flash implementations. Page and Settings no longer require `zoosper/admin`, completing their package-boundary migration.
+
+## Phase 9FS Page Grid dead-runtime closure
+
+Superseded complete-page and framework-neutral controller scaffolding was removed after repository-wide reference analysis proved it was isolated to self-tests. The deployed Page Grid remains owned by `PageAdminGridResponder`, `PageGridWorkspace`, and `PageGridMutationCoordinator`.
