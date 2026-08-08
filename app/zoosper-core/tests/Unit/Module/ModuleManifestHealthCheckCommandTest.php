@@ -15,7 +15,7 @@ it('publishes a strict manifest health check with stable exit semantics', functi
 });
 
 it('verifies the compiled manifest before deploy reports completion', function (): void {
-    $source = file_get_contents(dirname(__DIR__, 5) . '/bin/zoosper');
+    $source = file_get_contents(dirname(__DIR__, 5) . '/app/zoosper-core/src/Console/BuiltIn/DeployCommand.php');
     $verification = strpos($source, 'Module manifest post-compile verification passed.');
     $completion = strpos($source, '== Deploy complete ==');
 

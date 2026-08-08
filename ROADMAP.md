@@ -917,3 +917,7 @@ The console already had the correct shared configuration loader and a lazy PDO p
 ## Phase 9GF Console kernel decomposition
 
 Five operational commands moved into Core-owned command classes, reusable console service composition and kernel boundaries were introduced, and `bin/zoosper` stopped owning migration, compilation, cache-clear and manifest diagnostic implementations. Deployment and scaffolding extraction remain the next bulk slice.
+
+## Phase 9GG Console deployment and scaffolding extraction
+
+Deployment and all three scaffolding workflows moved into Core-owned command objects. `bin/zoosper` no longer owns deploy sequencing, scaffold output or local option helpers; the executable is now limited to bootstrapping, command composition and dispatch.

@@ -9,11 +9,16 @@ use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Config\MarkoConfigRepositoryAdapter;
 use Zoosper\Core\Console\ConsoleApplication;
 use Zoosper\Core\Console\ConsoleOutput;
+use Zoosper\Core\Console\ConsoleOptions;
 use Zoosper\Core\Console\BuiltIn\CacheClearCommand;
 use Zoosper\Core\Console\BuiltIn\CompileCommand;
 use Zoosper\Core\Console\BuiltIn\ManifestCheckCommand;
 use Zoosper\Core\Console\BuiltIn\ManifestStatusCommand;
 use Zoosper\Core\Console\BuiltIn\MigrateCommand;
+use Zoosper\Core\Console\BuiltIn\DeployCommand;
+use Zoosper\Core\Console\BuiltIn\MakeConsoleCommand;
+use Zoosper\Core\Console\BuiltIn\MakeModuleCommand;
+use Zoosper\Core\Console\BuiltIn\MakePackageModuleCommand;
 use Zoosper\Core\Console\ModuleConsoleCommandLoader;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
@@ -36,7 +41,7 @@ $basePath = dirname(__DIR__);
 $modules = new ModuleRegistry($basePath);
 $config = (new ApplicationConfigLoader($basePath, $modules))->load();
 $command = $argv[1] ?? 'help';
-$options = parseOptions(array_slice($argv, 2));
+$options = ConsoleOptions::parse(array_slice($argv, 2));
 if (in_array($command, ['module:manifest:status', 'module:manifest:check'], true)) {
     $format = $options['format'] ?? 'text';
     if (!in_array($format, ['text', 'json'], true)) {
@@ -54,15 +59,20 @@ $connection = new PdoConnectionProvider(
 );
 
 try {
-    $operationalCommands = [
-        'migrate' => new MigrateCommand(new Migrator($connection->get(), $basePath . '/database/migrations', $modules)),
-        'compile' => new CompileCommand(new ModuleManifestCompiler($basePath)),
-        'cache:clear' => new CacheClearCommand(new ModuleManifestCompiler($basePath)),
-        'module:manifest:status' => new ManifestStatusCommand(new ModuleManifestStatus($basePath)),
-        'module:manifest:check' => new ManifestCheckCommand(new ModuleManifestStatus($basePath)),
+    $operationalCommandFactories = [
+        'migrate' => static fn () => new MigrateCommand(new Migrator($connection->get(), $basePath . '/database/migrations', $modules)),
+        'compile' => static fn () => new CompileCommand(new ModuleManifestCompiler($basePath)),
+        'cache:clear' => static fn () => new CacheClearCommand(new ModuleManifestCompiler($basePath)),
+        'module:manifest:status' => static fn () => new ManifestStatusCommand(new ModuleManifestStatus($basePath)),
+        'module:manifest:check' => static fn () => new ManifestCheckCommand(new ModuleManifestStatus($basePath)),
+        'deploy' => static fn () => new DeployCommand(new Migrator($connection->get(), $basePath . '/database/migrations', $modules), new ModuleManifestCompiler($basePath), new ModuleManifestStatus($basePath)),
+        'make:module' => static fn () => new MakeModuleCommand(new ModuleScaffolder($basePath)),
+        'make:package-module' => static fn () => new MakePackageModuleCommand(new PackageModuleScaffolder($basePath)),
+        'make:command' => static fn () => new MakeConsoleCommand(new ConsoleCommandScaffolder($basePath)),
     ];
-    if (isset($operationalCommands[$command])) {
-        exit($operationalCommands[$command]->run(array_slice($argv, 2), new ConsoleOutput()));
+    if (isset($operationalCommandFactories[$command])) {
+        $operationalCommand = $operationalCommandFactories[$command]();
+        exit($operationalCommand->run(array_slice($argv, 2), new ConsoleOutput()));
     }
 
     if ($command === 'help' || $command === 'list') {
@@ -70,94 +80,6 @@ try {
 
         exit($application->run($command, [], new ConsoleOutput()));
     }
-    if ($command === 'deploy') {
-        echo "== Zoosper deploy ==\n\n";
-
-        echo "[1/3] Regenerating Composer autoloader (composer dump-autoload)...\n";
-        echo "      NOTE: this shells out to whatever 'composer' resolves to on your\n";
-        echo "      PATH. If you use a version-pinned alias (e.g. a php8.5-specific\n";
-        echo "      composer wrapper) and are not certain PATH resolves to it the same\n";
-        echo "      way, run that alias manually first and re-run deploy afterward —\n";
-        echo "      an autoloader regenerated with the wrong PHP/Composer version is\n";
-        echo "      worse than not regenerating it at all.\n";
-        passthru('composer dump-autoload', $autoloadExitCode);
-        if ($autoloadExitCode !== 0) {
-            fwrite(STDERR, "\nAutoload generation failed (exit code {$autoloadExitCode}). Aborting deploy before any schema changes.\n");
-            exit(1);
-        }
-
-        echo "\n[2/3] Applying database migrations (bin/zoosper migrate)...\n";
-        (new Migrator($connection->get(), $basePath . '/database/migrations', $modules))->migrate();
-        echo "Migrations applied.\n";
-
-        echo "\n[3/3] Compiling module manifest (bin/zoosper compile)...\n";
-        $compiledModules = (new ModuleManifestCompiler($basePath))->compile();
-        echo 'Compiled ' . count($compiledModules) . " module(s) to var/cache/modules.php\n";
-
-        $manifestStatus = (new ModuleManifestStatus($basePath))->inspect();
-        if ($manifestStatus['status'] !== 'fresh') {
-            throw new RuntimeException(
-                'Compiled module manifest failed post-compile verification: '
-                . ($manifestStatus['rejectionReason'] ?? $manifestStatus['status']),
-            );
-        }
-        echo "Module manifest post-compile verification passed.\n";
-        echo "\n== Deploy complete ==\n";
-        echo "Reminder: this does NOT run your test suite. Run `composer test` (or your\n";
-        echo "usual alias) to verify before considering this build done.\n";
-        exit(0);
-    }
-
-    if ($command === 'make:module') {
-        $moduleName = $argv[2] ?? '';
-        $result = (new ModuleScaffolder($basePath))->scaffold($moduleName);
-
-        echo "Created module {$result->moduleName}\n";
-        echo "Namespace: {$result->namespace}\n";
-        echo "Path: {$result->modulePath}\n";
-        echo "Files:\n";
-        foreach ($result->createdFiles as $file) {
-            echo "  - {$file}\n";
-        }
-        echo "\nNext: add the PSR-4 autoload snippet from {$result->modulePath}/README.md if you add PHP classes.\n";
-        exit(0);
-    }
-
-    if ($command === 'make:package-module') {
-        $moduleName = $argv[2] ?? '';
-        $result = (new PackageModuleScaffolder($basePath))->scaffold($moduleName);
-
-        echo "Created package module {$result->moduleName}\n";
-        echo "Package: {$result->packageName}\n";
-        echo "Namespace: {$result->namespace}\n";
-        echo "Path: {$result->packagePath}\n";
-        echo "Files:\n";
-        foreach ($result->createdFiles as $file) {
-            echo "  - {$file}\n";
-        }
-        echo "\nNext: run PHP=php8.5 composer dump-autoload and vendor/bin/pest {$result->packagePath}/tests/Unit.\n";
-        exit(0);
-    }
-
-    if ($command === 'make:command') {
-        $moduleName = $argv[2] ?? '';
-        $className = $argv[3] ?? '';
-        $commandName = required($options, 'name');
-        $description = $options['description'] ?? '';
-
-        $result = (new ConsoleCommandScaffolder($basePath))->scaffold($moduleName, $className, $commandName, $description);
-
-        echo "Created console command {$result->commandName}\n";
-        echo "Module: {$result->moduleName}\n";
-        echo "Class: {$result->commandClass}\n";
-        echo "Files:\n";
-        foreach ($result->createdFiles as $file) {
-            echo "  - {$file}\n";
-        }
-        echo "\nRun it with: php bin/zoosper {$result->commandName}\n";
-        exit(0);
-    }
-
     $output = new ConsoleOutput();
     $moduleCommands = loadModuleCommands($basePath, $config, $connection, $modules);
     $application = new ConsoleApplication(builtInCommands(), $moduleCommands);
@@ -209,28 +131,3 @@ function loadModuleCommands(
 
     return (new ModuleConsoleCommandLoader($modules, $services))->load();
 }
-
-/** @param list<string> $args @return array<string, string> */
-function parseOptions(array $args): array
-{
-    $options = [];
-    foreach ($args as $arg) {
-        if (!str_starts_with($arg, '--') || !str_contains($arg, '=')) {
-            continue;
-        }
-        [$key, $value] = explode('=', substr($arg, 2), 2);
-        $options[$key] = $value;
-    }
-    return $options;
-}
-
-/** @param array<string, string> $options */
-function required(array $options, string $key): string
-{
-    if (!array_key_exists($key, $options) || $options[$key] === '') {
-        fwrite(STDERR, "Missing required option: --{$key}=...\n");
-        exit(1);
-    }
-    return $options[$key];
-}
-

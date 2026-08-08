@@ -86,3 +86,7 @@ The Marko renderer now serves caught development HTTP exceptions as well as trul
 ## Phase 9GF Console kernel decomposition
 
 Core now owns operational command objects for migrate, compile, cache clear and manifest diagnostics, plus reusable `ConsoleServiceFactory` and `ConsoleKernel` boundaries. The executable retains deployment and scaffolding orchestration as an explicit follow-up.
+
+## Phase 9GG Console deployment and scaffolding extraction
+
+`DeployCommand`, `MakeModuleCommand`, `MakePackageModuleCommand` and `MakeConsoleCommand` now own the remaining built-in workflows. Deployment retains autoload, migration, compile and freshness verification ordering, while scaffolding retains existing output and next-step guidance.
