@@ -908,3 +908,7 @@ The Settings controller is now a thin authenticated HTTP adapter. Settings-owned
 ## Phase 9FU Settings presentation asset closure
 
 The Settings workspace stylesheet and browser runtime are now module-owned assets served through the secured asset route and registered through the Admin asset manifest. The template retains semantic markup and its JSON bootstrap payload but no executable inline CSS or JavaScript.
+
+## Phase 9FV Settings presentation test consolidation
+
+Settings Admin presentation-contract tests now load the semantic template, stylesheet and browser runtime through one guarded test helper. Behavioural test files remain focused while repeated three-file setup introduced during the asset cutover is retired.

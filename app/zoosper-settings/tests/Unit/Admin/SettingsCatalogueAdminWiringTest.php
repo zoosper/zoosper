@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once dirname(__DIR__, 2) . '/Support/settings-presentation-bundle.php';
+
 it('owns the protected read-only settings route and menu contribution', function (): void {
     $root = dirname(__DIR__, 5);
     $routes = require $root . '/app/zoosper-settings/config/admin_routes.php';
@@ -23,9 +25,7 @@ it('removes the settings menu contribution from the generic admin shell', functi
 
 it('renders a searchable module-owned catalogue without persistence controls', function (): void {
     $root = dirname(__DIR__, 5);
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
     expect($view)->toContain('Search settings, modules and paths')
         ->toContain('data-settings-card')
         ->toContain('Read-only')

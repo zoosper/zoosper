@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+require_once dirname(__DIR__, 2) . '/Support/settings-presentation-bundle.php';
+
 it('provides reset-view and search keyboard shortcuts', function (): void {
     $root = dirname(__DIR__, 5);
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($view)->toContain('id="settings-reset-view"')
         ->toContain("event.key===" . "'/'")
@@ -17,9 +17,7 @@ it('provides reset-view and search keyboard shortcuts', function (): void {
 
 it('preserves section and group deep-link hashes while activating categories', function (): void {
     $root = dirname(__DIR__, 5);
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($view)->toContain('function activate(category,focus=false,updateHash=true)')
         ->toContain('if(panel)activate(panel.dataset.categoryPanel,false,false)')
@@ -28,9 +26,7 @@ it('preserves section and group deep-link hashes while activating categories', f
 
 it('hides default scope value server-side and publishes filtered category counts', function (): void {
     $root = dirname(__DIR__, 5);
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($view)->toContain('$scopeType === \'default\'')
         ->toContain('class="settings-hidden"')

@@ -42,3 +42,7 @@ Settings screen composition moved to `SettingsCatalogueResponder`; save and inhe
 ## Phase 9FU Settings presentation asset closure
 
 Settings presentation was split into a semantic PHP template, a module-owned stylesheet and a deferred module-owned browser runtime. Existing workspace, saved-view, keyboard, print, accessibility and form contracts remain covered against the complete presentation bundle.
+
+## Phase 9FV Settings presentation test consolidation
+
+The post-asset-cutover Settings test suite now uses `settingsPresentationBundle()` as its single complete-presentation fixture. Existing accessibility, saved-view, search, print, keyboard and workspace assertions remain separate and unchanged.

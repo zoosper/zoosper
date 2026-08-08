@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+require_once dirname(__DIR__, 2) . '/Support/settings-presentation-bundle.php';
+
 it('uses one section form with non-nested clear controls', function (): void {
     $root = dirname(__DIR__, 5);
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($view)->toContain('action="<?= $e($saveUrl) ?>"')
         ->toContain('formaction="<?= $e($clearUrl) ?>"')
@@ -17,9 +17,7 @@ it('uses one section form with non-nested clear controls', function (): void {
 
 it('renders every Phase 9D1 editable type', function (): void {
     $root = dirname(__DIR__, 5);
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($view)->toContain('$setting->type===\'boolean\'')
         ->toContain('$setting->type===\'textarea\'')
@@ -33,9 +31,7 @@ it('renders every Phase 9D1 editable type', function (): void {
 
 it('keeps the boolean fallback before its checkbox value', function (): void {
     $root = dirname(__DIR__, 5);
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
     $hidden = strpos($view, 'type="hidden" name="<?= $e($inputName) ?>" value="0"');
     $checkbox = strpos($view, 'type="checkbox" name="<?= $e($inputName) ?>" value="1"');
 

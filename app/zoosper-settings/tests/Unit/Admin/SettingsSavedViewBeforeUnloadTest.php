@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+require_once dirname(__DIR__, 2) . '/Support/settings-presentation-bundle.php';
+
 it('warns before leaving the page with dirty settings forms', function (): void {
-    $root=dirname(__DIR__,5);$view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $root=dirname(__DIR__,5);$view = settingsPresentationBundle($root);
     expect($view)->toContain("window.addEventListener('beforeunload'")
         ->toContain('if(!hasDirtySettingsForms())return')
         ->toContain("event.returnValue=''" )

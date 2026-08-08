@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+require_once dirname(__DIR__, 2) . '/Support/settings-presentation-bundle.php';
+
 it('groups secondary operations into three labelled regions', function (): void {
     $root=dirname(__DIR__,5);
-    $view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($view)->toContain('Search results</strong>')
         ->toContain('Share and output</strong>')
@@ -18,9 +18,7 @@ it('groups secondary operations into three labelled regions', function (): void 
 
 it('retains every secondary action exactly once', function (): void {
     $root=dirname(__DIR__,5);
-    $view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     foreach (['settings-previous-match','settings-next-match','settings-copy-view','settings-clear-target','settings-print','settings-expand-all','settings-collapse-all'] as $id) {
         expect(substr_count($view, 'id="'.$id.'"'))->toBe(1);
@@ -29,9 +27,7 @@ it('retains every secondary action exactly once', function (): void {
 
 it('uses a bounded three-column desktop panel and one-column mobile panel', function (): void {
     $root=dirname(__DIR__,5);
-    $view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($view)->toContain('grid-template-columns:repeat(3,minmax(10rem,1fr))')
         ->toContain('width:min(38rem,calc(100vw - 2rem))')

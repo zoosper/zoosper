@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+require_once dirname(__DIR__, 2) . '/Support/settings-presentation-bundle.php';
+
 it('provides source filtering with live result counts', function (): void {
     $root = dirname(__DIR__, 5);
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($view)->toContain('id="settings-source-filter"')
         ->toContain('<option value="database">Overrides</option>')
@@ -19,9 +19,7 @@ it('provides source filtering with live result counts', function (): void {
 
 it('marks every rendered field with source and read-only metadata', function (): void {
     $root = dirname(__DIR__, 5);
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($view)->toContain('data-setting-source="<?= $e($effective->source) ?>"')
         ->toContain('data-setting-readonly="<?= $effective->readOnly ? \'true\' : \'false\' ?>"');
@@ -29,9 +27,7 @@ it('marks every rendered field with source and read-only metadata', function ():
 
 it('provides expand-all and collapse-all operations without changing persistence', function (): void {
     $root = dirname(__DIR__, 5);
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($view)->toContain('id="settings-expand-all"')
         ->toContain('id="settings-collapse-all"')

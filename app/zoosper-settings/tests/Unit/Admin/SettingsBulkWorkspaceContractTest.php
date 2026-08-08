@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+require_once dirname(__DIR__, 2) . '/Support/settings-presentation-bundle.php';
+
 it('supports multiple module-owned categories, stable sections and group anchors', function (): void {
     $root = dirname(__DIR__, 5);
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($view)->toContain('settings-section-nav')
         ->toContain('id="section-<?= $e($section->id) ?>"')
@@ -17,9 +17,7 @@ it('supports multiple module-owned categories, stable sections and group anchors
 it('keeps Mail secrets redacted and excludes password controls', function (): void {
     $root = dirname(__DIR__, 5);
     $config = require $root . '/app/zoosper-mail/config/admin_settings.php';
-    $view = file_get_contents($root . '/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $view = settingsPresentationBundle($root);
 
     expect($config[0]['category'])->toBe('communication')
         ->and($view)->toContain('••••••••')

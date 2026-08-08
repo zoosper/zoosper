@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+require_once dirname(__DIR__, 2) . '/Support/settings-presentation-bundle.php';
+
 it('provides connected tab and panel semantics with keyboard navigation', function (): void {
-    $root=dirname(__DIR__,5);$view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $root=dirname(__DIR__,5);$view = settingsPresentationBundle($root);
     expect($view)->toContain('aria-controls="category-panel-')
         ->toContain('role="tabpanel"')
         ->toContain('aria-labelledby="category-tab-')
@@ -14,9 +14,7 @@ it('provides connected tab and panel semantics with keyboard navigation', functi
 });
 
 it('remembers group state and supports direct section and group links', function (): void {
-    $root=dirname(__DIR__,5);$view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $root=dirname(__DIR__,5);$view = settingsPresentationBundle($root);
     expect($view)->toContain('data-group-key')
         ->toContain("'zoosper.settings.group.'+group.dataset.groupKey")
         ->toContain('function revealHash()')
@@ -24,9 +22,7 @@ it('remembers group state and supports direct section and group links', function
 });
 
 it('keeps scope and category navigation sticky while preserving mobile fallback', function (): void {
-    $root=dirname(__DIR__,5);$view=file_get_contents($root.'/app/zoosper-settings/resources/views/admin/settings/index.php');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
-    $view .= (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/js/settings-workspace.js');
+    $root=dirname(__DIR__,5);$view = settingsPresentationBundle($root);
     expect($view)->toContain('.settings-scope{position:sticky')
         ->toContain('.settings-nav{position:sticky;top:4.6rem')
         ->toContain('@media(max-width:850px)');
