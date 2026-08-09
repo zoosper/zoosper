@@ -953,3 +953,7 @@ Page revisions now support full restorable snapshots, Page-scoped lookup and bou
 ## Phase 9GLA Page Momentum retirement
 
 The temporary `/admin/page-momentum` engineering dashboard was removed from production. Its route, menu/config fragments, controllers, providers, template and dedicated architecture tests were retired. Release readiness remains enforced by CI, fresh-install smoke, release checks and focused Page feature tests.
+
+## Repository hygiene
+
+Canonical documentation now lives in `docs/`; module and package directories retain only concise independently useful READMEs. Executable tooling consolidation is the next separate hygiene stream and must preserve Composer, CI, hook and strict-gate dependencies.

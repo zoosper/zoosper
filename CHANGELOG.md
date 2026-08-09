@@ -13,3 +13,5 @@ Known limitation: Psalm remains advisory while the existing baseline is reduced.
 - Added the full Page revision snapshot domain with bounded retention and fresh-install schema coverage.
 
 - Removed the internal Page Momentum launch-readiness dashboard from the production Admin surface.
+
+- Consolidated module and package documentation into concise current READMEs and removed integration patch notes, readiness stubs and historical Media phase documents.

@@ -1,8 +1,5 @@
 # zoosper/grid
 
-Reusable, framework-facing grid contracts and implementations for Zoosper.
+Framework-facing Grid definitions, columns, filters, criteria, data-source contracts, HTML rendering and CSV export. The package does not own authentication, per-user persistence, routes or feature-specific queries.
 
-The package owns grid columns, filters, definitions, criteria, data-source
-contracts, module contribution discovery, HTML rendering and CSV export. It does
-not own admin authentication, per-user persistence, routes or feature-specific
-queries.
+See the canonical [developer guide](../../docs/developer-guide.md).
