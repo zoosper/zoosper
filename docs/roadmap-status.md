@@ -98,3 +98,11 @@ The broken Settings catalogue was traced to a manifest-shape mismatch: Settings 
 ## Phase 9GI Alpha release-candidate readiness strike
 
 Release metadata, diagnostics, CI invocation and operator documentation now form an explicit alpha-candidate contract. `release:check` validates runtime prerequisites, writable paths, critical assets, manifest freshness and production debug safety.
+
+## Phase 9GJ Fresh-install and runtime smoke closure
+
+`composer fresh-install:smoke` exercises the real CLI against an isolated temporary SQLite database and cleans it afterward. CI blocks on migration/bootstrap evidence plus critical route and asset inventory without touching the configured application database.
+
+## Phase 9GJ release-version parity hotfix
+
+The Admin footer, application configuration and CLI release identity now share `config/version.php` as their default source. The environment can still override `CMS_VERSION` deliberately.

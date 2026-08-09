@@ -44,7 +44,12 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
     {
         $userName = $user !== null ? $user->name : 'Guest';
         $navigation = $user !== null ? $this->navigation($user, $active) : '';
-        $version = 'Zoosper CMS ' . (string) ($this->config?->get('app.version', '0.16.0-dev') ?? '0.16.0-dev');
+        $release = require dirname(__DIR__, 4) . '/config/version.php';
+        $fallbackVersion = (string) ($release['version'] ?? 'unknown');
+        $version = 'Zoosper CMS ' . (string) (
+            $this->config?->get('app.version', $fallbackVersion)
+            ?? $fallbackVersion
+        );
         $templates = $this->templates ?? new TemplateRenderer(new ThemeResolver(dirname(__DIR__, 5) . '/themes/admin', 'default'));
         $assetData = $this->assetViewData?->data() ?? [
             'stylesheets' => [],

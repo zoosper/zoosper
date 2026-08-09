@@ -11,9 +11,11 @@ $env = static function (string $key, mixed $default = null): mixed {
     return $value !== false && $value !== '' ? $value : $default;
 };
 
+$release = require __DIR__ . '/version.php';
+
 return [
     'name' => $env('APP_NAME', 'Zoosper'),
     'env' => $env('APP_ENV', 'local'),
     'debug' => filter_var($env('APP_DEBUG', true), FILTER_VALIDATE_BOOLEAN),
-    'version' => $env('CMS_VERSION', '0.23.0-dev'),
+    'version' => $env('CMS_VERSION', $release['version']),
 ];

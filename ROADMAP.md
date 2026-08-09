@@ -929,3 +929,11 @@ Deployment and all three scaffolding workflows moved into Core-owned command obj
 ## Phase 9GI Alpha release-candidate readiness strike
 
 Zoosper now owns an authoritative `0.1.0-alpha.1` version, CLI `version` and `release:check` commands, an operator documentation set, an alpha checklist, changelog and a CI release-readiness step. Fresh-install and browser smoke evidence remain checklist requirements before tagging the alpha.
+
+## Phase 9GJ Fresh-install and runtime smoke closure
+
+CI now proves a disposable SQLite install from zero, idempotent migration reruns, initial Admin and site bootstrap, password hashing, expected core tables, duplicate-admin failure semantics, critical route inventory and critical Admin assets. Live authenticated browser and frontend rendering checks remain explicit pre-tag manual evidence.
+
+## Phase 9GJ release-version parity hotfix
+
+Admin presentation and application configuration now default to the authoritative `config/version.php` release identity. `CMS_VERSION` remains an optional explicit deployment override; stale development defaults were removed.

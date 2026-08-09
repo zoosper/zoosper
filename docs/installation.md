@@ -14,3 +14,7 @@ PHP 8.5 or newer, Composer 2, PDO and a supported database driver. The web serve
 6. Run `php bin/zoosper release:check`.
 
 Do not expose development debug output in production.
+
+## Fresh-install proof
+
+Run `composer fresh-install:smoke` to create a disposable SQLite installation, apply and rerun all migrations, create an initial administrator and site, verify password hashing and core tables, then remove the temporary database. The command does not modify the configured project database.

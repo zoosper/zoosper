@@ -61,3 +61,5 @@ jobs:
         run: composer compile
       - name: Run alpha release checks
         run: composer release:check
+      - name: Prove disposable fresh install and critical runtime inventory
+        run: composer fresh-install:smoke

@@ -4,12 +4,12 @@
 - [ ] Locked Composer installation succeeds
 - [ ] Strict Composer validation and dependency audit pass
 - [ ] JavaScript syntax and repository gate pass
-- [ ] Fresh database migration succeeds
+- [x] Disposable SQLite migration from zero succeeds and reruns idempotently
 - [ ] Full Pest suite passes
 - [ ] Module manifest compiles and is fresh
 - [ ] `php bin/zoosper release:check` passes
-- [ ] Admin login, dashboard, Pages, Media, Settings, Sites and Themes smoke-tested
-- [ ] API health and frontend page rendering smoke-tested
+- [~] Critical Admin/API route and asset inventory is automated; authenticated browser journeys remain manual
+- [~] API health route inventory is automated; live API and frontend rendering remain manual
 - [ ] Production debug disabled and runtime directories writable
 - [ ] Database and uploaded-file rollback point recorded
 
