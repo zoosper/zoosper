@@ -59,3 +59,5 @@ jobs:
         run: composer test
       - name: Compile module manifest
         run: composer compile
+      - name: Run alpha release checks
+        run: composer release:check

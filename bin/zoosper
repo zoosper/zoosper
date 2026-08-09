@@ -15,6 +15,9 @@ use Zoosper\Core\Console\BuiltIn\CompileCommand;
 use Zoosper\Core\Console\BuiltIn\ManifestCheckCommand;
 use Zoosper\Core\Console\BuiltIn\ManifestStatusCommand;
 use Zoosper\Core\Console\BuiltIn\MigrateCommand;
+use Zoosper\Core\Console\BuiltIn\ReleaseCheckCommand;
+use Zoosper\Core\Console\BuiltIn\VersionCommand;
+use Zoosper\Core\Release\ReleaseCheck;
 use Zoosper\Core\Console\BuiltIn\DeployCommand;
 use Zoosper\Core\Console\BuiltIn\MakeConsoleCommand;
 use Zoosper\Core\Console\BuiltIn\MakeModuleCommand;
@@ -69,6 +72,8 @@ try {
         'make:module' => static fn () => new MakeModuleCommand(new ModuleScaffolder($basePath)),
         'make:package-module' => static fn () => new MakePackageModuleCommand(new PackageModuleScaffolder($basePath)),
         'make:command' => static fn () => new MakeConsoleCommand(new ConsoleCommandScaffolder($basePath)),
+        'version' => static fn () => new VersionCommand($basePath),
+        'release:check' => static fn () => new ReleaseCheckCommand(new ReleaseCheck($basePath)),
     ];
     if (isset($operationalCommandFactories[$command])) {
         $operationalCommand = $operationalCommandFactories[$command]();
@@ -100,6 +105,8 @@ function builtInCommands(): array
         'module:manifest:status',
         'module:manifest:check',
         'deploy',
+        'version',
+        'release:check',
         'make:module Vendor_Module',
         'make:package-module Vendor/Module',
         'make:command Vendor_Module CommandClass --name=vendor:task:run --description="Describe the command"',

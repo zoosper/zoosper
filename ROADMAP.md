@@ -925,3 +925,7 @@ Deployment and all three scaffolding workflows moved into Core-owned command obj
 ## Phase 9GH Admin asset manifest compatibility and Settings runtime recovery
 
 `AdminAssetRegistry` now supports both the canonical wrapped `assets` manifest and the established flat module manifests used by Settings and Auth. Settings workspace CSS and JavaScript are again discoverable, restoring module-owned layout, print-only visibility rules and interactive workspace behaviour without moving feature styles into global Admin CSS.
+
+## Phase 9GI Alpha release-candidate readiness strike
+
+Zoosper now owns an authoritative `0.1.0-alpha.1` version, CLI `version` and `release:check` commands, an operator documentation set, an alpha checklist, changelog and a CI release-readiness step. Fresh-install and browser smoke evidence remain checklist requirements before tagging the alpha.

@@ -94,3 +94,7 @@ Core now owns operational command objects for migrate, compile, cache clear and 
 ## Phase 9GH Admin asset manifest compatibility and Settings runtime recovery
 
 The broken Settings catalogue was traced to a manifest-shape mismatch: Settings returned flat asset declarations while `AdminAssetRegistry` read only `config['assets']`. The registry now normalises wrapped and flat declarations after isolated loading, with compatibility and Settings runtime regressions guarded.
+
+## Phase 9GI Alpha release-candidate readiness strike
+
+Release metadata, diagnostics, CI invocation and operator documentation now form an explicit alpha-candidate contract. `release:check` validates runtime prerequisites, writable paths, critical assets, manifest freshness and production debug safety.
