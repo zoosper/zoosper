@@ -106,3 +106,7 @@ Release metadata, diagnostics, CI invocation and operator documentation now form
 ## Phase 9GJ release-version parity hotfix
 
 The Admin footer, application configuration and CLI release identity now share `config/version.php` as their default source. The environment can still override `CMS_VERSION` deliberately.
+
+## API health release-version parity hotfix
+
+CLI, Admin presentation, application configuration and the public API health response now share `config/version.php` as their default version source.

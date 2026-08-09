@@ -937,3 +937,7 @@ CI now proves a disposable SQLite install from zero, idempotent migration reruns
 ## Phase 9GJ release-version parity hotfix
 
 Admin presentation and application configuration now default to the authoritative `config/version.php` release identity. `CMS_VERSION` remains an optional explicit deployment override; stale development defaults were removed.
+
+## API health release-version parity hotfix
+
+The public health payload now reads the authoritative release identity from `config/version.php`; the stale `0.3.0-dev` literal was removed.

@@ -19,7 +19,7 @@ final readonly class HealthController
         return $this->json->success([
             'service' => 'zoosper',
             'status' => 'ok',
-            'version' => '0.3.0-dev',
+            'version' => (string) ((require dirname(__DIR__, 4) . '/config/version.php')['version'] ?? 'unknown'),
         ]);
     }
 }
