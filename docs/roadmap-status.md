@@ -90,3 +90,7 @@ Core now owns operational command objects for migrate, compile, cache clear and 
 ## Phase 9GG Console deployment and scaffolding extraction
 
 `DeployCommand`, `MakeModuleCommand`, `MakePackageModuleCommand` and `MakeConsoleCommand` now own the remaining built-in workflows. Deployment retains autoload, migration, compile and freshness verification ordering, while scaffolding retains existing output and next-step guidance.
+
+## Phase 9GH Admin asset manifest compatibility and Settings runtime recovery
+
+The broken Settings catalogue was traced to a manifest-shape mismatch: Settings returned flat asset declarations while `AdminAssetRegistry` read only `config['assets']`. The registry now normalises wrapped and flat declarations after isolated loading, with compatibility and Settings runtime regressions guarded.

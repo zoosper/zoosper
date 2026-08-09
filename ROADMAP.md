@@ -921,3 +921,7 @@ Five operational commands moved into Core-owned command classes, reusable consol
 ## Phase 9GG Console deployment and scaffolding extraction
 
 Deployment and all three scaffolding workflows moved into Core-owned command objects. `bin/zoosper` no longer owns deploy sequencing, scaffold output or local option helpers; the executable is now limited to bootstrapping, command composition and dispatch.
+
+## Phase 9GH Admin asset manifest compatibility and Settings runtime recovery
+
+`AdminAssetRegistry` now supports both the canonical wrapped `assets` manifest and the established flat module manifests used by Settings and Auth. Settings workspace CSS and JavaScript are again discoverable, restoring module-owned layout, print-only visibility rules and interactive workspace behaviour without moving feature styles into global Admin CSS.

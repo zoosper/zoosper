@@ -54,7 +54,8 @@ final readonly class AdminAssetRegistry
                 throw new RuntimeException('Admin asset config must return an array: ' . $file);
             }
 
-            foreach (($config['assets'] ?? []) as $handle => $assetConfig) {
+            $declarations = $this->assetDeclarations($config, $file);
+            foreach ($declarations as $handle => $assetConfig) {
                 if (!is_string($handle) || !is_array($assetConfig)) {
                     throw new RuntimeException('Invalid admin asset declaration in: ' . $file);
                 }
@@ -71,6 +72,26 @@ final readonly class AdminAssetRegistry
         usort($assets, static fn (AdminAsset $a, AdminAsset $b): int => [$a->sortOrder, $a->handle] <=> [$b->sortOrder, $b->handle]);
 
         return $this->deduplicateByPhysicalPath($assets);
+    }
+
+    /**
+     * Accept the canonical wrapped manifest and the established flat module
+     * manifest shape used by Settings and Auth.
+     *
+     * @param array<string, mixed> $config
+     * @return array<string, mixed>
+     */
+    private function assetDeclarations(array $config, string $file): array
+    {
+        if (array_key_exists('assets', $config)) {
+            if (!is_array($config['assets'])) {
+                throw new RuntimeException("Admin asset config key 'assets' must contain an array: " . $file);
+            }
+
+            return $config['assets'];
+        }
+
+        return $config;
     }
 
     /**
