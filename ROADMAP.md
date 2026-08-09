@@ -945,3 +945,7 @@ The public health payload now reads the authoritative release identity from `con
 ## Post-release 0.2 development line
 
 After tagging `v0.1.0-alpha.1`, the central development version advances to `0.2.0-alpha.1-dev`. The 0.2 line prioritises useful CMS core and visible product momentum while preserving the release gates established for 0.1.
+
+## Phase 9GK Page revision domain foundation
+
+Page revisions now support full restorable snapshots, Page-scoped lookup and bounded retention. The next adoption slice wires history, preview and restore into Page Admin with audit logging.

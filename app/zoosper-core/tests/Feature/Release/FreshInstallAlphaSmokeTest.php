@@ -62,6 +62,8 @@ it('proves a disposable alpha install from zero through bootstrap and idempotent
         $pdo = new \PDO('sqlite:' . $database, null, null, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
         $tables = $pdo->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(\PDO::FETCH_COLUMN);
         expect($tables)->toContain('migrations', 'admin_users', 'admin_roles', 'admin_permissions', 'sites', 'site_domains', 'pages');
+        $revisionColumns = $pdo->query('PRAGMA table_info(page_revisions)')->fetchAll(\PDO::FETCH_ASSOC);
+        expect(array_column($revisionColumns, 'name'))->toContain('slug', 'status', 'content_format', 'content_json', 'meta_title', 'canonical_url');
         $user = $pdo->query("SELECT email, password_hash FROM admin_users WHERE email='alpha-smoke@example.test'")->fetch(\PDO::FETCH_ASSOC);
         expect($user['email'])->toBe('alpha-smoke@example.test')
             ->and($user['password_hash'])->not->toBe('Alpha-Smoke-834!')

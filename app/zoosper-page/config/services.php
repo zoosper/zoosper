@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Zoosper\Page\Repository\PageRevisionRepository;
+use Zoosper\Page\Service\PageRevisionService;
+
 use Marko\Cache\Contracts\CacheInterface;
 use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Cache\CacheKeyBuilder;
@@ -20,6 +23,8 @@ use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Page\Console\PageCreateCommand;
 
 return [
+    PageRevisionRepository::class => static fn ($services): PageRevisionRepository => new PageRevisionRepository($services->get(\PDO::class)),
+    PageRevisionService::class => static fn ($services): PageRevisionService => new PageRevisionService($services->get(PageRevisionRepository::class), (int) ($services->get(\Zoosper\Core\Config\ConfigRepository::class)->get('page_revisions.retention', 50))),
     PageRepository::class => static fn (ServiceContainer $services): PageRepository => new PageRepository($services->get(PDO::class)),
     BlockJsonToHtmlRenderer::class => static fn (ServiceContainer $services): BlockJsonToHtmlRenderer => new BlockJsonToHtmlRenderer(
         $services->has(EditorJsImageBlockSanitizer::class) ? $services->get(EditorJsImageBlockSanitizer::class) : null,

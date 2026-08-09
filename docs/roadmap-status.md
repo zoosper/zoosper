@@ -114,3 +114,7 @@ CLI, Admin presentation, application configuration and the public API health res
 ## Post-release 0.2 development line
 
 `config/version.php` now identifies active development as `0.2.0-alpha.1-dev`; the immutable `v0.1.0-alpha.1` tag remains the released alpha.
+
+## Phase 9GK Page revision domain foundation
+
+The existing minimal revision write is expanded into a full snapshot repository and service, including Editor.js, SEO and publication metadata plus retention policy.
