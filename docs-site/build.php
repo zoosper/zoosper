@@ -145,7 +145,7 @@ function layout(string $title, string $content, string $navigation): string
         . '<meta name="description" content="Zoosper CMS documentation"><title>' . escapeHtml($title) . ' · Zoosper CMS</title>'
         . '<link rel="icon" href="/assets/favicon.svg"><link rel="stylesheet" href="/assets/site.css"></head><body>'
         . '<header><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Zoosper CMS</a><span>Documentation</span>'
-        . '<a href="https://github.com/dbashyal/zoosper-cms">GitHub</a></header><div class="shell">' . $navigation
+        . '<a href="https://github.com/zoosper/zoosper">GitHub</a></header><div class="shell">' . $navigation
         . '<main class="content">' . $content . '</main></div><footer>Zoosper CMS documentation</footer></body></html>';
 }
 
