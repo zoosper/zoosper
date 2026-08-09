@@ -110,3 +110,7 @@ The Admin footer, application configuration and CLI release identity now share `
 ## API health release-version parity hotfix
 
 CLI, Admin presentation, application configuration and the public API health response now share `config/version.php` as their default version source.
+
+## Post-release 0.2 development line
+
+`config/version.php` now identifies active development as `0.2.0-alpha.1-dev`; the immutable `v0.1.0-alpha.1` tag remains the released alpha.

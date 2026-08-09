@@ -941,3 +941,7 @@ Admin presentation and application configuration now default to the authoritativ
 ## API health release-version parity hotfix
 
 The public health payload now reads the authoritative release identity from `config/version.php`; the stale `0.3.0-dev` literal was removed.
+
+## Post-release 0.2 development line
+
+After tagging `v0.1.0-alpha.1`, the central development version advances to `0.2.0-alpha.1-dev`. The 0.2 line prioritises useful CMS core and visible product momentum while preserving the release gates established for 0.1.

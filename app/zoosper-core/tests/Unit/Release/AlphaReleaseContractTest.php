@@ -7,7 +7,7 @@ it('owns one alpha version and exposes release commands', function (): void {
     $version = require $root . '/config/version.php';
     $composer = json_decode((string) file_get_contents($root . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
     $bin = (string) file_get_contents($root . '/bin/zoosper');
-    expect($version['version'])->toBe('0.1.0-alpha.1')
+    expect($version['version'])->toBe('0.2.0-alpha.1-dev')
         ->and($composer)->not->toHaveKey('version')
         ->and($composer['scripts'])->toHaveKey('release:check')
         ->and($bin)->toContain("'release:check' => static fn ()")
