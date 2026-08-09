@@ -35,6 +35,34 @@ function removeDirectory(string $directory): void
     rmdir($directory);
 }
 
+/**
+ * Remove generated documentation while preserving deployment metadata.
+ *
+ * @param string[] $preserveNames
+ */
+function cleanBuildDirectory(string $directory, array $preserveNames = ['.git', 'CNAME']): void
+{
+    if (!is_dir($directory)) {
+        if (!mkdir($directory, 0775, true) && !is_dir($directory)) {
+            throw new RuntimeException("Unable to create documentation build directory: {$directory}");
+        }
+        return;
+    }
+
+    foreach (new FilesystemIterator($directory, FilesystemIterator::SKIP_DOTS) as $item) {
+        if (in_array($item->getFilename(), $preserveNames, true)) {
+            continue;
+        }
+        if ($item->isDir() && !$item->isLink()) {
+            removeDirectory($item->getPathname());
+            continue;
+        }
+        if (!unlink($item->getPathname())) {
+            throw new RuntimeException("Unable to remove generated file: {$item->getPathname()}");
+        }
+    }
+}
+
 function pageUrl(string $id): string { return $id === 'README' ? '/' : '/' . $id . '/'; }
 function escapeHtml(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 
@@ -139,23 +167,56 @@ function navigationHtml(array $navigation, array $labels, string $current): stri
     return $html . '</nav>';
 }
 
-function layout(string $title, string $content, string $navigation): string
-{
+function layout(
+    string $title,
+    string $content,
+    string $navigation,
+    string $logoFile,
+    string $faviconFile,
+): string {
     return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
         . '<meta name="description" content="Zoosper CMS documentation"><title>' . escapeHtml($title) . ' · Zoosper CMS</title>'
-        . '<link rel="icon" href="/assets/favicon.svg"><link rel="stylesheet" href="/assets/site.css"></head><body>'
-        . '<header><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Zoosper CMS</a><span>Documentation</span>'
+        . '<link rel="icon" href="/assets/' . escapeHtml($faviconFile) . '"><link rel="stylesheet" href="/assets/site.css"></head><body>'
+        . '<header><a class="brand" href="/"><img src="/assets/' . escapeHtml($logoFile) . '" alt="">Zoosper CMS</a><span>Documentation</span>'
         . '<a href="https://github.com/zoosper/zoosper">GitHub</a></header><div class="shell">' . $navigation
         . '<main class="content">' . $content . '</main></div><footer>Zoosper CMS documentation</footer></body></html>';
 }
 
-removeDirectory($outputRoot);
+/** Resolve a required canonical documentation asset. */
+function requireAsset(string $path, string $assetName): string
+{
+    if (!is_file($path)) {
+        throw new RuntimeException(
+            "Missing canonical {$assetName} asset: {$path}. "
+            . 'Restore the shared brand asset before rebuilding documentation.',
+        );
+    }
+    return $path;
+}
+
+$logoSource = requireAsset(
+    $repoRoot . '/app/zoosper-theme/resources/brand/mark.svg',
+    'theme mark',
+);
+$faviconSource = requireAsset(
+    $repoRoot . '/public/assets/brand/favicon.svg',
+    'favicon',
+);
+
+$logoFile = 'logo.' . pathinfo($logoSource, PATHINFO_EXTENSION);
+$faviconFile = 'favicon.' . pathinfo($faviconSource, PATHINFO_EXTENSION);
+
+cleanBuildDirectory($outputRoot);
 mkdir($outputRoot . '/assets', 0775, true);
-copy($siteRoot . '/assets/site.css', $outputRoot . '/assets/site.css');
-$brandMark = $repoRoot . '/app/zoosper-theme/resources/brand/mark.svg';
-if (!is_file($brandMark)) { throw new RuntimeException('Canonical Zoosper brand mark is missing.'); }
-copy($brandMark, $outputRoot . '/assets/logo.svg');
-copy($brandMark, $outputRoot . '/assets/favicon.svg');
+foreach ([
+    $siteRoot . '/assets/site.css' => $outputRoot . '/assets/site.css',
+    $logoSource => $outputRoot . '/assets/' . $logoFile,
+    $faviconSource => $outputRoot . '/assets/' . $faviconFile,
+] as $source => $destination) {
+    if (!copy($source, $destination)) {
+        throw new RuntimeException("Unable to copy documentation asset: {$source}");
+    }
+}
 
 $known = [];
 foreach ($navigation as $ids) { foreach ($ids as $id) { $known[$id] = true; } }
@@ -165,7 +226,7 @@ foreach (array_keys($known) as $id) {
     [$title, $content] = markdownToHtml((string) file_get_contents($source));
     $directory = $id === 'README' ? $outputRoot : $outputRoot . '/' . $id;
     if (!is_dir($directory)) { mkdir($directory, 0775, true); }
-    file_put_contents($directory . '/index.html', layout($title, $content, navigationHtml($navigation, $labels, $id)));
+    file_put_contents($directory . '/index.html', layout($title, $content, navigationHtml($navigation, $labels, $id), $logoFile, $faviconFile));
 }
 
 $errors = [];
