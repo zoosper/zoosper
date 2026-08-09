@@ -1,26 +1,27 @@
-# Zoosper architecture notes
+# Architecture
 
-## Current skeleton decision
+Zoosper is an API-first modular CMS built on Marko components and PHP 8.5.
 
-This skeleton uses a tiny internal kernel/router so the project is immediately understandable and runnable. It intentionally mirrors Marko's typical project layout:
+## Runtime
 
-- `app/` for first-party modules
-- `modules/` for third-party/community modules
-- `public/index.php` as the web entry point
-- `config/` for PHP configuration
-- `storage/` for cache/log/session data
-- `tests/` for tests
+The application loads layered configuration, discovers modules, composes services, loads module routes and executes middleware before dispatching controllers. Site context is resolved once per request and carried through the request path.
 
-## Next Marko integration step
+## Modules
 
-When ready, replace `Zoosper\Core\Http\Application` bootstrapping with real Marko bootstrapping and adapt the controller routes to Marko attributes or module route config.
+Modules own routes, controllers, services, migrations, schema declarations, permissions, Admin menus, Admin assets, templates, translations and extension contracts. Installed Composer modules opt in explicitly through package metadata.
 
-Keep these architecture rules:
+## Configuration
 
-- API first
-- security headers globally
-- lean controllers
-- service contracts first
-- roles and permissions from day one
-- no core hacks
-- modules over monolith
+Module defaults are loaded below project overrides. Secrets remain environment-owned. Settings can expose configuration without becoming the source of truth for every value.
+
+## Persistence
+
+Repositories own database access. Migrations are module-owned and discovered through the module registry. SQLite is supported for local development and automated fresh-install proof; MySQL is the production target.
+
+## Presentation
+
+Latte is the current default template engine, not a platform-wide restriction. The architecture remains API-first and template-engine integration should remain replaceable.
+
+## Security
+
+Authentication, CSRF, route permissions, two-factor authentication, security headers, sanitisation, rate-limiting seams and audit logging are explicit runtime boundaries.

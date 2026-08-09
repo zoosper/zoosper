@@ -1,3 +1,5 @@
-# Alpha upgrades
+# Upgrade
 
-Back up the database and uploaded files before changing code. Install the locked dependencies, run `php bin/zoosper migrate`, compile the module manifest, run `php bin/zoosper release:check`, then run the full test suite. Alpha releases may change extension contracts; review `CHANGELOG.md` before upgrading. Keep one rollback point containing the previous code, database and uploads.
+Back up the database and uploaded Media before changing code. Review `CHANGELOG.md`, install locked dependencies, run migrations, compile the module manifest, run release checks and execute the full test suite.
+
+Alpha contracts may change between releases. Keep the previous code, database and Media state available as a rollback point. Do not assume every migration is automatically reversible.

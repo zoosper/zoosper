@@ -1,9 +1,10 @@
 # Troubleshooting
 
-- Use `php bin/zoosper cache:clear` when module discovery or compiled-manifest state is stale.
-- Resolve duplicate module identities by removing the stale copy named in `DuplicateModuleException`.
-- Check `var/log/exception.log` for server-side exception details.
-- Verify module asset URLs when Admin feature styling is missing.
+- Run `php bin/zoosper cache:clear` when compiled module discovery is stale.
+- Run `php bin/zoosper module:manifest:status` to inspect manifest health.
+- Run `php bin/zoosper release:check` for runtime prerequisite failures.
+- Check `var/log` for application and exception logs.
 - Confirm `var/cache` and `var/log` are writable.
-- Run `php bin/zoosper release:check` for a concise blocker list.
-- Keep `APP_DEBUG` disabled in production.
+- Resolve duplicate module identities using the paths reported by the collision exception.
+- Verify module asset URLs when an Admin feature renders without its CSS or JavaScript.
+- Confirm the configured database and site-domain mapping when routing fails.
