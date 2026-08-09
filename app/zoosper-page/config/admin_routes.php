@@ -24,14 +24,4 @@ return [
     ['method' => 'GET', 'path' => '/admin/pages/preview', 'controller' => PageAdminController::class, 'action' => 'preview', 'permission' => 'page.manage'],
     ['method' => 'POST', 'path' => '/admin/pages/publish', 'controller' => PageAdminController::class, 'action' => 'publish', 'permission' => 'page.manage'],
     ['method' => 'POST', 'path' => '/admin/pages/unpublish', 'controller' => PageAdminController::class, 'action' => 'unpublish', 'permission' => 'page.manage'],
-    [
-        'name' => 'admin.page_momentum.index',
-        'method' => 'GET',
-        'path' => '/admin/page-momentum',
-        'controller' => 'Zoosper\\Page\\Admin\\Controller\\PageMomentumAdminHttpController',
-        'action' => 'index',
-        'view' => 'admin/page-momentum.latte',
-        'permission' => 'page.manage',
-        'description' => 'Read-only launch-readiness panel for page/admin momentum.',
-    ],
 ];

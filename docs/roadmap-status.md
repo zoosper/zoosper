@@ -118,3 +118,7 @@ CLI, Admin presentation, application configuration and the public API health res
 ## Phase 9GK Page revision domain foundation
 
 The existing minimal revision write is expanded into a full snapshot repository and service, including Editor.js, SEO and publication metadata plus retention policy.
+
+## Phase 9GLA Page Momentum retirement
+
+Page Momentum launch scaffolding is retired. Real Page revision history, preview and restore functionality replaces the internal readiness dashboard in the 0.2 product line.

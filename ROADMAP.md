@@ -949,3 +949,7 @@ After tagging `v0.1.0-alpha.1`, the central development version advances to `0.2
 ## Phase 9GK Page revision domain foundation
 
 Page revisions now support full restorable snapshots, Page-scoped lookup and bounded retention. The next adoption slice wires history, preview and restore into Page Admin with audit logging.
+
+## Phase 9GLA Page Momentum retirement
+
+The temporary `/admin/page-momentum` engineering dashboard was removed from production. Its route, menu/config fragments, controllers, providers, template and dedicated architecture tests were retired. Release readiness remains enforced by CI, fresh-install smoke, release checks and focused Page feature tests.

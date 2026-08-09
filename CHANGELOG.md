@@ -11,3 +11,5 @@ Initial alpha candidate. Includes modular installation and migrations, Admin aut
 Known limitation: Psalm remains advisory while the existing baseline is reduced. Alpha APIs and extension contracts may change before stable release.
 
 - Added the full Page revision snapshot domain with bounded retention and fresh-install schema coverage.
+
+- Removed the internal Page Momentum launch-readiness dashboard from the production Admin surface.
