@@ -973,3 +973,7 @@ Page saves now use complete retained snapshots. Page edit exposes revision histo
 ## Documentation website
 
 A zero-dependency PHP static builder now consumes canonical `docs/`, validates internal links and exports `docs-site/build/` for hosting at `docs.zoosper.com`.
+
+## Shared product branding
+
+The Theme module now owns the canonical Zoosper mark. Admin, the default frontend theme and the static documentation build consume published copies through stable asset contracts; custom frontend themes remain free to override presentation.

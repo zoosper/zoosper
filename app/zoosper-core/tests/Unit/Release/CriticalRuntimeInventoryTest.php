@@ -24,5 +24,7 @@ it('guards the alpha critical route and asset inventory', function (): void {
     expect($settings)->toHaveKeys(['zoosper-settings-workspace-style', 'zoosper-settings-workspace-script'])
         ->and($auth)->toHaveKey('zoosper-admin-user-two-factor-reset-runtime')
         ->and($root . '/public/assets/admin/css/admin.css')->toBeFile()
+        ->and($root . '/public/assets/brand/logo.svg')->toBeFile()
+        ->and($root . '/public/assets/brand/favicon.svg')->toBeFile()
         ->and($root . '/public/assets/admin/js/editorjs.bundle.js')->toBeFile();
 });

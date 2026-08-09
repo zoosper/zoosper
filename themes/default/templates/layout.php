@@ -18,12 +18,13 @@ $stylesheetUrl = isset($cdn) ? $cdn->staticAsset('/static/themes/default/assets/
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $e($title ?? 'Zoosper') ?></title>
+    <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg">
     <link rel="stylesheet" href="<?= $e($stylesheetUrl) ?>">
 </head>
 <body>
 <?= $slot('body.start') ?>
 <header class="site-header">
-    <a href="/" class="site-logo">Zoosper</a>
+    <a href="/" class="site-logo" aria-label="Zoosper home"><img src="/assets/brand/logo.svg" alt="" width="36" height="36"><span>Zoosper</span></a>
 </header>
 <main class="site-main page-shell">
     <?= $content ?? '' ?>

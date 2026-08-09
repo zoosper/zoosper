@@ -21,6 +21,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $e($title) ?> - Zoosper Admin</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg">
     <?php if (($assetStylesHtml ?? '') !== ''): ?>
         <?= $assetStylesHtml ?>
     <?php else: ?>
@@ -33,7 +34,7 @@
 <body>
 <?= $slot('body.start') ?>
 <div class="admin-shell">
-    <aside class="admin-sidebar"><div class="brand">Zoosper</div><?= $navigation ?></aside>
+    <aside class="admin-sidebar"><a class="brand" href="/admin" aria-label="Zoosper Admin home"><img src="/assets/brand/logo.svg" alt="" width="32" height="32"><span>Zoosper</span></a><?= $navigation ?></aside>
     <section class="admin-main">
         <header class="admin-topbar"><strong><?= $e($title) ?></strong><span class="muted"><?= $e($userName) ?></span></header>
         <?= $slot('before.content') ?>

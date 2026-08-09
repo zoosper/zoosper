@@ -152,8 +152,10 @@ function layout(string $title, string $content, string $navigation): string
 removeDirectory($outputRoot);
 mkdir($outputRoot . '/assets', 0775, true);
 copy($siteRoot . '/assets/site.css', $outputRoot . '/assets/site.css');
-copy($siteRoot . '/assets/logo.svg', $outputRoot . '/assets/logo.svg');
-copy($siteRoot . '/assets/favicon.svg', $outputRoot . '/assets/favicon.svg');
+$brandMark = $repoRoot . '/app/zoosper-theme/resources/brand/mark.svg';
+if (!is_file($brandMark)) { throw new RuntimeException('Canonical Zoosper brand mark is missing.'); }
+copy($brandMark, $outputRoot . '/assets/logo.svg');
+copy($brandMark, $outputRoot . '/assets/favicon.svg');
 
 $known = [];
 foreach ($navigation as $ids) { foreach ($ids as $id) { $known[$id] = true; } }

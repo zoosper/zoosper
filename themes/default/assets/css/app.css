@@ -29,3 +29,6 @@ body {
     color: #64748b;
     font-size: .9rem;
 }
+
+.site-logo { display:inline-flex; align-items:center; gap:.65rem; }
+.site-logo img { display:block; flex:0 0 auto; width:2.25rem; height:2.25rem; }

@@ -23,3 +23,5 @@ Known limitation: Psalm remains advisory while the existing baseline is reduced.
 - Added Page revision history, historical preview, complete snapshot capture and CSRF-protected safe restore with audit logging.
 
 - Added a zero-dependency static documentation website that builds `docs.zoosper.com` directly from canonical repository Markdown.
+
+- Unified Zoosper branding across the documentation site, Admin shell and default frontend theme using one Theme-owned vector mark and explicit public runtime assets.
