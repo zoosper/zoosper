@@ -42,15 +42,6 @@ $loadDurableManifest = static function () use ($manifestPath): array {
     // Fallback keeps the gate usable if the manifest is missing, but the
     // integrity check will flag the situation loudly.
     $fallback = [
-        'tools/apply-admin-form-config-aggregator-layered-loader.php' => ['reason' => 'fallback'],
-        'tools/apply-admin-form-config-layered-loader.php' => ['reason' => 'fallback'],
-        'tools/apply-composer-internal-package-stability.php' => ['reason' => 'fallback'],
-        'tools/apply-composer-local-package-repositories.php' => ['reason' => 'fallback'],
-        'tools/apply-rate-limit-admin-login-policy.php' => ['reason' => 'fallback'],
-        'tools/apply-rate-limit-admin-middleware-hook.php' => ['reason' => 'fallback'],
-        'tools/apply-role-admin-latte-cutover.php' => ['reason' => 'fallback'],
-        'tools/apply-role-admin-markup-view-cutover.php' => ['reason' => 'fallback'],
-        'tools/apply-site-lookup-service-binding.php' => ['reason' => 'fallback'],
         'tools/cleanup-expired-rate-limit-buckets.php' => ['reason' => 'fallback'],
         'tools/install-git-hooks.php' => ['reason' => 'fallback'],
     ];
@@ -79,7 +70,7 @@ $siteLookupAudit = static function () use ($root, $siteLookupCli): array {
             'name' => $name,
             'errors' => 1,
             'warnings' => 0,
-            'summary' => 'tools/site-lookup.php not found; run the 1.77 consolidation phase first.',
+            'summary' => 'tools/site-lookup.php is missing; restore the durable site-lookup audit tool.',
             'details' => [],
         ];
     }

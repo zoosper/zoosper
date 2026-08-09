@@ -15,3 +15,5 @@ Known limitation: Psalm remains advisory while the existing baseline is reduced.
 - Removed the internal Page Momentum launch-readiness dashboard from the production Admin surface.
 
 - Consolidated module and package documentation into concise current READMEs and removed integration patch notes, readiness stubs and historical Media phase documents.
+
+- Removed completed root apply scripts, package-local Media migration/audit tooling, tool-only historical tests and tracked runtime Media artefacts.

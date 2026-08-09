@@ -957,3 +957,7 @@ The temporary `/admin/page-momentum` engineering dashboard was removed from prod
 ## Repository hygiene
 
 Canonical documentation now lives in `docs/`; module and package directories retain only concise independently useful READMEs. Executable tooling consolidation is the next separate hygiene stream and must preserve Composer, CI, hook and strict-gate dependencies.
+
+## Repository hygiene baseline
+
+Repository cleanup is complete at the documentation and tooling layers. Active root tools are limited to operational, verification, gate and developer utilities; completed apply scripts and package-local migration scaffolding are removed after adoption.

@@ -18,45 +18,6 @@ declare(strict_types=1);
  */
 
 return [
-    'tools/apply-admin-form-config-aggregator-layered-loader.php' => [
-        'reason' => 'Test-protected admin form config aggregator layered loader repair tool.',
-    ],
-    'tools/apply-admin-form-config-layered-loader.php' => [
-        'reason' => 'Test-protected admin form config layered loader migration tool.',
-    ],
-    'tools/apply-composer-internal-package-stability.php' => [
-        'reason' => 'Test-protected Composer internal package stability repair tool.',
-    ],
-    'tools/apply-composer-local-package-repositories.php' => [
-        'reason' => 'Test-protected Composer local package repository repair tool.',
-    ],
-    'tools/apply-rate-limit-admin-login-policy.php' => [
-        'reason' => 'Test-protected rate-limit admin login policy apply tool.',
-    ],
-    'tools/apply-rate-limit-admin-middleware-hook.php' => [
-        'reason' => 'Test-protected rate-limit admin middleware hook apply tool.',
-    ],
-    'tools/apply-role-admin-latte-cutover.php' => [
-        'reason' => 'Durable read-only RoleAdminController Latte cutover executor required by RoleAdminLatteCutoverExecutorTest.',
-        'outputs' => [
-            'role-admin-latte-cutover-executor.txt',
-            'role-admin-latte-cutover-executor.log',
-        ],
-    ],
-    'tools/apply-role-admin-markup-view-cutover.php' => [
-        'reason' => 'Durable read-only RoleAdminController markup view cutover executor required by RoleAdminMarkupViewCutoverTest.',
-        'outputs' => [
-            'role-admin-markup-view-cutover.txt',
-            'role-admin-markup-view-cutover.log',
-        ],
-    ],
-    'tools/apply-site-lookup-service-binding.php' => [
-        'reason' => 'Guarded service-binding patcher retained as the documented Site lookup binding finalisation tool.',
-        'outputs' => [
-            'site-lookup-service-binding-apply.txt',
-            'site-lookup-service-binding-apply.json',
-        ],
-    ],
     'tools/cleanup-expired-rate-limit-buckets.php' => [
         'reason' => 'Test-protected dry-run-first expired rate-limit bucket cleanup command.',
     ],
