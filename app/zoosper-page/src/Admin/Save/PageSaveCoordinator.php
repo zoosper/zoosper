@@ -16,6 +16,7 @@ use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
+use Zoosper\Page\Service\PageRevisionService;
 
 /** Owns Page form processing, input normalisation, lifecycle execution and persistence. */
 final readonly class PageSaveCoordinator
@@ -27,6 +28,7 @@ final readonly class PageSaveCoordinator
         private ?AdminFormProcessorRegistry $processors = null,
         private ?EntitySaveLifecycleRunner $lifecycle = null,
         private ?ErrorHandler $errors = null,
+        private ?PageRevisionService $revisions = null,
     ) {
     }
 
@@ -79,7 +81,14 @@ final readonly class PageSaveCoordinator
                         metaKeywords: $input->metaKeywords,
                         canonicalUrl: $input->canonicalUrl,
                     );
+                    if ($this->revisions !== null && $pageId !== null) {
+                        $created = $this->pages->findById((int) $pageId);
+                        if ($created !== null) { $this->revisions->capturePage($created, $user->id); }
+                    }
                     return;
+                }
+                if ($this->revisions !== null && $page !== null) {
+                    $this->revisions->capturePage($page, $user->id);
                 }
                 $this->pages->update(
                     id: (int) $pageId,

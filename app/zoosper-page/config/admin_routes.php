@@ -17,6 +17,8 @@ return [
     ['method' => 'GET', 'path' => '/admin/pages/{id:\d+}/edit', 'controller' => PageAdminController::class, 'action' => 'editForm', 'permission' => 'page.manage'],
     ['method' => 'POST', 'path' => '/admin/pages/{id:\d+}/edit', 'controller' => PageAdminController::class, 'action' => 'update', 'permission' => 'page.manage'],
     ['method' => 'GET', 'path' => '/admin/pages/{id:\d+}/preview', 'controller' => PageAdminController::class, 'action' => 'preview', 'permission' => 'page.manage'],
+    ['method' => 'GET', 'path' => '/admin/pages/{id:\d+}/revisions/{revisionId:\d+}/preview', 'controller' => PageAdminController::class, 'action' => 'revisionPreview', 'permission' => 'page.manage'],
+    ['method' => 'POST', 'path' => '/admin/pages/{id:\d+}/revisions/{revisionId:\d+}/restore', 'controller' => PageAdminController::class, 'action' => 'restoreRevision', 'permission' => 'page.manage'],
     ['method' => 'POST', 'path' => '/admin/pages/{id:\d+}/publish', 'controller' => PageAdminController::class, 'action' => 'publish', 'permission' => 'page.manage'],
     ['method' => 'POST', 'path' => '/admin/pages/{id:\d+}/unpublish', 'controller' => PageAdminController::class, 'action' => 'unpublish', 'permission' => 'page.manage'],
     ['method' => 'GET', 'path' => '/admin/pages/edit', 'controller' => PageAdminController::class, 'action' => 'editForm', 'permission' => 'page.manage'],

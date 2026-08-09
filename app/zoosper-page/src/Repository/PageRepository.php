@@ -74,7 +74,6 @@ final readonly class PageRepository
         $statement->execute($params);
 
         $pageId = (int) $this->pdo->lastInsertId();
-        $this->createRevision($pageId, $title, $content, $userId);
 
         return $pageId;
     }
@@ -149,7 +148,6 @@ final readonly class PageRepository
 
         $statement = $this->pdo->prepare('UPDATE pages SET ' . implode(', ', $sets) . ' WHERE id = :id');
         $statement->execute($params);
-        $this->createRevision($id, $title, $content, $userId);
     }
 
     public function findById(int $id): ?Page
@@ -246,20 +244,25 @@ final readonly class PageRepository
         return '`' . implode('`, `', $columns) . '`';
     }
 
-    private function createRevision(int $pageId, string $title, string $content, ?int $userId): void
+    public function restoreRevision(int $siteId, \Zoosper\Page\Model\PageRevision $revision, ?int $userId): void
     {
-        if (!$this->tableExists('page_revisions')) {
-            return;
-        }
-
-        $statement = $this->pdo->prepare('INSERT INTO page_revisions (page_id, title, content, created_by, created_at) VALUES (:page_id, :title, :content, :created_by, :created_at)');
-        $statement->execute([
-            'page_id' => $pageId,
-            'title' => $title,
-            'content' => $content,
-            'created_by' => $userId,
-            'created_at' => gmdate('Y-m-d H:i:s'),
-        ]);
+        $this->update(
+            id: $revision->pageId,
+            siteId: $siteId,
+            title: $revision->title,
+            slug: $revision->slug,
+            content: $revision->content,
+            userId: $userId,
+            contentFormat: $revision->contentFormat,
+            contentJson: $revision->contentJson,
+            metaTitle: $revision->metaTitle,
+            metaDescription: $revision->metaDescription,
+            metaKeywords: $revision->metaKeywords,
+            canonicalUrl: $revision->canonicalUrl,
+        );
+        $revision->status === 'published'
+            ? $this->publish($revision->pageId, $userId)
+            : $this->unpublish($revision->pageId, $userId);
     }
 
     /** @param list<string> $columns @param array<string, mixed> $params */

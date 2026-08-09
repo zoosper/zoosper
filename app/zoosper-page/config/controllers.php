@@ -24,6 +24,8 @@ use Zoosper\Page\Admin\Save\PageSaveCoordinator;
 use Zoosper\Page\Admin\Form\PageAdminFormRenderer;
 use Zoosper\Page\Admin\PageAdminGridResponder;
 use Zoosper\Page\Admin\PageAdminPreviewResponder;
+use Zoosper\Page\Service\PageRevisionService;
+use Zoosper\Page\Admin\PageRevisionAdminResponder;
 use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
 use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
 use Zoosper\Page\Admin\PageSiteFilterOptions;
@@ -165,11 +167,20 @@ return [
                 : null,
             $services->get(EntitySaveLifecycleRunner::class),
             $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
+            $services->get(PageRevisionService::class),
         ),
         publication: new PagePublicationCoordinator(
             $services->get(PageRepository::class),
             $services->has(EventDispatcherInterface::class) ? $services->get(EventDispatcherInterface::class) : null,
         ),
         adminUrls: $services->get(AdminUrlGenerator::class),
+        revisionResponder: new PageRevisionAdminResponder(
+            $services->get(PageRevisionService::class),
+            $services->get(PageRepository::class),
+            $services->get(CsrfTokenManager::class),
+            $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
+            $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
+            $services->get(AdminUrlGenerator::class),
+        ),
     ),
 ];

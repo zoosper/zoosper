@@ -19,6 +19,7 @@ use Zoosper\Page\Admin\Save\PageSaveCoordinator;
 use Zoosper\Page\Admin\Form\PageAdminFormRenderer;
 use Zoosper\Page\Admin\PageAdminGridResponder;
 use Zoosper\Page\Admin\PageAdminPreviewResponder;
+use Zoosper\Page\Admin\PageRevisionAdminResponder;
 use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
@@ -46,6 +47,7 @@ final readonly class PageAdminController
         private ?PageSaveCoordinator              $pageSaver = null,
         private ?PagePublicationCoordinator       $publication = null,
         private ?AdminUrlGenerator                 $adminUrls = null,
+        private ?PageRevisionAdminResponder         $revisionResponder = null,
     )
     {
     }
@@ -144,7 +146,9 @@ final readonly class PageAdminController
             return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
         }
 
-        return $this->html('Edit page', $this->renderForm($this->adminUrl('/pages/' . $page->id . '/edit'), $page));
+        $content = $this->renderForm($this->adminUrl('/pages/' . $page->id . '/edit'), $page);
+        $content .= $this->revisionResponder?->historyHtml($page) ?? '';
+        return $this->html('Edit page', $content);
     }
 
     private function pageFromRequest(Request $request): ?Page
@@ -213,6 +217,28 @@ final readonly class PageAdminController
             throw new RuntimeException('Page Admin preview responder is unavailable.');
         }
         return $this->previewResponder->respond($this->pageFromRequest($request));
+    }
+
+    public function revisionPreview(Request $request): Response
+    {
+        $this->currentAdminUser();
+        $page = $this->pageFromRequest($request);
+        $revisionId = $request->routeParam('revisionId');
+        if ($page === null || $revisionId === null || !ctype_digit($revisionId) || $this->revisionResponder === null) {
+            return $this->html('Revision not found', '<p>Revision not found.</p>', 404);
+        }
+        return $this->revisionResponder->preview($page, (int) $revisionId);
+    }
+
+    public function restoreRevision(Request $request): Response
+    {
+        $actor = $this->currentAdminUser();
+        $page = $this->pageFromRequest($request);
+        $revisionId = $request->routeParam('revisionId');
+        if ($page === null || $revisionId === null || !ctype_digit($revisionId) || $this->revisionResponder === null) {
+            return $this->html('Revision not found', '<p>Revision not found.</p>', 404);
+        }
+        return $this->revisionResponder->restore($page, (int) $revisionId, $actor);
     }
 
     private function currentAdminUser(): AdminUser

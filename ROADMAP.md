@@ -965,3 +965,7 @@ Repository cleanup is complete at the documentation and tooling layers. Active r
 ## Module ecosystem interoperability
 
 Zoosper exposes one public module identity: `type: zoosper-module`. A central private classifier recognises upstream Marko modules so Zoosper can compose over maintained Marko capabilities without publishing a second authoring contract.
+
+## Page revision Admin adoption
+
+Page saves now use complete retained snapshots. Page edit exposes revision history, historical preview and restore; restore first captures the current state and records an audit event.
