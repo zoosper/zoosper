@@ -21,3 +21,6 @@
 # Runtime-managed public media
 /public/media/*
 !/public/media/.gitkeep
+
+# Documentation website build output
+/docs-site/build/

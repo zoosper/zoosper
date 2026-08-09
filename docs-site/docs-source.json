@@ -1,5 +1,1 @@
-{
-  "source": "../docs",
-  "canonicalUrl": "https://docs.zoosper.com/",
-  "duplicateContent": false
-}
+{"source":"../docs","canonicalUrl":"https://docs.zoosper.com/","duplicateContent":false,"output":"build","runtime":"php"}

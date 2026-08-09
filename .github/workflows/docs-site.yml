@@ -1,0 +1,23 @@
+name: Documentation website
+on:
+  pull_request:
+    paths: ['docs/**', 'docs-site/**', '.github/workflows/docs-site.yml']
+  push:
+    branches: [dev, master]
+    paths: ['docs/**', 'docs-site/**', '.github/workflows/docs-site.yml']
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+      - run: php docs-site/build.php
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zoosper-docs-site
+          path: docs-site/build
+          if-no-files-found: error

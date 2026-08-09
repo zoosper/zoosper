@@ -21,3 +21,5 @@ Known limitation: Psalm remains advisory while the existing baseline is reduced.
 - Made `type: zoosper-module` the sole public module identity and centralised private upstream Marko compatibility across Composer and runtime discovery.
 
 - Added Page revision history, historical preview, complete snapshot capture and CSRF-protected safe restore with audit logging.
+
+- Added a zero-dependency static documentation website that builds `docs.zoosper.com` directly from canonical repository Markdown.
