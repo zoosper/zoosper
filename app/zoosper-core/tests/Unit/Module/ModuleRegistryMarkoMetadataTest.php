@@ -55,6 +55,9 @@ function genericMarkoPackageFixture(): string
     return $root;
 }
 
-test('generic Marko framework packages are not mistaken for Zoosper CMS modules', function (): void {
-    expect((new ModuleRegistry(genericMarkoPackageFixture()))->discoverModulesLive())->toBe([]);
+test('generic Marko framework modules are recognised through private compatibility', function (): void {
+    $modules = (new ModuleRegistry(genericMarkoPackageFixture()))->discoverModulesLive();
+    expect($modules)->toHaveCount(1)
+        ->and($modules[0]->name)->toBe('marko-example')
+        ->and($modules[0]->source)->toBe('vendor');
 });

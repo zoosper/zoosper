@@ -28,11 +28,6 @@
         "test": "pest",
         "test:unit": "pest --testsuite=Unit"
     },
-    "extra": {
-        "marko": {
-            "module": true
-        }
-    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {

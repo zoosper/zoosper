@@ -24,11 +24,11 @@ test('first-party module files do not duplicate enabled state', function (): voi
             $composer = json_decode((string) file_get_contents($file->getPathname()), true, flags: JSON_THROW_ON_ERROR);
             $module = require $moduleFile;
 
-            expect($composer['extra']['marko']['module'] ?? null)->toBeTrue();
+            expect($composer['type'] ?? null)->toBe('zoosper-module');
             expect($module)->toBeArray();
             expect($module)->not->toHaveKey(
                 'enabled',
-                'Composer/Marko module identity enables first-party packages; remove duplicate state from ' . $moduleFile,
+                'Composer package type enables first-party modules; remove duplicate state from ' . $moduleFile,
             );
         }
     }

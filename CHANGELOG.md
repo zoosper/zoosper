@@ -17,3 +17,5 @@ Known limitation: Psalm remains advisory while the existing baseline is reduced.
 - Consolidated module and package documentation into concise current READMEs and removed integration patch notes, readiness stubs and historical Media phase documents.
 
 - Removed completed root apply scripts, package-local Media migration/audit tooling, tool-only historical tests and tracked runtime Media artefacts.
+
+- Made `type: zoosper-module` the sole public module identity and centralised private upstream Marko compatibility across Composer and runtime discovery.

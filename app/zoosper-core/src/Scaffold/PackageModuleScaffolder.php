@@ -136,11 +136,6 @@ final readonly class PackageModuleScaffolder
         "psr-4": {
             "{$namespaceEscaped}Tests\\\\": "tests/"
         }
-    },
-    "extra": {
-        "marko": {
-            "module": true
-        }
     }
 }
 JSON,

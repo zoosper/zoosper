@@ -93,15 +93,7 @@ final readonly class ComposerModuleDiscovery
      */
     private function isZoosperModulePackage(array $package): bool
     {
-        if (($package['type'] ?? null) === 'zoosper-module') {
-            return true;
-        }
-
-        $extra = $package['extra'] ?? [];
-        return is_array($extra)
-            && isset($extra['zoosper'])
-            && is_array($extra['zoosper'])
-            && isset($extra['zoosper']['module']);
+        return ComposerPackageModuleClassifier::isRuntimeModule($package);
     }
 
     /**

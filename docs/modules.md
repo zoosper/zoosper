@@ -1,15 +1,10 @@
 # Modules
 
-A Composer package is discoverable as a Zoosper module when it explicitly declares both the package type and Marko module flag.
+A Composer package is discoverable as a Zoosper module when it explicitly declares both the package type.
 
 ```json
 {
-  "type": "zoosper-module",
-  "extra": {
-    "marko": {
-      "module": true
-    }
-  }
+  "type": "zoosper-module"
 }
 ```
 

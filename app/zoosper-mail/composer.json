@@ -11,10 +11,5 @@
         "psr-4": {
             "Zoosper\\Mail\\": "src/"
         }
-    },
-    "extra": {
-        "marko": {
-            "module": true
-        }
     }
 }

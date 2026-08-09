@@ -11,10 +11,5 @@
         "psr-4": {
             "Zoosper\\UrlRewrite\\": "src/"
         }
-    },
-    "extra": {
-        "marko": {
-            "module": true
-        }
     }
 }

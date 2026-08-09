@@ -26,7 +26,7 @@ test('first-party module files do not duplicate Composer package identity', func
             $module = require $moduleFile;
 
             expect($composer['name'] ?? null)->toBeString()->not->toBe('');
-            expect($composer['extra']['marko']['module'] ?? null)->toBeTrue();
+            expect($composer['type'] ?? null)->toBe('zoosper-module');
             expect($module)->toBeArray();
             expect($module)->not->toHaveKey(
                 'name',

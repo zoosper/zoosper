@@ -14,10 +14,5 @@
         "psr-4": {
             "Zoosper\\Api\\": "src/"
         }
-    },
-    "extra": {
-        "marko": {
-            "module": true
-        }
     }
 }

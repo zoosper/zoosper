@@ -23,8 +23,8 @@ test('scaffolds a package module under packages with composer metadata and tests
     $composer = json_decode((string) file_get_contents($root . '/packages/acme-movie-library/composer.json'), true);
     expect($composer['name'])->toBe('acme/movie-library');
     expect($composer['type'])->toBe('zoosper-module');
-    expect($composer['extra']['marko']['module'])->toBeTrue();
-    expect($composer['extra'])->not->toHaveKey('zoosper');
+    expect($composer['extra']['marko']['module'] ?? null)->not->toBeTrue();
+    expect($composer['extra'] ?? [])->not->toHaveKey('zoosper');
     expect($composer['autoload']['psr-4'])->toHaveKey('Acme\\MovieLibrary\\');
     expect($composer['require']['zoosper/core'])->toBe('dev-dev');
 

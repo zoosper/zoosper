@@ -23,11 +23,6 @@
             "Zoosper\\ApiGrid\\Tests\\": "tests/"
         }
     },
-    "extra": {
-        "marko": {
-            "module": true
-        }
-    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {

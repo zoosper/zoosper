@@ -303,12 +303,7 @@ final class ModuleRegistry
                 continue;
             }
 
-            $extra = is_array($json['extra'] ?? null) ? $json['extra'] : [];
-            $marko = is_array($extra['marko'] ?? null) ? $extra['marko'] : [];
-
-            if (($json['type'] ?? null) !== 'zoosper-module'
-                || ($marko['module'] ?? false) !== true
-            ) {
+            if (!ComposerPackageModuleClassifier::isRuntimeModule($json)) {
                 continue;
             }
 
@@ -334,12 +329,7 @@ final class ModuleRegistry
             return null;
         }
 
-        $extra = is_array($metadata['extra'] ?? null) ? $metadata['extra'] : [];
-        $marko = is_array($extra['marko'] ?? null) ? $extra['marko'] : [];
-
-        if (($metadata['type'] ?? null) !== 'zoosper-module'
-            || ($marko['module'] ?? false) !== true
-        ) {
+        if (!ComposerPackageModuleClassifier::isRuntimeModule($metadata)) {
             return null;
         }
 

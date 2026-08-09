@@ -961,3 +961,7 @@ Canonical documentation now lives in `docs/`; module and package directories ret
 ## Repository hygiene baseline
 
 Repository cleanup is complete at the documentation and tooling layers. Active root tools are limited to operational, verification, gate and developer utilities; completed apply scripts and package-local migration scaffolding are removed after adoption.
+
+## Module ecosystem interoperability
+
+Zoosper exposes one public module identity: `type: zoosper-module`. A central private classifier recognises upstream Marko modules so Zoosper can compose over maintained Marko capabilities without publishing a second authoring contract.

@@ -28,6 +28,9 @@ function legacyOnlyVendorFixture(): string
     return $root;
 }
 
-test('legacy-only Composer metadata is not a runtime module identity', function (): void {
-    expect((new ModuleRegistry(legacyOnlyVendorFixture()))->discoverModulesLive())->toBe([]);
+test('Zoosper package type remains authoritative when legacy metadata is present', function (): void {
+    $modules = (new ModuleRegistry(legacyOnlyVendorFixture()))->discoverModulesLive();
+    expect($modules)->toHaveCount(1)
+        ->and($modules[0]->name)->toBe('acme-legacy')
+        ->and($modules[0]->source)->toBe('vendor');
 });

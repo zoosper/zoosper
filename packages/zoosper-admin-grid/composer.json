@@ -24,11 +24,6 @@
             "Zoosper\\AdminGrid\\Tests\\": "tests/"
         }
     },
-    "extra": {
-        "marko": {
-            "module": true
-        }
-    },
     "scripts": {
         "test": "pest",
         "test:unit": "pest --testsuite=Unit"

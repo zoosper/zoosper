@@ -10,8 +10,8 @@ test('zoosper media package metadata is suitable for composer discovery', functi
 
     expect($composer['name'])->toBe('zoosper/media');
     expect($composer['type'])->toBe('zoosper-module');
-    expect($composer['extra']['marko']['module'])->toBeTrue();
-    expect($composer['extra'])->not->toHaveKey('zoosper');
+    expect($composer['extra']['marko']['module'] ?? null)->not->toBeTrue();
+    expect($composer['extra'] ?? [])->not->toHaveKey('zoosper');
     expect($composer['autoload']['psr-4']['Zoosper\\Media\\'])->toBe('src/');
 });
 

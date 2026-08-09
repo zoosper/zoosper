@@ -18,10 +18,5 @@
         "psr-4": {
             "App\\zoospersettings\\tests\\": "tests/"
         }
-    },
-    "extra": {
-        "marko": {
-            "module": true
-        }
     }
 }
