@@ -1,0 +1,5 @@
+<?php
+declare(strict_types=1);
+namespace Zoosper\Menu\Admin;
+use Zoosper\Auth\Model\AdminUser; use Zoosper\Auth\UI\AdminViewRendererInterface; use Zoosper\Core\Http\Response; use Zoosper\Menu\Contract\MenuAdminRepositoryInterface;
+final readonly class MenuAdminResponder { public function __construct(private MenuAdminRepositoryInterface $menus,private AdminViewRendererInterface $views){} public function index(AdminUser $user): Response{return Response::html($this->views->render('Menus','menu/admin/index.latte',['menus'=>$this->menus->all()],$user,'menus'));} public function edit(AdminUser $user,int $id): Response{$menu=$this->menus->find($id);return $menu===null?Response::html('Menu not found',404):Response::html($this->views->render('Edit menu','menu/admin/edit.latte',['menu'=>$menu,'items'=>$this->menus->items($id)],$user,'menus'));} public function create(AdminUser $user): Response{return Response::html($this->views->render('Create menu','menu/admin/edit.latte',['menu'=>null,'items'=>[]],$user,'menus'));} }

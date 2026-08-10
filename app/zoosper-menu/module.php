@@ -1,3 +1,11 @@
 <?php
+
 declare(strict_types=1);
-return ['name'=>'zoosper-menu','enabled'=>true,'version'=>'0.2.0-alpha.1-dev','sort_order'=>45];
+
+/**
+ * Marko-compatible runtime wiring for the Menu module.
+ *
+ * Package identity, version and enabled state are owned by composer.json and
+ * Composer package discovery. Keep this file limited to runtime wiring keys.
+ */
+return [];
