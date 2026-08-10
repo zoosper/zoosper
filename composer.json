@@ -72,7 +72,9 @@
         "gate:strict": "@php tools/gate.php --strict",
         "ci:js": "@php -r '$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(\".\", FilesystemIterator::SKIP_DOTS)); foreach ($it as $file) { $path = $file->getPathname(); if ($file->isFile() && $file->getExtension() === \"js\" && (str_starts_with($path, \"./app/\") || str_starts_with($path, \"./packages/\") || str_starts_with($path, \"./public/\")) && !str_contains($path, \"/vendor/\") && !str_contains($path, \"/node_modules/\")) { passthru(\"node --check \" . escapeshellarg($path), $code); if ($code !== 0) exit($code); }}'",
         "release:check": "@php bin/zoosper release:check",
-        "fresh-install:smoke": "@php vendor/bin/pest app/zoosper-core/tests/Feature/Release/FreshInstallAlphaSmokeTest.php app/zoosper-core/tests/Unit/Release/CriticalRuntimeInventoryTest.php"
+        "fresh-install:smoke": "@php vendor/bin/pest app/zoosper-core/tests/Feature/Release/FreshInstallAlphaSmokeTest.php app/zoosper-core/tests/Unit/Release/CriticalRuntimeInventoryTest.php",
+        "hooks:install": "@bash tools/install-git-hooks.sh",
+        "pre-push": "@bash .githooks/pre-push"
     },
     "config": {
         "sort-packages": true,

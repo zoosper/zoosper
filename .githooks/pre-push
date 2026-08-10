@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+[ -n "$ROOT" ] || { echo "[Zoosper pre-push] Cannot locate repository root." >&2; exit 1; }
+cd "$ROOT"
+
+if [ "${ZOOSPER_SKIP_PRE_PUSH:-0}" = "1" ]; then
+    echo "[Zoosper pre-push] Explicitly skipped with ZOOSPER_SKIP_PRE_PUSH=1."
+    exit 0
+fi
+
+[ -f vendor/bin/pest ] || {
+    echo "[Zoosper pre-push] vendor/bin/pest is missing. Run composer install." >&2
+    exit 1
+}
+
+echo "[Zoosper pre-push] Running the complete test suite..."
+php vendor/bin/pest
+
+echo "[Zoosper pre-push] Running the standard quality gate..."
+php tools/gate.php
+
+echo "[Zoosper pre-push] All checks passed. Push may continue."
