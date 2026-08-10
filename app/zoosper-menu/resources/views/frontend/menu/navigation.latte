@@ -1,0 +1,10 @@
+<ul class="site-menu site-menu--level-0">
+{foreach $nodes as $node}
+    <li class="site-menu__item{if $node->active} is-active{/if}">
+        <a class="site-menu__link" href="{$node->href}" target="{$node->item->target}"{if $node->item->target === '_blank'} rel="noopener noreferrer"{/if}>{$node->item->label}</a>
+        {if $node->children}
+            {include 'zoosper-menu::frontend/menu/navigation-children.latte', nodes: $node->children, level: 1}
+        {/if}
+    </li>
+{/foreach}
+</ul>

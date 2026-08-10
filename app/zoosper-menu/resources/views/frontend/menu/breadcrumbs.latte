@@ -1,0 +1,7 @@
+<ol class="breadcrumbs">
+{foreach $breadcrumbs as $crumb}
+    <li class="breadcrumbs__item">
+        {if !$iterator->last}<a href="{$crumb['href']}">{$crumb['label']}</a>{else}<span aria-current="page">{$crumb['label']}</span>{/if}
+    </li>
+{/foreach}
+</ol>

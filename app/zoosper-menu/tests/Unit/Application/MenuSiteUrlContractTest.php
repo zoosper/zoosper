@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use InvalidArgumentException;
 use Zoosper\Menu\Application\MenuAdminService;
 use Zoosper\Menu\Contract\MenuAdminRepositoryInterface;
 use Zoosper\Menu\Model\{Menu,MenuItem};

@@ -15,6 +15,7 @@ use Zoosper\Core\Routing\CachingFallbackHandler;
 use Zoosper\Core\Routing\FallbackHandlerInterface;
 use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
+use Zoosper\Page\Contract\FrontendNavigationContributorInterface;
 use Zoosper\Page\Controller\PageController;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Routing\PageFallbackHandler;
@@ -34,6 +35,9 @@ return [
         $services->get(CmsVersion::class),
         $services->get(ModuleRegistry::class),
         $services->get(BlockJsonToHtmlRenderer::class),
+        $services->has(FrontendNavigationContributorInterface::class)
+            ? $services->get(FrontendNavigationContributorInterface::class)
+            : null,
     ),
     PageController::class => static fn (ServiceContainer $services): PageController => new PageController(
         $services->get(SiteRepository::class),

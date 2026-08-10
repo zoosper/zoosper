@@ -9,6 +9,7 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Site\SiteContext;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
+use Zoosper\Page\Contract\FrontendNavigationContributorInterface;
 use Zoosper\Page\Model\Page;
 use Zoosper\Site\Model\Site;
 use Zoosper\Theme\Template\TemplateRenderer;
@@ -21,6 +22,7 @@ final readonly class PageRenderer
         private ?CmsVersion $version = null,
         private ?ModuleRegistry $modules = null,
         private ?BlockJsonToHtmlRenderer $blockJsonRenderer = null,
+        private ?FrontendNavigationContributorInterface $navigation = null,
     ) {
     }
 
@@ -41,6 +43,9 @@ final readonly class PageRenderer
         $versionLabel = ($this->version ?? new CmsVersion())->label();
         $siteContext = $request?->siteContext() ?? $this->siteContextFromSite($site);
         $renderedContent = $this->renderContent($page);
+        $navigation = $request !== null && $this->navigation !== null
+            ? $this->navigation->contribute($siteContext, $request)
+            : ['navigationHtml' => '', 'breadcrumbsHtml' => ''];
 
         $data = [
             'page' => $page,
