@@ -1,0 +1,30 @@
+<?php
+declare(strict_types=1);
+return ['tables'=>[
+ 'menus'=>['columns'=>[
+  'id'=>['type'=>'integer','primary'=>true,'auto_increment'=>true],
+  'site_id'=>['type'=>'integer','nullable'=>false],
+  'code'=>['type'=>'string','length'=>120,'nullable'=>false],
+  'label'=>['type'=>'string','length'=>190,'nullable'=>false],
+  'status'=>['type'=>'string','length'=>32,'nullable'=>false,'default'=>'active'],
+  'created_at'=>['type'=>'datetime','nullable'=>false],'updated_at'=>['type'=>'datetime','nullable'=>false],
+ ],'indexes'=>[
+  'uniq_menus_site_code'=>['columns'=>['site_id','code'],'unique'=>true],
+  'idx_menus_site_status'=>['columns'=>['site_id','status']],
+ ]],
+ 'menu_items'=>['columns'=>[
+  'id'=>['type'=>'integer','primary'=>true,'auto_increment'=>true],
+  'menu_id'=>['type'=>'integer','nullable'=>false],
+  'parent_id'=>['type'=>'integer','nullable'=>true],
+  'page_id'=>['type'=>'integer','nullable'=>true],
+  'label'=>['type'=>'string','length'=>190,'nullable'=>false],
+  'url'=>['type'=>'string','length'=>2048,'nullable'=>true],
+  'target'=>['type'=>'string','length'=>16,'nullable'=>false,'default'=>'_self'],
+  'position'=>['type'=>'integer','nullable'=>false,'default'=>0],
+  'status'=>['type'=>'string','length'=>32,'nullable'=>false,'default'=>'active'],
+  'created_at'=>['type'=>'datetime','nullable'=>false],'updated_at'=>['type'=>'datetime','nullable'=>false],
+ ],'indexes'=>[
+  'idx_menu_items_menu_parent_position'=>['columns'=>['menu_id','parent_id','position']],
+  'idx_menu_items_page'=>['columns'=>['page_id']],
+ ]],
+]];

@@ -1,0 +1,14 @@
+{
+  "name": "zoosper/menu",
+  "description": "Site-scoped navigation, nested menu trees, breadcrumbs and menu API for Zoosper CMS.",
+  "type": "zoosper-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.3 || ^8.5",
+    "zoosper/core": "dev-dev",
+    "zoosper/page": "dev-dev",
+    "zoosper/site": "dev-dev"
+  },
+  "autoload": {"psr-4": {"Zoosper\\Menu\\": "src/"}},
+  "autoload-dev": {"psr-4": {"Zoosper\\Menu\\Tests\\": "tests/"}}
+}
