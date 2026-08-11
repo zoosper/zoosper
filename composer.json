@@ -9,6 +9,7 @@
         "bacon/bacon-qr-code": "^3.0",
         "ezyang/htmlpurifier": "^4.19",
         "latte/latte": "^3.1",
+        "marko/admin": "0.8.5",
         "marko/view": "0.8.5",
         "zoosper/admin": "dev-dev",
         "zoosper/admin-grid": "dev-dev",

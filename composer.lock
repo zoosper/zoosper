@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "39a17720d3539db1eb4899e13c09515b",
+    "content-hash": "3341b0f3c30cec67812d5d073c3eb148",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -262,6 +262,51 @@
                 "source": "https://github.com/nette/latte/tree/v3.1.6"
             },
             "time": "2026-07-27T14:32:10+00:00"
+        },
+        {
+            "name": "marko/admin",
+            "version": "0.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-admin.git",
+                "reference": "c7c1e825bf6b49cb317df17d65fc2750302de34b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-admin/zipball/c7c1e825bf6b49cb317df17d65fc2750302de34b",
+                "reference": "c7c1e825bf6b49cb317df17d65fc2750302de34b",
+                "shasum": ""
+            },
+            "require": {
+                "marko/config": "self.version",
+                "marko/core": "self.version",
+                "marko/routing": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "marko/testing": "self.version",
+                "pestphp/pest": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Admin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Admin contracts for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-admin/tree/0.8.5"
+            },
+            "time": "2026-07-26T15:19:30+00:00"
         },
         {
             "name": "marko/cache",
