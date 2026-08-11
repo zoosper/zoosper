@@ -1044,3 +1044,13 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [x] Added real SQLite tests for equivalent existing constraints and missing-constraint rebuild diagnostics.
 - [ ] Next: add an explicit operator-facing schema reconciliation command/apply boundary with snapshot recording and dry-run output.
 - [ ] Following: declare the first production Page relationships and ship Page archive, restore, and guarded permanent delete.
+
+## Phase 9HK — foreign-key operator boundary (2026-08-12)
+
+- [x] Added `schema:foreign-keys:status` with text and JSON output over live declarative reconciliation plans.
+- [x] Added confirmation-gated `schema:foreign-keys:apply` and `--dry-run=1` status delegation.
+- [x] Limited automatic application to safe missing MySQL constraints; mismatches and SQLite rebuild requirements block the operation.
+- [x] Recorded successful apply statements through `SchemaSnapshotRepository`, including successful statements before a partial DDL failure.
+- [x] Kept PDO lazy through operational command factories and preserved database-free help, compile, and cache-clear recovery paths.
+- [x] Kept ordinary `migrate` independent from existing-table foreign-key application.
+- [ ] Next: declare and reconcile the first production Page relationships, then ship Page archive, restore, and guarded permanent delete.

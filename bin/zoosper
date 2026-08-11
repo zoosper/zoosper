@@ -17,6 +17,11 @@ use Zoosper\Core\Console\BuiltIn\ManifestStatusCommand;
 use Zoosper\Core\Console\BuiltIn\MigrateCommand;
 use Zoosper\Core\Console\BuiltIn\ReleaseCheckCommand;
 use Zoosper\Core\Console\BuiltIn\VersionCommand;
+use Zoosper\Core\Console\BuiltIn\SchemaForeignKeyApplyCommand;
+use Zoosper\Core\Console\BuiltIn\SchemaForeignKeyStatusCommand;
+use Zoosper\Core\Schema\SchemaForeignKeyReconciliationService;
+use Zoosper\Core\Schema\SchemaLoader;
+use Zoosper\Core\Schema\SchemaSnapshotRepository;
 use Zoosper\Core\Release\ReleaseCheck;
 use Zoosper\Core\Console\BuiltIn\DeployCommand;
 use Zoosper\Core\Console\BuiltIn\MakeConsoleCommand;
@@ -74,6 +79,17 @@ try {
         'make:command' => static fn () => new MakeConsoleCommand(new ConsoleCommandScaffolder($basePath)),
         'version' => static fn () => new VersionCommand($basePath),
         'release:check' => static fn () => new ReleaseCheckCommand(new ReleaseCheck($basePath)),
+        'schema:foreign-keys:status' => static function () use ($connection, $config, $modules): SchemaForeignKeyStatusCommand {
+            $pdo = $connection->get();
+            $service = new SchemaForeignKeyReconciliationService($pdo, (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME), new SchemaLoader($modules), new SchemaSnapshotRepository($pdo));
+            return new SchemaForeignKeyStatusCommand($service);
+        },
+        'schema:foreign-keys:apply' => static function () use ($connection, $config, $modules): SchemaForeignKeyApplyCommand {
+            $pdo = $connection->get();
+            $service = new SchemaForeignKeyReconciliationService($pdo, (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME), new SchemaLoader($modules), new SchemaSnapshotRepository($pdo));
+            $status = new SchemaForeignKeyStatusCommand($service);
+            return new SchemaForeignKeyApplyCommand($service, $status);
+        },
     ];
     if (isset($operationalCommandFactories[$command])) {
         $operationalCommand = $operationalCommandFactories[$command]();
@@ -107,6 +123,8 @@ function builtInCommands(): array
         'deploy',
         'version',
         'release:check',
+        'schema:foreign-keys:status',
+        'schema:foreign-keys:apply --confirm=apply',
         'make:module Vendor_Module',
         'make:package-module Vendor/Module',
         'make:command Vendor_Module CommandClass --name=vendor:task:run --description="Describe the command"',

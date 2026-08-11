@@ -96,3 +96,7 @@ Foreign-key reconciliation is read-only by default: live constraints are inspect
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+
+## Foreign-key operations
+
+Use `php bin/zoosper schema:foreign-keys:status` before any apply. Existing-table application is explicit, MySQL-only, confirmation-gated, snapshot-recorded, and never part of ordinary migration. SQLite rebuilds remain manual migrations.
