@@ -12,8 +12,20 @@
 {block body.start}{/block}
 <header class="site-header">
     <a href="/" class="site-logo" aria-label="Zoosper home"><img src="/assets/brand/logo.svg" alt="" width="36" height="36"><span>Zoosper</span></a>
+
+{if ($navigationHtml ?? '') !== ''}
+    <nav class="site-navigation cms-site-navigation" aria-label="Primary navigation">
+        {$navigationHtml|noescape}
+    </nav>
+{/if}
 </header>
 <main class="site-main page-shell">
+{if ($breadcrumbsHtml ?? '') !== ''}
+    <nav class="cms-breadcrumbs" aria-label="Breadcrumb">
+        {$breadcrumbsHtml|noescape}
+    </nav>
+{/if}
+
     {$content|noescape}
 </main>
 <footer class="site-footer">

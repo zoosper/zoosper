@@ -1,9 +1,3 @@
-{if ($navigationHtml ?? '') !== ''}
-    <nav class="cms-site-navigation" aria-label="Primary navigation">{$navigationHtml|noescape}</nav>
-{/if}
-{if ($breadcrumbsHtml ?? '') !== ''}
-    <nav class="cms-breadcrumbs" aria-label="Breadcrumb">{$breadcrumbsHtml|noescape}</nav>
-{/if}
 {* Module-owned CMS page view. The body HTML is prepared by PageRenderer. *}
 <article class="cms-page page-shell cms-page--module-view">
     <header class="cms-page__header">

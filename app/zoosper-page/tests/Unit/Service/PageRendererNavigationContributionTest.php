@@ -11,5 +11,5 @@ it('keeps PageRenderer optionally extensible through a Page-owned navigation con
         ->toContain('FrontendNavigationContributorInterface')
         ->toContain("'navigationHtml'")
         ->toContain("'breadcrumbsHtml'")
-        ->and($template)->toContain('{$navigationHtml|noescape}')->toContain('{$breadcrumbsHtml|noescape}');
+        ->and($template)->not->toContain('{$navigationHtml|noescape}')->not->toContain('{$breadcrumbsHtml|noescape}');
 });
