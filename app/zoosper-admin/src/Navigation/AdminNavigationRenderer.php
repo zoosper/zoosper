@@ -57,7 +57,9 @@ final readonly class AdminNavigationRenderer
     {
         $icon = trim($icon);
 
-        return $icon === '' ? '' : '<span class="admin-nav-icon" aria-hidden="true">' . $this->escape($icon) . '</span>';
+        return $icon === ''
+            ? ''
+            : '<span class="admin-nav-icon" aria-hidden="true" data-admin-icon="' . $this->escape($icon) . '"></span>';
     }
 
     private function escape(string $value): string

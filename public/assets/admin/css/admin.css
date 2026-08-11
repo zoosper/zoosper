@@ -27,3 +27,9 @@ button,.button { display:inline-block; padding:.65rem .9rem; border:0; border-ra
 .checkbox input { width:auto; margin:0; }
 .muted { color:var(--z-muted); }
 .cms-version-footer { position:fixed; right:.85rem; bottom:.55rem; color:#64748b; background:rgba(255,255,255,.86); border:1px solid #e2e8f0; border-radius:999px; padding:.25rem .65rem; font-size:.78rem; }
+
+/* Admin text-brand override: start */
+.admin-sidebar .brand{display:inline-flex;align-items:center;gap:0}
+.admin-sidebar .brand img{display:none!important}
+.admin-sidebar .brand span{display:inline-block}
+/* Admin text-brand override: end */
