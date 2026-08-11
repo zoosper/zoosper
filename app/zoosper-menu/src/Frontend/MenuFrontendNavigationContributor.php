@@ -8,14 +8,14 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Site\SiteContext;
 use Zoosper\Menu\Contract\{BreadcrumbProviderInterface, MenuProviderInterface};
 use Zoosper\Page\Contract\FrontendNavigationContributorInterface;
-use Zoosper\Theme\Template\TemplateRenderer;
+use Marko\View\ViewInterface;
 
 final readonly class MenuFrontendNavigationContributor implements FrontendNavigationContributorInterface
 {
     public function __construct(
         private MenuProviderInterface $menus,
         private BreadcrumbProviderInterface $breadcrumbs,
-        private TemplateRenderer $templates,
+        private ViewInterface $views,
         private string $menuCode = 'main',
     ) {
     }
@@ -31,19 +31,13 @@ final readonly class MenuFrontendNavigationContributor implements FrontendNaviga
         $crumbs = $this->breadcrumbs->breadcrumbs($siteContext->siteId, $this->menuCode, $path);
 
         return [
-            'navigationHtml' => $nodes === [] ? '' : $this->templates->render(
+            'navigationHtml' => $nodes === [] ? '' : $this->views->renderToString(
                 'zoosper-menu::frontend/menu/navigation.latte',
                 ['nodes' => $nodes],
-                'default',
-                'frontend.menu',
-                $request,
             ),
-            'breadcrumbsHtml' => $crumbs === [] ? '' : $this->templates->render(
+            'breadcrumbsHtml' => $crumbs === [] ? '' : $this->views->renderToString(
                 'zoosper-menu::frontend/menu/breadcrumbs.latte',
                 ['breadcrumbs' => $crumbs],
-                'default',
-                'frontend.breadcrumbs',
-                $request,
             ),
         ];
     }
