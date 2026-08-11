@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Service;
 
+use Marko\View\ViewInterface;
+
 use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
@@ -23,6 +25,7 @@ final readonly class PageRenderer
         private ?ModuleRegistry $modules = null,
         private ?BlockJsonToHtmlRenderer $blockJsonRenderer = null,
         private ?FrontendNavigationContributorInterface $navigation = null,
+        private ?ViewInterface $views = null,
     ) {
     }
 
@@ -55,8 +58,12 @@ final readonly class PageRenderer
             'renderedContent' => $renderedContent,
         ];
 
-        $content = $templates->render('zoosper-page::page/view', $data, $themeCode, 'default', $request);
+        $content = $this->views !== null
+            ? $this->views->renderToString('zoosper-page::page/view', $data)
+            : $templates->render('zoosper-page::page/view', $data, $themeCode, 'default', $request);
 
+        // Layout rendering remains on Zoosper Theme until an aligned stable
+        // marko/layout release is available for the installed Marko version.
         return $templates->renderLayout('layout', $content, $data, $themeCode, 'default', $request);
     }
 

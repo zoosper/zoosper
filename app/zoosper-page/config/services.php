@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Marko\View\ViewInterface;
 use Zoosper\Page\Repository\PageRevisionRepository;
 use Zoosper\Page\Service\PageRevisionService;
 
@@ -37,6 +38,9 @@ return [
         $services->get(BlockJsonToHtmlRenderer::class),
         $services->has(FrontendNavigationContributorInterface::class)
             ? $services->get(FrontendNavigationContributorInterface::class)
+            : null,
+        $services->has(ViewInterface::class)
+            ? $services->get(ViewInterface::class)
             : null,
     ),
     PageController::class => static fn (ServiceContainer $services): PageController => new PageController(
