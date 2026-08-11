@@ -14,6 +14,8 @@ final readonly class SchemaTable
         public string $name,
         public array $columns,
         public array $indexes = [],
+        /** @var array<string, SchemaForeignKey> */
+        public array $foreignKeys = [],
     ) {
     }
 }

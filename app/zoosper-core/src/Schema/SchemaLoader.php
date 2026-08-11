@@ -118,9 +118,39 @@ final readonly class SchemaLoader
                 name: (string) $tableName,
                 columns: $table['columns'] ?? [],
                 indexes: $table['indexes'] ?? [],
+                foreignKeys: $this->foreignKeysFromConfig($table['foreign_keys'] ?? [], (string) $tableName),
             );
         }
 
         return $result;
     }
+
+    /** @param mixed $definitions @return array<string, SchemaForeignKey> */
+    private function foreignKeysFromConfig(mixed $definitions, string $table): array
+    {
+        if (!is_array($definitions)) {
+            throw new \InvalidArgumentException('Foreign keys for table "' . $table . '" must be an array.');
+        }
+
+        $foreignKeys = [];
+        foreach ($definitions as $name => $definition) {
+            if (!is_array($definition)) {
+                throw new \InvalidArgumentException('Foreign-key definition "' . (string) $name . '" must be an array.');
+            }
+
+            $columns = array_values(array_map('strval', is_array($definition['columns'] ?? null) ? $definition['columns'] : []));
+            $referencedColumns = array_values(array_map('strval', is_array($definition['referenced_columns'] ?? null) ? $definition['referenced_columns'] : []));
+            $foreignKeys[(string) $name] = new SchemaForeignKey(
+                name: (string) $name,
+                columns: $columns,
+                referencedTable: (string) ($definition['referenced_table'] ?? ''),
+                referencedColumns: $referencedColumns,
+                onDelete: strtoupper((string) ($definition['on_delete'] ?? SchemaForeignKey::ACTION_RESTRICT)),
+                onUpdate: strtoupper((string) ($definition['on_update'] ?? SchemaForeignKey::ACTION_RESTRICT)),
+            );
+        }
+
+        return $foreignKeys;
+    }
+
 }

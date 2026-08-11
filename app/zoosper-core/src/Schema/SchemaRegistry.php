@@ -12,13 +12,17 @@ final class SchemaRegistry
     public function addTable(SchemaTable $table): void
     {
         if (isset($this->tables[$table->name])) {
+            $existing = $this->tables[$table->name];
             $this->tables[$table->name] = new SchemaTable(
                 name: $table->name,
-                columns: array_replace($this->tables[$table->name]->columns, $table->columns),
-                indexes: array_replace($this->tables[$table->name]->indexes, $table->indexes),
+                columns: array_replace($existing->columns, $table->columns),
+                indexes: array_replace($existing->indexes, $table->indexes),
+                foreignKeys: array_replace($existing->foreignKeys, $table->foreignKeys),
             );
+
             return;
         }
+
         $this->tables[$table->name] = $table;
     }
 

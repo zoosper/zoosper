@@ -50,6 +50,36 @@ final readonly class SchemaValidator
                 }
             }
         }
+        foreach ($registry->tables() as $table) {
+            foreach ($table->foreignKeys as $name => $foreignKey) {
+                foreach ($foreignKey->columns as $column) {
+                    if (!array_key_exists($column, $table->columns)) {
+                        $errors[] = sprintf('Table %s foreign key %s references missing local column %s.', $table->name, $name, $column);
+                    }
+                }
+
+                $referenced = $registry->tables()[$foreignKey->referencedTable] ?? null;
+                if ($referenced === null) {
+                    $errors[] = sprintf('Table %s foreign key %s references missing table %s.', $table->name, $name, $foreignKey->referencedTable);
+                    continue;
+                }
+
+                foreach ($foreignKey->referencedColumns as $column) {
+                    if (!array_key_exists($column, $referenced->columns)) {
+                        $errors[] = sprintf('Table %s foreign key %s references missing column %s.%s.', $table->name, $name, $foreignKey->referencedTable, $column);
+                    }
+                }
+
+                if ($foreignKey->onDelete === SchemaForeignKey::ACTION_SET_NULL) {
+                    foreach ($foreignKey->columns as $column) {
+                        if (!(bool) ($table->columns[$column]['nullable'] ?? false)) {
+                            $errors[] = sprintf('Table %s foreign key %s uses SET NULL but local column %s is not nullable.', $table->name, $name, $column);
+                        }
+                    }
+                }
+            }
+        }
+
 
         return new SchemaValidationResult($errors);
     }

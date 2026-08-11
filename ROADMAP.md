@@ -1023,3 +1023,13 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [x] Enforced one policy per entity type and rejected missing, duplicate, and dishonest policy results.
 - [x] Kept mutation executors, controllers, persistence changes, and database foreign keys out of this foundation phase.
 - [ ] Next: audit Page repositories, revisions, menus, and URL rewrites, then implement the first real Page archive/delete policy and executor alongside referential-integrity work.
+
+## Phase 9HI — declarative foreign-key schema foundation (2026-08-11)
+
+- [x] Added typed, named declarative foreign keys with local/reference columns and explicit update/delete actions.
+- [x] Defaulted foreign-key actions to `RESTRICT`; supported explicit `CASCADE`, `SET NULL`, and `NO ACTION`.
+- [x] Added loader, same-table registry merge, cross-table validation, identifier safety, and fresh MySQL/SQLite CREATE TABLE SQL.
+- [x] Added real SQLite enforcement coverage for restrict, cascade, and set-null behaviour.
+- [x] Kept existing-table reconciliation out of this phase; no SQLite table is rebuilt implicitly.
+- [ ] Next Phase 9HJ: add foreign-key inspection, MySQL ALTER planning, explicit SQLite rebuild diagnostics, and idempotent existing-database reconciliation.
+- [ ] Following Phase 9HK: adopt the lifecycle foundation for Page archive, restore, and guarded permanent delete.

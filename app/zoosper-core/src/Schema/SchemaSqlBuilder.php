@@ -43,7 +43,32 @@ final readonly class SchemaSqlBuilder
         foreach ($table->columns as $name => $definition) {
             $columns[] = $this->columnSql((string) $name, $definition, true);
         }
+        foreach ($table->foreignKeys as $foreignKey) {
+            $columns[] = $this->foreignKeySql($foreignKey);
+        }
         return sprintf('CREATE TABLE IF NOT EXISTS %s (%s)%s', $table->name, implode(', ', $columns), $this->driver === 'mysql' ? ' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci' : '');
+    }
+
+    private function foreignKeySql(SchemaForeignKey $foreignKey): string
+    {
+        return sprintf(
+            'CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s) ON DELETE %s ON UPDATE %s',
+            $this->identifier($foreignKey->name),
+            implode(', ', array_map($this->identifier(...), $foreignKey->columns)),
+            $this->identifier($foreignKey->referencedTable),
+            implode(', ', array_map($this->identifier(...), $foreignKey->referencedColumns)),
+            $foreignKey->onDelete,
+            $foreignKey->onUpdate,
+        );
+    }
+
+    private function identifier(string $identifier): string
+    {
+        if (preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $identifier) !== 1) {
+            throw new RuntimeException('Unsafe schema identifier: ' . $identifier);
+        }
+
+        return $identifier;
     }
 
     /** @param array<string, mixed> $definition */
