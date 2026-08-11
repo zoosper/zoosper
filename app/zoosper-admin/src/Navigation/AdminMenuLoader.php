@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Navigation;
 
+use Marko\Admin\Contracts\MenuItemInterface;
+
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Url\AdminPathCollectionTransformer;
 
@@ -16,7 +18,7 @@ final readonly class AdminMenuLoader
     }
 
     /**
-     * @return list<AdminMenuItem>
+     * @return list<MenuItemInterface>
      */
     public function load(): array
     {
@@ -50,6 +52,7 @@ final readonly class AdminMenuLoader
                     parent: isset($item['parent']) ? (string) $item['parent'] : null,
                     sortOrder: (int) ($item['sort_order'] ?? $item['sortOrder'] ?? 100),
                     group: (string) ($item['group'] ?? 'main'),
+                    icon: (string) ($item['icon'] ?? ''),
                 );
             }
         }
