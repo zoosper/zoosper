@@ -17,3 +17,7 @@ After adding or changing module metadata, rebuild discovery with Composer autolo
 ## Package documentation policy
 
 The root `docs/` directory is the canonical website source. Every first-party Composer module or package must keep exactly one meaningful root `README.md` as its co-located technical reference, covering current responsibilities, architecture, configuration, dependencies, extension points, testing, and operational notes. Patch notes, completed phase records, readiness stubs, and duplicated architecture or operations trees are not permanent documentation.
+
+## Documentation integrity
+
+Public project summaries must be reconciled with detailed phase notes and current source whenever a phase closes. The root README describes the current product surface, `SECURITY.md` describes the current release/security scope, and `ROADMAP.md` owns open-versus-closed delivery status. Package READMEs remain co-located technical references and must not become independent roadmaps.

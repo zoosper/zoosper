@@ -1,3 +1,5 @@
+Last updated: 2026-08-11
+
 # Zoosper CMS — Master Roadmap
 
 > **Single source of truth for high-level feature status.**
@@ -475,10 +477,10 @@ replica.
 - [ ] **[R] Media derivative processing (resize/transform) reportedly
   100% dead in production** — the dispatcher/policy/processor classes are
   built and smoke-tested, but `services.php` never actually passes a
-  `derivatives:` argument to `MediaUploadService`. Not yet verified/fixed.
+  `derivatives:` argument to `MediaUploadService`. Duplicate MediaUploadService construction is resolved; derivative processing remains open and unwired.
 - [ ] **[R] Both media upload controllers reportedly construct their own
   private `MediaUploadService`** instead of the container-configured one
-  (with cleanup/derivative dispatcher wired in). Not yet verified/fixed.
+  (with cleanup/derivative dispatcher wired in). Duplicate MediaUploadService construction is resolved; derivative processing remains open and unwired.
 
 ## 7. Mail
 
@@ -977,3 +979,39 @@ A zero-dependency PHP static builder now consumes canonical `docs/`, validates i
 ## Shared product branding
 
 The Theme module now owns the canonical Zoosper mark. Admin, the default frontend theme and the static documentation build consume published copies through stable asset contracts; custom frontend themes remain free to override presentation.
+
+## External review response and public-launch priorities (2026-08-11)
+
+The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe1bf722a` was accepted as a launch-readiness input. Verified closures remain closed; roadmap summary lines must agree with detailed phase notes and current source.
+
+### P0 before public announcement
+
+- [ ] Define and ship consistent archive/delete lifecycle behaviour for Pages, Admin Users, Roles, Sites, Site Domains, and Media. Menu delete is the current reference for POST, permission, and CSRF shape, but hard delete is not appropriate for every entity.
+- [ ] Add declarative-schema foreign-key support or an equivalent shared restrict/cascade safety layer in the same delivery arc as broader entity deletion.
+- [x] Update `SECURITY.md` to identify `v0.1.0-alpha.1` as the latest tagged pre-release while stating that no stable release has shipped.
+- [x] Rewrite the root README current-state and included-capabilities sections for the alpha release, CI, Menu, Page revisions, docs site, Marko adoption, and explicit launch blockers.
+
+### P1 before stable
+
+- [ ] Emit an explicit diagnostic for every cross-layer module identity override before further package extraction.
+- [ ] Either wire a production Media derivative processor and enablement policy or remove/de-scope the inactive processing surface.
+- [ ] Consolidate the two Grid systems and adopt the extensible Grid model across remaining eligible Admin screens.
+- [ ] Consolidate the two Admin Form systems and adopt the section/processor model across remaining forms.
+- [ ] Graduate Admin login rate limiting from report-only observation to an enforced, tested policy.
+- [ ] Add password policy and `password_needs_rehash()` upgrade support.
+- [ ] Decide and document the CSRF model for stateful session-based `/api/*` routes.
+- [ ] Fail closed in production when secure-session configuration is absent or unsafe.
+- [ ] Investigate and consolidate environment loading across `Core\Bootstrap\EnvLoader`, `Core\Env`, and the global `env()` helper.
+- [ ] Register the project error handler before module discovery and module configuration execution.
+
+### P2 process and hygiene
+
+- [ ] Add a mechanical roadmap-summary drift check based on structured status identifiers, not fuzzy prose matching.
+- [ ] Commit a Psalm baseline and prevent new advisory errors while reducing the existing baseline.
+- [x] Make `composer.json` and `composer.lock` the source of truth for the dependency scope stated in `SECURITY.md`.
+- [ ] Record behavioural assertion/test coverage evidence for the historical test-file reduction.
+- [ ] Define semver constraints for extracted first-party packages instead of publishing `dev-dev` as the only compatibility signal.
+
+### Deferred while launch blockers are active
+
+- [ ] Resume Phase 9HF Marko dashboard widget adoption after the P0 lifecycle and integrity foundation is underway.

@@ -90,3 +90,13 @@ and service disruption during their research.
 test.
 - Report vulnerabilities promptly and do not publicly disclose them before
 a coordinated disclosure timeline has been agreed.
+
+## Supported versions
+
+Zoosper CMS is under active pre-release development. The latest tagged pre-release is `v0.1.0-alpha.1`. No stable release has shipped. Security fixes are developed on `dev` and should be verified against the latest tagged pre-release and current `dev` branch as applicable.
+
+## Dependency scope
+
+Security review covers the root Composer dependency graph and all first-party packages discovered from `app/*/composer.json` and `packages/*/composer.json`. `composer.json` and `composer.lock` are the source of truth for the current dependency set; this document intentionally does not duplicate a package list that can drift independently.
+
+The CI workflow runs Composer validation and `composer audit`. Reports involving PHP, Marko, Latte, HTMLPurifier, Pest, Psalm, or a first-party `zoosper/*` package should identify the affected locked version or commit.
