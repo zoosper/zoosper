@@ -32,6 +32,8 @@ use Zoosper\Admin\Message\SessionFlashMessageStore;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuLoader;
 use Zoosper\Admin\Navigation\AdminNavigationRenderer;
+use Zoosper\Admin\Navigation\AdminSectionMetadataLoader;
+use Zoosper\Admin\Navigation\AdminSectionBuilder;
 use Zoosper\Admin\UI\AdminComponentRenderer;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
@@ -89,10 +91,15 @@ return [
             $services->get(ContentEditorRuntimeConfig::class)->preferred(),
             $services->get(ContentEditorRuntimeConfig::class)->fallback(),
         ),
-    AdminMenu::class => static fn(ServiceContainer $services): AdminMenu => new AdminMenu(new AdminMenuLoader(
-        $services->get(ModuleRegistry::class),
-        $services->get(AdminPathCollectionTransformer::class),
-    )),
+    AdminSectionMetadataLoader::class => static fn(ServiceContainer $services): AdminSectionMetadataLoader => new AdminSectionMetadataLoader($services->get(ModuleRegistry::class)),
+    AdminSectionBuilder::class => static fn(ServiceContainer $services): AdminSectionBuilder => new AdminSectionBuilder($services->get(AdminSectionMetadataLoader::class)),
+    AdminMenu::class => static fn(ServiceContainer $services): AdminMenu => new AdminMenu(
+        new AdminMenuLoader(
+            $services->get(ModuleRegistry::class),
+            $services->get(AdminPathCollectionTransformer::class),
+        ),
+        $services->get(AdminSectionBuilder::class),
+    ),
     AdminNavigationRenderer::class => static fn(ServiceContainer $services): AdminNavigationRenderer => new AdminNavigationRenderer(),
     AdminLayout::class => static fn(ServiceContainer $services): AdminLayout => new AdminLayout(
         $services->get(AdminMenu::class),

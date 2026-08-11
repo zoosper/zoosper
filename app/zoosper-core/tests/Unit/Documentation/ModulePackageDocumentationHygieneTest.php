@@ -5,6 +5,7 @@ declare(strict_types=1);
 it('keeps only concise current module and package readmes', function (): void {
     $root = dirname(__DIR__, 5);
     $expected = [
+        'app/zoosper-admin/README.md',
         'app/zoosper-core/src/Schema/README.md',
         'app/zoosper-page/README.md',
         'app/zoosper-settings/README.md',
