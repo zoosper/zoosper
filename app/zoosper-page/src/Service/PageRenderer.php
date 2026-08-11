@@ -56,6 +56,8 @@ final readonly class PageRenderer
             'siteContext' => $siteContext,
             'versionLabel' => $versionLabel,
             'renderedContent' => $renderedContent,
+            'navigationHtml' => $navigation['navigationHtml'],
+            'breadcrumbsHtml' => $navigation['breadcrumbsHtml'],
         ];
 
         $content = $this->views !== null
