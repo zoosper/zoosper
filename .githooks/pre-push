@@ -16,9 +16,9 @@ fi
 }
 
 echo "[Zoosper pre-push] Running the complete test suite..."
-php vendor/bin/pest
+php8.5 vendor/bin/pest
 
 echo "[Zoosper pre-push] Running the standard quality gate..."
-php tools/gate.php
+php8.5 tools/gate.php
 
 echo "[Zoosper pre-push] All checks passed. Push may continue."
