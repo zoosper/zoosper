@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Marko\View\ViewInterface;
+use Zoosper\Theme\Template\MarkoViewAdapter;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Config\Scope\ScopeConfigRepository;
 use Zoosper\Core\Config\Scope\ScopeContext;
@@ -19,6 +21,9 @@ use Zoosper\Theme\Theme\ThemeRepository;
 use Zoosper\Theme\Theme\ThemeResolver;
 
 return [
+    ViewInterface::class => static fn (ServiceContainer $services): ViewInterface => new MarkoViewAdapter(
+        $services->get('theme.frontend_template_renderer'),
+    ),
     ThemeRepository::class => static fn (ServiceContainer $services): ThemeRepository => new ThemeRepository(dirname(__DIR__, 3) . '/themes'),
     LayoutUpdateRepository::class => static fn (ServiceContainer $services): LayoutUpdateRepository => new LayoutUpdateRepository(),
     ScopeConfigRepository::class => static fn (ServiceContainer $services): ScopeConfigRepository => new ScopeConfigRepository($services->get(PDO::class)),
