@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a97bd0bcd9fa0bfb4592f3403310a162",
+    "content-hash": "39a17720d3539db1eb4899e13c09515b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -613,6 +613,93 @@
                 "source": "https://github.com/marko-php/marko-errors-simple/tree/0.8.5"
             },
             "time": "2026-06-12T17:56:54+00:00"
+        },
+        {
+            "name": "marko/routing",
+            "version": "0.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-routing.git",
+                "reference": "288c4b07b701772390f36ecdb9890236ba684fd8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-routing/zipball/288c4b07b701772390f36ecdb9890236ba684fd8",
+                "reference": "288c4b07b701772390f36ecdb9890236ba684fd8",
+                "shasum": ""
+            },
+            "require": {
+                "marko/core": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "pestphp/pest": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Routing\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Marko Framework Routing",
+            "support": {
+                "source": "https://github.com/marko-php/marko-routing/tree/0.8.5"
+            },
+            "time": "2026-06-12T19:00:11+00:00"
+        },
+        {
+            "name": "marko/view",
+            "version": "0.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-view.git",
+                "reference": "a8b3a63eb34561d87aff7fa9cb43aca113e7c46f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-view/zipball/a8b3a63eb34561d87aff7fa9cb43aca113e7c46f",
+                "reference": "a8b3a63eb34561d87aff7fa9cb43aca113e7c46f",
+                "shasum": ""
+            },
+            "require": {
+                "marko/config": "self.version",
+                "marko/core": "self.version",
+                "marko/routing": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "marko/testing": "self.version",
+                "pestphp/pest": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\View\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Marko Framework View - Templating interfaces and contracts",
+            "support": {
+                "source": "https://github.com/marko-php/marko-view/tree/0.8.5"
+            },
+            "time": "2026-07-26T15:19:30+00:00"
         },
         {
             "name": "predis/predis",
