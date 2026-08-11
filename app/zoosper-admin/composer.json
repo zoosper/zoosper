@@ -4,13 +4,14 @@
     "type": "zoosper-module",
     "license": "MIT",
     "require": {
+        "marko/admin": "0.8.5",
         "php": "^8.5",
-        "zoosper/core": "dev-dev",
+        "zoosper/admin-grid": "dev-dev",
         "zoosper/auth": "dev-dev",
-        "zoosper/theme": "dev-dev",
+        "zoosper/core": "dev-dev",
         "zoosper/errors": "dev-dev",
         "zoosper/grid": "dev-dev",
-        "zoosper/admin-grid": "dev-dev"
+        "zoosper/theme": "dev-dev"
     },
     "autoload": {
         "psr-4": {
