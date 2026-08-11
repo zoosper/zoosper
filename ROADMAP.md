@@ -1054,3 +1054,12 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [x] Kept PDO lazy through operational command factories and preserved database-free help, compile, and cache-clear recovery paths.
 - [x] Kept ordinary `migrate` independent from existing-table foreign-key application.
 - [ ] Next: declare and reconcile the first production Page relationships, then ship Page archive, restore, and guarded permanent delete.
+
+## Phase 9HL — Page lifecycle domain and integrity adoption (2026-08-12)
+- [x] Added Page-owned archive, restore-to-draft, and guarded permanent-delete coordination.
+- [x] Captured complete revisions before archive and restore.
+- [x] Blocked permanent deletion unless archived and free of Menu-item and Page URL-rewrite references.
+- [x] Added transactional revision/Page deletion and a declarative `page_revisions.page_id` CASCADE relationship.
+- [x] Declared the migration-owned Page and revision identity columns required for standalone declarative validation and fresh-install schema merging.
+- [x] Added real SQLite lifecycle and reference-blocker coverage.
+- [ ] Next: expose POST-only Admin archive/restore/delete routes and CSP-safe destructive presentation through the existing thin Page controller.

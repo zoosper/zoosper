@@ -24,8 +24,23 @@ return [
                 'idx_page_site_assignments_site' => ['columns' => ['site_id']],
             ],
         ],
+        'page_revisions' => [
+            'columns' => [
+                'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],
+                'page_id' => ['type' => 'integer', 'nullable' => false],
+            ],
+            'foreign_keys' => [
+                'fk_page_revisions_page' => [
+                    'columns' => ['page_id'],
+                    'referenced_table' => 'pages',
+                    'referenced_columns' => ['id'],
+                    'on_delete' => 'CASCADE',
+                ],
+            ],
+        ],
         'pages' => [
             'columns' => [
+                'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],
                 'meta_title' => ['type' => 'string', 'length' => 255, 'nullable' => true],
                 'meta_description' => ['type' => 'string', 'length' => 500, 'nullable' => true],
                 'meta_keywords' => ['type' => 'string', 'length' => 500, 'nullable' => true],

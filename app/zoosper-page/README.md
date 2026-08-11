@@ -102,3 +102,10 @@ Zoosper_Page module for Zoosper CMS.
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+
+### Lifecycle
+- `PageLifecycleCoordinator` owns archive, restore-to-draft, and guarded permanent deletion.
+- Archive and restore capture complete safety revisions before mutation.
+- Permanent deletion requires an archived Page and refuses Menu-item or Page URL-rewrite references.
+- Revision and Page deletion run in one transaction. Declarative schema repeats the migration-owned `pages.id`, `page_revisions.id`, and `page_revisions.page_id` identity columns so the merged schema can validate the `ON DELETE CASCADE` relationship without relying on live-database introspection.
+- HTTP routes and destructive Admin presentation remain a following adoption slice; this phase establishes the tested domain and integrity boundary first.

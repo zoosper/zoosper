@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Marko\View\ViewInterface;
 use Zoosper\Page\Repository\PageRevisionRepository;
+use Zoosper\Page\Lifecycle\PageLifecycleCoordinator;
+use Zoosper\Page\Lifecycle\PageReferenceInspector;
+use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Page\Service\PageRevisionService;
 
 use Marko\Cache\Contracts\CacheInterface;
@@ -25,6 +28,15 @@ use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Page\Console\PageCreateCommand;
 
 return [
+    PageReferenceInspector::class => static fn (ServiceContainer $services): PageReferenceInspector => new PageReferenceInspector($services->get(PDO::class)),
+    PageLifecycleCoordinator::class => static fn (ServiceContainer $services): PageLifecycleCoordinator => new PageLifecycleCoordinator(
+        $services->get(PDO::class),
+        $services->get(PageRepository::class),
+        $services->get(PageRevisionService::class),
+        $services->get(PageRevisionRepository::class),
+        $services->get(PageReferenceInspector::class),
+        $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
+    ),
     PageRevisionRepository::class => static fn ($services): PageRevisionRepository => new PageRevisionRepository($services->get(\PDO::class)),
     PageRevisionService::class => static fn ($services): PageRevisionService => new PageRevisionService($services->get(PageRevisionRepository::class), (int) ($services->get(\Zoosper\Core\Config\ConfigRepository::class)->get('page_revisions.retention', 50))),
     PageRepository::class => static fn (ServiceContainer $services): PageRepository => new PageRepository($services->get(PDO::class)),

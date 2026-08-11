@@ -30,6 +30,12 @@ final readonly class PageRevisionRepository
         $statement->execute(['page_id'=>$pageId,'title'=>$snapshot['title'],'slug'=>$snapshot['slug'],'content'=>$snapshot['content'],'status'=>$snapshot['status'],'content_format'=>$snapshot['content_format'] ?? 'html','content_json'=>$snapshot['content_json'] ?? null,'meta_title'=>$snapshot['meta_title'] ?? null,'meta_description'=>$snapshot['meta_description'] ?? null,'meta_keywords'=>$snapshot['meta_keywords'] ?? null,'canonical_url'=>$snapshot['canonical_url'] ?? null,'created_by'=>$createdBy,'created_at'=>gmdate('Y-m-d H:i:s')]);
         return (int) $this->pdo->lastInsertId();
     }
+    public function deleteForPage(int $pageId): int
+    {
+        $statement = $this->pdo->prepare('DELETE FROM page_revisions WHERE page_id = :page_id');
+        $statement->execute(['page_id' => $pageId]);
+        return $statement->rowCount();
+    }
     public function prune(int $pageId, int $retain): int
     {
         $retain=max(1,$retain); $ids=$this->pdo->query('SELECT id FROM page_revisions WHERE page_id='.(int)$pageId.' ORDER BY id DESC')->fetchAll(PDO::FETCH_COLUMN);

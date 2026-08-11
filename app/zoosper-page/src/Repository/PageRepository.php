@@ -195,6 +195,22 @@ final readonly class PageRepository
         ]);
     }
 
+    public function archive(int $id, ?int $userId = null): void
+    {
+        $statement = $this->pdo->prepare('UPDATE pages SET status=:status, published_at=NULL, updated_by=:updated_by, updated_at=:updated_at WHERE id=:id');
+        $statement->execute(['id'=>$id,'status'=>'archived','updated_by'=>$userId,'updated_at'=>gmdate('Y-m-d H:i:s')]);
+    }
+    public function restoreArchived(int $id, ?int $userId = null): void
+    {
+        $statement = $this->pdo->prepare('UPDATE pages SET status=:status, published_at=NULL, updated_by=:updated_by, updated_at=:updated_at WHERE id=:id AND status=:archived');
+        $statement->execute(['id'=>$id,'status'=>'draft','archived'=>'archived','updated_by'=>$userId,'updated_at'=>gmdate('Y-m-d H:i:s')]);
+    }
+    public function deletePermanently(int $id): void
+    {
+        $statement = $this->pdo->prepare('DELETE FROM pages WHERE id=:id');
+        $statement->execute(['id'=>$id]);
+        if ($statement->rowCount() !== 1) { throw new \RuntimeException('Page was not deleted.'); }
+    }
     public function unpublish(int $id, ?int $userId = null): void
     {
         $statement = $this->pdo->prepare('UPDATE pages SET status = :status, published_at = NULL, updated_by = :updated_by, updated_at = :updated_at WHERE id = :id');
