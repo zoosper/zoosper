@@ -9,7 +9,7 @@ use Zoosper\Admin\Asset\AdminAssetViewDataProvider;
 use Zoosper\Admin\Message\FlashMessageRenderer;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\Navigation\AdminMenu;
-use Zoosper\Admin\Navigation\AdminMenuItem;
+use Zoosper\Admin\Navigation\AdminNavigationRenderer;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Config\ConfigRepository;
@@ -22,6 +22,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
 {
     public function __construct(
         private AdminMenu $menu,
+        private AdminNavigationRenderer $navigationRenderer = new AdminNavigationRenderer(),
         private ?ConfigRepository $config = null,
         private ?TemplateRenderer $templates = null,
         private ?AdminAssetTemplateRenderer $assetRenderer = null,
@@ -76,31 +77,11 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
      */
     private function navigation(AdminUser $user, string $active): string
     {
-        $html = '<nav class="admin-nav">';
-        $currentGroup = null;
-        foreach ($this->menu->itemsFor($user) as $item) {
-            if ($item->group !== $currentGroup) {
-                $currentGroup = $item->group;
-                $html .= '<div class="menu-group">' . htmlspecialchars($currentGroup, ENT_QUOTES, 'UTF-8') . '</div>';
-            }
-            $html .= $this->navigationLink($item, $active);
-        }
-
-        $html .= $this->logoutForm();
-
-        return $html . '</nav>';
-    }
-
-    /**
-     * Render one escaped menu link and mark the active item.
-     */
-    private function navigationLink(AdminMenuItem $item, string $active): string
-    {
-        $url = htmlspecialchars($item->url, ENT_QUOTES, 'UTF-8');
-        $label = htmlspecialchars($item->label, ENT_QUOTES, 'UTF-8');
-        $class = $item->code === $active ? ' class="active"' : '';
-
-        return '<a href="' . $url . '"' . $class . '>' . $label . '</a>';
+        return $this->navigationRenderer->render(
+            $this->menu->sectionsFor($user),
+            $active,
+            $this->logoutForm(),
+        );
     }
 
     /**

@@ -31,6 +31,7 @@ use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\Message\SessionFlashMessageStore;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuLoader;
+use Zoosper\Admin\Navigation\AdminNavigationRenderer;
 use Zoosper\Admin\UI\AdminComponentRenderer;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
@@ -92,8 +93,10 @@ return [
         $services->get(ModuleRegistry::class),
         $services->get(AdminPathCollectionTransformer::class),
     )),
+    AdminNavigationRenderer::class => static fn(ServiceContainer $services): AdminNavigationRenderer => new AdminNavigationRenderer(),
     AdminLayout::class => static fn(ServiceContainer $services): AdminLayout => new AdminLayout(
         $services->get(AdminMenu::class),
+        $services->get(AdminNavigationRenderer::class),
         $services->get(ConfigRepository::class),
         $services->get('theme.admin_template_renderer'),
         $services->get(AdminAssetTemplateRenderer::class),
