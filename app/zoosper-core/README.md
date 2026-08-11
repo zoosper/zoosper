@@ -74,6 +74,10 @@ Zoosper_Core module for Zoosper CMS.
 
 - Preserve public interfaces, route permissions, configuration keys, and service identifiers when extending or replacing behaviour.
 
+## Entity lifecycle policy
+
+`src/Entity/Lifecycle/` provides the shared read-only decision boundary for archive, disable, and permanent-delete operations. Feature modules register one `EntityLifecyclePolicyInterface` per entity type and return descriptive blockers before any controller or executor mutates state. Policies must not perform deletion themselves. Database foreign keys remain the final integrity safety net once schema-engine support lands.
+
 ## Testing
 
 - Full repository suite: `zcomposer test`.

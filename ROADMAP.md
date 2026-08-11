@@ -1015,3 +1015,11 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 ### Deferred while launch blockers are active
 
 - [ ] Resume Phase 9HF Marko dashboard widget adoption after the P0 lifecycle and integrity foundation is underway.
+
+## Phase 9HH — shared entity lifecycle policy foundation (2026-08-11)
+
+- [x] Added shared archive, disable, and permanent-delete operation vocabulary.
+- [x] Added immutable lifecycle subjects, descriptive blockers, allow/deny decisions, a loud policy registry, a read-only decision service, and a denial exception carrying the full decision.
+- [x] Enforced one policy per entity type and rejected missing, duplicate, and dishonest policy results.
+- [x] Kept mutation executors, controllers, persistence changes, and database foreign keys out of this foundation phase.
+- [ ] Next: audit Page repositories, revisions, menus, and URL rewrites, then implement the first real Page archive/delete policy and executor alongside referential-integrity work.
