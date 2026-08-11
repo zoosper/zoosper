@@ -867,9 +867,10 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-admin",
-                "reference": "a590d3c2dfab0e055b27709c9a6981eaace3e306"
+                "reference": "b957915694ce3f35002f5ee810b2b1156c222992"
             },
             "require": {
+                "marko/admin": "0.8.5",
                 "php": "^8.5",
                 "zoosper/admin-grid": "dev-dev",
                 "zoosper/auth": "dev-dev",
