@@ -1,53 +1,53 @@
-# zoosper/settings
+# zoosper/store-orders
 
-Module-owned settings catalogue and configuration management for Zoosper CMS.
+Store Orders API Grid integration for Zoosper.
 
 ## Responsibilities
 
 - Composer type: `zoosper-module`.
 - `module.php` exposes module discovery metadata.
-- Namespace `Zoosper\Settings\` maps to `src/`.
+- Namespace `Zoosper\StoreOrders\` maps to `src/`.
 
 ## Architecture
 
 - `src/Admin/`
-- `src/Audit/`
-- `src/Catalogue/`
-- `src/Controller/`
-- `src/Definition/`
-- `src/Persistence/`
-- `src/Scope/`
-- `src/Value/`
-- `src/Write/`
+- `src/Api/`
+- `src/StoreOrderCapabilities.php`
+- `src/StoreOrderDataSourceFactory.php`
+- `src/StoreOrderGrid.php`
 
 ## Configuration
 
-- `config/admin_assets.php`: Admin asset contributions.
+- `config/acl.php`: ACL groups and permissions.
 - `config/admin_menu.php`: Admin navigation items.
 - `config/admin_routes.php`: Authenticated Admin routes.
-- `config/admin_settings.php`: Settings catalogue contributions.
-- `config/assets.php`: Runtime asset registration.
 - `config/controllers.php`: Controller factories.
 - `config/services.php`: Service-container bindings.
 
 ## Routes
 
-- `GET /admin/settings` from `config/admin_routes.php`.
-- `POST /admin/settings/save` from `config/admin_routes.php`.
-- `POST /admin/settings/clear` from `config/admin_routes.php`.
+- `GET /admin/store-orders` from `config/admin_routes.php`.
+- `GET /admin/store-orders/export` from `config/admin_routes.php`.
+- `POST /admin/store-orders` from `config/admin_routes.php`.
 
 ## Dependencies
 
 - `php`: `^8.5`.
+- `zoosper/admin-grid`: `dev-dev`.
+- `zoosper/api-grid`: `dev-dev`.
 - `zoosper/auth`: `dev-dev`.
 - `zoosper/core`: `dev-dev`.
-- `zoosper/site`: `dev-dev`.
+- `zoosper/grid`: `dev-dev`.
+- Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
+
+## Database
+
+- Module migrations: `database/migrations/202608020001_seed_store_order_permissions.php`.
 
 ## Extension points
 
-- `config/admin_assets.php` for Admin assets.
+- `config/acl.php` for ACL declarations.
 - `config/admin_menu.php` for Admin navigation.
-- `config/admin_settings.php` for Settings catalogue entries.
 - `config/services.php` for service bindings and interface implementations.
 
 ## Security and compatibility
@@ -58,8 +58,8 @@ Module-owned settings catalogue and configuration management for Zoosper CMS.
 ## Testing
 
 - Full repository suite: `zcomposer test`.
-- Package suite: `php8.5 vendor/bin/pest app/zoosper-settings/tests`.
-- Current regression files discovered: `78`. Use `find app/zoosper-settings/tests -type f -name '*Test.php' | sort` for the live list.
+- Package suite: `php8.5 vendor/bin/pest packages/zoosper-store-orders/tests`.
+- Current regression files discovered: `16`. Use `find packages/zoosper-store-orders/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes

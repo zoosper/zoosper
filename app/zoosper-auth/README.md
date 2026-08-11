@@ -1,71 +1,75 @@
-# zoosper/admin
+# zoosper/auth
 
-Zoosper_Admin module for Zoosper CMS.
+Zoosper_Auth module for Zoosper CMS.
 
 ## Responsibilities
 
 - Composer type: `zoosper-module`.
 - `module.php` exposes module discovery metadata.
-- Namespace `Zoosper\Admin\` maps to `src/`.
+- Namespace `Zoosper\Auth\` maps to `src/`.
 
 ## Architecture
 
-- `src/Asset/`
-- `src/Audit/`
-- `src/Controller/`
-- `src/Editor/`
-- `src/Form/`
-- `src/Grid/`
-- `src/I18n/`
+- `src/Access/`
+- `src/Acl/`
+- `src/Admin/`
+- `src/Console/`
+- `src/Entity/`
+- `src/Http/`
 - `src/Layout/`
-- `src/Message/`
-- `src/Navigation/`
-- `src/Routing/`
+- `src/Model/`
+- `src/RateLimit/`
+- `src/Repository/`
+- `src/Security/`
+- `src/Service/`
 - `src/UI/`
 
 ## Configuration
 
+- `config/acl.php`: ACL groups and permissions.
 - `config/admin_assets.php`: Admin asset contributions.
 - `config/admin_menu.php`: Admin navigation items.
+- `config/admin_middleware.php`: Module runtime configuration.
 - `config/admin_routes.php`: Authenticated Admin routes.
-- `config/admin_sections.php`: Admin section labels, icons, and order.
-- `config/admin_settings.php`: Settings catalogue contributions.
-- `config/assets.php`: Runtime asset registration.
+- `config/admin_ui.php`: Module runtime configuration.
+- `config/console.php`: Console command discovery.
 - `config/controllers.php`: Controller factories.
 - `config/db_schema.php`: Declarative database schema.
 - `config/logging.php`: Module log channel/file.
 - `config/services.php`: Service-container bindings.
+- `config/services_auth_grid.php`: Module runtime configuration.
 
 ## Routes
 
-- `GET /admin/login` from `config/admin_routes.php`.
-- `POST /admin/login` from `config/admin_routes.php`.
-- `POST /admin/logout` from `config/admin_routes.php`.
-- `GET /admin` from `config/admin_routes.php`.
-- `GET /admin/audit-log` from `config/admin_routes.php`.
-- `GET /admin/login-history` from `config/admin_routes.php`.
+- `GET /admin/users` from `config/admin_routes.php`.
+- `GET /admin/users/create` from `config/admin_routes.php`.
+- `POST /admin/users/create` from `config/admin_routes.php`.
+- `GET /admin/users/edit` from `config/admin_routes.php`.
+- `POST /admin/users/edit` from `config/admin_routes.php`.
+- `GET /admin/roles` from `config/admin_routes.php`.
+- `GET /admin/roles/create` from `config/admin_routes.php`.
+- `POST /admin/roles/create` from `config/admin_routes.php`.
+- `GET /admin/roles/edit` from `config/admin_routes.php`.
+- `POST /admin/roles/edit` from `config/admin_routes.php`.
 
 ## Dependencies
 
-- `marko/admin`: `0.8.5`.
 - `php`: `^8.5`.
 - `zoosper/admin-grid`: `dev-dev`.
-- `zoosper/auth`: `dev-dev`.
 - `zoosper/core`: `dev-dev`.
-- `zoosper/errors`: `dev-dev`.
 - `zoosper/grid`: `dev-dev`.
-- `zoosper/theme`: `dev-dev`.
 
 ## Database
 
 - Declarative schema is owned by `config/db_schema.php`.
+- Module migrations: `database/migrations/202607090001_create_auth_tables.php`, `database/migrations/202607090002_seed_auth_defaults.php`, `database/migrations/202607090005_seed_user_role_permissions.php`, `database/migrations/202607090007_acl_tree_metadata.php`.
 
 ## Extension points
 
+- `config/acl.php` for ACL declarations.
 - `config/admin_assets.php` for Admin assets.
 - `config/admin_menu.php` for Admin navigation.
-- `config/admin_sections.php` for Admin section metadata.
-- `config/admin_settings.php` for Settings catalogue entries.
+- `config/console.php` for console commands.
 - `config/services.php` for service bindings and interface implementations.
 
 ## Security and compatibility
@@ -76,8 +80,8 @@ Zoosper_Admin module for Zoosper CMS.
 ## Testing
 
 - Full repository suite: `zcomposer test`.
-- Package suite: `php8.5 vendor/bin/pest app/zoosper-admin/tests`.
-- Current regression files discovered: `23`. Use `find app/zoosper-admin/tests -type f -name '*Test.php' | sort` for the live list.
+- Package suite: `php8.5 vendor/bin/pest app/zoosper-auth/tests`.
+- Current regression files discovered: `35`. Use `find app/zoosper-auth/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes

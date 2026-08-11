@@ -1,5 +1,48 @@
 # zoosper/grid
 
-Framework-facing Grid definitions, columns, filters, criteria, data-source contracts, HTML rendering and CSV export. The package does not own authentication, per-user persistence, routes or feature-specific queries.
+Reusable grid definitions, criteria, rendering, extension registry and CSV export for Zoosper.
 
-See the canonical [developer guide](../../docs/developer-guide.md).
+## Responsibilities
+
+- Composer type: `library`.
+- Namespace `Zoosper\Grid\` maps to `src/`.
+
+## Architecture
+
+- `src/BulkAction/`
+- `src/DataSource/`
+- `src/GridColumn.php`
+- `src/GridColumnOrderer.php`
+- `src/GridColumnRegistry.php`
+- `src/GridCriteria.php`
+- `src/GridCsvExporter.php`
+- `src/GridDataSourceInterface.php`
+- `src/GridDefinition.php`
+- `src/GridFilter.php`
+- `src/GridFilterOption.php`
+- `src/GridFilterValue.php`
+- `src/GridHtmlRenderer.php`
+- `src/GridMultiselectRenderer.php`
+
+## Dependencies
+
+- `php`: `^8.5`.
+- `zoosper/core`: `dev-dev`.
+- Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
+
+## Security and compatibility
+
+- Preserve public interfaces, route permissions, configuration keys, and service identifiers when extending or replacing behaviour.
+
+## Testing
+
+- Full repository suite: `zcomposer test`.
+- Package suite: `php8.5 vendor/bin/pest packages/zoosper-grid/tests`.
+- Current regression files discovered: `18`. Use `find packages/zoosper-grid/tests -type f -name '*Test.php' | sort` for the live list.
+- Standard quality gate: `php8.5 tools/gate.php`.
+
+## Operational notes
+
+- Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
+- Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
+- Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.

@@ -1,27 +1,17 @@
-# zoosper/errors
+# zoosper/install
 
-Zoosper's loud-errors exception, sensitive-value redaction, and CLI/web error display package, built on Marko's exception base class and error formatters.
+Zoosper CMS installer module - environment checks, first admin user, seed site.
 
 ## Responsibilities
 
 - Composer type: `zoosper-module`.
 - `module.php` exposes module discovery metadata.
-- Namespace `Zoosper\Errors\` maps to `src/`.
-
-## Architecture
-
-- `src/ConsoleExceptionFormatter.php`
-- `src/ExceptionDisplayer.php`
-- `src/SensitiveValueRedactor.php`
-- `src/ZoosperException.php`
+- Namespace `Zoosper\Install\` maps to `src/`.
 
 ## Dependencies
 
-- `marko/core`: `^0.8`.
-- `marko/errors`: `^0.8`.
-- `marko/errors-simple`: `^0.8`.
 - `php`: `^8.5`.
-- Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
+- `zoosper/core`: `dev-dev`.
 
 ## Security and compatibility
 
@@ -30,8 +20,7 @@ Zoosper's loud-errors exception, sensitive-value redaction, and CLI/web error di
 ## Testing
 
 - Full repository suite: `zcomposer test`.
-- Package suite: `php8.5 vendor/bin/pest packages/zoosper-errors/tests`.
-- Current regression files discovered: `1`. Use `find packages/zoosper-errors/tests -type f -name '*Test.php' | sort` for the live list.
+- No package-local `*Test.php` files were discovered; rely on the full repository suite and cross-package architecture tests.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes

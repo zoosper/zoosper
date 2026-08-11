@@ -16,4 +16,4 @@ After adding or changing module metadata, rebuild discovery with Composer autolo
 
 ## Package documentation policy
 
-The root `docs/` directory is the canonical website source. Module and package directories may keep one concise `README.md` only when the component has independently useful ownership or integration guidance. Patch notes, completed phase records, readiness stubs and duplicated architecture or operations trees are not permanent documentation.
+The root `docs/` directory is the canonical website source. Every first-party Composer module or package must keep exactly one meaningful root `README.md` as its co-located technical reference, covering current responsibilities, architecture, configuration, dependencies, extension points, testing, and operational notes. Patch notes, completed phase records, readiness stubs, and duplicated architecture or operations trees are not permanent documentation.

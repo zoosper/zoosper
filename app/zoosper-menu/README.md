@@ -1,50 +1,59 @@
-# zoosper/media
+# zoosper/menu
 
-Zoosper Media module for Zoosper CMS.
+Site-scoped navigation, nested menu trees, breadcrumbs and menu API for Zoosper CMS.
 
 ## Responsibilities
 
 - Composer type: `zoosper-module`.
 - `module.php` exposes module discovery metadata.
-- Namespace `Zoosper\Media\` maps to `src/`.
+- Namespace `Zoosper\Menu\` maps to `src/`.
 
 ## Architecture
 
-- `src/Controller/`
-- `src/EditorJs/`
+- `src/Admin/`
+- `src/Api/`
+- `src/Application/`
+- `src/Contract/`
+- `src/Frontend/`
 - `src/Model/`
-- `src/Processing/`
 - `src/Repository/`
 - `src/Service/`
+- `src/Tree/`
 
 ## Configuration
 
 - `config/acl.php`: ACL groups and permissions.
 - `config/admin_menu.php`: Admin navigation items.
 - `config/admin_routes.php`: Authenticated Admin routes.
+- `config/api_routes.php`: API routes.
 - `config/controllers.php`: Controller factories.
 - `config/db_schema.php`: Declarative database schema.
-- `config/logging.php`: Module log channel/file.
 - `config/services.php`: Service-container bindings.
 
 ## Routes
 
-- `GET /admin/media` from `config/admin_routes.php`.
-- `GET /admin/media/upload` from `config/admin_routes.php`.
-- `POST /admin/media/upload` from `config/admin_routes.php`.
-- `POST /admin/media/editorjs/upload` from `config/admin_routes.php`.
+- `GET /admin/menus` from `config/admin_routes.php`.
+- `GET /admin/menus/create` from `config/admin_routes.php`.
+- `POST /admin/menus` from `config/admin_routes.php`.
+- `GET /admin/menus/{id:\\d+}/edit` from `config/admin_routes.php`.
+- `POST /admin/menus/{id:\\d+}/edit` from `config/admin_routes.php`.
+- `POST /admin/menus/{id:\\d+}/items` from `config/admin_routes.php`.
+- `POST /admin/menus/{id:\\d+}/items/{itemId:\\d+}` from `config/admin_routes.php`.
+- `POST /admin/menus/{id:\\d+}/items/{itemId:\\d+}/delete` from `config/admin_routes.php`.
+- `POST /admin/menus/{id:\\d+}/delete` from `config/admin_routes.php`.
+- `GET /api/v1/menu` from `config/api_routes.php`.
 
 ## Dependencies
 
-- `ext-pdo`: `*`.
-- `php`: `^8.5`.
-- `zoosper/auth`: `dev-dev`.
+- `php`: `^8.3 || ^8.5`.
 - `zoosper/core`: `dev-dev`.
-- Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
+- `zoosper/page`: `dev-dev`.
+- `zoosper/site`: `dev-dev`.
 
 ## Database
 
 - Declarative schema is owned by `config/db_schema.php`.
+- Module migrations: `database/migrations/202608100001_create_menu_tables.php`, `database/migrations/202608100002_seed_menu_permission.php`.
 
 ## Extension points
 
@@ -56,12 +65,13 @@ Zoosper Media module for Zoosper CMS.
 
 - Preserve public interfaces, route permissions, configuration keys, and service identifiers when extending or replacing behaviour.
 - Admin routes remain subject to authentication, ACL, and central stateful middleware such as CSRF protection.
+- API routes should remain stateless unless their route contract explicitly states otherwise.
 
 ## Testing
 
 - Full repository suite: `zcomposer test`.
-- Package suite: `php8.5 vendor/bin/pest packages/zoosper-media/tests`.
-- Current regression files discovered: `26`. Use `find packages/zoosper-media/tests -type f -name '*Test.php' | sort` for the live list.
+- Package suite: `php8.5 vendor/bin/pest app/zoosper-menu/tests`.
+- Current regression files discovered: `16`. Use `find app/zoosper-menu/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes

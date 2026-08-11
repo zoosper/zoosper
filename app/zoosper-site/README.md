@@ -1,27 +1,27 @@
-# zoosper/media
+# zoosper/site
 
-Zoosper Media module for Zoosper CMS.
+Zoosper_Site module for Zoosper CMS.
 
 ## Responsibilities
 
 - Composer type: `zoosper-module`.
 - `module.php` exposes module discovery metadata.
-- Namespace `Zoosper\Media\` maps to `src/`.
+- Namespace `Zoosper\Site\` maps to `src/`.
 
 ## Architecture
 
-- `src/Controller/`
-- `src/EditorJs/`
+- `src/Admin/`
+- `src/Console/`
+- `src/Infrastructure/`
 - `src/Model/`
-- `src/Processing/`
 - `src/Repository/`
-- `src/Service/`
+- `src/Site/`
 
 ## Configuration
 
-- `config/acl.php`: ACL groups and permissions.
 - `config/admin_menu.php`: Admin navigation items.
 - `config/admin_routes.php`: Authenticated Admin routes.
+- `config/console.php`: Console command discovery.
 - `config/controllers.php`: Controller factories.
 - `config/db_schema.php`: Declarative database schema.
 - `config/logging.php`: Module log channel/file.
@@ -29,27 +29,31 @@ Zoosper Media module for Zoosper CMS.
 
 ## Routes
 
-- `GET /admin/media` from `config/admin_routes.php`.
-- `GET /admin/media/upload` from `config/admin_routes.php`.
-- `POST /admin/media/upload` from `config/admin_routes.php`.
-- `POST /admin/media/editorjs/upload` from `config/admin_routes.php`.
+- `GET /admin/sites` from `config/admin_routes.php`.
+- `GET /admin/sites/create` from `config/admin_routes.php`.
+- `POST /admin/sites/create` from `config/admin_routes.php`.
+- `GET /admin/sites/edit` from `config/admin_routes.php`.
+- `POST /admin/sites/edit` from `config/admin_routes.php`.
+- `GET /admin/site-domains` from `config/admin_routes.php`.
+- `GET /admin/site-domains/create` from `config/admin_routes.php`.
+- `POST /admin/site-domains/create` from `config/admin_routes.php`.
+- `GET /admin/site-domains/edit` from `config/admin_routes.php`.
+- `POST /admin/site-domains/edit` from `config/admin_routes.php`.
 
 ## Dependencies
 
-- `ext-pdo`: `*`.
 - `php`: `^8.5`.
-- `zoosper/auth`: `dev-dev`.
 - `zoosper/core`: `dev-dev`.
-- Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
 
 ## Database
 
 - Declarative schema is owned by `config/db_schema.php`.
+- Module migrations: `database/migrations/202607090003_create_site_tables.php`, `database/migrations/202607090008_site_theme_code.php`.
 
 ## Extension points
 
-- `config/acl.php` for ACL declarations.
 - `config/admin_menu.php` for Admin navigation.
+- `config/console.php` for console commands.
 - `config/services.php` for service bindings and interface implementations.
 
 ## Security and compatibility
@@ -60,8 +64,8 @@ Zoosper Media module for Zoosper CMS.
 ## Testing
 
 - Full repository suite: `zcomposer test`.
-- Package suite: `php8.5 vendor/bin/pest packages/zoosper-media/tests`.
-- Current regression files discovered: `26`. Use `find packages/zoosper-media/tests -type f -name '*Test.php' | sort` for the live list.
+- Package suite: `php8.5 vendor/bin/pest app/zoosper-site/tests`.
+- Current regression files discovered: `4`. Use `find app/zoosper-site/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes

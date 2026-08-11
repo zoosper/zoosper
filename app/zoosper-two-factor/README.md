@@ -1,53 +1,56 @@
-# zoosper/settings
+# zoosper/two-factor
 
-Module-owned settings catalogue and configuration management for Zoosper CMS.
+Zoosper_TwoFactor module for Zoosper CMS.
 
 ## Responsibilities
 
 - Composer type: `zoosper-module`.
 - `module.php` exposes module discovery metadata.
-- Namespace `Zoosper\Settings\` maps to `src/`.
+- Namespace `Zoosper\TwoFactor\` maps to `src/`.
 
 ## Architecture
 
-- `src/Admin/`
-- `src/Audit/`
-- `src/Catalogue/`
+- `src/Challenge/`
 - `src/Controller/`
-- `src/Definition/`
-- `src/Persistence/`
-- `src/Scope/`
+- `src/Crypto/`
+- `src/Qr/`
+- `src/Recovery/`
+- `src/Repository/`
+- `src/Service/`
+- `src/Totp/`
 - `src/Value/`
-- `src/Write/`
 
 ## Configuration
 
 - `config/admin_assets.php`: Admin asset contributions.
-- `config/admin_menu.php`: Admin navigation items.
 - `config/admin_routes.php`: Authenticated Admin routes.
-- `config/admin_settings.php`: Settings catalogue contributions.
-- `config/assets.php`: Runtime asset registration.
 - `config/controllers.php`: Controller factories.
+- `config/db_schema.php`: Declarative database schema.
+- `config/grid_columns.php`: Grid column contributions.
+- `config/logging.php`: Module log channel/file.
 - `config/services.php`: Service-container bindings.
 
 ## Routes
 
-- `GET /admin/settings` from `config/admin_routes.php`.
-- `POST /admin/settings/save` from `config/admin_routes.php`.
-- `POST /admin/settings/clear` from `config/admin_routes.php`.
+- `GET /admin/2fa/setup` from `config/admin_routes.php`.
+- `POST /admin/2fa/setup` from `config/admin_routes.php`.
+- `GET /admin/2fa/challenge` from `config/admin_routes.php`.
+- `POST /admin/2fa/challenge` from `config/admin_routes.php`.
 
 ## Dependencies
 
 - `php`: `^8.5`.
 - `zoosper/auth`: `dev-dev`.
 - `zoosper/core`: `dev-dev`.
-- `zoosper/site`: `dev-dev`.
+
+## Database
+
+- Declarative schema is owned by `config/db_schema.php`.
 
 ## Extension points
 
 - `config/admin_assets.php` for Admin assets.
-- `config/admin_menu.php` for Admin navigation.
-- `config/admin_settings.php` for Settings catalogue entries.
+- `config/grid_columns.php` for Grid columns.
 - `config/services.php` for service bindings and interface implementations.
 
 ## Security and compatibility
@@ -58,8 +61,8 @@ Module-owned settings catalogue and configuration management for Zoosper CMS.
 ## Testing
 
 - Full repository suite: `zcomposer test`.
-- Package suite: `php8.5 vendor/bin/pest app/zoosper-settings/tests`.
-- Current regression files discovered: `78`. Use `find app/zoosper-settings/tests -type f -name '*Test.php' | sort` for the live list.
+- Package suite: `php8.5 vendor/bin/pest app/zoosper-two-factor/tests`.
+- Current regression files discovered: `7`. Use `find app/zoosper-two-factor/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes

@@ -1,52 +1,48 @@
-# zoosper/settings
+# zoosper/mail
 
-Module-owned settings catalogue and configuration management for Zoosper CMS.
+Zoosper_Mail module for Zoosper CMS.
 
 ## Responsibilities
 
 - Composer type: `zoosper-module`.
 - `module.php` exposes module discovery metadata.
-- Namespace `Zoosper\Settings\` maps to `src/`.
+- Namespace `Zoosper\Mail\` maps to `src/`.
 
 ## Architecture
 
-- `src/Admin/`
-- `src/Audit/`
-- `src/Catalogue/`
+- `src/Config/`
 - `src/Controller/`
-- `src/Definition/`
-- `src/Persistence/`
-- `src/Scope/`
-- `src/Value/`
-- `src/Write/`
+- `src/Diagnostics/`
+- `src/Log/`
+- `src/Message/`
+- `src/Transport/`
 
 ## Configuration
 
-- `config/admin_assets.php`: Admin asset contributions.
-- `config/admin_menu.php`: Admin navigation items.
 - `config/admin_routes.php`: Authenticated Admin routes.
 - `config/admin_settings.php`: Settings catalogue contributions.
-- `config/assets.php`: Runtime asset registration.
 - `config/controllers.php`: Controller factories.
+- `config/db_schema.php`: Declarative database schema.
+- `config/logging.php`: Module log channel/file.
 - `config/services.php`: Service-container bindings.
 
 ## Routes
 
-- `GET /admin/settings` from `config/admin_routes.php`.
-- `POST /admin/settings/save` from `config/admin_routes.php`.
-- `POST /admin/settings/clear` from `config/admin_routes.php`.
+- `GET /admin/mail-logs` from `config/admin_routes.php`.
+- `GET /admin/mail-logs/view` from `config/admin_routes.php`.
 
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/auth`: `dev-dev`.
 - `zoosper/core`: `dev-dev`.
-- `zoosper/site`: `dev-dev`.
+
+## Database
+
+- Declarative schema is owned by `config/db_schema.php`.
+- Module migrations: `database/migrations/202607310001_expand_smtp_email_log_bodies.php`.
 
 ## Extension points
 
-- `config/admin_assets.php` for Admin assets.
-- `config/admin_menu.php` for Admin navigation.
 - `config/admin_settings.php` for Settings catalogue entries.
 - `config/services.php` for service bindings and interface implementations.
 
@@ -58,8 +54,8 @@ Module-owned settings catalogue and configuration management for Zoosper CMS.
 ## Testing
 
 - Full repository suite: `zcomposer test`.
-- Package suite: `php8.5 vendor/bin/pest app/zoosper-settings/tests`.
-- Current regression files discovered: `78`. Use `find app/zoosper-settings/tests -type f -name '*Test.php' | sort` for the live list.
+- Package suite: `php8.5 vendor/bin/pest app/zoosper-mail/tests`.
+- Current regression files discovered: `8`. Use `find app/zoosper-mail/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes

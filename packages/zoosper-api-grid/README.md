@@ -1,26 +1,26 @@
-# zoosper/errors
+# zoosper/api-grid
 
-Zoosper's loud-errors exception, sensitive-value redaction, and CLI/web error display package, built on Marko's exception base class and error formatters.
+Transport and mapping adapters for external API-backed Zoosper grids.
 
 ## Responsibilities
 
 - Composer type: `zoosper-module`.
-- `module.php` exposes module discovery metadata.
-- Namespace `Zoosper\Errors\` maps to `src/`.
+- Namespace `Zoosper\ApiGrid\` maps to `src/`.
 
 ## Architecture
 
-- `src/ConsoleExceptionFormatter.php`
-- `src/ExceptionDisplayer.php`
-- `src/SensitiveValueRedactor.php`
-- `src/ZoosperException.php`
+- `src/Authentication/`
+- `src/Definition/`
+- `src/Mapping/`
+- `src/Page/`
+- `src/Transport/`
+- `src/ApiGridDataSource.php`
 
 ## Dependencies
 
-- `marko/core`: `^0.8`.
-- `marko/errors`: `^0.8`.
-- `marko/errors-simple`: `^0.8`.
+- `ext-curl`: `*`.
 - `php`: `^8.5`.
+- `zoosper/grid`: `dev-dev`.
 - Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
 
 ## Security and compatibility
@@ -30,8 +30,8 @@ Zoosper's loud-errors exception, sensitive-value redaction, and CLI/web error di
 ## Testing
 
 - Full repository suite: `zcomposer test`.
-- Package suite: `php8.5 vendor/bin/pest packages/zoosper-errors/tests`.
-- Current regression files discovered: `1`. Use `find packages/zoosper-errors/tests -type f -name '*Test.php' | sort` for the live list.
+- Package suite: `php8.5 vendor/bin/pest packages/zoosper-api-grid/tests`.
+- Current regression files discovered: `4`. Use `find packages/zoosper-api-grid/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes
