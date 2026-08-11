@@ -7,3 +7,7 @@ See the canonical [architecture guide](../../../../../docs/architecture.md) and 
 ## Foreign keys
 
 Tables may declare `foreign_keys` beside `columns` and `indexes`. Each named definition provides `columns`, `referenced_table`, `referenced_columns`, and optional `on_delete` / `on_update` actions. `RESTRICT` is the default. `CASCADE`, `SET NULL`, and `NO ACTION` must be explicit; `SET NULL` requires nullable local columns. Phase 9HI emits constraints when creating fresh MySQL or SQLite tables. Existing-table introspection and reconciliation are deliberately deferred to Phase 9HJ so SQLite tables are never rebuilt implicitly.
+
+## Existing-table foreign-key reconciliation
+
+`SchemaForeignKeyInspector` reads live MySQL constraints from `INFORMATION_SCHEMA` and SQLite constraints from `PRAGMA foreign_key_list`. `SchemaForeignKeyReconciliationPlanner` classifies each declared constraint as present, addable on MySQL, mismatched, or requiring an explicit SQLite rebuild migration. Planning is read-only. It never executes DDL, drops a constraint, or rebuilds a SQLite table. MySQL additions are exposed as deterministic `ALTER TABLE ... ADD CONSTRAINT` statements for a later explicit apply boundary.

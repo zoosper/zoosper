@@ -1033,3 +1033,14 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [x] Kept existing-table reconciliation out of this phase; no SQLite table is rebuilt implicitly.
 - [ ] Next Phase 9HJ: add foreign-key inspection, MySQL ALTER planning, explicit SQLite rebuild diagnostics, and idempotent existing-database reconciliation.
 - [ ] Following Phase 9HK: adopt the lifecycle foundation for Page archive, restore, and guarded permanent delete.
+
+## Phase 9HJ — existing-database foreign-key reconciliation planning (2026-08-12)
+
+- [x] Added driver-aware live foreign-key inspection for MySQL `INFORMATION_SCHEMA` and SQLite `PRAGMA foreign_key_list`.
+- [x] Normalised local columns, referenced columns, target table, and update/delete actions into comparable state objects.
+- [x] Added read-only reconciliation outcomes: present, MySQL add, mismatch, and explicit SQLite rebuild required.
+- [x] Added deterministic MySQL `ALTER TABLE ... ADD CONSTRAINT` SQL generation.
+- [x] Prohibited automatic SQLite foreign-key alteration or table rebuild.
+- [x] Added real SQLite tests for equivalent existing constraints and missing-constraint rebuild diagnostics.
+- [ ] Next: add an explicit operator-facing schema reconciliation command/apply boundary with snapshot recording and dry-run output.
+- [ ] Following: declare the first production Page relationships and ship Page archive, restore, and guarded permanent delete.

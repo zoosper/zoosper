@@ -78,6 +78,8 @@ Zoosper_Core module for Zoosper CMS.
 
 The declarative schema engine supports typed foreign keys for fresh-table creation on MySQL and SQLite. Restrictive actions are the default. Existing-table reconciliation remains an explicit follow-up and is never performed as an invisible SQLite rebuild.
 
+Foreign-key reconciliation is read-only by default: live constraints are inspected and classified, MySQL additions may be planned, and SQLite rebuild requirements are reported explicitly. No table is rebuilt automatically.
+
 ## Entity lifecycle policy
 
 `src/Entity/Lifecycle/` provides the shared read-only decision boundary for archive, disable, and permanent-delete operations. Feature modules register one `EntityLifecyclePolicyInterface` per entity type and return descriptive blockers before any controller or executor mutates state. Policies must not perform deletion themselves. Database foreign keys remain the final integrity safety net once schema-engine support lands.

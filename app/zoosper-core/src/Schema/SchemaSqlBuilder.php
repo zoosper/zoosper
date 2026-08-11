@@ -49,6 +49,19 @@ final readonly class SchemaSqlBuilder
         return sprintf('CREATE TABLE IF NOT EXISTS %s (%s)%s', $table->name, implode(', ', $columns), $this->driver === 'mysql' ? ' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci' : '');
     }
 
+    public function addForeignKeySql(string $table, SchemaForeignKey $foreignKey): string
+    {
+        if ($this->driver === 'sqlite') {
+            throw new RuntimeException('SQLite foreign keys require an explicit table rebuild migration.');
+        }
+
+        return sprintf(
+            'ALTER TABLE %s ADD %s',
+            $this->identifier($table),
+            $this->foreignKeySql($foreignKey),
+        );
+    }
+
     private function foreignKeySql(SchemaForeignKey $foreignKey): string
     {
         return sprintf(
