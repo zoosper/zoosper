@@ -1134,3 +1134,8 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - Closed the useful-CMS-core alpha scope around guarded Menus and Media, Page revisions, CLI polish, idempotent starter content, the default starter theme, and application-owned sessions.
 - Final release identity is `0.2.0-alpha.1`; production deployment policy, distributed Redis/database session drivers, enforced rate limiting, and stable compatibility promises remain future work.
 - Tag only after the committed release identity has passed the full suite, fresh-install smoke, release checks, documentation build, manual browser acceptance, and a clean working tree.
+
+### v0.3.0-alpha.1 development line opened (2026-08-12)
+- Advanced the authoritative development identity to `0.3.0-alpha.1-dev` after the verified `v0.2.0-alpha.1` tag.
+- The release theme is Content and Marketing: SEO presentation first, followed by sitemap/robots, redirect management, forms, and focused block-editor improvements.
+- Existing 0.2 release gates remain mandatory; unrelated distributed-session, data-layer, commerce, localisation, and ecosystem programmes remain outside this release arc.
