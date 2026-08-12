@@ -115,3 +115,10 @@ Zoosper_Page module for Zoosper CMS.
 - All lifecycle mutations are POST-only, require `page.manage`, and use central CSRF validation.
 - Permanent deletion remains archived-first and reference-guarded by the Page lifecycle domain.
 - Lifecycle presentation contains no inline JavaScript confirmation handlers.
+
+### Page editor compactness and revision paging
+- Revision history is collapsed by default when revisions exist and renders ten rows per server-side page.
+- Paging uses the `revision_page` query parameter and repository-level `LIMIT` / `OFFSET`; the full retained history is not rendered into the edit screen.
+- Restore forms contain no inline JavaScript confirmation. Operators are instructed to preview before restoring, and the server still captures a safety snapshot.
+- The duplicate Content-section guidance was removed. Editor-specific safety guidance remains owned by the editor component.
+- Visual/HTML source switching and richer inline formatting are intentionally deferred to the dedicated editor roadmap so this usability phase does not invent a second content contract.

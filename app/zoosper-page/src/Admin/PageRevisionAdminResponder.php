@@ -15,9 +15,11 @@ use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRevisionService;
 
-/** Page-owned Admin history, historical preview and restore orchestration. */
+/** Page-owned paginated history, historical preview and restore orchestration. */
 final readonly class PageRevisionAdminResponder
 {
+    private const PAGE_SIZE = 10;
+
     public function __construct(
         private PageRevisionService $revisions,
         private PageRepository $pages,
@@ -25,30 +27,60 @@ final readonly class PageRevisionAdminResponder
         private ?FlashMessageStoreInterface $flash = null,
         private ?AuditLoggerInterface $audit = null,
         private ?AdminUrlGenerator $urls = null,
-    ) {
-    }
+    ) {}
 
-    public function historyHtml(Page $page): string
+    public function historyHtml(Page $page, int $currentPage = 1): string
     {
+        $total = $this->revisions->historyCount($page->id);
+        $pageCount = max(1, (int) ceil($total / self::PAGE_SIZE));
+        $currentPage = max(1, min($pageCount, $currentPage));
         $rows = '';
-        foreach ($this->revisions->history($page->id) as $revision) {
+        foreach ($this->revisions->historyPage($page->id, $currentPage, self::PAGE_SIZE) as $revision) {
             $preview = $this->url("pages/{$page->id}/revisions/{$revision->id}/preview");
             $restore = $this->url("pages/{$page->id}/revisions/{$revision->id}/restore");
             $rows .= '<tr><td>' . $revision->id . '</td><td>' . $this->e($revision->createdAt)
                 . '</td><td>' . $this->e($revision->title) . '</td><td>' . $this->e($revision->status)
                 . '</td><td><a target="_blank" rel="noopener" href="' . $this->e($preview) . '">Preview</a> '
-                . '<form method="post" action="' . $this->e($restore) . '" style="display:inline">'
+                . '<form method="post" action="' . $this->e($restore) . '" class="page-revision-restore-form">'
                 . '<input type="hidden" name="_csrf_token" value="' . $this->e($this->csrf->token()) . '">'
-                . '<button type="submit" onclick="return confirm(\'Restore this revision? A safety snapshot will be created first.\')">Restore</button>'
+                . '<button type="submit">Restore</button>'
                 . '</form></td></tr>';
         }
         if ($rows === '') {
             $rows = '<tr><td colspan="5">No revisions captured yet.</td></tr>';
         }
-        return '<section class="card page-revision-history"><h2>Revision history</h2>'
-            . '<p class="muted">Restoring creates a safety snapshot of the current page first.</p>'
-            . '<table><thead><tr><th>ID</th><th>Created</th><th>Title</th><th>Status</th><th>Actions</th></tr></thead><tbody>'
-            . $rows . '</tbody></table></section>';
+
+        return '<details class="card page-revision-history"' . ($total > 0 ? '' : ' open') . '>'
+            . '<summary><strong>Revision history</strong><span class="muted">' . $total . ' captured</span></summary>'
+            . '<div class="page-revision-history__body">'
+            . '<p class="muted">Restoring creates a safety snapshot first. Select Restore only after previewing the revision.</p>'
+            . '<div class="table-scroll"><table><thead><tr><th>ID</th><th>Created</th><th>Title</th><th>Status</th><th>Actions</th></tr></thead><tbody>'
+            . $rows . '</tbody></table></div>'
+            . $this->pagination($page, $currentPage, $pageCount, $total)
+            . '</div></details>';
+    }
+
+    private function pagination(Page $page, int $currentPage, int $pageCount, int $total): string
+    {
+        if ($pageCount <= 1) {
+            return $total === 0 ? '' : '<p class="muted">Showing all ' . $total . ' revisions.</p>';
+        }
+        $links = '<nav class="page-revision-pagination" aria-label="Revision history pages">';
+        if ($currentPage > 1) {
+            $links .= '<a class="button secondary" href="' . $this->e($this->editUrl($page, $currentPage - 1)) . '#revision-history">Previous</a>';
+        }
+        $links .= '<span>Page ' . $currentPage . ' of ' . $pageCount . ' · ' . $total . ' revisions</span>';
+        if ($currentPage < $pageCount) {
+            $links .= '<a class="button secondary" href="' . $this->e($this->editUrl($page, $currentPage + 1)) . '#revision-history">Next</a>';
+        }
+
+        return $links . '</nav>';
+    }
+
+    private function editUrl(Page $page, int $revisionPage): string
+    {
+        $base = $this->url("pages/{$page->id}/edit");
+        return $base . (str_contains($base, '?') ? '&' : '?') . 'revision_page=' . $revisionPage;
     }
 
     public function preview(Page $page, int $revisionId): Response

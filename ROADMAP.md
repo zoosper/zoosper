@@ -1072,3 +1072,11 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [x] Added archived Pages to the Grid status filter.
 - [x] Kept permanent delete out of ordinary Grid row actions and removed the need for inline confirmation handlers.
 - [ ] Next: remove stale Page Momentum asset registration and migrate the revision restore confirmation to an explicit CSP-safe interaction.
+
+## Phase 9HN — Page editor compactness and revision pagination (2026-08-12)
+- [x] Added repository-level Page revision count and `LIMIT` / `OFFSET` paging.
+- [x] Rendered revision history as a compact native disclosure with ten revisions per page.
+- [x] Removed the inline restore confirmation and retained POST, CSRF, preview, audit, and safety-snapshot protections.
+- [x] Removed duplicate Content-section guidance and kept editor-specific messaging in the editor component.
+- [ ] Parked visual/HTML mode switching and richer Editor.js formatting tools for a dedicated editor-contract phase.
+- [ ] Continue reviewer-priority referential-integrity and lifecycle adoption across Site, Menu, Role, Admin User, and Media entities.

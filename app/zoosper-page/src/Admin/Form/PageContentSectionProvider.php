@@ -28,7 +28,7 @@ final readonly class PageContentSectionProvider implements AdminFormSectionProvi
             title: 'Content',
             html: (string) $context['editorHtml'],
             sortOrder: 200,
-            description: 'Edit the page body. The HTML fallback is sanitised and Editor.js JSON is validated on save.',
+            description: '',
             modifierClass: 'page-form__section--content',
         );
     }

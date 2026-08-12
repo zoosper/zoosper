@@ -149,7 +149,9 @@ final readonly class PageAdminController
         }
 
         $content = $this->renderForm($this->adminUrl('/pages/' . $page->id . '/edit'), $page);
-        $content .= $this->revisionResponder?->historyHtml($page) ?? '';
+        $revisionPage = $request->query('revision_page');
+        $revisionPage = $revisionPage !== null && ctype_digit($revisionPage) ? max(1, (int) $revisionPage) : 1;
+        $content .= $this->revisionResponder?->historyHtml($page, $revisionPage) ?? '';
         $content .= $this->lifecycleResponder?->actionsHtml($page) ?? '';
         return $this->html('Edit page', $content);
     }

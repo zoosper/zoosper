@@ -54,6 +54,17 @@ final readonly class PageRevisionService
         return $this->revisions->forPage($pageId, $this->retention);
     }
 
+    /** @return list<PageRevision> */
+    public function historyPage(int $pageId, int $page, int $pageSize = 10): array
+    {
+        return $this->revisions->pageForPage($pageId, $page, $pageSize);
+    }
+
+    public function historyCount(int $pageId): int
+    {
+        return $this->revisions->countForPage($pageId);
+    }
+
     public function revision(int $pageId, int $revisionId): PageRevision
     {
         return $this->revisions->findForPage($revisionId, $pageId)

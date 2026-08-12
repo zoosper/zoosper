@@ -16,6 +16,28 @@ final readonly class PageRevisionRepository
         $statement->execute(['page_id' => $pageId]);
         return array_map($this->hydrate(...), $statement->fetchAll(PDO::FETCH_ASSOC));
     }
+    /** @return list<PageRevision> */
+    public function pageForPage(int $pageId, int $page, int $pageSize): array
+    {
+        $page = max(1, $page);
+        $pageSize = max(1, min(50, $pageSize));
+        $offset = ($page - 1) * $pageSize;
+        $statement = $this->pdo->prepare(
+            "SELECT * FROM page_revisions WHERE page_id = :page_id ORDER BY id DESC LIMIT {$pageSize} OFFSET {$offset}"
+        );
+        $statement->execute(['page_id' => $pageId]);
+
+        return array_map($this->hydrate(...), $statement->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    public function countForPage(int $pageId): int
+    {
+        $statement = $this->pdo->prepare('SELECT COUNT(*) FROM page_revisions WHERE page_id = :page_id');
+        $statement->execute(['page_id' => $pageId]);
+
+        return (int) $statement->fetchColumn();
+    }
+
     public function findForPage(int $revisionId, int $pageId): ?PageRevision
     {
         $statement = $this->pdo->prepare('SELECT * FROM page_revisions WHERE id = :id AND page_id = :page_id LIMIT 1');
