@@ -83,3 +83,9 @@ Site-scoped navigation, nested menu trees, breadcrumbs and menu API for Zoosper 
 ### Referential integrity
 - Menus cascade with their Site. Menu items cascade with their Menu and parent item. Page deletion sets optional `page_id` references to null.
 - These declarative relationships mirror the existing migration semantics and are covered by drift tests.
+
+### Menu lifecycle
+- Active Menus can be made inactive without deleting their identity, Site scope, nested items, Page links, external URLs, positions, or targets.
+- Inactive Menus can be restored. Permanent deletion is inactive-first and blocked until every Menu item is removed.
+- Menu item deletion verifies Menu ownership and blocks parent deletion while child items remain, avoiding accidental hierarchy cascades.
+- Lifecycle and deletion mutations are POST-only, require `menu.manage`, use central CSRF validation, and avoid inline confirmation handlers.

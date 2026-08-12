@@ -77,3 +77,9 @@ Zoosper_Site module for Zoosper CMS.
 ### Referential integrity
 - `site_domains.site_id` declaratively mirrors the migration-owned `ON DELETE CASCADE` relationship to `sites.id`.
 - Use `php8.5 bin/zoosper schema:foreign-keys:status` before any production reconciliation.
+
+### Site lifecycle
+- Active Sites can be made inactive without deleting Domains, Pages, Page assignments, Menus, URL Rewrites, themes, or scoped configuration.
+- Inactive Sites can be restored to active. Permanent deletion is inactive-first and blocked while any known Site reference remains.
+- Lifecycle mutations are POST-only, require `settings.manage`, use central CSRF validation, and are presented outside the ordinary list-row action.
+- Database cascades remain integrity safeguards and are not used by the Admin workflow as a bulk content-deletion shortcut.

@@ -1,4 +1,5 @@
 <?php
 declare(strict_types=1);
 use Zoosper\Auth\Service\SessionGuard; use Zoosper\Core\Container\ServiceContainer; use Zoosper\Core\Url\AdminUrlGenerator; use Zoosper\Menu\Admin\Controller\MenuAdminController; use Zoosper\Menu\Admin\MenuAdminResponder; use Zoosper\Menu\Api\MenuController; use Zoosper\Menu\Application\MenuAdminService; use Zoosper\Menu\Contract\{MenuAdminRepositoryInterface,MenuProviderInterface};
-return [MenuController::class=>static fn(ServiceContainer $s)=>new MenuController($s->get(MenuProviderInterface::class)),MenuAdminController::class=>static fn(ServiceContainer $s)=>new MenuAdminController($s->get(SessionGuard::class),$s->get(MenuAdminResponder::class),$s->get(MenuAdminService::class),$s->get(MenuAdminRepositoryInterface::class),$s->get(AdminUrlGenerator::class))];
+use Zoosper\Menu\Admin\Lifecycle\{MenuLifecycleAdminResponder,MenuItemDeletionService};
+return [MenuController::class=>static fn(ServiceContainer $s)=>new MenuController($s->get(MenuProviderInterface::class)),MenuAdminController::class=>static fn(ServiceContainer $s)=>new MenuAdminController($s->get(SessionGuard::class),$s->get(MenuAdminResponder::class),$s->get(MenuAdminService::class),$s->get(MenuAdminRepositoryInterface::class),$s->get(AdminUrlGenerator::class),$s->get(MenuLifecycleAdminResponder::class),$s->get(MenuItemDeletionService::class))];

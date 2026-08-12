@@ -13,6 +13,7 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Site\Model\Site;
+use Zoosper\Site\Admin\Lifecycle\SiteLifecycleAdminResponder;
 use Zoosper\Site\Repository\SiteRepository;
 
 /**
@@ -30,6 +31,7 @@ final readonly class SiteAdminController
         private SiteRepository $sites,
         private AdminLayout $layout,
         private ?AdminUrlGenerator $adminUrls = null,
+        private ?SiteLifecycleAdminResponder $lifecycle = null,
     ) {
     }
 
@@ -108,7 +110,7 @@ final readonly class SiteAdminController
             return $this->html('Site not found', '<section class="card"><p class="error">Site not found.</p></section>', $user, 404);
         }
 
-        return $this->html('Edit site', $this->form($this->adminUrl('sites/edit', ['id' => $site->id]), $site), $user);
+        return $this->html('Edit site', $this->form($this->adminUrl('sites/edit', ['id' => $site->id]), $site) . ($this->lifecycle?->actionsHtml($site) ?? ''), $user);
     }
 
     public function update(Request $request): Response
@@ -144,6 +146,17 @@ final readonly class SiteAdminController
     }
 
     /** @param array<string, mixed> $submitted */
+    public function disable(Request $request): Response { return $this->lifecycleOperation($request, 'disable'); }
+    public function restore(Request $request): Response { return $this->lifecycleOperation($request, 'restore'); }
+    public function deletePermanently(Request $request): Response { return $this->lifecycleOperation($request, 'delete'); }
+
+    private function lifecycleOperation(Request $request, string $operation): Response
+    {
+        $user = $this->currentAdminUser(); $site = $this->siteFromRequest($request);
+        if ($site === null || $this->lifecycle === null) { return Response::redirect($this->adminUrl('sites'), 303); }
+        return match ($operation) { 'disable' => $this->lifecycle->disable($site, $user), 'restore' => $this->lifecycle->restore($site, $user), 'delete' => $this->lifecycle->delete($site, $user), default => Response::redirect($this->adminUrl('sites'), 303) };
+    }
+
     private function form(string $action, ?Site $site = null, ?string $error = null, array $submitted = []): string
     {
         $value = static fn (string $key, mixed $fallback = ''): string => htmlspecialchars((string) ($submitted[$key] ?? $fallback), ENT_QUOTES, 'UTF-8');
@@ -173,7 +186,7 @@ final readonly class SiteAdminController
 
     private function siteFromRequest(Request $request): ?Site
     {
-        $id = $request->query('id');
+        $id = $request->routeParam('id') ?? $request->query('id');
 
         return $id !== null && ctype_digit($id) ? $this->sites->findById((int) $id) : null;
     }

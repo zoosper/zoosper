@@ -146,6 +146,19 @@ final readonly class SiteRepository
         $statement->execute(['id' => $siteId, 'theme_code' => $themeCode, 'updated_at' => gmdate('Y-m-d H:i:s')]);
     }
 
+    public function updateStatus(int $siteId, string $status): void
+    {
+        if (!in_array($status, ['active', 'inactive'], true)) { throw new \InvalidArgumentException('Site status must be active or inactive.'); }
+        $statement = $this->pdo->prepare('UPDATE sites SET status = :status, updated_at = :updated_at WHERE id = :id');
+        $statement->execute(['id' => $siteId, 'status' => $status, 'updated_at' => gmdate('Y-m-d H:i:s')]);
+    }
+
+    public function deletePermanently(int $siteId): void
+    {
+        $statement = $this->pdo->prepare('DELETE FROM sites WHERE id = :id');
+        $statement->execute(['id' => $siteId]);
+    }
+
     public function addDomain(int $siteId, string $host, bool $isPrimary = false): void
     {
         $now = gmdate('Y-m-d H:i:s');

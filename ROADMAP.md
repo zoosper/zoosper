@@ -1093,3 +1093,16 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [x] Mirrored migration-owned Site Domain, Menu, Menu Item, Admin User Role, and Admin Role Permission foreign keys in declarative schema.
 - [x] Added drift tests for destructive actions and relationship semantics.
 - [ ] Next: apply shared lifecycle policy adoption only to entities whose current status and reference contracts support it without inventing deletion semantics.
+
+## Phases 9HS-9HV — guarded Site lifecycle (2026-08-12)
+- [x] Added read-only Site reference inspection across Domains, direct Pages, Page assignments, Menus, and URL Rewrites.
+- [x] Added inactive/restore workflow using the existing Site status vocabulary.
+- [x] Added inactive-first, fully unreferenced permanent deletion with transaction and audit boundaries.
+- [x] Added protected `settings.manage` POST routes, contextual edit-screen actions, thin-controller delegation, and regression tests.
+
+## Phases 9HW-9HZ — guarded Menu lifecycle (2026-08-12)
+- [x] Added Menu item ownership and hierarchy reference inspection.
+- [x] Added inactive and restore workflow using the existing Menu status vocabulary.
+- [x] Replaced direct whole-Menu deletion with inactive-first, empty-Menu permanent deletion.
+- [x] Hardened Menu item deletion against cross-Menu and parent-cascade removal.
+- [x] Added contextual CSP-safe lifecycle actions and a compact native disclosure workspace.

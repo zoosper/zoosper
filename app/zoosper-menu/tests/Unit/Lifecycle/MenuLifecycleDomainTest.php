@@ -1,0 +1,11 @@
+<?php
+
+declare(strict_types=1);
+use Zoosper\Menu\Lifecycle\{MenuLifecycleCoordinator,MenuReferenceInspector};
+use Zoosper\Menu\Repository\PdoMenuAdminRepository;
+use Zoosper\Menu\Contract\MenuItemRepositoryInterface;
+function menuLifecycleDb():PDO{$pdo=new PDO('sqlite::memory:');$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);$pdo->exec('CREATE TABLE menus(id INTEGER PRIMARY KEY AUTOINCREMENT,site_id INTEGER,code TEXT,label TEXT,status TEXT,created_at TEXT,updated_at TEXT)');$pdo->exec('CREATE TABLE menu_items(id INTEGER PRIMARY KEY AUTOINCREMENT,menu_id INTEGER,parent_id INTEGER NULL,page_id INTEGER NULL,label TEXT,url TEXT,target TEXT,position INTEGER,status TEXT,created_at TEXT,updated_at TEXT)');return $pdo;}
+function menuLifecycleFixture(PDO $pdo):array{$rules=new class implements MenuItemRepositoryInterface{public function activeForMenu(int $menuId):array{return [];}public function wouldCreateCycle(int $menuId,int $itemId,?int $parentId):bool{return false;}};$repo=new PdoMenuAdminRepository($pdo,$rules);$id=$repo->saveMenu(null,1,'main','Main','active');return[$repo,$repo->find($id),new MenuLifecycleCoordinator($pdo,new MenuReferenceInspector($pdo))];}
+it('makes a Menu inactive and restores it while frontend active lookup semantics remain valid',function(){ $pdo=menuLifecycleDb();[$repo,$menu,$life]=menuLifecycleFixture($pdo);$life->disable($menu,1,'a');expect($repo->find($menu->id)->status)->toBe('inactive');$life->restore($repo->find($menu->id),1,'a');expect($repo->find($menu->id)->status)->toBe('active');});
+it('blocks Menu deletion until inactive and empty',function(){ $pdo=menuLifecycleDb();[$repo,$menu,$life]=menuLifecycleFixture($pdo);expect($life->deletePermanently($menu,1,'a')->successful)->toBeFalse();$life->disable($menu,1,'a');$repo->saveItem(null,$menu->id,null,null,'Home','/','_self',0,'active');$blocked=$life->deletePermanently($repo->find($menu->id),1,'a');expect($blocked->successful)->toBeFalse()->and($blocked->blockers['menu_items'])->toBe(1);});
+it('deletes an inactive empty Menu transactionally',function(){ $pdo=menuLifecycleDb();[$repo,$menu,$life]=menuLifecycleFixture($pdo);$life->disable($menu,1,'a');expect($life->deletePermanently($repo->find($menu->id),1,'a')->successful)->toBeTrue()->and($repo->find($menu->id))->toBeNull();});
