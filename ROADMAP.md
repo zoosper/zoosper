@@ -1129,3 +1129,8 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - Confirmed the existing default theme as the 0.2 starter-theme foundation.
 - Expanded release diagnostics to require starter-theme assets, the starter command, and application-owned session settings.
 - Release identity remains `0.2.0-alpha.1-dev` until final rehearsal and manual browser evidence are complete.
+
+### v0.2.0-alpha.1 release candidate (2026-08-12)
+- Closed the useful-CMS-core alpha scope around guarded Menus and Media, Page revisions, CLI polish, idempotent starter content, the default starter theme, and application-owned sessions.
+- Final release identity is `0.2.0-alpha.1`; production deployment policy, distributed Redis/database session drivers, enforced rate limiting, and stable compatibility promises remain future work.
+- Tag only after the committed release identity has passed the full suite, fresh-install smoke, release checks, documentation build, manual browser acceptance, and a clean working tree.
