@@ -1139,3 +1139,8 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - Advanced the authoritative development identity to `0.3.0-alpha.1-dev` after the verified `v0.2.0-alpha.1` tag.
 - The release theme is Content and Marketing: SEO presentation first, followed by sitemap/robots, redirect management, forms, and focused block-editor improvements.
 - Existing 0.2 release gates remain mandatory; unrelated distributed-session, data-layer, commerce, localisation, and ecosystem programmes remain outside this release arc.
+
+### Phase 10A-10D — SEO presentation foundation (2026-08-12)
+- Added engine-neutral Page SEO resolution and equivalent escaped PHP/Latte head output for title, description, robots, canonical and Open Graph basics.
+- Explicit absolute Page canonicals take precedence; safe Site-base derivation is available for published request rendering, while previews remain noindex.
+- Sitemap, robots endpoints, redirect management and Site-level SEO defaults remain following 0.3 slices.

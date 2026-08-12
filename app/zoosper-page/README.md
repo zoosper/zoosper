@@ -127,3 +127,7 @@ Zoosper_Page module for Zoosper CMS.
 - Revision pagination is progressively enhanced with a same-origin fragment request, so Previous and Next replace only the revision history body.
 - Normal links remain valid fallback navigation when JavaScript or the fragment request is unavailable.
 - The browser URL is updated with `revision_page` without reloading the full Page edit form.
+
+#### Frontend SEO presentation
+- PageSeoResolver normalises Page metadata into an engine-neutral layout contract. Explicit Page title/description/canonical values take precedence; title falls back to the Page title.
+- Derived canonicals require a valid absolute Site base URL. Non-request previews are `noindex,nofollow`.

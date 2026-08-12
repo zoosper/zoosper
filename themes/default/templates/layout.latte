@@ -5,6 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{$title ?? 'Zoosper'}</title>
+{if ($metaDescription ?? '') !== ''}    <meta name="description" content="{$metaDescription}">
+{/if}    <meta name="robots" content="{$robots ?? 'noindex,nofollow'}">
+{if ($canonicalUrl ?? '') !== ''}    <link rel="canonical" href="{$canonicalUrl}">
+{/if}    <meta property="og:title" content="{$openGraphTitle ?? $title ?? 'Zoosper'}">
+{if ($openGraphDescription ?? '') !== ''}    <meta property="og:description" content="{$openGraphDescription}">
+{/if}{if ($openGraphUrl ?? '') !== ''}    <meta property="og:url" content="{$openGraphUrl}">
+{/if}
     <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg">
     <link rel="stylesheet" href="{$stylesheetUrl}">
 </head>

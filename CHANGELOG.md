@@ -39,3 +39,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Starter experience and release readiness
 - Added safe repeatable starter Site and Page installation.
 - Added starter-theme and application-owned session checks to release diagnostics.
+
+### SEO presentation foundation
+- Added frontend Page metadata resolution with safe canonical policy, preview noindex behaviour, and equivalent PHP/Latte head rendering.
+- Added escaped description, robots, canonical and Open Graph basics to the default theme.
