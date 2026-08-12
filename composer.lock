@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f10a61ee3539e37a21a0a97cd9fdd11",
+    "content-hash": "1f0bd48ec6168208aad31afd80706f2d",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1405,13 +1405,14 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-page",
-                "reference": "3adaac9a5d8349b2d4c87f2b4ae6344ef2d63ddd"
+                "reference": "8280c256c107c5d5c94b75f8c14b2b221700b835"
             },
             "require": {
                 "php": "^8.5",
                 "zoosper/core": "dev-dev",
                 "zoosper/grid": "dev-dev",
                 "zoosper/media": "dev-dev",
+                "zoosper/seo": "dev-dev",
                 "zoosper/site": "dev-dev",
                 "zoosper/theme": "dev-dev"
             },
@@ -1430,6 +1431,39 @@
                 "MIT"
             ],
             "description": "Zoosper_Page module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/seo",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-seo",
+                "reference": "a5ac882f2078ac7d0331206f26c00a5c0ef0fc9a"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/core": "dev-dev",
+                "zoosper/site": "dev-dev"
+            },
+            "type": "zoosper-module",
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Seo\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Seo\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Extensible SEO metadata, sitemap and robots orchestration for Zoosper CMS.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -8682,6 +8716,7 @@
         "zoosper/media": 20,
         "zoosper/menu": 20,
         "zoosper/page": 20,
+        "zoosper/seo": 20,
         "zoosper/session": 20,
         "zoosper/settings": 20,
         "zoosper/site": 20,

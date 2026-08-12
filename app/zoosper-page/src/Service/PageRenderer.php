@@ -13,7 +13,7 @@ use Zoosper\Core\Site\SiteContext;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
 use Zoosper\Page\Contract\FrontendNavigationContributorInterface;
 use Zoosper\Page\Model\Page;
-use Zoosper\Page\Seo\PageSeoResolver;
+use Zoosper\Seo\Metadata\SeoMetadataManager;
 use Zoosper\Site\Model\Site;
 use Zoosper\Theme\Template\TemplateRenderer;
 use Zoosper\Theme\Theme\ThemeResolver;
@@ -27,7 +27,7 @@ final readonly class PageRenderer
         private ?BlockJsonToHtmlRenderer $blockJsonRenderer = null,
         private ?FrontendNavigationContributorInterface $navigation = null,
         private ?ViewInterface $views = null,
-        private ?PageSeoResolver $seoResolver = null,
+        private ?SeoMetadataManager $seoMetadata = null,
     ) {
     }
 
@@ -48,7 +48,7 @@ final readonly class PageRenderer
         $versionLabel = ($this->version ?? new CmsVersion())->label();
         $siteContext = $request?->siteContext() ?? $this->siteContextFromSite($site);
         $renderedContent = $this->renderContent($page);
-        $seo = ($this->seoResolver ?? new PageSeoResolver())->resolve($page, $site, $request);
+        $seo = $this->seoMetadata?->for($page, $site, $request) ?? (new \Zoosper\Page\Seo\PageSeoContributor())->contribute($page, $site, $request);
         $navigation = $request !== null && $this->navigation !== null
             ? $this->navigation->contribute($siteContext, $request)
             : ['navigationHtml' => '', 'breadcrumbsHtml' => ''];
@@ -61,7 +61,7 @@ final readonly class PageRenderer
             'renderedContent' => $renderedContent,
             'navigationHtml' => $navigation['navigationHtml'],
             'breadcrumbsHtml' => $navigation['breadcrumbsHtml'],
-            ...$seo->toLayoutData(),
+            ...($seo?->toLayoutData() ?? []),
         ];
 
         $content = $this->views !== null

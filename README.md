@@ -136,3 +136,5 @@ Zoosper Core depends only on native `SessionHandlerInterface`. The `zoosper/sess
 
 ## Starter site
 Run `php bin/zoosper starter:install` for an idempotent minimal Site with published Home and About Pages rendered by the default starter theme.
+
+- `zoosper-seo`: extensible metadata, sitemap and robots orchestration with module-discovered feature contributors.

@@ -9,7 +9,8 @@
         "zoosper/grid": "dev-dev",
         "zoosper/media": "dev-dev",
         "zoosper/site": "dev-dev",
-        "zoosper/theme": "dev-dev"
+        "zoosper/theme": "dev-dev",
+        "zoosper/seo": "dev-dev"
     },
     "autoload": {
         "psr-4": {

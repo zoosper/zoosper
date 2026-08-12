@@ -9,6 +9,9 @@ use Zoosper\Page\Lifecycle\PageReferenceInspector;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Page\Service\PageRevisionService;
 use Zoosper\Page\Console\StarterSiteInstallCommand;
+use Zoosper\Page\Seo\PageSeoContributor;
+use Zoosper\Page\Seo\PageSitemapContributor;
+use Zoosper\Seo\Metadata\SeoMetadataManager;
 
 use Marko\Cache\Contracts\CacheInterface;
 use Zoosper\Core\App\CmsVersion;
@@ -29,7 +32,8 @@ use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Page\Console\PageCreateCommand;
 
 return [
-    PageReferenceInspector::class => static fn (ServiceContainer $services): PageReferenceInspector => new PageReferenceInspector($services->get(PDO::class)),
+    PageSeoContributor::class => static fn (ServiceContainer $services): PageSeoContributor => new PageSeoContributor(),
+    PageSitemapContributor::class => static fn (ServiceContainer $services): PageSitemapContributor => new PageSitemapContributor($services->get(\Zoosper\Page\Repository\PageRepository::class)),    PageReferenceInspector::class => static fn (ServiceContainer $services): PageReferenceInspector => new PageReferenceInspector($services->get(PDO::class)),
     PageLifecycleCoordinator::class => static fn (ServiceContainer $services): PageLifecycleCoordinator => new PageLifecycleCoordinator(
         $services->get(PDO::class),
         $services->get(PageRepository::class),
@@ -54,6 +58,9 @@ return [
             : null,
         $services->has(ViewInterface::class)
             ? $services->get(ViewInterface::class)
+            : null,
+        $services->has(SeoMetadataManager::class)
+            ? $services->get(SeoMetadataManager::class)
             : null,
     ),
     PageController::class => static fn (ServiceContainer $services): PageController => new PageController(

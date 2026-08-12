@@ -51,3 +51,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Sitemap and robots foundation
 - Added public Site-aware `/sitemap.xml` and `/robots.txt` endpoints with correct content types.
 - Sitemap output includes only published Pages, escapes XML and refuses untrusted request-host URL generation.
+
+### Dedicated SEO module extraction
+- Moved metadata values, contributor discovery, sitemap aggregation, robots output and public routes into `zoosper-seo`.
+- Page now declares Page metadata and published Page sitemap contributors through module-owned `config/seo.php`.

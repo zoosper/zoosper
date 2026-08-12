@@ -135,3 +135,6 @@ Zoosper_Page module for Zoosper CMS.
 #### Sitemap and robots
 - Public `GET /sitemap.xml` and `GET /robots.txt` endpoints are Page-module API route declarations resolved from immutable request SiteContext.
 - Sitemap output is Site-scoped, published-only, deterministically ordered and XML escaped. Absolute URLs come only from explicit Page canonicals or a validated Site base URL; request hosts are never trusted for URL construction.
+
+#### SEO contribution
+- Page registers Page metadata and sitemap contributors through `config/seo.php`, implementing contracts owned by `zoosper-seo`. Generic SEO output and public endpoints are not owned by this module.

@@ -30,7 +30,8 @@
         "zoosper/theme": "dev-dev",
         "zoosper/two-factor": "dev-dev",
         "zoosper/url-rewrite": "dev-dev",
-        "zoosper/session": "dev-dev"
+        "zoosper/session": "dev-dev",
+        "zoosper/seo": "dev-dev"
     },
     "require-dev": {
         "icanhazstring/composer-unused": "^0.9.6",
@@ -225,6 +226,13 @@
         {
             "type": "path",
             "url": "./app/zoosper-session",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-seo",
             "options": {
                 "symlink": true
             }

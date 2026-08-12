@@ -1,0 +1,1 @@
+{"name":"zoosper/seo","description":"Extensible SEO metadata, sitemap and robots orchestration for Zoosper CMS.","type":"zoosper-module","license":"MIT","require":{"php":"^8.5","zoosper/core":"dev-dev","zoosper/site":"dev-dev"},"autoload":{"psr-4":{"Zoosper\\Seo\\":"src/"}},"autoload-dev":{"psr-4":{"Zoosper\\Seo\\Tests\\":"tests/"}}}

@@ -1153,3 +1153,8 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - Added Site-scoped published Page discovery, deterministic XML sitemap output and a plain-text robots endpoint.
 - Absolute public URLs require validated Page canonicals or Site base URL; request-host synthesis is intentionally forbidden.
 - Redirect management and Site-level SEO defaults remain following 0.3 slices.
+
+### Phase 10M-10P — dedicated SEO module and contributor discovery (2026-08-12)
+- Corrected SEO ownership by extracting generic metadata, contributor discovery, sitemap and robots orchestration into `zoosper-seo`.
+- Added module-discovered `config/seo.php` contribution so future modules can inject metadata and sitemap resources without SEO importing concrete Page types.
+- Preserved public endpoints and theme layout data; URL rewrite work resumes after this boundary correction.
