@@ -1158,3 +1158,8 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - Corrected SEO ownership by extracting generic metadata, contributor discovery, sitemap and robots orchestration into `zoosper-seo`.
 - Added module-discovered `config/seo.php` contribution so future modules can inject metadata and sitemap resources without SEO importing concrete Page types.
 - Preserved public endpoints and theme layout data; URL rewrite work resumes after this boundary correction.
+
+### Phase 10Q-10T — redirect domain and stateless SEO traffic (2026-08-12)
+- Extended `zoosper-url-rewrite` with redirect validation and Site-scoped persistence foundations.
+- Prevented `/sitemap.xml` and `/robots.txt` from starting application sessions.
+- Frontend resolution, chain diagnostics, and guarded Admin management remain the next URL Rewrite slice.

@@ -55,3 +55,8 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Dedicated SEO module extraction
 - Moved metadata values, contributor discovery, sitemap aggregation, robots output and public routes into `zoosper-seo`.
 - Page now declares Page metadata and published Page sitemap contributors through module-owned `config/seo.php`.
+
+### Redirect and stateless public foundations
+- Added 301/302 redirect validation, reserved-path protection, unsafe-scheme rejection, and direct-loop prevention.
+- Added Site-scoped URL Rewrite listing and save operations.
+- Made sitemap and robots requests stateless before session initialisation.

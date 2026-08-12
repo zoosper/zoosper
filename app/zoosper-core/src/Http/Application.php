@@ -23,7 +23,8 @@ final readonly class Application
 
     public function handle(): void
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
+        $request = Request::fromGlobals();
+        if (!self::isStatelessPublicPath($request->path()) && session_status() !== PHP_SESSION_ACTIVE) {
             session_name((string) env('SESSION_NAME', 'ZOOSPERSESSID'));
             $sessionLifetime = max(300, min(604800, (int) env('SESSION_LIFETIME_SECONDS', 28800)));
             ini_set('session.gc_maxlifetime', (string) $sessionLifetime);
@@ -59,7 +60,6 @@ final readonly class Application
         }
 
         $this->securityHeaders->apply();
-        $request = Request::fromGlobals();
 
         // Phase 1.34a: resolve the site context ONCE per request, from the request
         // (not $_SERVER), and carry it immutably on the request down the stack. When
@@ -91,6 +91,11 @@ final readonly class Application
         }
 
         $response->send();
+    }
+
+    public static function isStatelessPublicPath(string $path): bool
+    {
+        return in_array($path, ['/sitemap.xml', '/robots.txt'], true);
     }
 
     public static function normaliseSameSite(string $value): string

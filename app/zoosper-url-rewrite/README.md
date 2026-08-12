@@ -43,3 +43,8 @@ Zoosper_UrlRewrite module for Zoosper CMS.
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+
+### Redirect management foundation
+- `RedirectPolicy` normalises sources and targets, allows 301/302 only, and rejects unsafe schemes, direct loops, Site-root sources, and reserved application paths.
+- `UrlRewriteRepository` supports deterministic Site-scoped listing and insert/update persistence with branch-specific PDO parameters.
+- Frontend resolution and guarded Admin lifecycle remain the next adoption slice.

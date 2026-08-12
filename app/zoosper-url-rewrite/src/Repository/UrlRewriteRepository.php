@@ -37,6 +37,21 @@ final readonly class UrlRewriteRepository
         return is_array($row) ? $this->hydrate($row) : null;
     }
 
+    /** @return list<UrlRewrite> */
+    public function allForSite(int $siteId): array
+    {
+        $s=$this->pdo->prepare('SELECT * FROM url_rewrites WHERE site_id=:site_id ORDER BY request_path ASC,id ASC');
+        $s->execute(['site_id'=>$siteId]);
+        return array_map(fn(array $row):UrlRewrite=>$this->hydrate($row),$s->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    public function save(?int $id,int $siteId,string $requestPath,string $targetPath,int $redirectType,bool $active=true):int
+    {
+        $now=date('Y-m-d H:i:s');$data=['site_id'=>$siteId,'request_path'=>trim($requestPath,'/'),'target_path'=>$targetPath,'redirect_type'=>$redirectType,'is_active'=>$active?1:0,'updated_at'=>$now];
+        if($id===null){$s=$this->pdo->prepare("INSERT INTO url_rewrites(site_id,request_path,target_path,entity_type,entity_id,redirect_type,is_active,created_at,updated_at) VALUES(:site_id,:request_path,:target_path,'custom',NULL,:redirect_type,:is_active,:created_at,:updated_at)");$s->execute($data+['created_at'=>$now]);return (int)$this->pdo->lastInsertId();}
+        $s=$this->pdo->prepare('UPDATE url_rewrites SET request_path=:request_path,target_path=:target_path,redirect_type=:redirect_type,is_active=:is_active,updated_at=:updated_at WHERE id=:id AND site_id=:site_id');$s->execute($data+['id'=>$id]);return $id;
+    }
+
     /**
      * Hydrate a URL rewrite model from a database row.
      *
