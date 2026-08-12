@@ -73,6 +73,27 @@ final readonly class MediaAssetRepository
         return is_array($row) ? $this->hydrate($row) : null;
     }
 
+    public function changeStatus(int $id, string $status): void
+    {
+        if (!in_array($status, ['active', 'archived'], true)) {
+            throw new \InvalidArgumentException('Unsupported Media status.');
+        }
+        $statement = $this->pdo->prepare('UPDATE media_assets SET status = :status, updated_at = :updated_at WHERE id = :id');
+        $statement->execute(['status' => $status, 'updated_at' => gmdate('Y-m-d H:i:s'), 'id' => $id]);
+        if ($statement->rowCount() !== 1) {
+            throw new \RuntimeException('Media status was not changed.');
+        }
+    }
+
+    public function deletePermanently(int $id): void
+    {
+        $statement = $this->pdo->prepare('DELETE FROM media_assets WHERE id = :id');
+        $statement->execute(['id' => $id]);
+        if ($statement->rowCount() !== 1) {
+            throw new \RuntimeException('Media asset was not deleted.');
+        }
+    }
+
     /** @param array<string, mixed> $row */
     private function hydrate(array $row): MediaAsset
     {

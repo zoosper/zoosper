@@ -12,6 +12,7 @@ use Zoosper\Media\Controller\MediaEditorJsUploadController;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Service\MediaUploadService;
+use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
 
 return [
     MediaAdminController::class => static fn (ServiceContainer $services): MediaAdminController => new MediaAdminController(
@@ -21,6 +22,7 @@ return [
         assets: $services->get(MediaAssetRepository::class),
         uploads: $services->get(MediaUploadService::class),
         adminUrls: $services->get(AdminUrlGenerator::class),
+        lifecycle: $services->get(MediaLifecycleCoordinator::class),
     ),
     MediaEditorJsUploadController::class => static fn (ServiceContainer $services): MediaEditorJsUploadController => new MediaEditorJsUploadController(
         guard: $services->get(SessionGuard::class),

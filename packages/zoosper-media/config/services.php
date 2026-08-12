@@ -9,6 +9,8 @@ use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
 use Zoosper\Media\Processing\MediaProcessingPolicy;
+use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
+use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Service\MediaStorage;
 use Zoosper\Media\Service\MediaStoredFileCleanupService;
@@ -34,4 +36,10 @@ return [
     ),
     EditorJsImageBlockSanitizer::class => static fn (ServiceContainer $services): EditorJsImageBlockSanitizer => new EditorJsImageBlockSanitizer(),
     MediaProcessingPolicy::class => static fn (ServiceContainer $services): MediaProcessingPolicy => new MediaProcessingPolicy(),
+    MediaLifecycleCoordinator::class => static fn (ServiceContainer $services): MediaLifecycleCoordinator => new MediaLifecycleCoordinator(
+        $services->get(PDO::class),
+        $services->get(MediaAssetRepository::class),
+        $services->get(MediaStoredFileCleanupService::class),
+        $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
+    ),
 ];

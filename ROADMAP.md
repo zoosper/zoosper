@@ -1120,3 +1120,6 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - The module requires and adapts `marko/session-file` 0.8.5; the root project requires only `zoosper/session`.
 - Core resolves only native `SessionHandlerInterface`, keeping Marko implementation details outside `zoosper-core`.
 - Session payloads now default to application-owned `var/sessions`, while configured lifetime, Admin idle timeout, CSRF, flash, 2FA, regeneration, and logout semantics remain intact.
+
+### Phase 9IF Media lifecycle truth closure
+Media assets now use POST-only, media.manage, CSRF-protected archive, restore and archived-first permanent deletion boundaries. Metadata deletion is transactional and owned-file cleanup is conservative and audited. Upload derivatives remain disabled by default; LocalCopyMediaProcessor is not image transformation support.

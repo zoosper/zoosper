@@ -14,6 +14,7 @@ use Zoosper\Core\Http\Response;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Service\MediaUploadService;
+use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
 
 /**
  * Admin controller for the media library foundation.
@@ -50,6 +51,7 @@ final readonly class MediaAdminController
         private MediaAssetRepository $assets,
         private MediaUploadService $uploads,
         private ?AdminUrlGenerator $adminUrls = null,
+        private ?MediaLifecycleCoordinator $lifecycle = null,
     ) {
     }
 
@@ -63,6 +65,8 @@ final readonly class MediaAdminController
             [
                 'assets' => $this->assets->latest(),
                 'uploadUrl' => $this->adminUrl('media/upload'),
+                'csrfToken' => $this->csrf->token(),
+                'adminUrl' => fn (string $path): string => $this->adminUrl($path),
             ],
             $user,
             'media',
@@ -98,6 +102,38 @@ final readonly class MediaAdminController
         }
 
         return Response::redirect($this->adminUrl('media'));
+    }
+
+    public function archive(Request $request): Response
+    {
+        return $this->lifecycleOperation($request, 'archive');
+    }
+
+    public function restore(Request $request): Response
+    {
+        return $this->lifecycleOperation($request, 'restore');
+    }
+
+    public function deletePermanently(Request $request): Response
+    {
+        return $this->lifecycleOperation($request, 'delete');
+    }
+
+    private function lifecycleOperation(Request $request, string $operation): Response
+    {
+        $user = $this->currentAdminUser();
+        $id = (int) ($request->routeParam('id') ?? 0);
+        $asset = $id > 0 ? $this->assets->findById($id) : null;
+        if ($asset === null || $this->lifecycle === null) {
+            return Response::redirect($this->adminUrl('media'), 303);
+        }
+        match ($operation) {
+            'archive' => $this->lifecycle->archive($asset, $user->id, $user->email),
+            'restore' => $this->lifecycle->restore($asset, $user->id, $user->email),
+            'delete' => $this->lifecycle->deletePermanently($asset, $user->id, $user->email),
+            default => throw new \LogicException('Unsupported Media lifecycle operation.'),
+        };
+        return Response::redirect($this->adminUrl('media'), 303);
     }
 
     private function uploadErrorResponse(AdminUser $user, array $errors, int $status): Response

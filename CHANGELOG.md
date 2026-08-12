@@ -25,3 +25,6 @@ Known limitation: Psalm remains advisory while the existing baseline is reduced.
 - Added a zero-dependency static documentation website that builds `docs.zoosper.com` directly from canonical repository Markdown.
 
 - Unified Zoosper branding across the documentation site, Admin shell and default frontend theme using one Theme-owned vector mark and explicit public runtime assets.
+
+### Phase 9IF Media lifecycle truth closure
+Media assets now use POST-only, media.manage, CSRF-protected archive, restore and archived-first permanent deletion boundaries. Metadata deletion is transactional and owned-file cleanup is conservative and audited. Upload derivatives remain disabled by default; LocalCopyMediaProcessor is not image transformation support.
