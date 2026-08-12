@@ -40,7 +40,7 @@ final readonly class PageGridDefinition
                 new GridFilter('title','Title'),
                 new GridFilter('slug','Slug'),
                 new GridFilter('status','Status','select',[
-                    ['value'=>'','label'=>'All statuses'],['value'=>'draft','label'=>'Draft'],['value'=>'published','label'=>'Published'],
+                    ['value'=>'','label'=>'All statuses'],['value'=>'draft','label'=>'Draft'],['value'=>'published','label'=>'Published'],['value'=>'archived','label'=>'Archived'],
                 ]),
                 $this->siteFilter?->build()??new GridFilter('site_id','Site'),
             ],

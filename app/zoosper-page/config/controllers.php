@@ -27,6 +27,8 @@ use Zoosper\Page\Admin\PageAdminPreviewResponder;
 use Zoosper\Page\Service\PageRevisionService;
 use Zoosper\Page\Admin\PageRevisionAdminResponder;
 use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
+use Zoosper\Page\Admin\Lifecycle\PageLifecycleAdminResponder;
+use Zoosper\Page\Lifecycle\PageLifecycleCoordinator;
 use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
 use Zoosper\Page\Admin\PageSiteFilterOptions;
 
@@ -180,6 +182,12 @@ return [
             $services->get(CsrfTokenManager::class),
             $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
             $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
+            $services->get(AdminUrlGenerator::class),
+        ),
+        lifecycleResponder: new PageLifecycleAdminResponder(
+            $services->get(PageLifecycleCoordinator::class),
+            $services->get(CsrfTokenManager::class),
+            $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
             $services->get(AdminUrlGenerator::class),
         ),
     ),

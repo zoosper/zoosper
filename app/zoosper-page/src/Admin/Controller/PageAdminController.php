@@ -21,6 +21,7 @@ use Zoosper\Page\Admin\PageAdminGridResponder;
 use Zoosper\Page\Admin\PageAdminPreviewResponder;
 use Zoosper\Page\Admin\PageRevisionAdminResponder;
 use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
+use Zoosper\Page\Admin\Lifecycle\PageLifecycleAdminResponder;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 
@@ -48,6 +49,7 @@ final readonly class PageAdminController
         private ?PagePublicationCoordinator       $publication = null,
         private ?AdminUrlGenerator                 $adminUrls = null,
         private ?PageRevisionAdminResponder         $revisionResponder = null,
+        private ?PageLifecycleAdminResponder        $lifecycleResponder = null,
     )
     {
     }
@@ -148,6 +150,7 @@ final readonly class PageAdminController
 
         $content = $this->renderForm($this->adminUrl('/pages/' . $page->id . '/edit'), $page);
         $content .= $this->revisionResponder?->historyHtml($page) ?? '';
+        $content .= $this->lifecycleResponder?->actionsHtml($page) ?? '';
         return $this->html('Edit page', $content);
     }
 
@@ -219,6 +222,32 @@ final readonly class PageAdminController
         return $this->previewResponder->respond($this->pageFromRequest($request));
     }
 
+    public function archive(Request $request): Response
+    {
+        return $this->lifecycleOperation($request, 'archive');
+    }
+    public function restore(Request $request): Response
+    {
+        return $this->lifecycleOperation($request, 'restore');
+    }
+    public function deletePermanently(Request $request): Response
+    {
+        return $this->lifecycleOperation($request, 'delete');
+    }
+    private function lifecycleOperation(Request $request, string $operation): Response
+    {
+        $actor = $this->currentAdminUser();
+        $page = $this->pageFromRequest($request);
+        if ($page === null || $this->lifecycleResponder === null) {
+            return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
+        }
+        return match ($operation) {
+            'archive' => $this->lifecycleResponder->archive($page, $actor),
+            'restore' => $this->lifecycleResponder->restore($page, $actor),
+            'delete' => $this->lifecycleResponder->delete($page, $actor),
+            default => throw new RuntimeException('Unsupported Page lifecycle operation.'),
+        };
+    }
     public function revisionPreview(Request $request): Response
     {
         $this->currentAdminUser();

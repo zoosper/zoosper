@@ -1063,3 +1063,12 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [x] Declared the migration-owned Page and revision identity columns required for standalone declarative validation and fresh-install schema merging.
 - [x] Added real SQLite lifecycle and reference-blocker coverage.
 - [ ] Next: expose POST-only Admin archive/restore/delete routes and CSP-safe destructive presentation through the existing thin Page controller.
+
+## Phase 9HM — Page lifecycle Admin adoption (2026-08-12)
+- [x] Added POST-only `page.manage` routes for archive, restore, and guarded permanent deletion.
+- [x] Kept the Page controller thin by delegating lifecycle execution and presentation to a Page-owned responder.
+- [x] Added contextual edit-screen forms with central CSRF tokens and a separated destructive action.
+- [x] Added structured flash feedback for status and reference blockers.
+- [x] Added archived Pages to the Grid status filter.
+- [x] Kept permanent delete out of ordinary Grid row actions and removed the need for inline confirmation handlers.
+- [ ] Next: remove stale Page Momentum asset registration and migrate the revision restore confirmation to an explicit CSP-safe interaction.

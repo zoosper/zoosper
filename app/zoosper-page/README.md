@@ -109,3 +109,9 @@ Zoosper_Page module for Zoosper CMS.
 - Permanent deletion requires an archived Page and refuses Menu-item or Page URL-rewrite references.
 - Revision and Page deletion run in one transaction. Declarative schema repeats the migration-owned `pages.id`, `page_revisions.id`, and `page_revisions.page_id` identity columns so the merged schema can validate the `ON DELETE CASCADE` relationship without relying on live-database introspection.
 - HTTP routes and destructive Admin presentation remain a following adoption slice; this phase establishes the tested domain and integrity boundary first.
+
+### HTTP lifecycle adoption
+- The Page edit screen renders contextual Archive, Restore-to-draft, and separated permanent-delete forms.
+- All lifecycle mutations are POST-only, require `page.manage`, and use central CSRF validation.
+- Permanent deletion remains archived-first and reference-guarded by the Page lifecycle domain.
+- Lifecycle presentation contains no inline JavaScript confirmation handlers.
