@@ -54,6 +54,8 @@ use Zoosper\AdminGrid\BulkAction\GridBulkHostBindings;
 use Zoosper\AdminGrid\BulkAction\GridBulkExecutionResultAdapter;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Page\Admin\Controller\PageAdminController;
+use Zoosper\Page\Controller\SitemapRobotsController;
+use Zoosper\Page\Seo\SitemapGenerator;
 use Zoosper\Page\Admin\PageGridDataSource;
 use Zoosper\Page\Admin\PageGridDefinition;
 use Zoosper\Page\Admin\PageGridRepository;
@@ -62,6 +64,11 @@ use Zoosper\Page\Service\PageRenderer;
 use Zoosper\Site\Repository\SiteRepository;
 
 return [
+    SitemapRobotsController::class => static fn (ServiceContainer $services): SitemapRobotsController => new SitemapRobotsController(
+        $services->get(SiteRepository::class),
+        $services->get(PageRepository::class),
+        new SitemapGenerator(),
+    ),
     PageCsvExportController::class => static function (ServiceContainer $services): PageCsvExportController {
         $definition = new PageGridDefinition(
             $services->has(GridColumnRegistry::class) ? $services->get(GridColumnRegistry::class) : null,

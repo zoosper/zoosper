@@ -1148,3 +1148,8 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Menu item update PDO parity hotfix (2026-08-12)
 - Fixed the live Menu item update path after exact-source diagnosis showed an insert-only `created_at` parameter was supplied to update SQL, causing PDO HY093.
 - Added a database-backed update regression before resuming Phase 10E-10H sitemap and robots.
+
+### Phase 10E-10H — sitemap and robots foundation (2026-08-12)
+- Added Site-scoped published Page discovery, deterministic XML sitemap output and a plain-text robots endpoint.
+- Absolute public URLs require validated Page canonicals or Site base URL; request-host synthesis is intentionally forbidden.
+- Redirect management and Site-level SEO defaults remain following 0.3 slices.

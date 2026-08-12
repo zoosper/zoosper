@@ -131,3 +131,7 @@ Zoosper_Page module for Zoosper CMS.
 #### Frontend SEO presentation
 - PageSeoResolver normalises Page metadata into an engine-neutral layout contract. Explicit Page title/description/canonical values take precedence; title falls back to the Page title.
 - Derived canonicals require a valid absolute Site base URL. Non-request previews are `noindex,nofollow`.
+
+#### Sitemap and robots
+- Public `GET /sitemap.xml` and `GET /robots.txt` endpoints are Page-module API route declarations resolved from immutable request SiteContext.
+- Sitemap output is Site-scoped, published-only, deterministically ordered and XML escaped. Absolute URLs come only from explicit Page canonicals or a validated Site base URL; request hosts are never trusted for URL construction.

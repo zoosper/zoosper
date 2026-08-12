@@ -47,3 +47,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Menu item update hotfix
 - Fixed update-only PDO parameters so editing an existing Menu item no longer sends the insert-only `created_at` parameter to the update statement.
 - Added SQLite-backed coverage for Page-linked, top-level, position-zero Menu item updates.
+
+### Sitemap and robots foundation
+- Added public Site-aware `/sitemap.xml` and `/robots.txt` endpoints with correct content types.
+- Sitemap output includes only published Pages, escapes XML and refuses untrusted request-host URL generation.
