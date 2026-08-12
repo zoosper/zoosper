@@ -122,3 +122,8 @@ Zoosper_Page module for Zoosper CMS.
 - Restore forms contain no inline JavaScript confirmation. Operators are instructed to preview before restoring, and the server still captures a safety snapshot.
 - The duplicate Content-section guidance was removed. Editor-specific safety guidance remains owned by the editor component.
 - Visual/HTML source switching and richer inline formatting are intentionally deferred to the dedicated editor roadmap so this usability phase does not invent a second content contract.
+
+### Revision pagination enhancement
+- Revision pagination is progressively enhanced with a same-origin fragment request, so Previous and Next replace only the revision history body.
+- Normal links remain valid fallback navigation when JavaScript or the fragment request is unavailable.
+- The browser URL is updated with `revision_page` without reloading the full Page edit form.

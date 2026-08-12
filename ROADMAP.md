@@ -1080,3 +1080,9 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [x] Removed duplicate Content-section guidance and kept editor-specific messaging in the editor component.
 - [ ] Parked visual/HTML mode switching and richer Editor.js formatting tools for a dedicated editor-contract phase.
 - [ ] Continue reviewer-priority referential-integrity and lifecycle adoption across Site, Menu, Role, Admin User, and Media entities.
+
+## Phase 9HO — asynchronous Page revision pagination (2026-08-12)
+- [x] Added a protected Page revision fragment endpoint under the existing `page.manage` route boundary.
+- [x] Added progressively enhanced Previous/Next requests that replace only the revision table and pager.
+- [x] Preserved ordinary links as a no-JavaScript and request-failure fallback.
+- [x] Updated browser history with `revision_page` without reloading the Page editor.

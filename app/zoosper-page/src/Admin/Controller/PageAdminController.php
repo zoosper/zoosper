@@ -250,6 +250,19 @@ final readonly class PageAdminController
             default => throw new RuntimeException('Unsupported Page lifecycle operation.'),
         };
     }
+    public function revisionHistory(Request $request): Response
+    {
+        $this->currentAdminUser();
+        $page = $this->pageFromRequest($request);
+        $revisionPage = $request->query('revision_page');
+        $revisionPage = $revisionPage !== null && ctype_digit($revisionPage) ? max(1, (int) $revisionPage) : 1;
+        if ($page === null || $this->revisionResponder === null) {
+            return Response::html('Revision history unavailable.', 404);
+        }
+
+        return $this->revisionResponder->historyFragment($page, $revisionPage);
+    }
+
     public function revisionPreview(Request $request): Response
     {
         $this->currentAdminUser();

@@ -33,7 +33,7 @@ it('removes duplicate Content guidance and makes revision history compact and CS
     expect($content)->toContain("description: ''")
         ->not->toContain('The HTML fallback is sanitised and Editor.js JSON is validated on save.')
         ->and($responder)->toContain('private const PAGE_SIZE = 10')
-        ->toContain('<details class="card page-revision-history"')
+        ->toContain('<details id="revision-history" class="card page-revision-history"')
         ->toContain('revision_page=')
         ->not->toContain('onclick=')
         ->not->toContain('confirm(')

@@ -50,14 +50,40 @@ final readonly class PageRevisionAdminResponder
             $rows = '<tr><td colspan="5">No revisions captured yet.</td></tr>';
         }
 
-        return '<details class="card page-revision-history"' . ($total > 0 ? '' : ' open') . '>'
+        return '<details id="revision-history" class="card page-revision-history" data-page-revision-history' . ($total > 0 ? '' : ' open') . '>'
             . '<summary><strong>Revision history</strong><span class="muted">' . $total . ' captured</span></summary>'
-            . '<div class="page-revision-history__body">'
-            . '<p class="muted">Restoring creates a safety snapshot first. Select Restore only after previewing the revision.</p>'
+            . '<div class="page-revision-history__body" data-page-revision-results aria-live="polite">'
+            . $this->historyBody($page, $rows, $currentPage, $pageCount, $total)
+            . '</div></details>';
+    }
+
+    public function historyFragment(Page $page, int $currentPage): Response
+    {
+        $total = $this->revisions->historyCount($page->id);
+        $pageCount = max(1, (int) ceil($total / self::PAGE_SIZE));
+        $currentPage = max(1, min($pageCount, $currentPage));
+        $rows = '';
+        foreach ($this->revisions->historyPage($page->id, $currentPage, self::PAGE_SIZE) as $revision) {
+            $preview = $this->url("pages/{$page->id}/revisions/{$revision->id}/preview");
+            $restore = $this->url("pages/{$page->id}/revisions/{$revision->id}/restore");
+            $rows .= '<tr><td>' . $revision->id . '</td><td>' . $this->e($revision->createdAt)
+                . '</td><td>' . $this->e($revision->title) . '</td><td>' . $this->e($revision->status)
+                . '</td><td><a target="_blank" rel="noopener" href="' . $this->e($preview) . '">Preview</a> '
+                . '<form method="post" action="' . $this->e($restore) . '" class="page-revision-restore-form">'
+                . '<input type="hidden" name="_csrf_token" value="' . $this->e($this->csrf->token()) . '">'
+                . '<button type="submit">Restore</button></form></td></tr>';
+        }
+        if ($rows === '') { $rows = '<tr><td colspan="5">No revisions captured yet.</td></tr>'; }
+
+        return Response::html($this->historyBody($page, $rows, $currentPage, $pageCount, $total));
+    }
+
+    private function historyBody(Page $page, string $rows, int $currentPage, int $pageCount, int $total): string
+    {
+        return '<p class="muted">Restoring creates a safety snapshot first. Select Restore only after previewing the revision.</p>'
             . '<div class="table-scroll"><table><thead><tr><th>ID</th><th>Created</th><th>Title</th><th>Status</th><th>Actions</th></tr></thead><tbody>'
             . $rows . '</tbody></table></div>'
-            . $this->pagination($page, $currentPage, $pageCount, $total)
-            . '</div></details>';
+            . $this->pagination($page, $currentPage, $pageCount, $total);
     }
 
     private function pagination(Page $page, int $currentPage, int $pageCount, int $total): string
@@ -79,7 +105,7 @@ final readonly class PageRevisionAdminResponder
 
     private function editUrl(Page $page, int $revisionPage): string
     {
-        $base = $this->url("pages/{$page->id}/edit");
+        $base = $this->url("pages/{$page->id}/revisions");
         return $base . (str_contains($base, '?') ? '&' : '?') . 'revision_page=' . $revisionPage;
     }
 
