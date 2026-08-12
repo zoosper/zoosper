@@ -89,3 +89,7 @@ Zoosper_Auth module for Zoosper CMS.
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+
+### Referential integrity
+- Admin user-role and role-permission join rows cascade when their owning User, Role, or Permission is removed.
+- Declarative schema now mirrors the migration-owned join-table relationships without changing public repository contracts.

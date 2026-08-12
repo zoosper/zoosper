@@ -79,3 +79,7 @@ Site-scoped navigation, nested menu trees, breadcrumbs and menu API for Zoosper 
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+
+### Referential integrity
+- Menus cascade with their Site. Menu items cascade with their Menu and parent item. Page deletion sets optional `page_id` references to null.
+- These declarative relationships mirror the existing migration semantics and are covered by drift tests.

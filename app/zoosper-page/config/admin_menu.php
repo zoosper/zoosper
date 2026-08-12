@@ -12,11 +12,4 @@ return array (
     'sort_order' => 20,
     'group' => 'Content',
   ),
-  1 => 
-  array (
-    'label' => 'Page momentum',
-    'permission' => 'page.manage',
-    'sort_order' => 95,
-    'description' => 'Visible launch-readiness status for page/admin improvements.',
-  ),
 );

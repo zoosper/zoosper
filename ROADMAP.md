@@ -1086,3 +1086,10 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [x] Added progressively enhanced Previous/Next requests that replace only the revision table and pager.
 - [x] Preserved ordinary links as a no-JavaScript and request-failure fallback.
 - [x] Updated browser history with `revision_page` without reloading the Page editor.
+
+## Phases 9HP-9HR — reviewer closure bulk (2026-08-12)
+- [x] Retired obsolete Page Momentum Admin menu and stylesheet registrations.
+- [x] Added tenant-wide real-registry Admin asset manifest validation.
+- [x] Mirrored migration-owned Site Domain, Menu, Menu Item, Admin User Role, and Admin Role Permission foreign keys in declarative schema.
+- [x] Added drift tests for destructive actions and relationship semantics.
+- [ ] Next: apply shared lifecycle policy adoption only to entities whose current status and reference contracts support it without inventing deletion semantics.

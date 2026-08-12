@@ -73,3 +73,7 @@ Zoosper_Site module for Zoosper CMS.
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+
+### Referential integrity
+- `site_domains.site_id` declaratively mirrors the migration-owned `ON DELETE CASCADE` relationship to `sites.id`.
+- Use `php8.5 bin/zoosper schema:foreign-keys:status` before any production reconciliation.
