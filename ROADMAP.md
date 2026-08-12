@@ -1144,3 +1144,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - Added engine-neutral Page SEO resolution and equivalent escaped PHP/Latte head output for title, description, robots, canonical and Open Graph basics.
 - Explicit absolute Page canonicals take precedence; safe Site-base derivation is available for published request rendering, while previews remain noindex.
 - Sitemap, robots endpoints, redirect management and Site-level SEO defaults remain following 0.3 slices.
+
+### Menu item update PDO parity hotfix (2026-08-12)
+- Fixed the live Menu item update path after exact-source diagnosis showed an insert-only `created_at` parameter was supplied to update SQL, causing PDO HY093.
+- Added a database-backed update regression before resuming Phase 10E-10H sitemap and robots.

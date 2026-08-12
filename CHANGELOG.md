@@ -43,3 +43,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### SEO presentation foundation
 - Added frontend Page metadata resolution with safe canonical policy, preview noindex behaviour, and equivalent PHP/Latte head rendering.
 - Added escaped description, robots, canonical and Open Graph basics to the default theme.
+
+### Menu item update hotfix
+- Fixed update-only PDO parameters so editing an existing Menu item no longer sends the insert-only `created_at` parameter to the update statement.
+- Added SQLite-backed coverage for Page-linked, top-level, position-zero Menu item updates.
