@@ -20,6 +20,7 @@ PHP);
 'lifetime' => $sessionLifetime
 PHP)
         ->toContain("ini_set('session.use_strict_mode', '1')")
+        ->toContain('session_set_save_handler($this->sessionHandler, true)')
         ->toContain("ini_set('session.use_only_cookies', '1')")
         ->toContain("ini_set('session.use_trans_sid', '0')")
         ->toContain("ini_set('session.cookie_httponly', '1')");

@@ -128,3 +128,8 @@ Recent delivered work includes:
 - Password policy, automatic password rehash, production fail-closed secure-session defaults, and the stateful `/api/*` CSRF decision remain open.
 - Grid and Admin Form extension models have not yet been consolidated across every Admin screen.
 - Psalm remains advisory until a baseline and no-new-errors policy are established.
+
+
+### Application-owned sessions
+
+Zoosper Core depends only on native `SessionHandlerInterface`. The `zoosper/session` module currently adapts `marko/session-file` and owns the third-party dependency. Sessions default to application-owned `var/sessions`, configurable through `SESSION_STORAGE_PATH`; no host PHP session-path change is required.

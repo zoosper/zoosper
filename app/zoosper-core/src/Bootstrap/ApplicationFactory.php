@@ -86,6 +86,9 @@ final class ApplicationFactory
         // Load root service providers before controller providers are created.
         (new ServiceProviderManifestLoader($basePath))->load($services);
 
+        $sessionHandler = $services->has(\SessionHandlerInterface::class)
+            ? $services->get(\SessionHandlerInterface::class)
+            : null;
         $controllers = (new ControllerProviderLoader($modules, $services))->load();
 
         // Phase 1.27: inject ErrorHandler so the router logs uncaught exceptions.
@@ -153,6 +156,7 @@ final class ApplicationFactory
             new SecurityHeaders($config->array('security.headers'), $config->array('security.csp'), $config->array('security.hsts')),
             $services->get(\Zoosper\Core\Site\SiteContextResolver::class),
             $errorHandler,
+            $sessionHandler,
         );
     }
 }

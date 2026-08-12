@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3341b0f3c30cec67812d5d073c3eb148",
+    "content-hash": "1f10a61ee3539e37a21a0a97cd9fdd11",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -702,6 +702,92 @@
             "time": "2026-06-12T19:00:11+00:00"
         },
         {
+            "name": "marko/session",
+            "version": "0.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-session.git",
+                "reference": "198e9e098a47a990568b20c1b2508bc2c234071c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-session/zipball/198e9e098a47a990568b20c1b2508bc2c234071c",
+                "reference": "198e9e098a47a990568b20c1b2508bc2c234071c",
+                "shasum": ""
+            },
+            "require": {
+                "marko/config": "self.version",
+                "marko/core": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "marko/testing": "self.version",
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Session\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Session interfaces and infrastructure for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-session/tree/0.8.5"
+            },
+            "time": "2026-07-26T15:19:30+00:00"
+        },
+        {
+            "name": "marko/session-file",
+            "version": "0.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-session-file.git",
+                "reference": "72f6644ce8d828f258079673da630ae61e21df79"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-session-file/zipball/72f6644ce8d828f258079673da630ae61e21df79",
+                "reference": "72f6644ce8d828f258079673da630ae61e21df79",
+                "shasum": ""
+            },
+            "require": {
+                "marko/session": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "marko/testing": "self.version"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Session\\File\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "File-based session driver for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-session-file/tree/0.8.5"
+            },
+            "time": "2026-07-26T15:19:30+00:00"
+        },
+        {
             "name": "marko/view",
             "version": "0.8.5",
             "source": {
@@ -1344,6 +1430,39 @@
                 "MIT"
             ],
             "description": "Zoosper_Page module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/session",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-session",
+                "reference": "73936639c132a054d37522907210802f38996f53"
+            },
+            "require": {
+                "marko/session-file": "0.8.5",
+                "php": "^8.5",
+                "zoosper/core": "dev-dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Session\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper-owned adapter for swappable session infrastructure.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -8563,6 +8682,7 @@
         "zoosper/media": 20,
         "zoosper/menu": 20,
         "zoosper/page": 20,
+        "zoosper/session": 20,
         "zoosper/settings": 20,
         "zoosper/site": 20,
         "zoosper/store-orders": 20,

@@ -1,0 +1,21 @@
+{
+    "name": "zoosper/session",
+    "description": "Zoosper-owned adapter for swappable session infrastructure.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "marko/session-file": "0.8.5",
+        "zoosper/core": "dev-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\Session\\": "src/"
+        }
+    },
+    "extra": {
+        "marko": {
+            "module": true
+        }
+    }
+}

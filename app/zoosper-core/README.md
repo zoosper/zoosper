@@ -100,3 +100,8 @@ Foreign-key reconciliation is read-only by default: live constraints are inspect
 ## Foreign-key operations
 
 Use `php bin/zoosper schema:foreign-keys:status` before any apply. Existing-table application is explicit, MySQL-only, confirmation-gated, snapshot-recorded, and never part of ordinary migration. SQLite rebuilds remain manual migrations.
+
+
+### Application-owned sessions
+
+Zoosper Core depends only on native `SessionHandlerInterface`. The `zoosper/session` module currently adapts `marko/session-file` and owns the third-party dependency. Sessions default to application-owned `var/sessions`, configurable through `SESSION_STORAGE_PATH`; no host PHP session-path change is required.

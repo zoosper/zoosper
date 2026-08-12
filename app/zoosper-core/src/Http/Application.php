@@ -17,6 +17,7 @@ final readonly class Application
         private SecurityHeaders $securityHeaders,
         private ?SiteContextResolver $siteResolver = null,
         private ?ErrorHandler $errorHandler = null,
+        private ?\SessionHandlerInterface $sessionHandler = null,
     ) {
     }
 
@@ -30,6 +31,9 @@ final readonly class Application
             ini_set('session.use_only_cookies', '1');
             ini_set('session.use_trans_sid', '0');
             ini_set('session.cookie_httponly', '1');
+            if ($this->sessionHandler !== null) {
+                session_set_save_handler($this->sessionHandler, true);
+            }
 
             $sameSite = self::normaliseSameSite((string) env('SESSION_SAMESITE', 'Lax'));
             $secure = filter_var(env('SESSION_SECURE', self::requestIsHttps()), FILTER_VALIDATE_BOOLEAN);

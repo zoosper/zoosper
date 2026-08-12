@@ -1113,3 +1113,10 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - Added POST-only, permission-gated, centrally CSRF-protected identity lifecycle routes and contextual Admin actions.
 - Adopted the existing canonical Admin password policy through configuration-backed HTTP and `admin:create` wiring, and verified the already-present successful-login hash rehash support.
 - Kept permanent Admin User deletion unavailable so identity, audit, login-history, and ownership attribution remain intact.
+
+
+### Phase 9IE — Zoosper Session adapter with Marko file storage (2026-08-12)
+- Added the native `zoosper/session` module as the ownership and replacement boundary for third-party session infrastructure.
+- The module requires and adapts `marko/session-file` 0.8.5; the root project requires only `zoosper/session`.
+- Core resolves only native `SessionHandlerInterface`, keeping Marko implementation details outside `zoosper-core`.
+- Session payloads now default to application-owned `var/sessions`, while configured lifetime, Admin idle timeout, CSRF, flash, 2FA, regeneration, and logout semantics remain intact.
