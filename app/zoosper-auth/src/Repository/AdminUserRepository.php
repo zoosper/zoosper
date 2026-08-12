@@ -192,6 +192,19 @@ final readonly class AdminUserRepository
     }
 
     /** @param array<string, mixed> $row */
+
+    public function updateStatus(int $id, string $status): void
+    {
+        if (!in_array($status, ['active', 'inactive'], true)) {
+            throw new \InvalidArgumentException('Unsupported Admin User status.');
+        }
+        $statement = $this->pdo->prepare('UPDATE admin_users SET status = :status, updated_at = :updated_at WHERE id = :id');
+        $statement->execute(['id' => $id, 'status' => $status, 'updated_at' => gmdate('Y-m-d H:i:s')]);
+        if ($statement->rowCount() !== 1) {
+            throw new \RuntimeException('Admin User status update did not affect exactly one row.');
+        }
+    }
+
     private function hydrate(array $row): AdminUser
     {
         return new AdminUser(

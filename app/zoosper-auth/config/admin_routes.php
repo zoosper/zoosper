@@ -17,4 +17,8 @@ return [
     ['method' => 'POST', 'path' => '/admin/roles/create', 'controller' => RoleAdminController::class, 'action' => 'create', 'permission' => 'role.manage'],
     ['method' => 'GET', 'path' => '/admin/roles/edit', 'controller' => RoleAdminController::class, 'action' => 'editForm', 'permission' => 'role.manage'],
     ['method' => 'POST', 'path' => '/admin/roles/edit', 'controller' => RoleAdminController::class, 'action' => 'update', 'permission' => 'role.manage'],
+
+    ['method' => 'POST', 'path' => '/admin/users/{id:\d+}/disable', 'controller' => UserAdminController::class, 'action' => 'disable', 'permission' => 'user.manage'],
+    ['method' => 'POST', 'path' => '/admin/users/{id:\d+}/restore', 'controller' => UserAdminController::class, 'action' => 'restore', 'permission' => 'user.manage'],
+    ['method' => 'POST', 'path' => '/admin/roles/{id:\d+}/delete', 'controller' => RoleAdminController::class, 'action' => 'deletePermanently', 'permission' => 'role.manage'],
 ];

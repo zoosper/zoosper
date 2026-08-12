@@ -27,4 +27,6 @@ return [
     'base_path' => $basePath === '/' ? '/admin' : $basePath,
     // Seconds of inactivity before authenticated or pending-2FA state is cleared. 0 disables expiry.
     'session_idle_timeout' => $idleTimeout,
+    'password_minimum_length' => max(8, (int) $env('ADMIN_PASSWORD_MINIMUM_LENGTH', 12)),
+    'password_minimum_character_classes' => max(1, min(4, (int) $env('ADMIN_PASSWORD_MINIMUM_CHARACTER_CLASSES', 2))),
 ];

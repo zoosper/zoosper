@@ -34,3 +34,5 @@
     <button type="submit">Save role</button>
     <a href="<?= $escape($backUrl) ?>">Back</a>
 </form>
+
+<?php if (!empty($lifecycleHtml)): ?><?= $lifecycleHtml ?><?php endif; ?>

@@ -6,6 +6,7 @@ namespace Zoosper\Auth\Console;
 
 use RuntimeException;
 use Zoosper\Auth\Repository\AdminUserRepository;
+use Zoosper\Auth\Security\PasswordPolicy;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Core\Console\ConsoleCommandInterface;
 use Zoosper\Core\Console\ConsoleOptions;
@@ -25,6 +26,7 @@ final readonly class AdminCreateCommand implements ConsoleCommandInterface
     public function __construct(
         private AdminUserRepository $users,
         private PasswordHasher $hasher,
+        private ?PasswordPolicy $passwordPolicy = null,
     ) {
     }
 
@@ -47,6 +49,13 @@ final readonly class AdminCreateCommand implements ConsoleCommandInterface
             $password = ConsoleOptions::required($options, 'password');
         } catch (RuntimeException $exception) {
             $output->errorln($exception->getMessage());
+            return 1;
+        }
+
+        $policy = $this->passwordPolicy ?? new PasswordPolicy();
+        $violations = $policy->violations($password);
+        if ($violations !== []) {
+            $output->errorln($violations[0]);
             return 1;
         }
 

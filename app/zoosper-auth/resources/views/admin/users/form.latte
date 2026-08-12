@@ -27,3 +27,5 @@
     {/if}
     <div class="toolbar"><button type="submit">Save user</button><a class="button secondary" href="{$backUrl}">Back</a></div>
 </form>
+
+{if isset($lifecycleHtml) && $lifecycleHtml !== ''}{$lifecycleHtml|noescape}{/if}

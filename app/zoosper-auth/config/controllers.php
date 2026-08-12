@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Zoosper\Auth\Admin\Lifecycle\RoleLifecycleAdminResponder;
+use Zoosper\Auth\Admin\Lifecycle\AdminUserLifecycleAdminResponder;
 use Zoosper\Auth\Admin\Grid\RoleGridIndex;
 
 use Zoosper\Auth\Admin\Grid\AdminUserGridIndex;
@@ -30,6 +32,7 @@ use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\PasswordHasher;
+use Zoosper\Auth\Security\PasswordPolicy;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
@@ -49,6 +52,9 @@ return [
         saveLifecycle: $services->get(EntitySaveLifecycleRunner::class),
         gridIndex: $services->get(AdminUserGridIndex::class),
         adminUrls: $services->get(AdminUrlGenerator::class),
+        passwordPolicy: $services->get(PasswordPolicy::class),
+
+        lifecycle: new AdminUserLifecycleAdminResponder($services->get(\Zoosper\Auth\Lifecycle\AdminUserLifecycleCoordinator::class), $services->get(\Zoosper\Auth\Service\CsrfTokenManager::class), $services->has(\Zoosper\Core\Message\FlashMessageStoreInterface::class) ? $services->get(\Zoosper\Core\Message\FlashMessageStoreInterface::class) : null, $services->has(\Zoosper\Core\Url\AdminUrlGenerator::class) ? $services->get(\Zoosper\Core\Url\AdminUrlGenerator::class) : null),
     ),
     RoleAdminController::class => static fn (ServiceContainer $services): RoleAdminController => new RoleAdminController(
         $services->get(SessionGuard::class),
@@ -60,5 +66,7 @@ return [
         $services->get(ConfigRepository::class),
         gridIndex: $services->get(RoleGridIndex::class),
         adminUrls: $services->get(AdminUrlGenerator::class),
+
+        lifecycle: new RoleLifecycleAdminResponder($services->get(\Zoosper\Auth\Lifecycle\RoleLifecycleCoordinator::class), $services->get(\Zoosper\Auth\Service\CsrfTokenManager::class), $services->has(\Zoosper\Core\Message\FlashMessageStoreInterface::class) ? $services->get(\Zoosper\Core\Message\FlashMessageStoreInterface::class) : null, $services->has(\Zoosper\Core\Url\AdminUrlGenerator::class) ? $services->get(\Zoosper\Core\Url\AdminUrlGenerator::class) : null),
     ),
 ];

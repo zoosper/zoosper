@@ -93,3 +93,11 @@ Zoosper_Auth module for Zoosper CMS.
 ### Referential integrity
 - Admin user-role and role-permission join rows cascade when their owning User, Role, or Permission is removed.
 - Declarative schema now mirrors the migration-owned join-table relationships without changing public repository contracts.
+
+### Identity lifecycle and password security
+
+- Admin Users use reversible `active` and `inactive` states. The current account and the last active `super_admin` are protected from disablement.
+- Admin User records are retained so audit/login history and ownership references remain attributable.
+- Custom Roles may be permanently deleted only when unassigned; `super_admin` remains protected.
+- Identity lifecycle mutations are POST-only, centrally CSRF-protected, and permission-gated with `user.manage` or `role.manage`.
+- Newly supplied passwords use the configured canonical Admin password policy across HTTP and `admin:create`. The already-present successful-login `password_needs_rehash()` flow was verified and remains covered without forcing a reset.

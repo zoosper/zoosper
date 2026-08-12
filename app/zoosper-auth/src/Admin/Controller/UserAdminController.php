@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Zoosper\Auth\Admin\Controller;
+use Zoosper\Auth\Admin\Lifecycle\AdminUserLifecycleAdminResponder;
 
 use Zoosper\Auth\Admin\Grid\AuthGridQueryState;
 
@@ -91,6 +92,7 @@ final readonly class UserAdminController
         private ?PasswordPolicy $passwordPolicy = null,
         private ?AdminUserGridIndex $gridIndex = null,
         private ?AdminUrlGenerator $adminUrls = null,
+        private ?AdminUserLifecycleAdminResponder $lifecycle = null,
     ) {
     }
 
@@ -265,6 +267,26 @@ final readonly class UserAdminController
      *
      * PCI-aware: never reads, displays or logs secrets, TOTP data or tokens.
      */
+    public function disable(\Zoosper\Core\Http\Request $request): \Zoosper\Core\Http\Response
+    {
+        return $this->lifecycleOperation($request, 'disable');
+    }
+
+    public function restore(\Zoosper\Core\Http\Request $request): \Zoosper\Core\Http\Response
+    {
+        return $this->lifecycleOperation($request, 'restore');
+    }
+
+    private function lifecycleOperation(\Zoosper\Core\Http\Request $request, string $operation): \Zoosper\Core\Http\Response
+    {
+        $actor = $this->guard->user();
+        $id = (int) ($request->routeParam('id') ?? $request->query('id') ?? 0);
+        $target = $this->users->findById($id);
+        if ($actor === null || $target === null || $this->lifecycle === null) {
+            return \Zoosper\Core\Http\Response::redirect($this->adminUrl('users'), 303);
+        }
+        return $operation === 'restore' ? $this->lifecycle->restore($target, $actor) : $this->lifecycle->disable($target, $actor);
+    }
     private function resetTwoFactor(AdminUser $targetUser, AdminUser $actor): Response
     {
         if ($this->twoFactorReset === null) {
@@ -452,6 +474,7 @@ final readonly class UserAdminController
         $viewModel = [
             'action' => $action,
             'csrfToken' => $this->csrf->token(),
+            'lifecycleHtml' => $this->lifecycle?->actionsHtml($user, $actor) ?? '',
             'name' => (string) ($submitted['name'] ?? $user?->name ?? ''),
             'email' => (string) ($submitted['email'] ?? $user?->email ?? ''),
             'status' => (string) ($submitted['status'] ?? $user?->status ?? 'active'),

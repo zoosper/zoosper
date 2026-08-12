@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Zoosper\Auth\Admin\Controller;
+use Zoosper\Auth\Admin\Lifecycle\RoleLifecycleAdminResponder;
 
 use Zoosper\Auth\Admin\Grid\AuthGridQueryState;
 
@@ -61,6 +62,7 @@ final readonly class RoleAdminController
         private ?ConfigRepository $config = null,
         private ?RoleGridIndex $gridIndex = null,
         private ?AdminUrlGenerator $adminUrls = null,
+        private ?RoleLifecycleAdminResponder $lifecycle = null,
     ) {
     }
 
@@ -137,6 +139,16 @@ final readonly class RoleAdminController
     /**
      * Return the authenticated admin user after the middleware permission gate.
      */
+    public function deletePermanently(\Zoosper\Core\Http\Request $request): \Zoosper\Core\Http\Response
+    {
+        $actor = $this->guard->user();
+        $id = (int) ($request->routeParam('id') ?? $request->query('id') ?? 0);
+        $role = $this->roles->findById($id);
+        if ($actor === null || $role === null || $this->lifecycle === null) {
+            return \Zoosper\Core\Http\Response::redirect($this->adminUrl('roles'), 303);
+        }
+        return $this->lifecycle->delete($id, (string) ($role['code'] ?? ''), $actor);
+    }
     private function currentAdminUser(): AdminUser
     {
         $user = $this->guard->user();
@@ -168,6 +180,7 @@ final readonly class RoleAdminController
         return $this->renderRoleView('form.php', [
             'action' => $action,
             'csrfToken' => $this->csrf->token(),
+            'lifecycleHtml' => $this->lifecycle?->actionsHtml($id, (string) ($role['code'] ?? '')) ?? '',
             'code' => (string) ($submitted['code'] ?? $role['code'] ?? ''),
             'label' => (string) ($submitted['label'] ?? $role['label'] ?? ''),
             'error' => $error,

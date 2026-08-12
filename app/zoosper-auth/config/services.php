@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Zoosper\Auth\Lifecycle\RoleLifecycleCoordinator;
+use Zoosper\Auth\Lifecycle\AdminUserLifecycleCoordinator;
+use Zoosper\Auth\Security\PasswordPolicy;
 use Zoosper\Auth\Console\AdminCreateCommand;
 use Zoosper\Auth\Http\AuthenticationMiddleware;
 use Zoosper\Auth\Http\CsrfMiddleware;
@@ -54,5 +57,13 @@ return [
     AdminCreateCommand::class => static fn (ServiceContainer $services): AdminCreateCommand => new AdminCreateCommand(
         $services->get(AdminUserRepository::class),
         $services->get(PasswordHasher::class),
+        $services->get(PasswordPolicy::class),
     ),
+
+    PasswordPolicy::class => static fn ($services): PasswordPolicy => new PasswordPolicy(
+        minLength: (int) $services->get(\Zoosper\Core\Config\ConfigRepository::class)->get('admin.password_minimum_length', 12),
+        minCharacterClasses: (int) $services->get(\Zoosper\Core\Config\ConfigRepository::class)->get('admin.password_minimum_character_classes', 2),
+    ),
+    AdminUserLifecycleCoordinator::class => static fn($services): AdminUserLifecycleCoordinator => new AdminUserLifecycleCoordinator($services->get(\PDO::class), $services->get(\Zoosper\Auth\Repository\AdminUserRepository::class), $services->has(\Zoosper\Core\Audit\AuditLoggerInterface::class) ? $services->get(\Zoosper\Core\Audit\AuditLoggerInterface::class) : null),
+    RoleLifecycleCoordinator::class => static fn($services): RoleLifecycleCoordinator => new RoleLifecycleCoordinator($services->get(\PDO::class), $services->has(\Zoosper\Core\Audit\AuditLoggerInterface::class) ? $services->get(\Zoosper\Core\Audit\AuditLoggerInterface::class) : null),
 ];

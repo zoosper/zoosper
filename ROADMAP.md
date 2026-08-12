@@ -1106,3 +1106,10 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [x] Replaced direct whole-Menu deletion with inactive-first, empty-Menu permanent deletion.
 - [x] Hardened Menu item deletion against cross-Menu and parent-cascade removal.
 - [x] Added contextual CSP-safe lifecycle actions and a compact native disclosure workspace.
+
+### Phases 9IA-9ID — Admin identity lifecycle and password security (2026-08-12)
+- Added reversible Admin User inactive/restore lifecycle, protecting the current account and the last active super administrator.
+- Added guarded deletion for unassigned custom Roles while protecting `super_admin`.
+- Added POST-only, permission-gated, centrally CSRF-protected identity lifecycle routes and contextual Admin actions.
+- Adopted the existing canonical Admin password policy through configuration-backed HTTP and `admin:create` wiring, and verified the already-present successful-login hash rehash support.
+- Kept permanent Admin User deletion unavailable so identity, audit, login-history, and ownership attribution remain intact.
