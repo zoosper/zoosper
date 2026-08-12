@@ -28,6 +28,12 @@ final readonly class ReleaseCheck
             'settings:js' => 'app/zoosper-settings/resources/assets/js/settings-workspace.js',
             'admin:css' => 'public/assets/admin/css/admin.css',
             'env-example' => '.env.example',
+            'starter-theme' => 'themes/default/theme.php',
+            'starter-layout' => 'themes/default/templates/layout.latte',
+            'starter-page-view' => 'themes/default/templates/modules/zoosper-page/page/view.latte',
+            'starter-theme-css' => 'themes/default/assets/css/app.css',
+            'starter-command' => 'app/zoosper-page/src/Console/StarterSiteInstallCommand.php',
+            'session-settings' => 'app/zoosper-session/config/settings/session.php',
         ] as $name => $relative) {
             $results[] = new ReleaseCheckResult($name, is_file($this->basePath . '/' . $relative), $relative);
         }

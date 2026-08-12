@@ -1123,3 +1123,9 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 
 ### Phase 9IF Media lifecycle truth closure
 Media assets now use POST-only, media.manage, CSRF-protected archive, restore and archived-first permanent deletion boundaries. Metadata deletion is transactional and owned-file cleanup is conservative and audited. Upload derivatives remain disabled by default; LocalCopyMediaProcessor is not image transformation support.
+
+### Phase 9IG-9IJ — starter experience and alpha readiness (2026-08-12)
+- Added an idempotent `starter:install` command that retains existing content and creates only a missing Site plus published Home/About Pages.
+- Confirmed the existing default theme as the 0.2 starter-theme foundation.
+- Expanded release diagnostics to require starter-theme assets, the starter command, and application-owned session settings.
+- Release identity remains `0.2.0-alpha.1-dev` until final rehearsal and manual browser evidence are complete.

@@ -133,3 +133,6 @@ Recent delivered work includes:
 ### Application-owned sessions
 
 Zoosper Core depends only on native `SessionHandlerInterface`. The `zoosper/session` module currently adapts `marko/session-file` and owns the third-party dependency. Sessions default to application-owned `var/sessions`, configurable through `SESSION_STORAGE_PATH`; no host PHP session-path change is required.
+
+## Starter site
+Run `php bin/zoosper starter:install` for an idempotent minimal Site with published Home and About Pages rendered by the default starter theme.

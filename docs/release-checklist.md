@@ -11,3 +11,8 @@
 - Authenticated Admin smoke journey
 - Database and Media rollback points
 - Annotated immutable release tag
+
+## 0.2 starter experience
+- Run `php bin/zoosper starter:install` twice and verify the second run retains the Site and Pages.
+- Verify `/` and `/about` render through the default starter theme.
+- Verify the application-owned session path and starter-theme files pass `release:check`.

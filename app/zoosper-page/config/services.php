@@ -8,6 +8,7 @@ use Zoosper\Page\Lifecycle\PageLifecycleCoordinator;
 use Zoosper\Page\Lifecycle\PageReferenceInspector;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Page\Service\PageRevisionService;
+use Zoosper\Page\Console\StarterSiteInstallCommand;
 
 use Marko\Cache\Contracts\CacheInterface;
 use Zoosper\Core\App\CmsVersion;
@@ -63,6 +64,10 @@ return [
     PageCreateCommand::class => static fn (ServiceContainer $services): PageCreateCommand => new PageCreateCommand(
         $services->get(SiteRepository::class),
         $services->get(\Zoosper\Page\Repository\PageRepository::class), // use however PageRepository is already registered/imported in this file
+    ),
+    StarterSiteInstallCommand::class => static fn (ServiceContainer $services): StarterSiteInstallCommand => new StarterSiteInstallCommand(
+        $services->get(SiteRepository::class),
+        $services->get(\Zoosper\Page\Repository\PageRepository::class),
     ),
 
     // Phase 1.93: register the page module as the frontend fallback handler so

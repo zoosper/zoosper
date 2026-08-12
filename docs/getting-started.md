@@ -15,3 +15,6 @@ Zoosper requires PHP 8.5 or newer, Composer 2, PDO and a supported database driv
 7. Run `php bin/zoosper release:check`.
 
 For a disposable verification installation, run `composer fresh-install:smoke`. This command uses a temporary SQLite database and does not modify the configured project database.
+
+## Starter content
+After migrations and Site setup, run `php bin/zoosper starter:install`. The command creates only a missing Site and missing published Home/About Pages. Existing records are retained, so rerunning it is safe.

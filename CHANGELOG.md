@@ -28,3 +28,7 @@ Known limitation: Psalm remains advisory while the existing baseline is reduced.
 
 ### Phase 9IF Media lifecycle truth closure
 Media assets now use POST-only, media.manage, CSRF-protected archive, restore and archived-first permanent deletion boundaries. Metadata deletion is transactional and owned-file cleanup is conservative and audited. Upload derivatives remain disabled by default; LocalCopyMediaProcessor is not image transformation support.
+
+### Starter experience and release readiness
+- Added safe repeatable starter Site and Page installation.
+- Added starter-theme and application-owned session checks to release diagnostics.
