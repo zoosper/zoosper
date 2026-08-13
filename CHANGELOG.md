@@ -60,3 +60,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - Added 301/302 redirect validation, reserved-path protection, unsafe-scheme rejection, and direct-loop prevention.
 - Added Site-scoped URL Rewrite listing and save operations.
 - Made sitemap and robots requests stateless before session initialisation.
+
+### URL Rewrite frontend adoption
+- Added module-discovered service decorators and URL Rewrite fallback composition ahead of Page fallback.
+- Added Site-scoped redirect cycle and maximum-depth diagnostics.

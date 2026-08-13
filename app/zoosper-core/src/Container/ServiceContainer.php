@@ -39,6 +39,21 @@ final class ServiceContainer
         $this->factories[$id] = $factory;
     }
 
+    /** @param callable(self, object): object $decorator */
+    public function decorate(string $id, callable $decorator): void
+    {
+        $previousService = $this->services[$id] ?? null;
+        $previousFactory = $this->factories[$id] ?? null;
+        if ($previousService === null && $previousFactory === null) {
+            throw new \RuntimeException('Cannot decorate unregistered service: '.$id);
+        }
+        unset($this->services[$id]);
+        $this->factories[$id] = static function (self $services) use ($decorator, $previousService, $previousFactory): object {
+            $inner = $previousService ?? $previousFactory($services);
+            return $decorator($services, $inner);
+        };
+    }
+
     public function alias(string $id, string $targetId): void
     {
         $this->factory($id, static fn (self $services): object => $services->get($targetId));

@@ -48,3 +48,7 @@ Zoosper_UrlRewrite module for Zoosper CMS.
 - `RedirectPolicy` normalises sources and targets, allows 301/302 only, and rejects unsafe schemes, direct loops, Site-root sources, and reserved application paths.
 - `UrlRewriteRepository` supports deterministic Site-scoped listing and insert/update persistence with branch-specific PDO parameters.
 - Frontend resolution and guarded Admin lifecycle remain the next adoption slice.
+
+#### Frontend adoption and diagnostics
+- `UrlRewriteFallbackHandler` decorates the existing fallback after all module services load; explicit routes remain higher priority and Page has no URL Rewrite dependency.
+- `RedirectChainInspector` detects Site-scoped cycles and excessive chains. External-target permission and audit policy must be settled before Admin CRUD ships.

@@ -77,5 +77,16 @@ final readonly class ServiceProviderLoader
                 });
             }
         }
+
+        foreach ($this->modules->enabledModules() as $module) {
+            $file = $module->configPath('service_decorators.php');
+            if (!is_file($file)) continue;
+            $decorators = require $file;
+            if (!is_array($decorators)) throw new ZoosperException(message: 'Service decorators must return an array.', context: $file);
+            foreach ($decorators as $id => $decorator) {
+                if (!is_string($id) || !is_callable($decorator)) throw new ZoosperException(message: 'Invalid service decorator declaration.', context: $file);
+                $this->services->decorate($id, $decorator);
+            }
+        }
     }
 }

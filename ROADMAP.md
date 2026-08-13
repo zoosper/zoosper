@@ -1163,3 +1163,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - Extended `zoosper-url-rewrite` with redirect validation and Site-scoped persistence foundations.
 - Prevented `/sitemap.xml` and `/robots.txt` from starting application sessions.
 - Frontend resolution, chain diagnostics, and guarded Admin management remain the next URL Rewrite slice.
+
+### Phase 10U-10V — URL Rewrite frontend adoption and chain diagnostics (2026-08-13)
+- Added a generic module-discovered service decorator stage, then used it to place Site-scoped URL Rewrite resolution ahead of the existing cached Page fallback without Page importing URL Rewrite.
+- Added deterministic redirect cycle and maximum-depth diagnostics. Guarded Admin management remains pending permission and audit-policy closure.
