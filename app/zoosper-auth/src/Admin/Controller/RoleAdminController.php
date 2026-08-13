@@ -180,7 +180,9 @@ final readonly class RoleAdminController
         return $this->renderRoleView('form.php', [
             'action' => $action,
             'csrfToken' => $this->csrf->token(),
-            'lifecycleHtml' => $this->lifecycle?->actionsHtml($id, (string) ($role['code'] ?? '')) ?? '',
+            'lifecycleHtml' => $roleId !== null && $this->lifecycle !== null
+                ? $this->lifecycle->actionsHtml($roleId, (string) ($role['code'] ?? ''))
+                : '',
             'code' => (string) ($submitted['code'] ?? $role['code'] ?? ''),
             'label' => (string) ($submitted['label'] ?? $role['label'] ?? ''),
             'error' => $error,
