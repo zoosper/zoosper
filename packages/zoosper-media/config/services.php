@@ -9,6 +9,10 @@ use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
 use Zoosper\Media\Processing\MediaProcessingPolicy;
+use Zoosper\Media\Processing\MediaProcessorInterface;
+use Zoosper\Media\Processing\GdMediaProcessor;
+use Zoosper\Media\Processing\MediaUploadDerivativeDispatcher;
+use Zoosper\Media\Processing\MediaUploadDerivativePolicy;
 use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Media\Repository\MediaAssetRepository;
@@ -32,6 +36,7 @@ return [
         basePath: dirname(__DIR__, 3),
         errorHandler: $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
         cleanup: $services->get(MediaStoredFileCleanupService::class),
+        derivatives: $services->get(MediaUploadDerivativeDispatcher::class),
     ),
     EditorJsImageUploadResponseFactory::class => static fn (ServiceContainer $services): EditorJsImageUploadResponseFactory => new EditorJsImageUploadResponseFactory(),
     EditorJsImageToolConfig::class => static fn (ServiceContainer $services): EditorJsImageToolConfig => new EditorJsImageToolConfig(
@@ -39,6 +44,16 @@ return [
     ),
     EditorJsImageBlockSanitizer::class => static fn (ServiceContainer $services): EditorJsImageBlockSanitizer => new EditorJsImageBlockSanitizer(),
     MediaProcessingPolicy::class => static fn (ServiceContainer $services): MediaProcessingPolicy => new MediaProcessingPolicy(),
+    MediaProcessorInterface::class => static fn (ServiceContainer $services): MediaProcessorInterface => new GdMediaProcessor(
+        dirname(__DIR__, 3),
+        $services->get(MediaProcessingPolicy::class),
+    ),
+    MediaUploadDerivativePolicy::class => static fn (ServiceContainer $services): MediaUploadDerivativePolicy => new MediaUploadDerivativePolicy(true),
+    MediaUploadDerivativeDispatcher::class => static fn (ServiceContainer $services): MediaUploadDerivativeDispatcher => new MediaUploadDerivativeDispatcher(
+        $services->get(MediaProcessorInterface::class),
+        $services->get(MediaUploadDerivativePolicy::class),
+        $services->get(MediaProcessingPolicy::class)->defaultPlan(),
+    ),
     MediaLifecycleCoordinator::class => static fn (ServiceContainer $services): MediaLifecycleCoordinator => new MediaLifecycleCoordinator(
         $services->get(PDO::class),
         $services->get(MediaAssetRepository::class),

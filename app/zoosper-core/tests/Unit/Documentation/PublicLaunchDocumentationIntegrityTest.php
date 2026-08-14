@@ -35,7 +35,7 @@ it('records the current review priorities and does not overclaim media derivativ
         ->toContain('Last updated: 2026-08-11')
         ->toContain('External review response and public-launch priorities (2026-08-11)')
         ->toContain('Duplicate MediaUploadService construction is resolved')
-        ->toContain('derivative processing remains open and unwired')
+        ->toContain('Derivative database persistence remains a separate follow-up')
         ->toContain('Resume Phase 9HF Marko dashboard widget adoption')
         ->not->toContain('Page admin decoupling is partial')
         ->not->toContain('Page admin-decoupling is still partial');

@@ -144,3 +144,6 @@ The session-based API login is throttled through the canonical authentication li
 
 ### Media ingest security
 Supported raster uploads are canonicalised through GD before storage and publication; user-supplied image bytes are not copied directly into `public/media`.
+
+### Media derivatives
+Canonical originals now generate upload-time GD WebP derivatives through the Media-owned processor contract. Default profiles are thumb, medium, and large; generation is fail-closed and files are written atomically.

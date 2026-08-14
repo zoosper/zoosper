@@ -75,3 +75,6 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 
 ### Secure raster ingest
 JPEG, PNG, WebP and GIF uploads are decoded and freshly re-encoded through GD before either the private original or public copy is written. This removes untrusted original byte streams and metadata from published storage. The current GIF policy stores a canonical single-frame GIF; animated-image preservation requires a future animation-aware engine. A 40-megapixel decode ceiling limits decompression risk.
+
+### Runtime derivatives
+Upload-time derivatives are enabled through `MediaUploadDerivativeDispatcher` and the replaceable `MediaProcessorInterface`. The built-in GD processor creates deterministic `thumb`, `medium`, and `large` WebP files, preserves aspect ratio, never upscales, applies centre-crop only when the source is large enough, writes atomically, and publishes matching private/public derivative files.

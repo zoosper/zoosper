@@ -59,7 +59,10 @@ final readonly class MediaUploadService
                 createdBy: $user->id,
             );
 
-            $this->derivatives?->processAfterUpload($stored->storagePath);
+            $derivativeResult = $this->derivatives?->processAfterUpload($stored->storagePath);
+            if ($derivativeResult !== null && !$derivativeResult->successful) {
+                throw new \RuntimeException(implode(' ', $derivativeResult->errors));
+            }
         } catch (Throwable $exception) {
             $cleanupResult = null;
             if (is_object($stored)) {

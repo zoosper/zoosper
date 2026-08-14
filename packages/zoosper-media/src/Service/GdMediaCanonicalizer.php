@@ -19,6 +19,9 @@ final readonly class GdMediaCanonicalizer implements MediaCanonicalizerInterface
             if(in_array($extension,['png','webp','gif'],true)){imagealphablending($image,false);imagesavealpha($image,true);}
             $written=match($extension){'jpg','jpeg'=>imagejpeg($image,$destinationPath,90),'png'=>imagepng($image,$destinationPath,6),'webp'=>imagewebp($image,$destinationPath,85),'gif'=>imagegif($image,$destinationPath),default=>false};
             if(!$written)throw new RuntimeException('Unable to write canonical media output.');
-        }finally{imagedestroy($image);}
+        } finally {
+            // PHP 8.5 releases GdImage objects automatically; explicit destruction is unnecessary.
+            unset($image);
+        }
     }
 }

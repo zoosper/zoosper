@@ -65,7 +65,7 @@ final readonly class PageSaveCoordinator
                 new FieldDefinitionRegistry(),
                 $pageId,
             );
-            $persist = function (EntitySaveContext $context) use ($action, $input, $user, &$pageId): void {
+            $persist = function (EntitySaveContext $context) use ($action, $input, $page, $user, &$pageId): void {
                 if ($action === 'create') {
                     $pageId = $this->pages->create(
                         siteId: $input->siteId,

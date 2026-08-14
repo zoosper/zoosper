@@ -72,3 +72,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Media upload security
 - Canonically re-encode JPEG, PNG, WebP and GIF uploads through GD before storage and publication.
 - Added a 40-megapixel decode ceiling and regression guards against direct temporary-upload copying.
+
+### Media derivatives
+- Enabled upload-time GD WebP generation for the existing thumb, medium, and large profiles.
+- Added bounded resize/crop behaviour, no upscaling, alpha preservation, atomic publication, and fail-closed upload integration.

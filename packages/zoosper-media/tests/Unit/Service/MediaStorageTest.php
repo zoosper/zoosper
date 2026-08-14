@@ -15,7 +15,7 @@ test('stores validated media outside public and publishes controlled copy', func
     imagealphablending($image, false);
     imagesavealpha($image, true);
     imagepng($image, $tmp);
-    imagedestroy($image);
+    unset($image);
 
     $stored = (new MediaStorage($root))->store(['tmp_name' => $tmp], 'png');
 

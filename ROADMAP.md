@@ -1175,3 +1175,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Security P1 media ingest hardening (2026-08-14)
 - Added fail-closed GD raster decoding and canonical re-encoding before private storage and public publication.
 - Added a 40-megapixel safety ceiling and explicit single-frame GIF policy. Real responsive derivatives remain a separate performance phase.
+
+### Phase 10AD media derivative runtime adoption (2026-08-14)
+- Replaced the inactive copy-only upload seam with an enabled, interface-owned GD processor producing bounded WebP thumb, medium, and large derivatives.
+- Added no-upscale contain/width behaviour, guarded cover crops, alpha preservation, atomic private/public writes, and upload rollback on derivative failure. Derivative database persistence remains a separate follow-up.

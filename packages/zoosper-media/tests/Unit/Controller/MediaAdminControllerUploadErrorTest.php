@@ -200,7 +200,7 @@ it('still redirects to the media library on a successful upload', function (): v
     imagealphablending($image, false);
     imagesavealpha($image, true);
     imagepng($image, $tmpFile);
-    imagedestroy($image);
+    unset($image);
     $_FILES['file'] = [
         'name' => 'valid.png',
         'tmp_name' => $tmpFile,
