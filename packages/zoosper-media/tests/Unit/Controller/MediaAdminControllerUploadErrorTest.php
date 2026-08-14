@@ -196,8 +196,11 @@ it('still redirects to the media library on a successful upload', function (): v
     // A genuinely valid 1x1 PNG (smallest possible real image the real
     // validator's getimagesize() check will accept).
     $tmpFile = tempnam(sys_get_temp_dir(), 'zoosper-upload-test-');
-    $pngBytes = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=');
-    file_put_contents($tmpFile, $pngBytes);
+    $image = imagecreatetruecolor(2, 2);
+    imagealphablending($image, false);
+    imagesavealpha($image, true);
+    imagepng($image, $tmpFile);
+    imagedestroy($image);
     $_FILES['file'] = [
         'name' => 'valid.png',
         'tmp_name' => $tmpFile,

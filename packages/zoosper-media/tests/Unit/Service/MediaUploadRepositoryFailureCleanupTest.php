@@ -19,9 +19,11 @@ test('media upload service cleans stored files when repository persistence fails
     mkdir($root, 0775, true);
 
     $tmpFile = $root . '/upload.png';
-    file_put_contents($tmpFile, base64_decode(
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII='
-    ));
+    $image = imagecreatetruecolor(2, 2);
+    imagealphablending($image, false);
+    imagesavealpha($image, true);
+    imagepng($image, $tmpFile);
+    imagedestroy($image);
 
     $pdo = new PDO('sqlite::memory:');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

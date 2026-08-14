@@ -11,7 +11,11 @@ test('stores validated media outside public and publishes controlled copy', func
     $root = sys_get_temp_dir() . '/zoosper-media-storage-' . bin2hex(random_bytes(4));
     mkdir($root, 0775, true);
     $tmp = $root . '/upload.png';
-    file_put_contents($tmp, 'image-bytes');
+    $image = imagecreatetruecolor(2, 2);
+    imagealphablending($image, false);
+    imagesavealpha($image, true);
+    imagepng($image, $tmp);
+    imagedestroy($image);
 
     $stored = (new MediaStorage($root))->store(['tmp_name' => $tmp], 'png');
 

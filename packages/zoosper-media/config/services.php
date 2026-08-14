@@ -13,6 +13,8 @@ use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Service\MediaStorage;
+use Zoosper\Media\Service\MediaCanonicalizerInterface;
+use Zoosper\Media\Service\GdMediaCanonicalizer;
 use Zoosper\Media\Service\MediaStoredFileCleanupService;
 use Zoosper\Media\Service\MediaUploadService;
 use Zoosper\Media\Service\MediaUploadValidator;
@@ -20,7 +22,8 @@ use Zoosper\Media\Service\MediaUploadValidator;
 return [
     MediaAssetRepository::class => static fn (ServiceContainer $services): MediaAssetRepository => new MediaAssetRepository($services->get(PDO::class)),
     MediaUploadValidator::class => static fn (ServiceContainer $services): MediaUploadValidator => new MediaUploadValidator(),
-    MediaStorage::class => static fn (ServiceContainer $services): MediaStorage => new MediaStorage(dirname(__DIR__, 3)),
+    MediaCanonicalizerInterface::class => static fn (ServiceContainer $services): MediaCanonicalizerInterface => new GdMediaCanonicalizer(),
+    MediaStorage::class => static fn (ServiceContainer $services): MediaStorage => new MediaStorage(dirname(__DIR__, 3), $services->get(MediaCanonicalizerInterface::class)),
     MediaStoredFileCleanupService::class => static fn (ServiceContainer $services): MediaStoredFileCleanupService => new MediaStoredFileCleanupService(dirname(__DIR__, 3)),
     MediaUploadService::class => static fn (ServiceContainer $services): MediaUploadService => new MediaUploadService(
         assets: $services->get(MediaAssetRepository::class),

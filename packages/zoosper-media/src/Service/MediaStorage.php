@@ -14,7 +14,7 @@ use RuntimeException;
  */
 final readonly class MediaStorage
 {
-    public function __construct(private string $basePath)
+    public function __construct(private string $basePath, private ?MediaCanonicalizerInterface $canonicalizer = null)
     {
     }
 
@@ -36,8 +36,11 @@ final readonly class MediaStorage
         $this->ensureDirectory(dirname($storagePath));
         $this->ensureDirectory(dirname($publicPath));
 
-        if (!@copy($tmpName, $storagePath)) {
-            throw new RuntimeException('Unable to store uploaded media file.');
+        try {
+            ($this->canonicalizer ?? new GdMediaCanonicalizer())->canonicalize($tmpName, $storagePath, $extension);
+        } catch (RuntimeException $exception) {
+            @unlink($storagePath);
+            throw $exception;
         }
 
         if (!@copy($storagePath, $publicPath)) {

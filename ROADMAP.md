@@ -1171,3 +1171,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Security P0 API authentication closure (2026-08-14)
 - Closed password-only API session promotion for 2FA-enrolled Admin accounts with an Auth-owned fail-closed second-factor contract implemented by the Two Factor module.
 - Applied the canonical password-login limiter directly to API login and documented enforce-mode defaults. A dedicated API 2FA challenge or token protocol remains a separate design decision.
+
+### Security P1 media ingest hardening (2026-08-14)
+- Added fail-closed GD raster decoding and canonical re-encoding before private storage and public publication.
+- Added a 40-megapixel safety ceiling and explicit single-frame GIF policy. Real responsive derivatives remain a separate performance phase.

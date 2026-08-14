@@ -68,3 +68,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### API authentication security
 - Prevented password-only API session creation for Admin accounts protected by 2FA.
 - Applied canonical password-login throttling to `/api/v1/auth/login`, including JSON 429 and `Retry-After`.
+
+### Media upload security
+- Canonically re-encode JPEG, PNG, WebP and GIF uploads through GD before storage and publication.
+- Added a 40-megapixel decode ceiling and regression guards against direct temporary-upload copying.

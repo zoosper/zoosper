@@ -72,3 +72,6 @@ Zoosper Media module for Zoosper CMS.
 
 ### Phase 9IF Media lifecycle truth closure
 Media assets now use POST-only, media.manage, CSRF-protected archive, restore and archived-first permanent deletion boundaries. Metadata deletion is transactional and owned-file cleanup is conservative and audited. Upload derivatives remain disabled by default; LocalCopyMediaProcessor is not image transformation support.
+
+### Secure raster ingest
+JPEG, PNG, WebP and GIF uploads are decoded and freshly re-encoded through GD before either the private original or public copy is written. This removes untrusted original byte streams and metadata from published storage. The current GIF policy stores a canonical single-frame GIF; animated-image preservation requires a future animation-aware engine. A 40-megapixel decode ceiling limits decompression risk.

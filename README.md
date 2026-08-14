@@ -141,3 +141,6 @@ Run `php bin/zoosper starter:install` for an idempotent minimal Site with publis
 
 ### API authentication security
 The session-based API login is throttled through the canonical authentication limiter and refuses password-only session creation for accounts with active 2FA.
+
+### Media ingest security
+Supported raster uploads are canonicalised through GD before storage and publication; user-supplied image bytes are not copied directly into `public/media`.
