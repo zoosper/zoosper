@@ -1179,3 +1179,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Phase 10AD media derivative runtime adoption (2026-08-14)
 - Replaced the inactive copy-only upload seam with an enabled, interface-owned GD processor producing bounded WebP thumb, medium, and large derivatives.
 - Added no-upscale contain/width behaviour, guarded cover crops, alpha preservation, atomic private/public writes, and upload rollback on derivative failure. Derivative database persistence remains a separate follow-up.
+
+### Phase 10AG-10AI media derivative persistence (2026-08-14)
+- Added declarative derivative records, upload-time metadata persistence, stable profile lookup, cascade ownership, and permanent-delete file cleanup.
+- Regeneration/backfill CLI remains the next operational slice.

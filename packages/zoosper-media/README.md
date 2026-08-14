@@ -78,3 +78,9 @@ JPEG, PNG, WebP and GIF uploads are decoded and freshly re-encoded through GD be
 
 ### Runtime derivatives
 Upload-time derivatives are enabled through `MediaUploadDerivativeDispatcher` and the replaceable `MediaProcessorInterface`. The built-in GD processor creates deterministic `thumb`, `medium`, and `large` WebP files, preserves aspect ratio, never upscales, applies centre-crop only when the source is large enough, writes atomically, and publishes matching private/public derivative files.
+
+### Derivative records and lifecycle
+Generated profiles are persisted in `media_derivatives` with dimensions, byte size, private path, and public path. Lookup is Media-owned, rows cascade with their asset, and permanent deletion removes both original and derivative files.
+
+### Permission persistence
+`media.manage` is declared by Media configuration and persisted idempotently by `database/migrations/202608140001_seed_media_permission.php`, including ACL tree metadata and the established super-admin assignment policy. Role Manager reads persisted permissions, while Media routes and Admin navigation retain the same permission code.

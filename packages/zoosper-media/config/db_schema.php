@@ -33,5 +33,27 @@ return [
                 'idx_media_assets_created' => ['columns' => ['created_at']],
             ],
         ],
+        'media_derivatives' => [
+            'columns' => [
+                'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],
+                'media_asset_id' => ['type' => 'integer', 'nullable' => false],
+                'profile' => ['type' => 'string', 'length' => 64, 'nullable' => false],
+                'format' => ['type' => 'string', 'length' => 16, 'nullable' => false],
+                'width' => ['type' => 'integer', 'nullable' => false],
+                'height' => ['type' => 'integer', 'nullable' => false],
+                'size_bytes' => ['type' => 'integer', 'nullable' => false],
+                'storage_path' => ['type' => 'string', 'length' => 500, 'nullable' => false],
+                'public_path' => ['type' => 'string', 'length' => 500, 'nullable' => false],
+                'created_at' => ['type' => 'datetime', 'nullable' => false, 'default' => 'CURRENT_TIMESTAMP'],
+                'updated_at' => ['type' => 'datetime', 'nullable' => false, 'default' => 'CURRENT_TIMESTAMP'],
+            ],
+            'indexes' => [
+                'uq_media_derivatives_asset_profile_format' => ['columns' => ['media_asset_id', 'profile', 'format'], 'unique' => true],
+                'idx_media_derivatives_asset' => ['columns' => ['media_asset_id']],
+            ],
+            'foreign_keys' => [
+                'fk_media_derivatives_asset' => ['columns' => ['media_asset_id'], 'referenced_table' => 'media_assets', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE', 'on_update' => 'CASCADE'],
+            ],
+        ],
     ],
 ];

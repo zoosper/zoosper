@@ -16,6 +16,8 @@ use Zoosper\Media\Processing\MediaUploadDerivativePolicy;
 use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Media\Repository\MediaAssetRepository;
+use Zoosper\Media\Repository\MediaDerivativeRepository;
+use Zoosper\Media\Service\MediaDerivativeLookup;
 use Zoosper\Media\Service\MediaStorage;
 use Zoosper\Media\Service\MediaCanonicalizerInterface;
 use Zoosper\Media\Service\GdMediaCanonicalizer;
@@ -25,6 +27,8 @@ use Zoosper\Media\Service\MediaUploadValidator;
 
 return [
     MediaAssetRepository::class => static fn (ServiceContainer $services): MediaAssetRepository => new MediaAssetRepository($services->get(PDO::class)),
+    MediaDerivativeRepository::class => static fn (ServiceContainer $services): MediaDerivativeRepository => new MediaDerivativeRepository($services->get(PDO::class), dirname(__DIR__, 3)),
+    MediaDerivativeLookup::class => static fn (ServiceContainer $services): MediaDerivativeLookup => new MediaDerivativeLookup($services->get(MediaDerivativeRepository::class)),
     MediaUploadValidator::class => static fn (ServiceContainer $services): MediaUploadValidator => new MediaUploadValidator(),
     MediaCanonicalizerInterface::class => static fn (ServiceContainer $services): MediaCanonicalizerInterface => new GdMediaCanonicalizer(),
     MediaStorage::class => static fn (ServiceContainer $services): MediaStorage => new MediaStorage(dirname(__DIR__, 3), $services->get(MediaCanonicalizerInterface::class)),
@@ -53,11 +57,13 @@ return [
         $services->get(MediaProcessorInterface::class),
         $services->get(MediaUploadDerivativePolicy::class),
         $services->get(MediaProcessingPolicy::class)->defaultPlan(),
+        $services->get(MediaDerivativeRepository::class),
     ),
     MediaLifecycleCoordinator::class => static fn (ServiceContainer $services): MediaLifecycleCoordinator => new MediaLifecycleCoordinator(
         $services->get(PDO::class),
         $services->get(MediaAssetRepository::class),
         $services->get(MediaStoredFileCleanupService::class),
         $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
+        $services->get(MediaDerivativeRepository::class),
     ),
 ];

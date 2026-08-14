@@ -76,3 +76,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Media derivatives
 - Enabled upload-time GD WebP generation for the existing thumb, medium, and large profiles.
 - Added bounded resize/crop behaviour, no upscaling, alpha preservation, atomic publication, and fail-closed upload integration.
+
+### Media derivative persistence
+- Persist generated profile dimensions and paths as Media-owned records.
+- Added profile lookup, upload rollback, cascading metadata ownership, and permanent-delete cleanup for derivative files.

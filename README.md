@@ -147,3 +147,6 @@ Supported raster uploads are canonicalised through GD before storage and publica
 
 ### Media derivatives
 Canonical originals now generate upload-time GD WebP derivatives through the Media-owned processor contract. Default profiles are thumb, medium, and large; generation is fail-closed and files are written atomically.
+
+### Media derivative records
+Generated Media profiles are first-class database records with Media-owned lookup and permanent-delete cleanup.

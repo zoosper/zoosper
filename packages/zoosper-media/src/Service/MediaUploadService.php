@@ -45,6 +45,7 @@ final readonly class MediaUploadService
         }
 
         $stored = null;
+        $assetId = null;
         try {
             $stored = $this->storage->store($file, (string) $validation->extension);
             $assetId = $this->assets->create(
@@ -59,11 +60,18 @@ final readonly class MediaUploadService
                 createdBy: $user->id,
             );
 
-            $derivativeResult = $this->derivatives?->processAfterUpload($stored->storagePath);
+            $asset = $this->assets->findById((int) $assetId);
+            if ($asset === null) {
+                throw new \RuntimeException('Persisted Media asset could not be reloaded.');
+            }
+            $derivativeResult = $this->derivatives?->processAfterUpload($asset);
             if ($derivativeResult !== null && !$derivativeResult->successful) {
                 throw new \RuntimeException(implode(' ', $derivativeResult->errors));
             }
         } catch (Throwable $exception) {
+            if ($assetId !== null && $this->assets->findById((int) $assetId) !== null) {
+                $this->assets->deletePermanently((int) $assetId);
+            }
             $cleanupResult = null;
             if (is_object($stored)) {
                 $cleanupResult = $this->cleanup->cleanup($stored);

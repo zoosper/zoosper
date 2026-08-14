@@ -19,6 +19,7 @@ final readonly class MediaUploadDerivativeDispatcher
         private MediaProcessorInterface $processor,
         private ?MediaUploadDerivativePolicy $policy = null,
         private ?MediaDerivativePlan $plan = null,
+        private ?\Zoosper\Media\Repository\MediaDerivativeRepository $derivatives = null,
     ) {
     }
 
@@ -31,7 +32,11 @@ final readonly class MediaUploadDerivativeDispatcher
 
         if ($assetOrStoragePath instanceof MediaAsset) {
             $plan = $this->plan ?? (new MediaProcessingPolicy())->defaultPlan();
-            return $this->processor->process($assetOrStoragePath, $plan);
+            $result = $this->processor->process($assetOrStoragePath, $plan);
+            if ($result->successful) {
+                $this->derivatives?->replaceForAsset($assetOrStoragePath, $plan);
+            }
+            return $result;
         }
 
         if (method_exists($this->processor, 'processStoragePath')) {
