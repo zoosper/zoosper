@@ -64,3 +64,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### URL Rewrite frontend adoption
 - Added module-discovered service decorators and URL Rewrite fallback composition ahead of Page fallback.
 - Added Site-scoped redirect cycle and maximum-depth diagnostics.
+
+### API authentication security
+- Prevented password-only API session creation for Admin accounts protected by 2FA.
+- Applied canonical password-login throttling to `/api/v1/auth/login`, including JSON 429 and `Retry-After`.

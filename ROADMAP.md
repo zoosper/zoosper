@@ -1167,3 +1167,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Phase 10U-10V — URL Rewrite frontend adoption and chain diagnostics (2026-08-13)
 - Added a generic module-discovered service decorator stage, then used it to place Site-scoped URL Rewrite resolution ahead of the existing cached Page fallback without Page importing URL Rewrite.
 - Added deterministic redirect cycle and maximum-depth diagnostics. Guarded Admin management remains pending permission and audit-policy closure.
+
+### Security P0 API authentication closure (2026-08-14)
+- Closed password-only API session promotion for 2FA-enrolled Admin accounts with an Auth-owned fail-closed second-factor contract implemented by the Two Factor module.
+- Applied the canonical password-login limiter directly to API login and documented enforce-mode defaults. A dedicated API 2FA challenge or token protocol remains a separate design decision.

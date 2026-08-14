@@ -18,6 +18,24 @@ final readonly class AdminAuthenticationRateLimiter implements AdminAuthenticati
     {
     }
 
+    public function checkPasswordLogin(string $email, ?string $clientIp): RateLimitDecision
+    {
+        $config = $this->config();
+        $rule = $config->policies['admin.login'] ?? null;
+        if (!$config->enabled || $rule === null) {
+            return RateLimitDecision::allow(0, $rule?->maxAttempts ?? 1);
+        }
+        $this->assertSalt($config);
+        $context = (new AdminRateLimitContextFactory(new RateLimitIdentityHasher(), $config))
+            ->create('admin.login', [strtolower(trim($email)), $clientIp ?? '']);
+        $store = new DatabaseRateLimitStore($this->pdo);
+        $store->ensureSchema();
+        $decision = $store->recordAttempt($rule, $context->identityHash, $context->now);
+        return $config->isReportOnly()
+            ? RateLimitDecision::allow($decision->attempts, $decision->maxAttempts)
+            : $decision;
+    }
+
     public function resetPasswordLogin(string $email, ?string $clientIp): void
     {
         $this->reset('admin.login', [strtolower(trim($email)), $clientIp ?? '']);

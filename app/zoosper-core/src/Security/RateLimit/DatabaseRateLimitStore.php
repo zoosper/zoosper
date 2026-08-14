@@ -24,6 +24,13 @@ final class DatabaseRateLimitStore implements RateLimitStoreInterface
 
     public function ensureSchema(): void
     {
+        if (!$this->isSqlite()) {
+            // MySQL installations receive this table through Core declarative
+            // schema. Do not execute SQLite-only AUTOINCREMENT or CREATE INDEX
+            // syntax on a production MySQL connection.
+            return;
+        }
+
         $this->pdo->exec(<<<'SQL'
 CREATE TABLE IF NOT EXISTS rate_limit_buckets (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

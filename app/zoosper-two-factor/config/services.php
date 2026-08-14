@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Auth\Contract\SecondFactorRequirementInterface;
+use Zoosper\TwoFactor\Service\AdminSecondFactorRequirement;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Url\AdminUrlGenerator;
@@ -21,6 +23,7 @@ use Zoosper\TwoFactor\Totp\TotpSecretGenerator;
 use Zoosper\TwoFactor\Totp\TotpVerifier;
 
 return [
+    SecondFactorRequirementInterface::class => static fn (ServiceContainer $services): SecondFactorRequirementInterface => new AdminSecondFactorRequirement($services->get(AdminTwoFactorEnrollmentService::class)),
     AdminTwoFactorResetRepository::class => static fn (ServiceContainer $services): AdminTwoFactorResetRepository => new AdminTwoFactorResetRepository($services->get(PDO::class)),
 
     // Phase 1.41: depends on Zoosper\Core\Audit\AuditLoggerInterface instead

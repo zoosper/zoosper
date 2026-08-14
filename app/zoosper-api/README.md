@@ -52,3 +52,6 @@ Zoosper_Api module for Zoosper CMS.
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+
+### Authentication security
+Password-based API session login is rate-limited through the canonical authentication limiter. Accounts with active 2FA are refused with `second_factor_required`; the API never promotes those accounts from password-only authentication. API 2FA challenge/token design remains a separate explicit contract.

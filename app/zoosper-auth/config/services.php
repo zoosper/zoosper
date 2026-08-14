@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Zoosper\Auth\Lifecycle\RoleLifecycleCoordinator;
 use Zoosper\Auth\Lifecycle\AdminUserLifecycleCoordinator;
 use Zoosper\Auth\Security\PasswordPolicy;
+use Zoosper\Auth\Contract\SecondFactorRequirementInterface;
+use Zoosper\Auth\Service\RequireSecondFactorByDefault;
 use Zoosper\Auth\Console\AdminCreateCommand;
 use Zoosper\Auth\Http\AuthenticationMiddleware;
 use Zoosper\Auth\Http\CsrfMiddleware;
@@ -25,6 +27,7 @@ return [
     // Auth Grid read-side services. Existing manifest entries below retain precedence.
     ...require __DIR__ . '/services_auth_grid.php',
 
+    SecondFactorRequirementInterface::class => static fn (ServiceContainer $services): SecondFactorRequirementInterface => new RequireSecondFactorByDefault(),
     AdminUserRepository::class => static fn (ServiceContainer $services): AdminUserRepository => new AdminUserRepository($services->get(PDO::class)),
     RoleRepository::class => static fn (ServiceContainer $services): RoleRepository => new RoleRepository($services->get(PDO::class)),
     PasswordHasher::class => static fn (ServiceContainer $services): PasswordHasher => new PasswordHasher(),
