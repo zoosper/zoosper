@@ -101,3 +101,6 @@ Zoosper_Auth module for Zoosper CMS.
 - Custom Roles may be permanently deleted only when unassigned; `super_admin` remains protected.
 - Identity lifecycle mutations are POST-only, centrally CSRF-protected, and permission-gated with `user.manage` or `role.manage`.
 - Newly supplied passwords use the configured canonical Admin password policy across HTTP and `admin:create`. The already-present successful-login `password_needs_rehash()` flow was verified and remains covered without forcing a reset.
+
+### Personal Access Tokens
+Auth owns hash-only PAT persistence, issuance, revocation, scope validation and active-owner authentication. Plaintext credentials use the `zp_pat_` format and are returned only by the issuance service.

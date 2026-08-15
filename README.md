@@ -153,3 +153,6 @@ Generated Media profiles are first-class database records with Media-owned looku
 
 ### HTTP gateway
 Public API reads now declare stateless execution, wrong-method requests return RFC-compliant 405 responses, and exact-origin CORS preflight is configurable. Production boot fails closed for insecure session or authentication-throttling settings.
+
+### Integration authentication
+Zoosper now includes an Auth-owned Personal Access Token foundation with hash-only secrets, expiry, revocation, scopes and stateless bearer identity.

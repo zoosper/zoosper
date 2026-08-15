@@ -83,3 +83,6 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 
 ### HTTP gateway foundation
 - Added route-owned stateless APIs, RFC 405/Allow handling, configurable exact-origin CORS and production fail-closed security defaults.
+
+### Personal Access Token foundation
+- Added hash-only PAT persistence, scoped issuance, revocation, active-owner authentication and a stateless bearer identity endpoint.

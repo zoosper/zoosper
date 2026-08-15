@@ -55,3 +55,5 @@ Zoosper_Api module for Zoosper CMS.
 
 ### Authentication security
 Password-based API session login is rate-limited through the canonical authentication limiter. Accounts with active 2FA are refused with `second_factor_required`; the API never promotes those accounts from password-only authentication. API 2FA challenge/token design remains a separate explicit contract.
+
+- `GET /api/v1/token/me` provides stateless bearer-token identity inspection.

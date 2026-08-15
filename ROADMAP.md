@@ -1186,3 +1186,6 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 
 ### Phase 10AK HTTP gateway foundation (2026-08-15)
 - Added route-owned statelessness, 404/405 distinction with Allow, HEAD/OPTIONS handling, exact-origin CORS and production-secure session/rate-limit defaults.
+
+### Phase 10AL-A Personal Access Token foundation (2026-08-15)
+- Added Auth-owned PAT persistence, issuance, revocation, scope catalogue and stateless bearer identity. Admin token management and scoped mutation middleware continue in 10AL-B.

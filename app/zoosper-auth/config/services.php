@@ -13,6 +13,9 @@ use Zoosper\Auth\Http\CsrfMiddleware;
 use Zoosper\Auth\Http\RateLimitReportOnlyAdminMiddleware;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
+use Zoosper\Auth\Token\PersonalAccessTokenRepository;
+use Zoosper\Auth\Token\PersonalAccessTokenService;
+use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiter;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Service\AuthService;
@@ -69,4 +72,7 @@ return [
     ),
     AdminUserLifecycleCoordinator::class => static fn($services): AdminUserLifecycleCoordinator => new AdminUserLifecycleCoordinator($services->get(\PDO::class), $services->get(\Zoosper\Auth\Repository\AdminUserRepository::class), $services->has(\Zoosper\Core\Audit\AuditLoggerInterface::class) ? $services->get(\Zoosper\Core\Audit\AuditLoggerInterface::class) : null),
     RoleLifecycleCoordinator::class => static fn($services): RoleLifecycleCoordinator => new RoleLifecycleCoordinator($services->get(\PDO::class), $services->has(\Zoosper\Core\Audit\AuditLoggerInterface::class) ? $services->get(\Zoosper\Core\Audit\AuditLoggerInterface::class) : null),
+    PersonalAccessTokenRepository::class => static fn (ServiceContainer $services): PersonalAccessTokenRepository => new PersonalAccessTokenRepository($services->get(PDO::class)),
+    PersonalAccessTokenService::class => static fn (ServiceContainer $services): PersonalAccessTokenService => new PersonalAccessTokenService($services->get(PersonalAccessTokenRepository::class)),
+    PersonalAccessTokenAuthenticator::class => static fn (ServiceContainer $services): PersonalAccessTokenAuthenticator => new PersonalAccessTokenAuthenticator($services->get(PersonalAccessTokenRepository::class), $services->get(AdminUserRepository::class)),
 ];

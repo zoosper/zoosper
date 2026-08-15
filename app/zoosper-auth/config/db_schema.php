@@ -161,5 +161,111 @@ return array (
         ),
       ),
     ),
+    'personal_access_tokens' =>
+    array (
+      'columns' =>
+      array (
+        'id' =>
+        array (
+          'type' => 'integer',
+          'primary' => true,
+          'auto_increment' => true,
+        ),
+        'public_id' =>
+        array (
+          'type' => 'string',
+          'length' => 16,
+          'nullable' => false,
+        ),
+        'admin_user_id' =>
+        array (
+          'type' => 'integer',
+          'nullable' => false,
+        ),
+        'name' =>
+        array (
+          'type' => 'string',
+          'length' => 120,
+          'nullable' => false,
+        ),
+        'token_hash' =>
+        array (
+          'type' => 'string',
+          'length' => 64,
+          'nullable' => false,
+        ),
+        'scopes_json' =>
+        array (
+          'type' => 'text',
+          'nullable' => false,
+        ),
+        'expires_at' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => true,
+        ),
+        'last_used_at' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => true,
+        ),
+        'revoked_at' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => true,
+        ),
+        'created_at' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => false,
+        ),
+        'updated_at' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => false,
+        ),
+      ),
+      'indexes' =>
+      array (
+        'uniq_personal_access_tokens_public_id' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'public_id',
+          ),
+          'unique' => true,
+        ),
+        'idx_personal_access_tokens_owner' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'admin_user_id',
+          ),
+        ),
+        'idx_personal_access_tokens_expiry' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'expires_at',
+          ),
+        ),
+      ),
+      'foreign_keys' =>
+      array (
+        'fk_personal_access_tokens_owner' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'admin_user_id',
+          ),
+          'referenced_table' => 'admin_users',
+          'referenced_columns' =>
+          array (
+            0 => 'id',
+          ),
+          'on_delete' => 'CASCADE',
+        ),
+      ),
+    ),
   ),
 );
