@@ -22,6 +22,7 @@ final readonly class RouteContext
         public string $path,
         public bool $isPublic = false,
         string|array|null $permission = null,
+        public bool $stateless = false,
     ) {
         $this->permissions = self::normalise($permission);
     }

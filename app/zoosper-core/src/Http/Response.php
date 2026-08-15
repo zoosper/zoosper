@@ -85,6 +85,15 @@ final readonly class Response
     {
         return $this->body;
     }
+    /** @param array<string,string> $headers */
+    public function withHeaders(array $headers): self
+    {
+        return new self($this->body, $this->statusCode, array_merge($this->headers, $headers));
+    }
+    public function withoutBody(): self
+    {
+        return new self('', $this->statusCode, $this->headers);
+    }
 
     public function send(): void
     {

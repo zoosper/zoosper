@@ -24,7 +24,8 @@ final readonly class Application
     public function handle(): void
     {
         $request = Request::fromGlobals();
-        if (!self::isStatelessPublicPath($request->path()) && session_status() !== PHP_SESSION_ACTIVE) {
+        ProductionSecurityPolicy::assertEnvironment();
+        if (!$this->router->isStateless($request) && session_status() !== PHP_SESSION_ACTIVE) {
             session_name((string) env('SESSION_NAME', 'ZOOSPERSESSID'));
             $sessionLifetime = max(300, min(604800, (int) env('SESSION_LIFETIME_SECONDS', 28800)));
             ini_set('session.gc_maxlifetime', (string) $sessionLifetime);
@@ -95,7 +96,7 @@ final readonly class Application
 
     public static function isStatelessPublicPath(string $path): bool
     {
-        return in_array($path, ['/sitemap.xml', '/robots.txt'], true);
+        return in_array($path, ['/sitemap.xml', '/robots.txt', '/api/v1/health', '/api/v1/hello', '/api/v1/content/page', '/api/v1/menu'], true);
     }
 
     public static function normaliseSameSite(string $value): string

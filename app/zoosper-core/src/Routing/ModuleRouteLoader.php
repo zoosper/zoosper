@@ -45,7 +45,7 @@ final readonly class ModuleRouteLoader
     private function registerRoutesFromConfig(Router $router, string $configFile, array $middleware): void
     {
         foreach ($this->load($configFile) as $route) {
-            $router->map($route->method, $route->path, $this->handlerFor($route, $middleware));
+            $router->map($route->method, $route->path, $this->handlerFor($route, $middleware), $route->stateless);
         }
     }
 
@@ -86,6 +86,7 @@ final readonly class ModuleRouteLoader
                     action: (string) ($route['action'] ?? '__invoke'),
                     permissions: ModuleRouteDefinition::normalisePermissions($route['permission'] ?? null),
                     public: (bool) ($route['public'] ?? false),
+                    stateless: (bool) ($route['stateless'] ?? false),
                 );
             }
         }
@@ -121,7 +122,7 @@ final readonly class ModuleRouteLoader
             return [$controller, $action];
         }
 
-        $context = new RouteContext($route->method, $route->path, $route->public, $route->permissions);
+        $context = new RouteContext($route->method, $route->path, $route->public, $route->permissions, $route->stateless);
         $pipeline = new MiddlewarePipeline($middleware);
 
         return static fn (Request $request): Response => $pipeline->handle(
@@ -180,7 +181,7 @@ final readonly class ModuleRouteLoader
         if ($route->action === '') {
             throw new ZoosperException('Route action is required for path: ' . $route->path, 'Invalid route definition found while loading module routes.', 'Add an action method name to the route config.', 'docs/operations/troubleshooting-helpful-errors.md', ['path' => $route->path, 'controller' => $route->controller]);
         }
-        if (!in_array($route->method, ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], true)) {
+        if (!in_array($route->method, ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'], true)) {
             throw new ZoosperException('Unsupported route method: ' . $route->method, 'Invalid route definition found while loading module routes.', 'Use one of GET, POST, PUT, PATCH or DELETE.', 'docs/operations/troubleshooting-helpful-errors.md', ['method' => $route->method, 'path' => $route->path]);
         }
     }

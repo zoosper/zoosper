@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Throwable;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Http\CorsPolicy;
 use Zoosper\Core\Log\ErrorHandler;
 
 /**
@@ -25,12 +26,16 @@ final class Router
      * @var array<string, list<array{path: string, regex: string, params: list<string>, handler: callable(Request): Response}>>
      */
     private array $parameterRoutes = [];
+    /** @var array<string,bool> */
+    private array $statelessRoutes = [];
+    private CorsPolicy $cors;
 
     /** @var callable(Request): Response|null */
     private $fallback = null;
 
-    public function __construct(private ?ErrorHandler $errorHandler = null)
+    public function __construct(private ?ErrorHandler $errorHandler = null, ?CorsPolicy $cors = null)
     {
+        $this->cors = $cors ?? CorsPolicy::fromEnvironment();
     }
 
     public function get(string $path, callable $handler): void
@@ -43,10 +48,11 @@ final class Router
         $this->map('POST', $path, $handler);
     }
 
-    public function map(string $method, string $path, callable $handler): void
+    public function map(string $method, string $path, callable $handler, bool $stateless = false): void
     {
         $method = strtoupper($method);
         $path = $this->normalise($path);
+        $this->statelessRoutes[$method . ' ' . $path] = $stateless;
 
         if (!$this->hasPathParameter($path)) {
             $this->routes[$method . ' ' . $path] = $handler;
@@ -63,34 +69,53 @@ final class Router
 
     public function dispatch(Request $request): Response
     {
-        $method = $request->method();
+        $method = strtoupper($request->method());
         $path = $this->normalise($request->path());
-        $key = $method . ' ' . $path;
-
-        if (isset($this->routes[$key])) {
-            return $this->call($this->routes[$key], $request);
+        $origin = $request->header('origin');
+        $allowed = $this->allowedMethods($path);
+        if ($method === 'OPTIONS' && str_starts_with($path, '/api/') && $allowed !== []) {
+            $headers = ['Allow' => implode(', ', $allowed)];
+            return Response::raw('', 204, array_merge($headers, $this->cors->headersFor((string) $origin, true)));
         }
-
-        foreach ($this->parameterRoutes[$method] ?? [] as $route) {
-            if (preg_match($route['regex'], $path, $matches) !== 1) {
-                continue;
-            }
-
-            $params = [];
-            foreach ($route['params'] as $name) {
-                $params[$name] = rawurldecode((string) ($matches[$name] ?? ''));
-            }
-
-            return $this->call($route['handler'], $request->withRouteParams($params));
+        $dispatchMethod = $method === 'HEAD' && in_array('GET', $allowed, true) ? 'GET' : $method;
+        $match = $this->match($dispatchMethod, $path, $request);
+        if ($match !== null) {
+            $response = $this->call($match[0], $match[1]);
+            if (str_starts_with($path, '/api/')) $response = $response->withHeaders($this->cors->headersFor((string) $origin));
+            return $method === 'HEAD' ? $response->withoutBody() : $response;
         }
-
-        if ($this->fallback !== null) {
-            return $this->call($this->fallback, $request);
+        if ($allowed !== []) {
+            return Response::raw('', 405, ['Allow' => implode(', ', $allowed)]);
         }
-
+        if ($this->fallback !== null) return $this->call($this->fallback, $request);
         return Response::html('<h1>404</h1>', 404);
     }
-
+    public function isStateless(Request $request): bool
+    {
+        $method = strtoupper($request->method());
+        $path = $this->normalise($request->path());
+        if ($method === 'OPTIONS' && str_starts_with($path, '/api/') && $this->allowedMethods($path) !== []) return true;
+        if ($method === 'HEAD' && in_array('GET', $this->allowedMethods($path), true)) $method = 'GET';
+        if (array_key_exists($method . ' ' . $path, $this->statelessRoutes)) return $this->statelessRoutes[$method . ' ' . $path];
+        foreach ($this->parameterRoutes[$method] ?? [] as $route) if (preg_match($route['regex'], $path) === 1) return $this->statelessRoutes[$method . ' ' . $route['path']] ?? false;
+        return false;
+    }
+    /** @return list<string> */
+    public function allowedMethods(string $path): array
+    {
+        $path=$this->normalise($path);$methods=[];
+        foreach(array_keys($this->routes) as $key){[$method,$registered]=explode(' ',$key,2);if($registered===$path)$methods[]=$method;}
+        foreach($this->parameterRoutes as $method=>$routes)foreach($routes as $route)if(preg_match($route['regex'],$path)===1)$methods[]=$method;
+        if(in_array('GET',$methods,true))$methods[]='HEAD';
+        $methods=array_values(array_unique($methods));sort($methods);return $methods;
+    }
+    /** @return array{0:callable,1:Request}|null */
+    private function match(string $method,string $path,Request $request):?array
+    {
+        $key=$method.' '.$path;if(isset($this->routes[$key]))return [$this->routes[$key],$request];
+        foreach($this->parameterRoutes[$method]??[] as $route){if(preg_match($route['regex'],$path,$matches)!==1)continue;$params=[];foreach($route['params'] as $name)$params[$name]=rawurldecode((string)($matches[$name]??''));return [$route['handler'],$request->withRouteParams($params)];}
+        return null;
+    }
     /**
      * @param callable(Request): Response $handler
      */

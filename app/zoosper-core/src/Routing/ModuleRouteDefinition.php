@@ -14,6 +14,7 @@ final readonly class ModuleRouteDefinition
         public string $action,
         public array $permissions = [],
         public bool $public = false,
+        public bool $stateless = false,
     ) {
     }
 

@@ -150,3 +150,6 @@ Canonical originals now generate upload-time GD WebP derivatives through the Med
 
 ### Media derivative records
 Generated Media profiles are first-class database records with Media-owned lookup and permanent-delete cleanup.
+
+### HTTP gateway
+Public API reads now declare stateless execution, wrong-method requests return RFC-compliant 405 responses, and exact-origin CORS preflight is configurable. Production boot fails closed for insecure session or authentication-throttling settings.

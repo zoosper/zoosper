@@ -80,3 +80,6 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Media derivative persistence
 - Persist generated profile dimensions and paths as Media-owned records.
 - Added profile lookup, upload rollback, cascading metadata ownership, and permanent-delete cleanup for derivative files.
+
+### HTTP gateway foundation
+- Added route-owned stateless APIs, RFC 405/Allow handling, configurable exact-origin CORS and production fail-closed security defaults.

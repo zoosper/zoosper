@@ -1183,3 +1183,6 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Phase 10AG-10AI media derivative persistence (2026-08-14)
 - Added declarative derivative records, upload-time metadata persistence, stable profile lookup, cascade ownership, and permanent-delete file cleanup.
 - Regeneration/backfill CLI remains the next operational slice.
+
+### Phase 10AK HTTP gateway foundation (2026-08-15)
+- Added route-owned statelessness, 404/405 distinction with Allow, HEAD/OPTIONS handling, exact-origin CORS and production-secure session/rate-limit defaults.
