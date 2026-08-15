@@ -15,5 +15,7 @@ return [
     ['method' => 'POST', 'path' => '/api/v1/auth/logout', 'controller' => AuthController::class, 'action' => 'logout'],
     ['method' => 'GET', 'path' => '/api/v1/me', 'controller' => MeController::class, 'action' => 'show'],
     ['method' => 'GET', 'path' => '/api/v1/token/me', 'controller' => \Zoosper\Api\Controller\TokenMeController::class, 'action' => 'show', 'public' => true, 'stateless' => true],
+    ['method' => 'GET', 'path' => '/api/v1/pages', 'controller' => \Zoosper\Api\Controller\PageApiController::class, 'action' => 'index', 'public' => true, 'stateless' => true],
+    ['method' => 'GET', 'path' => '/api/v1/pages/{id:\d+}', 'controller' => \Zoosper\Api\Controller\PageApiController::class, 'action' => 'show', 'public' => true, 'stateless' => true],
     ['method' => 'GET', 'path' => '/api/v1/content/page', 'controller' => ContentPageController::class, 'action' => 'show', 'public' => true, 'stateless' => true],
 ];

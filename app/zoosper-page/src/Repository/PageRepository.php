@@ -177,6 +177,14 @@ final readonly class PageRepository
         return array_map(fn (array $row): Page => $this->hydrate($row), $statement->fetchAll(PDO::FETCH_ASSOC));
     }
 
+    /** @return list<Page> */
+    public function allForSite(int $siteId): array
+    {
+        $statement = $this->pdo->prepare('SELECT ' . $this->selectColumns() . ' FROM pages WHERE site_id = :site_id ORDER BY id DESC');
+        $statement->execute(['site_id' => $siteId]);
+        return array_map(fn (array $row): Page => $this->hydrate($row), $statement->fetchAll(PDO::FETCH_ASSOC));
+    }
+
     public function all(): array
     {
         $statement = $this->pdo->query('SELECT ' . $this->selectColumns() . ' FROM pages ORDER BY id DESC');

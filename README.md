@@ -159,3 +159,4 @@ Zoosper now includes an Auth-owned Personal Access Token foundation with hash-on
 
 ### Personal Access Token administration
 Admin now provides self-owned PAT issuance, one-time credential display, scope and expiry selection, revocation and safe audit events.
+- Phase 10AM-A adds stateless, PAT-scoped Page list and detail API reads with structured content and Site isolation.
