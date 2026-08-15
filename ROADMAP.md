@@ -1189,3 +1189,6 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 
 ### Phase 10AL-A Personal Access Token foundation (2026-08-15)
 - Added Auth-owned PAT persistence, issuance, revocation, scope catalogue and stateless bearer identity. Admin token management and scoped mutation middleware continue in 10AL-B.
+
+### Phase 10AL-B PAT Admin lifecycle (2026-08-15)
+- Added self-owned Admin PAT issuance, one-time display, listing, revocation and safe audit events. Scoped bearer middleware adoption continues with API verticals.

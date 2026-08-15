@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\Auth\Admin\Controller\RoleAdminController;
 use Zoosper\Auth\Admin\Controller\UserAdminController;
+use Zoosper\Auth\Admin\Controller\PersonalAccessTokenAdminController;
 
 return [
     ['method' => 'GET', 'path' => '/admin/users', 'controller' => UserAdminController::class, 'action' => 'index', 'permission' => ['role.manage', 'user.manage']],
@@ -21,4 +22,7 @@ return [
     ['method' => 'POST', 'path' => '/admin/users/{id:\d+}/disable', 'controller' => UserAdminController::class, 'action' => 'disable', 'permission' => 'user.manage'],
     ['method' => 'POST', 'path' => '/admin/users/{id:\d+}/restore', 'controller' => UserAdminController::class, 'action' => 'restore', 'permission' => 'user.manage'],
     ['method' => 'POST', 'path' => '/admin/roles/{id:\d+}/delete', 'controller' => RoleAdminController::class, 'action' => 'deletePermanently', 'permission' => 'role.manage'],
+    ['method' => 'GET', 'path' => '/admin/access-tokens', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'index'],
+    ['method' => 'POST', 'path' => '/admin/access-tokens/create', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'create'],
+    ['method' => 'POST', 'path' => '/admin/access-tokens/{id:\d+}/revoke', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'revoke'],
 ];

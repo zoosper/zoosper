@@ -86,3 +86,6 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 
 ### Personal Access Token foundation
 - Added hash-only PAT persistence, scoped issuance, revocation, active-owner authentication and a stateless bearer identity endpoint.
+
+### PAT Admin lifecycle
+- Added authenticated self-service PAT issuance, one-time secret display, listing, revocation and audit-safe lifecycle records.

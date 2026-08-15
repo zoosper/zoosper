@@ -104,3 +104,6 @@ Zoosper_Auth module for Zoosper CMS.
 
 ### Personal Access Tokens
 Auth owns hash-only PAT persistence, issuance, revocation, scope validation and active-owner authentication. Plaintext credentials use the `zp_pat_` format and are returned only by the issuance service.
+
+### Admin PAT lifecycle
+Authenticated Admin identities can create, list and revoke only their own Personal Access Tokens. Plaintext is rendered directly once after issuance and is never placed in flash messages, redirects or audit metadata.
