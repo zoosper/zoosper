@@ -9,6 +9,7 @@ use Zoosper\Api\Controller\HelloController;
 use Zoosper\Api\Controller\MeController;
 use Zoosper\Api\Controller\TokenMeController;
 use Zoosper\Api\Controller\PageApiController;
+use Zoosper\Api\Controller\MenuApiController;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Auth\Contract\SecondFactorRequirementInterface;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
@@ -23,6 +24,8 @@ use Zoosper\Page\Service\PageRevisionService;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Site\Repository\SiteRepository;
+use Zoosper\Menu\Contract\MenuAdminRepositoryInterface;
+use Zoosper\Menu\Contract\MenuProviderInterface;
 
 return [
     ApiAuthController::class => static fn (ServiceContainer $services): ApiAuthController => new ApiAuthController(
@@ -52,6 +55,12 @@ return [
         $services->get(PageRepository::class),
     ),
     TokenMeController::class => static fn (ServiceContainer $services): TokenMeController => new TokenMeController($services->get(JsonResponder::class), $services->get(PersonalAccessTokenAuthenticator::class)),
+    MenuApiController::class => static fn (ServiceContainer $services): MenuApiController => new MenuApiController(
+        $services->get(JsonResponder::class),
+        $services->get(PersonalAccessTokenAuthenticator::class),
+        $services->get(MenuAdminRepositoryInterface::class),
+        $services->get(MenuProviderInterface::class),
+    ),
     PageApiController::class => static fn (ServiceContainer $services): PageApiController => new PageApiController(
         $services->get(JsonResponder::class),
         $services->get(PersonalAccessTokenAuthenticator::class),
