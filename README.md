@@ -1,169 +1,156 @@
-## Zoosper CMS
+# Zoosper CMS
 
-Latest pre-release: `v0.1.0-alpha.1`  
-Required runtime: PHP 8.5+
+**A modular, API-first CMS without the weight. Extend features without forking core.**
 
-Zoosper is a modern, lightweight, modular PHP 8.5+ CMS inspired by
-Magento-style extensibility, Hyva-style frontend simplicity and Marko PHP
-module conventions.
+- Latest pre-release: `v0.3.0-alpha.1`
+- Current development line: `v0.3.0-alpha.2-dev`
+- Required runtime: PHP 8.5+
 
-### Current phase
+Zoosper is an API-first, multi-site CMS built around independently owned Composer modules. Each feature can contribute its own routes, services, schema, migrations, permissions, Admin UI, API adapters, tests, assets and documentation. Cross-cutting platform modules stay free of feature implementation dependencies.
 
-Public alpha hardening and launch-readiness — two
-confirmed security issues from external review (privilege escalation on
-`/admin/users/edit`, a rate-limit store race condition) fixed and verified;
-a real production 2FA lockout incident diagnosed and fixed with proper key
-rotation support; a module-manifest compile step built (and a stale-cache
-bug it introduced caught and fixed by a second review pass); the first
-module (`zoosper/errors`) extracted out of `zoosper-core` into its own
-standalone package with **real, verified** Marko framework integration
-(not just an unused dependency); and a working, configurable (file/Redis)
-cache foundation wired in, with an opt-in frontend page cache built on top
-of it. See [ROADMAP.md](ROADMAP.md) for full, current status — it is kept
-genuinely up to date and is the project's actual continuity mechanism.
+> Zoosper is public alpha software. It is suitable for evaluation, extension development and controlled testing. No stable release has shipped.
 
-### Framework foundation
+## Why Zoosper
 
-Zoosper builds on real, adopted [Marko PHP](https://marko.build) packages
-where they fit — checked and verified against actual installed source
-before adoption, not assumed from package names. Currently adopted:
-`marko/core` (`MarkoException`, extended by `ZoosperException`),
-`marko/errors` + `marko/errors-simple` (real error reporting and CLI/web
-display), and `marko/cache` + `marko/cache-file` + `marko/cache-redis`
-(a real, configurable cache backend). Evaluated and deliberately deferred:
-`marko/database` (too large a rewrite of the existing schema/persistence
-layer to adopt casually). See [ROADMAP.md §14](ROADMAP.md) for the full,
-current adoption strategy and reasoning.
+- **Feature-owned architecture:** Page, Menu, Media, Site, Auth, SEO and other capabilities own their runtime contributions.
+- **Dependency-aware modules:** first-party modules are Composer packages discovered through the module registry.
+- **API-first delivery:** stateless bearer APIs coexist with the Admin and frontend rendering layers.
+- **Extension without core edits:** modules contribute routes, services, events, settings, forms, Grid columns, assets and presentation.
+- **Multi-site by design:** resolved Site context travels immutably with each request.
+- **Security-focused foundations:** ACL, CSRF, 2FA, password policy, automatic password rehash, rate limiting, secure sessions, canonical Media ingest and safe audit metadata.
+- **Pluggable presentation:** Latte is the current default template engine; Marko View contracts are adopted at selected boundaries.
 
-### What is included
+## What shipped in v0.3.0-alpha.1
 
-- All first-party modules registered as real Composer packages, with per-module dependency resolution
-- Two modules (`zoosper/errors`, `zoosper/media`) fully extracted into standalone `packages/` (more planned — see roadmap)
-- Module-owned database migrations (each module owns its own schema history), always resolved via live module discovery (never a stale compiled cache)
-- Module-owned controller providers through `config/controllers.php`
-- Module-owned admin/API routes, menus, ACL/resource config and views
-- Module-owned log filenames through `config/logging.php`
-- Console commands (`admin:create`, `site:create`, `page:create`) discovered per-module, not hardcoded in the CLI kernel
-- A module-manifest compile step (`bin/zoosper compile`/`cache:clear`/`deploy`) for faster boot, with safe fail-back to a live scan
-- Admin form UI metadata through `config/admin_ui.php`
-- Admin grid pagination/search/filter foundation, with genuinely honored per-column sorting
-- Real, opt-in frontend page caching (file or Redis backend, disabled by default) — see [ROADMAP.md §10](ROADMAP.md)
-- Layout updates with remove, replace and inject operations
-- Login-time 2FA enforcement with recovery-code redemption and real encryption-key rotation support
-- A hardened security baseline: real server-side MySQL prepared statements, pinned table collation, rate-limit identity salting, an environment-guarded HTML sanitizer fallback, and a fixed admin privilege-escalation path
-- PCI-aware roadmap notes
+### Integration APIs
 
-### Pages grid filters
+- Auth-owned, hash-only Personal Access Tokens with scopes, expiry, revocation and last-used metadata.
+- Stateless bearer identity with current-owner permission intersection.
+- Page list, detail, create, update, publish, unpublish, revision listing and revision restoration.
+- Menu list, detail, resolved tree, Menu and item mutations, guarded item deletion, disable, restore and guarded permanent deletion.
+- Feature-owned Page and Menu API routes, adapters, controller factories and tests. The cross-cutting `zoosper-api` module does not own those feature implementations.
 
-`/admin/pages` supports the foundation for: `q`, `status`, `site_id`,
-`page`, `page_size`. The controller integration remains module-owned in
-`zoosper-page`.
+### CMS and platform
 
-### Getting started
+- Multi-site Page management with structured Editor.js content, generated HTML, SEO metadata, revisions, preview and lifecycle controls.
+- Site-scoped nested Menus, frontend navigation and breadcrumbs.
+- Canonical raster Media ingest, upload-time WebP derivatives, persisted derivative metadata and lifecycle cleanup.
+- Extensible SEO metadata, sitemap and robots orchestration.
+- Application-owned file sessions behind `SessionHandlerInterface`.
+- Module-owned migrations, declarative schema, ACL, Admin routes, API routes, controller factories, services, settings, assets, events and tests.
+- Admin Grid workspaces, saved views, column visibility and ordering, filtering, paging, export and protected bulk-action foundations.
+
+### HTTP and security
+
+- RFC-aware `404` and `405` handling, `Allow`, implicit `HEAD`, stateless `OPTIONS` and configurable exact-origin CORS.
+- Login-time 2FA with recovery codes and encryption-key rotation support.
+- Password policy and successful-login password rehash upgrades.
+- Authentication throttling, production fail-closed security checks, hardened session policy and real server-side prepared statements.
+- Canonical GD re-encoding so uploaded raster bytes are not copied directly into public Media storage.
+
+## Architecture at a glance
+
+```text
+zoosper-api       Cross-cutting API platform and authentication endpoints
+zoosper-auth      Identity, ACL, sessions guards, PATs and password security
+zoosper-page      Page domain, Admin UI, frontend rendering and Page APIs
+zoosper-menu      Menu domain, Admin UI, frontend navigation and Menu APIs
+zoosper-media     Media ingest, processing, derivatives and lifecycle
+zoosper-seo       Metadata, sitemap and robots contributor orchestration
+zoosper-site      Site and domain ownership
+zoosper-theme     Pluggable template-engine and theme runtime
+zoosper-core      Framework contracts, HTTP, routing, module discovery and shared infrastructure
+```
+
+A feature-owned API slice follows this pattern:
+
+```text
+<module>/
+├── config/api_routes.php
+├── config/controllers.php
+├── src/Api/
+├── src/Application/
+└── tests/Unit/Api/
+```
+
+Removing or disabling a feature module removes its discovered routes and factories. Required dependencies remain Composer-enforced.
+
+## Getting started
 
 ```bash
 composer install
 cp .env.example .env
-# Edit .env: APP_KEY, TWO_FACTOR_ENCRYPTION_KEY, database, mail as needed
-php bin/zoosper migrate
+php8.5 bin/zoosper migrate
+php8.5 bin/zoosper starter:install
 ```
 
-See [docs/guide/getting-started.md](docs/guide/getting-started.md) for the
-full walkthrough, and [.env.example](.env.example) for every documented
-environment variable.
+Configure the database, `APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY` and deployment-specific settings in `.env` before booting the application.
 
-### Security
+Useful commands:
 
-See [SECURITY.md](SECURITY.md) for the vulnerability disclosure policy.
-This project is under active, pre-release development — see
-`SECURITY.md` for exactly what that means for support and reporting.
+```bash
+php8.5 bin/zoosper version
+php8.5 bin/zoosper compile
+php8.5 bin/zoosper module:manifest:status
+php8.5 bin/zoosper module:manifest:check
+php8.5 vendor/bin/pest
+php8.5 tools/gate.php
+```
 
-### Documentation
+See [Getting started](docs/guide/getting-started.md), [feature guides](docs/guide/index.md), [release checklist](docs/release-checklist.md), [security policy](SECURITY.md), [changelog](CHANGELOG.md) and [roadmap](ROADMAP.md).
 
-Canonical feature guides: [docs/guide/index.md](docs/guide/index.md).
+## Extension model
 
-### Roadmap
+A Zoosper module can own or contribute:
 
-See [ROADMAP.md](ROADMAP.md) — kept genuinely current, not just at
-milestones. It is the project's actual continuity mechanism: a fresh
-conversation or a new contributor should be able to reconstruct full
-project state from this file alone.
+- Composer dependencies and PSR-4 namespaces
+- services and interface implementations
+- Admin and API routes
+- database schema and migrations
+- ACL permissions and Admin navigation
+- settings catalogue entries
+- events and entity-save listeners
+- Admin form sections and processors
+- Grid columns, filters, saved-view behaviour and bulk actions
+- templates, frontend navigation, assets and translations
+- tests and package-level technical documentation
 
-## Continuous integration
+Use `php8.5 bin/zoosper make:module` for a local module or the package-module scaffolder for a distributable package.
 
-Changes targeting `dev` run strict Composer validation, locked dependency audit, shipped JavaScript syntax validation, the strict repository gate, an explicitly advisory Psalm baseline, the full Pest suite and module compilation. Psalm remains visible but non-blocking until its pre-existing baseline is reduced to zero.
+## Quality and release discipline
 
-## Current phase
+The `v0.3.0-alpha.1` release gate completed with:
 
-Zoosper CMS is in active public-alpha development. The latest tagged pre-release is `v0.1.0-alpha.1`. The current `dev` branch includes the first usable modular CMS foundation, while destructive entity lifecycle, referential-integrity, and several production-security items remain explicit launch blockers rather than completed capabilities.
+- 1,441 passing tests
+- 8,237 assertions
+- zero standard quality-gate errors
+- zero standard quality-gate warnings
+- a fresh, validated 28-module manifest
+- a disposable fresh-install alpha smoke test
 
-Recent delivered work includes:
+CI and the tracked pre-push hook run the repository quality contract. Psalm remains visible and advisory while its existing baseline is reduced.
 
-- a GitHub Actions quality gate with Composer validation, dependency audit, JavaScript syntax checks, repository checks, Psalm visibility, the full Pest suite, module-manifest compilation, release checks, and a fresh-install smoke test;
-- a tracked pre-push hook running the full Pest suite and the standard Zoosper quality gate;
-- the `zoosper-menu` module with Admin CRUD, site-scoped nested menus, frontend navigation, breadcrumbs, API output, ACL, safe URL handling, and delete support;
-- Page revisions with history, preview, audited restore, and restore-before-change safety capture;
-- a zero-dependency static documentation site built from the canonical `docs/` source;
-- Marko View and Marko Admin contract adoption for frontend rendering, Admin menu items, sections, metadata, and the live Admin navigation runtime;
-- one co-located technical root README for every first-party Composer module and package;
-- substantial repository cleanup across historical tools, phase fragments, duplicated documentation, and production Page Momentum scaffolding.
+## Current development focus
 
-## What is included
+The `v0.3.0-alpha.2-dev` line begins with Phase 10AP, feature-owned Media API parity:
 
-- Modular Composer packages discovered from application and package layers.
-- Multi-site resolution with request-carried site context.
-- Secure Admin authentication, ACL, CSRF protection, audit logging, login history, and optional two-factor authentication infrastructure.
-- Page management, structured content rendering, revisions, preview, restore, SEO metadata, and frontend theme rendering.
-- Site, domain, URL rewrite, settings, mail, media, menu, Grid, API Grid, Admin Grid, and Store Orders modules or packages at their documented maturity levels.
-- API-first architecture with Latte as the current default template engine and Marko View contracts at selected runtime boundaries.
-- Module-owned routes, services, migrations, schema, permissions, menu items, Admin sections, assets, settings, events, entity-save listeners, tests, and technical documentation.
-- CI, pre-push verification, release checks, a standard quality gate, and a static documentation website.
+- Media reads and derivative representation
+- canonical PAT-scoped upload
+- archive and restore
+- reference-safe permanent deletion where the shared reference contract permits it
 
 ### Explicitly not complete
 
-- Core entity archive/delete flows are not yet consistently available outside Menu.
-- Declarative-schema foreign-key support and broader referential-integrity enforcement remain open.
-- Media derivative processing is not wired to a production processor and enablement policy.
-- Rate limiting is report-only; enforcement is not yet active.
-- Password policy, automatic password rehash, production fail-closed secure-session defaults, and the stateful `/api/*` CSRF decision remain open.
-- Grid and Admin Form extension models have not yet been consolidated across every Admin screen.
-- Psalm remains advisory until a baseline and no-new-errors policy are established.
+- Feature-owned Media API parity is not yet released.
+- Referential-integrity and foreign-key reconciliation are not yet comprehensive across every feature.
+- CSP remains report-only while reporting configuration and broader browser verification continue.
+- Grid and Admin Form extension models are not yet consolidated across every Admin screen.
+- Psalm is not yet an enforced zero-baseline gate.
 
+## Project status and support
 
-### Application-owned sessions
+Zoosper CMS is in active public-alpha development. The latest tagged pre-release is `v0.3.0-alpha.1`; the current `dev` branch is `v0.3.0-alpha.2-dev`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
 
-Zoosper Core depends only on native `SessionHandlerInterface`. The `zoosper/session` module currently adapts `marko/session-file` and owns the third-party dependency. Sessions default to application-owned `var/sessions`, configurable through `SESSION_STORAGE_PATH`; no host PHP session-path change is required.
+## Licence
 
-## Starter site
-Run `php bin/zoosper starter:install` for an idempotent minimal Site with published Home and About Pages rendered by the default starter theme.
-
-- `zoosper-seo`: extensible metadata, sitemap and robots orchestration with module-discovered feature contributors.
-
-### API authentication security
-The session-based API login is throttled through the canonical authentication limiter and refuses password-only session creation for accounts with active 2FA.
-
-### Media ingest security
-Supported raster uploads are canonicalised through GD before storage and publication; user-supplied image bytes are not copied directly into `public/media`.
-
-### Media derivatives
-Canonical originals now generate upload-time GD WebP derivatives through the Media-owned processor contract. Default profiles are thumb, medium, and large; generation is fail-closed and files are written atomically.
-
-### Media derivative records
-Generated Media profiles are first-class database records with Media-owned lookup and permanent-delete cleanup.
-
-### HTTP gateway
-Public API reads now declare stateless execution, wrong-method requests return RFC-compliant 405 responses, and exact-origin CORS preflight is configurable. Production boot fails closed for insecure session or authentication-throttling settings.
-
-### Integration authentication
-Zoosper now includes an Auth-owned Personal Access Token foundation with hash-only secrets, expiry, revocation, scopes and stateless bearer identity.
-
-### Personal Access Token administration
-Admin now provides self-owned PAT issuance, one-time credential display, scope and expiry selection, revocation and safe audit events.
-- Phase 10AM-A adds stateless, PAT-scoped Page list and detail API reads with structured content and Site isolation.
-
-- Phase 10AM-B adds shared Page mutation services and PAT-scoped create/update APIs.
-- Phase 10AM-C adds PAT-scoped Page publication, revision listing and restoration.
-- Phase 10AN-A adds stateless PAT-scoped Menu list, detail and resolved-tree reads.
-- Phase 10AN-B/C adds PAT-scoped Menu and item mutations, guarded item deletion, and Menu lifecycle parity through shared Menu services.
-
-- Phase 10AO moves Page and Menu API routes, adapters, factories, tests, and dependencies into their owning feature modules and locks the API platform against reverse feature imports.
+See the repository licence for usage terms.

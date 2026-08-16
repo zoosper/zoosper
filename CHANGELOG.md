@@ -1,8 +1,29 @@
 # Changelog
+## v0.3.0-alpha.1
+
+### Added
+
+- Stateless HTTP gateway with RFC-aware 404/405 handling, implicit HEAD, stateless OPTIONS and exact-origin CORS.
+- Auth-owned hash-only Personal Access Tokens with scopes, expiry, revocation, last-used metadata and stateless bearer identity.
+- PAT-scoped Page reads, mutations, publication, revision listing and restoration.
+- PAT-scoped Menu reads, mutations, item operations and guarded lifecycle operations.
+- Canonical Media ingest, upload-time WebP derivatives and persisted derivative records.
+
+### Changed
+
+- Page and Menu API routes, adapters, factories, tests and dependencies moved into their owning feature modules.
+- Shared Admin and API mutations use feature-owned application services.
+- The API platform no longer depends on Page or Menu feature implementations.
+
+### Quality
+
+- 1,441 tests with 8,237 assertions.
+- Standard quality gate completed with zero errors and zero warnings.
+- Fresh validated 28-module manifest.
+
 
 
 ## 0.3.0-alpha.1-dev
-
 ### Development line opened
 - Opened the Content and Marketing alpha line after v0.2.0-alpha.1.
 - Planned scope: SEO presentation, sitemap and robots, redirect management, forms, and focused block-editor improvements.

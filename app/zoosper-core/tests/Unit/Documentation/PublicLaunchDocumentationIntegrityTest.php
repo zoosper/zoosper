@@ -7,11 +7,12 @@ it('publishes the current alpha release and delivered product surface at the rep
     $readme = (string) file_get_contents($root . '/README.md');
 
     expect($readme)
-        ->toContain('v0.1.0-alpha.1')
+        ->toContain('v0.3.0-alpha.1')
+        ->toContain('v0.3.0-alpha.2-dev')
         ->toContain('zoosper-menu')
-        ->toContain('Page revisions')
-        ->toContain('GitHub Actions quality gate')
-        ->toContain('static documentation site')
+        ->toContain('revision listing and revision restoration')
+        ->toContain('CI and the tracked pre-push hook')
+        ->toContain('[feature guides](docs/guide/index.md)')
         ->toContain('Explicitly not complete')
         ->not->toContain('Post-Phase 1.41 hardening and Marko adoption (2026-07-30/31)');
 });
@@ -21,7 +22,7 @@ it('states the tagged pre-release and stable-release status precisely', function
     $security = (string) file_get_contents($root . '/SECURITY.md');
 
     expect($security)
-        ->toContain('latest tagged pre-release is `v0.1.0-alpha.1`')
+        ->toContain('latest tagged pre-release is `v0.3.0-alpha.1`')
         ->toContain('No stable release has shipped')
         ->toContain('`composer.json` and `composer.lock` are the source of truth')
         ->not->toContain('no tagged stable releases have shipped yet');
@@ -32,7 +33,7 @@ it('records the current review priorities and does not overclaim media derivativ
     $roadmap = (string) file_get_contents($root . '/ROADMAP.md');
 
     expect($roadmap)
-        ->toContain('Last updated: 2026-08-11')
+        ->toContain('Last updated:** 2026-08-16 (Sydney)')
         ->toContain('External review response and public-launch priorities (2026-08-11)')
         ->toContain('Duplicate MediaUploadService construction is resolved')
         ->toContain('Derivative database persistence remains a separate follow-up')
