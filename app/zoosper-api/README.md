@@ -61,3 +61,5 @@ Password-based API session login is rate-limited through the canonical authentic
 - `GET /api/v1/pages` and `GET /api/v1/pages/{id}` require a PAT with `pages:read` and an owner with `page.view` or `page.manage`.
 
 - `POST /api/v1/pages` and `PATCH /api/v1/pages/{id}` require `pages:write` plus current `page.manage`; creates are draft-only.
+- `POST /api/v1/pages/{id}/publish` and `/unpublish` require `pages:publish` plus current `page.manage`.
+- `GET /api/v1/pages/{id}/revisions` requires `pages:read` plus current `page.view` or `page.manage`; restoration requires `pages:write` plus current `page.manage`. All routes are stateless and Site-isolated.

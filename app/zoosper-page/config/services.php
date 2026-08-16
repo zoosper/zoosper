@@ -117,4 +117,9 @@ return [
             ttlSeconds: (int) ($pageCacheConfig['ttl'] ?? 300),
         );
     },
+
+    \Zoosper\Page\Application\Publication\PagePublicationCoordinator::class => static fn (\Zoosper\Core\Container\ServiceContainer $services): \Zoosper\Page\Application\Publication\PagePublicationCoordinator => new \Zoosper\Page\Application\Publication\PagePublicationCoordinator(
+        $services->get(\Zoosper\Page\Repository\PageRepository::class),
+        $services->has(\Zoosper\Core\Event\EventDispatcherInterface::class) ? $services->get(\Zoosper\Core\Event\EventDispatcherInterface::class) : null,
+    ),
 ];

@@ -26,7 +26,7 @@ use Zoosper\Page\Admin\PageAdminGridResponder;
 use Zoosper\Page\Admin\PageAdminPreviewResponder;
 use Zoosper\Page\Service\PageRevisionService;
 use Zoosper\Page\Admin\PageRevisionAdminResponder;
-use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
+use Zoosper\Page\Application\Publication\PagePublicationCoordinator;
 use Zoosper\Page\Admin\Lifecycle\PageLifecycleAdminResponder;
 use Zoosper\Page\Lifecycle\PageLifecycleCoordinator;
 use Zoosper\Core\Form\AdminFormProcessorConfigFactory;

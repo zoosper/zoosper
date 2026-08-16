@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Page\Admin\Publication;
+namespace Zoosper\Page\Application\Publication;
 
 use Zoosper\Core\Event\EventDispatcherInterface;
 use Zoosper\Page\Event\PageEvents;
@@ -11,7 +11,7 @@ use Zoosper\Page\Event\PageUnpublishedEvent;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 
-/** Owns single-Page publication mutations and their established domain events. */
+/** Application-owned single-Page publication boundary shared by Admin and API. */
 final readonly class PagePublicationCoordinator
 {
     public function __construct(

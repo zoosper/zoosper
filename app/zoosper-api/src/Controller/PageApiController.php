@@ -12,13 +12,16 @@ use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Page\Application\Save\PageSaveCoordinator;
+use Zoosper\Page\Application\Publication\PagePublicationCoordinator;
+use Zoosper\Page\Model\PageRevision;
+use Zoosper\Page\Service\PageRevisionService;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 
 final readonly class PageApiController
 {
-    public function __construct(private JsonResponder $json, private PersonalAccessTokenAuthenticator $auth, private PageRepository $pages, private PageSaveCoordinator $saver, private BlockJsonToHtmlRenderer $renderer, private ?AuditLoggerInterface $audit = null) {}
+    public function __construct(private JsonResponder $json, private PersonalAccessTokenAuthenticator $auth, private PageRepository $pages, private PageSaveCoordinator $saver, private BlockJsonToHtmlRenderer $renderer, private PagePublicationCoordinator $publication, private PageRevisionService $revisions, private ?AuditLoggerInterface $audit = null) {}
 
     public function index(Request $request): Response { $p=$this->principal($request,'pages:read',true);if($p instanceof Response)return $p;$site=$request->siteContext()?->siteId;if($site===null)return $this->json->error('site_not_found','No active site exists for this host.',404);return $this->json->success(['pages'=>array_map($this->normalise(...),$this->pages->allForSite($site))]); }
     public function show(Request $request): Response { $p=$this->principal($request,'pages:read',true);if($p instanceof Response)return $p;$page=$this->sitePage($request);return $page===null?$this->json->error('page_not_found','Page does not exist for this Site.',404):$this->json->success(['page'=>$this->normalise($page)]); }
@@ -39,6 +42,76 @@ final readonly class PageApiController
         $result=$this->saver->update($form,$page,$p->user);if(!$result->successful)return $this->json->error('page_validation_failed',$result->error??'Page validation failed.',422);
         $updated=$this->pages->findById($page->id);if($updated===null)return $this->json->error('page_not_found','Updated Page could not be reloaded.',500);
         $this->audit($p,'page.api_updated',$updated,array_keys($request->json()));return $this->json->success(['page'=>$this->normalise($updated)]);
+    }
+
+    public function publish(Request $request): Response
+    {
+        return $this->publicationMutation($request, true);
+    }
+
+    public function unpublish(Request $request): Response
+    {
+        return $this->publicationMutation($request, false);
+    }
+
+    public function revisions(Request $request): Response
+    {
+        $principal = $this->principal($request, 'pages:read', true);
+        if ($principal instanceof Response) return $principal;
+        $page = $this->sitePage($request);
+        if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
+        $requested = filter_var($request->query('page', '1'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) ?: 1;
+        $pageSize = 20;
+        $total = $this->revisions->historyCount($page->id);
+        $pageCount = max(1, (int) ceil($total / $pageSize));
+        $current = min($requested, $pageCount);
+        return $this->json->success(['revisions' => array_map($this->normaliseRevision(...), $this->revisions->historyPage($page->id, $current, $pageSize)), 'pagination' => ['page' => $current, 'page_size' => $pageSize, 'page_count' => $pageCount, 'total' => $total]]);
+    }
+
+    public function restoreRevision(Request $request): Response
+    {
+        $principal = $this->principal($request, 'pages:write');
+        if ($principal instanceof Response) return $principal;
+        $page = $this->sitePage($request);
+        if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
+        $revisionId = (int) $request->routeParam('revisionId', '0');
+        try {
+            $revision = $this->revisions->restore($page, $revisionId, $principal->user->id, $this->pages);
+        } catch (\RuntimeException) {
+            return $this->json->error('revision_not_found', 'Revision does not exist for this Page and Site.', 404);
+        }
+        $restored = $this->pages->findById($page->id);
+        if ($restored === null || $restored->siteId !== $request->siteContext()?->siteId) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
+        $this->audit($principal, 'page.api_revision_restored', $restored, ['revision_id']);
+        return $this->json->success(['page' => $this->normalise($restored), 'restored_revision' => $this->normaliseRevision($revision)]);
+    }
+
+    private function publicationMutation(Request $request, bool $publish): Response
+    {
+        $principal = $this->principal($request, 'pages:publish');
+        if ($principal instanceof Response) return $principal;
+        $page = $this->sitePage($request);
+        if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
+        if ($page->status === 'archived') return $this->json->error('page_state_conflict', 'Archived Pages cannot be published or unpublished.', 409);
+        $target = $publish ? 'published' : 'draft';
+        if ($page->status !== $target) {
+            $this->revisions->capturePage($page, $principal->user->id);
+            $publish ? $this->publication->publish($page, $principal->user->id) : $this->publication->unpublish($page, $principal->user->id);
+        }
+        $updated = $this->pages->findById($page->id);
+        if ($updated === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
+        $this->audit($principal, $publish ? 'page.api_published' : 'page.api_unpublished', $updated, ['status']);
+        return $this->json->success(['page' => $this->normalise($updated)]);
+    }
+
+    /** @return array<string,mixed> */
+    private function normaliseRevision(PageRevision $revision): array
+    {
+        $document = null;
+        if ($revision->contentJson !== null && trim($revision->contentJson) !== '') {
+            try { $decoded = json_decode($revision->contentJson, true, 512, JSON_THROW_ON_ERROR); $document = is_array($decoded) ? $decoded : null; } catch (JsonException) {}
+        }
+        return ['id' => $revision->id, 'page_id' => $revision->pageId, 'title' => $revision->title, 'slug' => $revision->slug, 'status' => $revision->status, 'content_format' => $revision->contentFormat, 'content_json' => $document, 'content_html' => $revision->content, 'seo' => ['meta_title' => $revision->metaTitle, 'meta_description' => $revision->metaDescription, 'meta_keywords' => $revision->metaKeywords, 'canonical_url' => $revision->canonicalUrl], 'created_by' => $revision->createdBy, 'created_at' => $revision->createdAt];
     }
 
     private function principal(Request $request,string $scope,bool $read=false): PersonalAccessTokenPrincipal|Response

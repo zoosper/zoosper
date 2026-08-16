@@ -18,6 +18,8 @@ use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Application\Save\PageSaveCoordinator;
+use Zoosper\Page\Application\Publication\PagePublicationCoordinator;
+use Zoosper\Page\Service\PageRevisionService;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Site\Repository\SiteRepository;
@@ -56,6 +58,8 @@ return [
         $services->get(PageRepository::class),
         $services->get(PageSaveCoordinator::class),
         $services->get(BlockJsonToHtmlRenderer::class),
+        $services->get(PagePublicationCoordinator::class),
+        $services->get(PageRevisionService::class),
         $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
     ),
 ];

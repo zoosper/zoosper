@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\Core\Event\EventDispatcherInterface;
 use Zoosper\Core\Event\EventListenerInterface;
-use Zoosper\Page\Admin\Publication\PagePublicationCoordinator;
+use Zoosper\Page\Application\Publication\PagePublicationCoordinator;
 use Zoosper\Page\Event\PageEvents;
 use Zoosper\Page\Repository\PageRepository;
 
