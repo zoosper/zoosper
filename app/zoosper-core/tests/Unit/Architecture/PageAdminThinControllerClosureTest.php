@@ -15,5 +15,5 @@ it('moves save normalisation lifecycle persistence and publication events out of
         ->not->toContain('PageEvents::UNPUBLISHED')
         ->not->toContain('$this->pages->publish(')
         ->not->toContain('$this->pages->unpublish(')
-        ->and($factory)->toContain('new PageSaveCoordinator(')->toContain('new PagePublicationCoordinator(');
+        ->and($factory)->toContain('$services->get(PageSaveCoordinator::class)')->toContain('new PagePublicationCoordinator(');
 });

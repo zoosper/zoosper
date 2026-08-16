@@ -20,7 +20,7 @@ use Zoosper\Page\Admin\PageGridMutationCoordinator;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Page\Admin\PageGridSiteFilter;
 use Zoosper\Page\Admin\PageGridWorkspace;
-use Zoosper\Page\Admin\Save\PageSaveCoordinator;
+use Zoosper\Page\Application\Save\PageSaveCoordinator;
 use Zoosper\Page\Admin\Form\PageAdminFormRenderer;
 use Zoosper\Page\Admin\PageAdminGridResponder;
 use Zoosper\Page\Admin\PageAdminPreviewResponder;
@@ -159,19 +159,7 @@ return [
             $services->get(AdminUrlGenerator::class),
             dirname(__DIR__, 3),
         ),
-        pageSaver: new PageSaveCoordinator(
-            $services->get(PageRepository::class),
-            $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,
-            $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
-            $services->has(AdminFormProcessorConfigFactory::class)
-                ? $services->get(AdminFormProcessorConfigFactory::class)->create(
-                    $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class)->array('admin_forms') : [],
-                )
-                : null,
-            $services->get(EntitySaveLifecycleRunner::class),
-            $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
-            $services->get(PageRevisionService::class),
-        ),
+        pageSaver: $services->get(PageSaveCoordinator::class),
         publication: new PagePublicationCoordinator(
             $services->get(PageRepository::class),
             $services->has(EventDispatcherInterface::class) ? $services->get(EventDispatcherInterface::class) : null,

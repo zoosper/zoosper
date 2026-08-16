@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Page\Admin\Save;
+namespace Zoosper\Page\Application\Save;
 
 use RuntimeException;
 use Zoosper\Core\Config\ConfigRepository;
@@ -17,6 +17,7 @@ final readonly class PageSaveInput
         public string $title,
         public string $slug,
         public string $content,
+        public string $contentFormat,
         public bool $publish,
         public ?string $contentJson,
         public ?string $metaTitle,
@@ -41,6 +42,7 @@ final readonly class PageSaveInput
             slug: trim($slug, '-'),
             content: $sanitizer?->sanitise((string) ($form['content'] ?? ''))->toString()
                 ?? (string) ($form['content'] ?? ''),
+            contentFormat: in_array((string) ($form['content_format'] ?? 'html'), ['html', 'block_json'], true) ? (string) ($form['content_format'] ?? 'html') : 'html',
             publish: isset($form['publish']),
             contentJson: self::normaliseContentJson($form['content_json'] ?? null, $config),
             metaTitle: self::optional($form['meta_title'] ?? null),

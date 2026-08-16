@@ -15,7 +15,7 @@ use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\IdentityTranslator;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Url\AdminUrlGenerator;
-use Zoosper\Page\Admin\Save\PageSaveCoordinator;
+use Zoosper\Page\Application\Save\PageSaveCoordinator;
 use Zoosper\Page\Admin\Form\PageAdminFormRenderer;
 use Zoosper\Page\Admin\PageAdminGridResponder;
 use Zoosper\Page\Admin\PageAdminPreviewResponder;

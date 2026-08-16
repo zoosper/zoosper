@@ -18,7 +18,7 @@ it('locks the completed Page runtime ownership boundaries', function (): void {
         ->and($factory)->toContain('gridResponder: new PageAdminGridResponder(')
         ->toContain('previewResponder: new PageAdminPreviewResponder(')
         ->toContain('formRenderer: new PageAdminFormRenderer(')
-        ->toContain('pageSaver: new PageSaveCoordinator(')
+        ->toContain('pageSaver: $services->get(PageSaveCoordinator::class)')
         ->toContain('publication: new PagePublicationCoordinator(');
 });
 

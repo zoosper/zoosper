@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 use Marko\View\ViewInterface;
 use Zoosper\Page\Repository\PageRevisionRepository;
+use Zoosper\Page\Application\Save\PageSaveCoordinator;
+use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
+use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
+use Zoosper\Core\Html\HtmlSanitizerInterface;
+use Zoosper\Core\Log\ErrorHandler;
 use Zoosper\Page\Lifecycle\PageLifecycleCoordinator;
 use Zoosper\Page\Lifecycle\PageReferenceInspector;
 use Zoosper\Core\Audit\AuditLoggerInterface;
@@ -32,6 +37,17 @@ use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Page\Console\PageCreateCommand;
 
 return [
+    PageSaveCoordinator::class => static fn (ServiceContainer $services): PageSaveCoordinator => new PageSaveCoordinator(
+        $services->get(PageRepository::class),
+        $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,
+        $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
+        $services->has(AdminFormProcessorConfigFactory::class)
+            ? $services->get(AdminFormProcessorConfigFactory::class)->create($services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class)->array('admin_forms') : [])
+            : null,
+        $services->get(EntitySaveLifecycleRunner::class),
+        $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
+        $services->get(PageRevisionService::class),
+    ),
     PageSeoContributor::class => static fn (ServiceContainer $services): PageSeoContributor => new PageSeoContributor(),
     PageSitemapContributor::class => static fn (ServiceContainer $services): PageSitemapContributor => new PageSitemapContributor($services->get(\Zoosper\Page\Repository\PageRepository::class)),    PageReferenceInspector::class => static fn (ServiceContainer $services): PageReferenceInspector => new PageReferenceInspector($services->get(PDO::class)),
     PageLifecycleCoordinator::class => static fn (ServiceContainer $services): PageLifecycleCoordinator => new PageLifecycleCoordinator(

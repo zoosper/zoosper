@@ -91,3 +91,5 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - Added authenticated self-service PAT issuance, one-time secret display, listing, revocation and audit-safe lifecycle records.
 
 - Added stateless PAT-authenticated Page list/detail API reads with Site isolation and structured content.
+
+- Added shared Page save application ownership and stateless PAT-scoped Page create/update endpoints.

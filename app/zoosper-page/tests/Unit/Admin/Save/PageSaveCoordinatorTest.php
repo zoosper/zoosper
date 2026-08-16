@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Auth\Model\AdminUser;
-use Zoosper\Page\Admin\Save\PageSaveCoordinator;
+use Zoosper\Page\Application\Save\PageSaveCoordinator;
 use Zoosper\Page\Repository\PageRepository;
 
 function phase9fnPagesPdo(): PDO

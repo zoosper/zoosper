@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Page\Admin\Save;
+namespace Zoosper\Page\Application\Save;
 
 final readonly class PageSaveResult
 {

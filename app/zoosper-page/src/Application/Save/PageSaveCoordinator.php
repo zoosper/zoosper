@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Page\Admin\Save;
+namespace Zoosper\Page\Application\Save;
 
 use RuntimeException;
 use Zoosper\Auth\Model\AdminUser;
@@ -74,7 +74,7 @@ final readonly class PageSaveCoordinator
                         content: $input->content,
                         status: $input->publish ? 'published' : 'draft',
                         userId: $user->id,
-                        contentFormat: 'html',
+                        contentFormat: $input->contentFormat,
                         contentJson: $input->contentJson,
                         metaTitle: $input->metaTitle,
                         metaDescription: $input->metaDescription,
@@ -97,7 +97,7 @@ final readonly class PageSaveCoordinator
                     slug: $input->slug,
                     content: $input->content,
                     userId: $user->id,
-                    contentFormat: 'html',
+                    contentFormat: $input->contentFormat,
                     contentJson: $input->contentJson,
                     metaTitle: $input->metaTitle,
                     metaDescription: $input->metaDescription,

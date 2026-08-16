@@ -59,3 +59,5 @@ Password-based API session login is rate-limited through the canonical authentic
 - `GET /api/v1/token/me` provides stateless bearer-token identity inspection.
 
 - `GET /api/v1/pages` and `GET /api/v1/pages/{id}` require a PAT with `pages:read` and an owner with `page.view` or `page.manage`.
+
+- `POST /api/v1/pages` and `PATCH /api/v1/pages/{id}` require `pages:write` plus current `page.manage`; creates are draft-only.
