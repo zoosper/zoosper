@@ -15,3 +15,8 @@ PAT clients can publish or unpublish a Site-owned Page with `pages:publish`, lis
 ## Menu reads
 
 PAT clients can list request-Site Menus, inspect a Menu and its items, and resolve an active frontend tree with `menus:read` plus the token owner's current `menu.manage` permission. These routes are stateless and return not-found semantics across Site boundaries.
+
+
+## Menu mutations and lifecycle
+
+PAT clients with `menus:write` and current `menu.manage` can create and update request-Site Menus and items, delete childless items, disable or restore Menus, and permanently delete only inactive empty Menus. Site ownership, same-Menu parent relationships, and published same-Site Page targets are server validated. Audit metadata excludes bearer secrets and Menu content payloads.

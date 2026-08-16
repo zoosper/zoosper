@@ -65,3 +65,5 @@ Password-based API session login is rate-limited through the canonical authentic
 - `GET /api/v1/pages/{id}/revisions` requires `pages:read` plus current `page.view` or `page.manage`; restoration requires `pages:write` plus current `page.manage`. All routes are stateless and Site-isolated.
 
 - `GET /api/v1/menus`, `GET /api/v1/menus/{id}`, and `GET /api/v1/menus/{id}/tree` require `menus:read` plus current `menu.manage`; all are stateless and request-Site isolated.
+
+- Menu and Menu-item create/update, guarded item deletion, disable/restore, and guarded permanent deletion require `menus:write` plus current `menu.manage`; request Site and relationship authority remain server-owned.

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Zoosper\Menu\Admin\Controller;
 use Zoosper\Menu\Admin\Lifecycle\MenuLifecycleAdminResponder;
-use Zoosper\Menu\Admin\Lifecycle\MenuItemDeletionService;
+use Zoosper\Menu\Application\MenuItemDeletionService;
 use RuntimeException; use Throwable; use Zoosper\Auth\Model\AdminUser; use Zoosper\Auth\Service\SessionGuard; use Zoosper\Core\Http\{Request,Response}; use Zoosper\Core\Url\AdminUrlGenerator; use Zoosper\Menu\Admin\MenuAdminResponder; use Zoosper\Menu\Application\MenuAdminService; use Zoosper\Menu\Contract\MenuAdminRepositoryInterface;
 /** Thin HTTP adapter. Authentication, CSRF and permission checks are middleware-owned. */
 final readonly class MenuAdminController {

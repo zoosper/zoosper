@@ -89,3 +89,7 @@ Site-scoped navigation, nested menu trees, breadcrumbs and menu API for Zoosper 
 - Inactive Menus can be restored. Permanent deletion is inactive-first and blocked until every Menu item is removed.
 - Menu item deletion verifies Menu ownership and blocks parent deletion while child items remain, avoiding accidental hierarchy cascades.
 - Lifecycle and deletion mutations are POST-only, require `menu.manage`, use central CSRF validation, and avoid inline confirmation handlers.
+
+### Shared API mutation ownership
+
+Menu writes use `MenuAdminService`, `MenuMutationGuard`, `MenuItemDeletionService`, and `MenuLifecycleCoordinator` across Admin and stateless API adapters. Cross-Site reassignment, cross-Menu parent/item references, unpublished or foreign-Site Page targets, parent deletion with children, and deletion of non-empty or active Menus are rejected.

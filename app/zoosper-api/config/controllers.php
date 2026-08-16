@@ -26,6 +26,8 @@ use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Menu\Contract\MenuAdminRepositoryInterface;
 use Zoosper\Menu\Contract\MenuProviderInterface;
+use Zoosper\Menu\Application\{MenuAdminService,MenuItemDeletionService,MenuMutationGuard};
+use Zoosper\Menu\Lifecycle\MenuLifecycleCoordinator;
 
 return [
     ApiAuthController::class => static fn (ServiceContainer $services): ApiAuthController => new ApiAuthController(
@@ -60,6 +62,11 @@ return [
         $services->get(PersonalAccessTokenAuthenticator::class),
         $services->get(MenuAdminRepositoryInterface::class),
         $services->get(MenuProviderInterface::class),
+        $services->get(MenuAdminService::class),
+        $services->get(MenuMutationGuard::class),
+        $services->get(MenuItemDeletionService::class),
+        $services->get(MenuLifecycleCoordinator::class),
+        $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
     ),
     PageApiController::class => static fn (ServiceContainer $services): PageApiController => new PageApiController(
         $services->get(JsonResponder::class),

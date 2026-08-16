@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Menu\Admin\Lifecycle;
+namespace Zoosper\Menu\Application;
 
 use RuntimeException;
 use Zoosper\Menu\Contract\MenuAdminRepositoryInterface;
 use Zoosper\Menu\Lifecycle\MenuReferenceInspector;
 
-/** Prevents cross-Menu and parent-cascade item deletion through the Admin workflow. */
+/** Prevents cross-Menu and parent-cascade item deletion through every Menu mutation adapter. */
 final readonly class MenuItemDeletionService
 {
     public function __construct(private MenuAdminRepositoryInterface $menus, private MenuReferenceInspector $references) {}
