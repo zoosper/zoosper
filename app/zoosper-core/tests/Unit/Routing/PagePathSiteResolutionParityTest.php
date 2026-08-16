@@ -18,7 +18,7 @@ function projectPath(string $relative): string
 test('page hot path controllers no longer depend on legacy SiteResolver', function () {
     foreach ([
         'app/zoosper-page/src/Controller/PageController.php',
-        'app/zoosper-api/src/Controller/ContentPageController.php',
+        'app/zoosper-page/src/Api/ContentPageController.php',
     ] as $file) {
         $source = (string) file_get_contents(projectPath($file));
 
@@ -33,7 +33,7 @@ test('page hot path controllers no longer depend on legacy SiteResolver', functi
 test('page hot path factories no longer inject legacy SiteResolver', function () {
     foreach ([
         'app/zoosper-page/config/services.php',
-        'app/zoosper-api/config/controllers.php',
+        'app/zoosper-page/config/controllers.php',
     ] as $file) {
         $source = (string) file_get_contents(projectPath($file));
 

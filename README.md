@@ -165,3 +165,5 @@ Admin now provides self-owned PAT issuance, one-time credential display, scope a
 - Phase 10AM-C adds PAT-scoped Page publication, revision listing and restoration.
 - Phase 10AN-A adds stateless PAT-scoped Menu list, detail and resolved-tree reads.
 - Phase 10AN-B/C adds PAT-scoped Menu and item mutations, guarded item deletion, and Menu lifecycle parity through shared Menu services.
+
+- Phase 10AO moves Page and Menu API routes, adapters, factories, tests, and dependencies into their owning feature modules and locks the API platform against reverse feature imports.

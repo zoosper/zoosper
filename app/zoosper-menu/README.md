@@ -93,3 +93,7 @@ Site-scoped navigation, nested menu trees, breadcrumbs and menu API for Zoosper 
 ### Shared API mutation ownership
 
 Menu writes use `MenuAdminService`, `MenuMutationGuard`, `MenuItemDeletionService`, and `MenuLifecycleCoordinator` across Admin and stateless API adapters. Cross-Site reassignment, cross-Menu parent/item references, unpublished or foreign-Site Page targets, parent deletion with children, and deletion of non-empty or active Menus are rejected.
+
+### Feature-owned API
+
+Menu owns its stateless read, mutation, item, and lifecycle API routes, adapters, factories, tests, and service integration. Removing the Menu module removes those routes without edits to `zoosper-api`.

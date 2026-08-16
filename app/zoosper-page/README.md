@@ -140,3 +140,7 @@ Zoosper_Page module for Zoosper CMS.
 - Page registers Page metadata and sitemap contributors through `config/seo.php`, implementing contracts owned by `zoosper-seo`. Generic SEO output and public endpoints are not owned by this module.
 
 - `Application\Save\PageSaveCoordinator` is the shared Page mutation boundary used by Admin and API consumers.
+
+### Feature-owned API
+
+Page owns its stateless Page and public content API routes, adapters, controller factories, tests, and application-service integration. Removing the Page module removes those routes without edits to `zoosper-api`.

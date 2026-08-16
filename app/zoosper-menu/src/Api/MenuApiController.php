@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Api\Controller;
+namespace Zoosper\Menu\Api;
 
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Auth\Token\PersonalAccessTokenPrincipal;

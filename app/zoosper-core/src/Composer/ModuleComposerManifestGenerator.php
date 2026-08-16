@@ -18,11 +18,11 @@ final readonly class ModuleComposerManifestGenerator
     /** @var array<string, list<string>> */
     private const PACKAGE_DEPENDENCIES = [
         'zoosper/admin' => ['zoosper/core', 'zoosper/auth', 'zoosper/theme'],
-        'zoosper/api' => ['zoosper/core', 'zoosper/auth', 'zoosper/page', 'zoosper/site'],
+        'zoosper/api' => ['zoosper/core', 'zoosper/auth'],
         'zoosper/auth' => ['zoosper/core'],
         'zoosper/mail' => ['zoosper/core'],
         'zoosper/media' => ['zoosper/core', 'zoosper/admin', 'zoosper/auth'],
-        'zoosper/page' => ['zoosper/core', 'zoosper/admin', 'zoosper/site', 'zoosper/theme'],
+        'zoosper/page' => ['zoosper/core', 'zoosper/admin', 'zoosper/auth', 'zoosper/site', 'zoosper/theme'],
         'zoosper/site' => ['zoosper/core'],
         'zoosper/theme' => ['zoosper/core'],
         'zoosper/two-factor' => ['zoosper/core', 'zoosper/auth', 'zoosper/admin'],

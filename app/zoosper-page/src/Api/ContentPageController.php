@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Api\Controller;
+namespace Zoosper\Page\Api;
 
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;

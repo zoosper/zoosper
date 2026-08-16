@@ -67,3 +67,7 @@ Password-based API session login is rate-limited through the canonical authentic
 - `GET /api/v1/menus`, `GET /api/v1/menus/{id}`, and `GET /api/v1/menus/{id}/tree` require `menus:read` plus current `menu.manage`; all are stateless and request-Site isolated.
 
 - Menu and Menu-item create/update, guarded item deletion, disable/restore, and guarded permanent deletion require `menus:write` plus current `menu.manage`; request Site and relationship authority remain server-owned.
+
+### Platform ownership boundary
+
+This module owns only cross-cutting API platform endpoints and presentation. Feature modules contribute their own `config/api_routes.php`, controller factories, API adapters, tests, and documentation. The API platform must not import Page, Menu, Media, or other feature namespaces.
