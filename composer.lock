@@ -1033,14 +1033,12 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-api",
-                "reference": "5c51000735235be0a9d050682ebe798decb3b2a6"
+                "reference": "5f8901db820ce146d9f1e056e1d3fa62484bee12"
             },
             "require": {
                 "php": "^8.5",
                 "zoosper/auth": "dev-dev",
-                "zoosper/core": "dev-dev",
-                "zoosper/page": "dev-dev",
-                "zoosper/site": "dev-dev"
+                "zoosper/core": "dev-dev"
             },
             "type": "zoosper-module",
             "autoload": {
@@ -1371,10 +1369,11 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-menu",
-                "reference": "0ac4fdf054746f309b1ddeda9746668b86ed46c9"
+                "reference": "3143712e1952c2f2c00f6e75aade37033ad68112"
             },
             "require": {
                 "php": "^8.3 || ^8.5",
+                "zoosper/auth": "dev-dev",
                 "zoosper/core": "dev-dev",
                 "zoosper/page": "dev-dev",
                 "zoosper/site": "dev-dev"
@@ -1405,10 +1404,11 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-page",
-                "reference": "8280c256c107c5d5c94b75f8c14b2b221700b835"
+                "reference": "ae5bff700bdb26f61a61c0b1bf70a6976163f2b4"
             },
             "require": {
                 "php": "^8.5",
+                "zoosper/auth": "dev-dev",
                 "zoosper/core": "dev-dev",
                 "zoosper/grid": "dev-dev",
                 "zoosper/media": "dev-dev",
