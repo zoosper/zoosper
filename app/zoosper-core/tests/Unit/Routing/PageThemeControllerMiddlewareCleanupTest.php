@@ -69,7 +69,7 @@ test('page and theme admin controllers no longer duplicate permission gates', fu
     $root = dirname(__DIR__, 5);
     foreach ([
         'app/zoosper-page/src/Admin/Controller/PageAdminController.php',
-        'app/zoosper-admin/src/Controller/ThemeAdminController.php',
+        '/app/zoosper-theme/src/Admin/Controller/ThemeAdminController.php',
     ] as $relative) {
         $source = (string) file_get_contents($root . '/' . $relative);
 
@@ -83,7 +83,7 @@ test('page and theme admin forms still generate csrf tokens for middleware valid
     $root = dirname(__DIR__, 5);
 
     $pageController = (string) file_get_contents($root . '/app/zoosper-page/src/Admin/Controller/PageAdminController.php');
-    $themeController = (string) file_get_contents($root . '/app/zoosper-admin/src/Controller/ThemeAdminController.php');
+    $themeController = (string) file_get_contents($root . '/app/zoosper-theme/src/Admin/Controller/ThemeAdminController.php');
     $pageFormRenderer = (string) file_get_contents($root . '/app/zoosper-page/src/Admin/Form/PageAdminFormRenderer.php');
 
     expect($pageController)->not->toContain('$this->csrf->token()');

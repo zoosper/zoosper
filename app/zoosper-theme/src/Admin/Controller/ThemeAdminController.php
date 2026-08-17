@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Controller;
+namespace Zoosper\Theme\Admin\Controller;
 
 use RuntimeException;
-use Zoosper\Admin\Audit\AuditLogger;
+use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\CsrfTokenManager;
@@ -14,6 +14,7 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Site\Repository\SiteRepository;
+use Zoosper\Theme\Application\ThemeAssignmentService;
 use Zoosper\Theme\Theme\ThemeRepository;
 
 final readonly class ThemeAdminController
@@ -24,7 +25,8 @@ final readonly class ThemeAdminController
         private AdminLayout $layout,
         private ThemeRepository $themes,
         private SiteRepository $sites,
-        private ?AuditLogger $auditLogger = null,
+        private ThemeAssignmentService $assignment,
+        private ?AuditLoggerInterface $auditLogger = null,
         private ?AdminViewRenderer $views = null,
         private ?AdminUrlGenerator $adminUrls = null,
     ) {
@@ -69,8 +71,8 @@ final readonly class ThemeAdminController
                 throw new RuntimeException('Theme does not exist: ' . $themeCode);
             }
 
-            $this->sites->updateTheme($siteId, $themeCode);
-            $this->auditLogger?->record($user, 'site.theme.updated', 'site', (string) $siteId, 'Updated site theme', ['theme_code' => $themeCode], $request);
+            $this->assignment->assign($siteId, $themeCode);
+            $this->auditLogger?->logAction($user->id, $user->email, 'site.theme.updated', 'site', (string) $siteId, 'Updated site theme.', ['theme_code' => $themeCode]);
 
             return Response::redirect($this->adminUrls?->url('themes') ?? '/admin/themes');
         } catch (RuntimeException $exception) {

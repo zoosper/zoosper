@@ -20,8 +20,9 @@ use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Site\Api\SiteApiController;
+use Zoosper\Site\Application\SiteMutationService;
 return [
-    SiteApiController::class => static fn (ServiceContainer $s): SiteApiController => new SiteApiController($s->get(JsonResponder::class),$s->get(PersonalAccessTokenAuthenticator::class),$s->get(SiteRepository::class),new SiteLifecycleCoordinator($s->get(PDO::class),$s->get(SiteRepository::class),new SiteReferenceInspector($s->get(PDO::class)),$s->has(AuditLoggerInterface::class)?$s->get(AuditLoggerInterface::class):null)),
+    SiteApiController::class => static fn (ServiceContainer $s): SiteApiController => new SiteApiController($s->get(JsonResponder::class),$s->get(PersonalAccessTokenAuthenticator::class),$s->get(SiteRepository::class),$s->get(SiteLifecycleCoordinator::class),$s->get(SiteMutationService::class)),
 
     SiteAdminController::class => static fn (ServiceContainer $services): SiteAdminController => new SiteAdminController(
         $services->get(SessionGuard::class),
@@ -30,12 +31,7 @@ return [
         $services->get(AdminLayout::class),
         $services->get(AdminUrlGenerator::class),
         lifecycle: new SiteLifecycleAdminResponder(
-            new SiteLifecycleCoordinator(
-                $services->get(PDO::class),
-                $services->get(SiteRepository::class),
-                new SiteReferenceInspector($services->get(PDO::class)),
-                $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
-            ),
+            $services->get(SiteLifecycleCoordinator::class),
             $services->get(CsrfTokenManager::class),
             $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
             $services->has(AdminUrlGenerator::class) ? $services->get(AdminUrlGenerator::class) : null,

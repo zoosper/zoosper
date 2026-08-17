@@ -8,4 +8,5 @@ return [
  ['method'=>'PATCH','path'=>'/api/v1/url-rewrites/{id:\d+}','controller'=>UrlRewriteApiController::class,'action'=>'update','public'=>true,'stateless'=>true],
  ['method'=>'POST','path'=>'/api/v1/url-rewrites/{id:\d+}/disable','controller'=>UrlRewriteApiController::class,'action'=>'disable','public'=>true,'stateless'=>true],
  ['method'=>'POST','path'=>'/api/v1/url-rewrites/{id:\d+}/restore','controller'=>UrlRewriteApiController::class,'action'=>'restore','public'=>true,'stateless'=>true],
+ ['method'=>'DELETE','path'=>'/api/v1/url-rewrites/{id:\d+}','controller'=>UrlRewriteApiController::class,'action'=>'deletePermanently','public'=>true,'stateless'=>true],
 ];

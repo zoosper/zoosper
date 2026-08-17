@@ -24,7 +24,7 @@ it('cuts over remaining active Admin Mail Theme and Site runtime URLs', function
     $files = [
         '/app/zoosper-admin/src/Controller/AuditLogController.php',
         '/app/zoosper-admin/src/Controller/LoginHistoryController.php',
-        '/app/zoosper-admin/src/Controller/ThemeAdminController.php',
+        '/app/zoosper-theme/src/Admin/Controller/ThemeAdminController.php',
         '/app/zoosper-mail/src/Controller/EmailLogAdminController.php',
         '/app/zoosper-site/src/Admin/Controller/SiteAdminController.php',
         '/app/zoosper-site/src/Admin/Controller/SiteDomainAdminController.php',

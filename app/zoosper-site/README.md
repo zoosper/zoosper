@@ -86,3 +86,6 @@ Zoosper_Site module for Zoosper CMS.
 
 ## Feature-owned API
 PAT-scoped Site reads and the existing reference-guarded disable, restore, and permanent-delete lifecycle are exposed by this module. Create/update remain Admin-only until a shared mutation coordinator is extracted.
+
+### Shared Site mutation
+Admin/API-ready Site validation is centralised in SiteMutationService; PAT create/update are exposed and Site plus primary-Domain creation is transactional.

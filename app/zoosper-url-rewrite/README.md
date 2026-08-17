@@ -55,3 +55,6 @@ Zoosper_UrlRewrite module for Zoosper CMS.
 
 ## Feature-owned API
 PAT-scoped, request-Site isolated URL Rewrite reads, policy-backed create/update, and reversible disable/restore are owned by this module. Permanent deletion remains absent until a shared Admin/API lifecycle contract exists.
+
+### Shared mutation lifecycle
+Create/update use one policy-backed application service. Disable, restore and disabled-first permanent deletion use a feature-owned lifecycle coordinator with safe audit metadata.

@@ -66,3 +66,6 @@ Theme and template rendering foundation for Zoosper CMS.
 
 ## Feature-owned API
 The filesystem Theme catalogue exposes safe code, name, and version metadata only. Site assignment uses a Theme-owned application service and never exposes Theme filesystem paths.
+
+### Admin ownership
+The Theme Admin adapter is owned by this module and reuses ThemeAssignmentService and AuditLoggerInterface.

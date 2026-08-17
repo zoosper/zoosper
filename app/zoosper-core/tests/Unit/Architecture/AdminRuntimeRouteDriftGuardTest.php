@@ -7,7 +7,7 @@ it('keeps migrated runtime consumers on the canonical Admin URL boundary', funct
     $required = [
         '/app/zoosper-admin/src/Controller/AuditLogController.php' => "->url('audit-log')",
         '/app/zoosper-admin/src/Controller/LoginHistoryController.php' => "->url('login-history')",
-        '/app/zoosper-admin/src/Controller/ThemeAdminController.php' => "->url('themes')",
+        '/app/zoosper-theme/src/Admin/Controller/ThemeAdminController.php' => "->url('themes')",
         '/app/zoosper-mail/src/Controller/EmailLogAdminController.php' => "->url('mail-logs')",
         '/app/zoosper-site/src/Admin/Controller/SiteAdminController.php' => 'private function adminUrl(',
         '/app/zoosper-site/src/Admin/Controller/SiteDomainAdminController.php' => 'private function adminUrl(',

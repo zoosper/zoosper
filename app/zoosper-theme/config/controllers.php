@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Audit\AuditLogger;
-use Zoosper\Admin\Controller\ThemeAdminController;
+use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Theme\Admin\Controller\ThemeAdminController;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\CsrfTokenManager;
@@ -26,7 +26,8 @@ return [
         $services->get(AdminLayout::class),
         $services->get(ThemeRepository::class),
         $services->get(SiteRepository::class),
-        $services->has(AuditLogger::class) ? $services->get(AuditLogger::class) : null,
+        $services->get(ThemeAssignmentService::class),
+        $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
         $services->get(AdminUrlGenerator::class),
     ),

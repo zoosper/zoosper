@@ -62,6 +62,12 @@ final readonly class UrlRewriteRepository
         $s=$this->pdo->prepare('UPDATE url_rewrites SET is_active=:active,updated_at=:updated WHERE id=:id AND site_id=:site');$s->execute(['active'=>$active?1:0,'updated'=>gmdate('Y-m-d H:i:s'),'id'=>$id,'site'=>$siteId]);
     }
 
+    public function deletePermanently(int $id, int $siteId): void
+    {
+        $statement = $this->pdo->prepare('DELETE FROM url_rewrites WHERE id = :id AND site_id = :site_id');
+        $statement->execute(['id' => $id, 'site_id' => $siteId]);
+    }
+
     /**
      * Hydrate a URL rewrite model from a database row.
      *
