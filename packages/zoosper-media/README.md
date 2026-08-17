@@ -87,4 +87,4 @@ Generated profiles are persisted in `media_derivatives` with dimensions, byte si
 
 ## Feature-owned API
 
-Media owns stateless PAT-scoped list, detail, derivative, canonical upload, archive and restore endpoints under `/api/v1/media`. API responses expose browser-safe public paths and metadata, never private storage paths. Permanent deletion remains unavailable through the API until shared reference-safety policy can prove that no content references the asset.
+Media owns stateless PAT-scoped list, detail, derivative, canonical upload, archive and restore endpoints under `/api/v1/media`. API responses expose browser-safe public paths and metadata, never private storage paths. Permanent deletion is available only for archived assets after the shared Media lifecycle verifies that neither current Pages nor restorable Page revisions reference the complete canonical public path.

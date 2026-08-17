@@ -115,6 +115,24 @@ final readonly class MediaApiController
         return $this->lifecycle($request, 'restore');
     }
 
+    public function deletePermanently(Request $request): Response
+    {
+        $principal = $this->principal($request, 'media:delete');
+        if ($principal instanceof Response) {
+            return $principal;
+        }
+        $asset = $this->asset($request);
+        if ($asset === null) {
+            return $this->json->error('media_not_found', 'Media asset does not exist.', 404);
+        }
+        $result = $this->lifecycle->deletePermanentlyGuarded($asset, $principal->user->id, $principal->user->email);
+        if (!$result->successful) {
+            return $this->json->error('media_delete_blocked', $result->message ?? 'Media deletion was blocked.', 409, ['blockers' => $result->blockers]);
+        }
+
+        return $this->json->success(['deleted' => true, 'media_id' => $asset->id]);
+    }
+
     private function lifecycle(Request $request, string $operation): Response
     {
         $principal = $this->principal($request, 'media:delete');

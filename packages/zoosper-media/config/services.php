@@ -14,6 +14,7 @@ use Zoosper\Media\Processing\GdMediaProcessor;
 use Zoosper\Media\Processing\MediaUploadDerivativeDispatcher;
 use Zoosper\Media\Processing\MediaUploadDerivativePolicy;
 use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
+use Zoosper\Media\Lifecycle\MediaReferenceInspector;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Repository\MediaDerivativeRepository;
@@ -26,6 +27,7 @@ use Zoosper\Media\Service\MediaUploadService;
 use Zoosper\Media\Service\MediaUploadValidator;
 
 return [
+    MediaReferenceInspector::class => static fn (ServiceContainer $services): MediaReferenceInspector => new MediaReferenceInspector($services->get(PDO::class)),
     MediaAssetRepository::class => static fn (ServiceContainer $services): MediaAssetRepository => new MediaAssetRepository($services->get(PDO::class)),
     MediaDerivativeRepository::class => static fn (ServiceContainer $services): MediaDerivativeRepository => new MediaDerivativeRepository($services->get(PDO::class), dirname(__DIR__, 3)),
     MediaDerivativeLookup::class => static fn (ServiceContainer $services): MediaDerivativeLookup => new MediaDerivativeLookup($services->get(MediaDerivativeRepository::class)),
@@ -65,5 +67,6 @@ return [
         $services->get(MediaStoredFileCleanupService::class),
         $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
         $services->get(MediaDerivativeRepository::class),
+        references: $services->get(MediaReferenceInspector::class),
     ),
 ];
