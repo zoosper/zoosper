@@ -3,6 +3,11 @@
 declare(strict_types=1);
 
 use Zoosper\Auth\Service\CsrfTokenManager;
+use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
+use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Core\Http\JsonResponder;
+use Zoosper\Media\Api\MediaApiController;
+use Zoosper\Media\Repository\MediaDerivativeRepository;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Container\ServiceContainer;
@@ -15,6 +20,15 @@ use Zoosper\Media\Service\MediaUploadService;
 use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
 
 return [
+    MediaApiController::class => static fn (ServiceContainer $services): MediaApiController => new MediaApiController(
+        json: $services->get(JsonResponder::class),
+        auth: $services->get(PersonalAccessTokenAuthenticator::class),
+        assets: $services->get(MediaAssetRepository::class),
+        derivatives: $services->get(MediaDerivativeRepository::class),
+        uploads: $services->get(MediaUploadService::class),
+        lifecycle: $services->get(MediaLifecycleCoordinator::class),
+        audit: $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
+    ),
     MediaAdminController::class => static fn (ServiceContainer $services): MediaAdminController => new MediaAdminController(
         guard: $services->get(SessionGuard::class),
         csrf: $services->get(CsrfTokenManager::class),
