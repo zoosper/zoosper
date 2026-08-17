@@ -1,0 +1,14 @@
+<?php
+declare(strict_types=1);
+namespace Zoosper\Site\Api;
+use Zoosper\Auth\Token\{PersonalAccessTokenAuthenticator,PersonalAccessTokenPrincipal};use Zoosper\Core\Http\{JsonResponder,Request,Response};use Zoosper\Site\Lifecycle\SiteLifecycleCoordinator;use Zoosper\Site\Model\Site;use Zoosper\Site\Repository\SiteRepository;
+final readonly class SiteApiController{
+ public function __construct(private JsonResponder $json,private PersonalAccessTokenAuthenticator $auth,private SiteRepository $sites,private SiteLifecycleCoordinator $lifecycle){}
+ public function index(Request $r):Response{$p=$this->principal($r,'sites:read');if($p instanceof Response)return$p;return$this->json->success(['sites'=>array_map($this->row(...),$this->sites->all())]);}
+ public function show(Request $r):Response{$p=$this->principal($r,'sites:read');if($p instanceof Response)return$p;$s=$this->site($r);return$s===null?$this->json->error('site_not_found','Site does not exist.',404):$this->json->success(['site'=>$this->row($s)]);}
+ public function disable(Request $r):Response{return$this->life($r,'disable');}public function restore(Request $r):Response{return$this->life($r,'restore');}public function deletePermanently(Request $r):Response{return$this->life($r,'delete');}
+ private function life(Request $r,string $op):Response{$p=$this->principal($r,'sites:write');if($p instanceof Response)return$p;$s=$this->site($r);if($s===null)return$this->json->error('site_not_found','Site does not exist.',404);$x=match($op){'disable'=>$this->lifecycle->disable($s,$p->user->id,$p->user->email),'restore'=>$this->lifecycle->restore($s,$p->user->id,$p->user->email),'delete'=>$this->lifecycle->deletePermanently($s,$p->user->id,$p->user->email)};if(!$x->successful)return$this->json->error('site_lifecycle_blocked',$x->message??'Site lifecycle operation was blocked.',409,['blockers'=>$x->blockers]);if($op==='delete')return$this->json->success(['deleted'=>true,'site_id'=>$s->id]);return$this->json->success(['site'=>$this->row($this->sites->findById($s->id))]);}
+ private function principal(Request $r,string $scope):PersonalAccessTokenPrincipal|Response{$p=$this->auth->authenticate($r->header('authorization'));if($p===null)return$this->json->error('invalid_bearer_token','A valid bearer token is required.',401);if(!$p->allows($scope)||!$p->user->can('settings.manage'))return$this->json->error('insufficient_scope','The bearer token cannot perform this Site operation.',403);return$p;}
+ private function site(Request $r):?Site{return$this->sites->findById((int)$r->routeParam('id','0'));}
+ private function row(?Site $s):array{return$s===null?[]:['id'=>$s->id,'code'=>$s->code,'name'=>$s->name,'status'=>$s->status,'homepage_slug'=>$s->homepageSlug,'theme_code'=>$s->themeCode,'locale'=>$s->locale,'currency'=>$s->currency,'base_url'=>$s->baseUrl,'website_code'=>$s->websiteCode,'store_code'=>$s->storeCode,'store_view_code'=>$s->storeViewCode,'path_prefix'=>$s->pathPrefix];}
+}

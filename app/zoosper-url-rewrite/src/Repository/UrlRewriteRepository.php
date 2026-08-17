@@ -52,6 +52,16 @@ final readonly class UrlRewriteRepository
         $s=$this->pdo->prepare('UPDATE url_rewrites SET request_path=:request_path,target_path=:target_path,redirect_type=:redirect_type,is_active=:is_active,updated_at=:updated_at WHERE id=:id AND site_id=:site_id');$s->execute($data+['id'=>$id]);return $id;
     }
 
+    public function findByIdForSite(int $id, int $siteId): ?UrlRewrite
+    {
+        $s=$this->pdo->prepare('SELECT * FROM url_rewrites WHERE id=:id AND site_id=:site LIMIT 1');$s->execute(['id'=>$id,'site'=>$siteId]);$row=$s->fetch(PDO::FETCH_ASSOC);return is_array($row)?$this->hydrate($row):null;
+    }
+
+    public function changeStatus(int $id, int $siteId, bool $active): void
+    {
+        $s=$this->pdo->prepare('UPDATE url_rewrites SET is_active=:active,updated_at=:updated WHERE id=:id AND site_id=:site');$s->execute(['active'=>$active?1:0,'updated'=>gmdate('Y-m-d H:i:s'),'id'=>$id,'site'=>$siteId]);
+    }
+
     /**
      * Hydrate a URL rewrite model from a database row.
      *

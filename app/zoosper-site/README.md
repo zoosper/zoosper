@@ -83,3 +83,6 @@ Zoosper_Site module for Zoosper CMS.
 - Inactive Sites can be restored to active. Permanent deletion is inactive-first and blocked while any known Site reference remains.
 - Lifecycle mutations are POST-only, require `settings.manage`, use central CSRF validation, and are presented outside the ordinary list-row action.
 - Database cascades remain integrity safeguards and are not used by the Admin workflow as a bulk content-deletion shortcut.
+
+## Feature-owned API
+PAT-scoped Site reads and the existing reference-guarded disable, restore, and permanent-delete lifecycle are exposed by this module. Create/update remain Admin-only until a shared mutation coordinator is extracted.

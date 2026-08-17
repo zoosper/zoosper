@@ -63,3 +63,6 @@ Theme and template rendering foundation for Zoosper CMS.
 #### SEO head contract
 - Frontend theme layouts consume escaped SEO values supplied by the Page module. PHP and Latte layouts provide equivalent title, description, robots, canonical and Open Graph basics.
 - Themes must escape metadata and must not recompute canonical URLs.
+
+## Feature-owned API
+The filesystem Theme catalogue exposes safe code, name, and version metadata only. Site assignment uses a Theme-owned application service and never exposes Theme filesystem paths.

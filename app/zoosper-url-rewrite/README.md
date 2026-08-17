@@ -52,3 +52,6 @@ Zoosper_UrlRewrite module for Zoosper CMS.
 #### Frontend adoption and diagnostics
 - `UrlRewriteFallbackHandler` decorates the existing fallback after all module services load; explicit routes remain higher priority and Page has no URL Rewrite dependency.
 - `RedirectChainInspector` detects Site-scoped cycles and excessive chains. External-target permission and audit policy must be settled before Admin CRUD ships.
+
+## Feature-owned API
+PAT-scoped, request-Site isolated URL Rewrite reads, policy-backed create/update, and reversible disable/restore are owned by this module. Permanent deletion remains absent until a shared Admin/API lifecycle contract exists.

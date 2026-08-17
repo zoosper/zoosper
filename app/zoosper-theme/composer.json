@@ -6,7 +6,9 @@
     "require": {
         "php": "^8.5",
         "zoosper/core": "dev-dev",
-        "zoosper/errors": "dev-dev"
+        "zoosper/errors": "dev-dev",
+        "zoosper/auth": "dev-dev",
+        "zoosper/site": "dev-dev"
     },
     "autoload": {
         "psr-4": {

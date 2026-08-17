@@ -19,8 +19,11 @@ use Zoosper\Theme\Template\Engine\TemplateEngineRegistry;
 use Zoosper\Theme\Template\TemplateRenderer;
 use Zoosper\Theme\Theme\ThemeRepository;
 use Zoosper\Theme\Theme\ThemeResolver;
+use Zoosper\Theme\Application\ThemeAssignmentService;
+use Zoosper\Site\Repository\SiteRepository;
 
 return [
+    ThemeAssignmentService::class => static fn (ServiceContainer $s): ThemeAssignmentService => new ThemeAssignmentService($s->get(ThemeRepository::class),$s->get(SiteRepository::class)),
     ViewInterface::class => static fn (ServiceContainer $services): ViewInterface => new MarkoViewAdapter(
         $services->get('theme.frontend_template_renderer'),
     ),

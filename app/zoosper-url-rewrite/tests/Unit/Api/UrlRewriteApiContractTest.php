@@ -1,0 +1,1 @@
+<?php declare(strict_types=1);it('owns PAT Site-scoped URL Rewrite reads writes and reversible lifecycle',function(){ $r=(string)file_get_contents(dirname(__DIR__,3).'/config/api_routes.php');expect($r)->toContain('/api/v1/url-rewrites')->toContain("'action'=>'create'")->toContain("'action'=>'restore'")->not->toContain("'method'=>'DELETE'");});
