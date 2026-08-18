@@ -54,6 +54,24 @@ final readonly class PageApiController
         return $this->publicationMutation($request, false);
     }
 
+    public function revision(Request $request): Response
+    {
+        $principal = $this->principal($request, 'pages:read', true);
+        if ($principal instanceof Response) {
+            return $principal;
+        }
+        $page = $this->sitePage($request);
+        if ($page === null) {
+            return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
+        }
+        $revisionId = (int) $request->routeParam('revisionId', '0');
+        try {
+            $revision = $this->revisions->revision($page->id, $revisionId);
+        } catch (\RuntimeException) {
+            return $this->json->error('revision_not_found', 'Revision does not exist for this Page and Site.', 404);
+        }
+        return $this->json->success(['revision' => $this->normaliseRevision($revision)]);
+    }
     public function revisions(Request $request): Response
     {
         $principal = $this->principal($request, 'pages:read', true);
@@ -61,7 +79,12 @@ final readonly class PageApiController
         $page = $this->sitePage($request);
         if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
         $requested = filter_var($request->query('page', '1'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) ?: 1;
-        $pageSize = 20;
+        $requestedPageSize = filter_var(
+            $request->query('page_size', '20'),
+            FILTER_VALIDATE_INT,
+            ['options' => ['min_range' => 1, 'max_range' => 100]],
+        );
+        $pageSize = $requestedPageSize === false ? 20 : $requestedPageSize;
         $total = $this->revisions->historyCount($page->id);
         $pageCount = max(1, (int) ceil($total / $pageSize));
         $current = min($requested, $pageCount);

@@ -144,3 +144,9 @@ Zoosper_Page module for Zoosper CMS.
 ### Feature-owned API
 
 Page owns its stateless Page and public content API routes, adapters, controller factories, tests, and application-service integration. Removing the Page module removes those routes without edits to `zoosper-api`.
+
+### Page revision API closure
+- `GET /api/v1/pages/{id}/revisions/{revisionId}` returns one Page-scoped revision through the existing `pages:read` and current-owner permission contract.
+- Revision detail, list and restore remain stateless and request-Site isolated; a revision belonging to another Page is returned as not found.
+- Revision list accepts `page_size` from 1 to 100 and falls back to 20 when invalid, while retaining exact total and page metadata.
+- Restoration continues to require `pages:write`, captures a safety snapshot first and records secret-free audit metadata.
