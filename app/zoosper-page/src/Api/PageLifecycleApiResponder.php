@@ -15,6 +15,6 @@ final readonly class PageLifecycleApiResponder
             $status = $result->blockers !== [] ? 409 : 422;
             return $this->json->error('page_lifecycle_conflict', $result->message ?? 'Page lifecycle operation was rejected.', $status, ['operation' => $result->operation, 'blockers' => $result->blockers]);
         }
-        return $this->json->success(['operation' => $result->operation, 'page_id' => $result->pageId, 'previous_status' => $result->previousStatus, 'current_status' => $result->currentStatus, 'deleted' => $result->operation === 'delete', 'page' => $page === null ? null : ['id' => $page->id, 'site_id' => $page->siteId, 'status' => $page->status]]);
+        return $this->json->success(['operation' => $result->operation, 'page_id' => $result->pageId, 'previous_status' => $result->previousStatus, 'current_status' => $page?->status ?? $result->currentStatus, 'deleted' => $result->operation === 'delete', 'page' => $page === null ? null : ['id' => $page->id, 'site_id' => $page->siteId, 'status' => $page->status]]);
     }
 }

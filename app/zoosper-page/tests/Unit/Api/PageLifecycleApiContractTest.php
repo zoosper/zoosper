@@ -8,5 +8,5 @@ it('requires dedicated lifecycle scopes and current Page management permission',
  $root=dirname(__DIR__,5);$source=(string)file_get_contents($root.'/app/zoosper-page/src/Api/PageApiController.php');expect($source)->toContain("principal(\$request, 'pages:archive')")->toContain("principal(\$request, 'pages:delete')")->toContain('$this->sitePage($request)')->toContain('$this->lifecycle->archive(')->toContain('$this->lifecycle->restore(')->toContain('$this->lifecycle->deletePermanently(')->not->toContain('tokenHash');
 });
 it('maps lifecycle blockers without exposing content or credentials', function (): void {
- $root=dirname(__DIR__,5);$source=(string)file_get_contents($root.'/app/zoosper-page/src/Api/PageLifecycleApiResponder.php');expect($source)->toContain("'blockers' => \$result->blockers")->toContain("'page_lifecycle_conflict'")->not->toContain('content')->not->toContain('token')->not->toContain('authorization');
+ $root=dirname(__DIR__,5);$source=(string)file_get_contents($root.'/app/zoosper-page/src/Api/PageLifecycleApiResponder.php');expect($source)->toContain("'blockers' => \$result->blockers")->toContain("'page_lifecycle_conflict'")->toContain("'current_status' => \$page?->status ?? \$result->currentStatus")->not->toContain('content')->not->toContain('token')->not->toContain('authorization');
 });
