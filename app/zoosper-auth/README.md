@@ -107,3 +107,7 @@ Auth owns hash-only PAT persistence, issuance, revocation, scope validation and 
 
 ### Admin PAT lifecycle
 Authenticated Admin identities can create, list and revoke only their own Personal Access Tokens. Plaintext is rendered directly once after issuance and is never placed in flash messages, redirects or audit metadata.
+
+### Page lifecycle PAT scopes
+- `pages:archive` authorises Page archive and archived-to-draft restoration when the current owner still has `page.manage`.
+- `pages:delete` authorises guarded permanent deletion when the current owner still has `page.manage`.

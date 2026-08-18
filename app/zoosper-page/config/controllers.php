@@ -61,13 +61,15 @@ use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRenderer;
 use Zoosper\Site\Repository\SiteRepository;
 
-use Zoosper\Page\Api\{PageApiController,ContentPageController};
+use Zoosper\Page\Api\{PageApiController, ContentPageController, PageLifecycleApiResponder};
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
 return [
     ContentPageController::class => static fn (ServiceContainer $services): ContentPageController => new ContentPageController($services->get(JsonResponder::class), $services->get(SiteRepository::class), $services->get(PageRepository::class)),
-    PageApiController::class => static fn (ServiceContainer $services): PageApiController => new PageApiController($services->get(JsonResponder::class), $services->get(PersonalAccessTokenAuthenticator::class), $services->get(PageRepository::class), $services->get(PageSaveCoordinator::class), $services->get(BlockJsonToHtmlRenderer::class), $services->get(PagePublicationCoordinator::class), $services->get(PageRevisionService::class), $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null),
+    PageApiController::class => static fn (ServiceContainer $services): PageApiController => new PageApiController($services->get(JsonResponder::class), $services->get(PersonalAccessTokenAuthenticator::class), $services->get(PageRepository::class), $services->get(PageSaveCoordinator::class), $services->get(BlockJsonToHtmlRenderer::class), $services->get(PagePublicationCoordinator::class), $services->get(PageRevisionService::class),
+            $services->get(PageLifecycleCoordinator::class),
+            new PageLifecycleApiResponder($services->get(JsonResponder::class)), $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null),
 
 
     PageCsvExportController::class => static function (ServiceContainer $services): PageCsvExportController {

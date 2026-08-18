@@ -18,10 +18,12 @@ use Zoosper\Page\Service\PageRevisionService;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
+use Zoosper\Page\Lifecycle\PageLifecycleCoordinator;
+use Zoosper\Page\Api\PageLifecycleApiResponder;
 
 final readonly class PageApiController
 {
-    public function __construct(private JsonResponder $json, private PersonalAccessTokenAuthenticator $auth, private PageRepository $pages, private PageSaveCoordinator $saver, private BlockJsonToHtmlRenderer $renderer, private PagePublicationCoordinator $publication, private PageRevisionService $revisions, private ?AuditLoggerInterface $audit = null) {}
+    public function __construct(private JsonResponder $json, private PersonalAccessTokenAuthenticator $auth, private PageRepository $pages, private PageSaveCoordinator $saver, private BlockJsonToHtmlRenderer $renderer, private PagePublicationCoordinator $publication, private PageRevisionService $revisions, private PageLifecycleCoordinator $lifecycle, private PageLifecycleApiResponder $lifecycleResponder, private ?AuditLoggerInterface $audit = null) {}
 
     public function index(Request $request): Response { $p=$this->principal($request,'pages:read',true);if($p instanceof Response)return $p;$site=$request->siteContext()?->siteId;if($site===null)return $this->json->error('site_not_found','No active site exists for this host.',404);return $this->json->success(['pages'=>array_map($this->normalise(...),$this->pages->allForSite($site))]); }
     public function show(Request $request): Response { $p=$this->principal($request,'pages:read',true);if($p instanceof Response)return $p;$page=$this->sitePage($request);return $page===null?$this->json->error('page_not_found','Page does not exist for this Site.',404):$this->json->success(['page'=>$this->normalise($page)]); }
@@ -44,6 +46,33 @@ final readonly class PageApiController
         $this->audit($p,'page.api_updated',$updated,array_keys($request->json()));return $this->json->success(['page'=>$this->normalise($updated)]);
     }
 
+    public function archive(Request $request): Response
+    {
+        $principal = $this->principal($request, 'pages:archive');
+        if ($principal instanceof Response) return $principal;
+        $page = $this->sitePage($request);
+        if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
+        $result = $this->lifecycle->archive($page, $principal->user->id, $principal->user->email);
+        return $this->lifecycleResponder->respond($result, $this->pages->findById($page->id));
+    }
+    public function restoreArchived(Request $request): Response
+    {
+        $principal = $this->principal($request, 'pages:archive');
+        if ($principal instanceof Response) return $principal;
+        $page = $this->sitePage($request);
+        if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
+        $result = $this->lifecycle->restore($page, $principal->user->id, $principal->user->email);
+        return $this->lifecycleResponder->respond($result, $this->pages->findById($page->id));
+    }
+    public function deletePermanently(Request $request): Response
+    {
+        $principal = $this->principal($request, 'pages:delete');
+        if ($principal instanceof Response) return $principal;
+        $page = $this->sitePage($request);
+        if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
+        $result = $this->lifecycle->deletePermanently($page, $principal->user->id, $principal->user->email);
+        return $this->lifecycleResponder->respond($result, null);
+    }
     public function publish(Request $request): Response
     {
         return $this->publicationMutation($request, true);

@@ -150,3 +150,8 @@ Page owns its stateless Page and public content API routes, adapters, controller
 - Revision detail, list and restore remain stateless and request-Site isolated; a revision belonging to another Page is returned as not found.
 - Revision list accepts `page_size` from 1 to 100 and falls back to 20 when invalid, while retaining exact total and page metadata.
 - Restoration continues to require `pages:write`, captures a safety snapshot first and records secret-free audit metadata.
+
+### PAT-scoped Page lifecycle API
+- `POST /api/v1/pages/{id}/archive` and `/restore` require `pages:archive` plus current `page.manage`.
+- `DELETE /api/v1/pages/{id}` requires `pages:delete` plus current `page.manage`, archived state, and zero Menu or URL Rewrite references.
+- Archive and restore create safety revisions. All routes are feature-owned, stateless, request-Site isolated, audited and secret-free.
