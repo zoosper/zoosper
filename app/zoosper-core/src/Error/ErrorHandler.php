@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Log;
+namespace Zoosper\Core\Error;
 
 use Throwable;
+use Zoosper\Logger\Contract\LoggerInterface;
 use Zoosper\Errors\ExceptionDisplayer;
 use Zoosper\Errors\SensitiveValueRedactor;
 use Zoosper\Errors\ZoosperException;
@@ -67,7 +68,7 @@ use Zoosper\Core\Http\Response;
 final readonly class ErrorHandler
 {
     public function __construct(
-        private LocalLogger $logger,
+        private LoggerInterface $logger,
         private bool $debug = false,
     ) {
     }

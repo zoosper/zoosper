@@ -53,8 +53,8 @@ function errorHandlerTestRunSubprocess(string $basePath, string $logFilePath): a
 
 require %s;
 
-$logger = new \Zoosper\Core\Log\LocalLogger(%s, true);
-$handler = new \Zoosper\Core\Log\ErrorHandler($logger);
+$logger = new \Zoosper\Logger\Driver\LocalLogger(%s, true);
+$handler = new \Zoosper\Core\Error\ErrorHandler($logger);
 $handler->register();
 
 throw new \RuntimeException('Deliberate test exception for ErrorHandler coverage.');

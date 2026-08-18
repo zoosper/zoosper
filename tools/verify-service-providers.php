@@ -11,19 +11,19 @@ $basePath = require __DIR__ . '/bootstrap.php';
 $config = \Zoosper\Core\Config\ConfigRepository::fromPath($basePath . '/config');
 $pdo = (new \Zoosper\Core\Database\ConnectionFactory($config, $basePath))->create();
 $modules = new \Zoosper\Core\Module\ModuleRegistry($basePath);
-$logManager = new \Zoosper\Core\Log\LogManager($config, $basePath);
-$errorHandler = new \Zoosper\Core\Log\ErrorHandler($logManager->exceptions());
+$logManager = new \Zoosper\Logger\Manager\LogManager($config, $basePath);
+$errorHandler = new \Zoosper\Core\Error\ErrorHandler($logManager->exceptions());
 
 $services = new \Zoosper\Core\Container\ServiceContainer();
 $services->set(\Zoosper\Core\Config\ConfigRepository::class, $config);
 $services->set(\Zoosper\Core\Module\ModuleRegistry::class, $modules);
 $services->set(PDO::class, $pdo);
-$services->set(\Zoosper\Core\Log\LogManager::class, $logManager);
-$services->set(\Zoosper\Core\Log\ErrorHandler::class, $errorHandler);
+$services->set(\Zoosper\Logger\Manager\LogManager::class, $logManager);
+$services->set(\Zoosper\Core\Error\ErrorHandler::class, $errorHandler);
 $services->set('logger.default', $logManager->default());
 $services->set('logger.exception', $logManager->exceptions());
 
-(new \Zoosper\Core\Log\ModuleLoggerProviderLoader($modules, $logManager, $services))->register();
+(new \Zoosper\Logger\Module\ModuleLoggerProviderLoader($modules, $logManager, $services))->register();
 (new \Zoosper\Core\Container\ServiceProviderLoader($modules, $services))->register();
 
 $critical = [

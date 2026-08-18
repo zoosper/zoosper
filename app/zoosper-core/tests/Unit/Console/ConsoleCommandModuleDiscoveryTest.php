@@ -8,8 +8,8 @@ use Zoosper\Core\Console\ModuleConsoleCommandLoader;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
 use Zoosper\Core\Database\Migrator;
-use Zoosper\Core\Log\ErrorHandler;
-use Zoosper\Core\Log\LogManager;
+use Zoosper\Core\Error\ErrorHandler;
+use Zoosper\Logger\Manager\LogManager;
 use Zoosper\Core\Module\ModuleRegistry;
 
 /**

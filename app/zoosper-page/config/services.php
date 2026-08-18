@@ -8,7 +8,7 @@ use Zoosper\Page\Application\Save\PageSaveCoordinator;
 use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
 use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
-use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Error\ErrorHandler;
 use Zoosper\Page\Lifecycle\PageLifecycleCoordinator;
 use Zoosper\Page\Lifecycle\PageReferenceInspector;
 use Zoosper\Core\Audit\AuditLoggerInterface;

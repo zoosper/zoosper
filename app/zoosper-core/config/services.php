@@ -17,7 +17,7 @@ use Zoosper\Core\Filesystem\ProjectPathResolver;
 use Zoosper\Core\Html\HtmlSanitizerFactory;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Http\JsonResponder;
-use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Error\ErrorHandler;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Site\SiteContextResolver;
 use Zoosper\Core\Site\SiteContextResolverFactory;

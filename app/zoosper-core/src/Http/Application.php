@@ -8,7 +8,7 @@ use Throwable;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
 use Zoosper\Core\Site\SiteContextResolver;
-use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Error\ErrorHandler;
 
 final readonly class Application
 {

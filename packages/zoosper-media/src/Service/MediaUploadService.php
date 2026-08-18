@@ -7,7 +7,7 @@ namespace Zoosper\Media\Service;
 use Zoosper\Media\Processing\MediaUploadDerivativeDispatcher;
 use Throwable;
 use Zoosper\Auth\Model\AdminUser;
-use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Error\ErrorHandler;
 use Zoosper\Media\Repository\MediaAssetRepository;
 
 /**

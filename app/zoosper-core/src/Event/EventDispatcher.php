@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Core\Event;
 
 use Throwable;
-use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Error\ErrorHandler;
 
 /**
  * Synchronous, in-process event dispatcher for general application events.

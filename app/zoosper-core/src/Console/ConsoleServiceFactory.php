@@ -8,8 +8,8 @@ use Zoosper\Core\Config\MarkoConfigRepositoryAdapter;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
 use Zoosper\Core\Database\PdoConnectionProvider;
-use Zoosper\Core\Log\ErrorHandler;
-use Zoosper\Core\Log\LogManager;
+use Zoosper\Core\Error\ErrorHandler;
+use Zoosper\Logger\Manager\LogManager;
 use Zoosper\Core\Module\ModuleRegistry;
 final readonly class ConsoleServiceFactory
 {

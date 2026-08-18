@@ -17,7 +17,7 @@ use Throwable;
  * (marko/errors + marko/errors-simple).
  *
  * ARCHITECTURAL BOUNDARY (2026-07-30): this class exists specifically so
- * that Zoosper\Core\Log\ErrorHandler — and any other future Zoosper
+ * that Zoosper\Core\Error\ErrorHandler — and any other future Zoosper
  * consumer — never needs to import a single Marko\* class directly, or
  * declare marko/errors / marko/errors-simple in its own composer.json.
  * zoosper-core should not need to know Zoosper's error display is

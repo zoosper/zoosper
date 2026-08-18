@@ -25,3 +25,7 @@ Latte is the current default template engine, not a platform-wide restriction. T
 ## Security
 
 Authentication, CSRF, route permissions, two-factor authentication, security headers, sanitisation, rate-limiting seams and audit logging are explicit runtime boundaries.
+
+## Logging boundary
+
+Logging is owned by the standalone `zoosper/logger` package. Core and feature consumers use the native Zoosper logger boundary, while the package delegates physical writes to Marko `FileLogger` with `DailyRotation`. Module `config/logging.php` contributions remain discoverable and retain their logical channel and legacy filename identities. Root Composer owns `zoosper/logger`; the package owns `marko/log` and `marko/log-file`.

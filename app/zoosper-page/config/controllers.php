@@ -46,7 +46,7 @@ use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\I18n\AdminContextTranslatorResolver;
 use Zoosper\Core\I18n\TranslatorInterface;
-use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Error\ErrorHandler;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Page\Admin\Controller\PageBulkActionController;
 use Zoosper\Page\Admin\BulkAction\PageBulkActionBackend;

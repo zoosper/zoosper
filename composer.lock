@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f0bd48ec6168208aad31afd80706f2d",
+    "content-hash": "acb5e20cd6bcedb94cc5529b0ee589cc",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -660,6 +660,94 @@
             "time": "2026-06-12T17:56:54+00:00"
         },
         {
+            "name": "marko/log",
+            "version": "0.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-log.git",
+                "reference": "5c57e1d029d9e60f093173b3da6da4f22cc9f4c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-log/zipball/5c57e1d029d9e60f093173b3da6da4f22cc9f4c2",
+                "reference": "5c57e1d029d9e60f093173b3da6da4f22cc9f4c2",
+                "shasum": ""
+            },
+            "require": {
+                "marko/config": "self.version",
+                "marko/core": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "marko/testing": "self.version",
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Log\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PSR-3 compatible logging interfaces and formatters for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-log/tree/0.8.5"
+            },
+            "time": "2026-06-12T19:00:11+00:00"
+        },
+        {
+            "name": "marko/log-file",
+            "version": "0.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-log-file.git",
+                "reference": "80b5df10668f435b50416f0d36cd3d430fc69063"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-log-file/zipball/80b5df10668f435b50416f0d36cd3d430fc69063",
+                "reference": "80b5df10668f435b50416f0d36cd3d430fc69063",
+                "shasum": ""
+            },
+            "require": {
+                "marko/config": "self.version",
+                "marko/core": "self.version",
+                "marko/log": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Log\\File\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "File-based logging driver for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-log-file/tree/0.8.5"
+            },
+            "time": "2026-05-02T01:27:31+00:00"
+        },
+        {
             "name": "marko/routing",
             "version": "0.8.5",
             "source": {
@@ -1133,7 +1221,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-core",
-                "reference": "950a1f97fb447472a96d79384bef48d38bdf2842"
+                "reference": "4e9b0a312e46fb270f6a99cb67be5e7e60e88417"
             },
             "require": {
                 "ext-pdo": "*",
@@ -1143,7 +1231,8 @@
                 "marko/config": "^0.8",
                 "marko/encryption": "^0.8",
                 "php": "^8.5",
-                "zoosper/errors": "dev-dev"
+                "zoosper/errors": "dev-dev",
+                "zoosper/logger": "dev-dev"
             },
             "type": "zoosper-module",
             "autoload": {
@@ -1284,6 +1373,44 @@
                 "MIT"
             ],
             "description": "Zoosper CMS installer module - environment checks, first admin user, seed site.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/logger",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./packages/zoosper-logger",
+                "reference": "ef480501cf5db6716f54f77e4806c969c63b1460"
+            },
+            "require": {
+                "marko/log": "0.8.5",
+                "marko/log-file": "0.8.5",
+                "php": "^8.5"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Logger\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Logger\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper-owned multi-channel logging boundary backed by Marko file logging.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -8716,6 +8843,7 @@
         "zoosper/errors": 20,
         "zoosper/grid": 20,
         "zoosper/install": 20,
+        "zoosper/logger": 20,
         "zoosper/mail": 20,
         "zoosper/media": 20,
         "zoosper/menu": 20,
@@ -8732,8 +8860,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.5",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "php": "^8.5"
     },
     "platform-dev": {},
     "platform-overrides": {

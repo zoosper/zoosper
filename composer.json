@@ -4,13 +4,13 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": "^8.5",
-        "ext-pdo": "*",
         "bacon/bacon-qr-code": "^3.0",
+        "ext-pdo": "*",
         "ezyang/htmlpurifier": "^4.19",
         "latte/latte": "^3.1",
         "marko/admin": "0.8.5",
         "marko/view": "0.8.5",
+        "php": "^8.5",
         "zoosper/admin": "dev-dev",
         "zoosper/admin-grid": "dev-dev",
         "zoosper/api": "dev-dev",
@@ -20,18 +20,19 @@
         "zoosper/errors": "dev-dev",
         "zoosper/grid": "dev-dev",
         "zoosper/install": "dev-dev",
+        "zoosper/logger": "dev-dev",
         "zoosper/mail": "dev-dev",
         "zoosper/media": "dev-dev",
         "zoosper/menu": "dev-dev",
         "zoosper/page": "dev-dev",
+        "zoosper/seo": "dev-dev",
+        "zoosper/session": "dev-dev",
         "zoosper/settings": "dev-dev",
         "zoosper/site": "dev-dev",
         "zoosper/store-orders": "dev-dev",
         "zoosper/theme": "dev-dev",
         "zoosper/two-factor": "dev-dev",
-        "zoosper/url-rewrite": "dev-dev",
-        "zoosper/session": "dev-dev",
-        "zoosper/seo": "dev-dev"
+        "zoosper/url-rewrite": "dev-dev"
     },
     "require-dev": {
         "icanhazstring/composer-unused": "^0.9.6",
@@ -233,6 +234,13 @@
         {
             "type": "path",
             "url": "./app/zoosper-seo",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./packages/zoosper-logger",
             "options": {
                 "symlink": true
             }

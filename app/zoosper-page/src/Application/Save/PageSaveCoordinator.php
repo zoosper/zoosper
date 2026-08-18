@@ -13,7 +13,7 @@ use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Entity\Save\FieldDefinitionRegistry;
 use Zoosper\Core\Form\AdminFormProcessorRegistry;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
-use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Error\ErrorHandler;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRevisionService;

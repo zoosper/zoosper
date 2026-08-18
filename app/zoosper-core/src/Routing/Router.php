@@ -9,7 +9,7 @@ use Throwable;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Http\CorsPolicy;
-use Zoosper\Core\Log\ErrorHandler;
+use Zoosper\Core\Error\ErrorHandler;
 
 /**
  * Minimal HTTP router.

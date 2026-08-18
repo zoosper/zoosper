@@ -4,14 +4,15 @@
     "type": "zoosper-module",
     "license": "MIT",
     "require": {
-        "php": "^8.5",
         "ext-pdo": "*",
         "marko/cache": "^0.8",
         "marko/cache-file": "^0.8",
         "marko/cache-redis": "^0.8",
         "marko/config": "^0.8",
         "marko/encryption": "^0.8",
-        "zoosper/errors": "dev-dev"
+        "php": "^8.5",
+        "zoosper/errors": "dev-dev",
+        "zoosper/logger": "dev-dev"
     },
     "autoload": {
         "psr-4": {

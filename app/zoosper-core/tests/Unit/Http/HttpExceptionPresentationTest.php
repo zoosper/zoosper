@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Log\ErrorHandler;
-use Zoosper\Core\Log\LocalLogger;
+use Zoosper\Core\Error\ErrorHandler;
+use Zoosper\Logger\Driver\LocalLogger;
 
 function exceptionPresentationHandler(bool $debug): ErrorHandler
 {
