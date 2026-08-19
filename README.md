@@ -2,7 +2,7 @@
 
 **A modular, API-first CMS without the weight. Extend features without forking core.**
 
-- Latest pre-release: `v0.3.0-alpha.1`
+- Latest pre-release: `v0.3.0-alpha.2`
 - Current development line: `v0.3.0-alpha.3-dev`
 - Required runtime: PHP 8.5+
 
@@ -20,7 +20,7 @@ Zoosper is an API-first, multi-site CMS built around independently owned Compose
 - **Security-focused foundations:** ACL, CSRF, 2FA, password policy, automatic password rehash, rate limiting, secure sessions, canonical Media ingest and safe audit metadata.
 - **Pluggable presentation:** Latte is the current default template engine; Marko View contracts are adopted at selected boundaries.
 
-## What shipped in v0.3.0-alpha.1
+## What shipped in v0.3.0-alpha.2
 
 ### Integration APIs
 
@@ -119,7 +119,7 @@ Use `php8.5 bin/zoosper make:module` for a local module or the package-module sc
 
 ## Quality and release discipline
 
-The `v0.3.0-alpha.1` release gate completed with:
+The `v0.3.0-alpha.2` release gate completed with:
 
 - 1,441 passing tests
 - 8,237 assertions
@@ -132,7 +132,7 @@ CI and the tracked pre-push hook run the repository quality contract. Psalm rema
 
 ## Current development focus
 
-The `v0.3.0-alpha.3-dev` line begins with Phase 10AP, feature-owned Media API parity:
+The `0.3.0-alpha.3-dev` line begins from the published `v0.3.0-alpha.2` API, security, and modular-ownership baseline. The next work should prioritise visible CMS capability and extension-author experience:
 
 - Media reads and derivative representation
 - canonical PAT-scoped upload
@@ -149,7 +149,7 @@ The `v0.3.0-alpha.3-dev` line begins with Phase 10AP, feature-owned Media API pa
 
 ## Project status and support
 
-Zoosper CMS is in active public-alpha development. The latest tagged pre-release is `v0.3.0-alpha.1`; the current `dev` branch is `v0.3.0-alpha.3-dev`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
+Zoosper CMS is in active public-alpha development. The latest tagged pre-release is `v0.3.0-alpha.2`; the current `dev` branch is `v0.3.0-alpha.3-dev`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
 
 ## Licence
 

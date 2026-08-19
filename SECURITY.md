@@ -93,7 +93,7 @@ a coordinated disclosure timeline has been agreed.
 
 ## Supported versions
 
-Zoosper CMS is under active pre-release development. The latest tagged pre-release is `v0.3.0-alpha.1`; the supported development branch is `dev` on `v0.3.0-alpha.3-dev`. No stable release has shipped. Security fixes are developed on `dev` and should be verified against the latest tagged pre-release and current `dev` branch as applicable.
+Zoosper CMS is under active pre-release development. The latest tagged pre-release is `v0.3.0-alpha.2`; the supported development branch is `dev` on `v0.3.0-alpha.3-dev`. No stable release has shipped. Security fixes are developed on `dev` and should be verified against the latest tagged pre-release and current `dev` branch as applicable.
 
 ## Dependency scope
 
