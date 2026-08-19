@@ -2,22 +2,23 @@
 
 ## Decision
 
-Marko Plugins are the canonical future general method-interception runtime for Zoosper. Phase 10BI-A proves the installed Marko 0.8 line can discover an attributed plugin, resolve it through the Marko container, modify arguments before a call, modify the result after a call, and leave non-plugged resolutions unwrapped.
+Zoosper retains bridge-first package ownership. Feature and platform modules consume Zoosper-owned contracts and adapters; the focused Zoosper bridge package owns the corresponding Marko package and implementation dependency.
 
-The existing Zoosper method-plugin subsystem is now compatibility-only. It is not expanded with new production consumers. Removal requires a later inventory proving that its disabled mode, report-only mode, layered configuration, module discovery, ordering and any current consumers are either unused or migrated. Around-style interception is not carried forward as a public extension promise.
+Direct Marko package dependencies in a feature or platform module are permitted only where the Marko contract is deliberately part of that module's public boundary and no same-capability Zoosper bridge exists. Transitive availability is never treated as dependency ownership.
 
-Zoosper service decorators remain supported for explicit whole-service wrapping through module `service_decorators.php` contributions.
+The Phase 10BI-A compatibility proof established that installed Marko 0.8 Plugins can modify arguments before a call, modify results after a call and avoid wrapping services without plugins. That proof does not make `zoosper/core` the owner of Marko's container or plugin runtime. The direct `marko/core` requirement and Core-local compatibility fixture are therefore retired.
 
-Zoosper entity-save lifecycle remains separate because it owns ordered, abort-capable persistence orchestration and mutable save context.
+A future production need for Plugins, Preferences, container integration or Marko observers must first introduce or select a focused Zoosper bridge boundary. To avoid unnecessary package proliferation, the preferred initial boundary is `zoosper/extensibility`, provided it remains a thin adapter and does not duplicate Marko.
 
-Zoosper general events remain authoritative until a dedicated event-convergence phase proves that Marko observers can preserve Zoosper's tested continue-after-listener-failure behaviour.
+The existing `Zoosper\\Core\\Plugin` subsystem has no production consumer or module plugin manifest in the Phase 10BI-B inventory. It remains frozen compatibility code until a dedicated removal change proves its complete test and documentation closure.
 
-Marko Preferences remain unavailable to Zoosper modules until normal Zoosper service resolution is intentionally converged on the Marko container. Attribute discovery alone must not be presented as runtime support.
+Zoosper service decorators remain supported for explicit whole-service wrapping. Zoosper entity-save lifecycle remains separate because it owns ordered, abort-capable persistence orchestration and mutable save context. Zoosper general events remain authoritative because their tested continue-after-listener-failure behaviour differs from the captured Marko observer dispatcher.
 
 ## Guardrails
 
-- Do not run two permanent general plugin runtimes for the same production service.
+- Do not add direct `marko/core` ownership to `zoosper/core` for compatibility tests or future runtime experiments.
 - Do not add new production consumers to `Zoosper\\Core\\Plugin`.
-- Prefer interface-targeted Marko plugins.
+- Do not run two permanent general interception runtimes for the same production service.
+- Put Marko implementation dependencies in the focused Zoosper bridge that owns the capability.
 - Keep business services free of direct container access.
-- Require direct Composer ownership for every Marko contract used by Zoosper Core.
+- Preserve the entity-save lifecycle and general-event semantics until separately proven replacements exist.

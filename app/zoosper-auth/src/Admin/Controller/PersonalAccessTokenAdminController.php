@@ -6,7 +6,7 @@ use DateTimeImmutable;use DateTimeZone;use InvalidArgumentException;use Zoosper\
 /** Self-owned, session-authenticated Personal Access Token administration. */
 final readonly class PersonalAccessTokenAdminController
 {
-    public function __construct(private SessionGuard $guard,private CsrfTokenManager $csrf,private PersonalAccessTokenRepository $tokens,private PersonalAccessTokenService $issuer,private AdminViewRendererInterface $views,private AdminUrlGenerator $urls,private ?FlashMessageStoreInterface $flash=null,private AuditLoggerInterface $audit){}
+    public function __construct(private SessionGuard $guard,private CsrfTokenManager $csrf,private PersonalAccessTokenRepository $tokens,private PersonalAccessTokenService $issuer,private AdminViewRendererInterface $views,private AdminUrlGenerator $urls,private AuditLoggerInterface $audit,private ?FlashMessageStoreInterface $flash=null){}
     public function index(Request $request):Response{return $this->render();}
     public function create(Request $request):Response
     {

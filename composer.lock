@@ -1221,7 +1221,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-core",
-                "reference": "bf75cdf38a1a2656d1cda831a169295354585817"
+                "reference": "4e9b0a312e46fb270f6a99cb67be5e7e60e88417"
             },
             "require": {
                 "ext-pdo": "*",
@@ -1229,7 +1229,6 @@
                 "marko/cache-file": "^0.8",
                 "marko/cache-redis": "^0.8",
                 "marko/config": "^0.8",
-                "marko/core": "^0.8",
                 "marko/encryption": "^0.8",
                 "php": "^8.5",
                 "zoosper/errors": "dev-dev",

@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
-use ReflectionMethod;
-use ReflectionParameter;
 use Zoosper\Auth\Admin\Grid\AdminUserGridPageBuilder;
 use Zoosper\Auth\Admin\Grid\AuthGridPage;
 use Zoosper\Auth\Admin\Grid\RoleGridPageBuilder;
 
 it('requires authenticated identity for both Auth Grid page builders', function (): void {
     foreach ([AdminUserGridPageBuilder::class, RoleGridPageBuilder::class] as $builder) {
-        $method = new ReflectionMethod($builder, 'build');
+        $method = new \ReflectionMethod($builder, 'build');
         $parameters = $method->getParameters();
 
         expect($parameters[0]->getName())->toBe('authenticatedAdminUserId')
@@ -38,9 +36,9 @@ it('uses resolved Grid state for rows and table rendering', function (): void {
 });
 
 it('keeps Auth Grid page output typed and framework-neutral', function (): void {
-    $constructor = (new ReflectionClass(AuthGridPage::class))->getConstructor();
+    $constructor = (new \ReflectionClass(AuthGridPage::class))->getConstructor();
     $names = array_map(
-        static fn (ReflectionParameter $parameter): string => $parameter->getName(),
+        static fn (\ReflectionParameter $parameter): string => $parameter->getName(),
         $constructor?->getParameters() ?? [],
     );
 

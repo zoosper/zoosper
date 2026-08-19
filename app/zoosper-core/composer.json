@@ -9,7 +9,6 @@
         "marko/cache-file": "^0.8",
         "marko/cache-redis": "^0.8",
         "marko/config": "^0.8",
-        "marko/core": "^0.8",
         "marko/encryption": "^0.8",
         "php": "^8.5",
         "zoosper/errors": "dev-dev",
