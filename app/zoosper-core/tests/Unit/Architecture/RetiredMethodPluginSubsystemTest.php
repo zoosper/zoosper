@@ -21,9 +21,9 @@ it('keeps the unused duplicate method-plugin subsystem retired', function (): vo
 it('records staged bridge ownership without pretending inactive dependencies are gone', function (): void {
     $root=dirname(__DIR__,5);
     $core=json_decode((string)file_get_contents($root.'/app/zoosper-core/composer.json'),true,512,JSON_THROW_ON_ERROR);
-    expect($core['require'])->toHaveKey('zoosper/cache')->toHaveKey('marko/config')->not->toHaveKeys(['marko/cache','marko/cache-file','marko/cache-redis','marko/encryption']);
+    expect($core['require'])->toHaveKey('zoosper/cache')->toHaveKey('zoosper/config')->not->toHaveKeys(['marko/cache','marko/cache-file','marko/cache-redis','marko/config','marko/encryption']);
     $decision=(string)file_get_contents($root.'/docs/architecture-decisions/marko-cache-config-encryption-ownership.md');
     expect($decision)->toContain('Phase 10BI extracted `zoosper/cache`')
-        ->toContain('Configuration remains in Core')
+        ->toContain('Phase 10BJ extracted `zoosper/config`')
         ->toContain('Encryption is not extracted independently');
 });

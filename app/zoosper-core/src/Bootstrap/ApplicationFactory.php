@@ -13,7 +13,7 @@ use Zoosper\Core\Asset\ModuleAssetManifestLoader;
 use Marko\Config\ConfigRepositoryInterface;
 use Zoosper\Core\Config\ApplicationConfigLoader;
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\MarkoConfigRepositoryAdapter;
+use Zoosper\Config\Bridge\MarkoConfigRepositoryAdapter;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
 use Zoosper\Core\Database\ConnectionFactory;

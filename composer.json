@@ -17,6 +17,7 @@
         "zoosper/api-grid": "dev-dev",
         "zoosper/auth": "dev-dev",
         "zoosper/cache": "dev-dev",
+        "zoosper/config": "dev-dev",
         "zoosper/core": "dev-dev",
         "zoosper/errors": "dev-dev",
         "zoosper/grid": "dev-dev",
@@ -249,6 +250,13 @@
         {
             "type": "path",
             "url": "./packages/zoosper-cache",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./packages/zoosper-config",
             "options": {
                 "symlink": true
             }

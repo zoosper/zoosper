@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3a7a18527c99b2f65b0488810da02a8",
+    "content-hash": "0cf005f9b1b2defa119409ece9d148bb",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1257,18 +1257,55 @@
             }
         },
         {
+            "name": "zoosper/config",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./packages/zoosper-config",
+                "reference": "007cd94c04855fca75fd97eefc49e6131a0278ea"
+            },
+            "require": {
+                "marko/config": "0.8.5",
+                "php": "^8.5"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Config\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Config\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper-owned compatibility bridge for shared Marko configuration consumers.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "zoosper/core",
             "version": "dev-dev",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-core",
-                "reference": "b5a8b5357cb866de88fa8a458a962c39758eceaa"
+                "reference": "1c60368116a8d67b95cf66ab1e8dc4880499325a"
             },
             "require": {
                 "ext-pdo": "*",
-                "marko/config": "^0.8",
                 "php": "^8.5",
                 "zoosper/cache": "dev-dev",
+                "zoosper/config": "dev-dev",
                 "zoosper/errors": "dev-dev",
                 "zoosper/logger": "dev-dev"
             },
@@ -1641,11 +1678,12 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-session",
-                "reference": "73936639c132a054d37522907210802f38996f53"
+                "reference": "9819a1220c64462b0789199b10d76256e6de997f"
             },
             "require": {
                 "marko/session-file": "0.8.5",
                 "php": "^8.5",
+                "zoosper/config": "dev-dev",
                 "zoosper/core": "dev-dev"
             },
             "type": "zoosper-module",
@@ -8879,6 +8917,7 @@
         "zoosper/api-grid": 20,
         "zoosper/auth": 20,
         "zoosper/cache": 20,
+        "zoosper/config": 20,
         "zoosper/core": 20,
         "zoosper/errors": 20,
         "zoosper/grid": 20,

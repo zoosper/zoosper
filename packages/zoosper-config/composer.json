@@ -1,0 +1,11 @@
+{
+    "name": "zoosper/config",
+    "description": "Zoosper-owned compatibility bridge for shared Marko configuration consumers.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {"php": "^8.5", "marko/config": "0.8.5"},
+    "autoload": {"psr-4": {"Zoosper\\Config\\": "src/"}},
+    "autoload-dev": {"psr-4": {"Zoosper\\Config\\Tests\\": "tests/"}},
+    "extra": {"marko": {"module": true}},
+    "config": {"sort-packages": true, "platform": {"php": "8.5"}}
+}

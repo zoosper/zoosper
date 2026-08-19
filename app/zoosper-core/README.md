@@ -53,7 +53,7 @@ Zoosper_Core module for Zoosper CMS.
 ## Dependencies
 
 - `ext-pdo`: `*`.
-- `marko/config`: `^0.8`.
+- `zoosper/config`: `dev-dev`.
 - `zoosper/cache`: `dev-dev`.
 - `php`: `^8.5`.
 - `zoosper/errors`: `dev-dev`.

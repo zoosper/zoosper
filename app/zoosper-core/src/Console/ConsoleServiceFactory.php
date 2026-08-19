@@ -4,7 +4,7 @@ namespace Zoosper\Core\Console;
 use Marko\Config\ConfigRepositoryInterface;
 use PDO;
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\MarkoConfigRepositoryAdapter;
+use Zoosper\Config\Bridge\MarkoConfigRepositoryAdapter;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
 use Zoosper\Core\Database\PdoConnectionProvider;

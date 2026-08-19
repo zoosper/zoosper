@@ -4,8 +4,9 @@
     "type": "zoosper-module",
     "license": "MIT",
     "require": {
-        "php": "^8.5",
         "marko/session-file": "0.8.5",
+        "php": "^8.5",
+        "zoosper/config": "dev-dev",
         "zoosper/core": "dev-dev"
     },
     "autoload": {

@@ -9,7 +9,7 @@ These dependencies are active runtime boundaries, not unused manifest entries. T
 ## Decisions
 
 - Phase 10BI extracted `zoosper/cache`, which owns `marko/cache`, `marko/cache-file`, `marko/cache-redis` and the cache-specific use of `marko/encryption`. It exposes a Zoosper-owned cache contract, and Core and Page no longer import Marko Cache directly.
-- Configuration remains in Core until a dedicated compatibility design covers HTTP boot, console composition and the existing Session adapter. Moving only `marko/config` would leave the adapter and service identifier in Core and would not create an honest bridge.
+- Phase 10BJ extracted `zoosper/config` as the shared compatibility bridge for HTTP boot, console composition and Session. Core retains application loading, module aggregation, project overrides and persisted scoped configuration; Cache retains its independent package-local adapter.
 - Encryption is not extracted independently while its only captured Core use is cache signing configuration. Its ownership should move with `zoosper/cache` unless a separate non-cache consumer is discovered.
 - Existing public configuration keys, file and Redis behaviour, fail-open page-cache semantics and module-removal behaviour must remain unchanged.
 

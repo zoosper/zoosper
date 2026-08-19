@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Marko\Config\Exceptions\ConfigException;
 use Marko\Config\Exceptions\ConfigNotFoundException;
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\MarkoConfigRepositoryAdapter;
+use Zoosper\Config\Bridge\MarkoConfigRepositoryAdapter;
 
 function markoConfigAdapterTestInstance(array $items): MarkoConfigRepositoryAdapter
 {

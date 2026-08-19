@@ -6,7 +6,7 @@ declare(strict_types=1);
 use Marko\Config\ConfigRepositoryInterface;
 use Zoosper\Core\Config\ApplicationConfigLoader;
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\MarkoConfigRepositoryAdapter;
+use Zoosper\Config\Bridge\MarkoConfigRepositoryAdapter;
 use Zoosper\Core\Console\ConsoleApplication;
 use Zoosper\Core\Console\ConsoleOutput;
 use Zoosper\Core\Console\ConsoleOptions;
