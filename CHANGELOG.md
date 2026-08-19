@@ -1,4 +1,23 @@
 # Changelog
+
+## [0.3.0-alpha.2] - 2026-08-19
+
+### Added
+- Feature-owned PAT-scoped API expansion and Page lifecycle/revision foundations.
+- Dedicated `zoosper/cache`, `zoosper/config`, and `zoosper/scoped-config` packages.
+- Stronger stateless HTTP, media lifecycle, authentication, and operational recovery coverage.
+
+### Changed
+- Shared cache, Marko configuration compatibility, and persisted scoped configuration now have honest package owners.
+- API controllers and lifecycle orchestration continue moving into owning feature modules.
+- Documentation, package READMEs, architecture decisions, and module-manifest verification were updated throughout the development line.
+
+### Removed
+- Unused Zoosper-native general method-plugin subsystem.
+
+### Verified
+- 1,472 tests with 8,672 assertions, zero quality findings, fresh installation, frontend boot, valid Composer manifests, and a fresh 34-module manifest.
+
 ## v0.3.0-alpha.1
 
 ### Added

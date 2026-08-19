@@ -5,7 +5,7 @@
 ## Current continuity status
 
 - Latest tag: `v0.3.0-alpha.1`.
-- Current development line: `v0.3.0-alpha.2-dev`.
+- Current development line: `v0.3.0-alpha.2`.
 - Completed API arc: 10AK, 10AL, 10AM-A, 10AM-B, 10AM-C, 10AN-A, 10AN-B/C and 10AO.
 - Next bulk: 10AP-A Media reads and derivatives, 10AP-B canonical PAT upload, and 10AP-C archive/restore plus reference-safe permanent deletion where the shared reference contract permits it.
 

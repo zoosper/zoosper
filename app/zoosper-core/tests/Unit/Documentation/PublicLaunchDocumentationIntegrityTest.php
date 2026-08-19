@@ -8,7 +8,7 @@ it('publishes the current alpha release and delivered product surface at the rep
 
     expect($readme)
         ->toContain('v0.3.0-alpha.1')
-        ->toContain('v0.3.0-alpha.2-dev')
+        ->toContain('v0.3.0-alpha.2')
         ->toContain('zoosper-menu')
         ->toContain('revision listing and revision restoration')
         ->toContain('CI and the tracked pre-push hook')

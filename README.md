@@ -3,7 +3,7 @@
 **A modular, API-first CMS without the weight. Extend features without forking core.**
 
 - Latest pre-release: `v0.3.0-alpha.1`
-- Current development line: `v0.3.0-alpha.2-dev`
+- Current development line: `v0.3.0-alpha.2`
 - Required runtime: PHP 8.5+
 
 Zoosper is an API-first, multi-site CMS built around independently owned Composer modules. Each feature can contribute its own routes, services, schema, migrations, permissions, Admin UI, API adapters, tests, assets and documentation. Cross-cutting platform modules stay free of feature implementation dependencies.
@@ -132,7 +132,7 @@ CI and the tracked pre-push hook run the repository quality contract. Psalm rema
 
 ## Current development focus
 
-The `v0.3.0-alpha.2-dev` line begins with Phase 10AP, feature-owned Media API parity:
+The `v0.3.0-alpha.2` line begins with Phase 10AP, feature-owned Media API parity:
 
 - Media reads and derivative representation
 - canonical PAT-scoped upload
@@ -149,7 +149,7 @@ The `v0.3.0-alpha.2-dev` line begins with Phase 10AP, feature-owned Media API pa
 
 ## Project status and support
 
-Zoosper CMS is in active public-alpha development. The latest tagged pre-release is `v0.3.0-alpha.1`; the current `dev` branch is `v0.3.0-alpha.2-dev`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
+Zoosper CMS is in active public-alpha development. The latest tagged pre-release is `v0.3.0-alpha.1`; the current `dev` branch is `v0.3.0-alpha.2`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
 
 ## Licence
 
