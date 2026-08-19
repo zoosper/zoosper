@@ -33,7 +33,6 @@ Zoosper_Core module for Zoosper CMS.
 - `src/Message/`
 - `src/Module/`
 - `src/Pagination/`
-- `src/Plugin/`
 - `src/Release/`
 - `src/Routing/`
 - `src/Scaffold/`

@@ -14,10 +14,14 @@ The existing `Zoosper\\Core\\Plugin` subsystem has no production consumer or mod
 
 Zoosper service decorators remain supported for explicit whole-service wrapping. Zoosper entity-save lifecycle remains separate because it owns ordered, abort-capable persistence orchestration and mutable save context. Zoosper general events remain authoritative because their tested continue-after-listener-failure behaviour differs from the captured Marko observer dispatcher.
 
+## Phase 10BE retirement
+
+Phase 10BE removed the unused `Zoosper\Core\Plugin` subsystem after repository-wide inventory found no production consumer or module `method_plugins.php` manifest. General method interception remains unavailable until a real production use case introduces a thin Zoosper-owned bridge over Marko.
+
 ## Guardrails
 
 - Do not add direct `marko/core` ownership to `zoosper/core` for compatibility tests or future runtime experiments.
-- Do not add new production consumers to `Zoosper\\Core\\Plugin`.
+- Do not recreate `Zoosper\Core\Plugin` or another Zoosper-native general interceptor framework.
 - Do not run two permanent general interception runtimes for the same production service.
 - Put Marko implementation dependencies in the focused Zoosper bridge that owns the capability.
 - Keep business services free of direct container access.
