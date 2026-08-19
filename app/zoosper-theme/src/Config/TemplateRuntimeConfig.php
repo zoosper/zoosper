@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Zoosper\Theme\Config;
 
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeContext;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
+use Zoosper\ScopedConfig\ScopeContext;
 
 /** Resolves Theme-owned template runtime settings with scoped DB precedence. */
 final readonly class TemplateRuntimeConfig

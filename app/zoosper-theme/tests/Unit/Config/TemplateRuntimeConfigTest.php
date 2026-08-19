@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeContext;
-use Zoosper\Core\Config\Scope\ScopeType;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
+use Zoosper\ScopedConfig\ScopeContext;
+use Zoosper\ScopedConfig\ScopeType;
 use Zoosper\Theme\Config\TemplateRuntimeConfig;
 
 function themeScopeRepository(): ScopeConfigRepository

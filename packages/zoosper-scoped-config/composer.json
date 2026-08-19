@@ -1,0 +1,10 @@
+{
+    "name": "zoosper/scoped-config",
+    "description": "Shared persisted scoped configuration foundation for Zoosper modules.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {"php": "^8.5", "ext-pdo": "*"},
+    "autoload": {"psr-4": {"Zoosper\\ScopedConfig\\": "src/"}},
+    "autoload-dev": {"psr-4": {"Zoosper\\ScopedConfig\\Tests\\": "tests/"}},
+    "config": {"sort-packages": true, "platform": {"php": "8.5"}}
+}

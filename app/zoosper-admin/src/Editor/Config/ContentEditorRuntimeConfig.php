@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Editor\Config;
 
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeContext;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
+use Zoosper\ScopedConfig\ScopeContext;
 
 /** Resolves Admin-owned editor selection with scoped database precedence. */
 final readonly class ContentEditorRuntimeConfig

@@ -6,7 +6,7 @@ namespace Zoosper\Settings\Write;
 
 use InvalidArgumentException;
 use Zoosper\Settings\Persistence\ScopedSettingStoreInterface;
-use Zoosper\Core\Config\Scope\ScopeType;
+use Zoosper\ScopedConfig\ScopeType;
 use Zoosper\Settings\Definition\SettingsSection;
 
 /** Removes one declared editable override so normal inheritance resumes. */

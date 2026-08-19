@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Settings\Write;
 
 use Zoosper\Settings\Persistence\ScopedSettingStoreInterface;
-use Zoosper\Core\Config\Scope\ScopeType;
+use Zoosper\ScopedConfig\ScopeType;
 use Zoosper\Settings\Definition\SettingsSection;
 
 /** Validates a complete declared section before atomically writing any value. */

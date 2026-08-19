@@ -6,9 +6,9 @@ namespace Zoosper\Settings\Persistence;
 
 use PDO;
 use Throwable;
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeContext;
-use Zoosper\Core\Config\Scope\ScopeType;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
+use Zoosper\ScopedConfig\ScopeContext;
+use Zoosper\ScopedConfig\ScopeType;
 
 final readonly class ScopeConfigSettingStore implements ScopedSettingStoreInterface
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Settings\Scope;
 
 use InvalidArgumentException;
-use Zoosper\Core\Config\Scope\ScopeContext;
+use Zoosper\ScopedConfig\ScopeContext;
 use Zoosper\Core\Http\Request;
 use Zoosper\Site\Repository\SiteRepository;
 

@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Marko\View\ViewInterface;
 use Zoosper\Theme\Template\MarkoViewAdapter;
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeContext;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
+use Zoosper\ScopedConfig\ScopeContext;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\View\TemplateViewContextProvider;
@@ -29,7 +29,6 @@ return [
     ),
     ThemeRepository::class => static fn (ServiceContainer $services): ThemeRepository => new ThemeRepository(dirname(__DIR__, 3) . '/themes'),
     LayoutUpdateRepository::class => static fn (ServiceContainer $services): LayoutUpdateRepository => new LayoutUpdateRepository(),
-    ScopeConfigRepository::class => static fn (ServiceContainer $services): ScopeConfigRepository => new ScopeConfigRepository($services->get(PDO::class)),
     TemplateRuntimeConfig::class => static fn (ServiceContainer $services): TemplateRuntimeConfig => new TemplateRuntimeConfig(
         dirname(__DIR__, 3),
         $services->get(ConfigRepository::class),

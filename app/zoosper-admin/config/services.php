@@ -42,8 +42,8 @@ use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeContext;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
+use Zoosper\ScopedConfig\ScopeContext;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Entity\Save\EntitySaveEventDispatcher;
 use Zoosper\Core\Entity\Save\EntitySaveEventDispatcherInterface;
@@ -65,9 +65,6 @@ return [
     AssetPathResolver::class => static fn(ServiceContainer $services): AssetPathResolver => new AssetPathResolver($services->get(ConfigRepository::class)),
     FlashMessageStoreInterface::class => static fn(ServiceContainer $services): FlashMessageStoreInterface => new SessionFlashMessageStore(),
     FlashMessageRenderer::class => static fn(ServiceContainer $services): FlashMessageRenderer => new FlashMessageRenderer(),
-    ScopeConfigRepository::class => static fn (ServiceContainer $services): ScopeConfigRepository => new ScopeConfigRepository(
-        $services->get(PDO::class),
-    ),
     ContentEditorRuntimeConfigFactory::class => static fn (ServiceContainer $services): ContentEditorRuntimeConfigFactory => new ContentEditorRuntimeConfigFactory(
         $services->get(ConfigRepository::class),
         $services->get(ScopeConfigRepository::class),

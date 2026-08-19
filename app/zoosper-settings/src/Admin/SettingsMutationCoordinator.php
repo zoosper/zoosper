@@ -6,7 +6,7 @@ namespace Zoosper\Settings\Admin;
 
 use InvalidArgumentException;
 use Zoosper\Auth\Model\AdminUser;
-use Zoosper\Core\Config\Scope\ScopeType;
+use Zoosper\ScopedConfig\ScopeType;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Message\FlashMessageStoreInterface;

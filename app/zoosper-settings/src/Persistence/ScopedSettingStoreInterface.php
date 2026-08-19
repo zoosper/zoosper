@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Settings\Persistence;
 
-use Zoosper\Core\Config\Scope\ScopeContext;
-use Zoosper\Core\Config\Scope\ScopeType;
+use Zoosper\ScopedConfig\ScopeContext;
+use Zoosper\ScopedConfig\ScopeType;
 
 interface ScopedSettingStoreInterface
 {

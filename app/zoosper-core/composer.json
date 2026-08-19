@@ -9,7 +9,8 @@
         "zoosper/cache": "dev-dev",
         "zoosper/config": "dev-dev",
         "zoosper/errors": "dev-dev",
-        "zoosper/logger": "dev-dev"
+        "zoosper/logger": "dev-dev",
+        "zoosper/scoped-config": "dev-dev"
     },
     "autoload": {
         "psr-4": {

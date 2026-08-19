@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Zoosper\Settings\Value;
 
 use Zoosper\Settings\Persistence\ScopedSettingStoreInterface;
-use Zoosper\Core\Config\Scope\ScopeContext;
-use Zoosper\Core\Config\Scope\ScopeType;
+use Zoosper\ScopedConfig\ScopeContext;
+use Zoosper\ScopedConfig\ScopeType;
 use Zoosper\Settings\Definition\SettingDefinition;
 
 /** Resolves scoped DB overrides before the Phase 9B project/default fallback. */

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeContext;
-use Zoosper\Core\Config\Scope\ScopeType;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
+use Zoosper\ScopedConfig\ScopeContext;
+use Zoosper\ScopedConfig\ScopeType;
 use Zoosper\Settings\Persistence\ScopeConfigSettingStore;
 
 it('writes resolves and clears scoped values through one Settings boundary', function (): void {

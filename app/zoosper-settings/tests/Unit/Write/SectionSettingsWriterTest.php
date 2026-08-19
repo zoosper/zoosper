@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
 use Zoosper\Settings\Persistence\ScopeConfigSettingStore;
-use Zoosper\Core\Config\Scope\ScopeContext;
-use Zoosper\Core\Config\Scope\ScopeType;
+use Zoosper\ScopedConfig\ScopeContext;
+use Zoosper\ScopedConfig\ScopeType;
 use Zoosper\Settings\Definition\SettingDefinition;
 use Zoosper\Settings\Definition\SettingsSection;
 use Zoosper\Settings\Write\SectionSettingsWriter;

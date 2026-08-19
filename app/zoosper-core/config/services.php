@@ -8,6 +8,7 @@ use Zoosper\Cache\Factory\CacheDriverFactory;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
 use Zoosper\Core\Entity\Extension\EntityExtensionDataPersister;
 use Zoosper\Core\Entity\Extension\EntityExtensionValueRepository;
 use Zoosper\Core\Event\EventDispatcher;
@@ -28,6 +29,7 @@ use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Core\View\TemplateViewContextProvider;
 
 return [
+    ScopeConfigRepository::class => static fn (ServiceContainer $services): ScopeConfigRepository => new ScopeConfigRepository($services->get(PDO::class)),
     AdminUrlGenerator::class => static fn (ServiceContainer $services): AdminUrlGenerator => new AdminUrlGenerator(
         $services->get(ConfigRepository::class),
     ),

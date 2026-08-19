@@ -19,3 +19,7 @@ These dependencies are active runtime boundaries, not unused manifest entries. T
 - Do not create empty same-name packages before runtime ownership and public contracts move with them.
 - Do not make feature modules depend on concrete Marko cache drivers.
 - Require focused real file-cache, Redis object-graph, frontend boot, console recovery and full-suite proof for extraction.
+
+## Phase 10BK scoped configuration ownership
+
+Phase 10BK extracted `zoosper/scoped-config` as the independent persisted scope foundation shared by Admin, Mail, Settings and Theme. Settings retains catalogue, mutation, validation, audit and presentation workflows. Core retains application configuration loading and registers one shared scoped repository service.

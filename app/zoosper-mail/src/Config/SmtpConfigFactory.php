@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Zoosper\Mail\Config;
 
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeContext;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
+use Zoosper\ScopedConfig\ScopeContext;
 
 /**
  * Creates immutable SMTP runtime configuration for an explicit scope.

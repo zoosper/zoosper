@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Settings\Admin\SettingsAdminUrls;
@@ -35,9 +35,6 @@ return [
     ),
     SettingValueResolver::class => static fn (ServiceContainer $services): SettingValueResolver => new SettingValueResolver(
         $services->get(ConfigRepository::class),
-    ),
-    ScopeConfigRepository::class => static fn (ServiceContainer $services): ScopeConfigRepository => new ScopeConfigRepository(
-        $services->get(PDO::class),
     ),
     ScopeConfigSettingStore::class => static fn (ServiceContainer $services): ScopeConfigSettingStore => new ScopeConfigSettingStore(
         $services->get(PDO::class),

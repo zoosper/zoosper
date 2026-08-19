@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Config\Scope;
+namespace Zoosper\ScopedConfig;
 
 /**
  * Identifies the (website, store, site) coordinates to resolve scoped config

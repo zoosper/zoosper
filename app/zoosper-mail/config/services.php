@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeConfigRepository;
-use Zoosper\Core\Config\Scope\ScopeContext;
+use Zoosper\ScopedConfig\ScopeConfigRepository;
+use Zoosper\ScopedConfig\ScopeContext;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Mail\Config\SmtpConfig;
 use Zoosper\Mail\Config\SmtpConfigFactory;
@@ -15,9 +15,6 @@ use Zoosper\Mail\Transport\MailerInterface;
 use Zoosper\Mail\Transport\SmtpMailer;
 
 return [
-    ScopeConfigRepository::class => static fn (ServiceContainer $services): ScopeConfigRepository => new ScopeConfigRepository(
-        $services->get(PDO::class),
-    ),
     SmtpConfigFactory::class => static fn (ServiceContainer $services): SmtpConfigFactory => new SmtpConfigFactory(
         $services->get(ConfigRepository::class),
         $services->get(ScopeConfigRepository::class),

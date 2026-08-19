@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Config\Scope;
+namespace Zoosper\ScopedConfig;
 
 /**
  * The four levels a config value can be set at, from least to most specific.
