@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "acb5e20cd6bcedb94cc5529b0ee589cc",
+    "content-hash": "c3a7a18527c99b2f65b0488810da02a8",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1216,21 +1216,59 @@
             }
         },
         {
+            "name": "zoosper/cache",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./packages/zoosper-cache",
+                "reference": "9359da8d5d24e82b9cd5318a27b585282a7a7664"
+            },
+            "require": {
+                "marko/cache": "0.8.5",
+                "marko/cache-file": "0.8.5",
+                "marko/cache-redis": "0.8.5",
+                "marko/config": "0.8.5",
+                "marko/encryption": "0.8.5",
+                "php": "^8.5"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Cache\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Cache\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper-owned cache boundary backed by Marko file and Redis drivers.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "zoosper/core",
             "version": "dev-dev",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-core",
-                "reference": "4e9b0a312e46fb270f6a99cb67be5e7e60e88417"
+                "reference": "b5a8b5357cb866de88fa8a458a962c39758eceaa"
             },
             "require": {
                 "ext-pdo": "*",
-                "marko/cache": "^0.8",
-                "marko/cache-file": "^0.8",
-                "marko/cache-redis": "^0.8",
                 "marko/config": "^0.8",
-                "marko/encryption": "^0.8",
                 "php": "^8.5",
+                "zoosper/cache": "dev-dev",
                 "zoosper/errors": "dev-dev",
                 "zoosper/logger": "dev-dev"
             },
@@ -1531,11 +1569,12 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-page",
-                "reference": "ae5bff700bdb26f61a61c0b1bf70a6976163f2b4"
+                "reference": "968ae601b731f3c76f321d7571872b7826d896b4"
             },
             "require": {
                 "php": "^8.5",
                 "zoosper/auth": "dev-dev",
+                "zoosper/cache": "dev-dev",
                 "zoosper/core": "dev-dev",
                 "zoosper/grid": "dev-dev",
                 "zoosper/media": "dev-dev",
@@ -8839,6 +8878,7 @@
         "zoosper/api": 20,
         "zoosper/api-grid": 20,
         "zoosper/auth": 20,
+        "zoosper/cache": 20,
         "zoosper/core": 20,
         "zoosper/errors": 20,
         "zoosper/grid": 20,

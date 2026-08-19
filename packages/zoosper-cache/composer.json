@@ -1,0 +1,18 @@
+{
+    "name": "zoosper/cache",
+    "description": "Zoosper-owned cache boundary backed by Marko file and Redis drivers.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "marko/cache": "0.8.5",
+        "marko/cache-file": "0.8.5",
+        "marko/cache-redis": "0.8.5",
+        "marko/config": "0.8.5",
+        "marko/encryption": "0.8.5"
+    },
+    "autoload": {"psr-4": {"Zoosper\\Cache\\": "src/"}},
+    "autoload-dev": {"psr-4": {"Zoosper\\Cache\\Tests\\": "tests/"}},
+    "extra": {"marko": {"module": true}},
+    "config": {"sort-packages": true, "platform": {"php": "8.5"}}
+}

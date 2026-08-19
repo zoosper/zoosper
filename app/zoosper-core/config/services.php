@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Marko\Cache\Contracts\CacheInterface;
+use Zoosper\Cache\Contract\CacheInterface;
 use Zoosper\Core\App\CmsVersion;
-use Zoosper\Core\Cache\CacheDriverFactory;
+use Zoosper\Cache\Factory\CacheDriverFactory;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
@@ -60,7 +60,7 @@ return [
     HtmlSanitizerInterface::class => static fn (ServiceContainer $services): HtmlSanitizerInterface => $services->get(HtmlSanitizerFactory::class)->create(),
     CacheDriverFactory::class => static fn (ServiceContainer $services): CacheDriverFactory => new CacheDriverFactory(
         $services->get(ConfigRepository::class),
-        $services->get(ProjectPathResolver::class),
+        dirname(__DIR__, 3),
     ),
     CacheInterface::class => static fn (ServiceContainer $services): CacheInterface => $services->get(CacheDriverFactory::class)->create(),
     EntityExtensionValueRepository::class => static fn (ServiceContainer $services): EntityExtensionValueRepository => new EntityExtensionValueRepository($services->get(PDO::class)),

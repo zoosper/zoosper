@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 use Marko\Cache\File\Driver\FileCacheDriver;
 use Marko\Cache\Redis\Driver\RedisCacheDriver;
-use Zoosper\Core\Cache\CacheDriverFactory;
+use Zoosper\Cache\Contract\CacheInterface as ZoosperCacheInterface;
+use Zoosper\Cache\Driver\MarkoCacheAdapter;
+use Zoosper\Cache\Factory\CacheDriverFactory;
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Filesystem\ProjectPathResolver;
 
 function cacheDriverFactoryTestInstance(array $cacheOverrides = [], array $encryptionOverrides = []): CacheDriverFactory
 {
@@ -19,12 +20,14 @@ function cacheDriverFactoryTestInstance(array $cacheOverrides = [], array $encry
         ], $cacheOverrides),
         'encryption' => array_replace(['key' => '', 'cipher' => 'aes-256-gcm'], $encryptionOverrides),
     ]);
-    return new CacheDriverFactory($config, ProjectPathResolver::fromCoreModule());
+    return new CacheDriverFactory($config, dirname(__DIR__, 4));
 }
 
 it('builds a genuinely working FileCacheDriver, proven with a real set/get roundtrip', function (): void {
     $driver = cacheDriverFactoryTestInstance()->create();
-    expect($driver)->toBeInstanceOf(FileCacheDriver::class);
+    expect($driver)->toBeInstanceOf(ZoosperCacheInterface::class)
+        ->and($driver)->toBeInstanceOf(MarkoCacheAdapter::class)
+        ->and($driver->markoDriver())->toBeInstanceOf(FileCacheDriver::class);
     $key = 'zoosper-cache-factory-test-key-' . bin2hex(random_bytes(4));
     expect($driver->has($key))->toBeFalse();
     $driver->set($key, ['hello' => 'world'], 60);
@@ -36,7 +39,9 @@ it('builds a genuinely working FileCacheDriver, proven with a real set/get round
 
 it('defaults to the file driver when cache.driver is not explicitly set', function (): void {
     $config = ConfigRepository::fromArray(['cache' => ['path' => 'var/cache/zoosper-cache-factory-default-test-' . bin2hex(random_bytes(4))]]);
-    expect((new CacheDriverFactory($config, ProjectPathResolver::fromCoreModule()))->create())->toBeInstanceOf(FileCacheDriver::class);
+    $driver=(new CacheDriverFactory($config, dirname(__DIR__, 4)))->create();
+    expect($driver)->toBeInstanceOf(MarkoCacheAdapter::class)
+        ->and($driver->markoDriver())->toBeInstanceOf(FileCacheDriver::class);
 });
 
 it('throws a clear error for an unsupported driver name', function (): void {
@@ -46,7 +51,8 @@ it('throws a clear error for an unsupported driver name', function (): void {
 
 it('constructs a RedisCacheDriver object graph correctly WITHOUT requiring a real Redis connection', function (): void {
     $driver = cacheDriverFactoryTestInstance(['driver' => 'redis'], ['key' => 'test-signing-key-value'])->create();
-    expect($driver)->toBeInstanceOf(RedisCacheDriver::class);
+    expect($driver)->toBeInstanceOf(MarkoCacheAdapter::class)
+        ->and($driver->markoDriver())->toBeInstanceOf(RedisCacheDriver::class);
 });
 
 it('performs a REAL Redis set/get roundtrip when Redis is actually reachable (explicitly skipped otherwise)', function (): void {

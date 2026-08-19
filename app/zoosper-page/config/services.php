@@ -18,7 +18,7 @@ use Zoosper\Page\Seo\PageSeoContributor;
 use Zoosper\Page\Seo\PageSitemapContributor;
 use Zoosper\Seo\Metadata\SeoMetadataManager;
 
-use Marko\Cache\Contracts\CacheInterface;
+use Zoosper\Cache\Contract\CacheInterface;
 use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Config\ConfigRepository;

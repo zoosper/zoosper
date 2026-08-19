@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Routing;
 
-use Marko\Cache\Contracts\CacheInterface;
+use Zoosper\Cache\Contract\CacheInterface;
 use Throwable;
 use Zoosper\Core\Cache\CacheContext;
 use Zoosper\Core\Cache\CacheKeyBuilder;

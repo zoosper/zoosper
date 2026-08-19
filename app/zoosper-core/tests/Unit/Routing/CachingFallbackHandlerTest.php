@@ -2,13 +2,10 @@
 
 declare(strict_types=1);
 
-use Marko\Cache\CacheItem;
-use Marko\Cache\Contracts\CacheInterface;
-use Marko\Cache\Contracts\CacheItemInterface;
-use Zoosper\Core\Cache\CacheDriverFactory;
+use Zoosper\Cache\Contract\CacheInterface;
+use Zoosper\Cache\Factory\CacheDriverFactory;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Config\ConfigRepository;
-use Zoosper\Core\Filesystem\ProjectPathResolver;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Routing\CachingFallbackHandler;
@@ -67,13 +64,6 @@ final class FakeMarkoCacheForCachingFallbackHandlerTest implements CacheInterfac
     {
         $this->store = [];
         return true;
-    }
-
-    public function getItem(string $key): CacheItemInterface
-    {
-        return array_key_exists($key, $this->store)
-            ? CacheItem::hit($key, $this->store[$key])
-            : CacheItem::miss($key);
     }
 
     public function getMultiple(array $keys, mixed $default = null): iterable
@@ -241,7 +231,7 @@ it('produces a genuinely Marko-cache-key-valid key, proven end-to-end against th
         'cache' => ['driver' => 'file', 'path' => 'var/cache/zoosper-caching-fallback-handler-test-' . bin2hex(random_bytes(4)), 'default_ttl' => 60],
         'encryption' => ['key' => '', 'cipher' => 'aes-256-gcm'],
     ]);
-    $realCache = (new CacheDriverFactory($realConfig, ProjectPathResolver::fromCoreModule()))->create();
+    $realCache = (new CacheDriverFactory($realConfig, dirname(__DIR__, 5)))->create();
     $inner = new FakeInnerFallbackHandlerForCachingFallbackHandlerTest(Response::html('real cache driver body', 200));
 
     $handler = new CachingFallbackHandler($inner, $realCache, new CacheKeyBuilder(), enabled: true, ttlSeconds: 60);

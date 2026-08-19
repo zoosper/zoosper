@@ -53,11 +53,8 @@ Zoosper_Core module for Zoosper CMS.
 ## Dependencies
 
 - `ext-pdo`: `*`.
-- `marko/cache`: `^0.8`.
-- `marko/cache-file`: `^0.8`.
-- `marko/cache-redis`: `^0.8`.
 - `marko/config`: `^0.8`.
-- `marko/encryption`: `^0.8`.
+- `zoosper/cache`: `dev-dev`.
 - `php`: `^8.5`.
 - `zoosper/errors`: `dev-dev`.
 
