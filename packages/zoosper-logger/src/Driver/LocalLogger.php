@@ -67,7 +67,8 @@ final class LocalLogger implements LoggerInterface
     {
         foreach ($context as $key => $value) {
             $normalised = strtolower((string) $key);
-            if (str_contains($normalised, 'password') || str_contains($normalised, 'token') || str_contains($normalised, 'secret') || str_contains($normalised, 'session')) { $context[$key] = '[redacted]'; continue; }
+            if (preg_match('/password|token|secret|session|authorization|bearer|cookie|api[_-]?key|credential/i', $normalised) === 1) { $context[$key] = '[redacted]'; continue; }
+            if (is_string($value) && preg_match('/(?:Bearer\s+)?zp_pat_[a-f0-9]{16}_[a-f0-9]{64}/i', $value) === 1) { $context[$key] = preg_replace('/(?:Bearer\s+)?zp_pat_[a-f0-9]{16}_[a-f0-9]{64}/i', '[redacted]', $value); continue; }
             if (is_array($value)) $context[$key] = $this->redact($value);
         }
         return $context;

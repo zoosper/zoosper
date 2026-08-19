@@ -32,3 +32,5 @@ Logging is owned by the standalone `zoosper/logger` package. Core and feature co
 
 ### Feature lifecycle APIs
 Feature modules own lifecycle routes and response mapping. Page archive, restore and guarded permanent deletion use Page-owned application/domain boundaries; Auth owns only PAT identity and scope validation.
+### Security closure boundaries
+Recognised environments are local, development, testing, staging and production; empty or unknown values fail boot. Staging and production require secure sessions and enforced salted rate limiting in both HTTP and console service composition. Logger redaction covers credential-bearing keys and Zoosper PAT-shaped values. PAT issue and revocation require audit infrastructure. Successful PAT use updates last-used metadata at most once per five-minute database interval. Session `/api/v1/me` is read-only; bearer `/api/v1/token/me` remains the stateless integration identity endpoint.

@@ -9,11 +9,12 @@ use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
 use Zoosper\Core\Database\PdoConnectionProvider;
 use Zoosper\Core\Error\ErrorHandler;
+use Zoosper\Core\Http\ProductionSecurityPolicy;
 use Zoosper\Logger\Manager\LogManager;
 use Zoosper\Core\Module\ModuleRegistry;
 final readonly class ConsoleServiceFactory
 {
-    public function __construct(private string $basePath, private ConfigRepository $config, private ModuleRegistry $modules, private PdoConnectionProvider $connection, private LogManager $logs, private ErrorHandler $errors) {}
+    public function __construct(private string $basePath, private ConfigRepository $config, private ModuleRegistry $modules, private PdoConnectionProvider $connection, private LogManager $logs, private ErrorHandler $errors) { ProductionSecurityPolicy::assertEnvironment(); }
     public function create(): ServiceContainer
     {
         $services = new ServiceContainer();
