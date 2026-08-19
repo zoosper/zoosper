@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
+use Zoosper\Admin\Audit\Grid\OperationalGridPageBuilder;
+use Zoosper\Admin\Audit\Grid\LoginHistoryGridDefinition;
+use Zoosper\Admin\Audit\Grid\AuditLogGridDefinition;
 use Zoosper\Admin\Controller\AuditLogController;
 use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
@@ -16,8 +19,6 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Url\AdminUrlGenerator;
-use Zoosper\Grid\GridColumnRegistry;
-use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeService;
 use Zoosper\TwoFactor\Service\AdminTwoFactorEnrollmentService;
 use Zoosper\TwoFactor\Service\AdminTwoFactorLoginRedirectService;
@@ -43,24 +44,14 @@ return [
     ),
 
     AuditLogController::class => static fn (ServiceContainer $services): AuditLogController => new AuditLogController(
-        $services->get(SessionGuard::class),
-        $services->get(AuditLogRepository::class),
-        $services->get(AdminLayout::class),
-        $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
-        // Phase B2: constructed directly from ModuleRegistry (confirmed always
-        // registered by ApplicationFactory) rather than requiring a new
-        // registration in zoosper-core's services.php.
-        new GridColumnRegistry($services->get(ModuleRegistry::class)),
-        $services->get(AdminUrlGenerator::class),
+        $services->get(SessionGuard::class), $services->get(AuditLogRepository::class), new AuditLogGridDefinition(),
+        $services->get(OperationalGridPageBuilder::class), $services->get(AdminLayout::class),
+        $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null, $services->get(AdminUrlGenerator::class),
     ),
-
     LoginHistoryController::class => static fn (ServiceContainer $services): LoginHistoryController => new LoginHistoryController(
-        $services->get(SessionGuard::class),
-        $services->get(LoginHistoryRepository::class),
-        $services->get(AdminLayout::class),
-        $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
-        new GridColumnRegistry($services->get(ModuleRegistry::class)),
-        $services->get(AdminUrlGenerator::class),
+        $services->get(SessionGuard::class), $services->get(LoginHistoryRepository::class), new LoginHistoryGridDefinition(),
+        $services->get(OperationalGridPageBuilder::class), $services->get(AdminLayout::class),
+        $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null, $services->get(AdminUrlGenerator::class),
     ),
 ];
 

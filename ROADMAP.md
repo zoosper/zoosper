@@ -1204,3 +1204,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - Phase 10AM-A: PAT-scoped Page API list/detail read vertical delivered.
 
 - Phase 10AM-B: shared Page mutation application service plus PAT create/update delivered.
+
+### Phase 10BL: Audit Log and Login History Admin Grid cutover
+
+Audit Log and Login History now use the persistent `zoosper/admin-grid` workspace on top of their existing `zoosper/grid` definitions and repositories. The cutover adds per-admin saved views, column visibility, column ordering, compact filters, page-size state and direct navigation while preserving module-contributed columns such as Two Factor User Agent. The obsolete direct-controller `GridHtmlRenderer` path is retired; `zoosper/grid` remains the generic engine and `zoosper/admin-grid` remains the Admin workspace layer.

@@ -10,6 +10,7 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Url\AdminUrlGenerator;
+use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\StoreOrders\Admin\StoreOrderAdminController;
 use Zoosper\StoreOrders\Admin\StoreOrderCsvExportController;
 use Zoosper\StoreOrders\Admin\StoreOrderGridMutationCoordinator;
@@ -33,6 +34,7 @@ return [
         mutations: $services->get(StoreOrderGridMutationCoordinator::class),
         mutationForms: $services->get(GridWorkspaceMutationFormsRenderer::class),
         config: $services->get(ConfigRepository::class)->array('store_orders'),
+        gridRenderer: new GridHtmlRenderer(),
         adminUrls: $services->get(AdminUrlGenerator::class),
     ),
 ];

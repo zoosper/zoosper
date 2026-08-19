@@ -31,7 +31,7 @@ final readonly class StoreOrderAdminController
         private StoreOrderGridMutationCoordinator $mutations,
         private GridWorkspaceMutationFormsRenderer $mutationForms,
         private array $config,
-        private GridHtmlRenderer $gridRenderer = new GridHtmlRenderer(),
+        private GridHtmlRenderer $gridRenderer,
         private ?AdminUrlGenerator $adminUrls = null,
     ) {
     }

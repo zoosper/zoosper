@@ -18,6 +18,9 @@ use Zoosper\Admin\Asset\AssetPathResolver;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
+use Zoosper\Admin\Audit\Grid\OperationalGridPageBuilder;
+use Zoosper\Admin\Audit\Grid\OperationalGridPageBuilderFactory;
+use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Core\Editor\ContentEditorInterface;
 use Zoosper\Admin\Editor\ContentEditorRegistry;
 use Zoosper\Admin\Editor\Config\ContentEditorRuntimeConfig;
@@ -55,6 +58,8 @@ use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 
 return [
+    OperationalGridPageBuilderFactory::class => static fn(ServiceContainer $services): OperationalGridPageBuilderFactory => new OperationalGridPageBuilderFactory($services->get(GridViewStateResolver::class)),
+    OperationalGridPageBuilder::class => static fn(ServiceContainer $services): OperationalGridPageBuilder => $services->get(OperationalGridPageBuilderFactory::class)->create(),
     LoginHistoryRepository::class => static fn(ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
     AuditLogRepository::class => static fn(ServiceContainer $services): AuditLogRepository => new AuditLogRepository($services->get(PDO::class)),
     AuditLogger::class => static fn(ServiceContainer $services): AuditLogger => new AuditLogger($services->get(AuditLogRepository::class)),
