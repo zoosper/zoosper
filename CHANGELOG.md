@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0-alpha.3-dev]
+
+### Planned
+- Visible CMS capability and extension-author experience.
+
+
 ## [0.3.0-alpha.2] - 2026-08-19
 
 ### Added
