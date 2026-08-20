@@ -14,7 +14,7 @@ final readonly class GridCompactToolbarRenderer
         bool $dirty,
         int $pageSize,
         int $activeFilters,
-        string $exportUrl = '/admin/pages/export',
+        ?string $exportUrl = '/admin/pages/export',
         array $bookmarks = [],
         ?int $activeBookmarkId = null,
         string $viewAction = '/admin/pages',
@@ -54,7 +54,7 @@ final readonly class GridCompactToolbarRenderer
             . '<button type="button" data-grid-settings-toggle aria-expanded="false" aria-controls="grid-workspace-settings" title="Manage saved views" aria-label="Manage saved views">&#8942;</button>'
             . '</span>'
             . '<button type="button" data-grid-toggle="columns" aria-expanded="false">Columns</button>'
-            . '<a class="button" data-grid-export href="' . $this->escape($exportUrl) . '">Export current page</a>'
+            . ($exportUrl !== null ? '<a class="button" data-grid-export href="' . $this->escape($exportUrl) . '">Export current page</a>' : '')
             . '</div>'
             . '<div class="grid-compact-state">'
             . '<span class="grid-compact-status' . ($dirty ? ' is-dirty' : '') . '">' . $status . '</span>'

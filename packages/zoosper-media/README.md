@@ -92,3 +92,7 @@ Media owns stateless PAT-scoped list, detail, derivative, canonical upload, arch
 ## Phase 10BM-B visual Admin Grid
 
 The Media library uses the stable `admin.media` workspace with server-side total-count pagination, allow-listed filters and sorting, persistent page-size and view state, and Media-owned responsive cards. Upload, Editor.js integration, archive, restore and reference-safe permanent deletion remain feature-owned. Media depends on `zoosper/admin-grid` and `zoosper/grid`, not the concrete Admin application module.
+
+## Media workspace URL ownership
+
+The Media Grid resets to `/admin/media` and intentionally hides export until Media owns a real export endpoint. No Pages route is reused by Media controls.

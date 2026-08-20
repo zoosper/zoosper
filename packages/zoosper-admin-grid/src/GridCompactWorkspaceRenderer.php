@@ -17,7 +17,7 @@ final readonly class GridCompactWorkspaceRenderer
     ) {
     }
 
-    public function render(GridViewState $state, string $formAction, ?string $exportUrl = null): string
+    public function render(GridViewState $state, string $formAction, ?string $exportUrl = null, bool $exportEnabled = true): string
     {
         $filters=$state->criteria->filters;
         $active=0; foreach($filters as $value){if(is_array($value)?$value!==[]:trim((string)$value)!==''){$active++;}}
@@ -29,14 +29,14 @@ final readonly class GridCompactWorkspaceRenderer
             false,
             $state->criteria->pager->pageSize,
             $active,
-            $exportUrl ?? '/admin/pages/export',
+            $exportEnabled ? ($exportUrl ?? '/admin/pages/export') : null,
             $state->bookmarks,
             $state->activeBookmarkId,
             $formAction,
         );
         $html.='<form method="get" action="'.$this->e($formAction).'" data-grid-filter-form>';
         $html.='<input type="hidden" name="page" value="1">';
-        $html.=$this->filters($state->definition,$filters);
+        $html.=$this->filters($state->definition,$filters,$formAction);
         $html.=$this->columns($state->definition,$state->visibleColumns,$state->columnOrder);
         if($state->criteria->sortBy!==null){$html.='<input type="hidden" name="sort" value="'.$this->e($state->criteria->sortBy).'"><input type="hidden" name="dir" value="'.$this->e($state->criteria->sortDir).'">';}
         $html.='</form>'.$this->chips->render($this->chipValues($state->definition,$filters)).'</section>';
@@ -44,7 +44,7 @@ final readonly class GridCompactWorkspaceRenderer
     }
 
     /** @param array<string,mixed> $values */
-    private function filters(GridDefinition $definition,array $values):string
+    private function filters(GridDefinition $definition,array $values,string $clearAction):string
     {
         $html='<div class="grid-compact-panel" hidden data-grid-panel="filters"><div class="grid-compact-panel__head"><strong>Filters</strong><button type="button" data-grid-panel-close>×</button></div><div class="grid-compact-filters">';
         foreach ($definition->filters as $filter) {
@@ -60,7 +60,7 @@ final readonly class GridCompactWorkspaceRenderer
                 . $this->e($filter->label) . '</span>'
                 . $this->control($filter, $values[$filter->key] ?? null) . '</label>';
         }
-        return $html.'<div><button type="submit">Apply filters</button> <a href="'.$this->e('/admin/pages').'">Clear all</a></div></div></div>';
+        return $html.'<div><button type="submit">Apply filters</button> <a href="'.$this->e($clearAction).'">Clear all</a></div></div></div>';
     }
 
     private function control(GridFilter $filter,mixed $value):string
