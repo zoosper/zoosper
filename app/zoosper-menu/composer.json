@@ -5,8 +5,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.3 || ^8.5",
+        "zoosper/admin-grid": "dev-dev",
         "zoosper/auth": "dev-dev",
         "zoosper/core": "dev-dev",
+        "zoosper/grid": "dev-dev",
         "zoosper/page": "dev-dev",
         "zoosper/site": "dev-dev"
     },

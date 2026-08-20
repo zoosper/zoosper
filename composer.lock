@@ -1574,12 +1574,14 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-menu",
-                "reference": "3143712e1952c2f2c00f6e75aade37033ad68112"
+                "reference": "04e8bb79a9139e3bb72f40e5e38624c983e12a39"
             },
             "require": {
                 "php": "^8.3 || ^8.5",
+                "zoosper/admin-grid": "dev-dev",
                 "zoosper/auth": "dev-dev",
                 "zoosper/core": "dev-dev",
+                "zoosper/grid": "dev-dev",
                 "zoosper/page": "dev-dev",
                 "zoosper/site": "dev-dev"
             },
@@ -1782,12 +1784,14 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-site",
-                "reference": "a87ffe158fe3e5a673c55f838006d47cd21b5d05"
+                "reference": "fe70c082f14475e798fa1b84a3ce27b51f267017"
             },
             "require": {
                 "php": "^8.5",
+                "zoosper/admin-grid": "dev-dev",
                 "zoosper/auth": "dev-dev",
-                "zoosper/core": "dev-dev"
+                "zoosper/core": "dev-dev",
+                "zoosper/grid": "dev-dev"
             },
             "type": "zoosper-module",
             "autoload": {

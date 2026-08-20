@@ -16,9 +16,12 @@
 <button type="submit" class="button primary">Create token</button>
 </form>
 </section>
+{if isset($gridHtml) && $gridHtml !== null}{$gridHtml|noescape}{else}
 <section class="card"><h2>Your tokens</h2>
 {if count($tokens) === 0}<p>No Personal Access Tokens have been created.</p>{else}
 <table><thead><tr><th>Name</th><th>Public ID</th><th>Scopes</th><th>Expires</th><th>Last used</th><th>Status</th><th>Action</th></tr></thead><tbody>
 {foreach $tokens as $token}<tr><td>{$token->name}</td><td><code>{$token->publicId}</code></td><td>{implode(', ', $token->scopes)}</td><td>{$token->expiresAt ?? 'Never'}</td><td>{$token->lastUsedAt ?? 'Never'}</td><td>{if $token->isRevoked()}Revoked{elseif $token->isExpired()}Expired{else}Active{/if}</td><td>{if !$token->isRevoked()}<form method="post" action="{$revokeUrl($token->id)}"><input type="hidden" name="_csrf_token" value="{$csrfToken}"><button type="submit" class="button button--danger">Revoke</button></form>{/if}</td></tr>{/foreach}
 </tbody></table>{/if}
 </section>
+
+{/if}

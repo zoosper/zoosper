@@ -9,6 +9,10 @@ it('requires every first-party tabular Admin index listing to use the Admin Grid
   'admin.roles'=>$root.'/app/zoosper-auth/src/Admin/Grid/RoleGridIndex.php',
   'admin.pages'=>$root.'/app/zoosper-page/src/Admin/PageAdminGridResponder.php',
   'admin.store-orders'=>$root.'/packages/zoosper-store-orders/src/Admin/StoreOrderGridWorkspace.php',
+  'admin.access-tokens'=>$root.'/app/zoosper-auth/src/Admin/Controller/PersonalAccessTokenAdminController.php',
+  'admin.sites'=>$root.'/app/zoosper-site/src/Admin/Controller/SiteAdminController.php',
+  'admin.site-domains'=>$root.'/app/zoosper-site/src/Admin/Controller/SiteDomainAdminController.php',
+  'admin.menus'=>$root.'/app/zoosper-menu/src/Admin/MenuAdminResponder.php',
  ];
  foreach($listings as $key=>$file){expect($file)->toBeFile();$source=(string)file_get_contents($file);expect($source,$key.' must use the shared Admin Grid workspace')->toMatch('/AdminGrid|GridWorkspace|GridPageBuilder|GridIndex|OperationalGridPageBuilder/');}
 });

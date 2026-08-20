@@ -89,3 +89,7 @@ PAT-scoped Site reads and the existing reference-guarded disable, restore, and p
 
 ### Shared Site mutation
 Admin/API-ready Site validation is centralised in SiteMutationService; PAT create/update are exposed and Site plus primary-Domain creation is transactional.
+
+## Phase 10BM-A Admin collection Grid
+
+The module-owned Admin collection index uses a stable Admin Grid workspace with server-side count and page queries, allow-listed sorting, filters, saved views, column visibility, ordering and page-size state. Existing POST lifecycle workflows remain feature-owned.

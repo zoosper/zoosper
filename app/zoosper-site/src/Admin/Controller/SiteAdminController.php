@@ -12,6 +12,8 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Url\AdminUrlGenerator;
+use Zoosper\AdminGrid\{AdminCollectionGrid,AdminCollectionGridQuery};
+use Zoosper\Site\Admin\Grid\SiteGrid;
 use Zoosper\Site\Model\Site;
 use Zoosper\Site\Admin\Lifecycle\SiteLifecycleAdminResponder;
 use Zoosper\Site\Repository\SiteRepository;
@@ -31,41 +33,19 @@ final readonly class SiteAdminController
         private SiteRepository $sites,
         private AdminLayout $layout,
         private ?AdminUrlGenerator $adminUrls = null,
+        private ?SiteGrid $grid = null,
+        private ?AdminCollectionGrid $collectionGrid = null,
         private ?SiteLifecycleAdminResponder $lifecycle = null,
     ) {
     }
 
     public function index(Request $request): Response
     {
-        $user = $this->currentAdminUser();
-        $rows = $this->sites->all();
-
-        $html = '<section class="card">'
-            . '<div class="admin-page-heading"><h2>Sites</h2><a class="button" href="' . $this->adminUrl('sites/create') . '">Create site</a></div>';
-
-        if ($rows === []) {
-            $html .= '<p class="muted">No sites exist yet. Create your first site to start publishing.</p>';
-        } else {
-            $html .= '<table class="admin-table"><thead><tr>'
-                . '<th>ID</th><th>Name</th><th>Code</th><th>Status</th><th>Locale</th><th>Theme</th><th></th>'
-                . '</tr></thead><tbody>';
-            foreach ($rows as $site) {
-                $html .= '<tr>'
-                    . '<td>' . $site->id . '</td>'
-                    . '<td>' . $this->e($site->name) . '</td>'
-                    . '<td><code>' . $this->e($site->code) . '</code></td>'
-                    . '<td>' . $this->e($site->status) . '</td>'
-                    . '<td>' . $this->e($site->locale) . '</td>'
-                    . '<td><code>' . $this->e($site->themeCode) . '</code></td>'
-                    . '<td><a href="/admin/sites/edit?id=' . $site->id . '">Edit</a></td>'
-                    . '</tr>';
-            }
-            $html .= '</tbody></table>';
-        }
-
-        $html .= '</section>';
-
-        return $this->html('Sites', $html, $user);
+        $user=$this->currentAdminUser();
+        if($this->grid===null||$this->collectionGrid===null)throw new RuntimeException('Admin Grid services are required for Sites.');
+        $definition=$this->grid->definition();
+        $html='<section class="card"><div class="admin-page-heading"><h2>Sites</h2><a class="button" href="'.$this->adminUrl('sites/create').'">Create</a></div>'.$this->collectionGrid->render($user->id,'admin.sites',$this->adminUrl('sites'),$definition,$this->grid,AdminCollectionGridQuery::values($request,$definition),AdminCollectionGridQuery::bookmark($request))['html'].'</section>';
+        return $this->html('Sites',$html,$user);
     }
 
     public function create(Request $request): Response

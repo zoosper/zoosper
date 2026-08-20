@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Site\Application\SiteMutationService;
 use Zoosper\Site\Lifecycle\SiteLifecycleCoordinator;
@@ -14,7 +15,11 @@ use Zoosper\Site\Infrastructure\DatabaseSiteLookup;
 use Zoosper\Site\Repository\SiteDomainRepository;
 use Zoosper\Site\Repository\SiteRepository;
 
+use Zoosper\Site\Admin\Grid\{SiteGrid,SiteDomainGrid};
 return [
+    SiteGrid::class => static fn(ServiceContainer $s): SiteGrid => new SiteGrid($s->get(PDO::class),$s->get(AdminUrlGenerator::class)),
+    SiteDomainGrid::class => static fn(ServiceContainer $s): SiteDomainGrid => new SiteDomainGrid($s->get(PDO::class),$s->get(AdminUrlGenerator::class)),
+
     SiteReferenceInspector::class => static fn (ServiceContainer $services): SiteReferenceInspector => new SiteReferenceInspector($services->get(PDO::class)),
     SiteLifecycleCoordinator::class => static fn (ServiceContainer $services): SiteLifecycleCoordinator => new SiteLifecycleCoordinator($services->get(PDO::class),$services->get(SiteRepository::class),$services->get(SiteReferenceInspector::class),$services->has(AuditLoggerInterface::class)?$services->get(AuditLoggerInterface::class):null),
     SiteMutationService::class => static fn (ServiceContainer $services): SiteMutationService => new SiteMutationService($services->get(PDO::class),$services->get(SiteRepository::class),$services->has(AuditLoggerInterface::class)?$services->get(AuditLoggerInterface::class):null),

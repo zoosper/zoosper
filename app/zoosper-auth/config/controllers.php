@@ -7,6 +7,8 @@ use Zoosper\Auth\Admin\Lifecycle\AdminUserLifecycleAdminResponder;
 use Zoosper\Auth\Admin\Grid\RoleGridIndex;
 
 use Zoosper\Auth\Admin\Grid\AdminUserGridIndex;
+use Zoosper\Auth\Admin\Grid\AccessToken\AccessTokenGrid;
+use Zoosper\AdminGrid\{AdminCollectionGrid,GridViewStateResolver};
 
 /**
  * Auth module admin controller registrations.
@@ -75,5 +77,5 @@ return [
 
         lifecycle: new RoleLifecycleAdminResponder($services->get(\Zoosper\Auth\Lifecycle\RoleLifecycleCoordinator::class), $services->get(\Zoosper\Auth\Service\CsrfTokenManager::class), $services->has(\Zoosper\Core\Message\FlashMessageStoreInterface::class) ? $services->get(\Zoosper\Core\Message\FlashMessageStoreInterface::class) : null, $services->has(\Zoosper\Core\Url\AdminUrlGenerator::class) ? $services->get(\Zoosper\Core\Url\AdminUrlGenerator::class) : null),
     ),
-    PersonalAccessTokenAdminController::class => static fn (ServiceContainer $services): PersonalAccessTokenAdminController => new PersonalAccessTokenAdminController($services->get(SessionGuard::class), $services->get(CsrfTokenManager::class), $services->get(PersonalAccessTokenRepository::class), $services->get(PersonalAccessTokenService::class), $services->get(AdminViewRendererInterface::class), $services->get(AdminUrlGenerator::class), $services->get(AuditLoggerInterface::class), $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null),
+    PersonalAccessTokenAdminController::class => static fn (ServiceContainer $services): PersonalAccessTokenAdminController => new PersonalAccessTokenAdminController($services->get(SessionGuard::class), $services->get(CsrfTokenManager::class), $services->get(PersonalAccessTokenRepository::class), $services->get(PersonalAccessTokenService::class), $services->get(AdminViewRendererInterface::class), $services->get(AdminUrlGenerator::class), $services->get(AuditLoggerInterface::class), $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null, new AdminCollectionGrid($services->get(GridViewStateResolver::class)), $services->get(PDO::class)),
 ];

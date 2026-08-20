@@ -26,6 +26,7 @@ use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Url\AdminUrlGenerator;
 
+use Zoosper\Auth\Admin\Grid\AccessToken\AccessTokenGrid;
 return [
     // Auth Grid read-side services. Existing manifest entries below retain precedence.
     ...require __DIR__ . '/services_auth_grid.php',

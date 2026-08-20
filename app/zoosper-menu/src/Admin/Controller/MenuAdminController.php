@@ -7,7 +7,7 @@ use RuntimeException; use Throwable; use Zoosper\Auth\Model\AdminUser; use Zoosp
 /** Thin HTTP adapter. Authentication, CSRF and permission checks are middleware-owned. */
 final readonly class MenuAdminController {
  public function __construct(private SessionGuard $guard,private MenuAdminResponder $views,private MenuAdminService $service,private MenuAdminRepositoryInterface $menus,private AdminUrlGenerator $urls,private ?MenuLifecycleAdminResponder $lifecycle=null,private ?MenuItemDeletionService $itemDeletion=null){}
- public function index(Request $r): Response{return $this->views->index($this->user());} public function create(Request $r): Response{return $this->views->create($this->user());} public function edit(Request $r): Response{return $this->views->edit($this->user(),$this->id($r,'id'));}
+ public function index(Request $r): Response{return $this->views->index($this->user(),$r);} public function create(Request $r): Response{return $this->views->create($this->user());} public function edit(Request $r): Response{return $this->views->edit($this->user(),$this->id($r,'id'));}
  public function store(Request $r): Response
  {
   $user=$this->user();

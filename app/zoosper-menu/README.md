@@ -97,3 +97,7 @@ Menu writes use `MenuAdminService`, `MenuMutationGuard`, `MenuItemDeletionServic
 ### Feature-owned API
 
 Menu owns its stateless read, mutation, item, and lifecycle API routes, adapters, factories, tests, and service integration. Removing the Menu module removes those routes without edits to `zoosper-api`.
+
+## Phase 10BM-A Admin collection Grid
+
+The module-owned Admin collection index uses a stable Admin Grid workspace with server-side count and page queries, allow-listed sorting, filters, saved views, column visibility, ordering and page-size state. Existing POST lifecycle workflows remain feature-owned.

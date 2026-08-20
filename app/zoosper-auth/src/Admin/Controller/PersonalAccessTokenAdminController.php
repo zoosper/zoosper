@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 namespace Zoosper\Auth\Admin\Controller;
-use DateTimeImmutable;use DateTimeZone;use InvalidArgumentException;use Zoosper\Auth\Service\CsrfTokenManager;use Zoosper\Auth\Service\SessionGuard;use Zoosper\Auth\Token\PersonalAccessTokenRepository;use Zoosper\Auth\Token\PersonalAccessTokenService;use Zoosper\Auth\UI\AdminViewRendererInterface;use Zoosper\Core\Audit\AuditLoggerInterface;use Zoosper\Core\Http\Request;use Zoosper\Core\Http\Response;use Zoosper\Core\Message\FlashMessageStoreInterface;use Zoosper\Core\Url\AdminUrlGenerator;
+use Zoosper\Auth\Admin\Grid\AccessToken\AccessTokenGrid;use Zoosper\AdminGrid\{AdminCollectionGrid,AdminCollectionGridQuery};use PDO;use DateTimeImmutable;use DateTimeZone;use InvalidArgumentException;use Zoosper\Auth\Service\CsrfTokenManager;use Zoosper\Auth\Service\SessionGuard;use Zoosper\Auth\Token\PersonalAccessTokenRepository;use Zoosper\Auth\Token\PersonalAccessTokenService;use Zoosper\Auth\UI\AdminViewRendererInterface;use Zoosper\Core\Audit\AuditLoggerInterface;use Zoosper\Core\Http\Request;use Zoosper\Core\Http\Response;use Zoosper\Core\Message\FlashMessageStoreInterface;use Zoosper\Core\Url\AdminUrlGenerator;
 /** Self-owned, session-authenticated Personal Access Token administration. */
 final readonly class PersonalAccessTokenAdminController
 {
-    public function __construct(private SessionGuard $guard,private CsrfTokenManager $csrf,private PersonalAccessTokenRepository $tokens,private PersonalAccessTokenService $issuer,private AdminViewRendererInterface $views,private AdminUrlGenerator $urls,private AuditLoggerInterface $audit,private ?FlashMessageStoreInterface $flash=null){}
-    public function index(Request $request):Response{return $this->render();}
+    public function __construct(private SessionGuard $guard,private CsrfTokenManager $csrf,private PersonalAccessTokenRepository $tokens,private PersonalAccessTokenService $issuer,private AdminViewRendererInterface $views,private AdminUrlGenerator $urls,private AuditLoggerInterface $audit,private ?FlashMessageStoreInterface $flash=null,private ?AdminCollectionGrid $collectionGrid=null,private ?PDO $pdo=null){}
+    public function index(Request $request):Response{return $this->render(request:$request);}
     public function create(Request $request):Response
     {
         $user=$this->guard->user();if($user===null)return Response::redirect($this->urls->url('login'));
@@ -26,10 +26,10 @@ final readonly class PersonalAccessTokenAdminController
         $this->flash?->success('Personal Access Token revoked.','admin.pat.revoke');return Response::redirect($this->urls->url('access-tokens'));
     }
     /** @param array<string,mixed> $submitted */
-    private function render(?string $oneTimeToken=null,?string $error=null,array $submitted=[],int $status=200):Response
+    private function render(?string $oneTimeToken=null,?string $error=null,array $submitted=[],int $status=200,?Request $request=null):Response
     {
         $user=$this->guard->user();if($user===null)return Response::redirect($this->urls->url('login'));
-        return Response::html($this->views->render('Personal Access Tokens','zoosper-auth::admin/access-tokens/index',['tokens'=>$this->tokens->allForUser($user->id),'scopes'=>PersonalAccessTokenService::SCOPES,'csrfToken'=>$this->csrf->token(),'createUrl'=>$this->urls->url('access-tokens/create'),'revokeUrl'=>fn(int $id):string=>$this->urls->url("access-tokens/{$id}/revoke"),'oneTimeToken'=>$oneTimeToken,'error'=>$error,'submitted'=>$submitted],$user,'access-tokens'),$status);
+        $gridHtml=null;if($request!==null&&$this->collectionGrid!==null&&$this->pdo!==null){$grid=new AccessTokenGrid($this->pdo,$user->id,$this->urls,$this->csrf->token());$definition=$grid->definition();$gridHtml=$this->collectionGrid->render($user->id,AccessTokenGrid::KEY,$this->urls->url('access-tokens'),$definition,$grid,AdminCollectionGridQuery::values($request,$definition),AdminCollectionGridQuery::bookmark($request))['html'];}return Response::html($this->views->render('Personal Access Tokens','zoosper-auth::admin/access-tokens/index',['tokens'=>$gridHtml===null?$this->tokens->allForUser($user->id):[],'gridHtml'=>$gridHtml,'scopes'=>PersonalAccessTokenService::SCOPES,'csrfToken'=>$this->csrf->token(),'createUrl'=>$this->urls->url('access-tokens/create'),'revokeUrl'=>fn(int $id):string=>$this->urls->url("access-tokens/{$id}/revoke"),'oneTimeToken'=>$oneTimeToken,'error'=>$error,'submitted'=>$submitted],$user,'access-tokens'),$status);
     }
     private function expiry(string $value):?string
     {

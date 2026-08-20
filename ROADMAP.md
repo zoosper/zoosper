@@ -1208,3 +1208,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 ### Phase 10BL: Audit Log and Login History Admin Grid cutover
 
 Audit Log and Login History now use the persistent `zoosper/admin-grid` workspace on top of their existing `zoosper/grid` definitions and repositories. The cutover adds per-admin saved views, column visibility, column ordering, compact filters, page-size state and direct navigation while preserving module-contributed columns such as Two Factor User Agent. The obsolete direct-controller `GridHtmlRenderer` path is retired; `zoosper/grid` remains the generic engine and `zoosper/admin-grid` remains the Admin workspace layer.
+
+### Phase 10BM-A: remaining tabular Admin collections
+
+Access Tokens, Sites, Site Domains and the Menus collection index use persistent Admin Grid workspaces and server-side pagination. PAT ownership and POST revocation remain unchanged; Site lifecycle remains POST-only; the individual Menu editor remains a specialised tree. Media follows as a paginated visual-grid workspace.

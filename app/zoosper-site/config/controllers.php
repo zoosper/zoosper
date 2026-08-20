@@ -9,6 +9,8 @@ use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Site\Admin\Controller\SiteAdminController;
 use Zoosper\Site\Admin\Controller\SiteDomainAdminController;
+use Zoosper\Site\Admin\Grid\{SiteGrid,SiteDomainGrid};
+use Zoosper\AdminGrid\{AdminCollectionGrid,GridViewStateResolver};
 use Zoosper\Site\Repository\SiteDomainRepository;
 use Zoosper\Site\Repository\SiteRepository;
 
@@ -30,6 +32,8 @@ return [
         $services->get(SiteRepository::class),
         $services->get(AdminLayout::class),
         $services->get(AdminUrlGenerator::class),
+        grid: $services->get(SiteGrid::class),
+        collectionGrid: new AdminCollectionGrid($services->get(GridViewStateResolver::class)),
         lifecycle: new SiteLifecycleAdminResponder(
             $services->get(SiteLifecycleCoordinator::class),
             $services->get(CsrfTokenManager::class),
@@ -45,5 +49,7 @@ return [
         $services->get(SiteRepository::class),
         $services->get(AdminLayout::class),
         $services->get(AdminUrlGenerator::class),
+        grid: $services->get(SiteDomainGrid::class),
+        collectionGrid: new AdminCollectionGrid($services->get(GridViewStateResolver::class)),
     ),
 ];

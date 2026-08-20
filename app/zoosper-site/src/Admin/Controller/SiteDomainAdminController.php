@@ -12,6 +12,8 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Url\AdminUrlGenerator;
+use Zoosper\AdminGrid\{AdminCollectionGrid,AdminCollectionGridQuery};
+use Zoosper\Site\Admin\Grid\SiteDomainGrid;
 use Zoosper\Site\Model\SiteDomain;
 use Zoosper\Site\Repository\SiteDomainRepository;
 use Zoosper\Site\Repository\SiteRepository;
@@ -26,34 +28,18 @@ final readonly class SiteDomainAdminController
         private SiteRepository $sites,
         private AdminLayout $layout,
         private ?AdminUrlGenerator $adminUrls = null,
+        private ?SiteDomainGrid $grid = null,
+        private ?AdminCollectionGrid $collectionGrid = null,
     ) {
     }
 
     public function index(Request $request): Response
     {
-        $user = $this->currentAdminUser();
-        $domains = $this->domains->all();
-        $siteNames = $this->siteNames();
-
-        $html = '<section class="card"><div class="admin-page-heading"><h2>Site Domains</h2><a class="button" href="' . $this->adminUrl('site-domains/create') . '">Add domain</a></div>';
-        if ($domains === []) {
-            $html .= '<p class="muted">No site domains exist yet. Add a domain to route requests to a site.</p>';
-        } else {
-            $html .= '<table class="admin-table"><thead><tr><th>ID</th><th>Host</th><th>Site</th><th>Primary</th><th></th></tr></thead><tbody>';
-            foreach ($domains as $domain) {
-                $html .= '<tr>'
-                    . '<td>' . $domain->id . '</td>'
-                    . '<td><code>' . $this->e($domain->host) . '</code></td>'
-                    . '<td>' . $this->e($siteNames[$domain->siteId] ?? ('#' . $domain->siteId)) . '</td>'
-                    . '<td>' . ($domain->isPrimary ? 'Yes' : 'No') . '</td>'
-                    . '<td><a href="/admin/site-domains/edit?id=' . $domain->id . '">Edit</a></td>'
-                    . '</tr>';
-            }
-            $html .= '</tbody></table>';
-        }
-        $html .= '</section>';
-
-        return $this->html('Site Domains', $html, $user);
+        $user=$this->currentAdminUser();
+        if($this->grid===null||$this->collectionGrid===null)throw new RuntimeException('Admin Grid services are required for Site Domains.');
+        $definition=$this->grid->definition();
+        $html='<section class="card"><div class="admin-page-heading"><h2>Site Domains</h2><a class="button" href="'.$this->adminUrl('site-domains/create').'">Create</a></div>'.$this->collectionGrid->render($user->id,'admin.site-domains',$this->adminUrl('site-domains'),$definition,$this->grid,AdminCollectionGridQuery::values($request,$definition),AdminCollectionGridQuery::bookmark($request))['html'].'</section>';
+        return $this->html('Site Domains',$html,$user);
     }
 
     public function create(Request $request): Response

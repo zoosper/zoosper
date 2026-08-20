@@ -111,3 +111,7 @@ Authenticated Admin identities can create, list and revoke only their own Person
 ### Page lifecycle PAT scopes
 - `pages:archive` authorises Page archive and archived-to-draft restoration when the current owner still has `page.manage`.
 - `pages:delete` authorises guarded permanent deletion when the current owner still has `page.manage`.
+
+## Phase 10BM-A Admin collection Grid
+
+The module-owned Admin collection index uses a stable Admin Grid workspace with server-side count and page queries, allow-listed sorting, filters, saved views, column visibility, ordering and page-size state. Existing POST lifecycle workflows remain feature-owned.
