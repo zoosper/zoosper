@@ -4,7 +4,7 @@ return [
     'assets' => [
         'media.visual-grid' => [
             'type' => 'style',
-            'path' => 'resources/assets/css/media-visual-grid.css',
+            'path' => '/asset/zoosper-media/css/media-visual-grid.css',
         ],
     ],
 ];
