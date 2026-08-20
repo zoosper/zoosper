@@ -13,6 +13,7 @@ use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\Controller\MediaAdminController;
+use Zoosper\Media\Admin\Grid\MediaVisualGridWorkspace;
 use Zoosper\Media\Controller\MediaEditorJsUploadController;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
 use Zoosper\Media\Repository\MediaAssetRepository;
@@ -37,6 +38,7 @@ return [
         uploads: $services->get(MediaUploadService::class),
         adminUrls: $services->get(AdminUrlGenerator::class),
         lifecycle: $services->get(MediaLifecycleCoordinator::class),
+        visualGrid: $services->get(MediaVisualGridWorkspace::class),
     ),
     MediaEditorJsUploadController::class => static fn (ServiceContainer $services): MediaEditorJsUploadController => new MediaEditorJsUploadController(
         guard: $services->get(SessionGuard::class),

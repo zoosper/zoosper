@@ -1527,13 +1527,15 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-media",
-                "reference": "1e80077efaee4d084d634a6f886ef0ea6853e14d"
+                "reference": "80e62c8df4eef3a071338e9b4e737f09f766cbe8"
             },
             "require": {
                 "ext-pdo": "*",
                 "php": "^8.5",
+                "zoosper/admin-grid": "dev-dev",
                 "zoosper/auth": "dev-dev",
-                "zoosper/core": "dev-dev"
+                "zoosper/core": "dev-dev",
+                "zoosper/grid": "dev-dev"
             },
             "require-dev": {
                 "pestphp/pest": "^3.0",

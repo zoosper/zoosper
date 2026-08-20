@@ -88,3 +88,7 @@ Generated profiles are persisted in `media_derivatives` with dimensions, byte si
 ## Feature-owned API
 
 Media owns stateless PAT-scoped list, detail, derivative, canonical upload, archive and restore endpoints under `/api/v1/media`. API responses expose browser-safe public paths and metadata, never private storage paths. Permanent deletion is available only for archived assets after the shared Media lifecycle verifies that neither current Pages nor restorable Page revisions reference the complete canonical public path.
+
+## Phase 10BM-B visual Admin Grid
+
+The Media library uses the stable `admin.media` workspace with server-side total-count pagination, allow-listed filters and sorting, persistent page-size and view state, and Media-owned responsive cards. Upload, Editor.js integration, archive, restore and reference-safe permanent deletion remain feature-owned. Media depends on `zoosper/admin-grid` and `zoosper/grid`, not the concrete Admin application module.

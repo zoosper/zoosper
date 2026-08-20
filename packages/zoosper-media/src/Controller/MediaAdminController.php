@@ -15,6 +15,7 @@ use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Service\MediaUploadService;
 use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
+use Zoosper\Media\Admin\Grid\MediaVisualGridWorkspace;
 
 /**
  * Admin controller for the media library foundation.
@@ -52,21 +53,27 @@ final readonly class MediaAdminController
         private MediaUploadService $uploads,
         private ?AdminUrlGenerator $adminUrls = null,
         private ?MediaLifecycleCoordinator $lifecycle = null,
+        private ?MediaVisualGridWorkspace $visualGrid = null,
     ) {
     }
 
     public function index(Request $request): Response
     {
         $user = $this->currentAdminUser();
-
+        if ($this->visualGrid === null) {
+            throw new RuntimeException('Media visual Grid service is required.');
+        }
         return Response::html($this->views->render(
             'Media',
             'zoosper-media::admin/media/index',
             [
-                'assets' => $this->assets->latest(),
+                'gridHtml' => $this->visualGrid->render(
+                    $user->id,
+                    $request,
+                    $this->adminUrl('media'),
+                    $this->csrf->token(),
+                ),
                 'uploadUrl' => $this->adminUrl('media/upload'),
-                'csrfToken' => $this->csrf->token(),
-                'adminUrl' => fn (string $path): string => $this->adminUrl($path),
             ],
             $user,
             'media',

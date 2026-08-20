@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\AdminGrid\{GridCompactWorkspaceRenderer,GridViewStateResolver};
+use Zoosper\Grid\GridColumnOrderer;
+use Zoosper\Media\Admin\Grid\{MediaGridSource,MediaVisualGridRenderer,MediaVisualGridWorkspace};
 use Zoosper\Core\Error\ErrorHandler;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
@@ -27,6 +30,9 @@ use Zoosper\Media\Service\MediaUploadService;
 use Zoosper\Media\Service\MediaUploadValidator;
 
 return [
+    MediaGridSource::class => static fn (ServiceContainer $services): MediaGridSource => new MediaGridSource($services->get(PDO::class)),
+    MediaVisualGridRenderer::class => static fn (ServiceContainer $services): MediaVisualGridRenderer => new MediaVisualGridRenderer($services->get(AdminUrlGenerator::class)),
+    MediaVisualGridWorkspace::class => static fn (ServiceContainer $services): MediaVisualGridWorkspace => new MediaVisualGridWorkspace($services->get(GridViewStateResolver::class), new GridCompactWorkspaceRenderer(), new GridColumnOrderer(), $services->get(MediaGridSource::class), $services->get(MediaVisualGridRenderer::class)),
     MediaReferenceInspector::class => static fn (ServiceContainer $services): MediaReferenceInspector => new MediaReferenceInspector($services->get(PDO::class)),
     MediaAssetRepository::class => static fn (ServiceContainer $services): MediaAssetRepository => new MediaAssetRepository($services->get(PDO::class)),
     MediaDerivativeRepository::class => static fn (ServiceContainer $services): MediaDerivativeRepository => new MediaDerivativeRepository($services->get(PDO::class), dirname(__DIR__, 3)),

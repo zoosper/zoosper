@@ -4,10 +4,12 @@
     "type": "zoosper-module",
     "license": "MIT",
     "require": {
-        "php": "^8.5",
         "ext-pdo": "*",
+        "php": "^8.5",
+        "zoosper/admin-grid": "dev-dev",
+        "zoosper/auth": "dev-dev",
         "zoosper/core": "dev-dev",
-        "zoosper/auth": "dev-dev"
+        "zoosper/grid": "dev-dev"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",

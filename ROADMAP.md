@@ -1212,3 +1212,7 @@ Audit Log and Login History now use the persistent `zoosper/admin-grid` workspac
 ### Phase 10BM-A: remaining tabular Admin collections
 
 Access Tokens, Sites, Site Domains and the Menus collection index use persistent Admin Grid workspaces and server-side pagination. PAT ownership and POST revocation remain unchanged; Site lifecycle remains POST-only; the individual Menu editor remains a specialised tree. Media follows as a paginated visual-grid workspace.
+
+### Phase 10BM-B: Media visual Admin Grid
+
+Media uses the stable `admin.media` workspace with true total-count pagination, safe filters and sorting, and a responsive card renderer. Existing upload and lifecycle behaviour remains unchanged, and Media retains concrete Admin decoupling. The first-party policy classifies Media as a visual-grid collection.
