@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Zoosper\Media\Controller;
 
 use RuntimeException;
+use Throwable;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Service\MediaUploadService;
@@ -54,6 +56,7 @@ final readonly class MediaAdminController
         private ?AdminUrlGenerator $adminUrls = null,
         private ?MediaLifecycleCoordinator $lifecycle = null,
         private ?MediaVisualGridWorkspace $visualGrid = null,
+        private ?FlashMessageStoreInterface $flash = null,
     ) {
     }
 
@@ -134,12 +137,30 @@ final readonly class MediaAdminController
         if ($asset === null || $this->lifecycle === null) {
             return Response::redirect($this->adminUrl('media'), 303);
         }
-        match ($operation) {
-            'archive' => $this->lifecycle->archive($asset, $user->id, $user->email),
-            'restore' => $this->lifecycle->restore($asset, $user->id, $user->email),
-            'delete' => $this->lifecycle->deletePermanently($asset, $user->id, $user->email),
-            default => throw new \LogicException('Unsupported Media lifecycle operation.'),
-        };
+        try {
+            $successful = match ($operation) {
+                'archive' => $this->lifecycle->archive($asset, $user->id, $user->email),
+                'restore' => $this->lifecycle->restore($asset, $user->id, $user->email),
+                'delete' => $this->lifecycle->deletePermanentlyGuarded($asset, $user->id, $user->email)->successful,
+                default => throw new \LogicException('Unsupported Media lifecycle operation.'),
+            };
+            if ($successful) {
+                $this->flash?->success(match ($operation) {
+                    'archive' => 'Media asset archived.',
+                    'restore' => 'Media asset restored.',
+                    'delete' => 'Media asset permanently deleted.',
+                }, 'media.lifecycle.' . $operation);
+            } else {
+                $this->flash?->error(
+                    $operation === 'delete'
+                        ? 'Media deletion was blocked. Archive it first and remove current Page and restorable revision references.'
+                        : 'Media lifecycle operation is not valid for the current status.',
+                    'media.lifecycle.blocked',
+                );
+            }
+        } catch (Throwable $exception) {
+            $this->flash?->error($exception->getMessage(), 'media.lifecycle.failed');
+        }
         return Response::redirect($this->adminUrl('media'), 303);
     }
 

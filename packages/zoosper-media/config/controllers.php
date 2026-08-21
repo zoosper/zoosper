@@ -6,6 +6,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Core\Http\JsonResponder;
+use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Media\Api\MediaApiController;
 use Zoosper\Media\Repository\MediaDerivativeRepository;
 use Zoosper\Auth\Service\SessionGuard;
@@ -39,6 +40,7 @@ return [
         adminUrls: $services->get(AdminUrlGenerator::class),
         lifecycle: $services->get(MediaLifecycleCoordinator::class),
         visualGrid: $services->get(MediaVisualGridWorkspace::class),
+        flash: $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
     ),
     MediaEditorJsUploadController::class => static fn (ServiceContainer $services): MediaEditorJsUploadController => new MediaEditorJsUploadController(
         guard: $services->get(SessionGuard::class),

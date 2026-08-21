@@ -70,9 +70,9 @@ return [
     MediaLifecycleCoordinator::class => static fn (ServiceContainer $services): MediaLifecycleCoordinator => new MediaLifecycleCoordinator(
         $services->get(PDO::class),
         $services->get(MediaAssetRepository::class),
-        $services->get(MediaStoredFileCleanupService::class),
-        $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
-        $services->get(MediaDerivativeRepository::class),
+        cleanup: $services->get(MediaStoredFileCleanupService::class),
+        derivatives: $services->get(MediaDerivativeRepository::class),
         references: $services->get(MediaReferenceInspector::class),
+        audit: $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
     ),
 ];

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Media\Lifecycle;
 
 use PDO;
+use RuntimeException;
 use Zoosper\Media\Model\MediaAsset;
 
 /**
@@ -26,6 +27,15 @@ final readonly class MediaReferenceInspector
             return ['pages' => 0, 'page_revisions' => 0];
         }
 
+        $pagesExist = $this->tableExists('pages');
+        $revisionsExist = $this->tableExists('page_revisions');
+        if (!$pagesExist && !$revisionsExist) {
+            return ['pages' => 0, 'page_revisions' => 0];
+        }
+        if (!$pagesExist || !$revisionsExist) {
+            throw new RuntimeException('Media reference inspection is unavailable because Page reference storage is incomplete.');
+        }
+
         return [
             'pages' => $this->countReferences('pages', $asset->publicPath),
             'page_revisions' => $this->countReferences('page_revisions', $asset->publicPath),
@@ -34,9 +44,6 @@ final readonly class MediaReferenceInspector
 
     private function countReferences(string $table, string $publicPath): int
     {
-        if (!$this->tableExists($table)) {
-            return 0;
-        }
         $columns = $this->columns($table);
         $conditions = [];
         $params = [];
@@ -49,7 +56,10 @@ final readonly class MediaReferenceInspector
             $params['json_reference'] = '%' . $publicPath . '%';
         }
         if ($conditions === []) {
-            return 0;
+            throw new RuntimeException(sprintf(
+                'Media reference inspection is unavailable because %s has no supported content column.',
+                $table,
+            ));
         }
         $statement = $this->pdo->prepare(
             'SELECT COUNT(*) FROM ' . $table . ' WHERE ' . implode(' OR ', $conditions)

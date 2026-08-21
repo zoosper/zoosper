@@ -21,9 +21,9 @@ final readonly class MediaLifecycleCoordinator
         private PDO $pdo,
         private MediaAssetRepository $assets,
         private MediaStoredFileCleanupService $cleanup,
+        private MediaDerivativeRepository $derivatives,
+        private MediaReferenceInspector $references,
         private ?AuditLoggerInterface $audit = null,
-        private ?MediaDerivativeRepository $derivatives = null,
-        private ?MediaReferenceInspector $references = null,
     ) {
     }
 
@@ -58,14 +58,14 @@ final readonly class MediaLifecycleCoordinator
         if ($asset->status !== 'archived') {
             return new MediaLifecycleResult(false, 'delete', $asset->id, $asset->status, blockers: ['status' => 1], message: 'Archive Media before permanent deletion.');
         }
-        $counts = $this->references?->counts($asset) ?? ['pages' => 0, 'page_revisions' => 0];
+        $counts = $this->references->counts($asset);
         $blockers = array_filter($counts, static fn (int $count): bool => $count > 0);
         if ($blockers !== []) {
             $this->log($actorId, $actorEmail, 'media.delete_blocked', $asset, $asset->status, ['blockers' => $blockers]);
             return new MediaLifecycleResult(false, 'delete', $asset->id, $asset->status, blockers: $blockers, message: 'Remove Page references before permanent Media deletion.');
         }
 
-        $derivatives = $this->derivatives?->forAsset($asset->id) ?? [];
+        $derivatives = $this->derivatives->forAsset($asset->id);
         $ownTransaction = !$this->pdo->inTransaction();
         if ($ownTransaction) {
             $this->pdo->beginTransaction();
