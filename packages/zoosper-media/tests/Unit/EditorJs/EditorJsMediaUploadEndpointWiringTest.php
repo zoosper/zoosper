@@ -17,7 +17,8 @@ test('editorjs upload controller uses image field and response factory', functio
     $root = dirname(__DIR__, 5);
     $source = (string) file_get_contents($root . '/packages/zoosper-media/src/Controller/MediaEditorJsUploadController.php');
 
-    expect($source)->toContain("\$_FILES['image']");
+    expect($source)->toContain("uploadedFile('image')")
+        ->not->toContain("\$_FILES['image']");
     expect($source)->toContain('EditorJsImageUploadResponseFactory');
     expect($source)->toContain('Response::json');
     expect($source)->toContain('$this->responses->success');

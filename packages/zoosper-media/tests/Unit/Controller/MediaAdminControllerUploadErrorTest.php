@@ -131,14 +131,14 @@ it('shows the real validation error message instead of silently redirecting on a
     // Genuinely invalid: a real temp file with a disallowed .txt extension.
     $tmpFile = tempnam(sys_get_temp_dir(), 'zoosper-upload-test-');
     file_put_contents($tmpFile, 'not an image');
-    $_FILES['file'] = [
-        'name' => 'not-an-image.txt',
-        'tmp_name' => $tmpFile,
-        'error' => UPLOAD_ERR_OK,
-        'size' => filesize($tmpFile),
-    ];
-
-    $request = new Request(method: 'POST', path: '/admin/media/upload');
+    $request = new Request(method: 'POST', path: '/admin/media/upload', files: [
+        'media_file' => [
+            'name' => 'not-an-image.txt',
+            'tmp_name' => $tmpFile,
+            'error' => UPLOAD_ERR_OK,
+            'size' => filesize($tmpFile),
+        ],
+    ]);
     $response = $controller->upload($request);
 
     ob_start();
@@ -193,22 +193,19 @@ it('still redirects to the media library on a successful upload', function (): v
         ),
     );
 
-    // A genuinely valid 1x1 PNG (smallest possible real image the real
-    // validator's getimagesize() check will accept).
+    // A genuine JPEG submitted under the upload form's media_file field.
     $tmpFile = tempnam(sys_get_temp_dir(), 'zoosper-upload-test-');
     $image = imagecreatetruecolor(2, 2);
-    imagealphablending($image, false);
-    imagesavealpha($image, true);
-    imagepng($image, $tmpFile);
+    imagejpeg($image, $tmpFile, 90);
     unset($image);
-    $_FILES['file'] = [
-        'name' => 'valid.png',
-        'tmp_name' => $tmpFile,
-        'error' => UPLOAD_ERR_OK,
-        'size' => filesize($tmpFile),
-    ];
-
-    $request = new Request(method: 'POST', path: '/admin/media/upload');
+    $request = new Request(method: 'POST', path: '/admin/media/upload', files: [
+        'media_file' => [
+            'name' => 'valid.jpg',
+            'tmp_name' => $tmpFile,
+            'error' => UPLOAD_ERR_OK,
+            'size' => filesize($tmpFile),
+        ],
+    ]);
     $response = $controller->upload($request);
 
     ob_start();

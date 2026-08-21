@@ -14,6 +14,7 @@ final readonly class Request
      * @param array<string, mixed> $query
      * @param array<string, string> $routeParams
      * @param array<string, mixed> $form
+     * @param array<string, mixed> $files Uploaded-file entries captured at the HTTP boundary.
      */
     public function __construct(
         private string $method,
@@ -26,6 +27,7 @@ final readonly class Request
         private ?SiteContext $siteContext = null,
         private array $routeParams = [],
         private array $form = [],
+        private array $files = [],
     ) {
     }
 
@@ -48,13 +50,14 @@ final readonly class Request
             host: strtolower((string) ($_SERVER['HTTP_HOST'] ?? 'localhost')),
             clientIp: TrustedProxyResolver::fromEnvironment()->clientIp($_SERVER),
             form: $_POST,
+            files: $_FILES,
         );
     }
 
     public function withSiteContext(SiteContext $siteContext): self
     {
         return new self($this->method, $this->path, $this->headers, $this->body, $this->query,
-            $this->host, $this->clientIp, $siteContext, $this->routeParams, $this->form);
+            $this->host, $this->clientIp, $siteContext, $this->routeParams, $this->form, $this->files);
     }
 
     /** @param array<string, scalar|null> $routeParams */
@@ -67,14 +70,14 @@ final readonly class Request
             }
         }
         return new self($this->method, $this->path, $this->headers, $this->body, $this->query,
-            $this->host, $this->clientIp, $this->siteContext, $normalised, $this->form);
+            $this->host, $this->clientIp, $this->siteContext, $normalised, $this->form, $this->files);
     }
 
     /** @param array<string, mixed> $form */
     public function withForm(array $form): self
     {
         return new self($this->method, $this->path, $this->headers, $this->body, $this->query,
-            $this->host, $this->clientIp, $this->siteContext, $this->routeParams, $form);
+            $this->host, $this->clientIp, $this->siteContext, $this->routeParams, $form, $this->files);
     }
 
     public function siteContext(): ?SiteContext { return $this->siteContext; }
@@ -126,6 +129,18 @@ final readonly class Request
 
     /** @return array<string, mixed> */
     public function form(): array { return $this->form; }
+
+    /**
+     * Returns one uploaded-file entry captured by fromGlobals().
+     *
+     * @return array<string, mixed>
+     */
+    public function uploadedFile(string $key): array
+    {
+        $file = $this->files[$key] ?? null;
+
+        return is_array($file) ? $file : [];
+    }
 
     /** @param array<string, mixed> $values @return array<string, mixed> */
     private static function normaliseInputMap(array $values): array

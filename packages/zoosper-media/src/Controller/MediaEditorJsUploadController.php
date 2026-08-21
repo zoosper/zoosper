@@ -49,7 +49,7 @@ final readonly class MediaEditorJsUploadController
 
     public function upload(Request $request): Response
     {
-        $file = is_array($_FILES['image'] ?? null) ? $_FILES['image'] : [];
+        $file = $request->uploadedFile('image');
         $result = $this->uploads->upload($file, $this->currentAdminUser());
 
         if (!$result->successful) {

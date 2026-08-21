@@ -42,3 +42,24 @@ test('rejects unsupported extensions before storage', function () {
     expect($result->valid)->toBeFalse();
     expect($result->errors)->not->toBe([]);
 });
+
+
+test('accepts a small valid jpeg upload', function () {
+    $path = tempnam(sys_get_temp_dir(), 'zoosper-media-');
+    $image = imagecreatetruecolor(2, 2);
+    imagejpeg($image, $path, 90);
+    unset($image);
+
+    $result = (new MediaUploadValidator())->validate([
+        'name' => 'photo.jpg',
+        'tmp_name' => $path,
+        'size' => filesize($path),
+        'error' => UPLOAD_ERR_OK,
+    ]);
+
+    expect($result->valid)->toBeTrue()
+        ->and($result->extension)->toBe('jpg')
+        ->and($result->mimeType)->toBe('image/jpeg');
+
+    unlink($path);
+});

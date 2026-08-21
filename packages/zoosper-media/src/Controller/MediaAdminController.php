@@ -101,7 +101,7 @@ final readonly class MediaAdminController
     public function upload(Request $request): Response
     {
         $user = $this->currentAdminUser();
-        $file = is_array($_FILES['file'] ?? null) ? $_FILES['file'] : [];
+        $file = $request->uploadedFile('media_file');
         $result = $this->uploads->upload($file, $user);
 
         if (!$result->successful) {
