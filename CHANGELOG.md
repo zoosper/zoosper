@@ -2,6 +2,8 @@
 
 ## [0.3.0-alpha.3-dev]
 
+- Completed Phase 10AP-A Media reads and derivatives: feature-owned PAT reads now provide bounded collection pagination, allow-listed search/filter/sort controls, deterministic derivative metadata, and private-storage-path redaction.
+
 ### Planned
 - Visible CMS capability and extension-author experience.
 

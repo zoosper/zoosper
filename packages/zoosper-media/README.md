@@ -61,7 +61,7 @@ Zoosper Media module for Zoosper CMS.
 
 - Full repository suite: `zcomposer test`.
 - Package suite: `php8.5 vendor/bin/pest packages/zoosper-media/tests`.
-- Current regression files discovered: `26`. Use `find packages/zoosper-media/tests -type f -name '*Test.php' | sort` for the live list.
+- Discover the current regression files with `find packages/zoosper-media/tests -type f -name '*Test.php' | sort`.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes
@@ -87,7 +87,7 @@ Generated profiles are persisted in `media_derivatives` with dimensions, byte si
 
 ## Feature-owned API
 
-Media owns stateless PAT-scoped list, detail, derivative, canonical upload, archive and restore endpoints under `/api/v1/media`. API responses expose browser-safe public paths and metadata, never private storage paths. Permanent deletion is available only for archived assets after the shared Media lifecycle verifies that neither current Pages nor restorable Page revisions reference the complete canonical public path.
+Media owns stateless PAT-scoped list, detail, derivative, canonical upload, archive and restore endpoints under `/api/v1/media`. API responses expose browser-safe public paths and metadata, never private storage paths. Collection reads use bounded offset pagination (default page size `20`, maximum page size `100`, maximum page `100_000`), deterministic allow-listed sorting, and optional `q`, `status`, `mime_type`, and `extension` filters. Permanent deletion is available only for archived assets after the shared Media lifecycle verifies that neither current Pages nor restorable Page revisions reference the complete canonical public path.
 
 ## Phase 10BM-B visual Admin Grid
 
@@ -104,3 +104,8 @@ Media filtering, sorting and card metadata visibility use the shared Admin Colle
 ## Pagination ownership
 
 This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+
+
+## Phase 10AP-A Media reads and derivatives
+
+The feature-owned `GET /api/v1/media`, `GET /api/v1/media/{id}`, and `GET /api/v1/media/{id}/derivatives` routes require the `media:read` PAT scope plus the token owner's `media.manage` permission. The collection response includes `page`, `page_size`, `page_count`, `total`, `has_previous`, and `has_next`. Invalid pagination, sort, direction, and filter values are bounded or reduced to safe defaults. Media remains globally owned because the current `media_assets` contract has no `site_id`; this phase does not invent site ownership or silently infer it from the request host. Responses expose `public_path` only and never return private `storage_path` values.

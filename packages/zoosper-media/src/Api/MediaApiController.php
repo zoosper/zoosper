@@ -16,6 +16,7 @@ use Zoosper\Media\Model\MediaDerivative;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Repository\MediaDerivativeRepository;
 use Zoosper\Media\Service\MediaUploadService;
+use Zoosper\Pagination\PaginationResult;
 
 /** Stateless PAT adapter for feature-owned Media reads, upload, archive and restore. */
 final readonly class MediaApiController
@@ -38,8 +39,11 @@ final readonly class MediaApiController
             return $principal;
         }
 
+        $result = $this->assets->paginate(MediaApiReadQuery::fromRequest($request));
+
         return $this->json->success([
-            'media' => array_map($this->normaliseAsset(...), $this->assets->latest()),
+            'media' => array_map($this->normaliseAsset(...), $result->items),
+            'pagination' => $this->normalisePagination($result),
         ]);
     }
 
@@ -188,6 +192,19 @@ final readonly class MediaApiController
             'created_by' => $asset->createdBy,
             'created_at' => $asset->createdAt,
             'updated_at' => $asset->updatedAt,
+        ];
+    }
+
+    /** @param PaginationResult<MediaAsset> $result @return array<string, int|bool> */
+    private function normalisePagination(PaginationResult $result): array
+    {
+        return [
+            'page' => $result->page,
+            'page_size' => $result->pageSize,
+            'page_count' => $result->totalPages(),
+            'total' => $result->total,
+            'has_previous' => $result->hasPrevious(),
+            'has_next' => $result->hasNext(),
         ];
     }
 

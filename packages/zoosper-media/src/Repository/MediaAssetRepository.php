@@ -6,6 +6,8 @@ namespace Zoosper\Media\Repository;
 
 use PDO;
 use Zoosper\Media\Model\MediaAsset;
+use Zoosper\Pagination\Pager;
+use Zoosper\Pagination\PaginationResult;
 
 /**
  * Repository for media asset metadata.
@@ -62,6 +64,59 @@ final readonly class MediaAssetRepository
         }
 
         return $items;
+    }
+
+    /** @return PaginationResult<MediaAsset> */
+    public function paginate(MediaAssetCriteria $criteria): PaginationResult
+    {
+        $where = ['1 = 1'];
+        $parameters = [];
+
+        if ($criteria->query !== null) {
+            $where[] = '(filename LIKE :filename_query OR original_filename LIKE :original_filename_query)';
+            $parameters['filename_query'] = '%' . $criteria->query . '%';
+            $parameters['original_filename_query'] = '%' . $criteria->query . '%';
+        }
+        if ($criteria->status !== null) {
+            $where[] = 'status = :status';
+            $parameters['status'] = $criteria->status;
+        }
+        if ($criteria->mimeType !== null) {
+            $where[] = 'mime_type = :mime_type';
+            $parameters['mime_type'] = $criteria->mimeType;
+        }
+        if ($criteria->extension !== null) {
+            $where[] = 'extension = :extension';
+            $parameters['extension'] = $criteria->extension;
+        }
+
+        $from = ' FROM media_assets WHERE ' . implode(' AND ', $where);
+        $count = $this->pdo->prepare('SELECT COUNT(*)' . $from);
+        $count->execute($parameters);
+        $total = (int) $count->fetchColumn();
+        $pageCount = max(1, (int) ceil($total / $criteria->pager->pageSize));
+        $pager = new Pager(min($criteria->pager->page, $pageCount), $criteria->pager->pageSize);
+        $direction = $criteria->sortDirection === 'asc' ? 'ASC' : 'DESC';
+        $statement = $this->pdo->prepare(
+            'SELECT *' . $from
+            . ' ORDER BY ' . $criteria->sortBy . ' ' . $direction . ', id ' . $direction
+            . ' LIMIT :limit OFFSET :offset'
+        );
+        foreach ($parameters as $name => $value) {
+            $statement->bindValue(':' . $name, $value);
+        }
+        $statement->bindValue(':limit', $pager->pageSize, PDO::PARAM_INT);
+        $statement->bindValue(':offset', $pager->offset(), PDO::PARAM_INT);
+        $statement->execute();
+
+        $items = [];
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) ?: [] as $row) {
+            if (is_array($row)) {
+                $items[] = $this->hydrate($row);
+            }
+        }
+
+        return new PaginationResult($items, $total, $pager->page, $pager->pageSize);
     }
 
     public function findById(int $id): ?MediaAsset

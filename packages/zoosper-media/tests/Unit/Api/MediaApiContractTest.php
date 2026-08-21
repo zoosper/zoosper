@@ -12,6 +12,8 @@ it('owns stateless PAT Media reads upload and reversible lifecycle routes', func
     expect(substr_count($routes, "'stateless' => true"))->toBe(7)
         ->and($controller)->toContain("'media:read'")->toContain("'media:upload'")->toContain("'media:delete'")
         ->toContain("can('media.manage')")->toContain('MediaUploadService')->toContain('MediaLifecycleCoordinator')
+        ->toContain('MediaApiReadQuery::fromRequest($request)')
+        ->toContain("'pagination' => \$this->normalisePagination(\$result)")
         ->not->toContain("'storage_path'")->not->toContain('tokenHash')->not->toContain('SessionGuard');
 });
 
