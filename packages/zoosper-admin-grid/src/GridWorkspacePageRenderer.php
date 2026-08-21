@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\AdminGrid;
 
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\PaginationResult;
 use Zoosper\Grid\GridHtmlRenderer;
 
 /** Composes resolved workspace controls and the matching Grid result. */

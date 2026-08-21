@@ -8,7 +8,7 @@ use Zoosper\Auth\Admin\Grid\PdoAdminUserGridReadRepository;
 use Zoosper\Auth\Admin\Grid\PdoRoleGridReadRepository;
 use Zoosper\Auth\Admin\Grid\RoleGridCriteria;
 use Zoosper\Auth\Admin\Grid\RoleGridSqlBuilder;
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 
 function authGridPdo(): PDO
 {

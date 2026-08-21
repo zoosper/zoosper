@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Zoosper\Media\Admin\Grid;
-use Zoosper\Core\Pagination\PaginationResult;use Zoosper\Core\Url\AdminUrlGenerator;use Zoosper\Grid\GridCriteria;
+use Zoosper\Pagination\PaginationResult;use Zoosper\Core\Url\AdminUrlGenerator;use Zoosper\Grid\GridCriteria;
 final readonly class MediaVisualGridRenderer
 {
  public function __construct(private AdminUrlGenerator $urls){}

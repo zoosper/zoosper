@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Pagination;
+namespace Zoosper\Pagination;
 
 /**
  * Normalises pagination request values for admin grids.

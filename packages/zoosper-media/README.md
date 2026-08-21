@@ -100,3 +100,7 @@ The Media Grid resets to `/admin/media` and intentionally hides export until Med
 ## Media Grid query state
 
 Media filtering, sorting and card metadata visibility use the shared Admin Collection Grid query adapter. Filename search uses parameterised predicates for both stored and original filenames. Preview, ID and actions are mandatory Media workspace capabilities; optional metadata follows submitted visible-column state.
+
+## Pagination ownership
+
+This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.

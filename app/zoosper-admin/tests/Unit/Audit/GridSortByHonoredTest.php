@@ -7,7 +7,7 @@ use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Core\Database\Migrator;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Core\Module\ModuleRegistry;
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 
 /**
  * CORRECTNESS REGRESSION TEST — proves AuditLogRepository::paginate() and

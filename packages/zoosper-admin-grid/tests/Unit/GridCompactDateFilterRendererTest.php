@@ -6,7 +6,7 @@ namespace Zoosper\AdminGrid\Tests\Unit;
 
 use Zoosper\AdminGrid\GridCompactWorkspaceRenderer;
 use Zoosper\AdminGrid\GridViewState;
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 use Zoosper\Grid\GridColumn;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDefinition;

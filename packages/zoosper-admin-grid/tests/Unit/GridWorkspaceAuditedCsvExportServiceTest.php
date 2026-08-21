@@ -9,7 +9,7 @@ use Zoosper\AdminGrid\GridWorkspaceAuditedCsvExportService;
 use Zoosper\AdminGrid\GridWorkspaceCsvExportService;
 use Zoosper\AdminGrid\GridWorkspaceExportAudit;
 use Zoosper\AdminGrid\GridWorkspaceExportAuditorInterface;
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 use Zoosper\Grid\GridColumn;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridCsvExporter;

@@ -32,7 +32,6 @@ Zoosper_Core module for Zoosper CMS.
 - `src/Log/`
 - `src/Message/`
 - `src/Module/`
-- `src/Pagination/`
 - `src/Release/`
 - `src/Routing/`
 - `src/Scaffold/`
@@ -49,6 +48,10 @@ Zoosper_Core module for Zoosper CMS.
 - `config/logging.php`: Module log channel/file.
 - `config/rate_limit.php`: Module runtime configuration.
 - `config/services.php`: Service-container bindings.
+
+## Pagination ownership
+
+Generic pagination is owned by `zoosper/pagination`; Core no longer provides `src/Pagination/` classes.
 
 ## Dependencies
 
@@ -84,7 +87,7 @@ Foreign-key reconciliation is read-only by default: live constraints are inspect
 
 - Full repository suite: `zcomposer test`.
 - Package suite: `php8.5 vendor/bin/pest app/zoosper-core/tests`.
-- Current regression files discovered: `181`. Use `find app/zoosper-core/tests -type f -name '*Test.php' | sort` for the live list.
+- Current regression files discovered: `180`. Use `find app/zoosper-core/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes

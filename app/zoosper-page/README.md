@@ -155,3 +155,7 @@ Page owns its stateless Page and public content API routes, adapters, controller
 - `POST /api/v1/pages/{id}/archive` and `/restore` require `pages:archive` plus current `page.manage`.
 - `DELETE /api/v1/pages/{id}` requires `pages:delete` plus current `page.manage`, archived state, and zero Menu or URL Rewrite references.
 - Archive and restore create safety revisions. All routes are feature-owned, stateless, request-Site isolated, audited and secret-free.
+
+## Pagination ownership
+
+This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.

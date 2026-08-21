@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 
 /**
  * PERFORMANCE/COST-AMPLIFICATION REGRESSION TEST — proves
@@ -10,8 +10,7 @@ use Zoosper\Core\Pagination\Pager;
  * fixed safety ceiling, so it can never produce an arbitrarily huge
  * OFFSET for the database to scan through and discard.
  *
- * File placement: app/zoosper-core/tests/Unit/Pagination/PagerMaxPageClampTest.php
- * — 5 levels up to repo root, matching other per-module tests.
+ * File placement: packages/zoosper-pagination/tests/Unit/PagerMaxPageClampTest.php.
  */
 it('clamps an excessively large page number to the default max page ceiling', function (): void {
     $pager = Pager::fromQuery(['page' => '999999999']);

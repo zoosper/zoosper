@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Auth\Admin\Grid;
 
 use PDO;
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\PaginationResult;
 
 /** PDO read model for the Roles Grid. */
 final readonly class PdoRoleGridReadRepository implements RoleGridReadRepositoryInterface

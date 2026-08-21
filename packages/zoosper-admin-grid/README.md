@@ -73,3 +73,7 @@ Compact Grid controls derive Clear all from the feature action. Export is an exp
 ## HTTP query-state adapter
 
 `AdminCollectionGridQuery` maps flat GET controls into canonical Grid state: feature filters are nested under `filters`, `sort` and `dir` become `sort_by` and `sort_dir`, and array-valued column state is preserved. Query state replaces complete top-level bookmark values so shorter submitted lists cannot retain stale columns.
+
+## Pagination ownership
+
+This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.

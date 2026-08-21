@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "972cb3e645ab0ae72e2885c8124431e2",
+    "content-hash": "9a8630d7554b76ae19299c513bbb5304",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -748,6 +748,50 @@
             "time": "2026-05-02T01:27:31+00:00"
         },
         {
+            "name": "marko/pagination",
+            "version": "0.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-pagination.git",
+                "reference": "289c4c38d97b0cd5b1a5cc9b9c75765ef9b05833"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-pagination/zipball/289c4c38d97b0cd5b1a5cc9b9c75765ef9b05833",
+                "reference": "289c4c38d97b0cd5b1a5cc9b9c75765ef9b05833",
+                "shasum": ""
+            },
+            "require": {
+                "marko/config": "self.version",
+                "marko/core": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "marko/testing": "self.version",
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Pagination\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Pagination interfaces and implementations for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-pagination/tree/0.8.5"
+            },
+            "time": "2026-03-25T17:53:35+00:00"
+        },
+        {
             "name": "marko/routing",
             "version": "0.8.5",
             "source": {
@@ -1041,7 +1085,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-admin",
-                "reference": "ab5dd62c57797e04d9f47bd4f4a7d03320734fa1"
+                "reference": "6430c0e9de34766e5ab03e451e510ee9e65ac2fb"
             },
             "require": {
                 "marko/admin": "0.8.5",
@@ -1051,6 +1095,7 @@
                 "zoosper/core": "dev-dev",
                 "zoosper/errors": "dev-dev",
                 "zoosper/grid": "dev-dev",
+                "zoosper/pagination": "dev-dev",
                 "zoosper/scoped-config": "dev-dev",
                 "zoosper/theme": "dev-dev"
             },
@@ -1075,13 +1120,14 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-admin-grid",
-                "reference": "0a4d856f211535009e5255dc898c9d0b25376570"
+                "reference": "1dcc01f3554bfaab775d77ac219211f7644059d5"
             },
             "require": {
                 "ext-pdo": "*",
                 "php": "^8.5",
                 "zoosper/core": "dev-dev",
-                "zoosper/grid": "dev-dev"
+                "zoosper/grid": "dev-dev",
+                "zoosper/pagination": "dev-dev"
             },
             "require-dev": {
                 "pestphp/pest": "^3.0",
@@ -1188,13 +1234,14 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-auth",
-                "reference": "c10d4f5d742daed00e933ec01664d403f09eb83f"
+                "reference": "d9851d8ea1cb39a2a07da909033863a9cf38dd06"
             },
             "require": {
                 "php": "^8.5",
                 "zoosper/admin-grid": "dev-dev",
                 "zoosper/core": "dev-dev",
-                "zoosper/grid": "dev-dev"
+                "zoosper/grid": "dev-dev",
+                "zoosper/pagination": "dev-dev"
             },
             "type": "zoosper-module",
             "autoload": {
@@ -1384,11 +1431,11 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-grid",
-                "reference": "e2845c0807ac2d9a88aaca8d20d90a457732879c"
+                "reference": "e80c154f75e7af431a209247c7425caf234858c2"
             },
             "require": {
                 "php": "^8.5",
-                "zoosper/core": "dev-dev"
+                "zoosper/pagination": "dev-dev"
             },
             "require-dev": {
                 "pestphp/pest": "^3.0",
@@ -1527,7 +1574,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-media",
-                "reference": "80e62c8df4eef3a071338e9b4e737f09f766cbe8"
+                "reference": "ef83aae4c0def5e1a1a2ffe7104303985abf8869"
             },
             "require": {
                 "ext-pdo": "*",
@@ -1535,7 +1582,8 @@
                 "zoosper/admin-grid": "dev-dev",
                 "zoosper/auth": "dev-dev",
                 "zoosper/core": "dev-dev",
-                "zoosper/grid": "dev-dev"
+                "zoosper/grid": "dev-dev",
+                "zoosper/pagination": "dev-dev"
             },
             "require-dev": {
                 "pestphp/pest": "^3.0",
@@ -1576,7 +1624,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-menu",
-                "reference": "04e8bb79a9139e3bb72f40e5e38624c983e12a39"
+                "reference": "c685b2f92ee32707bfd32518a7cb18e4baa7b759"
             },
             "require": {
                 "php": "^8.3 || ^8.5",
@@ -1585,6 +1633,7 @@
                 "zoosper/core": "dev-dev",
                 "zoosper/grid": "dev-dev",
                 "zoosper/page": "dev-dev",
+                "zoosper/pagination": "dev-dev",
                 "zoosper/site": "dev-dev"
             },
             "type": "zoosper-module",
@@ -1613,7 +1662,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-page",
-                "reference": "968ae601b731f3c76f321d7571872b7826d896b4"
+                "reference": "e6fd556eefbae8e5e62fe04b5c629920cdd5efdf"
             },
             "require": {
                 "php": "^8.5",
@@ -1622,6 +1671,7 @@
                 "zoosper/core": "dev-dev",
                 "zoosper/grid": "dev-dev",
                 "zoosper/media": "dev-dev",
+                "zoosper/pagination": "dev-dev",
                 "zoosper/seo": "dev-dev",
                 "zoosper/site": "dev-dev",
                 "zoosper/theme": "dev-dev"
@@ -1641,6 +1691,51 @@
                 "MIT"
             ],
             "description": "Zoosper_Page module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/pagination",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "packages/zoosper-pagination",
+                "reference": "f2da3b5cf4d9a691d3d6fbcf991f016cba04430d"
+            },
+            "require": {
+                "marko/pagination": "0.8.5",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin": "^3.0",
+                "phpunit/phpunit": "^11.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Pagination\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Pagination\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ],
+                "test:unit": [
+                    "pest --testsuite=Unit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper-owned pagination contracts and Marko offset-pagination adapter.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -1786,14 +1881,15 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-site",
-                "reference": "fe70c082f14475e798fa1b84a3ce27b51f267017"
+                "reference": "ece56c15b1bc6ad6d3898ecc7369a0816034aff7"
             },
             "require": {
                 "php": "^8.5",
                 "zoosper/admin-grid": "dev-dev",
                 "zoosper/auth": "dev-dev",
                 "zoosper/core": "dev-dev",
-                "zoosper/grid": "dev-dev"
+                "zoosper/grid": "dev-dev",
+                "zoosper/pagination": "dev-dev"
             },
             "type": "zoosper-module",
             "autoload": {
@@ -1821,7 +1917,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-store-orders",
-                "reference": "221f455c4ecc4910e6316a4b56a871e984c20bfd"
+                "reference": "434ad09ba55cc07c4b73cb5b84e411068376c35b"
             },
             "require": {
                 "php": "^8.5",
@@ -1829,7 +1925,8 @@
                 "zoosper/api-grid": "dev-dev",
                 "zoosper/auth": "dev-dev",
                 "zoosper/core": "dev-dev",
-                "zoosper/grid": "dev-dev"
+                "zoosper/grid": "dev-dev",
+                "zoosper/pagination": "dev-dev"
             },
             "require-dev": {
                 "pestphp/pest": "^3.0",
@@ -8970,6 +9067,7 @@
         "zoosper/media": 20,
         "zoosper/menu": 20,
         "zoosper/page": 20,
+        "zoosper/pagination": 20,
         "zoosper/scoped-config": 20,
         "zoosper/seo": 20,
         "zoosper/session": 20,

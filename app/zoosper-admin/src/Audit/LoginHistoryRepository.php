@@ -8,7 +8,7 @@ use PDO;
 use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDataSourceInterface;
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\PaginationResult;
 
 /**
  * Repository for admin login history.

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Zoosper\Admin\Audit\Grid;
 use Zoosper\AdminGrid\GridViewState;
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\PaginationResult;
 final readonly class OperationalGridPage
 {
     /** @param PaginationResult<array<string,mixed>> $pagination */

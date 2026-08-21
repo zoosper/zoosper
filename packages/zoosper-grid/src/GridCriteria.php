@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Grid;
 
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 
 final readonly class GridCriteria
 {

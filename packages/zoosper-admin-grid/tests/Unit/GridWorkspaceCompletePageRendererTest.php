@@ -9,7 +9,7 @@ use Zoosper\AdminGrid\GridWorkspaceCompletePageRenderer;
 use Zoosper\AdminGrid\GridWorkspaceNavigation;
 use Zoosper\AdminGrid\GridWorkspaceNavigationRenderer;
 use Zoosper\AdminGrid\GridWorkspacePage;
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 use Zoosper\Grid\GridColumn;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDefinition;

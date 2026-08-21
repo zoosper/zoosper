@@ -33,7 +33,7 @@ it('records the current review priorities and does not overclaim media derivativ
     $roadmap = (string) file_get_contents($root . '/ROADMAP.md');
 
     expect($roadmap)
-        ->toContain('Last updated:** 2026-08-16 (Sydney)')
+        ->toContain('Last updated:** 2026-08-21 (Sydney)')
         ->toContain('External review response and public-launch priorities (2026-08-11)')
         ->toContain('Duplicate MediaUploadService construction is resolved')
         ->toContain('Derivative database persistence remains a separate follow-up')

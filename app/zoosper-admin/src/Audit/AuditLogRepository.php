@@ -7,7 +7,7 @@ namespace Zoosper\Admin\Audit;
 use PDO;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDataSourceInterface;
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\PaginationResult;
 
 /**
  * Repository for the admin activity log.

@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "zoosper/core": "dev-dev"
+        "zoosper/pagination": "dev-dev"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",

@@ -7,8 +7,8 @@ use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDefinition;
 use Zoosper\Grid\GridFilter;
 use Zoosper\Grid\GridHtmlRenderer;
-use Zoosper\Core\Pagination\Pager;
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\Pager;
+use Zoosper\Pagination\PaginationResult;
 
 /*
  * Grid Core (Phase A) behavioural tests for the shared HTML renderer.

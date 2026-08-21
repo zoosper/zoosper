@@ -27,6 +27,7 @@
         "zoosper/media": "dev-dev",
         "zoosper/menu": "dev-dev",
         "zoosper/page": "dev-dev",
+        "zoosper/pagination": "dev-dev",
         "zoosper/scoped-config": "dev-dev",
         "zoosper/seo": "dev-dev",
         "zoosper/session": "dev-dev",
@@ -46,19 +47,20 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Zoosper\\AdminGrid\\Tests\\": "packages/zoosper-admin-grid/tests/",
             "Zoosper\\Admin\\Tests\\": "app/zoosper-admin/tests/",
+            "Zoosper\\ApiGrid\\Tests\\": "packages/zoosper-api-grid/tests/",
             "Zoosper\\Auth\\Tests\\": "app/zoosper-auth/tests/",
             "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
             "Zoosper\\Errors\\Tests\\": "packages/zoosper-errors/tests/",
-            "Zoosper\\Media\\Tests\\": "packages/zoosper-media/tests/",
-            "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/",
-            "Zoosper\\Site\\Tests\\": "app/zoosper-site/tests/",
-            "Zoosper\\TwoFactor\\Tests\\": "app/zoosper-two-factor/tests/",
             "Zoosper\\Grid\\Tests\\": "packages/zoosper-grid/tests/",
-            "Zoosper\\AdminGrid\\Tests\\": "packages/zoosper-admin-grid/tests/",
-            "Zoosper\\ApiGrid\\Tests\\": "packages/zoosper-api-grid/tests/",
+            "Zoosper\\Media\\Tests\\": "packages/zoosper-media/tests/",
+            "Zoosper\\Menu\\Tests\\": "app/zoosper-menu/tests/",
+            "Zoosper\\Page\\Tests\\": "app/zoosper-page/tests/",
+            "Zoosper\\Pagination\\Tests\\": "packages/zoosper-pagination/tests/",
+            "Zoosper\\Site\\Tests\\": "app/zoosper-site/tests/",
             "Zoosper\\StoreOrders\\Tests\\": "packages/zoosper-store-orders/tests/",
-            "Zoosper\\Menu\\Tests\\": "app/zoosper-menu/tests/"
+            "Zoosper\\TwoFactor\\Tests\\": "app/zoosper-two-factor/tests/"
         }
     },
     "scripts": {
@@ -94,6 +96,13 @@
         }
     },
     "repositories": [
+        {
+            "type": "path",
+            "url": "packages/zoosper-pagination",
+            "options": {
+                "symlink": true
+            }
+        },
         {
             "type": "path",
             "url": "packages/zoosper-store-orders",

@@ -11,7 +11,7 @@ use Zoosper\AdminGrid\GridWorkspaceStateFingerprint;
 use Zoosper\AdminGrid\GridWorkspaceStatusDecorator;
 use Zoosper\AdminGrid\GridWorkspaceViewStatusRenderer;
 use Zoosper\AdminGrid\GridWorkspaceViewStatusResolver;
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 use Zoosper\Grid\GridColumn;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDefinition;

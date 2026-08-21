@@ -10,7 +10,7 @@ use Zoosper\AdminGrid\GridWorkspaceDirtyState;
 use Zoosper\AdminGrid\GridWorkspaceStateFingerprint;
 use Zoosper\AdminGrid\GridWorkspaceViewActionsRenderer;
 use Zoosper\AdminGrid\GridWorkspaceViewActionsResolver;
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 use Zoosper\Grid\GridColumn;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDefinition;

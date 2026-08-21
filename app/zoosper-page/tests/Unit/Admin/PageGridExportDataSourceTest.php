@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Tests\Unit\Admin;
 
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Page\Admin\PageGridExportCriteria;
 use Zoosper\Page\Admin\PageGridExportDataSource;

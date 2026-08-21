@@ -8,8 +8,8 @@ use Zoosper\Auth\Admin\Grid\AdminUserGridReadRepositoryInterface;
 use Zoosper\Auth\Admin\Grid\RoleGridCriteria;
 use Zoosper\Auth\Admin\Grid\RoleGridDataSource;
 use Zoosper\Auth\Admin\Grid\RoleGridReadRepositoryInterface;
-use Zoosper\Core\Pagination\Pager;
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\Pager;
+use Zoosper\Pagination\PaginationResult;
 use Zoosper\Grid\GridCriteria;
 
 it('maps generic Grid criteria into the Admin Users read boundary', function (): void {

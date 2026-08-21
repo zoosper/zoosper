@@ -14,7 +14,7 @@ use Zoosper\AdminGrid\GridWorkspaceRequest;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Url\AdminUrlGenerator;
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\PaginationResult;
 use Zoosper\Grid\DataSource\GridQuery;
 use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\StoreOrders\StoreOrderDataSourceFactory;

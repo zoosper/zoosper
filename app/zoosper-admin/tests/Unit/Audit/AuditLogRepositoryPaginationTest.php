@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Zoosper\Admin\Audit\AuditLogGrid;
 use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Grid\GridCriteria;
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 
 /*
  * Phase A hotfix: REPLACES the Phase 1.112 version of this test file, which

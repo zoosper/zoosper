@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Admin;
 
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\PaginationResult;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDataSourceInterface;
 use Zoosper\Grid\GridFilterValue;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Auth\Admin\Grid;
 
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\PaginationResult;
 
 interface AdminUserGridReadRepositoryInterface
 {

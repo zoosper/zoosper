@@ -10,6 +10,7 @@
         "zoosper/core": "dev-dev",
         "zoosper/grid": "dev-dev",
         "zoosper/page": "dev-dev",
+        "zoosper/pagination": "dev-dev",
         "zoosper/site": "dev-dev"
     },
     "autoload": {

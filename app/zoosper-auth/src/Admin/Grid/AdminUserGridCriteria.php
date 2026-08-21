@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Auth\Admin\Grid;
 
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 use Zoosper\Grid\GridCriteria;
 
 /** Normalised read criteria for the Admin Users listing. */

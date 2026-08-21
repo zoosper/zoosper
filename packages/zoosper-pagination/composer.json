@@ -1,14 +1,11 @@
 {
-    "name": "zoosper/admin-grid",
-    "description": "Per-admin grid preferences, saved views and persistence integration for Zoosper.",
-    "type": "zoosper-module",
+    "name": "zoosper/pagination",
+    "description": "Zoosper-owned pagination contracts and Marko offset-pagination adapter.",
+    "type": "library",
     "license": "MIT",
     "require": {
-        "ext-pdo": "*",
-        "php": "^8.5",
-        "zoosper/core": "dev-dev",
-        "zoosper/grid": "dev-dev",
-        "zoosper/pagination": "dev-dev"
+        "marko/pagination": "0.8.5",
+        "php": "^8.5"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",
@@ -17,12 +14,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Zoosper\\AdminGrid\\": "src/"
+            "Zoosper\\Pagination\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Zoosper\\AdminGrid\\Tests\\": "tests/"
+            "Zoosper\\Pagination\\Tests\\": "tests/"
         }
     },
     "scripts": {

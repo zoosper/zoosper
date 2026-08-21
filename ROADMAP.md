@@ -1,11 +1,15 @@
 # Zoosper CMS — Master Roadmap
 
-**Last updated:** 2026-08-16 (Sydney)
+**Last updated:** 2026-08-21 (Sydney)
 
 ## Current continuity status
 
 - Latest tag: `v0.3.0-alpha.2`.
 - Current development line: `v0.3.0-alpha.3-dev`.
+- **[x] Phase 10BN:** generic pagination ownership moved from Core to the
+  `zoosper/pagination` library. Zoosper's page parsing, default page size `20`,
+  maximum page size `100`, and maximum page `100_000` remain stable; verified
+  `marko/pagination` `0.8.5` is used only behind the Zoosper boundary.
 - Completed API arc: 10AK, 10AL, 10AM-A, 10AM-B, 10AM-C, 10AN-A, 10AN-B/C and 10AO.
 - Next bulk: 10AP-A Media reads and derivatives, 10AP-B canonical PAT upload, and 10AP-C archive/restore plus reference-safe permanent deletion where the shared reference contract permits it.
 

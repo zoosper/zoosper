@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Grid;
 
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\PaginationResult;
 
 final class GridHtmlRenderer
 {

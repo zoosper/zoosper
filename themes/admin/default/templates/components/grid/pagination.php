@@ -1,7 +1,7 @@
 <?php
 /**
  * @var callable $e
- * @var \Zoosper\Core\Pagination\PaginationResult<mixed> $pagination
+ * @var \Zoosper\Pagination\PaginationResult<mixed> $pagination
  * @var array<string, string|int> $params
  * @var string $baseUrl
  */

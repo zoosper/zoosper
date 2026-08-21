@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Page\Admin;
 
 use PDO;
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\PaginationResult;
 
 final readonly class PageGridRepository
 {

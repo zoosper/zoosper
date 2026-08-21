@@ -27,8 +27,12 @@ Reusable grid definitions, criteria, rendering, extension registry and CSV expor
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/core`: `dev-dev`.
+- `zoosper/pagination`: `dev-dev`.
 - Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
+
+## Pagination ownership
+
+The legacy numbered Grid boundary consumes `Zoosper\Pagination\Pager` and `PaginationResult`. Marko pagination classes must remain behind `zoosper/pagination`. The separate neutral `DataSource\GridDataSourceInterface` remains unchanged.
 
 ## Security and compatibility
 

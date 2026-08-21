@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Zoosper\Media\Admin\Grid;
-use PDO;use Zoosper\Core\Pagination\PaginationResult;use Zoosper\Grid\{GridColumn,GridCriteria,GridDataSourceInterface,GridDefinition,GridFilter};
+use PDO;use Zoosper\Pagination\PaginationResult;use Zoosper\Grid\{GridColumn,GridCriteria,GridDataSourceInterface,GridDefinition,GridFilter};
 final readonly class MediaGridSource implements GridDataSourceInterface
 {
  public const KEY='admin.media';

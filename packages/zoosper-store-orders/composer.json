@@ -9,7 +9,8 @@
         "zoosper/api-grid": "dev-dev",
         "zoosper/auth": "dev-dev",
         "zoosper/core": "dev-dev",
-        "zoosper/grid": "dev-dev"
+        "zoosper/grid": "dev-dev",
+        "zoosper/pagination": "dev-dev"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",

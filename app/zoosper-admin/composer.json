@@ -11,6 +11,7 @@
         "zoosper/core": "dev-dev",
         "zoosper/errors": "dev-dev",
         "zoosper/grid": "dev-dev",
+        "zoosper/pagination": "dev-dev",
         "zoosper/scoped-config": "dev-dev",
         "zoosper/theme": "dev-dev"
     },

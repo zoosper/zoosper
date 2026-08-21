@@ -7,7 +7,7 @@ namespace Zoosper\AdminGrid\Tests\Unit;
 use Zoosper\AdminGrid\GridViewState;
 use Zoosper\AdminGrid\GridWorkspaceCsvExportService;
 use Zoosper\AdminGrid\GridWorkspaceExportPolicy;
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 use Zoosper\Grid\GridColumn;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridCsvExporter;

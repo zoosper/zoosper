@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Auth\Admin\Grid;
 
 use Zoosper\AdminGrid\GridViewState;
-use Zoosper\Core\Pagination\PaginationResult;
+use Zoosper\Pagination\PaginationResult;
 
 /** Complete, framework-neutral view model for an Auth admin Grid page. */
 final readonly class AuthGridPage

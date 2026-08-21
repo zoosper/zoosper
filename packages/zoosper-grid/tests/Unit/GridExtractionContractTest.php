@@ -20,6 +20,7 @@ test('grid package is a library with a bounded core dependency', function (): vo
     );
 
     expect($manifest['type'] ?? null)->toBe('library');
-    expect($manifest['require']['zoosper/core'] ?? null)->toBe('dev-dev');
+    expect($manifest['require']['zoosper/pagination'] ?? null)->toBe('dev-dev');
+    expect($manifest['require'] ?? [])->not->toHaveKey('zoosper/core');
     expect($manifest['extra'] ?? [])->not->toHaveKey('marko');
 });

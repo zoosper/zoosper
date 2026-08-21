@@ -6,7 +6,7 @@ use Zoosper\Auth\Admin\Grid\AdminUserGridCriteria;
 use Zoosper\Auth\Admin\Grid\AdminUserGridSqlBuilder;
 use Zoosper\Auth\Admin\Grid\RoleGridCriteria;
 use Zoosper\Auth\Admin\Grid\RoleGridSqlBuilder;
-use Zoosper\Core\Pagination\Pager;
+use Zoosper\Pagination\Pager;
 
 it('builds bound Admin User search and status filters', function (): void {
     $plan = (new AdminUserGridSqlBuilder())->build(new AdminUserGridCriteria(

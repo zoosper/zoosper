@@ -101,3 +101,7 @@ Menu owns its stateless read, mutation, item, and lifecycle API routes, adapters
 ## Phase 10BM-A Admin collection Grid
 
 The module-owned Admin collection index uses a stable Admin Grid workspace with server-side count and page queries, allow-listed sorting, filters, saved views, column visibility, ordering and page-size state. Existing POST lifecycle workflows remain feature-owned.
+
+## Pagination ownership
+
+This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
