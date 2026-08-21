@@ -109,3 +109,10 @@ This package directly consumes the stable `Zoosper\Pagination` request/result bo
 ## Phase 10AP-A Media reads and derivatives
 
 The feature-owned `GET /api/v1/media`, `GET /api/v1/media/{id}`, and `GET /api/v1/media/{id}/derivatives` routes require the `media:read` PAT scope plus the token owner's `media.manage` permission. The collection response includes `page`, `page_size`, `page_count`, `total`, `has_previous`, and `has_next`. Invalid pagination, sort, direction, and filter values are bounded or reduced to safe defaults. Media remains globally owned because the current `media_assets` contract has no `site_id`; this phase does not invent site ownership or silently infer it from the request host. Responses expose `public_path` only and never return private `storage_path` values.
+
+
+## Phase 10AP-B canonical PAT upload
+
+The feature-owned stateless `POST /api/v1/media` route requires the `media:upload` PAT scope plus the token owner's `media.manage` permission. Multipart input is read from the immutable request upload key `file`; controllers never read `$_FILES` after `Request::fromGlobals()` captures it. The thin API adapter delegates to the same `MediaUploadService` used by Admin and Editor.js, preserving the 5 MB JPEG, PNG, GIF, and WebP allow-list, MIME and decoded-image validation, 40-megapixel canonical re-encoding ceiling, private-original/public-copy separation, enabled `thumb`, `medium`, and `large` WebP derivatives, persisted asset and derivative metadata, and failure cleanup.
+
+A successful upload returns HTTP `201` with the public asset representation and public derivative representations. Responses never include private `storage_path` values or PAT secrets. Audit action `media.api_uploaded` records the asset ID, internal token ID, and public token ID only.

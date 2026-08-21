@@ -2,6 +2,8 @@
 
 ## [0.3.0-alpha.3-dev]
 
+- Completed Phase 10AP-B canonical PAT upload: the stateless `media:upload` endpoint now consumes request-captured multipart input and is regression-guarded across PAT scope, owner permission, shared canonical storage and derivatives, HTTP `201`, safe audit metadata, and private-path redaction.
+
 - Completed Phase 10AP-A Media reads and derivatives: feature-owned PAT reads now provide bounded collection pagination, allow-listed search/filter/sort controls, deterministic derivative metadata, and private-storage-path redaction.
 
 ### Planned

@@ -12,7 +12,8 @@
   `marko/pagination` `0.8.5` is used only behind the Zoosper boundary.
 - Completed API arc: 10AK, 10AL, 10AM-A, 10AM-B, 10AM-C, 10AN-A, 10AN-B/C and 10AO.
 - **[x] Phase 10AP-A:** Media list, detail, and derivative reads use the feature-owned stateless `media:read` PAT boundary; collection reads now provide bounded pagination, allow-listed filters/sorting, deterministic metadata, and no private storage paths.
-- Next bulk: 10AP-B canonical PAT upload, then 10AP-C archive/restore plus reference-safe permanent deletion where the shared reference contract permits it.
+- **[x] Phase 10AP-B:** Canonical multipart upload uses the feature-owned stateless `media:upload` PAT boundary plus token-owner `media.manage`, reads files only from the immutable request boundary, delegates to the shared canonical storage/derivative/cleanup pipeline, returns HTTP `201`, and exposes no private paths or token secrets.
+- Next bulk: 10AP-C archive/restore plus reference-safe permanent deletion where the shared reference contract permits it.
 
 ---
 

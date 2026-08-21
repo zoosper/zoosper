@@ -84,7 +84,7 @@ final readonly class MediaApiController
         if ($principal instanceof Response) {
             return $principal;
         }
-        $file = is_array($_FILES['file'] ?? null) ? $_FILES['file'] : [];
+        $file = $request->uploadedFile('file');
         $result = $this->uploads->upload($file, $principal->user);
         if (!$result->successful) {
             return $this->json->error('media_upload_failed', $result->message, $result->statusCode);
