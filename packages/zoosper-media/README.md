@@ -96,3 +96,7 @@ The Media library uses the stable `admin.media` workspace with server-side total
 ## Media workspace URL ownership
 
 The Media Grid resets to `/admin/media` and intentionally hides export until Media owns a real export endpoint. No Pages route is reused by Media controls.
+
+## Media Grid query state
+
+Media filtering, sorting and card metadata visibility use the shared Admin Collection Grid query adapter. Filename search uses parameterised predicates for both stored and original filenames. Preview, ID and actions are mandatory Media workspace capabilities; optional metadata follows submitted visible-column state.

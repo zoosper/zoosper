@@ -28,7 +28,7 @@ final readonly class GridViewStateResolver
         $bookmarks = $this->bookmarks->allForUser($adminUserId, $gridKey);
         $bookmark = $this->selectBookmark($bookmarks, $bookmarkId);
         $savedColumns = $this->preferences->findVisibleColumns($adminUserId, $gridKey);
-        $state = array_replace_recursive($bookmark['state'] ?? [], $queryState);
+        $state = array_replace($bookmark['state'] ?? [], $queryState);
         if ($savedColumns !== null && !array_key_exists('visible_columns', $state)) {
             $state['visible_columns'] = $savedColumns;
         }

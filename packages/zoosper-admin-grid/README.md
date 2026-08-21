@@ -69,3 +69,7 @@ Per-admin grid preferences, saved views and persistence integration for Zoosper.
 ## Feature-owned workspace URLs
 
 Compact Grid controls derive Clear all from the feature action. Export is an explicit capability and may be disabled when a feature has no real export endpoint.
+
+## HTTP query-state adapter
+
+`AdminCollectionGridQuery` maps flat GET controls into canonical Grid state: feature filters are nested under `filters`, `sort` and `dir` become `sort_by` and `sort_dir`, and array-valued column state is preserved. Query state replaces complete top-level bookmark values so shorter submitted lists cannot retain stale columns.

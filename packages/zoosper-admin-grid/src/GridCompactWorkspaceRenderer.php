@@ -35,7 +35,7 @@ final readonly class GridCompactWorkspaceRenderer
             $formAction,
         );
         $html.='<form method="get" action="'.$this->e($formAction).'" data-grid-filter-form>';
-        $html.='<input type="hidden" name="page" value="1">';
+        $html.='<input type="hidden" name="page" value="1"><input type="hidden" name="columns_submitted" value="1">';
         $html.=$this->filters($state->definition,$filters,$formAction);
         $html.=$this->columns($state->definition,$state->visibleColumns,$state->columnOrder);
         if($state->criteria->sortBy!==null){$html.='<input type="hidden" name="sort" value="'.$this->e($state->criteria->sortBy).'"><input type="hidden" name="dir" value="'.$this->e($state->criteria->sortDir).'">';}
