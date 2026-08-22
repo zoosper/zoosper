@@ -37,6 +37,12 @@ return array (
       'path' => '/asset/zoosper-admin/css/admin-shell.css?v=1.37l',
       'sort_order' => 15,
     ),
+    'zoosper-admin-components-style' =>
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin/css/admin-components.css?v=1.37m',
+      'sort_order' => 16,
+    ),
     'zoosper-admin-messages-style' => 
     array (
       'type' => 'style',

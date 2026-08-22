@@ -79,6 +79,12 @@ Both files are registered by `config/admin_assets.php` and served through the mo
 
 The theme preference uses `zoosper.admin.theme` in browser local storage and falls back to `prefers-color-scheme`. The desktop collapse preference uses `zoosper.admin.sidebar-collapsed`. Storage failure is non-fatal and does not disable the controls.
 
+## Shared Admin components
+
+`resources/assets/css/admin-components.css` is the Admin-owned presentation contract for reusable page hierarchy, cards, forms, buttons, toolbars, notices, badges, tables, pagination and empty states. It consumes shell design tokens, supports light and dark themes, remains fluid at narrow widths and removes component transitions when reduced motion is requested. It is registered immediately after the shell stylesheet and before feature styles so an owning feature package can refine its own specialised UI without copying the shared foundation.
+
+The default theme's reusable component templates add semantic card regions, alert announcements, scoped table headings, labelled keyboard-scrollable table regions and live pagination summaries. Templates remain server-rendered and contain no inline style or behaviour. Feature modules may use these semantic classes, but must continue to own domain-specific rendering, routes, permissions and mutations. `zoosper/admin-grid` continues to own Grid workspace structure and behaviour; shared Admin CSS must not replace its package assets.
+
 ## Security and compatibility
 
 - Preserve public interfaces, route permissions, configuration keys, and service identifiers when extending or replacing behaviour.
@@ -90,7 +96,7 @@ The theme preference uses `zoosper.admin.theme` in browser local storage and fal
 
 - Full repository suite: `zcomposer test`.
 - Package suite: `php8.5 vendor/bin/pest app/zoosper-admin/tests`.
-- Current regression files discovered: `23`. Use `find app/zoosper-admin/tests -type f -name '*Test.php' | sort` for the live list.
+- Current regression files discovered: `25`. Use `find app/zoosper-admin/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes

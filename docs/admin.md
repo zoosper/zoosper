@@ -8,6 +8,12 @@ The default Admin theme provides a fluid responsive shell with Admin-owned desig
 
 Shell behaviour is progressive: server-rendered navigation and content remain available if JavaScript is unavailable. Production templates must not add inline JavaScript, event handlers, styles or dynamic `innerHTML`. Feature modules should contribute navigation, assets and rendered content through existing Admin contracts rather than depend on shell selectors or implementation classes.
 
+## Shared component presentation
+
+The Admin-owned `admin-components.css` layer provides theme-aware page headers, responsive card grids, cards, controls, forms, toolbars, actions, notices, badges, horizontally scrollable data tables, pagination and empty states. It loads after shell tokens and before feature assets. Default-theme components preserve semantic headings, alert announcements, column scopes and labelled keyboard-scrollable table regions. Responsive controls remain usable at narrow widths and component motion is disabled for `prefers-reduced-motion`.
+
+Feature modules should reuse these presentation contracts for ordinary Admin UI while retaining ownership of domain data and behaviour. Specialised packages such as `zoosper/admin-grid` continue to own their markup, scripts and detailed styles; the shared layer does not create a concrete reverse dependency or move Grid behaviour into the Admin module.
+
 Routes must declare permissions. Stateful Admin mutations are protected by authentication and CSRF middleware. Admin controllers should delegate rendering and domain work to collaborators. Shell redesigns do not alter route methods, permissions, ownership filters or CSRF boundaries.
 
 ## Page revisions

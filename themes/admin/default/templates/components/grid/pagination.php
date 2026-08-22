@@ -8,8 +8,8 @@
 $totalPages = $pagination->totalPages();
 ?>
 <nav class="pagination" aria-label="Pagination">
-    <span class="muted">Page <?= (int) $pagination->page ?> of <?= (int) $totalPages ?> · <?= (int) $pagination->total ?> result(s)</span>
-    <div class="toolbar">
+    <span class="pagination__summary muted" aria-live="polite">Page <?= (int) $pagination->page ?> of <?= (int) $totalPages ?> · <?= (int) $pagination->total ?> result(s)</span>
+    <div class="pagination__actions toolbar">
         <?php if ($pagination->hasPrevious()): ?>
             <a class="button secondary" href="<?= $e($baseUrl . '?' . http_build_query($params + ['page' => $pagination->page - 1])) ?>">Previous</a>
         <?php endif; ?>
