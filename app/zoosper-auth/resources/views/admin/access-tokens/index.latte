@@ -102,7 +102,9 @@
         </div>
 
         {if isset($gridHtml) && $gridHtml !== null}
-            {$gridHtml|noescape}
+            <div class="pat-grid-scroll" tabindex="0" role="region" aria-label="Personal Access Token table and controls">
+                {$gridHtml|noescape}
+            </div>
         {else}
             <div class="card">
                 {if count($tokens) === 0}

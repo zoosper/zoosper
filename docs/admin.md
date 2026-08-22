@@ -31,3 +31,7 @@ Compact Grid controls provide explicit relationships to their filter and column 
 The Auth module owns the Personal Access Tokens Admin experience, including its Latte markup and registered CSS/JavaScript. The screen composes the shared responsive Admin shell with the specialised Admin Grid, presents canonical service scopes in accessible domain groups, identifies destructive delete scopes, and provides a CSP-safe one-time copy enhancement without placing secrets in redirects, flash messages, logs or persistent client state.
 
 PAT creation and revocation remain authenticated, centrally CSRF-protected POST operations. Listings and revocation stay scoped to the current Admin identity, and repository, scope-validation, audit and one-time plaintext-disclosure contracts remain Auth-owned. JavaScript only enhances selection feedback and clipboard handling; the server-rendered form remains authoritative and usable without it. Prototype-only statistics, exports, site restrictions, presets and simulated persistence are not production capabilities.
+
+### Personal Access Token presentation refinement
+
+The Auth-owned Personal Access Tokens workspace uses a four/three/two/one-column responsive scope layout and PAT-specific Grid cell renderers for truncated names, scope chips, dates, status badges and compact revoke actions. These renderers escape all persisted values and retain the owner-scoped query, POST-only revoke form and central CSRF contract. Presentation overrides remain scoped beneath the PAT workspace and do not alter generic Admin Grid behaviour.

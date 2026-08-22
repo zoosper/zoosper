@@ -325,3 +325,277 @@
         transition: none;
     }
 }
+
+/* Phase 10AS-E: rendered-evidence refinement for denser creation and token review. */
+@media (min-width: 72rem) {
+    .pat-scope-groups {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.admin-content .pat-scope-group {
+    min-height: 7.25rem;
+    padding: .8rem .9rem .9rem;
+    background: var(--admin-surface);
+    box-shadow: 0 1px 2px rgb(15 23 42 / 3%);
+}
+
+.admin-content .pat-scope-group[data-has-selection="true"] {
+    box-shadow: 0 0 0 1px var(--admin-brand-400), 0 4px 12px rgb(15 23 42 / 6%);
+}
+
+.pat-scope-group__options {
+    align-content: flex-start;
+}
+
+.admin-content .pat-scope-chip {
+    min-height: 2rem;
+    padding: .38rem .6rem;
+}
+
+.admin-content .pat-scope-chip--read:has(input:checked) {
+    border-color: var(--admin-brand-400);
+    background: var(--admin-brand-50);
+    color: var(--admin-brand-700);
+}
+
+.admin-content .pat-scope-chip--write:has(input:checked) {
+    border-color: var(--admin-warning-border);
+    background: var(--admin-warning-soft);
+    color: var(--admin-warning);
+}
+
+.pat-token-list [data-grid-workspace] {
+    gap: .55rem;
+}
+
+.pat-token-list .grid-compact-actions {
+    padding: .55rem .65rem;
+}
+
+.pat-token-list .grid-compact-state {
+    padding: .45rem .65rem;
+}
+
+.pat-token-list .grid-table {
+    table-layout: fixed;
+}
+
+.pat-token-list .grid-table th,
+.pat-token-list .grid-table td {
+    padding: .65rem .75rem;
+}
+
+.pat-token-list .grid-table th:nth-child(1),
+.pat-token-list .grid-table td:nth-child(1) {
+    width: 34%;
+}
+
+.pat-token-list .grid-table th:nth-child(2),
+.pat-token-list .grid-table td:nth-child(2) {
+    width: 31%;
+}
+
+.pat-token-list .grid-table th:nth-child(3),
+.pat-token-list .grid-table td:nth-child(3),
+.pat-token-list .grid-table th:nth-child(4),
+.pat-token-list .grid-table td:nth-child(4) {
+    width: 10.5rem;
+}
+
+.pat-token-list .grid-table th:nth-child(5),
+.pat-token-list .grid-table td:nth-child(5) {
+    width: 7.25rem;
+}
+
+.pat-token-list .grid-table th:nth-child(6),
+.pat-token-list .grid-table td:nth-child(6) {
+    width: 6.5rem;
+    text-align: right;
+}
+
+.pat-token-name {
+    display: block;
+    overflow: hidden;
+    color: var(--admin-text);
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pat-token-scopes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .3rem;
+    min-width: 0;
+}
+
+.pat-token-scope {
+    display: inline-flex;
+    max-width: 100%;
+    padding: .2rem .42rem;
+    overflow: hidden;
+    border: 1px solid var(--admin-border);
+    border-radius: .35rem;
+    background: var(--admin-surface-muted);
+    color: var(--admin-text-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: .68rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pat-token-date {
+    display: inline-block;
+    color: var(--admin-text-muted);
+    font-size: .78rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.35;
+    white-space: normal;
+}
+
+.pat-token-empty {
+    color: var(--admin-text-subtle, var(--admin-text-muted));
+    font-size: .8rem;
+}
+
+.pat-token-status {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    min-height: 1.7rem;
+    padding: .25rem .55rem;
+    border: 1px solid var(--admin-border);
+    border-radius: 999px;
+    font-size: .72rem;
+    font-weight: 720;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.pat-token-status > span {
+    width: .42rem;
+    height: .42rem;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.pat-token-status--active {
+    border-color: var(--admin-success-border);
+    background: var(--admin-success-soft);
+    color: var(--admin-success);
+}
+
+.pat-token-status--expired {
+    border-color: var(--admin-warning-border);
+    background: var(--admin-warning-soft);
+    color: var(--admin-warning);
+}
+
+.pat-token-status--revoked {
+    background: var(--admin-surface-muted);
+    color: var(--admin-text-muted);
+}
+
+.admin-content .pat-token-revoke {
+    min-height: 2.15rem;
+    padding: .42rem .65rem;
+    font-size: .75rem;
+}
+
+:root[data-admin-theme="dark"] .admin-content .pat-scope-chip--read:has(input:checked) {
+    background: rgba(49, 205, 174, .11);
+    color: var(--admin-brand-300);
+}
+
+@media (max-width: 71.99rem) and (min-width: 56rem) {
+    .pat-scope-groups {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 55.99rem) and (min-width: 38rem) {
+    .pat-scope-groups {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pat-token-list .grid-table {
+        min-width: 66rem;
+    }
+}
+
+@media (max-width: 47.99rem) {
+    .pat-create {
+        padding-inline: clamp(.85rem, 4vw, 1.15rem);
+    }
+
+    .pat-scopes__toolbar {
+        align-items: stretch;
+    }
+
+    .pat-scopes__count {
+        order: 3;
+    }
+
+    .pat-scope-groups {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-content .pat-scope-group {
+        min-height: 0;
+    }
+
+    .pat-token-list .grid-table {
+        min-width: 62rem;
+    }
+
+    .pat-token-list .grid-compact-actions {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 26.25rem) {
+    .admin-content .pat-scope-group legend {
+        align-items: flex-start;
+    }
+
+    .pat-scope-group__options {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .admin-content .pat-scope-chip {
+        width: 100%;
+    }
+}
+
+/* Phase 10AS-E2: contain the readable-width Grid inside the mobile viewport. */
+.pat-token-list,
+.pat-grid-scroll,
+.pat-grid-scroll [data-grid-workspace] {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.pat-grid-scroll {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+}
+
+.pat-grid-scroll:focus-visible {
+    border-radius: var(--admin-radius-md);
+    outline: 3px solid var(--admin-focus);
+    outline-offset: 3px;
+}
+
+@media (max-width: 47.99rem) {
+    .pat-grid-scroll {
+        margin-inline: 0;
+        padding-bottom: .35rem;
+    }
+}
