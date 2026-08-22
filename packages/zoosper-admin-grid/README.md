@@ -77,3 +77,11 @@ Compact Grid controls derive Clear all from the feature action. Export is an exp
 ## Pagination ownership
 
 This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+
+## Admin visual integration
+
+The final `grid-admin-polish.css` asset is owned by this package and loads at sort order `95`, after the established Grid behaviour styles. It consumes the Admin shell semantic tokens for light and dark presentation while retaining package ownership of Grid layout, tables, panels, actions, saved views, pagination, selection, and export UI.
+
+The compact filter and column controls publish explicit `aria-controls` and labelled panel relationships. Close controls remain native buttons, visible focus is preserved, mobile panels remain dismissible, and reduced-motion preferences suppress decorative motion. Production renderers contain no inline styles, scripts, event handlers, or unsafe HTML construction.
+
+Visual changes do not alter Grid criteria, query-state persistence, saved-view repositories, bulk-action permissions, POST-only mutation routes, CSRF validation, local-path validation, exports, or audit behaviour. Run the package regression suite and `AdminGridPolishContractTest` after changing the integration layer.

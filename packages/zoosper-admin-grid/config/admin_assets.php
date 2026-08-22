@@ -233,5 +233,11 @@ return array (
         'defer' => true,
       ),
     ),
+    'zoosper-admin-grid-polish-style' =>
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin-grid/css/grid-admin-polish.css?v=9fe0484c7198',
+      'sort_order' => 95,
+    ),
   ),
 );

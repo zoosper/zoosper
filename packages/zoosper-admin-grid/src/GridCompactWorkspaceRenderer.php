@@ -46,7 +46,10 @@ final readonly class GridCompactWorkspaceRenderer
     /** @param array<string,mixed> $values */
     private function filters(GridDefinition $definition,array $values,string $clearAction):string
     {
-        $html='<div class="grid-compact-panel" hidden data-grid-panel="filters"><div class="grid-compact-panel__head"><strong>Filters</strong><button type="button" data-grid-panel-close>×</button></div><div class="grid-compact-filters">';
+        $html='<div id="grid-filters-panel" class="grid-compact-panel" hidden data-grid-panel="filters"'
+            . ' aria-labelledby="grid-filters-title"><div class="grid-compact-panel__head">'
+            . '<strong id="grid-filters-title">Filters</strong><button type="button" data-grid-panel-close'
+            . ' aria-label="Close filters">×</button></div><div class="grid-compact-filters">';
         foreach ($definition->filters as $filter) {
             $dependencies = match ($filter->key) {
                 'q' => '',
@@ -60,7 +63,8 @@ final readonly class GridCompactWorkspaceRenderer
                 . $this->e($filter->label) . '</span>'
                 . $this->control($filter, $values[$filter->key] ?? null) . '</label>';
         }
-        return $html.'<div><button type="submit">Apply filters</button> <a href="'.$this->e($clearAction).'">Clear all</a></div></div></div>';
+        return $html . '<div class="grid-compact-panel__actions"><a href="' . $this->e($clearAction)
+            . '">Clear all</a><button type="submit">Apply filters</button></div></div></div>';
     }
 
     private function control(GridFilter $filter,mixed $value):string
@@ -78,9 +82,14 @@ final readonly class GridCompactWorkspaceRenderer
     private function columns(GridDefinition $definition,array $visible,array $order):string
     {
         $map=[];foreach($definition->columns as $column){$map[$column->key]=$column;}
-        $html='<div class="grid-compact-panel" hidden data-grid-panel="columns"><div class="grid-compact-panel__head"><strong>Columns</strong><button type="button" data-grid-panel-close>×</button></div><div class="grid-compact-columns" data-grid-column-list>';
+        $html='<div id="grid-columns-panel" class="grid-compact-panel" hidden data-grid-panel="columns"'
+            . ' aria-labelledby="grid-columns-title"><div class="grid-compact-panel__head">'
+            . '<strong id="grid-columns-title">Columns</strong><button type="button" data-grid-panel-close'
+            . ' aria-label="Close columns">×</button></div>'
+            . '<div class="grid-compact-columns" data-grid-column-list>';
         foreach($order as $key){if(!isset($map[$key]))continue;$column=$map[$key];$html.='<label class="grid-compact-column" draggable="true" data-column-key="'.$this->e($key).'"><input type="checkbox" name="visible_columns[]" value="'.$this->e($key).'"'.(in_array($key,$visible,true)?' checked':'').(!$column->toggleable?' disabled':'').'> '.$this->e($column->label).'<input type="hidden" name="column_order[]" value="'.$this->e($key).'"></label>';}
-        return $html.'</div><button type="submit">Apply columns</button></div>';
+        return $html . '</div><div class="grid-compact-panel__actions">'
+            . '<button type="submit">Apply columns</button></div></div>';
     }
 
     /** @param array<string,mixed> $filters @return array<string,scalar|list<scalar>> */

@@ -19,3 +19,9 @@ Routes must declare permissions. Stateful Admin mutations are protected by authe
 ## Page revisions
 
 The Page edit screen lists retained revisions. Administrators with `page.manage` may preview a historical snapshot or restore it through a CSRF-protected POST action. Restore captures the current Page as a safety revision before applying the selected title, slug, content, publication state, structured content and SEO metadata.
+
+## Admin Grid presentation
+
+Admin Grid is a specialised package-owned surface. Its final visual integration layer is registered by `packages/zoosper-admin-grid/config/admin_assets.php` after the established Grid assets. It uses the Admin shell semantic tokens for fluid light and dark themes without moving Grid styling into the generic Admin module.
+
+Compact Grid controls provide explicit relationships to their filter and column panels, labelled dismiss controls, visible keyboard focus, mobile-safe panels, and reduced-motion treatment. Grid mutations remain POST-only and retain existing permission, CSRF, application-local path, ownership, persistence, export, and audit boundaries. New Admin screens should compose the shared Admin shell with Admin Grid rather than copying Grid markup or styles into feature modules.

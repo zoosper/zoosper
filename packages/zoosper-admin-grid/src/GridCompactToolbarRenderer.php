@@ -45,20 +45,27 @@ final readonly class GridCompactToolbarRenderer
                 . $this->escape($name) . '</option>';
         }
 
-        return '<div class="grid-compact-actions">'
-            . '<button type="button" data-grid-toggle="filters" aria-expanded="false">Filters' . $count . '</button>'
+        return '<div class="grid-compact-actions" aria-label="Grid controls">'
+            . '<button type="button" data-grid-toggle="filters" aria-controls="grid-filters-panel"'
+            . ' aria-expanded="false">Filters' . $count . '</button>'
             . '<span class="grid-compact-view-tools">'
             . '<label class="grid-compact-view-selector"><span class="sr-only">View</span>'
             . '<select id="grid-workspace-view" name="bookmark_view" data-grid-view-selector aria-label="Saved view">'
             . $viewOptions . '</select></label>'
-            . '<button type="button" data-grid-settings-toggle aria-expanded="false" aria-controls="grid-workspace-settings" title="Manage saved views" aria-label="Manage saved views">&#8942;</button>'
+            . '<button type="button" data-grid-settings-toggle aria-expanded="false"'
+            . ' aria-controls="grid-workspace-settings" title="Manage saved views"'
+            . ' aria-label="Manage saved views">&#8942;</button>'
             . '</span>'
-            . '<button type="button" data-grid-toggle="columns" aria-expanded="false">Columns</button>'
-            . ($exportUrl !== null ? '<a class="button" data-grid-export href="' . $this->escape($exportUrl) . '">Export current page</a>' : '')
+            . '<button type="button" data-grid-toggle="columns" aria-controls="grid-columns-panel"'
+            . ' aria-expanded="false">Columns</button>'
+            . ($exportUrl !== null ? '<a class="button" data-grid-export href="' . $this->escape($exportUrl)
+                . '">Export current page</a>' : '')
             . '</div>'
             . '<div class="grid-compact-state">'
-            . '<span class="grid-compact-status' . ($dirty ? ' is-dirty' : '') . '">' . $status . '</span>'
-            . '<label>Per page <select name="page_size" data-grid-page-size>' . $pageSizeOptions . '</select></label>'
+            . '<span class="grid-compact-status' . ($dirty ? ' is-dirty' : '')
+            . '" role="status">' . $status . '</span>'
+            . '<label>Per page <select name="page_size" data-grid-page-size aria-label="Rows per page">'
+            . $pageSizeOptions . '</select></label>'
             . '</div>';
     }
 
