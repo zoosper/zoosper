@@ -14,6 +14,7 @@
 - **[x] Phase 10AP-A:** Media list, detail, and derivative reads use the feature-owned stateless `media:read` PAT boundary; collection reads now provide bounded pagination, allow-listed filters/sorting, deterministic metadata, and no private storage paths.
 - **[x] Phase 10AP-B:** Canonical multipart upload uses the feature-owned stateless `media:upload` PAT boundary plus token-owner `media.manage`, reads files only from the immutable request boundary, delegates to the shared canonical storage/derivative/cleanup pipeline, returns HTTP `201`, and exposes no private paths or token secrets.
 - **[x] Phase 10AP-C:** Media archive/restore and archived-first permanent deletion now share mandatory reference and derivative boundaries, fail closed on incomplete Page reference storage, preserve transactional metadata removal and conservative original/derivative cleanup, and provide Admin/API blocker feedback.
+- **[x] Phase 10AQ:** module-discovery status now matches the Phase 9GC fail-closed implementation; stale silent-override claims and the obsolete false-signal override test were removed while the dedicated same-layer and cross-layer contracts remain authoritative.
 
 ---
 
@@ -339,7 +340,7 @@ replica.
   the stale-cache deploy bug.
 - [x] **[FIXED] Real, configurable page cache foundation** — see §15.
 - [x] Admin/module dependency decoupling: two-factor and media are complete; shared presentation contracts moved to Core in Phase 9FR, and Page and Settings no longer require `zoosper/admin`.
-- [ ] **[R] Layered module discovery collision diagnostics.** `ModuleRegistry` scans four runtime patterns: `app/*/module.php`, `modules/*/module.php`, `modules/*/*/module.php`, and Composer packages under `vendor/*/*`. Same-layer duplicate identities throw `DuplicateModuleException`; cross-layer identities resolve silently by app > modules > vendor priority. Add an explicit diagnostic for cross-layer overrides before further package extractions.
+- [x] **[FIXED] Layered module discovery collision diagnostics.** `ModuleRegistry` scans four runtime patterns: `app/*/module.php`, `modules/*/module.php`, `modules/*/*/module.php`, and Composer packages under `vendor/*/*`. Same-layer duplicate identities and all app/modules/vendor cross-layer identity collisions now throw descriptive `DuplicateModuleException` failures; silent priority-based shadowing was removed in Phase 9GC.
 - [ ] **[R] No FK support in the declarative schema engine, no
   down-migrations.** Zero referential integrity on any table built through
   it. Low blast-radius today only because no admin screen supports
@@ -1007,7 +1008,7 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 
 ### P1 before stable
 
-- [ ] Emit an explicit diagnostic for every cross-layer module identity override before further package extraction.
+- [x] Emit an explicit diagnostic for every cross-layer module identity override before further package extraction — completed in Phase 9GC with descriptive fail-closed coverage for app/modules/vendor layer pairings.
 - [ ] Either wire a production Media derivative processor and enablement policy or remove/de-scope the inactive processing surface.
 - [ ] Consolidate the two Grid systems and adopt the extensible Grid model across remaining eligible Admin screens.
 - [ ] Consolidate the two Admin Form systems and adopt the section/processor model across remaining forms.
