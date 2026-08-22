@@ -48,6 +48,9 @@ Zoosper_Auth module for Zoosper CMS.
 - `POST /admin/users/edit` from `config/admin_routes.php`.
 - `GET /admin/roles` from `config/admin_routes.php`.
 - `GET /admin/roles/create` from `config/admin_routes.php`.
+- `GET /admin/access-tokens` from `config/admin_routes.php`.
+- `POST /admin/access-tokens/create` from `config/admin_routes.php`.
+- `POST /admin/access-tokens/{id}/revoke` from `config/admin_routes.php`.
 - `POST /admin/roles/create` from `config/admin_routes.php`.
 - `GET /admin/roles/edit` from `config/admin_routes.php`.
 - `POST /admin/roles/edit` from `config/admin_routes.php`.
@@ -107,6 +110,8 @@ Auth owns hash-only PAT persistence, issuance, revocation, scope validation and 
 
 ### Admin PAT lifecycle
 Authenticated Admin identities can create, list and revoke only their own Personal Access Tokens. Plaintext is rendered directly once after issuance and is never placed in flash messages, redirects or audit metadata.
+
+The Auth-owned PAT screen consumes the shared Admin shell and Admin Grid while keeping its grouped scope picker, one-time copy enhancement and responsive light/dark presentation in CSP-safe Auth assets. The server-rendered form remains usable without JavaScript; enhancement code never submits requests or builds HTML strings. Delete scopes are explicitly identified as destructive. The redesign does not add prototype-only site restrictions, statistics, exports, presets or fake persistence.
 
 ### Page lifecycle PAT scopes
 - `pages:archive` authorises Page archive and archived-to-draft restoration when the current owner still has `page.manage`.

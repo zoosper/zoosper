@@ -1,27 +1,136 @@
-{var $e = fn($value) => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8')}
-<section class="card">
-<h1>Personal Access Tokens</h1>
-<p class="muted">Create credentials for API integrations. Tokens are limited to the selected scopes and remain owned by your current Admin identity.</p>
-{if $oneTimeToken}
-<div class="notice success"><h2>Copy this token now</h2><p>This credential cannot be shown again.</p><pre>{$oneTimeToken}</pre></div>
-{/if}
-{if $error}<div class="notice error">{$error}</div>{/if}
-<form method="post" action="{$createUrl}" class="page-form">
-<input type="hidden" name="_csrf_token" value="{$csrfToken}">
-<label>Name <input type="text" name="name" maxlength="120" value="{$submitted['name'] ?? ''}" required></label>
-<label>Expiry (optional) <input type="datetime-local" name="expires_at" value="{$submitted['expires_at'] ?? ''}"></label>
-<fieldset><legend>Scopes</legend>
-{foreach $scopes as $scope}<label><input type="checkbox" name="scopes[]" value="{$scope}" {if in_array($scope, $submitted['scopes'] ?? [], true)}checked{/if}> {$scope}</label>{/foreach}
-</fieldset>
-<button type="submit" class="button primary">Create token</button>
-</form>
-</section>
-{if isset($gridHtml) && $gridHtml !== null}{$gridHtml|noescape}{else}
-<section class="card"><h2>Your tokens</h2>
-{if count($tokens) === 0}<p>No Personal Access Tokens have been created.</p>{else}
-<table><thead><tr><th>Name</th><th>Public ID</th><th>Scopes</th><th>Expires</th><th>Last used</th><th>Status</th><th>Action</th></tr></thead><tbody>
-{foreach $tokens as $token}<tr><td>{$token->name}</td><td><code>{$token->publicId}</code></td><td>{implode(', ', $token->scopes)}</td><td>{$token->expiresAt ?? 'Never'}</td><td>{$token->lastUsedAt ?? 'Never'}</td><td>{if $token->isRevoked()}Revoked{elseif $token->isExpired()}Expired{else}Active{/if}</td><td>{if !$token->isRevoked()}<form method="post" action="{$revokeUrl($token->id)}"><input type="hidden" name="_csrf_token" value="{$csrfToken}"><button type="submit" class="button button--danger">Revoke</button></form>{/if}</td></tr>{/foreach}
-</tbody></table>{/if}
-</section>
+<div class="pat-screen" data-pat-screen>
+    <header class="page-header pat-page-header">
+        <div class="page-header__copy">
+            <p class="page-header__eyebrow">Users · Security</p>
+            <h1>Personal Access Tokens</h1>
+            <p class="muted">Credentials for API integrations. Each token is limited to the scopes you select and remains owned by your current Admin identity.</p>
+        </div>
+        <a class="button" href="#pat-create" data-pat-focus-create>New token</a>
+    </header>
 
-{/if}
+    {if $oneTimeToken}
+        <section class="admin-alert admin-alert--success pat-secret" role="status" aria-live="polite" aria-labelledby="pat-secret-title">
+            <div>
+                <h2 id="pat-secret-title">Copy this token now</h2>
+                <p>This credential cannot be shown again. Store it in your secret manager before leaving this page.</p>
+            </div>
+            <div class="pat-secret__value">
+                <code id="pat-one-time-secret" tabindex="0">{$oneTimeToken}</code>
+                <button type="button" class="button button--secondary" data-pat-copy data-copy-target="pat-one-time-secret">Copy token</button>
+            </div>
+            <p class="pat-secret__status" data-pat-copy-status aria-live="polite"></p>
+        </section>
+    {/if}
+
+    {if $error}
+        <div class="admin-alert admin-alert--error" role="alert">
+            <strong>Token was not created.</strong>
+            <span>{$error}</span>
+        </div>
+    {/if}
+
+    <section class="card pat-create" id="pat-create" aria-labelledby="pat-create-title">
+        <div class="card__header">
+            <div>
+                <h2 class="card__title" id="pat-create-title">Create a token</h2>
+                <p class="muted">The secret is shown once, immediately after creation. Store it in your secret manager.</p>
+            </div>
+        </div>
+
+        <form method="post" action="{$createUrl}" class="pat-form" data-pat-form>
+            <input type="hidden" name="_csrf_token" value="{$csrfToken}">
+            <div class="pat-form__fields">
+                <label for="pat-name">
+                    <span>Name</span>
+                    <input id="pat-name" type="text" name="name" maxlength="120" value="{$submitted['name'] ?? ''}" placeholder="e.g. Storefront build pipeline" autocomplete="off" required data-pat-name>
+                    <small>Use a name that identifies who or what will use it.</small>
+                </label>
+                <label for="pat-expiry">
+                    <span>Expiry <small>(optional)</small></span>
+                    <input id="pat-expiry" type="datetime-local" name="expires_at" value="{$submitted['expires_at'] ?? ''}">
+                    <small>Leave blank for no expiry. A limited lifetime is recommended.</small>
+                </label>
+            </div>
+
+            <div class="pat-scopes" aria-describedby="pat-scope-help">
+                <div class="pat-scopes__toolbar">
+                    <div>
+                        <h3>Scopes</h3>
+                        <p id="pat-scope-help" class="muted">Grant only the access this integration requires. Delete scopes can permanently remove content.</p>
+                    </div>
+                    <output class="pat-scopes__count" data-pat-scope-count aria-live="polite"></output>
+                    <div class="pat-scopes__actions">
+                        <button type="button" class="button button--secondary" data-pat-select-all>Select all</button>
+                        <button type="button" class="button button--secondary" data-pat-clear>Clear</button>
+                    </div>
+                </div>
+
+                <div class="pat-scope-groups">
+                    {foreach $scopeGroups as $group}
+                        <fieldset class="pat-scope-group" data-pat-scope-group>
+                            <legend>
+                                <span>{$group['label']}</span>
+                                <button type="button" class="pat-scope-group__toggle" data-pat-select-group>Select group</button>
+                            </legend>
+                            <div class="pat-scope-group__options">
+                                {foreach $group['scopes'] as $scope}
+                                    <label class="pat-scope-chip pat-scope-chip--{$scope['kind']}">
+                                        <input type="checkbox" name="scopes[]" value="{$scope['code']}" {if in_array($scope['code'], $submitted['scopes'] ?? [], true)}checked{/if}>
+                                        <span>{$scope['code']}</span>
+                                        {if $scope['kind'] === 'destructive'}<span class="pat-scope-chip__risk">destructive</span>{/if}
+                                    </label>
+                                {/foreach}
+                            </div>
+                        </fieldset>
+                    {/foreach}
+                </div>
+            </div>
+
+            <div class="pat-form__footer">
+                <p class="muted" data-pat-selection-help>Pick at least one scope to continue.</p>
+                <button type="submit" data-pat-create>Create token</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="pat-token-list" aria-labelledby="pat-list-title">
+        <div class="pat-token-list__heading">
+            <div>
+                <h2 id="pat-list-title">Your tokens</h2>
+                <p class="muted">Review current access and revoke credentials that are no longer required.</p>
+            </div>
+        </div>
+
+        {if isset($gridHtml) && $gridHtml !== null}
+            {$gridHtml|noescape}
+        {else}
+            <div class="card">
+                {if count($tokens) === 0}
+                    <div class="empty-state">
+                        <h3>No Personal Access Tokens yet</h3>
+                        <p>Create a token when an API integration needs access.</p>
+                    </div>
+                {else}
+                    <div class="table-wrap" tabindex="0" role="region" aria-label="Personal Access Tokens">
+                        <table>
+                            <thead><tr><th scope="col">Name</th><th scope="col">Public ID</th><th scope="col">Scopes</th><th scope="col">Expires</th><th scope="col">Last used</th><th scope="col">Status</th><th scope="col">Action</th></tr></thead>
+                            <tbody>
+                                {foreach $tokens as $token}
+                                    <tr>
+                                        <td>{$token->name}</td>
+                                        <td><code>{$token->publicId}</code></td>
+                                        <td>{implode(', ', $token->scopes)}</td>
+                                        <td>{$token->expiresAt ?? 'Never'}</td>
+                                        <td>{$token->lastUsedAt ?? 'Never'}</td>
+                                        <td>{if $token->isRevoked()}<span class="badge badge--neutral">Revoked</span>{elseif $token->isExpired()}<span class="badge badge--warning">Expired</span>{else}<span class="badge badge--success">Active</span>{/if}</td>
+                                        <td>{if !$token->isRevoked()}<form method="post" action="{$revokeUrl($token->id)}"><input type="hidden" name="_csrf_token" value="{$csrfToken}"><button type="submit" class="button button--danger">Revoke</button></form>{/if}</td>
+                                    </tr>
+                                {/foreach}
+                            </tbody>
+                        </table>
+                    </div>
+                {/if}
+            </div>
+        {/if}
+    </section>
+</div>

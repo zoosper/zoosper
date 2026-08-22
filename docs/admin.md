@@ -25,3 +25,9 @@ The Page edit screen lists retained revisions. Administrators with `page.manage`
 Admin Grid is a specialised package-owned surface. Its final visual integration layer is registered by `packages/zoosper-admin-grid/config/admin_assets.php` after the established Grid assets. It uses the Admin shell semantic tokens for fluid light and dark themes without moving Grid styling into the generic Admin module.
 
 Compact Grid controls provide explicit relationships to their filter and column panels, labelled dismiss controls, visible keyboard focus, mobile-safe panels, and reduced-motion treatment. Grid mutations remain POST-only and retain existing permission, CSRF, application-local path, ownership, persistence, export, and audit boundaries. New Admin screens should compose the shared Admin shell with Admin Grid rather than copying Grid markup or styles into feature modules.
+
+## Personal Access Tokens
+
+The Auth module owns the Personal Access Tokens Admin experience, including its Latte markup and registered CSS/JavaScript. The screen composes the shared responsive Admin shell with the specialised Admin Grid, presents canonical service scopes in accessible domain groups, identifies destructive delete scopes, and provides a CSP-safe one-time copy enhancement without placing secrets in redirects, flash messages, logs or persistent client state.
+
+PAT creation and revocation remain authenticated, centrally CSRF-protected POST operations. Listings and revocation stay scoped to the current Admin identity, and repository, scope-validation, audit and one-time plaintext-disclosure contracts remain Auth-owned. JavaScript only enhances selection feedback and clipboard handling; the server-rendered form remains authoritative and usable without it. Prototype-only statistics, exports, site restrictions, presets and simulated persistence are not production capabilities.
