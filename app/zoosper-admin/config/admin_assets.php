@@ -31,6 +31,12 @@ return array (
       'path' => '/assets/admin/css/admin.css?v=1.37l',
       'sort_order' => 10,
     ),
+    'zoosper-admin-shell-style' =>
+    array (
+      'type' => 'style',
+      'path' => '/asset/zoosper-admin/css/admin-shell.css?v=1.37l',
+      'sort_order' => 15,
+    ),
     'zoosper-admin-messages-style' => 
     array (
       'type' => 'style',
@@ -54,6 +60,13 @@ return array (
       'type' => 'style',
       'path' => '/assets/admin/css/zoosper-tag-selector.css',
       'sort_order' => 40,
+    ),
+    'zoosper-admin-shell-script' =>
+    array (
+      'type' => 'script',
+      'path' => '/asset/zoosper-admin/js/admin-shell.js?v=1.37l',
+      'sort_order' => 10,
+      'defer' => true,
     ),
     'zoosper-admin-messages-script' => 
     array (

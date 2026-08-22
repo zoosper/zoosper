@@ -4,7 +4,11 @@ Modules extend Admin through route manifests, permissions, menu declarations, fo
 
 Admin assets are module-owned and registered through `config/admin_assets.php`. Both the wrapped `assets` form and established flat declaration form are supported.
 
-Routes must declare permissions. Stateful Admin mutations are protected by authentication and CSRF middleware. Admin controllers should delegate rendering and domain work to collaborators.
+The default Admin theme provides a fluid responsive shell with Admin-owned design tokens. Its external module CSS and JavaScript provide light/dark theme selection, desktop navigation collapse, mobile off-canvas navigation, keyboard focus containment and restoration, visible focus states, and reduced-motion support. The shell uses full-width `minmax(0, 1fr)` content so feature screens—not a fixed global maximum—control their useful working width.
+
+Shell behaviour is progressive: server-rendered navigation and content remain available if JavaScript is unavailable. Production templates must not add inline JavaScript, event handlers, styles or dynamic `innerHTML`. Feature modules should contribute navigation, assets and rendered content through existing Admin contracts rather than depend on shell selectors or implementation classes.
+
+Routes must declare permissions. Stateful Admin mutations are protected by authentication and CSRF middleware. Admin controllers should delegate rendering and domain work to collaborators. Shell redesigns do not alter route methods, permissions, ownership filters or CSRF boundaries.
 
 ## Page revisions
 

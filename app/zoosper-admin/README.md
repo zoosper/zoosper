@@ -68,10 +68,23 @@ Zoosper_Admin module for Zoosper CMS.
 - `config/admin_settings.php` for Settings catalogue entries.
 - `config/services.php` for service bindings and interface implementations.
 
+## Responsive Admin shell
+
+The default Admin theme owns the semantic shell markup in `themes/admin/default/templates/layout.php`. The Admin module owns its progressive presentation and behaviour through:
+
+- `resources/assets/css/admin-shell.css`: fluid design tokens, light and dark colour schemes, full-width content, desktop sidebar collapse, mobile off-canvas navigation, focus-visible treatment and reduced-motion handling.
+- `resources/assets/js/admin-shell.js`: stored theme/sidebar preferences plus accessible navigation state, Escape handling, focus restoration and mobile focus containment.
+
+Both files are registered by `config/admin_assets.php` and served through the module asset route. Shell templates must not add inline scripts, event handlers or styles. Feature modules contribute escaped navigation and page content through existing contracts; they must not couple to the shell implementation. Existing Admin screen styles remain supported through compatibility token mappings while screens migrate gradually.
+
+The theme preference uses `zoosper.admin.theme` in browser local storage and falls back to `prefers-color-scheme`. The desktop collapse preference uses `zoosper.admin.sidebar-collapsed`. Storage failure is non-fatal and does not disable the controls.
+
 ## Security and compatibility
 
 - Preserve public interfaces, route permissions, configuration keys, and service identifiers when extending or replacing behaviour.
 - Admin routes remain subject to authentication, ACL, and central stateful middleware such as CSRF protection.
+- Shell assets are CSP-compatible external module assets and use event listeners and safe text updates; do not introduce `innerHTML` or inline executable behaviour.
+- Shell changes must preserve the canonical shared logo and favicon references, logout's POST/CSRF boundary, escaped navigation output and module asset ordering.
 
 ## Testing
 
