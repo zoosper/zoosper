@@ -392,3 +392,120 @@
     .admin-content select,
     .admin-content tbody tr { transition: none; }
 }
+
+/* Dashboard composition: permission-derived navigation, never synthetic business metrics. */
+.dashboard-overview {
+    display: grid;
+    grid-template-columns: minmax(14rem, .72fr) minmax(18rem, 1.28fr);
+    gap: clamp(.85rem, 1.5vw, 1.25rem);
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.dashboard-overview > .card {
+    height: 100%;
+    margin: 0;
+}
+
+.dashboard-overview__stat .muted {
+    position: relative;
+    z-index: 1;
+    max-width: 28rem;
+    margin-bottom: 0;
+}
+
+.dashboard-workspaces {
+    display: grid;
+    gap: 1rem;
+}
+
+.dashboard-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+}
+
+.dashboard-section-header h2,
+.dashboard-section-header p {
+    margin-bottom: 0;
+}
+
+.dashboard-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: .75rem;
+}
+
+.dashboard-link {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: .75rem;
+    min-height: 4.5rem;
+    padding: .9rem 1rem;
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-md);
+    background: var(--admin-surface);
+    box-shadow: var(--admin-shadow-sm);
+    color: var(--admin-text);
+    text-decoration: none;
+    transition: border-color var(--admin-fast) var(--admin-ease), background-color var(--admin-fast) var(--admin-ease), transform var(--admin-fast) var(--admin-ease);
+}
+
+.dashboard-link:hover {
+    border-color: var(--admin-brand-400);
+    background: color-mix(in srgb, var(--admin-brand-50) 54%, var(--admin-surface));
+    transform: translateY(-1px);
+}
+
+:root[data-admin-theme="dark"] .dashboard-link:hover {
+    background: color-mix(in srgb, var(--admin-brand-500) 10%, var(--admin-surface));
+}
+
+.dashboard-link__mark {
+    width: .7rem;
+    height: .7rem;
+    border: 2px solid var(--admin-brand-500);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px var(--admin-focus-ring);
+}
+
+.dashboard-link__copy {
+    display: grid;
+    gap: .2rem;
+    min-width: 0;
+}
+
+.dashboard-link__copy strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dashboard-link__copy span,
+.dashboard-link__arrow {
+    color: var(--admin-text-muted);
+    font-size: .78rem;
+}
+
+.dashboard-link__arrow {
+    font-size: 1rem;
+}
+
+@media (max-width: 680px) {
+    .dashboard-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-section-header {
+        align-items: start;
+        flex-direction: column;
+        gap: .35rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dashboard-link {
+        transition: none;
+    }
+}

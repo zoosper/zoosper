@@ -34,13 +34,13 @@ return array (
     'zoosper-admin-shell-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/admin-shell.css?v=4458eb7da01b',
+      'path' => '/asset/zoosper-admin/css/admin-shell.css?v=e90bf00bc793',
       'sort_order' => 15,
     ),
     'zoosper-admin-components-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/admin-components.css?v=1.37m',
+      'path' => '/asset/zoosper-admin/css/admin-components.css?v=fb3cd99d40f5',
       'sort_order' => 16,
     ),
     'zoosper-admin-messages-style' => 

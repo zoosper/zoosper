@@ -11,7 +11,9 @@ use Zoosper\Admin\Controller\AuditLogController;
 use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
 use Zoosper\Admin\Controller\LoginHistoryController;
+use Zoosper\Admin\Dashboard\DashboardQuickLinks;
 use Zoosper\Admin\Layout\AdminLayout;
+use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Service\AuthService;
@@ -40,6 +42,8 @@ return [
         $services->get(SessionGuard::class),
         $services->get(CsrfTokenManager::class),
         $services->get(AdminLayout::class),
+        $services->get(AdminMenu::class),
+        new DashboardQuickLinks(),
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
     ),
 

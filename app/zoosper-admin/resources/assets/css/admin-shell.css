@@ -567,3 +567,36 @@ body::before {
         transition-duration: .01ms !important;
     }
 }
+
+/* Keep the top-bar title inside its flexible region at every sidebar state. */
+.admin-topbar {
+    min-width: 0;
+}
+
+.admin-topbar__leading {
+    overflow: hidden;
+    flex: 1 1 auto;
+}
+
+.admin-topbar__actions {
+    flex: 0 0 auto;
+}
+
+.admin-topbar__title {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav-section {
+    overflow: hidden;
+}
+
+@media (max-width: 540px) {
+    .admin-topbar__leading {
+        gap: .35rem;
+    }
+
+    .admin-topbar__title {
+        max-width: 100%;
+    }
+}

@@ -33,7 +33,7 @@ it('registers the CSP-safe Admin-owned shell assets in deterministic order', fun
         ->and($assets['zoosper-admin-shell-style'])
         ->toMatchArray([
             'type' => 'style',
-            'path' => '/asset/zoosper-admin/css/admin-shell.css?v=4458eb7da01b',
+            'path' => '/asset/zoosper-admin/css/admin-shell.css?v=e90bf00bc793',
             'sort_order' => 15,
         ])
         ->and($assets['zoosper-admin-shell-script'])
@@ -61,6 +61,9 @@ it('provides theme, responsive, keyboard and reduced-motion shell contracts', fu
         ->toContain('@media (max-width: 860px)')
         ->toContain('@media (prefers-reduced-motion: reduce)')
         ->toContain(':focus-visible')
+        ->toContain('.admin-topbar__leading')
+        ->toContain('overflow: hidden')
+        ->toContain('flex: 1 1 auto')
         ->and($script)
         ->toContain("window.matchMedia('(prefers-color-scheme: dark)')")
         ->toContain("window.matchMedia('(max-width: 860px)')")

@@ -13,6 +13,7 @@ Zoosper_Admin module for Zoosper CMS.
 - `src/Asset/`
 - `src/Audit/`
 - `src/Controller/`
+- `src/Dashboard/`
 - `src/Editor/`
 - `src/Form/`
 - `src/Grid/`
@@ -79,7 +80,11 @@ Both files are registered by `config/admin_assets.php` and served through the mo
 
 Admin asset declarations may include `screens`, a list of generic active-screen codes supplied to `AdminLayout::render()`. Missing or empty `screens` keeps an asset global. Filtering occurs before physical-path de-duplication, and no-argument registry APIs continue to return the complete diagnostic inventory. EditorJS assets are restricted to the proven `pages` screen instead of loading on unrelated Admin routes.
 
-The theme preference uses `zoosper.admin.theme` in browser local storage and falls back to `prefers-color-scheme`. The same root theme state drives the content, top bar and complete left navigation: light mode uses a light sidebar palette, while dark mode retains the high-contrast dark palette. Navigation hover, active, divider, scrollbar, border and brand colours are semantic tokens rather than fixed dark-only values. The desktop collapse preference uses `zoosper.admin.sidebar-collapsed`. Storage failure is non-fatal and does not disable the controls.
+The theme preference uses `zoosper.admin.theme` in browser local storage and falls back to `prefers-color-scheme`. The same root theme state drives the content, top bar and complete left navigation: light mode uses a light sidebar palette, while dark mode retains the high-contrast dark palette. Navigation hover, active, divider, scrollbar, border and brand colours are semantic tokens rather than fixed dark-only values. The desktop collapse preference uses `zoosper.admin.sidebar-collapsed`. Storage failure is non-fatal and does not disable the controls. The top-bar leading region is explicitly flexible and clipped, so its title truncates instead of colliding with shell controls when navigation is collapsed or the viewport narrows.
+
+## Dashboard
+
+The Dashboard derives quick-access links from `AdminMenu::itemsFor()` and then normalises them through `DashboardQuickLinks`. It therefore follows module discovery and the current user's permission-filtered navigation without hardcoded feature-module routes or synthetic business metrics. The module view and default-theme override remain server rendered, escape labels and URLs, and provide a useful empty state when no additional workspace is available.
 
 ## Shared Admin components
 

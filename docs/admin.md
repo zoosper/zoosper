@@ -6,9 +6,13 @@ Admin assets are module-owned and registered through `config/admin_assets.php`. 
 
 Feature assets can declare a `screens` list using the generic active-screen code passed to the Admin layout. Declarations without a screen list remain global. Applicability is evaluated before physical-path de-duplication, while no-argument registry APIs preserve the complete diagnostic inventory. Settings assets load only for `settings`; Admin-owned EditorJS assets load only for the proven `pages` screen. Feature runtimes must still return safely when their required DOM contract is absent.
 
-The default Admin theme provides a fluid responsive shell with Admin-owned design tokens. Its external module CSS and JavaScript provide light/dark theme selection across both the content area and complete left navigation, desktop navigation collapse, mobile off-canvas navigation, keyboard focus containment and restoration, visible focus states, and reduced-motion support. The sidebar uses theme-owned surface, text, border, hover, active, divider, scrollbar and brand tokens instead of remaining permanently dark. The shell uses full-width `minmax(0, 1fr)` content so feature screens—not a fixed global maximum—control their useful working width.
+The default Admin theme provides a fluid responsive shell with Admin-owned design tokens. Its external module CSS and JavaScript provide light/dark theme selection across both the content area and complete left navigation, desktop navigation collapse, mobile off-canvas navigation, keyboard focus containment and restoration, visible focus states, and reduced-motion support. The sidebar uses theme-owned surface, text, border, hover, active, divider, scrollbar and brand tokens instead of remaining permanently dark. The shell uses full-width `minmax(0, 1fr)` content so feature screens—not a fixed global maximum—control their useful working width. The top-bar title lives in a clipped flexible region and truncates before it can collide with navigation or appearance controls.
 
 Shell behaviour is progressive: server-rendered navigation and content remain available if JavaScript is unavailable. Production templates must not add inline JavaScript, event handlers, styles or dynamic `innerHTML`. Feature modules should contribute navigation, assets and rendered content through existing Admin contracts rather than depend on shell selectors or implementation classes.
+
+## Dashboard composition
+
+The Admin-owned Dashboard builds quick-access cards from the module-discovered, permission-filtered `AdminMenu` result. It does not import feature modules, hardcode their routes, or fabricate operational statistics. This keeps new module menu contributions automatically visible to authorised users while preserving the existing route and ACL boundary.
 
 ## Shared component presentation
 
