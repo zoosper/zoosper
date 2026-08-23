@@ -9,6 +9,13 @@
     --grid-text-muted: var(--admin-text-muted, #667085);
     --grid-border: var(--admin-border, #d8dee9);
     --grid-focus: var(--admin-focus, #2563eb);
+    --grid-row-even: var(--grid-surface-subtle);
+    --grid-row-separator: color-mix(in srgb, var(--grid-border) 92%, var(--grid-text-muted));
+    --grid-header-separator: color-mix(in srgb, var(--grid-accent) 42%, var(--grid-border));
+    --grid-row-hover: color-mix(in srgb, var(--grid-accent) 9%, var(--grid-surface));
+    --grid-row-focus: color-mix(in srgb, var(--grid-focus) 11%, var(--grid-surface));
+    --grid-row-selected: color-mix(in srgb, var(--grid-accent) 16%, var(--grid-surface));
+    --grid-row-selected-hover: color-mix(in srgb, var(--grid-accent) 21%, var(--grid-surface));
     position: relative;
     gap: .75rem;
     min-width: 0;
@@ -227,7 +234,7 @@
 
 .grid-table th {
     padding: .7rem .8rem;
-    border-bottom: 1px solid var(--grid-border);
+    border-bottom: 2px solid var(--grid-header-separator);
     background: var(--grid-surface-subtle);
     color: var(--grid-text-muted);
     font-size: .76rem;
@@ -239,16 +246,49 @@
 
 .grid-table td {
     padding: .78rem .8rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--grid-border) 70%, transparent);
+    border-bottom: 1px solid var(--grid-row-separator);
     vertical-align: middle;
+}
+
+.grid-table tbody tr > td {
+    transition: background-color var(--admin-fast, 150ms) var(--admin-ease, ease);
+}
+
+.grid-table tbody tr:nth-child(even) > td {
+    background: var(--grid-row-even);
+}
+
+.grid-table tbody tr:hover > td {
+    background: var(--grid-row-hover);
+}
+
+.grid-table tbody tr:focus-within {
+    outline: 2px solid var(--grid-focus);
+    outline-offset: -2px;
+}
+
+.grid-table tbody tr:focus-within > td {
+    background: var(--grid-row-focus);
+}
+
+.grid-table.grid-has-selection tbody tr.is-selected > td {
+    background: var(--grid-row-selected);
+}
+
+.grid-table.grid-has-selection tbody tr.is-selected > td:first-child {
+    box-shadow: inset .25rem 0 0 var(--grid-accent);
+}
+
+.grid-table.grid-has-selection tbody tr.is-selected:hover > td {
+    background: var(--grid-row-selected-hover);
+}
+
+.grid-table.grid-has-selection tbody tr.is-selected:focus-within > td {
+    background: var(--grid-row-selected-hover);
 }
 
 .grid-table tbody tr:last-child td {
     border-bottom: 0;
-}
-
-.grid-table tbody tr:hover {
-    background: color-mix(in srgb, var(--grid-accent) 5%, var(--grid-surface));
 }
 
 .grid-table a {
@@ -278,6 +318,13 @@
 }
 
 :root[data-admin-theme="dark"] [data-grid-workspace] {
+    --grid-row-even: color-mix(in srgb, var(--grid-surface-subtle) 88%, var(--grid-text-muted));
+    --grid-row-separator: color-mix(in srgb, var(--grid-border) 84%, var(--grid-text-muted));
+    --grid-header-separator: color-mix(in srgb, var(--grid-accent) 52%, var(--grid-border));
+    --grid-row-hover: color-mix(in srgb, var(--grid-accent) 13%, var(--grid-surface));
+    --grid-row-focus: color-mix(in srgb, var(--grid-focus) 17%, var(--grid-surface));
+    --grid-row-selected: color-mix(in srgb, var(--grid-accent) 22%, var(--grid-surface));
+    --grid-row-selected-hover: color-mix(in srgb, var(--grid-accent) 28%, var(--grid-surface));
     color-scheme: dark;
 }
 

@@ -8,10 +8,12 @@ it('registers the package-owned polish layer after established Grid assets', fun
     $root = dirname(__DIR__, 5);
     $manifest = require $root . '/packages/zoosper-admin-grid/config/admin_assets.php';
     $asset = $manifest['assets']['zoosper-admin-grid-polish-style'] ?? null;
+    $stylesheet = $root . '/packages/zoosper-admin-grid/resources/admin/css/grid-admin-polish.css';
+    $version = substr((string) hash_file('sha256', $stylesheet), 0, 12);
 
     expect($asset)->toBeArray()
         ->and($asset['type'] ?? null)->toBe('style')
-        ->and($asset['path'] ?? '')->toStartWith('/asset/zoosper-admin-grid/css/grid-admin-polish.css?v=')
+        ->and($asset['path'] ?? '')->toBe('/asset/zoosper-admin-grid/css/grid-admin-polish.css?v=' . $version)
         ->and($asset['sort_order'] ?? null)->toBe(95);
 });
 
@@ -29,6 +31,27 @@ it('integrates semantic themes responsive layout focus and reduced motion', func
         ->toContain('@media (prefers-reduced-motion: reduce)')
         ->not->toContain('<style')
         ->not->toContain('javascript:');
+});
+
+it('keeps wide rows traceable across themes and interaction states', function (): void {
+    $root = dirname(__DIR__, 5);
+    $css = (string) file_get_contents(
+        $root . '/packages/zoosper-admin-grid/resources/admin/css/grid-admin-polish.css',
+    );
+
+    expect($css)->toContain('--grid-row-even: var(--grid-surface-subtle)')
+        ->toContain('--grid-row-separator:')
+        ->toContain('--grid-header-separator:')
+        ->toContain('border-bottom: 2px solid var(--grid-header-separator)')
+        ->toContain('border-bottom: 1px solid var(--grid-row-separator)')
+        ->toContain('.grid-table tbody tr:nth-child(even) > td')
+        ->toContain('.grid-table tbody tr:hover > td')
+        ->toContain('.grid-table tbody tr:focus-within')
+        ->toContain('.grid-table.grid-has-selection tbody tr.is-selected > td')
+        ->toContain('.grid-table.grid-has-selection tbody tr.is-selected > td:first-child')
+        ->toContain('--grid-row-selected-hover:')
+        ->toContain(':root[data-admin-theme="dark"] [data-grid-workspace]')
+        ->toContain('@media (prefers-reduced-motion: reduce)');
 });
 
 it('publishes explicit accessible relationships for compact controls', function (): void {
