@@ -39,7 +39,8 @@ it('keeps wide rows traceable across themes and interaction states', function ()
         $root . '/packages/zoosper-admin-grid/resources/admin/css/grid-admin-polish.css',
     );
 
-    expect($css)->toContain('--grid-row-even: var(--grid-surface-subtle)')
+    expect($css)->toContain(':where([data-grid-workspace], .grid-table) {')
+        ->toContain('--grid-row-even: var(--grid-surface-subtle)')
         ->toContain('--grid-row-separator:')
         ->toContain('--grid-header-separator:')
         ->toContain('--grid-column-separator:')
@@ -53,7 +54,7 @@ it('keeps wide rows traceable across themes and interaction states', function ()
         ->toContain('.grid-table.grid-has-selection tbody tr.is-selected > td')
         ->toContain('.grid-table.grid-has-selection tbody tr.is-selected > td:first-child')
         ->toContain('--grid-row-selected-hover:')
-        ->toContain(':root[data-admin-theme="dark"] [data-grid-workspace]')
+        ->toContain(':root[data-admin-theme="dark"] :where([data-grid-workspace], .grid-table)')
         ->toContain('@media (prefers-reduced-motion: reduce)');
 });
 

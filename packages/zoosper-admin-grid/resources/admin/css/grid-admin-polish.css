@@ -1,5 +1,5 @@
 /* Phase 10AS-C: Admin Grid visual integration over the established behaviour layers. */
-[data-grid-workspace] {
+:where([data-grid-workspace], .grid-table) {
     --grid-accent: var(--admin-focus, #0f766e);
     --grid-accent-hover: var(--admin-focus, #0b5f59);
     --grid-surface: var(--admin-surface, #fff);
@@ -325,7 +325,7 @@
     color: #fff;
 }
 
-:root[data-admin-theme="dark"] [data-grid-workspace] {
+:root[data-admin-theme="dark"] :where([data-grid-workspace], .grid-table) {
     --grid-row-even: color-mix(in srgb, var(--grid-surface-subtle) 88%, var(--grid-text-muted));
     --grid-row-separator: color-mix(in srgb, var(--grid-border) 84%, var(--grid-text-muted));
     --grid-column-separator: color-mix(in srgb, var(--grid-border) 88%, transparent);

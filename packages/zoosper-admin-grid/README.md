@@ -80,7 +80,7 @@ This package directly consumes the stable `Zoosper\Pagination` request/result bo
 
 ## Admin visual integration
 
-The final `grid-admin-polish.css` asset is owned by this package and loads at sort order `95`, after the established Grid behaviour styles. It consumes the Admin shell semantic tokens for light and dark presentation while retaining package ownership of Grid layout, tables, panels, actions, saved views, pagination, selection, and export UI.
+The final `grid-admin-polish.css` asset is owned by this package and loads at sort order `95`, after the established Grid behaviour styles. It consumes the Admin shell semantic tokens for light and dark presentation while retaining package ownership of Grid layout, tables, panels, actions, saved views, pagination, selection, and export UI. Its semantic Grid tokens are applied to both full `[data-grid-workspace]` compositions and standalone `.grid-table` renderings, so feature-owned scroll wrappers do not invalidate table borders, row states, or theme colours.
 
 The compact filter and column controls publish explicit `aria-controls` and labelled panel relationships. Close controls remain native buttons, visible focus is preserved, mobile panels remain dismissible, and reduced-motion preferences suppress decorative motion. Production renderers contain no inline styles, scripts, event handlers, or unsafe HTML construction.
 
