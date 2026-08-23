@@ -35,11 +35,13 @@ final readonly class AdminAssetRegistry
     /**
      * Return all enabled admin assets sorted by sort order and handle, with
      * duplicate physical assets (same path, different handle/module)
-     * collapsed to a single entry.
+     * collapsed to a single entry. Screen applicability is evaluated before
+     * physical-path de-duplication so an inapplicable early declaration cannot
+     * suppress an applicable declaration from another module.
      *
      * @return list<AdminAsset>
      */
-    public function all(): array
+    public function all(?string $screen = null): array
     {
         $assets = [];
 
@@ -65,7 +67,9 @@ final readonly class AdminAssetRegistry
                     throw new RuntimeException('Admin asset path cannot be empty for handle: ' . $handle);
                 }
 
-                $assets[] = $asset;
+                if ($asset->appliesTo($screen)) {
+                    $assets[] = $asset;
+                }
             }
         }
 
@@ -113,9 +117,9 @@ final readonly class AdminAssetRegistry
      *
      * @return list<AdminAsset>
      */
-    public function stylesheets(): array
+    public function stylesheets(?string $screen = null): array
     {
-        return array_values(array_filter($this->all(), static fn (AdminAsset $asset): bool => $asset->type === 'style'));
+        return array_values(array_filter($this->all($screen), static fn (AdminAsset $asset): bool => $asset->type === 'style'));
     }
 
     /**
@@ -123,9 +127,9 @@ final readonly class AdminAssetRegistry
      *
      * @return list<AdminAsset>
      */
-    public function scripts(): array
+    public function scripts(?string $screen = null): array
     {
-        return array_values(array_filter($this->all(), static fn (AdminAsset $asset): bool => $asset->type === 'script'));
+        return array_values(array_filter($this->all($screen), static fn (AdminAsset $asset): bool => $asset->type === 'script'));
     }
 
     /**

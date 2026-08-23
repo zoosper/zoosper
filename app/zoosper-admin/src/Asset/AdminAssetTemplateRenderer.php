@@ -20,10 +20,10 @@ final readonly class AdminAssetTemplateRenderer
     /**
      * Render stylesheet tags for the admin layout head section.
      */
-    public function stylesHtml(): string
+    public function stylesHtml(?string $screen = null): string
     {
         $html = '';
-        foreach ($this->registry->stylesheets() as $asset) {
+        foreach ($this->registry->stylesheets($screen) as $asset) {
             $html .= '<link rel="stylesheet" href="' . $this->escape($asset->path) . '">' . PHP_EOL;
         }
 
@@ -33,10 +33,10 @@ final readonly class AdminAssetTemplateRenderer
     /**
      * Render script tags for the admin layout footer/body end section.
      */
-    public function scriptsHtml(): string
+    public function scriptsHtml(?string $screen = null): string
     {
         $html = '';
-        foreach ($this->registry->scripts() as $asset) {
+        foreach ($this->registry->scripts($screen) as $asset) {
             $html .= '<script src="' . $this->escape($asset->path) . '"' . ($asset->defer ? ' defer' : '') . '></script>' . PHP_EOL;
         }
 

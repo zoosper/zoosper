@@ -52,7 +52,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
             ?? $fallbackVersion
         );
         $templates = $this->templates ?? new TemplateRenderer(new ThemeResolver(dirname(__DIR__, 5) . '/themes/admin', 'default'));
-        $assetData = $this->assetViewData?->data() ?? [
+        $assetData = $this->assetViewData?->data($active) ?? [
             'stylesheets' => [],
             'scripts' => [],
         ];
@@ -66,8 +66,8 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
             'version' => $version,
             'stylesheets' => $assetData['stylesheets'],
             'scripts' => $assetData['scripts'],
-            'assetStylesHtml' => $this->assetRenderer?->stylesHtml() ?? '',
-            'assetScriptsHtml' => $this->assetRenderer?->scriptsHtml() ?? '',
+            'assetStylesHtml' => $this->assetRenderer?->stylesHtml($active) ?? '',
+            'assetScriptsHtml' => $this->assetRenderer?->scriptsHtml($active) ?? '',
             'flashMessagesHtml' => $flashMessagesHtml,
         ]);
     }

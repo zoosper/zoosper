@@ -51,6 +51,7 @@ return array (
     ),
     'zoosper-admin-editor-style' => 
     array (
+      'screens' => array ('pages'),
       'type' => 'style',
       'path' => '/assets/admin/css/zoosper-content-editor.css?v=1.37l',
       'sort_order' => 30,
@@ -86,6 +87,7 @@ return array (
     ),
     'zoosper-admin-editorjs-bundle' => 
     array (
+      'screens' => array ('pages'),
       'type' => 'script',
       'path' => '/assets/admin/js/editorjs.bundle.js?v=1.37l',
       'sort_order' => 25,
@@ -96,6 +98,7 @@ return array (
     ),
     'zoosper-admin-editor-script' => 
     array (
+      'screens' => array ('pages'),
       'type' => 'script',
       'path' => '/assets/admin/js/zoosper-content-editor.js?v=1.37l',
       'sort_order' => 30,

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Asset;
 
+use InvalidArgumentException;
+
 /**
  * Immutable admin asset definition.
  *
@@ -19,6 +21,8 @@ final readonly class AdminAsset
         public string $path,
         public int $sortOrder = 100,
         public bool $defer = true,
+        /** @var list<string> */
+        public array $screens = [],
     ) {
     }
 
@@ -35,6 +39,35 @@ final readonly class AdminAsset
             path: (string) ($config['path'] ?? ''),
             sortOrder: (int) ($config['sort_order'] ?? 100),
             defer: (bool) ($config['defer'] ?? true),
+            screens: self::screens($config['screens'] ?? []),
         );
+    }
+
+    /**
+     * A missing screen context preserves the established diagnostic API and an
+     * empty declaration means that the asset is global.
+     */
+    public function appliesTo(?string $screen): bool
+    {
+        return $screen === null || $this->screens === [] || in_array($screen, $this->screens, true);
+    }
+
+    /** @return list<string> */
+    private static function screens(mixed $screens): array
+    {
+        if (!is_array($screens)) {
+            throw new InvalidArgumentException('Admin asset screens must be an array.');
+        }
+
+        $normalised = [];
+        foreach ($screens as $screen) {
+            if (!is_string($screen) || trim($screen) === '') {
+                throw new InvalidArgumentException('Admin asset screen names must be non-empty strings.');
+            }
+
+            $normalised[] = trim($screen);
+        }
+
+        return array_values(array_unique($normalised));
     }
 }

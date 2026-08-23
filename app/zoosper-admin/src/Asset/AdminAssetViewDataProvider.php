@@ -23,11 +23,11 @@ final readonly class AdminAssetViewDataProvider
      *
      * @return array{stylesheets:list<AdminAsset>,scripts:list<AdminAsset>}
      */
-    public function data(): array
+    public function data(?string $screen = null): array
     {
         return [
-            'stylesheets' => $this->assets->stylesheets(),
-            'scripts' => $this->assets->scripts(),
+            'stylesheets' => $this->assets->stylesheets($screen),
+            'scripts' => $this->assets->scripts($screen),
         ];
     }
 }

@@ -77,6 +77,8 @@ The default Admin theme owns the semantic shell markup in `themes/admin/default/
 
 Both files are registered by `config/admin_assets.php` and served through the module asset route. Shell templates must not add inline scripts, event handlers or styles. Feature modules contribute escaped navigation and page content through existing contracts; they must not couple to the shell implementation. Existing Admin screen styles remain supported through compatibility token mappings while screens migrate gradually.
 
+Admin asset declarations may include `screens`, a list of generic active-screen codes supplied to `AdminLayout::render()`. Missing or empty `screens` keeps an asset global. Filtering occurs before physical-path de-duplication, and no-argument registry APIs continue to return the complete diagnostic inventory. EditorJS assets are restricted to the proven `pages` screen instead of loading on unrelated Admin routes.
+
 The theme preference uses `zoosper.admin.theme` in browser local storage and falls back to `prefers-color-scheme`. The desktop collapse preference uses `zoosper.admin.sidebar-collapsed`. Storage failure is non-fatal and does not disable the controls.
 
 ## Shared Admin components
