@@ -236,7 +236,7 @@ return array (
     'zoosper-admin-grid-polish-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin-grid/css/grid-admin-polish.css?v=2359b65b2c0b',
+      'path' => '/asset/zoosper-admin-grid/css/grid-admin-polish.css?v=eb851867990d',
       'sort_order' => 95,
     ),
   ),

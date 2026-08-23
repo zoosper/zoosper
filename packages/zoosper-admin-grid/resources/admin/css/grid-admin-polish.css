@@ -11,6 +11,7 @@
     --grid-focus: var(--admin-focus, #2563eb);
     --grid-row-even: var(--grid-surface-subtle);
     --grid-row-separator: color-mix(in srgb, var(--grid-border) 92%, var(--grid-text-muted));
+    --grid-column-separator: color-mix(in srgb, var(--grid-border) 76%, transparent);
     --grid-header-separator: color-mix(in srgb, var(--grid-accent) 42%, var(--grid-border));
     --grid-row-hover: color-mix(in srgb, var(--grid-accent) 9%, var(--grid-surface));
     --grid-row-focus: color-mix(in srgb, var(--grid-focus) 11%, var(--grid-surface));
@@ -234,6 +235,7 @@
 
 .grid-table th {
     padding: .7rem .8rem;
+    border-right: 1px solid var(--grid-column-separator);
     border-bottom: 2px solid var(--grid-header-separator);
     background: var(--grid-surface-subtle);
     color: var(--grid-text-muted);
@@ -246,8 +248,14 @@
 
 .grid-table td {
     padding: .78rem .8rem;
+    border-right: 1px solid var(--grid-column-separator);
     border-bottom: 1px solid var(--grid-row-separator);
     vertical-align: middle;
+}
+
+.grid-table th:last-child,
+.grid-table td:last-child {
+    border-right: 0;
 }
 
 .grid-table tbody tr > td {
@@ -320,6 +328,7 @@
 :root[data-admin-theme="dark"] [data-grid-workspace] {
     --grid-row-even: color-mix(in srgb, var(--grid-surface-subtle) 88%, var(--grid-text-muted));
     --grid-row-separator: color-mix(in srgb, var(--grid-border) 84%, var(--grid-text-muted));
+    --grid-column-separator: color-mix(in srgb, var(--grid-border) 88%, transparent);
     --grid-header-separator: color-mix(in srgb, var(--grid-accent) 52%, var(--grid-border));
     --grid-row-hover: color-mix(in srgb, var(--grid-accent) 13%, var(--grid-surface));
     --grid-row-focus: color-mix(in srgb, var(--grid-focus) 17%, var(--grid-surface));

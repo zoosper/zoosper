@@ -14,10 +14,17 @@
     --admin-border-strong: #cbd5e1;
     --admin-text: #141b25;
     --admin-text-muted: #64748b;
-    --admin-sidebar: #0b1017;
-    --admin-sidebar-raised: #101a24;
-    --admin-sidebar-text: #c7d3e1;
-    --admin-sidebar-muted: #7d8fa3;
+    --admin-sidebar: #ffffff;
+    --admin-sidebar-raised: #f1f5f9;
+    --admin-sidebar-text: #253247;
+    --admin-sidebar-muted: #64748b;
+    --admin-sidebar-border: #d8e1eb;
+    --admin-sidebar-hover: rgba(18, 179, 148, .08);
+    --admin-sidebar-active: linear-gradient(90deg, rgba(18, 179, 148, .16), rgba(255, 255, 255, .72));
+    --admin-sidebar-active-text: #075e52;
+    --admin-sidebar-divider: rgba(100, 116, 139, .24);
+    --admin-sidebar-scrollbar: rgba(100, 116, 139, .38);
+    --admin-sidebar-brand: #111827;
     --admin-focus: #12b394;
     --admin-focus-ring: rgba(18, 179, 148, .28);
     --admin-danger: #b42318;
@@ -57,6 +64,13 @@
     --admin-sidebar-raised: #101822;
     --admin-sidebar-text: #d7e1ec;
     --admin-sidebar-muted: #8293a7;
+    --admin-sidebar-border: rgba(255, 255, 255, .08);
+    --admin-sidebar-hover: rgba(255, 255, 255, .07);
+    --admin-sidebar-active: linear-gradient(90deg, rgba(18, 179, 148, .24), rgba(255, 255, 255, .035));
+    --admin-sidebar-active-text: #ffffff;
+    --admin-sidebar-divider: rgba(255, 255, 255, .1);
+    --admin-sidebar-scrollbar: rgba(255, 255, 255, .16);
+    --admin-sidebar-brand: #ffffff;
     --admin-focus: #31cdae;
     --admin-focus-ring: rgba(49, 205, 174, .3);
     --admin-danger: #fda29b;
@@ -129,11 +143,13 @@ body::before {
     flex-direction: column;
     height: 100vh;
     padding: 0 .75rem 1rem;
-    border-right: 1px solid rgba(255, 255, 255, .06);
+    border-right: 1px solid var(--admin-sidebar-border);
     background:
-        radial-gradient(26rem 14rem at 20% 0%, rgba(18, 179, 148, .18), transparent 70%),
+        radial-gradient(26rem 14rem at 20% 0%, rgba(18, 179, 148, .13), transparent 70%),
         linear-gradient(180deg, var(--admin-sidebar), var(--admin-sidebar-raised));
+    box-shadow: 1px 0 0 rgba(255, 255, 255, .28) inset;
     color: var(--admin-sidebar-text);
+    transition: background-color var(--admin-medium) var(--admin-ease), border-color var(--admin-medium) var(--admin-ease), color var(--admin-medium) var(--admin-ease);
 }
 
 .admin-sidebar .brand {
@@ -144,7 +160,7 @@ body::before {
     min-height: var(--admin-topbar-height);
     margin: 0;
     padding: 0 .4rem;
-    color: #ffffff;
+    color: var(--admin-sidebar-brand);
     font-size: .98rem;
     font-weight: 750;
     letter-spacing: -.02em;
@@ -175,7 +191,7 @@ body::before {
     overflow-y: auto;
     flex: 1 1 auto;
     padding: .25rem 0;
-    scrollbar-color: rgba(255, 255, 255, .16) transparent;
+    scrollbar-color: var(--admin-sidebar-scrollbar) transparent;
     scrollbar-width: thin;
 }
 
@@ -224,12 +240,12 @@ body::before {
 .admin-nav a.active,
 .admin-nav-logout-button:hover {
     border-color: transparent;
-    background: rgba(255, 255, 255, .07);
-    color: #ffffff;
+    background: var(--admin-sidebar-hover);
+    color: var(--admin-sidebar-active-text);
 }
 
 .admin-nav a.active {
-    background: linear-gradient(90deg, rgba(18, 179, 148, .24), rgba(255, 255, 255, .035));
+    background: var(--admin-sidebar-active);
 }
 
 .admin-nav a.active::before {
@@ -298,7 +314,7 @@ body::before {
     height: 1px;
     margin: .75rem .5rem;
     padding: 0;
-    background: rgba(255, 255, 255, .1);
+    background: var(--admin-sidebar-divider);
     color: transparent;
     font-size: 0;
 }
@@ -321,7 +337,7 @@ body::before {
     height: 1px;
     margin: .75rem .5rem;
     padding: 0;
-    background: rgba(255, 255, 255, .1);
+    background: var(--admin-sidebar-divider);
 }
 
 .admin-shell[data-sidebar-collapsed="true"] .admin-nav a {

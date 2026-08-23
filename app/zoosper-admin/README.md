@@ -79,7 +79,7 @@ Both files are registered by `config/admin_assets.php` and served through the mo
 
 Admin asset declarations may include `screens`, a list of generic active-screen codes supplied to `AdminLayout::render()`. Missing or empty `screens` keeps an asset global. Filtering occurs before physical-path de-duplication, and no-argument registry APIs continue to return the complete diagnostic inventory. EditorJS assets are restricted to the proven `pages` screen instead of loading on unrelated Admin routes.
 
-The theme preference uses `zoosper.admin.theme` in browser local storage and falls back to `prefers-color-scheme`. The desktop collapse preference uses `zoosper.admin.sidebar-collapsed`. Storage failure is non-fatal and does not disable the controls.
+The theme preference uses `zoosper.admin.theme` in browser local storage and falls back to `prefers-color-scheme`. The same root theme state drives the content, top bar and complete left navigation: light mode uses a light sidebar palette, while dark mode retains the high-contrast dark palette. Navigation hover, active, divider, scrollbar, border and brand colours are semantic tokens rather than fixed dark-only values. The desktop collapse preference uses `zoosper.admin.sidebar-collapsed`. Storage failure is non-fatal and does not disable the controls.
 
 ## Shared Admin components
 
