@@ -29,6 +29,11 @@ it('integrates semantic themes responsive layout focus and reduced motion', func
         ->toContain('@media (max-width: 48rem)')
         ->toContain('@media (max-width: 24.375rem)')
         ->toContain('.grid-compact-toolbar {')
+        ->toContain('.grid-workspace > .grid-table,')
+        ->toContain('overflow-x: auto')
+        ->toContain('overscroll-behavior-inline: contain')
+        ->toContain('.grid-filter-chip__label')
+        ->toContain('width: auto')
         ->toContain('.grid-compact-display-tools,')
         ->toContain(':focus-visible')
         ->toContain('@media (prefers-reduced-motion: reduce)')
@@ -59,6 +64,19 @@ it('keeps wide rows traceable across themes and interaction states', function ()
         ->toContain('--grid-row-selected-hover:')
         ->toContain(':root[data-admin-theme="dark"] :where([data-grid-workspace], .grid-table)')
         ->toContain('@media (prefers-reduced-motion: reduce)');
+});
+
+it('keeps the legacy compact foundation theme-aware and free from obsolete positioning', function (): void {
+    $root = dirname(__DIR__, 5);
+    $css = (string) file_get_contents(
+        $root . '/packages/zoosper-admin-grid/resources/admin/css/grid-compact-workspace.css',
+    );
+
+    expect($css)->toContain('var(--admin-surface')
+        ->toContain('var(--admin-text')
+        ->toContain('var(--admin-border')
+        ->not->toContain('margin-top: -3.2rem')
+        ->not->toMatch('/background\s*:\s*#fff(?:fff)?\b/i');
 });
 
 it('publishes explicit accessible relationships for compact controls', function (): void {

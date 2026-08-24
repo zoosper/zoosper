@@ -42,7 +42,8 @@ it('renders escaped admin-local create actions as established primary buttons', 
         $root . '/app/zoosper-auth/src/Admin/Grid/AuthGridPagePresenter.php',
     );
 
-    expect($presenter)->toContain('<a class="button" href="')
+    expect($presenter)->toContain('<div class="admin-page-actions">')
+        ->toContain('<a class="button" href="')
         ->toContain('$this->escape($createUrl)')
         ->toContain('$this->escape($createLabel)')
         ->not->toContain('style=')

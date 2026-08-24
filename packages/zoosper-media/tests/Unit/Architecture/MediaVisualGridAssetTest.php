@@ -21,7 +21,7 @@ it('publishes the Media visual Grid stylesheet through its module asset root', f
 
     expect($asset['type'])->toBe('style');
     expect($asset['path'])->toBe(
-        '/asset/zoosper-media/css/media-visual-grid.css'
+        '/asset/zoosper-media/css/media-visual-grid.css?v=87ecda0b8af4'
     );
 
     $stylesheet = $root . '/resources/admin/css/media-visual-grid.css';
@@ -33,5 +33,10 @@ it('publishes the Media visual Grid stylesheet through its module asset root', f
     expect($css)
         ->toContain('.media-visual-grid')
         ->toContain('.media-card img')
-        ->toContain('max-width: 100%');
+        ->toContain('max-width: 100%')
+        ->toContain('var(--admin-surface-muted')
+        ->toContain('var(--admin-text-muted')
+        ->toContain('var(--admin-shadow-sm')
+        ->not->toContain('var(--admin-muted')
+        ->not->toMatch('/<script|\son[a-z]+\s*=|javascript:/i');
 });

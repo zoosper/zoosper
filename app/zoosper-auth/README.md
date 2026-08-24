@@ -127,4 +127,4 @@ This package directly consumes the stable `Zoosper\Pagination` request/result bo
 
 ## Admin collection primary actions
 
-Auth Grid create actions remain validated as Admin-local and escaped by `AuthGridPagePresenter`. They opt into the shared Admin `.button` component so Users and Roles present a consistent primary action without changing route, permission, or mutation ownership.
+Auth Grid create actions remain validated as Admin-local and escaped by `AuthGridPagePresenter`. They use the shared `.admin-page-actions` composition and Admin `.button` component so Users and Roles present a visible, consistently aligned primary action without changing route, permission, or mutation ownership.

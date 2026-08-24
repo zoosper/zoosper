@@ -40,7 +40,7 @@ return array (
     'zoosper-admin-components-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/admin-components.css?v=fb3cd99d40f5',
+      'path' => '/asset/zoosper-admin/css/admin-components.css?v=3adf2f4d67e9',
       'sort_order' => 16,
     ),
     'zoosper-admin-messages-style' => 

@@ -11,7 +11,7 @@ it('registers the Admin-owned component layer after shell tokens and before feat
         ->and($assets['zoosper-admin-components-style'])
         ->toMatchArray([
             'type' => 'style',
-            'path' => '/asset/zoosper-admin/css/admin-components.css?v=fb3cd99d40f5',
+            'path' => '/asset/zoosper-admin/css/admin-components.css?v=3adf2f4d67e9',
             'sort_order' => 16,
         ])
         ->and($assets['zoosper-admin-shell-style']['sort_order'])
@@ -28,6 +28,8 @@ it('provides fluid theme-aware components with responsive and reduced-motion beh
         ->toContain(':root[data-admin-theme="dark"]')
         ->toContain('grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr))')
         ->toContain('.page-header')
+        ->toContain('.admin-page-actions')
+        ->toContain('justify-content: flex-end')
         ->toContain('.admin-card-grid')
         ->toContain('.admin-alert--success')
         ->toContain('.admin-badge--danger')

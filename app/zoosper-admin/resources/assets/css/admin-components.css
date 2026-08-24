@@ -62,6 +62,17 @@
     text-transform: uppercase;
 }
 
+.admin-page-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: .65rem;
+    margin: 0 0 .75rem;
+}
+
+.admin-page-actions .button {
+    box-shadow: 0 .35rem .85rem color-mix(in srgb, var(--admin-brand-600) 20%, transparent);
+}
+
 .cards,
 .admin-card-grid {
     display: grid;

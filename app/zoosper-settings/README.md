@@ -46,7 +46,7 @@ Module-owned settings catalogue and configuration management for Zoosper CMS.
 ## Extension points
 
 - `config/admin_assets.php` for Admin assets.
-  Settings workspace CSS and JavaScript declare `screens => ['settings']` and initialise only when their complete DOM roots exist.
+  Settings workspace CSS and JavaScript declare `screens => ['settings']` and initialise only when their complete DOM roots exist. The module-owned CSS consumes Admin semantic surface, border, text, focus, and shadow tokens for coherent light/dark presentation, with an explicit `390px` layout contract.
 - `config/admin_menu.php` for Admin navigation.
 - `config/admin_settings.php` for Settings catalogue entries.
 - `config/services.php` for service bindings and interface implementations.

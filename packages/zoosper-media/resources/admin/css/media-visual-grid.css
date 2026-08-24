@@ -1,14 +1,24 @@
-.media-visual-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1rem 0}.media-card{display:flex;flex-direction:column;border:1px solid var(--admin-border,#d8dee4);border-radius:.5rem;background:var(--admin-surface,#fff);overflow:hidden}.media-card img{width:100%;aspect-ratio:4/3;object-fit:contain;background:#f6f8fa}.media-card__body{display:grid;gap:.35rem;padding:.75rem}.media-card__body span{font-size:.875rem;color:var(--admin-muted,#57606a)}.media-card__actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:auto;padding:.75rem;border-top:1px solid var(--admin-border,#d8dee4)}.grid-pagination{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin:1rem 0}@media(max-width:560px){.media-visual-grid{grid-template-columns:1fr}}
-
-/* Live containment guard: media previews must never expand the Admin workspace. */
+/* Media-owned visual Grid presentation. Shared Admin tokens provide theme coherence. */
 .media-visual-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
     width: 100%;
     min-width: 0;
+    margin: 1rem 0;
 }
 
 .media-card {
+    display: flex;
+    flex-direction: column;
     min-width: 0;
     max-width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--admin-border, #d8dee4);
+    border-radius: .5rem;
+    background: var(--admin-surface, #fff);
+    color: var(--admin-text, #141b25);
+    box-shadow: var(--admin-shadow-sm, 0 1px 3px rgba(16, 24, 40, .08));
 }
 
 .media-card img {
@@ -18,4 +28,47 @@
     height: auto;
     aspect-ratio: 4 / 3;
     object-fit: contain;
+    background: var(--admin-surface-muted, #f1f5f9);
+}
+
+.media-card__body {
+    display: grid;
+    gap: .35rem;
+    padding: .75rem;
+}
+
+.media-card__body strong {
+    overflow-wrap: anywhere;
+    color: var(--admin-text, #141b25);
+}
+
+.media-card__body span {
+    color: var(--admin-text-muted, #64748b);
+    font-size: .875rem;
+}
+
+.media-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: auto;
+    padding: .75rem;
+    border-top: 1px solid var(--admin-border, #d8dee4);
+    background: var(--admin-surface-muted, #f1f5f9);
+}
+
+.grid-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0;
+    color: var(--admin-text-muted, #64748b);
+}
+
+@media (max-width: 560px) {
+    .media-visual-grid {
+        grid-template-columns: 1fr;
+    }
 }

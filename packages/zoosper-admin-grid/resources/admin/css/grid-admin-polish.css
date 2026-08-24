@@ -344,6 +344,18 @@
     color: #fff;
 }
 
+.grid-workspace > .grid-table,
+[data-grid-workspace] > .grid-table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-color: var(--grid-border) var(--grid-surface-subtle);
+    scrollbar-width: thin;
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+}
+
 :root[data-admin-theme="dark"] :where([data-grid-workspace], .grid-table) {
     --grid-row-even: color-mix(in srgb, var(--grid-surface-subtle) 88%, var(--grid-text-muted));
     --grid-row-separator: color-mix(in srgb, var(--grid-border) 84%, var(--grid-text-muted));
@@ -354,6 +366,17 @@
     --grid-row-selected: color-mix(in srgb, var(--grid-accent) 22%, var(--grid-surface));
     --grid-row-selected-hover: color-mix(in srgb, var(--grid-accent) 28%, var(--grid-surface));
     color-scheme: dark;
+}
+
+:root[data-admin-theme="dark"] .grid-compact-toolbar,
+:root[data-admin-theme="dark"] .grid-compact-actions,
+:root[data-admin-theme="dark"] .grid-compact-state,
+:root[data-admin-theme="dark"] .grid-compact-panel,
+:root[data-admin-theme="dark"] .grid-compact-actions select,
+:root[data-admin-theme="dark"] .grid-compact-state select {
+    border-color: var(--grid-border);
+    background: var(--grid-surface);
+    color: var(--grid-text);
 }
 
 :root[data-admin-theme="dark"] .grid-compact-status.is-dirty {
@@ -418,6 +441,16 @@
     .grid-table td {
         padding-inline: .65rem;
     }
+
+    .grid-workspace > .grid-table,
+    [data-grid-workspace] > .grid-table {
+        border-inline-color: var(--grid-header-separator);
+        box-shadow: inset -.35rem 0 .45rem -.45rem var(--grid-text-muted);
+    }
+
+    .grid-workspace__navigation {
+        margin-top: .55rem;
+    }
 }
 
 @media (max-width: 24.375rem) {
@@ -441,9 +474,21 @@
         flex-direction: column;
     }
 
+    .grid-filter-chips {
+        align-items: flex-start;
+    }
+
     .grid-filter-chip {
-        justify-content: space-between;
-        width: 100%;
+        flex: 0 1 auto;
+        justify-content: flex-start;
+        width: auto;
+        max-width: 100%;
+    }
+
+    .grid-filter-chip__label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }
 

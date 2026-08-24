@@ -14,6 +14,7 @@ test('filter chips escape labels and preserve repeated Site filters', function (
 
     expect(substr_count($html, 'data-grid-remove-filter="site_id"'))->toBe(2);
     expect($html)
+        ->toContain('<span class="grid-filter-chip__label">Status: published</span>')
         ->toContain('Wholesale &lt;Portal&gt;')
         ->not->toContain('Wholesale <Portal>');
 });

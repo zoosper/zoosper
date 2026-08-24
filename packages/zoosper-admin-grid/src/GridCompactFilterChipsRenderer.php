@@ -13,9 +13,9 @@ final readonly class GridCompactFilterChipsRenderer
         foreach ($filters as $key => $value) {
             $label = $key === 'site_id' ? 'Site' : ucwords(str_replace('_', ' ', $key));
             foreach ($this->flatten($value) as $item) {
-                $html .= '<span class="grid-filter-chip">'
+                $html .= '<span class="grid-filter-chip"><span class="grid-filter-chip__label">'
                     . $this->escape($label . ': ' . $item)
-                    . '<button type="button" data-grid-remove-filter="' . $this->escape($key)
+                    . '</span><button type="button" data-grid-remove-filter="' . $this->escape($key)
                     . '" aria-label="Remove ' . $this->escape($label) . ' filter">×</button></span>';
             }
         }
