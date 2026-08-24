@@ -21,7 +21,7 @@ final readonly class AuthGridPagePresenter
             throw new \InvalidArgumentException('Auth Grid create URL must remain admin-local.');
         }
 
-        return '<div class="admin-page-actions"><a href="'
+        return '<div class="admin-page-actions"><a class="button" href="'
             . $this->escape($createUrl)
             . '">' . $this->escape($createLabel) . '</a></div>'
             . $page->workspaceHtml

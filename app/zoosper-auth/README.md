@@ -124,3 +124,7 @@ The module-owned Admin collection index uses a stable Admin Grid workspace with 
 ## Pagination ownership
 
 This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+
+## Admin collection primary actions
+
+Auth Grid create actions remain validated as Admin-local and escaped by `AuthGridPagePresenter`. They opt into the shared Admin `.button` component so Users and Roles present a consistent primary action without changing route, permission, or mutation ownership.

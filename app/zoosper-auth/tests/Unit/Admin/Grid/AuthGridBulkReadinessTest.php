@@ -34,3 +34,17 @@ it('rejects external primary-action URLs', function (): void {
     expect(fn () => (new AuthGridPagePresenter())->present($page, 'https://example.test', 'Create'))
         ->toThrow(InvalidArgumentException::class);
 });
+
+
+it('renders escaped admin-local create actions as established primary buttons', function (): void {
+    $root = dirname(__DIR__, 6);
+    $presenter = (string) file_get_contents(
+        $root . '/app/zoosper-auth/src/Admin/Grid/AuthGridPagePresenter.php',
+    );
+
+    expect($presenter)->toContain('<a class="button" href="')
+        ->toContain('$this->escape($createUrl)')
+        ->toContain('$this->escape($createLabel)')
+        ->not->toContain('style=')
+        ->not->toContain('onclick=');
+});

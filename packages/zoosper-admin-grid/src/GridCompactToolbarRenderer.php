@@ -8,6 +8,7 @@ final readonly class GridCompactToolbarRenderer
 {
     /**
      * @param list<array{id: int, name: string, state: array<string, mixed>, is_default: bool}> $bookmarks
+     * @param list<int> $pageSizeOptions
      */
     public function render(
         string $viewLabel,
@@ -18,12 +19,14 @@ final readonly class GridCompactToolbarRenderer
         array $bookmarks = [],
         ?int $activeBookmarkId = null,
         string $viewAction = '/admin/pages',
+        array $pageSizeOptions = [20, 50, 100, 200],
     ): string {
         $status = $dirty ? 'Unsaved' : 'Saved';
         $count = $activeFilters > 0 ? ' (' . $activeFilters . ')' : '';
-        $pageSizeOptions = '';
-        foreach ([20, 50, 100, 200] as $value) {
-            $pageSizeOptions .= '<option value="' . $value . '"'
+        $pageSizes = new GridWorkspacePageSizeOptions($pageSizeOptions);
+        $pageSizeMarkup = '';
+        foreach ($pageSizes->values as $value) {
+            $pageSizeMarkup .= '<option value="' . $value . '"'
                 . ($value === $pageSize ? ' selected' : '') . '>' . $value . '</option>';
         }
 
@@ -45,9 +48,14 @@ final readonly class GridCompactToolbarRenderer
                 . $this->escape($name) . '</option>';
         }
 
-        return '<div class="grid-compact-actions" aria-label="Grid controls">'
+        return '<div class="grid-compact-toolbar">'
+            . '<div class="grid-compact-actions" aria-label="Grid controls">'
+            . '<span class="grid-compact-display-tools">'
             . '<button type="button" data-grid-toggle="filters" aria-controls="grid-filters-panel"'
             . ' aria-expanded="false">Filters' . $count . '</button>'
+            . '<button type="button" data-grid-toggle="columns" aria-controls="grid-columns-panel"'
+            . ' aria-expanded="false">Columns</button>'
+            . '</span>'
             . '<span class="grid-compact-view-tools">'
             . '<label class="grid-compact-view-selector"><span class="sr-only">View</span>'
             . '<select id="grid-workspace-view" name="bookmark_view" data-grid-view-selector aria-label="Saved view">'
@@ -56,8 +64,6 @@ final readonly class GridCompactToolbarRenderer
             . ' aria-controls="grid-workspace-settings" title="Manage saved views"'
             . ' aria-label="Manage saved views">&#8942;</button>'
             . '</span>'
-            . '<button type="button" data-grid-toggle="columns" aria-controls="grid-columns-panel"'
-            . ' aria-expanded="false">Columns</button>'
             . ($exportUrl !== null ? '<a class="button" data-grid-export href="' . $this->escape($exportUrl)
                 . '">Export current page</a>' : '')
             . '</div>'
@@ -65,8 +71,8 @@ final readonly class GridCompactToolbarRenderer
             . '<span class="grid-compact-status' . ($dirty ? ' is-dirty' : '')
             . '" role="status">' . $status . '</span>'
             . '<label>Per page <select name="page_size" data-grid-page-size aria-label="Rows per page">'
-            . $pageSizeOptions . '</select></label>'
-            . '</div>';
+            . $pageSizeMarkup . '</select></label>'
+            . '</div></div>';
     }
 
     private function escape(string $value): string

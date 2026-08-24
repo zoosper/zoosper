@@ -41,7 +41,8 @@ final readonly class StoreOrderGridWorkspace
      */
     public function resolve(int $adminUserId, array $queryState, ?int $bookmarkId = null): array
     {
-        $definition = StoreOrderGrid::definition()->grid;
+        $apiDefinition = StoreOrderGrid::definition();
+        $definition = $apiDefinition->grid;
         $state = $this->resolver->resolve(
             adminUserId: $adminUserId,
             gridKey: self::GRID_KEY,
@@ -67,6 +68,7 @@ final readonly class StoreOrderGridWorkspace
                 $workspaceState,
                 $this->action(),
                 $this->exportUrl(),
+                pageSizeOptions: $apiDefinition->pageSizes,
             ),
         ];
     }

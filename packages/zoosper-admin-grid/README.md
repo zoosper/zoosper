@@ -57,7 +57,7 @@ Per-admin grid preferences, saved views and persistence integration for Zoosper.
 
 - Full repository suite: `zcomposer test`.
 - Package suite: `php8.5 vendor/bin/pest packages/zoosper-admin-grid/tests`.
-- Current regression files discovered: `59`. Use `find packages/zoosper-admin-grid/tests -type f -name '*Test.php' | sort` for the live list.
+- Current regression files discovered: `60`. Use `find packages/zoosper-admin-grid/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes
@@ -87,3 +87,5 @@ The compact filter and column controls publish explicit `aria-controls` and labe
 Visual changes do not alter Grid criteria, query-state persistence, saved-view repositories, bulk-action permissions, POST-only mutation routes, CSRF validation, local-path validation, exports, or audit behaviour. Run the package regression suite and `AdminGridPolishContractTest` after changing the integration layer.
 
 Grid body rows use package-owned, theme-aware odd/even presentation, permanent horizontal separators and restrained vertical cell boundaries so records remain traceable across wide horizontally scrollable tables. A stronger header separator makes the column-heading boundary unambiguous. Hover and keyboard `focus-within` states override the stripe, while selected rows retain a stronger fill and a solid leading-edge marker in addition to their checked control. The state hierarchy applies to cells so it remains visible alongside selection styling, and row transitions follow the existing reduced-motion contract.
+
+The compact toolbar groups display controls, saved-view controls, export, saved state, and per-page selection into one responsive semantic surface. Feature integrations may supply their declared ascending page-size allow-list; existing consumers retain `[20, 50, 100, 200]`. At `390px` (`24.375rem`), controls, filter chips, panels, and pagination deliberately stack without changing GET query or persistence behaviour.

@@ -17,7 +17,14 @@ final readonly class GridCompactWorkspaceRenderer
     ) {
     }
 
-    public function render(GridViewState $state, string $formAction, ?string $exportUrl = null, bool $exportEnabled = true): string
+    /** @param list<int> $pageSizeOptions */
+    public function render(
+        GridViewState $state,
+        string $formAction,
+        ?string $exportUrl = null,
+        bool $exportEnabled = true,
+        array $pageSizeOptions = [20, 50, 100, 200],
+    ): string
     {
         $filters=$state->criteria->filters;
         $active=0; foreach($filters as $value){if(is_array($value)?$value!==[]:trim((string)$value)!==''){$active++;}}
@@ -33,6 +40,7 @@ final readonly class GridCompactWorkspaceRenderer
             $state->bookmarks,
             $state->activeBookmarkId,
             $formAction,
+            $pageSizeOptions,
         );
         $html.='<form method="get" action="'.$this->e($formAction).'" data-grid-filter-form>';
         $html.='<input type="hidden" name="page" value="1"><input type="hidden" name="columns_submitted" value="1">';

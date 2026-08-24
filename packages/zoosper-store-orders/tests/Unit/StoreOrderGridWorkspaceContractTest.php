@@ -39,3 +39,20 @@ it('keeps the remote request driven by resolved workspace scope and page size', 
         ->and($source)->toContain('$state->criteria->filters[\'kiosk_website_id\']')
         ->and($source)->toContain('pageSize: $state->criteria->pager->pageSize');
 });
+
+
+it('uses the shell title once and publishes feature-owned page-size choices', function (): void {
+    $root = dirname(__DIR__, 4);
+    $controller = (string) file_get_contents(
+        $root . '/packages/zoosper-store-orders/src/Admin/StoreOrderAdminController.php',
+    );
+    $workspace = (string) file_get_contents(
+        $root . '/packages/zoosper-store-orders/src/Admin/StoreOrderGridWorkspace.php',
+    );
+
+    expect($controller)->toContain("layout->render('Store Orders'")
+        ->not->toContain('<h1>Store Orders</h1>')
+        ->toContain('role="alert"')
+        ->and($workspace)->toContain('$apiDefinition = StoreOrderGrid::definition()')
+        ->toContain('pageSizeOptions: $apiDefinition->pageSizes');
+});

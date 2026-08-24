@@ -71,3 +71,7 @@ Store Orders API Grid integration for Zoosper.
 ## Pagination ownership
 
 This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+
+## Admin presentation
+
+The Admin shell owns the single visible Store Orders page title. Success and error content therefore do not repeat a content-level heading; error status codes and escaped messages remain unchanged. The shared compact toolbar receives this feature's declared page-size allow-list `[5, 10, 20, 50, 100]`. GET listing/export and CSRF-protected POST mutation boundaries are unchanged.

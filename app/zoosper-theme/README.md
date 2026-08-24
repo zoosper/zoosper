@@ -51,7 +51,7 @@ Theme and template rendering foundation for Zoosper CMS.
 
 - Full repository suite: `zcomposer test`.
 - Package suite: `php8.5 vendor/bin/pest app/zoosper-theme/tests`.
-- Current regression files discovered: `11`. Use `find app/zoosper-theme/tests -type f -name '*Test.php' | sort` for the live list.
+- Current regression files discovered: `12`. Use `find app/zoosper-theme/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes
@@ -69,3 +69,7 @@ The filesystem Theme catalogue exposes safe code, name, and version metadata onl
 
 ### Admin ownership
 The Theme Admin adapter is owned by this module and reuses ThemeAssignmentService and AuditLoggerInterface.
+
+## Admin theme workspace
+
+The Theme-owned Admin view uses shared semantic Admin components for the installed-theme catalogue and per-site assignment cards. Both the module template and default Admin-theme override consume the controller-supplied escaped assignment URL, retain POST and CSRF fields, and provide equivalent empty states. Theme assignment remains owned by `ThemeAssignmentService`; this presentation does not define Admin shell colour-theme registration.

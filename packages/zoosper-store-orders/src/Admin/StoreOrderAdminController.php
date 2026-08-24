@@ -74,8 +74,7 @@ final readonly class StoreOrderAdminController
                 page: $result->page,
                 pageSize: $result->pageSize,
             );
-            $content = '<h1>Store Orders</h1>'
-                . $resolved['html']
+            $content = $resolved['html']
                 . $this->mutationForms->render(
                     $state,
                     $this->workspace->action(),
@@ -91,13 +90,12 @@ final readonly class StoreOrderAdminController
 
             return Response::html($this->layout->render('Store Orders', $content, $user, 'store-orders'));
         } catch (InvalidArgumentException $exception) {
-            $content = '<h1>Store Orders</h1><div class="admin-alert admin-alert--error">'
+            $content = '<div class="admin-alert admin-alert--error" role="alert">'
                 . htmlspecialchars($exception->getMessage(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
                 . '</div>';
             return Response::html($this->layout->render('Store Orders', $content, $user, 'store-orders'), 422);
         } catch (Throwable) {
-            $content = '<h1>Store Orders</h1>'
-                . '<div class="admin-alert admin-alert--error">'
+            $content = '<div class="admin-alert admin-alert--error" role="alert">'
                 . 'The Store Orders service is currently unavailable. No empty-result state has been shown.'
                 . '</div>';
             return Response::html($this->layout->render('Store Orders', $content, $user, 'store-orders'), 503);
