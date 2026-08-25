@@ -474,7 +474,12 @@ final readonly class UserAdminController
         $viewModel = [
             'action' => $action,
             'csrfToken' => $this->csrf->token(),
-            'lifecycleHtml' => $this->lifecycle?->actionsHtml($user, $this->guard->user() ?? throw new RuntimeException('Authenticated Admin User required while rendering the Admin User form.')) ?? '',
+            'lifecycleHtml' => $user !== null && $this->lifecycle !== null
+                ? $this->lifecycle->actionsHtml(
+                    $user,
+                    $this->guard->user() ?? throw new RuntimeException('Authenticated Admin User required while rendering the Admin User form.'),
+                )
+                : '',
             'name' => (string) ($submitted['name'] ?? $user?->name ?? ''),
             'email' => (string) ($submitted['email'] ?? $user?->email ?? ''),
             'status' => (string) ($submitted['status'] ?? $user?->status ?? 'active'),

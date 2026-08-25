@@ -77,5 +77,13 @@
     input.addEventListener('input', () => input.setCustomValidity(''));
 
     pageText.textContent = (pageText.textContent ?? '').replace(pagePattern, '');
+    host.classList.add('grid-pagination-controls');
     host.insertBefore(form, pageText.nextSibling);
+
+    const pageSize = workspace.querySelector('[data-grid-page-size]');
+    const pageSizeLabel = pageSize?.closest('label');
+    if (pageSizeLabel) {
+        host.insertBefore(pageSizeLabel, form);
+        workspace.classList.add('grid-page-size-relocated');
+    }
 })();

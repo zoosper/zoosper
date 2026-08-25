@@ -33,6 +33,9 @@ it('integrates semantic themes responsive layout focus and reduced motion', func
         ->toContain('overflow-x: auto')
         ->toContain('overscroll-behavior-inline: contain')
         ->toContain('.grid-filter-chip__label')
+        ->toContain('.admin-content [data-grid-workspace] .grid-filter-chip button')
+        ->toContain('background: transparent !important')
+        ->toContain('min-height: 1.45rem !important')
         ->toContain('width: auto')
         ->toContain('.grid-compact-display-tools,')
         ->toContain(':focus-visible')
@@ -47,7 +50,7 @@ it('keeps wide rows traceable across themes and interaction states', function ()
         $root . '/packages/zoosper-admin-grid/resources/admin/css/grid-admin-polish.css',
     );
 
-    expect($css)->toContain(':where([data-grid-workspace], .grid-table) {')
+    expect($css)->toContain(':where([data-grid-workspace], .grid-table, .grid-workspace__settings) {')
         ->toContain('--grid-row-even: var(--grid-surface-subtle)')
         ->toContain('--grid-row-separator:')
         ->toContain('--grid-header-separator:')
@@ -62,7 +65,7 @@ it('keeps wide rows traceable across themes and interaction states', function ()
         ->toContain('.grid-table.grid-has-selection tbody tr.is-selected > td')
         ->toContain('.grid-table.grid-has-selection tbody tr.is-selected > td:first-child')
         ->toContain('--grid-row-selected-hover:')
-        ->toContain(':root[data-admin-theme="dark"] :where([data-grid-workspace], .grid-table)')
+        ->toContain(':root[data-admin-theme="dark"] :where([data-grid-workspace], .grid-table, .grid-workspace__settings)')
         ->toContain('@media (prefers-reduced-motion: reduce)');
 });
 
@@ -100,6 +103,22 @@ it('publishes explicit accessible relationships for compact controls', function 
         ->not->toContain('<script');
 });
 
+it('owns the standalone saved-view surface with opaque semantic presentation', function (): void {
+    $root = dirname(__DIR__, 5);
+    $css = (string) file_get_contents(
+        $root . '/packages/zoosper-admin-grid/resources/admin/css/grid-admin-polish.css',
+    );
+
+    expect($css)->toContain(':where([data-grid-workspace], .grid-table, .grid-workspace__settings) {')
+        ->toContain('.grid-workspace__settings:not([hidden]) {')
+        ->toContain('background-color: var(--admin-surface, #fff);')
+        ->toContain('.admin-content .grid-workspace__settings :is(button, .button, [role="button"])')
+        ->toContain('.grid-workspace__settings .grid-workspace__mutations {')
+        ->toContain('grid-template-columns: minmax(0, 1fr);')
+        ->toContain('.grid-workspace__settings .grid-workspace__mutation-form input:not([type="hidden"])')
+        ->not->toContain('.admin-content [data-grid-workspace] .grid-workspace__settings');
+});
+
 it('preserves Grid mutation security boundaries while changing presentation', function (): void {
     $root = dirname(__DIR__, 5);
     $source = (string) file_get_contents(
@@ -109,4 +128,22 @@ it('preserves Grid mutation security boundaries while changing presentation', fu
     expect($source)->toContain('method="post"')
         ->toContain('Grid workspace mutation forms require a CSRF field and token.')
         ->toContain('Grid workspace form action must use an application-local path.');
+});
+
+
+it('composes toolbar state and pagination as a dense responsive surface', function (): void {
+    $root = dirname(__DIR__, 3);
+    $css = (string) file_get_contents($root . '/resources/admin/css/grid-admin-polish.css');
+    expect($css)->toContain('grid-template-columns: minmax(0, 1fr) auto;')
+        ->toContain('border-left: 1px solid var(--grid-border);')
+        ->toContain('.grid-compact-actions :is(button, .button, [role="button"]):not([data-grid-export])')
+        ->toContain('[data-grid-workspace] > nav[aria-label*="Pagination"]')
+        ->toContain('@media (max-width: 48rem)')
+        ->toContain('@media (max-width: 24.375rem)')
+        ->toContain('.grid-compact-status:not(.is-dirty):not(.grid-compact-status--dirty)')
+        ->toContain('overflow-x: hidden;')
+        ->toContain('.grid-pagination-controls {')
+        ->toContain('.grid-page-size-relocated .grid-compact-state:not(:has(')
+        ->toContain('[data-grid-workspace] .grid-compact-panel:not([hidden])')
+        ->toContain('position: static;');
 });

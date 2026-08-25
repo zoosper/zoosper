@@ -16,5 +16,8 @@ it('preserves Grid query state and validates direct page entry', function (): vo
         ->and($script)->toContain("input.min = '1'")
         ->and($script)->toContain('input.max = String(totalPages)')
         ->and($script)->toContain('event.preventDefault()')
+        ->and($script)->toContain("host.classList.add('grid-pagination-controls')")
+        ->and($script)->toContain("workspace.querySelector('[data-grid-page-size]')")
+        ->and($script)->toContain("workspace.classList.add('grid-page-size-relocated')")
         ->and($script)->not->toContain('innerHTML');
 });

@@ -71,6 +71,16 @@ return array (
   ),
   'assets' => 
   array (
+    'zoosper-admin-grid-compact-workspace-script' =>
+    array (
+      'type' => 'script',
+      'path' => '/asset/zoosper-admin-grid/js/grid-compact-workspace.js?v=b27199c8cc5c',
+      'sort_order' => 80,
+      'attributes' =>
+      array (
+        'defer' => true,
+      ),
+    ),
     'zoosper-admin-grid-column-order-style' => 
     array (
       'type' => 'style',
@@ -168,13 +178,13 @@ return array (
     'zoosper-admin-grid-page-jump-style' => 
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin-grid/css/grid-page-jump.css?v=7i1',
+      'path' => '/asset/zoosper-admin-grid/css/grid-page-jump.css?v=de3b8f15713e',
       'sort_order' => 90,
     ),
     'zoosper-admin-grid-page-jump-script' => 
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-admin-grid/js/grid-page-jump.js?v=7i1',
+      'path' => '/asset/zoosper-admin-grid/js/grid-page-jump.js?v=2adfc6b4205e',
       'sort_order' => 90,
       'attributes' => 
       array (
@@ -190,7 +200,7 @@ return array (
     'zoosper-admin-grid-page-selection-script' => 
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-admin-grid/js/grid-page-selection.js?v=7j1',
+      'path' => '/asset/zoosper-admin-grid/js/grid-page-selection.js?v=7b63d80e2fb8',
       'sort_order' => 91,
       'attributes' => 
       array (
@@ -236,7 +246,7 @@ return array (
     'zoosper-admin-grid-polish-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin-grid/css/grid-admin-polish.css?v=698dfa0dfb15',
+      'path' => '/asset/zoosper-admin-grid/css/grid-admin-polish.css?v=fdeb67c88386',
       'sort_order' => 95,
     ),
   ),

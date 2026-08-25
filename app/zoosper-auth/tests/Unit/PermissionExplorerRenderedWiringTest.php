@@ -9,7 +9,7 @@ it('wires Permission Explorer assets from the rendered permission partial', func
     expect(is_file($viewPath))->toBeTrue();
     $view = file_get_contents($viewPath);
     expect($view !== false)->toBeTrue();
-    expect(str_contains($view, '/assets/admin/css/permission-explorer.css?v=6d'))->toBeTrue();
+    expect(str_contains($view, '/assets/admin/css/permission-explorer.css?v=8d'))->toBeTrue();
     expect(str_contains($view, '/assets/admin/js/permission-explorer.js?v=6d'))->toBeTrue();
 });
 

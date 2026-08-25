@@ -128,3 +128,13 @@ This package directly consumes the stable `Zoosper\Pagination` request/result bo
 ## Admin collection primary actions
 
 Auth Grid create actions remain validated as Admin-local and escaped by `AuthGridPagePresenter`. They use the shared `.admin-page-actions` composition and Admin `.button` component so Users and Roles present a visible, consistently aligned primary action without changing route, permission, or mutation ownership.
+
+
+## Phase 10AS-H4 v3 Admin form presentation
+
+User lifecycle actions are edit-only: the create form deliberately omits responder output until an `AdminUser` target exists, while edit operations continue to require the authenticated actor. The Auth-owned Permission Explorer remains progressively enhanced and no-JS compatible, uses Admin semantic theme tokens, and stacks its native controls at responsive breakpoints without changing permission submission, CSRF or mutation behaviour.
+
+
+### Phase 10AS-H4 v4 Permission Explorer theme refinement
+
+Auth-owned selectors deliberately outrank shared Admin button defaults so Permission Explorer bulk and group controls retain semantic light and dark surfaces. Native buttons, keyboard operation, permission fields, CSRF handling and POST mutation behaviour are unchanged.

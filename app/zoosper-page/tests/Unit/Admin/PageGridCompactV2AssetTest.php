@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Tests\Unit\Admin;
 
-test('obsolete compact v2 asset is not required after Grid CSS consolidation', function (): void {
+test('obsolete Admin compact v2 presentation is not required after package ownership', function (): void {
     $root = dirname(__DIR__, 5);
-    $gridCss = (string) file_get_contents(
+    $adminGridCss = (string) file_get_contents(
         $root . '/app/zoosper-admin/resources/assets/css/zoosper-grid.css',
     );
+    $packageGridCss = $root . '/packages/zoosper-admin-grid/resources/admin/css/grid-compact-workspace.css';
 
-    expect($gridCss)->toContain('BEGIN ZOOSPER COMPACT GRID V2');
-    expect(is_file(
-        $root . '/app/zoosper-admin/resources/assets/css/zoosper-grid-compact-v2.css',
-    ))->toBeFalse();
+    expect($adminGridCss)
+        ->toContain('Compact Grid presentation is package-owned by zoosper/admin-grid.')
+        ->not->toContain('BEGIN ZOOSPER COMPACT GRID V2')
+        ->and(is_file($packageGridCss))->toBeTrue()
+        ->and(is_file(
+            $root . '/app/zoosper-admin/resources/assets/css/zoosper-grid-compact-v2.css',
+        ))->toBeFalse();
 });

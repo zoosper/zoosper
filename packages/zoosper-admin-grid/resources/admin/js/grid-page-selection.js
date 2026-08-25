@@ -44,6 +44,7 @@
     const count = document.createElement('strong');
     count.dataset.gridSelectionCount = '';
     const action = document.createElement('select');
+    action.name = 'bulk_action';
     action.disabled = true;
     action.setAttribute('aria-label', 'Bulk actions');
     action.innerHTML = '<option>Bulk actions</option>';

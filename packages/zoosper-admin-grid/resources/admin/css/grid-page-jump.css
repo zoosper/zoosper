@@ -1,1 +1,4 @@
 .grid-page-jump{display:inline-flex;align-items:center;gap:.45rem;margin-inline:.65rem}.grid-page-jump label{display:inline-flex;align-items:center;gap:.35rem;white-space:nowrap}.grid-page-jump input[type=number]{width:4.5rem;min-height:2.25rem;padding:.35rem .45rem;text-align:center}.grid-page-jump button{min-height:2.25rem;padding:.35rem .7rem}@media(max-width:720px){.grid-page-jump{margin:.5rem 0;flex-wrap:wrap}}
+
+.grid-pagination-controls .grid-page-jump{margin-inline:0}
+@media(max-width:45rem){.grid-pagination-controls{row-gap:.5rem}.grid-pagination-controls .grid-page-jump{justify-content:center}}

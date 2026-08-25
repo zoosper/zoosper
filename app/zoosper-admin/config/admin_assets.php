@@ -5,16 +5,6 @@ declare(strict_types=1);
 return array (
   'assets' => 
   array (
-    'zoosper-grid-compact-script' => 
-    array (
-      'type' => 'script',
-      'path' => '/asset/zoosper-admin/js/zoosper-grid-compact.js?v=1.37l',
-      'sort_order' => 80,
-      'attributes' => 
-      array (
-        'defer' => true,
-      ),
-    ),
     'zoosper-grid-columns-script' => 
     array (
       'type' => 'script',
@@ -59,7 +49,7 @@ return array (
     'zoosper-admin-grid-style' => 
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/zoosper-grid.css?v=1.37l',
+      'path' => '/asset/zoosper-admin/css/zoosper-grid.css?v=1dd2d73b4d17',
       'sort_order' => 35,
     ),
     'zoosper-admin-tag-selector-style' => 

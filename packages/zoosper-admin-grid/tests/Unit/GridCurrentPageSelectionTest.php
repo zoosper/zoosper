@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
-it('publishes shared current-page selection assets', function (): void {
+it('publishes content-versioned shared current-page selection assets', function (): void {
     $root=dirname(__DIR__,4);$assets=require $root.'/packages/zoosper-admin-grid/config/admin_assets.php';
-    expect($assets['assets'])->toHaveKeys(['zoosper-admin-grid-page-selection-style','zoosper-admin-grid-page-selection-script']);
+    $script=$root.'/packages/zoosper-admin-grid/resources/admin/js/grid-page-selection.js';
+    $hash=substr(hash_file('sha256',$script),0,12);
+    expect($assets['assets'])->toHaveKeys(['zoosper-admin-grid-page-selection-style','zoosper-admin-grid-page-selection-script'])
+        ->and($assets['assets']['zoosper-admin-grid-page-selection-script']['path']??null)
+        ->toBe('/asset/zoosper-admin-grid/js/grid-page-selection.js?v='.$hash);
 });
 
 it('requires unique non-empty row identities before enabling selection', function (): void {
@@ -18,7 +22,9 @@ it('requires unique non-empty row identities before enabling selection', functio
         ->and($script)->not->toContain('localStorage');
 });
 
-it('keeps executable bulk actions disabled in the selection foundation', function (): void {
+it('keeps executable bulk actions disabled and identifies the form field', function (): void {
     $root=dirname(__DIR__,4);$script=file_get_contents($root.'/packages/zoosper-admin-grid/resources/admin/js/grid-page-selection.js');
-    expect($script)->toContain('action.disabled = true')->toContain("action.innerHTML = '<option>Bulk actions</option>'");
+    expect($script)->toContain("action.name = 'bulk_action'")
+        ->toContain('action.disabled = true')
+        ->toContain("action.innerHTML = '<option>Bulk actions</option>'");
 });

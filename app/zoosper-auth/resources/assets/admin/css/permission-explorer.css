@@ -1,1 +1,92 @@
-.permission-explorer__toolbar{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:minmax(16rem,1fr) auto auto;gap:.75rem;align-items:end;margin:1rem 0;padding:1rem;border:1px solid #d7e0ea;border-radius:.75rem;background:#fff;box-shadow:0 .4rem 1.2rem rgba(15,35,55,.06)}.permission-explorer__search-label{display:grid;gap:.35rem;font-weight:600}.permission-explorer__search{width:100%;min-height:2.65rem;padding:.55rem .75rem;border:1px solid #b9c8d8;border-radius:.5rem}.permission-explorer__actions{display:flex;flex-wrap:wrap;gap:.45rem}.permission-explorer__actions button,.permission-explorer__group-toggle{padding:.5rem .7rem;border:1px solid #b9c8d8;border-radius:.45rem;background:#f7fafc;color:#17324a;cursor:pointer}.permission-explorer__actions button:hover,.permission-explorer__actions button:focus-visible,.permission-explorer__group-toggle:hover,.permission-explorer__group-toggle:focus-visible{border-color:#147d74;background:#eaf7f5}.permission-explorer__count{white-space:nowrap;color:#526779;font-weight:600}.permission-explorer__heading{display:flex;align-items:center;justify-content:space-between;gap:.75rem}.permission-explorer__group--collapsed>*:not(legend):not(.permission-explorer__heading){display:none!important}.permission-explorer [hidden]{display:none!important}@media(max-width:900px){.permission-explorer__toolbar{position:static;grid-template-columns:1fr}.permission-explorer__count{white-space:normal}}
+/* Auth-owned progressive Permission Explorer presentation. */
+.permission-explorer {
+    --permission-surface: var(--admin-surface, #fff);
+    --permission-surface-muted: var(--admin-surface-muted, #f7f9fc);
+    --permission-text: var(--admin-text, #172033);
+    --permission-muted: var(--admin-text-muted, #667085);
+    --permission-border: var(--admin-border, #d8dee9);
+    --permission-focus: var(--admin-focus, #0f766e);
+    display: grid;
+    gap: .75rem;
+    color: var(--permission-text);
+}
+.permission-explorer__toolbar {
+    position: sticky;
+    top: .5rem;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(14rem, 1fr) auto minmax(8rem, auto);
+    gap: .65rem;
+    align-items: center;
+    padding: .7rem;
+    border: 1px solid var(--permission-border);
+    border-radius: .75rem;
+    background: var(--permission-surface);
+    box-shadow: 0 .4rem 1.2rem rgb(15 35 55 / 8%);
+}
+.permission-explorer__search-label { display: grid; gap: .3rem; min-width: 0; font-weight: 700; }
+.permission-explorer__search {
+    width: 100%;
+    min-height: 2.5rem;
+    padding: .5rem .7rem;
+    border: 1px solid var(--permission-border);
+    border-radius: .5rem;
+    background: var(--permission-surface-muted);
+    color: var(--permission-text);
+}
+.permission-explorer__actions { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; }
+.permission-explorer__button,
+.permission-explorer__group-toggle {
+    min-height: 2.5rem;
+    padding: .45rem .65rem;
+    border: 1px solid var(--permission-border);
+    border-radius: .5rem;
+    background: var(--permission-surface-muted);
+    color: var(--permission-text);
+    cursor: pointer;
+}
+.permission-explorer__button:hover,
+.permission-explorer__button:focus-visible,
+.permission-explorer__group-toggle:hover,
+.permission-explorer__group-toggle:focus-visible {
+    border-color: var(--permission-focus);
+    background: color-mix(in srgb, var(--permission-focus) 10%, var(--permission-surface));
+    outline: 2px solid transparent;
+}
+.permission-explorer__search:focus-visible { border-color: var(--permission-focus); outline: 2px solid var(--permission-focus); outline-offset: 1px; }
+.permission-explorer__count { justify-self: end; white-space: nowrap; color: var(--permission-muted); font-weight: 700; }
+.permission-explorer fieldset,
+.permission-explorer .permission-group { margin: 0; padding: .75rem; border: 1px solid var(--permission-border); border-radius: .65rem; background: var(--permission-surface); }
+.permission-explorer legend,
+.permission-explorer .permission-group__title { color: var(--permission-text); font-weight: 750; }
+.permission-explorer__heading { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.permission-explorer__group-toggle { margin-left: .5rem; font-size: .8rem; }
+.permission-explorer__group--collapsed > *:not(legend):not(h2):not(h3):not(h4):not(.permission-group__title):not(.permission-explorer__heading) { display: none !important; }
+.permission-explorer label:has(input[name="permission_ids[]"]) { display: flex; gap: .55rem; align-items: flex-start; padding: .42rem .5rem; border-radius: .4rem; }
+.permission-explorer label:has(input[name="permission_ids[]"]):hover { background: var(--permission-surface-muted); }
+.permission-explorer [hidden] { display: none !important; }
+:root[data-admin-theme="dark"] .permission-explorer { color-scheme: dark; }
+@media (max-width: 56.25rem) {
+    .permission-explorer__toolbar { position: static; grid-template-columns: 1fr; align-items: stretch; }
+    .permission-explorer__count { justify-self: start; white-space: normal; }
+}
+@media (max-width: 24.375rem) {
+    .permission-explorer__actions { display: grid; grid-template-columns: 1fr 1fr; }
+    .permission-explorer__button { width: 100%; }
+    .permission-explorer__heading { align-items: flex-start; flex-direction: column; }
+    .permission-explorer__group-toggle { width: 100%; margin-left: 0; }
+}
+
+
+/* Phase 10AS-H4 v4: Auth owns coherent Permission Explorer controls across themes. */
+.admin-content .permission-explorer :is(.permission-explorer__button, .permission-explorer__group-toggle) {
+    border-color: var(--permission-border);
+    background: var(--permission-surface-muted);
+    color: var(--permission-text);
+    box-shadow: none;
+}
+.admin-content .permission-explorer :is(.permission-explorer__button, .permission-explorer__group-toggle):is(:hover, :focus-visible) {
+    border-color: var(--permission-focus);
+    background: color-mix(in srgb, var(--permission-focus) 12%, var(--permission-surface));
+    color: var(--permission-text);
+}
