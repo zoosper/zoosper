@@ -123,8 +123,10 @@
 .grid-compact-panel__head {
     align-items: center;
     gap: 1rem;
-    margin: -.8rem -.8rem .85rem;
-    padding: .8rem 1rem;
+    margin: 0 0 1rem;
+    padding: .75rem .85rem;
+    border: 1px solid var(--grid-border);
+    border-radius: .7rem;
     border-bottom: 1px solid var(--grid-border);
     background: var(--grid-surface-subtle);
 }
@@ -546,6 +548,42 @@
 .admin-content [data-grid-workspace] .grid-filter-chip button:focus-visible {
     background: color-mix(in srgb, var(--grid-accent) 16%, var(--grid-surface)) !important;
     color: var(--grid-text) !important;
+}
+
+/* Phase 10AS-H5: calm inset disclosure surfaces. */
+.grid-compact-panel:not([hidden]) {
+    padding: 1rem;
+}
+
+
+.grid-workspace__settings:not([hidden]) {
+    padding: .75rem;
+}
+
+.grid-workspace__settings-header {
+    top: .75rem;
+    margin-bottom: .75rem;
+    padding: .75rem .85rem;
+    border: 1px solid var(--grid-border);
+    border-radius: .7rem;
+    background: var(--grid-surface-subtle);
+}
+
+.grid-workspace__settings .grid-workspace__mutations {
+    border: 1px solid var(--grid-border);
+    border-radius: .7rem;
+    background: var(--grid-surface-raised);
+}
+
+@media (max-width: 48rem) {
+    .grid-compact-panel:not([hidden]),
+    .grid-workspace__settings:not([hidden]) {
+        padding: .85rem;
+    }
+
+    .grid-workspace__settings-header {
+        top: .85rem;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

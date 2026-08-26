@@ -9,4 +9,5 @@ return [[
     'permission' => 'store_order.view',
     'sort_order' => 30,
     'group' => 'Content',
+    'icon' => 'orders',
 ]];

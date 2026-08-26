@@ -200,15 +200,15 @@ body::before {
 }
 
 .admin-nav .menu-group {
-    display: flex;
-    align-items: center;
-    gap: .45rem;
+    display: block;
     margin: 0;
-    padding: .65rem .75rem .35rem;
+    padding: .75rem .75rem .35rem;
     color: var(--admin-sidebar-muted);
-    font-size: .67rem;
+    cursor: default;
+    font-size: .65rem;
     font-weight: 750;
-    letter-spacing: .1em;
+    letter-spacing: .12em;
+    line-height: 1.25;
     text-transform: uppercase;
     white-space: nowrap;
 }
@@ -267,26 +267,31 @@ body::before {
 }
 
 .admin-nav-icon {
-    display: grid;
+    display: inline-grid;
     flex: 0 0 auto;
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.2rem;
+    height: 1.2rem;
     place-items: center;
-    border: 1px solid currentColor;
-    border-radius: .34rem;
-    opacity: .72;
+    color: var(--admin-sidebar-muted);
+    opacity: .88;
 }
 
-.admin-nav-icon::before {
-    width: .3rem;
-    height: .3rem;
-    border-radius: 50%;
-    background: currentColor;
-    content: "";
+.admin-nav-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+    vector-effect: non-scaling-stroke;
 }
 
+.admin-nav a:is(:hover, :focus-visible) .admin-nav-icon,
+.admin-nav-logout-button:is(:hover, :focus-visible) .admin-nav-icon,
 .admin-nav a.active .admin-nav-icon {
-    color: var(--admin-brand-300);
+    color: var(--admin-sidebar-active-text);
     opacity: 1;
 }
 
@@ -303,9 +308,8 @@ body::before {
 }
 
 .admin-shell[data-sidebar-collapsed="true"] .admin-sidebar .brand span,
-.admin-shell[data-sidebar-collapsed="true"] .admin-nav .menu-group span,
 .admin-shell[data-sidebar-collapsed="true"] .admin-nav a > span:not(.admin-nav-icon),
-.admin-shell[data-sidebar-collapsed="true"] .admin-nav .menu-group > .admin-nav-icon {
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav-section > .menu-group {
     display: none;
 }
 
@@ -331,13 +335,6 @@ body::before {
     color: var(--admin-sidebar-text);
     content: "↪";
     font-size: 1rem;
-}
-
-.admin-shell[data-sidebar-collapsed="true"] .admin-nav .menu-group {
-    height: 1px;
-    margin: .75rem .5rem;
-    padding: 0;
-    background: var(--admin-sidebar-divider);
 }
 
 .admin-shell[data-sidebar-collapsed="true"] .admin-nav a {
@@ -555,6 +552,101 @@ body::before {
     .admin-content {
         padding-inline: .75rem;
     }
+}
+
+/* Keep desktop navigation sizing inside its owning sidebar, away from page titles. */
+.admin-sidebar > .admin-sidebar-toggle {
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: .65rem;
+    border-color: var(--admin-sidebar-border);
+    background: color-mix(in srgb, var(--admin-sidebar-raised) 88%, transparent);
+    color: var(--admin-sidebar-text);
+}
+
+.admin-sidebar > .admin-sidebar-toggle:is(:hover, :focus-visible) {
+    border-color: var(--admin-sidebar-scrollbar);
+    background: var(--admin-sidebar-hover);
+    color: var(--admin-sidebar-text);
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-sidebar > .admin-sidebar-toggle {
+    justify-content: center;
+    padding-inline: .55rem;
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-sidebar > .admin-sidebar-toggle .admin-control-label {
+    position: absolute;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* Phase 10AS-H5: calm, legible collapsed navigation. */
+.admin-sidebar-toggle [data-admin-collapse-icon] {
+    display: inline-grid;
+    place-items: center;
+    width: 1rem;
+    color: var(--admin-text-muted);
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-sidebar {
+    width: 5rem;
+    padding-inline: .6rem;
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .brand {
+    justify-content: center;
+    padding-inline: .45rem;
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav-section + .admin-nav-section {
+    margin-top: .65rem;
+    padding-top: .65rem;
+    border-top: 1px solid var(--admin-border);
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav a,
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav-logout-button {
+    justify-content: center;
+    min-height: 2.75rem;
+    padding-inline: .55rem;
+    border: 1px solid transparent;
+    border-radius: .7rem;
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav a:is(:hover, :focus-visible),
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav-logout-button:is(:hover, :focus-visible) {
+    border-color: var(--admin-border-strong);
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav a.active {
+    border-color: color-mix(in srgb, var(--admin-accent) 35%, var(--admin-border));
+    box-shadow: inset .2rem 0 0 var(--admin-accent);
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav a.active::before,
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav-logout-button::before {
+    content: none;
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav-logout-button {
+    color: var(--admin-sidebar-text);
+}
+
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav-logout-button > span:not(.admin-nav-icon) {
+    display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

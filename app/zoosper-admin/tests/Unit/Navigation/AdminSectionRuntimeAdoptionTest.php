@@ -19,6 +19,8 @@ it('renders Marko sections through the live admin navigation presentation', func
         ->toContain('aria-label="Admin navigation"')
         ->toContain('data-admin-section="content"')
         ->toContain('data-admin-item="pages"')
+        ->toContain('data-admin-label="Pages"')
+        ->toContain('title="Pages"')
         ->toContain('href="/control/pages"')
         ->toContain('class="active" aria-current="page"')
         ->toContain('data-admin-icon="home"')
@@ -39,6 +41,8 @@ it('escapes section item and icon content and skips empty sections', function ()
         ->toContain('&lt;Content&gt;')
         ->toContain('&lt;Item&gt;')
         ->toContain('data-admin-icon="&lt;svg&gt;"')
+        ->toContain('data-admin-label="&lt;Item&gt;"')
+        ->toContain('title="&lt;Item&gt;"')
         ->toContain('/admin?x=1&amp;y=2')
         ->not->toContain('<svg>');
 });

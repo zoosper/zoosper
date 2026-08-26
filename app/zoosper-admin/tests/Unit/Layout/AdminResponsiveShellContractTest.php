@@ -14,6 +14,9 @@ it('keeps the Admin shell responsive, accessible and free from inline behaviour'
         ->toContain('aria-controls="admin-navigation"')
         ->toContain('aria-expanded="false"')
         ->toContain('data-admin-sidebar-toggle')
+        ->toContain('data-admin-collapse-icon')
+        ->toMatch('/<aside[^>]*data-admin-sidebar.*data-admin-sidebar-toggle.*<\/aside>/s')
+        ->not->toMatch('/admin-topbar__leading.*data-admin-sidebar-toggle/s')
         ->toContain('data-admin-theme-toggle')
         ->toContain('id="admin-content" tabindex="-1"')
         ->toContain('/assets/brand/logo.svg')
@@ -33,13 +36,13 @@ it('registers the CSP-safe Admin-owned shell assets in deterministic order', fun
         ->and($assets['zoosper-admin-shell-style'])
         ->toMatchArray([
             'type' => 'style',
-            'path' => '/asset/zoosper-admin/css/admin-shell.css?v=e90bf00bc793',
+            'path' => '/asset/zoosper-admin/css/admin-shell.css?v=a940051ffd42',
             'sort_order' => 15,
         ])
         ->and($assets['zoosper-admin-shell-script'])
         ->toMatchArray([
             'type' => 'script',
-            'path' => '/asset/zoosper-admin/js/admin-shell.js?v=1.37l',
+            'path' => '/asset/zoosper-admin/js/admin-shell.js?v=595c9400b58c',
             'sort_order' => 10,
             'defer' => true,
         ]);
@@ -64,12 +67,26 @@ it('provides theme, responsive, keyboard and reduced-motion shell contracts', fu
         ->toContain('.admin-topbar__leading')
         ->toContain('overflow: hidden')
         ->toContain('flex: 1 1 auto')
+        ->toContain('/* Keep desktop navigation sizing inside its owning sidebar, away from page titles. */')
+        ->toContain('.admin-sidebar > .admin-sidebar-toggle')
+        ->toContain('/* Phase 10AS-H5: calm, legible collapsed navigation. */')
+        ->toContain('.admin-shell[data-sidebar-collapsed="true"] .admin-nav-section + .admin-nav-section')
+        ->toContain('.admin-nav .menu-group')
+        ->toContain('cursor: default')
+        ->toContain('.admin-shell[data-sidebar-collapsed="true"] .admin-nav-section > .menu-group')
+        ->toContain('.admin-nav-icon svg')
+        ->toContain('.admin-shell[data-sidebar-collapsed="true"] .admin-nav-icon')
+        ->toContain('stroke: currentColor')
+        ->toContain('border-color: var(--admin-border-strong)')
+        ->toContain('box-shadow: inset .2rem 0 0 var(--admin-accent)')
         ->and($script)
         ->toContain("window.matchMedia('(prefers-color-scheme: dark)')")
         ->toContain("window.matchMedia('(max-width: 860px)')")
         ->toContain("event.key === 'Escape'")
         ->toContain("event.key !== 'Tab'")
         ->toContain('navigationToggle.focus()')
+        ->toContain("sidebarToggle.setAttribute('aria-label'")
+        ->toContain('collapseIcon.textContent = collapsed')
         ->toContain('textContent =')
         ->not->toContain('innerHTML')
         ->not->toContain('document.write')

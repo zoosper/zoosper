@@ -11,5 +11,6 @@ return array (
     'permission' => 'page.manage',
     'sort_order' => 20,
     'group' => 'Content',
+    'icon' => 'pages',
   ),
 );

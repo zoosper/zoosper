@@ -24,7 +24,7 @@ return array (
     'zoosper-admin-shell-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/admin-shell.css?v=e90bf00bc793',
+      'path' => '/asset/zoosper-admin/css/admin-shell.css?v=a940051ffd42',
       'sort_order' => 15,
     ),
     'zoosper-admin-components-style' =>
@@ -61,7 +61,7 @@ return array (
     'zoosper-admin-shell-script' =>
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-admin/js/admin-shell.js?v=1.37l',
+      'path' => '/asset/zoosper-admin/js/admin-shell.js?v=595c9400b58c',
       'sort_order' => 10,
       'defer' => true,
     ),

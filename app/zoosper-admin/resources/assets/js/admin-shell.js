@@ -11,6 +11,7 @@
     const navigationToggle = shell.querySelector('[data-admin-navigation-toggle]');
     const navigationClose = shell.querySelector('[data-admin-navigation-close]');
     const sidebarToggle = shell.querySelector('[data-admin-sidebar-toggle]');
+    const collapseIcon = sidebarToggle?.querySelector('[data-admin-collapse-icon]');
     const themeToggle = shell.querySelector('[data-admin-theme-toggle]');
     const themeLabel = shell.querySelector('[data-admin-theme-label]');
     const mobileQuery = window.matchMedia('(max-width: 860px)');
@@ -70,7 +71,11 @@
         shell.dataset.sidebarCollapsed = collapsed ? 'true' : 'false';
         if (sidebarToggle instanceof HTMLButtonElement) {
             sidebarToggle.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
+            sidebarToggle.setAttribute('aria-label', collapsed ? 'Expand navigation' : 'Collapse navigation');
             sidebarToggle.title = collapsed ? 'Expand navigation' : 'Collapse navigation';
+            if (collapseIcon instanceof HTMLElement) {
+                collapseIcon.textContent = collapsed ? '›' : '‹';
+            }
             const label = sidebarToggle.querySelector('.admin-control-label');
             if (label instanceof HTMLElement) {
                 label.textContent = collapsed ? 'Expand navigation' : 'Collapse navigation';

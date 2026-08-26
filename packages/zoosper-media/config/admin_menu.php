@@ -10,5 +10,6 @@ return [
         'permission' => 'media.manage',
         'sort_order' => 25,
         'group' => 'Content',
+        'icon' => 'media',
     ],
 ];

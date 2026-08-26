@@ -106,7 +106,9 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
         return '<div class="menu-group">Account</div>'
             . '<form method="post" action="' . $action . '" class="admin-nav-logout-form">'
             . $tokenInput
-            . '<button type="submit" class="admin-nav-logout-button">Logout</button>'
+            . '<button type="submit" class="admin-nav-logout-button" data-admin-label="Logout" title="Logout">'
+            . $this->navigationRenderer->renderIcon('logout')
+            . '<span>Logout</span></button>'
             . '</form>';
     }
 

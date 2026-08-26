@@ -41,6 +41,10 @@
             <span>Zoosper</span>
         </a>
         <?= $navigation ?>
+        <button class="admin-shell-control admin-sidebar-toggle" type="button" data-admin-sidebar-toggle aria-controls="admin-navigation" aria-pressed="false">
+            <span aria-hidden="true" data-admin-collapse-icon>‹</span>
+            <span class="admin-control-label">Collapse navigation</span>
+        </button>
     </aside>
     <button class="admin-navigation-scrim" type="button" data-admin-navigation-close aria-label="Close navigation" aria-hidden="true" tabindex="-1"></button>
     <section class="admin-main">
@@ -49,10 +53,6 @@
                 <button class="admin-shell-control admin-menu-toggle" type="button" data-admin-navigation-toggle aria-controls="admin-navigation" aria-expanded="false">
                     <span aria-hidden="true">☰</span>
                     <span class="admin-control-label">Open navigation</span>
-                </button>
-                <button class="admin-shell-control admin-sidebar-toggle" type="button" data-admin-sidebar-toggle aria-controls="admin-navigation" aria-pressed="false">
-                    <span aria-hidden="true">◫</span>
-                    <span class="admin-control-label">Collapse navigation</span>
                 </button>
                 <strong class="admin-topbar__title"><?= $e($title) ?></strong>
             </div>
