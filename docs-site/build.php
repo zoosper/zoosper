@@ -12,7 +12,7 @@ $navigation = [
     'Getting started' => ['getting-started', 'deployment', 'upgrade', 'troubleshooting'],
     'User guide' => ['user-guide'],
     'Developer guide' => ['developer-guide', 'architecture', 'modules', 'configuration', 'cli', 'api', 'admin', 'themes', 'testing'],
-    'Project' => ['release-checklist'],
+    'Project' => ['releases/current-development', 'release-checklist'],
 ];
 
 $labels = [
@@ -21,7 +21,7 @@ $labels = [
     'configuration' => 'Configuration', 'cli' => 'Command Line', 'api' => 'API', 'admin' => 'Admin',
     'themes' => 'Themes', 'deployment' => 'Deployment', 'upgrade' => 'Upgrade',
     'troubleshooting' => 'Troubleshooting', 'testing' => 'Testing',
-    'release-checklist' => 'Release Checklist',
+    'releases/current-development' => 'Current Development', 'release-checklist' => 'Release Checklist',
 ];
 
 function removeDirectory(string $directory): void
@@ -85,7 +85,7 @@ function inlineMarkdown(string $text): string
                 $path = is_array($parts) ? (string) ($parts['path'] ?? '') : $href;
                 $fragment = is_array($parts) && isset($parts['fragment']) ? '#' . $parts['fragment'] : '';
                 if (str_ends_with($path, '.md')) {
-                    $id = basename($path, '.md');
+                    $id = trim((string) preg_replace('/\.md$/', '', $path), '/');
                     $href = pageUrl($id) . $fragment;
                 }
             }

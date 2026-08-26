@@ -97,7 +97,7 @@ php8.5 vendor/bin/pest
 php8.5 tools/gate.php
 ```
 
-See [Getting started](docs/guide/getting-started.md), [feature guides](docs/guide/index.md), [release checklist](docs/release-checklist.md), [security policy](SECURITY.md), [changelog](CHANGELOG.md) and [roadmap](ROADMAP.md).
+See [Getting started](docs/getting-started.md), the [documentation index](docs/README.md), [release checklist](docs/release-checklist.md), [security policy](SECURITY.md), [changelog](CHANGELOG.md) and [roadmap](ROADMAP.md).
 
 ## Extension model
 
@@ -132,12 +132,9 @@ CI and the tracked pre-push hook run the repository quality contract. Psalm rema
 
 ## Current development focus
 
-The `0.3.0-alpha.3-dev` line begins from the published `v0.3.0-alpha.2` API, security, and modular-ownership baseline. The next work should prioritise visible CMS capability and extension-author experience:
+The `0.3.0-alpha.3-dev` line begins from the published `v0.3.0-alpha.2` API, security, and modular-ownership baseline. Current source has completed the Media API lifecycle, reconciled module-discovery collision truth, and delivered the responsive Admin workspace and navigation refinement.
 
-- Media reads and derivative representation
-- canonical PAT-scoped upload
-- archive and restore
-- reference-safe permanent deletion where the shared reference contract permits it
+The next engineering phase revalidates the historical production-security reviewer findings against current source before any implementation. In particular, deployment-environment, secure-session, rate-limiting, HTTP boot, and console boot claims remain unconfirmed until that evidence pass completes.
 
 ### Explicitly not complete
 

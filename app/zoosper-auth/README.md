@@ -117,7 +117,7 @@ The Auth-owned PAT screen consumes the shared Admin shell and Admin Grid while k
 - `pages:archive` authorises Page archive and archived-to-draft restoration when the current owner still has `page.manage`.
 - `pages:delete` authorises guarded permanent deletion when the current owner still has `page.manage`.
 
-## Phase 10BM-A Admin collection Grid
+## Admin collection Grid
 
 The module-owned Admin collection index uses a stable Admin Grid workspace with server-side count and page queries, allow-listed sorting, filters, saved views, column visibility, ordering and page-size state. Existing POST lifecycle workflows remain feature-owned.
 
@@ -130,11 +130,11 @@ This package directly consumes the stable `Zoosper\Pagination` request/result bo
 Auth Grid create actions remain validated as Admin-local and escaped by `AuthGridPagePresenter`. They use the shared `.admin-page-actions` composition and Admin `.button` component so Users and Roles present a visible, consistently aligned primary action without changing route, permission, or mutation ownership.
 
 
-## Phase 10AS-H4 v3 Admin form presentation
+## Admin form presentation
 
 User lifecycle actions are edit-only: the create form deliberately omits responder output until an `AdminUser` target exists, while edit operations continue to require the authenticated actor. The Auth-owned Permission Explorer remains progressively enhanced and no-JS compatible, uses Admin semantic theme tokens, and stacks its native controls at responsive breakpoints without changing permission submission, CSRF or mutation behaviour.
 
 
-### Phase 10AS-H4 v4 Permission Explorer theme refinement
+### Permission Explorer theme integration
 
 Auth-owned selectors deliberately outrank shared Admin button defaults so Permission Explorer bulk and group controls retain semantic light and dark surfaces. Native buttons, keyboard operation, permission fields, CSRF handling and POST mutation behaviour are unchanged.

@@ -1,6 +1,6 @@
 # Zoosper CMS — Master Roadmap
 
-**Last updated:** 2026-08-21 (Sydney)
+**Last updated:** 2026-08-27 (Sydney)
 
 ## Current continuity status
 
@@ -15,6 +15,8 @@
 - **[x] Phase 10AP-B:** Canonical multipart upload uses the feature-owned stateless `media:upload` PAT boundary plus token-owner `media.manage`, reads files only from the immutable request boundary, delegates to the shared canonical storage/derivative/cleanup pipeline, returns HTTP `201`, and exposes no private paths or token secrets.
 - **[x] Phase 10AP-C:** Media archive/restore and archived-first permanent deletion now share mandatory reference and derivative boundaries, fail closed on incomplete Page reference storage, preserve transactional metadata removal and conservative original/derivative cleanup, and provide Admin/API blocker feedback.
 - **[x] Phase 10AQ:** module-discovery status now matches the Phase 9GC fail-closed implementation; stale silent-override claims and the obsolete false-signal override test were removed while the dedicated same-layer and cross-layer contracts remain authoritative.
+- **Phase 10AS-H completed in source, browser-accepted, and pushed:** the Admin now has a permission-aware Dashboard, fluid light/dark shell and shared components, package-owned responsive Grid workflows, screen-scoped assets, theme-coherent feature surfaces, a sidebar-owned collapse control, semantic destination icons, and non-interactive navigation groups. Final accepted source is `364414a4878cde36fd89de8583326e4d1ff1f625`, verified by `1,550` tests with `11,157` assertions and a `3`-check standard quality gate with `0` errors and `0` warnings. This phase was not deployed.
+- **Next — Phase 10AR:** refresh and adjudicate the historical production-security reviewer findings against current source before implementation. Deployment-environment detection, secure-session/rate-limit enforcement, and HTTP/console boot parity are unconfirmed review questions, not established current defects.
 
 ---
 
@@ -41,6 +43,18 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 ---
 
 ## 0. TOP PRIORITY — next phase
+
+**Phase 10AR — production-security truth verification.** Start with a fresh read-only capture at the current aligned `dev` commit. Adjudicate each historical reviewer assertion independently against current policy, environment loading, HTTP and console boot callers, configuration, tests, and deployment documentation. Implement only a confirmed defect, preserve existing security boundaries, and require production-like runtime acceptance. Phase 10AQ already proved that a high-severity reviewer claim can be stale, so historical reports must not override current source.
+
+**Planned Admin follow-ups after Phase 10AR:**
+
+- Replace Dashboard navigation repetition with useful dynamic widgets behind an Admin-owned, module-discovered contributor contract. Feature modules own their data; Admin owns permission-filtered composition, responsive layout, failure isolation, accessibility, and user layout preferences without concrete cross-module dependencies.
+- Introduce extensible Admin colour-theme registration beyond the current built-in light/dark choices while retaining coherent tokens and CSP-safe assets.
+- Diagnose and correct non-persisting Grid column preferences as a behavioural workstream separate from presentation.
+- Improve organised multi-layer navigation discovery without making non-interactive groups look actionable or coupling Admin to vertical solutions.
+- Treat assigned-user search, Grid integration, and pagination as a separate Auth-owned enhancement.
+
+The following earlier top-priority findings are retained as completed history:
 
 **Both items from the 2026-07-29 top-priority list are now confirmed and
 fixed:**
@@ -1223,3 +1237,11 @@ Access Tokens, Sites, Site Domains and the Menus collection index use persistent
 ### Phase 10BM-B: Media visual Admin Grid
 
 Media uses the stable `admin.media` workspace with true total-count pagination, safe filters and sorting, and a responsive card renderer. Existing upload and lifecycle behaviour remains unchanged, and Media retains concrete Admin decoupling. The first-party policy classifies Media as a visual-grid collection.
+
+### Phase 10AQ: module-discovery truth reconciliation
+
+Current same-layer and cross-layer duplicate module names fail descriptively. Stale reviewer and roadmap wording that described silent cross-layer override behaviour was removed without introducing a second collision implementation.
+
+### Phase 10AS-H: Admin experience refinement
+
+The Admin redesign established a permission-aware Dashboard, a fluid responsive shell, coherent light/dark themes, shared accessible components, package-owned Grid presentation, responsive disclosures and paging, and refined feature workspaces. Navigation collapse is owned by the sidebar, feature modules declare semantic destination identifiers, the Admin renderer owns a safe static SVG allow-list, and text-only menu groups cannot be mistaken for destinations. CSP-safe asset registration, permissions, CSRF, POST-only mutations, query state, persistence, and audit boundaries remain unchanged. The accepted source was browser-reviewed and pushed at `364414a4878cde36fd89de8583326e4d1ff1f625`; no deployment was performed.

@@ -12,8 +12,9 @@ it('publishes the current alpha release and delivered product surface at the rep
         ->toContain('zoosper-menu')
         ->toContain('revision listing and revision restoration')
         ->toContain('CI and the tracked pre-push hook')
-        ->toContain('[feature guides](docs/guide/index.md)')
+        ->toContain('[documentation index](docs/README.md)')
         ->toContain('Explicitly not complete')
+        ->not->toContain('docs/guide/')
         ->not->toContain('Post-Phase 1.41 hardening and Marko adoption (2026-07-30/31)');
 });
 
@@ -33,11 +34,16 @@ it('records the current review priorities and does not overclaim media derivativ
     $roadmap = (string) file_get_contents($root . '/ROADMAP.md');
 
     expect($roadmap)
-        ->toContain('Last updated:** 2026-08-21 (Sydney)')
+        ->toContain('Last updated:** 2026-08-27 (Sydney)')
         ->toContain('External review response and public-launch priorities (2026-08-11)')
         ->toContain('Duplicate MediaUploadService construction is resolved')
         ->toContain('Derivative database persistence remains a separate follow-up')
-        ->toContain('Resume Phase 9HF Marko dashboard widget adoption')
+        ->toContain('Phase 10AR — production-security truth verification')
+        ->toContain('not established current defects')
+        ->toContain('Admin-owned, module-discovered contributor contract')
+        ->toContain('non-persisting Grid column preferences')
+        ->toContain('364414a4878cde36fd89de8583326e4d1ff1f625')
+        ->toContain('This phase was not deployed.')
         ->not->toContain('Page admin decoupling is partial')
         ->not->toContain('Page admin-decoupling is still partial');
 });

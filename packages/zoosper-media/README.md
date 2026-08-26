@@ -70,7 +70,7 @@ Zoosper Media module for Zoosper CMS.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
 
-### Phase 9IF Media lifecycle truth closure
+### Media lifecycle
 Media assets now use POST-only, media.manage, CSRF-protected archive, restore and archived-first permanent deletion boundaries. Metadata deletion is transactional and owned-file cleanup is conservative and audited. Upload derivatives remain disabled by default; LocalCopyMediaProcessor is not image transformation support.
 
 ### Secure raster ingest
@@ -89,7 +89,7 @@ Generated profiles are persisted in `media_derivatives` with dimensions, byte si
 
 Media owns stateless PAT-scoped list, detail, derivative, canonical upload, archive and restore endpoints under `/api/v1/media`. API responses expose browser-safe public paths and metadata, never private storage paths. Collection reads use bounded offset pagination (default page size `20`, maximum page size `100`, maximum page `100_000`), deterministic allow-listed sorting, and optional `q`, `status`, `mime_type`, and `extension` filters. Permanent deletion is available only for archived assets after the shared Media lifecycle verifies that neither current Pages nor restorable Page revisions reference the complete canonical public path.
 
-## Phase 10BM-B visual Admin Grid
+## Visual Admin Grid
 
 The Media library uses the stable `admin.media` workspace with server-side total-count pagination, allow-listed filters and sorting, persistent page-size and view state, and Media-owned responsive cards. Upload, Editor.js integration, archive, restore and reference-safe permanent deletion remain feature-owned. Media depends on `zoosper/admin-grid` and `zoosper/grid`, not the concrete Admin application module.
 
@@ -108,19 +108,19 @@ Media cards consume the shared Admin surface, border, text, muted-text and shado
 This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
 
 
-## Phase 10AP-A Media reads and derivatives
+## Media reads and derivatives
 
 The feature-owned `GET /api/v1/media`, `GET /api/v1/media/{id}`, and `GET /api/v1/media/{id}/derivatives` routes require the `media:read` PAT scope plus the token owner's `media.manage` permission. The collection response includes `page`, `page_size`, `page_count`, `total`, `has_previous`, and `has_next`. Invalid pagination, sort, direction, and filter values are bounded or reduced to safe defaults. Media remains globally owned because the current `media_assets` contract has no `site_id`; this phase does not invent site ownership or silently infer it from the request host. Responses expose `public_path` only and never return private `storage_path` values.
 
 
-## Phase 10AP-B canonical PAT upload
+## Canonical PAT upload
 
 The feature-owned stateless `POST /api/v1/media` route requires the `media:upload` PAT scope plus the token owner's `media.manage` permission. Multipart input is read from the immutable request upload key `file`; controllers never read `$_FILES` after `Request::fromGlobals()` captures it. The thin API adapter delegates to the same `MediaUploadService` used by Admin and Editor.js, preserving the 5 MB JPEG, PNG, GIF, and WebP allow-list, MIME and decoded-image validation, 40-megapixel canonical re-encoding ceiling, private-original/public-copy separation, enabled `thumb`, `medium`, and `large` WebP derivatives, persisted asset and derivative metadata, and failure cleanup.
 
 A successful upload returns HTTP `201` with the public asset representation and public derivative representations. Responses never include private `storage_path` values or PAT secrets. Audit action `media.api_uploaded` records the asset ID, internal token ID, and public token ID only.
 
 
-## Phase 10AP-C lifecycle completion
+## API lifecycle completion
 
 Archive, restore, and permanent deletion share `MediaLifecycleCoordinator` across Admin and the stateless PAT API. Admin routes are POST-only, require `media.manage`, and remain protected by central CSRF middleware. API archive, restore, and deletion require `media:delete` plus the token owner’s current `media.manage` permission; permanent deletion uses `DELETE /api/v1/media/{id}`.
 

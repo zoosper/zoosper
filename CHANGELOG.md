@@ -7,9 +7,13 @@
 - Completed Phase 10AP-B canonical PAT upload: the stateless `media:upload` endpoint now consumes request-captured multipart input and is regression-guarded across PAT scope, owner permission, shared canonical storage and derivatives, HTTP `201`, safe audit metadata, and private-path redaction.
 
 - Completed Phase 10AP-A Media reads and derivatives: feature-owned PAT reads now provide bounded collection pagination, allow-listed search/filter/sort controls, deterministic derivative metadata, and private-storage-path redaction.
+- Reconciled module-discovery collision documentation with the existing fail-closed same-layer and cross-layer implementation.
+- Refined the Admin experience with a permission-aware Dashboard, fluid responsive light/dark shell, accessible shared components, package-owned Grid workflows, scoped assets, theme-coherent feature workspaces, a sidebar-owned collapse control, semantic destination icons, and non-interactive navigation groups.
+- Preserved CSP-safe asset registration, permissions, CSRF, POST-only mutations, Grid state, persistence, and audit boundaries throughout the Admin refinement.
+- Verified the accepted Admin source with `1,550` tests and `11,157` assertions plus `3` standard quality checks with `0` errors and `0` warnings.
 
 ### Planned
-- Visible CMS capability and extension-author experience.
+- Revalidate the historical production-security reviewer findings against current source before changing runtime behaviour.
 
 
 ## [0.3.0-alpha.2] - 2026-08-19
