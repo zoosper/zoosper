@@ -3,7 +3,7 @@
 **A modular, API-first CMS without the weight. Extend features without forking core.**
 
 - Latest pre-release: `v0.3.0-alpha.3`
-- Current release line: `v0.3.0-alpha.3`
+- Current development line: `0.3.0-alpha.4-dev`
 - Required runtime: PHP 8.5+
 
 Zoosper is an API-first, multi-site CMS built around independently owned Composer modules. Each feature can contribute its own routes, services, schema, migrations, permissions, Admin UI, API adapters, tests, assets and documentation. Cross-cutting platform modules stay free of feature implementation dependencies.
@@ -131,9 +131,9 @@ The `v0.3.0-alpha.3` release gate completed with:
 
 CI and the tracked pre-push hook run the repository quality contract. Psalm remains visible and advisory while its existing baseline is reduced.
 
-## Current release focus
+## Latest release and current development focus
 
-`v0.3.0-alpha.3` completes the Media API lifecycle, reconciles module-discovery collision truth, delivers the responsive Admin workspace and navigation refinement, and preserves deployment-provided environment values ahead of `.env`. Staging and production continue to fail closed for secure sessions and enforcing rate limits across HTTP and console boot.
+`v0.3.0-alpha.3` completes the Media API lifecycle, reconciles module-discovery collision truth, delivers the responsive Admin workspace and navigation refinement, and preserves deployment-provided environment values ahead of `.env`. Development is now open as `0.3.0-alpha.4-dev`; staging and production continue to fail closed for secure sessions and enforcing rate limits across HTTP and console boot.
 
 ### Explicitly not complete
 
@@ -145,7 +145,7 @@ CI and the tracked pre-push hook run the repository quality contract. Psalm rema
 
 ## Project status and support
 
-Zoosper CMS is in active public-alpha development. The latest tagged pre-release and current release line are `v0.3.0-alpha.3`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
+Zoosper CMS is in active public-alpha development. The latest tagged pre-release is `v0.3.0-alpha.3`, and the current development line is `0.3.0-alpha.4-dev`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
 
 ## Licence
 

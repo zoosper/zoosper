@@ -5,7 +5,7 @@
 ## Current continuity status
 
 - Latest tag: `v0.3.0-alpha.3`.
-- Current release line: `v0.3.0-alpha.3`.
+- Current development line: `0.3.0-alpha.4-dev`.
 - **[x] Phase 10BN:** generic pagination ownership moved from Core to the
   `zoosper/pagination` library. Zoosper's page parsing, default page size `20`,
   maximum page size `100`, and maximum page `100_000` remain stable; verified
@@ -44,9 +44,9 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ## 0. TOP PRIORITY — next phase
 
-**`v0.3.0-alpha.3` release closure.** Phase 10AR is complete at `fcbfa4e736a1c25e1f0e97760507fd42b8294c77`; release identity, compiled-manifest checks and the immutable annotated tag are the remaining release operations. After the release, resume the planned Admin-owned improvements below.
+**`0.3.0-alpha.4-dev` is open.** The immutable annotated `v0.3.0-alpha.3` tag targets release commit `72dd1da44ea491c478ee76ab85dbe9fc286ebf99`; no GitHub release publication or deployment has occurred. Resume the planned Admin-owned improvements below from this development baseline.
 
-**Planned Admin follow-ups after Phase 10AR:**
+**Planned Admin follow-ups for the current development line:**
 
 - Replace Dashboard navigation repetition with useful dynamic widgets behind an Admin-owned, module-discovered contributor contract. Feature modules own their data; Admin owns permission-filtered composition, responsive layout, failure isolation, accessibility, and user layout preferences without concrete cross-module dependencies.
 - Introduce extensible Admin colour-theme registration beyond the current built-in light/dark choices while retaining coherent tokens and CSP-safe assets.
