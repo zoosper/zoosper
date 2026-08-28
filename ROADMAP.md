@@ -1,11 +1,11 @@
 # Zoosper CMS — Master Roadmap
 
-**Last updated:** 2026-08-27 (Sydney)
+**Last updated:** 2026-08-28 (Sydney)
 
 ## Current continuity status
 
-- Latest tag: `v0.3.0-alpha.2`.
-- Current development line: `v0.3.0-alpha.3-dev`.
+- Latest tag: `v0.3.0-alpha.3`.
+- Current release line: `v0.3.0-alpha.3`.
 - **[x] Phase 10BN:** generic pagination ownership moved from Core to the
   `zoosper/pagination` library. Zoosper's page parsing, default page size `20`,
   maximum page size `100`, and maximum page `100_000` remain stable; verified
@@ -16,7 +16,7 @@
 - **[x] Phase 10AP-C:** Media archive/restore and archived-first permanent deletion now share mandatory reference and derivative boundaries, fail closed on incomplete Page reference storage, preserve transactional metadata removal and conservative original/derivative cleanup, and provide Admin/API blocker feedback.
 - **[x] Phase 10AQ:** module-discovery status now matches the Phase 9GC fail-closed implementation; stale silent-override claims and the obsolete false-signal override test were removed while the dedicated same-layer and cross-layer contracts remain authoritative.
 - **Phase 10AS-H completed in source, browser-accepted, and pushed:** the Admin now has a permission-aware Dashboard, fluid light/dark shell and shared components, package-owned responsive Grid workflows, screen-scoped assets, theme-coherent feature surfaces, a sidebar-owned collapse control, semantic destination icons, and non-interactive navigation groups. Final accepted source is `364414a4878cde36fd89de8583326e4d1ff1f625`, verified by `1,550` tests with `11,157` assertions and a `3`-check standard quality gate with `0` errors and `0` warnings. This phase was not deployed.
-- **Phase 10AR current-source review:** staging/production secure-session and enforcing rate-limit policy plus HTTP/console parity already exist. The historical allegations are not established current defects. One confirmed defect remains in the bounded correction: `.env` must not overwrite deployment-provided process/container values.
+- **[x] Phase 10AR:** current-source review disproved the stale historical allegations and corrected the confirmed environment-precedence defect. Process-manager/container values now remain authoritative over `.env`; focused verification passed `26` tests / `76` assertions, the full suite passed `1,557` tests / `11,175` assertions, the strict quality gate passed with `0` findings, and browser plus production-safe console acceptance passed.
 
 ---
 
@@ -44,7 +44,7 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ## 0. TOP PRIORITY — next phase
 
-**Phase 10AR — production-security truth verification.** Current-source capture at `0fae94e913cc1c7bbe7f93dd0904f96b06886cdd` confirmed that `ProductionSecurityPolicy` already covers staging and production and is invoked from HTTP and console boot. It also identified one bounded defect: the canonical `.env` loader overwrote process-manager/container values, allowing file configuration to replace deployment-provided `APP_ENV` and security controls. Correct the precedence, add isolated regressions and production-like acceptance, then close Phase 10AR in the alpha.3 release gate.
+**`v0.3.0-alpha.3` release closure.** Phase 10AR is complete at `fcbfa4e736a1c25e1f0e97760507fd42b8294c77`; release identity, compiled-manifest checks and the immutable annotated tag are the remaining release operations. After the release, resume the planned Admin-owned improvements below.
 
 **Planned Admin follow-ups after Phase 10AR:**
 

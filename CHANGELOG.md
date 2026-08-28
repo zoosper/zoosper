@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.3.0-alpha.3-dev]
+## [0.3.0-alpha.3] - 2026-08-28
 
 - Completed Phase 10AP-C Media lifecycle: archive/restore and archived-first permanent deletion now require complete Page-reference inspection, preserve transactional metadata and conservative original/derivative cleanup, and surface guarded blockers through Admin flash feedback and stateless `media:delete` API responses.
 
@@ -11,7 +11,7 @@
 - Refined the Admin experience with a permission-aware Dashboard, fluid responsive light/dark shell, accessible shared components, package-owned Grid workflows, scoped assets, theme-coherent feature workspaces, a sidebar-owned collapse control, semantic destination icons, and non-interactive navigation groups.
 - Preserved CSP-safe asset registration, permissions, CSRF, POST-only mutations, Grid state, persistence, and audit boundaries throughout the Admin refinement.
 - Made process-manager and container environment values authoritative over `.env`, while retaining fail-closed staging/production secure-session and rate-limit enforcement across HTTP and console boot.
-- Verified the accepted Admin source with `1,550` tests and `11,157` assertions plus `3` standard quality checks with `0` errors and `0` warnings.
+- Verified the release source with `1,557` tests and `11,175` assertions plus `3` strict quality checks with `0` errors and `0` warnings; browser acceptance and production-safe console boot also passed.
 
 
 ## [0.3.0-alpha.2] - 2026-08-19

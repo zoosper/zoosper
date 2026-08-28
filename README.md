@@ -2,8 +2,8 @@
 
 **A modular, API-first CMS without the weight. Extend features without forking core.**
 
-- Latest pre-release: `v0.3.0-alpha.2`
-- Current development line: `v0.3.0-alpha.3-dev`
+- Latest pre-release: `v0.3.0-alpha.3`
+- Current release line: `v0.3.0-alpha.3`
 - Required runtime: PHP 8.5+
 
 Zoosper is an API-first, multi-site CMS built around independently owned Composer modules. Each feature can contribute its own routes, services, schema, migrations, permissions, Admin UI, API adapters, tests, assets and documentation. Cross-cutting platform modules stay free of feature implementation dependencies.
@@ -20,7 +20,7 @@ Zoosper is an API-first, multi-site CMS built around independently owned Compose
 - **Security-focused foundations:** ACL, CSRF, 2FA, password policy, automatic password rehash, rate limiting, secure sessions, canonical Media ingest and safe audit metadata.
 - **Pluggable presentation:** Latte is the current default template engine; Marko View contracts are adopted at selected boundaries.
 
-## What shipped in v0.3.0-alpha.2
+## What shipped in v0.3.0-alpha.3
 
 ### Integration APIs
 
@@ -119,26 +119,25 @@ Use `php8.5 bin/zoosper make:module` for a local module or the package-module sc
 
 ## Quality and release discipline
 
-The `v0.3.0-alpha.2` release gate completed with:
+The `v0.3.0-alpha.3` release gate completed with:
 
-- 1,441 passing tests
-- 8,237 assertions
-- zero standard quality-gate errors
-- zero standard quality-gate warnings
-- a fresh, validated 28-module manifest
+- 1,557 passing tests
+- 11,175 assertions
+- zero strict quality-gate errors
+- zero strict quality-gate warnings
+- a compiled, fresh module manifest
 - a disposable fresh-install alpha smoke test
+- browser acceptance and production-safe console boot
 
 CI and the tracked pre-push hook run the repository quality contract. Psalm remains visible and advisory while its existing baseline is reduced.
 
-## Current development focus
+## Current release focus
 
-The `0.3.0-alpha.3-dev` line begins from the published `v0.3.0-alpha.2` API, security, and modular-ownership baseline. Current source has completed the Media API lifecycle, reconciled module-discovery collision truth, and delivered the responsive Admin workspace and navigation refinement.
-
-The next engineering phase revalidates the historical production-security reviewer findings against current source before any implementation. In particular, deployment-environment, secure-session, rate-limiting, HTTP boot, and console boot claims remain unconfirmed until that evidence pass completes.
+`v0.3.0-alpha.3` completes the Media API lifecycle, reconciles module-discovery collision truth, delivers the responsive Admin workspace and navigation refinement, and preserves deployment-provided environment values ahead of `.env`. Staging and production continue to fail closed for secure sessions and enforcing rate limits across HTTP and console boot.
 
 ### Explicitly not complete
 
-- Feature-owned Media API parity is not yet released.
+- Dynamic Dashboard widgets and extensible Admin colour-theme registration remain planned follow-ups.
 - Referential-integrity and foreign-key reconciliation are not yet comprehensive across every feature.
 - CSP remains report-only while reporting configuration and broader browser verification continue.
 - Grid and Admin Form extension models are not yet consolidated across every Admin screen.
@@ -146,7 +145,7 @@ The next engineering phase revalidates the historical production-security review
 
 ## Project status and support
 
-Zoosper CMS is in active public-alpha development. The latest tagged pre-release is `v0.3.0-alpha.2`; the current `dev` branch is `v0.3.0-alpha.3-dev`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
+Zoosper CMS is in active public-alpha development. The latest tagged pre-release and current release line are `v0.3.0-alpha.3`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
 
 ## Licence
 
