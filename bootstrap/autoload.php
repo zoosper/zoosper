@@ -43,6 +43,9 @@ declare(strict_types=1);
  *      putenv() — so this same function's own getenv() fallback branch
  *      could read a DIFFERENT, inconsistent value than what was actually
  *      parsed from .env. Fixed to call putenv() alongside $_ENV.
+ *    - Deployment-provided environment values were overwritten by .env.
+ *      Existing process values now remain authoritative, followed by
+ *      existing $_ENV values; .env only fills genuinely missing keys.
  *    Also added: support for a leading `export ` keyword (a common .env
  *    dialect). Deliberately NOT added (genuinely larger features, not
  *    simple bug fixes, out of scope here): multiline values and
@@ -137,6 +140,20 @@ if (!function_exists('env')) {
                     $rawValue = trim($rawValue);
 
                     if ($name === '') {
+                        continue;
+                    }
+
+                    // Process-manager/container values are authoritative.
+                    // Keep $_ENV and getenv() consistent, then use .env only
+                    // for a key that is genuinely missing from both sources.
+                    $processValue = getenv($name);
+                    if ($processValue !== false) {
+                        $_ENV[$name] = $processValue;
+                        continue;
+                    }
+
+                    if (array_key_exists($name, $_ENV)) {
+                        putenv($name . '=' . (string) $_ENV[$name]);
                         continue;
                     }
 

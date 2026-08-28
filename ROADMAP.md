@@ -16,7 +16,7 @@
 - **[x] Phase 10AP-C:** Media archive/restore and archived-first permanent deletion now share mandatory reference and derivative boundaries, fail closed on incomplete Page reference storage, preserve transactional metadata removal and conservative original/derivative cleanup, and provide Admin/API blocker feedback.
 - **[x] Phase 10AQ:** module-discovery status now matches the Phase 9GC fail-closed implementation; stale silent-override claims and the obsolete false-signal override test were removed while the dedicated same-layer and cross-layer contracts remain authoritative.
 - **Phase 10AS-H completed in source, browser-accepted, and pushed:** the Admin now has a permission-aware Dashboard, fluid light/dark shell and shared components, package-owned responsive Grid workflows, screen-scoped assets, theme-coherent feature surfaces, a sidebar-owned collapse control, semantic destination icons, and non-interactive navigation groups. Final accepted source is `364414a4878cde36fd89de8583326e4d1ff1f625`, verified by `1,550` tests with `11,157` assertions and a `3`-check standard quality gate with `0` errors and `0` warnings. This phase was not deployed.
-- **Next — Phase 10AR:** refresh and adjudicate the historical production-security reviewer findings against current source before implementation. Deployment-environment detection, secure-session/rate-limit enforcement, and HTTP/console boot parity are unconfirmed review questions, not established current defects.
+- **Phase 10AR current-source review:** staging/production secure-session and enforcing rate-limit policy plus HTTP/console parity already exist. The historical allegations are not established current defects. One confirmed defect remains in the bounded correction: `.env` must not overwrite deployment-provided process/container values.
 
 ---
 
@@ -44,7 +44,7 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ## 0. TOP PRIORITY — next phase
 
-**Phase 10AR — production-security truth verification.** Start with a fresh read-only capture at the current aligned `dev` commit. Adjudicate each historical reviewer assertion independently against current policy, environment loading, HTTP and console boot callers, configuration, tests, and deployment documentation. Implement only a confirmed defect, preserve existing security boundaries, and require production-like runtime acceptance. Phase 10AQ already proved that a high-severity reviewer claim can be stale, so historical reports must not override current source.
+**Phase 10AR — production-security truth verification.** Current-source capture at `0fae94e913cc1c7bbe7f93dd0904f96b06886cdd` confirmed that `ProductionSecurityPolicy` already covers staging and production and is invoked from HTTP and console boot. It also identified one bounded defect: the canonical `.env` loader overwrote process-manager/container values, allowing file configuration to replace deployment-provided `APP_ENV` and security controls. Correct the precedence, add isolated regressions and production-like acceptance, then close Phase 10AR in the alpha.3 release gate.
 
 **Planned Admin follow-ups after Phase 10AR:**
 
@@ -314,11 +314,9 @@ replica.
   move to Swoole/FrankenPHP-style long-lived workers. Needs an explicit
   "rebuild request-scoped services per request" story before any such move
   — not just the existing manual `clearCache()` escape hatch on one class.
-- **Rate-limit enforcement** (currently report-only only, per the
-  project's own ADR) — more traffic means more exposed attack surface for
-  longer before report-only data is even reviewed. Still correctly gated
-  on collecting real report-only data first, per the ADR — but worth
-  revisiting the timeline given the traffic assumption.
+- **Rate-limit operations at scale** — enforcing Admin-login throttling now
+  exists and is mandatory in staging/production. Continue tuning bounded
+  policies and observability from production evidence as traffic grows.
 - **Every CLI command requiring a live DB** (§0 R2) and **CLI/HTTP config
   divergence** (§0 R2) become more painful operationally at higher
   deployment frequency/scale (cron jobs, scaling scripts, health checks).
@@ -454,15 +452,13 @@ replica.
   now requires an explicit, separate `HTML_SANITIZER_ALLOW_BASIC_DRIVER=true`
   confirmation; also fixed a confirmed, real `??`/`?:` operator-precedence
   bug in that same config file's `$env` closure.
-- [ ] Enable report-only rate-limit mode in production config and begin
-  collecting real data — precondition (per the ADR) before enforcement.
-  "Enforcement" itself still has no code path built at all (deliberately
-  deferred per the ADR) — see §15 for revisiting this given the
-  high-traffic assumption.
+- [x] Staging and production fail closed unless rate limiting is enabled in
+  `enforce` mode with a strong identity salt; the Admin login middleware
+  returns a generic HTTP `429` with `Retry-After` when the policy denies.
 - [ ] CSP report-only → enforce (after adding report-uri + resolving the
   inline-handler conflict — see §3)
 - [ ] Password min-length/complexity + `password_needs_rehash()` upgrade path
-- [ ] Prod fail-closed when `SESSION_SECURE` unset
+- [x] Staging and production fail closed when `SESSION_SECURE` is unset or false.
 - [ ] CSRF decision for stateful `/api/*` session routes
 - [x] Atomic admin writes (transaction-wrap user/role create+sync) — fixed
   in both `RoleRepository` and `AdminUserRepository`
@@ -477,10 +473,8 @@ replica.
   fallback autoloader (only mapped 6 of 12+ namespaces, replaced with a
   clear fail-fast error), the `env()` `??`/`?:` operator-precedence bug,
   3 real `.env` parser bugs (inline comments, quote-stripping, `putenv()`
-  consistency), and a missing `function_exists()` guard. **Still open**:
-  a reported third, competing env implementation pair (`Core\Bootstrap\
-  EnvLoader`, `Core\Env\`) coexisting with the global `env()` — not yet
-  investigated, needs those specific files read before consolidating.
+  consistency), and a missing `function_exists()` guard. The historical competing-loader claim is closed: architecture regressions prove
+  those loaders are absent and `bootstrap/autoload.php` is the sole owner.
 - [x] **[FIXED] PDO connected before the error handler registered** —
   `ApplicationFactory::create()` now registers `ErrorHandler` first. **[R2]
   Still open**: `ModuleRegistry` construction and
@@ -618,8 +612,8 @@ replica.
 4. **[Substantially advanced]** Real security hardening:
    `EMULATE_PREPARES` ✅, pinned collation ✅, rate-limit salt ✅, sanitizer
    driver guard ✅, privilege-escalation fix ✅, race-condition fix ✅, 2FA
-   key rotation ✅. Still open: real rate-limit *enforcement*, account
-   lockout, password reset.
+   key rotation ✅, Admin-login rate-limit enforcement ✅. Still open:
+   account lockout and password reset.
 5. **[Done]** Fixed the `role.manage`/`user.manage` privilege boundary
 6. **[Done]** Verified the obsolete parallel 2FA family is already retired
 7. **[Done]** Shared presentation contracts moved to Core; Page and Settings dropped `zoosper/admin`

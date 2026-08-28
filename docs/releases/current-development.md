@@ -15,7 +15,7 @@
 
 ## Next engineering phase
 
-Revalidate the historical production-security reviewer findings against current source before changing runtime behaviour. The review must independently verify deployment-environment detection, secure-session and rate-limiting enforcement, and HTTP/console boot parity. These are historical assertions, not confirmed current defects.
+Phase 10AR current-source review confirmed that staging and production already fail closed for insecure sessions, disabled or report-only rate limiting, and weak identity salts, and that both HTTP and console boot invoke the policy. It also confirmed one environment-source defect: `.env` could overwrite process-manager or container values. The bounded correction makes deployment-provided values authoritative and adds isolated precedence and public-environment policy regressions before the alpha.3 release gate.
 
 After that evidence-led security phase, planned Admin follow-ups include an Admin-owned, module-discovered contract for useful permission-filtered dynamic Dashboard widgets; extensible colour-theme registration; the separate Grid column-preference persistence defect; organised multi-layer navigation discovery; and Auth-owned assigned-user search, Grid, and pagination improvements.
 

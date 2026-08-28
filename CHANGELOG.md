@@ -10,10 +10,8 @@
 - Reconciled module-discovery collision documentation with the existing fail-closed same-layer and cross-layer implementation.
 - Refined the Admin experience with a permission-aware Dashboard, fluid responsive light/dark shell, accessible shared components, package-owned Grid workflows, scoped assets, theme-coherent feature workspaces, a sidebar-owned collapse control, semantic destination icons, and non-interactive navigation groups.
 - Preserved CSP-safe asset registration, permissions, CSRF, POST-only mutations, Grid state, persistence, and audit boundaries throughout the Admin refinement.
+- Made process-manager and container environment values authoritative over `.env`, while retaining fail-closed staging/production secure-session and rate-limit enforcement across HTTP and console boot.
 - Verified the accepted Admin source with `1,550` tests and `11,157` assertions plus `3` standard quality checks with `0` errors and `0` warnings.
-
-### Planned
-- Revalidate the historical production-security reviewer findings against current source before changing runtime behaviour.
 
 
 ## [0.3.0-alpha.2] - 2026-08-19

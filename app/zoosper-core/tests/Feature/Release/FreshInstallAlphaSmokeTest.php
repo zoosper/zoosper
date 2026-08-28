@@ -5,7 +5,12 @@ declare(strict_types=1);
 /** @return array{code:int,output:string} */
 function runFreshInstallCommand(string $root, string $database, array $arguments): array
 {
-    $environment = $_ENV;
+    $environment = array_merge($_ENV, [
+        'APP_ENV' => 'testing',
+        'APP_DEBUG' => 'false',
+        'DB_CONNECTION' => 'sqlite',
+        'DB_DATABASE' => $database,
+    ]);
     $command = array_merge([PHP_BINARY, $root . '/bin/zoosper'], $arguments);
     $process = proc_open($command, [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $root, $environment);
     if (!is_resource($process)) {

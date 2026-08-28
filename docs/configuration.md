@@ -1,6 +1,6 @@
 # Configuration
 
-Zoosper loads module defaults beneath project configuration. Environment variables are used for deployment-specific values and secrets.
+Zoosper loads module defaults beneath project configuration. Environment variables are used for deployment-specific values and secrets. Values supplied by the process manager or container take precedence; existing `$_ENV` values follow, and `.env` fills only missing keys.
 
 Important groups include application identity and debug mode, database connections, sessions, Admin paths, security, Media, themes, Page cache and external service endpoints.
 
