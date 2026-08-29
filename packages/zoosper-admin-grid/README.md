@@ -49,15 +49,24 @@ Per-admin grid preferences, saved views and persistence integration for Zoosper.
 - `config/admin_assets.php` for Admin assets.
 - `config/services.php` for service bindings and interface implementations.
 
+## Column-preference persistence
+
+`GridViewMutationService::saveColumnPreferences()` normalises and stores visible columns and column order as one per-admin, per-grid preference. The existing `visible_columns_json` field now contains an object with `visible_columns` and `column_order`; no database migration is required. Legacy rows containing a plain visibility list remain readable and use the module definition order until the user next saves columns.
+
+Explicit validated GET column state takes precedence for the current request. A selected or default saved view takes precedence over unnamed per-user preferences for fields present in that view. Missing fields fall back to unnamed preferences and then module defaults. Unknown keys are discarded, non-toggleable columns are restored, duplicate keys are removed, and newly declared columns append deterministically.
+
+The package-owned column-order runtime synchronises the live visibility and order controls into CSRF-bearing Save columns and Save view POST forms. It does not use local storage and does not create a second ordering owner. Reset columns removes the complete unnamed preference.
+
 ## Security and compatibility
 
 - Preserve public interfaces, route permissions, configuration keys, and service identifiers when extending or replacing behaviour.
+- Feature modules continue to authenticate, authorise and validate CSRF before calling the mutation service. Admin user IDs and stable grid keys remain server-derived rather than client-controlled.
 
 ## Testing
 
 - Full repository suite: `zcomposer test`.
 - Package suite: `php8.5 vendor/bin/pest packages/zoosper-admin-grid/tests`.
-- Current regression files discovered: `60`. Use `find packages/zoosper-admin-grid/tests -type f -name '*Test.php' | sort` for the live list.
+- Current regression files discovered: `61`. Use `find packages/zoosper-admin-grid/tests -type f -name '*Test.php' | sort` for the live list.
 - Standard quality gate: `php8.5 tools/gate.php`.
 
 ## Operational notes

@@ -74,6 +74,42 @@ test('default bookmark and saved columns resolve for the authenticated admin onl
     expect($state->definition->allColumnKeys())->toBe(['id', 'title', 'actions']);
 });
 
+test('saved column order resolves and appends newly declared columns deterministically', function (): void {
+    $pdo = viewStateDatabase();
+    $preferences = new GridPreferenceRepository($pdo);
+    $preferences->saveColumnPreferences(
+        10,
+        'admin.pages',
+        ['title'],
+        ['title', 'id', 'actions'],
+    );
+
+    $state = resolverFor($pdo)->resolve(10, 'admin.pages', viewStateDefinition());
+
+    expect($state->visibleColumns)->toBe(['title', 'id', 'actions']);
+    expect($state->columnOrder)->toBe(['title', 'id', 'actions', 'status']);
+    expect($state->definition->allColumnKeys())->toBe(['title', 'id', 'actions']);
+});
+
+test('explicit query column state overrides persisted column preferences', function (): void {
+    $pdo = viewStateDatabase();
+    $preferences = new GridPreferenceRepository($pdo);
+    $preferences->saveColumnPreferences(
+        10,
+        'admin.pages',
+        ['title'],
+        ['title', 'id', 'actions', 'status'],
+    );
+
+    $state = resolverFor($pdo)->resolve(10, 'admin.pages', viewStateDefinition(), [
+        'visible_columns' => ['status'],
+        'column_order' => ['status', 'title'],
+    ]);
+
+    expect($state->visibleColumns)->toBe(['status', 'id', 'actions']);
+    expect($state->columnOrder)->toBe(['status', 'title', 'id', 'actions']);
+});
+
 test('query state overrides the selected bookmark after validation', function (): void {
     $pdo = viewStateDatabase();
     $bookmarks = new GridBookmarkRepository($pdo);

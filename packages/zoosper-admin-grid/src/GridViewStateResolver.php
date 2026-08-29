@@ -27,10 +27,17 @@ final readonly class GridViewStateResolver
     ): GridViewState {
         $bookmarks = $this->bookmarks->allForUser($adminUserId, $gridKey);
         $bookmark = $this->selectBookmark($bookmarks, $bookmarkId);
-        $savedColumns = $this->preferences->findVisibleColumns($adminUserId, $gridKey);
+        $savedPreferences = $this->preferences->findColumnPreferences($adminUserId, $gridKey);
         $state = array_replace($bookmark['state'] ?? [], $queryState);
-        if ($savedColumns !== null && !array_key_exists('visible_columns', $state)) {
-            $state['visible_columns'] = $savedColumns;
+        if ($savedPreferences !== null && !array_key_exists('visible_columns', $state)) {
+            $state['visible_columns'] = $savedPreferences['visible_columns'];
+        }
+        if (
+            $savedPreferences !== null
+            && $savedPreferences['column_order'] !== []
+            && !array_key_exists('column_order', $state)
+        ) {
+            $state['column_order'] = $savedPreferences['column_order'];
         }
 
         $normalised = $this->normaliser->normalise($state, $definition);

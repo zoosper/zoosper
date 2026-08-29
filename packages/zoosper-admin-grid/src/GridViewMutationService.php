@@ -23,21 +23,54 @@ final readonly class GridViewMutationService
     ) {
     }
 
-    /** @param list<string> $visibleColumns */
+    /**
+     * @param list<string> $visibleColumns
+     * @param list<string> $columnOrder
+     * @return array{visible_columns: list<string>, column_order: list<string>}
+     */
+    public function saveColumnPreferences(
+        int $adminUserId,
+        string $gridKey,
+        GridDefinition $definition,
+        array $visibleColumns,
+        array $columnOrder,
+    ): array {
+        $state = $this->normaliser->normalise([
+            'visible_columns' => $visibleColumns,
+            'column_order' => $columnOrder,
+        ], $definition);
+        $this->preferences->saveColumnPreferences(
+            $adminUserId,
+            $gridKey,
+            $state['visible_columns'],
+            $state['column_order'],
+        );
+
+        return [
+            'visible_columns' => $state['visible_columns'],
+            'column_order' => $state['column_order'],
+        ];
+    }
+
+    /**
+     * Backwards-compatible visibility-only mutation contract.
+     *
+     * @param list<string> $visibleColumns
+     * @return list<string>
+     */
     public function saveVisibleColumns(
         int $adminUserId,
         string $gridKey,
         GridDefinition $definition,
         array $visibleColumns,
     ): array {
-        $state = $this->normaliser->normalise(
-            ['visible_columns' => $visibleColumns],
-            $definition,
-        );
-        $this->preferences->saveVisibleColumns(
+        $state = $this->saveColumnPreferences(
             $adminUserId,
             $gridKey,
-            $state['visible_columns'],
+            $definition,
+            $visibleColumns,
+            $this->preferences->findColumnOrder($adminUserId, $gridKey)
+                ?? $definition->allColumnKeys(),
         );
 
         return $state['visible_columns'];

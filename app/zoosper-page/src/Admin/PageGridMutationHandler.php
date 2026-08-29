@@ -27,11 +27,12 @@ final readonly class PageGridMutationHandler
         $definition = $this->definition->build();
 
         match ($action) {
-            GridWorkspaceMutationContract::SAVE_COLUMNS => $this->mutations->saveVisibleColumns(
+            GridWorkspaceMutationContract::SAVE_COLUMNS => $this->mutations->saveColumnPreferences(
                 $adminUserId,
                 PageGridWorkspace::GRID_KEY,
                 $definition,
                 is_array($post['visible_columns'] ?? null) ? $post['visible_columns'] : [],
+                is_array($post['column_order'] ?? null) ? $post['column_order'] : [],
             ),
             GridWorkspaceMutationContract::RESET_COLUMNS => $this->mutations->resetVisibleColumns(
                 $adminUserId,

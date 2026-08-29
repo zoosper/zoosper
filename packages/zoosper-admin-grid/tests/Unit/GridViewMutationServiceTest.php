@@ -60,6 +60,43 @@ test('visible-column save keeps ID and Actions and drops unknown columns', funct
     expect($preferences->findVisibleColumns(10, 'admin.pages'))->toBe($saved);
 });
 
+test('column-preference save normalises and persists visibility and order together', function (): void {
+    $pdo = mutationDatabase();
+    [$service, $preferences] = mutationService($pdo);
+
+    $saved = $service->saveColumnPreferences(
+        10,
+        'admin.pages',
+        mutationDefinition(),
+        ['title', 'retired'],
+        ['title', 'site_name', 'retired', 'title'],
+    );
+
+    expect($saved)->toBe([
+        'visible_columns' => ['title', 'id', 'actions'],
+        'column_order' => ['title', 'site_name', 'id', 'actions'],
+    ]);
+    expect($preferences->findColumnPreferences(10, 'admin.pages'))->toBe($saved);
+});
+
+test('legacy visibility-only service calls preserve an existing saved order', function (): void {
+    $pdo = mutationDatabase();
+    [$service, $preferences] = mutationService($pdo);
+    $preferences->saveColumnPreferences(
+        10,
+        'admin.pages',
+        ['title'],
+        ['title', 'id', 'actions', 'site_name'],
+    );
+
+    $service->saveVisibleColumns(10, 'admin.pages', mutationDefinition(), ['site_name']);
+
+    expect($preferences->findColumnPreferences(10, 'admin.pages'))->toBe([
+        'visible_columns' => ['site_name', 'id', 'actions'],
+        'column_order' => ['title', 'id', 'actions', 'site_name'],
+    ]);
+});
+
 test('bookmark save persists one normalised complete workspace state', function (): void {
     $pdo = mutationDatabase();
     [$service, , $bookmarks] = mutationService($pdo);

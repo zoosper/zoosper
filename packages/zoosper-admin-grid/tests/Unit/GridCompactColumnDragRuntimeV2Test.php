@@ -12,6 +12,7 @@ it('enables compact configurable columns at runtime and locks boundary keys', fu
         ->toContain("addEventListener('dragstart'")
         ->toContain("addEventListener('drop'")
         ->toContain("document.createElement('input')")
+        ->toContain('replaceColumnOrderInputs(form, keys)')
         ->toContain("input.name = 'column_order[]'")
         ->not->toContain('innerHTML');
 });

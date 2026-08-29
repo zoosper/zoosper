@@ -18,6 +18,10 @@ it('owns the canonical key-driven column order runtime', function (): void {
         ->toContain('reflectTableOrder')
         ->toContain('data-grid-column')
         ->toContain('zoosper:grid:columns-reordered')
+        ->toContain('syncPersistedColumnState')
+        ->toContain('[data-grid-column-state-form]')
+        ->toContain('replaceVisibleInputs(form, visible)')
+        ->toContain('replaceColumnOrderInputs(form, order)')
         ->toContain('[data-grid-column-move]')
         ->not->toContain('cellIndex');
 

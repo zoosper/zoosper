@@ -41,6 +41,7 @@ test('every mutation form uses POST and carries the supplied CSRF token', functi
     );
 
     expect(substr_count($html, 'method="post"'))->toBe(4);
+    expect(substr_count($html, 'data-grid-column-state-form'))->toBe(2);
     expect(substr_count($html, 'name="_csrf" value="token-value"'))->toBe(4);
     expect(substr_count($html, 'name="view_name"'))->toBe(1);
     expect($html)->not->toContain('admin_user_id');

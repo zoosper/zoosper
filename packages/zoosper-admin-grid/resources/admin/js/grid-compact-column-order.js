@@ -14,25 +14,53 @@
         ?? list.closest('[data-grid-workspace]')?.querySelector('form')
         ?? null;
 
+    const replaceVisibleInputs = (form, values) => {
+        form.querySelectorAll('input[name="visible_columns[]"]').forEach((input) => input.remove());
+        values.forEach((value) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'visible_columns[]';
+            input.value = value;
+            form.appendChild(input);
+        });
+    };
+
+    const replaceColumnOrderInputs = (form, values) => {
+        form.querySelectorAll('input[name="column_order[]"]').forEach((input) => input.remove());
+        values.forEach((value) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'column_order[]';
+            input.value = value;
+            form.appendChild(input);
+        });
+    };
+
+    const syncPersistedColumnState = (list) => {
+        const workspace = list.closest('[data-grid-workspace]');
+        const settings = workspace?.nextElementSibling?.matches('[data-grid-settings]')
+            ? workspace.nextElementSibling
+            : null;
+        if (!settings) return;
+
+        const order = keysFrom(list);
+        const visible = Array.from(list.querySelectorAll(`${ITEM_SELECTOR} input[name="visible_columns[]"]:checked`))
+            .map((input) => input.value.trim())
+            .filter(Boolean);
+        settings.querySelectorAll('[data-grid-column-state-form]').forEach((form) => {
+            if (!(form instanceof HTMLFormElement)) return;
+            replaceVisibleInputs(form, visible);
+            replaceColumnOrderInputs(form, order);
+        });
+    };
+
     const syncOrderInputs = (list) => {
         const form = formFor(list);
         if (!(form instanceof HTMLFormElement)) return;
 
         const keys = keysFrom(list);
-        const inputs = Array.from(form.querySelectorAll('input[name="column_order[]"]'));
-
-        while (inputs.length < keys.length) {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'column_order[]';
-            form.appendChild(input);
-            inputs.push(input);
-        }
-
-        inputs.forEach((input, index) => {
-            if (index < keys.length) input.value = keys[index];
-            else input.remove();
-        });
+        replaceColumnOrderInputs(form, keys);
+        syncPersistedColumnState(list);
     };
 
     const tableFor = (list) => {
@@ -127,6 +155,13 @@
                 item.setAttribute('aria-grabbed', 'false');
                 dragging = null;
             });
+        });
+
+        list.addEventListener('change', (event) => {
+            const input = event.target;
+            if (!(input instanceof HTMLInputElement) || input.name !== 'visible_columns[]') return;
+            syncPersistedColumnState(list);
+            markDirty(list);
         });
 
         list.addEventListener('click', (event) => {

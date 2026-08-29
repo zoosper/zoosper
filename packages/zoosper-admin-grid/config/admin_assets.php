@@ -90,7 +90,7 @@ return array (
     'zoosper-admin-grid-column-order-script' => 
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-admin-grid/js/grid-compact-column-order.js?v=ad26ae411791',
+      'path' => '/asset/zoosper-admin-grid/js/grid-compact-column-order.js?v=d35a14b14d05',
       'sort_order' => 81,
       'attributes' => 
       array (

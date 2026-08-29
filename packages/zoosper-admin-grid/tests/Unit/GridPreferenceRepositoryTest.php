@@ -24,6 +24,30 @@ test('visible columns are isolated by admin user and grid', function (): void {
     expect($repository->findVisibleColumns(10, 'admin.audit'))->toBeNull();
 });
 
+test('complete column preferences round-trip without changing the existing schema', function (): void {
+    $repository = new GridPreferenceRepository(preferenceDatabase());
+    $repository->saveColumnPreferences(
+        10,
+        'admin.pages',
+        ['id', 'title'],
+        ['title', 'id', 'actions'],
+    );
+
+    expect($repository->findColumnPreferences(10, 'admin.pages'))->toBe([
+        'visible_columns' => ['id', 'title'],
+        'column_order' => ['title', 'id', 'actions'],
+    ]);
+});
+
+test('legacy visibility-only rows remain readable and have no saved order', function (): void {
+    $pdo = preferenceDatabase();
+    $pdo->exec("INSERT INTO admin_grid_preferences (admin_user_id, grid_key, visible_columns_json, updated_at) VALUES (10, 'admin.pages', '[\"id\",\"title\"]', '2026-08-29 00:00:00')");
+    $repository = new GridPreferenceRepository($pdo);
+
+    expect($repository->findVisibleColumns(10, 'admin.pages'))->toBe(['id', 'title']);
+    expect($repository->findColumnOrder(10, 'admin.pages'))->toBeNull();
+});
+
 test('visible columns update and clear without duplicate rows', function (): void {
     $pdo = preferenceDatabase();
     $repository = new GridPreferenceRepository($pdo);

@@ -20,9 +20,10 @@ final readonly class StoreOrderGridMutationHandler
     {
         $definition = StoreOrderGrid::definition()->grid;
         match ($action) {
-            GridWorkspaceMutationContract::SAVE_COLUMNS => $this->mutations->saveVisibleColumns(
+            GridWorkspaceMutationContract::SAVE_COLUMNS => $this->mutations->saveColumnPreferences(
                 $adminUserId, StoreOrderGridWorkspace::GRID_KEY, $definition,
                 is_array($post['visible_columns'] ?? null) ? $post['visible_columns'] : [],
+                is_array($post['column_order'] ?? null) ? $post['column_order'] : [],
             ),
             GridWorkspaceMutationContract::RESET_COLUMNS => $this->mutations->resetVisibleColumns(
                 $adminUserId, StoreOrderGridWorkspace::GRID_KEY,

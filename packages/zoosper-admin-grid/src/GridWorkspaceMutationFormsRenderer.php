@@ -58,7 +58,12 @@ final readonly class GridWorkspaceMutationFormsRenderer
         string $csrfField,
         string $csrfToken,
     ): string {
-        $html = $this->openForm($path, $csrfField, $csrfToken);
+        $html = $this->openForm(
+            $path,
+            $csrfField,
+            $csrfToken,
+            columnStateForm: true,
+        );
         foreach ($state->visibleColumns as $key) {
             $html .= $this->hidden('visible_columns[]', $key);
         }
@@ -87,7 +92,13 @@ final readonly class GridWorkspaceMutationFormsRenderer
         string $csrfField,
         string $csrfToken,
     ): string {
-        $html = $this->openForm($path, $csrfField, $csrfToken, 'grid-workspace__mutation-form grid-workspace__named-view-form');
+        $html = $this->openForm(
+            $path,
+            $csrfField,
+            $csrfToken,
+            'grid-workspace__mutation-form grid-workspace__named-view-form',
+            columnStateForm: true,
+        );
         $html .= '<label>View name <input name="view_name" maxlength="120" required autocomplete="off"></label>';
         foreach ($state->criteria->filters as $key => $value) {
             foreach (is_array($value) ? $value : [$value] as $item) {
@@ -131,8 +142,11 @@ final readonly class GridWorkspaceMutationFormsRenderer
         string $csrfField,
         string $csrfToken,
         string $class = 'grid-workspace__mutation-form',
+        bool $columnStateForm = false,
     ): string {
-        return '<form class="' . $this->escape($class) . '" method="post" action="'
+        $attribute = $columnStateForm ? ' data-grid-column-state-form' : '';
+
+        return '<form class="' . $this->escape($class) . '"' . $attribute . ' method="post" action="'
             . $this->escape($path) . '">' . $this->hidden($csrfField, $csrfToken);
     }
 
