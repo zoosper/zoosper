@@ -41,6 +41,7 @@ use Zoosper\Admin\Navigation\AdminMenuLoader;
 use Zoosper\Admin\Navigation\AdminNavigationRenderer;
 use Zoosper\Admin\Navigation\AdminSectionMetadataLoader;
 use Zoosper\Admin\Navigation\AdminSectionBuilder;
+use Zoosper\Admin\Theme\ModuleAdminColourThemeLoader;
 use Zoosper\Admin\UI\AdminComponentRenderer;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\AdminDashboard\Contract\DashboardRolePreferenceRepositoryInterface;
@@ -74,6 +75,7 @@ return [
     DashboardWidgetPersonaliser::class => static fn(ServiceContainer $services): DashboardWidgetPersonaliser => new DashboardWidgetPersonaliser(),
     DashboardPersonalisationService::class => static fn(ServiceContainer $services): DashboardPersonalisationService => new DashboardPersonalisationService($services->get(ModuleDashboardWidgetLoader::class), $services->get(DashboardPreferenceRepository::class), $services->get(DashboardWidgetPersonaliser::class), $services->has(DashboardRolePreferenceRepositoryInterface::class) ? $services->get(DashboardRolePreferenceRepositoryInterface::class) : null),
     AdminAssetRegistry::class => static fn(ServiceContainer $services): AdminAssetRegistry => new AdminAssetRegistry($services->get(ModuleRegistry::class)),
+    ModuleAdminColourThemeLoader::class => static fn(ServiceContainer $services): ModuleAdminColourThemeLoader => new ModuleAdminColourThemeLoader($services->get(ModuleRegistry::class)),
     AdminAssetViewDataProvider::class => static fn(ServiceContainer $services): AdminAssetViewDataProvider => new AdminAssetViewDataProvider($services->get(AdminAssetRegistry::class)),
     AdminAssetTemplateRenderer::class => static fn(ServiceContainer $services): AdminAssetTemplateRenderer => new AdminAssetTemplateRenderer($services->get(AdminAssetRegistry::class)),
     AssetPathResolver::class => static fn(ServiceContainer $services): AssetPathResolver => new AssetPathResolver($services->get(ConfigRepository::class)),
@@ -123,6 +125,7 @@ return [
         $services->get(FlashMessageRenderer::class),
         $services->get(CsrfTokenManager::class),
         $services->get(AdminUrlGenerator::class),
+        $services->get(ModuleAdminColourThemeLoader::class),
     ),
     AdminViewRenderer::class => static fn(ServiceContainer $services): AdminViewRenderer => new AdminViewRenderer(
         $services->get('theme.admin_template_renderer'),

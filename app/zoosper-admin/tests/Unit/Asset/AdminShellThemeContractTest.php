@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-it('keeps the complete Admin shell aligned with the selected light or dark theme', function (): void {
+it('keeps the complete Admin shell aligned with the selected colour palette and base mode', function (): void {
     $root = dirname(__DIR__, 5);
     $stylesheet = $root . '/app/zoosper-admin/resources/assets/css/admin-shell.css';
     $css = (string) file_get_contents($stylesheet);
@@ -12,6 +12,7 @@ it('keeps the complete Admin shell aligned with the selected light or dark theme
 
     expect($css)->toContain(':root {')
         ->toContain(':root[data-admin-theme="dark"]')
+        ->toContain(':root[data-admin-theme-palette="ocean"]')
         ->toContain('--admin-sidebar: #ffffff;')
         ->toContain('--admin-sidebar: #080c12;')
         ->toContain('--admin-sidebar-border:')
@@ -38,12 +39,14 @@ it('retains the CSP-safe persisted theme control contract', function (): void {
     $layout = (string) file_get_contents($root . '/themes/admin/default/templates/layout.php');
     $runtime = (string) file_get_contents($root . '/app/zoosper-admin/resources/assets/js/admin-shell.js');
 
-    expect($layout)->toContain('data-admin-theme-toggle')
-        ->toContain('data-admin-theme-label')
+    expect($layout)->toContain('data-admin-theme-selector')
+        ->toContain('data-admin-theme-mode=')
+        ->toContain('Admin colour theme')
         ->not->toContain('onclick=')
         ->and($runtime)->toContain("const themeKey = 'zoosper.admin.theme';")
-        ->toContain('root.dataset.adminTheme = resolved;')
-        ->toContain("resolved === 'dark' ? 'Use light theme' : 'Use dark theme'")
+        ->toContain('root.dataset.adminTheme = mode;')
+        ->toContain('root.dataset.adminThemePalette = palette;')
+        ->toContain('themes.has(storedTheme)')
         ->toContain('window.localStorage.setItem(key, value)')
         ->not->toContain('innerHTML');
 });

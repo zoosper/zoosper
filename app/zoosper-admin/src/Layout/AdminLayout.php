@@ -10,6 +10,8 @@ use Zoosper\Admin\Message\FlashMessageRenderer;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminNavigationRenderer;
+use Zoosper\Admin\Theme\AdminColourTheme;
+use Zoosper\Admin\Theme\ModuleAdminColourThemeLoader;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Config\ConfigRepository;
@@ -31,6 +33,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
         private ?FlashMessageRenderer $flashRenderer = null,
         private ?CsrfTokenManager $csrf = null,
         private ?AdminUrlGenerator $adminUrls = null,
+        private ?ModuleAdminColourThemeLoader $colourThemes = null,
     ) {
     }
 
@@ -57,6 +60,10 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
             'scripts' => [],
         ];
         $flashMessagesHtml = $this->flashRenderer?->render($this->flashMessages?->pull() ?? []) ?? '';
+        $colourThemes = $this->colourThemes?->all() ?? [
+            new AdminColourTheme('light', 'Light', 'light', 10),
+            new AdminColourTheme('dark', 'Dark', 'dark', 20),
+        ];
 
         return $templates->render('layout.php', [
             'title' => $title,
@@ -69,6 +76,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
             'assetStylesHtml' => $this->assetRenderer?->stylesHtml($active) ?? '',
             'assetScriptsHtml' => $this->assetRenderer?->scriptsHtml($active) ?? '',
             'flashMessagesHtml' => $flashMessagesHtml,
+            'adminColourThemes' => $colourThemes,
         ]);
     }
 

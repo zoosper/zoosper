@@ -12,12 +12,20 @@
     const navigationClose = shell.querySelector('[data-admin-navigation-close]');
     const sidebarToggle = shell.querySelector('[data-admin-sidebar-toggle]');
     const collapseIcon = sidebarToggle?.querySelector('[data-admin-collapse-icon]');
-    const themeToggle = shell.querySelector('[data-admin-theme-toggle]');
-    const themeLabel = shell.querySelector('[data-admin-theme-label]');
+    const themeSelector = shell.querySelector('[data-admin-theme-selector]');
     const mobileQuery = window.matchMedia('(max-width: 860px)');
     const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const themeKey = 'zoosper.admin.theme';
     const sidebarKey = 'zoosper.admin.sidebar-collapsed';
+    const themes = new Map();
+
+    if (themeSelector instanceof HTMLSelectElement) {
+        Array.from(themeSelector.options).forEach((option) => {
+            if (option.value !== '' && (option.dataset.adminThemeMode === 'light' || option.dataset.adminThemeMode === 'dark')) {
+                themes.set(option.value, option.dataset.adminThemeMode);
+            }
+        });
+    }
 
     shell.dataset.adminShellReady = 'true';
 
@@ -37,33 +45,38 @@
         }
     };
 
-    const setTheme = (theme, persist = false) => {
-        const resolved = theme === 'dark' ? 'dark' : 'light';
-        root.dataset.adminTheme = resolved;
-        if (themeToggle instanceof HTMLButtonElement) {
-            themeToggle.setAttribute('aria-pressed', resolved === 'dark' ? 'true' : 'false');
-            themeToggle.title = resolved === 'dark' ? 'Use light theme' : 'Use dark theme';
+    const systemTheme = () => darkQuery.matches ? 'dark' : 'light';
+
+    const setTheme = (palette, persist = false) => {
+        const mode = themes.get(palette);
+        if (mode === undefined) {
+            return false;
         }
-        if (themeLabel instanceof HTMLElement) {
-            themeLabel.textContent = resolved === 'dark' ? 'Use light theme' : 'Use dark theme';
+
+        root.dataset.adminTheme = mode;
+        root.dataset.adminThemePalette = palette;
+        if (themeSelector instanceof HTMLSelectElement) {
+            themeSelector.value = palette;
         }
         if (persist) {
-            storageSet(themeKey, resolved);
+            storageSet(themeKey, palette);
         }
+        return true;
     };
 
     const storedTheme = storageGet(themeKey);
-    setTheme(storedTheme === 'light' || storedTheme === 'dark'
-        ? storedTheme
-        : (darkQuery.matches ? 'dark' : 'light'));
+    setTheme(storedTheme !== null && themes.has(storedTheme) ? storedTheme : systemTheme());
 
-    themeToggle?.addEventListener('click', () => {
-        setTheme(root.dataset.adminTheme === 'dark' ? 'light' : 'dark', true);
+    themeSelector?.addEventListener('change', () => {
+        if (themeSelector instanceof HTMLSelectElement) {
+            setTheme(themeSelector.value, true);
+        }
     });
 
-    darkQuery.addEventListener('change', (event) => {
-        if (storageGet(themeKey) === null) {
-            setTheme(event.matches ? 'dark' : 'light');
+    darkQuery.addEventListener('change', () => {
+        const stored = storageGet(themeKey);
+        if (stored === null || !themes.has(stored)) {
+            setTheme(systemTheme());
         }
     });
 

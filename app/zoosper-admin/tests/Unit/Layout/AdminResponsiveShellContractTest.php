@@ -17,7 +17,7 @@ it('keeps the Admin shell responsive, accessible and free from inline behaviour'
         ->toContain('data-admin-collapse-icon')
         ->toMatch('/<aside[^>]*data-admin-sidebar.*data-admin-sidebar-toggle.*<\/aside>/s')
         ->not->toMatch('/admin-topbar__leading.*data-admin-sidebar-toggle/s')
-        ->toContain('data-admin-theme-toggle')
+        ->toContain('data-admin-theme-selector')
         ->toContain('id="admin-content" tabindex="-1"')
         ->toContain('/assets/brand/logo.svg')
         ->toContain('/assets/brand/favicon.svg')
@@ -36,13 +36,13 @@ it('registers the CSP-safe Admin-owned shell assets in deterministic order', fun
         ->and($assets['zoosper-admin-shell-style'])
         ->toMatchArray([
             'type' => 'style',
-            'path' => '/asset/zoosper-admin/css/admin-shell.css?v=a940051ffd42',
+            'path' => '/asset/zoosper-admin/css/admin-shell.css?v=2d298a1d43e7',
             'sort_order' => 15,
         ])
         ->and($assets['zoosper-admin-shell-script'])
         ->toMatchArray([
             'type' => 'script',
-            'path' => '/asset/zoosper-admin/js/admin-shell.js?v=595c9400b58c',
+            'path' => '/asset/zoosper-admin/js/admin-shell.js?v=7070538c82e0',
             'sort_order' => 10,
             'defer' => true,
         ]);

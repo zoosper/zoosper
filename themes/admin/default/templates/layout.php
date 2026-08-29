@@ -13,6 +13,7 @@
  * @var string $assetStylesHtml
  * @var string $assetScriptsHtml
  * @var string $flashMessagesHtml
+ * @var list<\Zoosper\Admin\Theme\AdminColourTheme> $adminColourThemes
  */
 ?>
 <!doctype html>
@@ -58,10 +59,16 @@
             </div>
             <div class="admin-topbar__actions">
                 <span class="admin-user-name"><?= $e($userName) ?></span>
-                <button class="admin-shell-control" type="button" data-admin-theme-toggle aria-pressed="false">
-                    <span aria-hidden="true" data-admin-theme-icon>◐</span>
-                    <span class="admin-control-label" data-admin-theme-label>Use dark theme</span>
-                </button>
+                <label class="admin-theme-picker">
+                    <span class="admin-control-label">Colour theme</span>
+                    <select data-admin-theme-selector aria-label="Admin colour theme">
+                        <?php foreach ($adminColourThemes ?? [] as $adminColourTheme): ?>
+                            <option value="<?= $e($adminColourTheme->code) ?>" data-admin-theme-mode="<?= $e($adminColourTheme->mode) ?>">
+                                <?= $e($adminColourTheme->name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
             </div>
         </header>
         <?= $slot('before.content') ?>
