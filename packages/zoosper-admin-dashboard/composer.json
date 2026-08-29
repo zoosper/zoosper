@@ -1,0 +1,20 @@
+{
+    "name": "zoosper/admin-dashboard",
+    "description": "Dependency-safe contracts and immutable widget values for the Zoosper Admin Dashboard.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\AdminDashboard\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.5"
+        }
+    }
+}

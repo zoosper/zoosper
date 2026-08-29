@@ -48,7 +48,7 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 **Planned Admin follow-ups for the current development line:**
 
-- Replace Dashboard navigation repetition with useful dynamic widgets behind an Admin-owned, module-discovered contributor contract. Feature modules own their data; Admin owns permission-filtered composition, responsive layout, failure isolation, accessibility, and user layout preferences without concrete cross-module dependencies.
+- [x] The Admin-owned, module-discovered contributor contract now replaces Dashboard navigation repetition with dynamic widgets through the focused `zoosper/admin-dashboard` contracts package. Auth contributes an active-user metric from its own repository; Admin permission-filters before service resolution, isolates contributor failures, renders escaped responsive cards, and retains no concrete feature-module dependency. Admin-owned per-user preferences now add permission-safe show/hide, persisted order, reset-to-default, accessible keyboard movement, and CSP-safe drag enhancement; role/team defaults remain a separate future layer.
 - Introduce extensible Admin colour-theme registration beyond the current built-in light/dark choices while retaining coherent tokens and CSP-safe assets.
 - Diagnose and correct non-persisting Grid column preferences as a behavioural workstream separate from presentation.
 - Improve organised multi-layer navigation discovery without making non-interactive groups look actionable or coupling Admin to vertical solutions.

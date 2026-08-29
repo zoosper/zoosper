@@ -53,6 +53,7 @@ it('discovers and applies migrations from each module\'s own database/migrations
         'page_revisions',       // app/zoosper-page/database/migrations
         'admin_login_history',  // app/zoosper-admin/config/db_schema.php
         'admin_activity_log',   // app/zoosper-admin/config/db_schema.php
+        'admin_dashboard_preferences', // app/zoosper-admin/config/db_schema.php
     ];
 
     foreach ($expectedTables as $table) {

@@ -29,6 +29,7 @@ Zoosper_Auth module for Zoosper CMS.
 - `config/acl.php`: ACL groups and permissions.
 - `config/admin_assets.php`: Admin asset contributions.
 - `config/admin_menu.php`: Admin navigation items.
+- `config/admin_dashboard.php`: the permission-gated active Admin user Dashboard contribution.
 - `config/admin_middleware.php`: Module runtime configuration.
 - `config/admin_routes.php`: Authenticated Admin routes.
 - `config/admin_ui.php`: Module runtime configuration.
@@ -72,6 +73,7 @@ Zoosper_Auth module for Zoosper CMS.
 - `config/acl.php` for ACL declarations.
 - `config/admin_assets.php` for Admin assets.
 - `config/admin_menu.php` for Admin navigation.
+- `config/admin_dashboard.php` for the `user.manage`-gated active-user metric through `zoosper/admin-dashboard`; Auth retains ownership of the repository query and does not depend on concrete Admin classes.
 - `config/console.php` for console commands.
 - `config/services.php` for service bindings and interface implementations.
 

@@ -32,6 +32,10 @@ use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Message\FlashMessageRenderer;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\Message\SessionFlashMessageStore;
+use Zoosper\Admin\Dashboard\DashboardPersonalisationService;
+use Zoosper\Admin\Dashboard\DashboardPreferenceRepository;
+use Zoosper\Admin\Dashboard\DashboardWidgetPersonaliser;
+use Zoosper\Admin\Dashboard\ModuleDashboardWidgetLoader;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuLoader;
 use Zoosper\Admin\Navigation\AdminNavigationRenderer;
@@ -64,6 +68,10 @@ return [
     AuditLogRepository::class => static fn(ServiceContainer $services): AuditLogRepository => new AuditLogRepository($services->get(PDO::class)),
     AuditLogger::class => static fn(ServiceContainer $services): AuditLogger => new AuditLogger($services->get(AuditLogRepository::class)),
     AdminFormUiConfigLoader::class => static fn(ServiceContainer $services): AdminFormUiConfigLoader => new AdminFormUiConfigLoader($services->get(ModuleRegistry::class)),
+    ModuleDashboardWidgetLoader::class => static fn(ServiceContainer $services): ModuleDashboardWidgetLoader => new ModuleDashboardWidgetLoader($services->get(ModuleRegistry::class), $services),
+    DashboardPreferenceRepository::class => static fn(ServiceContainer $services): DashboardPreferenceRepository => new DashboardPreferenceRepository($services->get(PDO::class)),
+    DashboardWidgetPersonaliser::class => static fn(ServiceContainer $services): DashboardWidgetPersonaliser => new DashboardWidgetPersonaliser(),
+    DashboardPersonalisationService::class => static fn(ServiceContainer $services): DashboardPersonalisationService => new DashboardPersonalisationService($services->get(ModuleDashboardWidgetLoader::class), $services->get(DashboardPreferenceRepository::class), $services->get(DashboardWidgetPersonaliser::class)),
     AdminAssetRegistry::class => static fn(ServiceContainer $services): AdminAssetRegistry => new AdminAssetRegistry($services->get(ModuleRegistry::class)),
     AdminAssetViewDataProvider::class => static fn(ServiceContainer $services): AdminAssetViewDataProvider => new AdminAssetViewDataProvider($services->get(AdminAssetRegistry::class)),
     AdminAssetTemplateRenderer::class => static fn(ServiceContainer $services): AdminAssetTemplateRenderer => new AdminAssetTemplateRenderer($services->get(AdminAssetRegistry::class)),

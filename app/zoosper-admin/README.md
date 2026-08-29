@@ -31,6 +31,7 @@ Zoosper_Admin module for Zoosper CMS.
 - `config/admin_routes.php`: Authenticated Admin routes.
 - `config/admin_sections.php`: Admin section labels, icons, and order.
 - `config/admin_settings.php`: Settings catalogue contributions.
+- `config/admin_dashboard.php`: permission-gated Dashboard widget contributors.
 - `config/assets.php`: Runtime asset registration.
 - `config/controllers.php`: Controller factories.
 - `config/db_schema.php`: Declarative database schema.
@@ -43,6 +44,8 @@ Zoosper_Admin module for Zoosper CMS.
 - `POST /admin/login` from `config/admin_routes.php`.
 - `POST /admin/logout` from `config/admin_routes.php`.
 - `GET /admin` from `config/admin_routes.php`.
+- `POST /admin/dashboard/preferences` saves the current user's permitted widget visibility and order.
+- `POST /admin/dashboard/preferences/reset` resets the current user to module defaults.
 - `GET /admin/audit-log` from `config/admin_routes.php`.
 - `GET /admin/login-history` from `config/admin_routes.php`.
 
@@ -59,7 +62,7 @@ Zoosper_Admin module for Zoosper CMS.
 
 ## Database
 
-- Declarative schema is owned by `config/db_schema.php`.
+- Declarative schema is owned by `config/db_schema.php`, including per-user `admin_dashboard_preferences`.
 
 ## Extension points
 
@@ -86,7 +89,9 @@ Each feature module owns its destination's semantic `icon` identifier in `config
 
 ## Dashboard
 
-The Dashboard derives quick-access links from `AdminMenu::itemsFor()` and then normalises them through `DashboardQuickLinks`. It therefore follows module discovery and the current user's permission-filtered navigation without hardcoded feature-module routes or synthetic business metrics. The module view and default-theme override remain server rendered, escape labels and URLs, and provide a useful empty state when no additional workspace is available.
+The Dashboard discovers enabled modules' `config/admin_dashboard.php` declarations through `ModuleDashboardWidgetLoader`. Every contributor declaration requires a permission, which is checked before its service is resolved or executed. Contributors implement the dependency-safe `zoosper/admin-dashboard` contract and return immutable plain-text widget values; feature modules own their queries while Admin owns deterministic composition, duplicate rejection, failure isolation, responsive rendering, escaping, and the generic unavailable state. The Auth module supplies the first live metric: active Admin users, visible only with `user.manage`.
+
+Admin also owns per-user Dashboard preferences in `admin_dashboard_preferences`. Permission-filtered widgets are composed before `DashboardPersonalisationService` reads or applies state. Each authenticated user may hide, show, reorder, or reset only their own available widgets; unknown, duplicate, and unauthorised submitted codes are rejected. New permitted widgets appear by module-default order, while stale stored codes are ignored. Standard POST forms remain the server-authoritative fallback, central Admin CSRF middleware validates mutations, and the screen-scoped `dashboard-personalisation.js` asset progressively adds immediate drag, keyboard move, and visibility feedback without inline behaviour. Preference changes are not written to the security audit log because they alter only the actor's presentation and no authorisation or domain state.
 
 ## Shared Admin components
 

@@ -2,6 +2,18 @@
 declare(strict_types=1);
 return [
     'tables' => [
+        'admin_dashboard_preferences' => [
+            'columns' => [
+                'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],
+                'admin_user_id' => ['type' => 'integer', 'nullable' => false],
+                'hidden_widget_codes_json' => ['type' => 'json', 'nullable' => false],
+                'widget_order_json' => ['type' => 'json', 'nullable' => false],
+                'updated_at' => ['type' => 'datetime', 'nullable' => false],
+            ],
+            'indexes' => [
+                'idx_admin_dashboard_preferences_user' => ['columns' => ['admin_user_id'], 'unique' => true],
+            ],
+        ],
         'admin_login_history' => [
             'columns' => [
                 'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],

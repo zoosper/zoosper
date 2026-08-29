@@ -13,6 +13,7 @@ use Zoosper\Auth\Http\CsrfMiddleware;
 use Zoosper\Auth\Http\RateLimitReportOnlyAdminMiddleware;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
+use Zoosper\Auth\Dashboard\AdminUserCountDashboardWidgetContributor;
 use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
@@ -33,6 +34,7 @@ return [
 
     SecondFactorRequirementInterface::class => static fn (ServiceContainer $services): SecondFactorRequirementInterface => new RequireSecondFactorByDefault(),
     AdminUserRepository::class => static fn (ServiceContainer $services): AdminUserRepository => new AdminUserRepository($services->get(PDO::class)),
+    AdminUserCountDashboardWidgetContributor::class => static fn (ServiceContainer $services): AdminUserCountDashboardWidgetContributor => new AdminUserCountDashboardWidgetContributor($services->get(AdminUserRepository::class)),
     RoleRepository::class => static fn (ServiceContainer $services): RoleRepository => new RoleRepository($services->get(PDO::class)),
     PasswordHasher::class => static fn (ServiceContainer $services): PasswordHasher => new PasswordHasher(),
     AuthService::class => static fn (ServiceContainer $services): AuthService => new AuthService(

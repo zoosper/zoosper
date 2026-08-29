@@ -6,6 +6,7 @@
     "require": {
         "marko/admin": "0.8.5",
         "php": "^8.5",
+        "zoosper/admin-dashboard": "dev-dev",
         "zoosper/admin-grid": "dev-dev",
         "zoosper/auth": "dev-dev",
         "zoosper/core": "dev-dev",

@@ -11,7 +11,7 @@ it('registers the Admin-owned component layer after shell tokens and before feat
         ->and($assets['zoosper-admin-components-style'])
         ->toMatchArray([
             'type' => 'style',
-            'path' => '/asset/zoosper-admin/css/admin-components.css?v=3adf2f4d67e9',
+            'path' => '/asset/zoosper-admin/css/admin-components.css?v=84b6d533a2ef',
             'sort_order' => 16,
         ])
         ->and($assets['zoosper-admin-shell-style']['sort_order'])
@@ -35,8 +35,8 @@ it('provides fluid theme-aware components with responsive and reduced-motion beh
         ->toContain('.admin-badge--danger')
         ->toContain('.admin-table-scroll')
         ->toContain('.admin-empty-state')
-        ->toContain('.dashboard-overview')
-        ->toContain('.dashboard-links')
+        ->toContain('.dashboard-widget-grid')
+        ->toContain('.dashboard-widget')
         ->toContain('@media (max-width: 680px)')
         ->toContain('@media (prefers-reduced-motion: reduce)')
         ->not->toMatch('/javascript\s*:/i')

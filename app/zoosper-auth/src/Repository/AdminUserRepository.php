@@ -32,6 +32,14 @@ final readonly class AdminUserRepository
     {
     }
 
+    public function countByStatus(string $status): int
+    {
+        $statement = $this->pdo->prepare('SELECT COUNT(*) FROM admin_users WHERE status = :status');
+        $statement->execute(['status' => $status]);
+
+        return (int) $statement->fetchColumn();
+    }
+
     /** @return list<AdminUser> */
     public function all(): array
     {

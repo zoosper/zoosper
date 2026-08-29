@@ -30,8 +30,18 @@ return array (
     'zoosper-admin-components-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/admin-components.css?v=3adf2f4d67e9',
+      'path' => '/asset/zoosper-admin/css/admin-components.css?v=84b6d533a2ef',
       'sort_order' => 16,
+    ),
+    'zoosper-dashboard-personalisation-script' =>
+    array (
+      'screens' => array ('dashboard'),
+      'type' => 'script',
+      'path' => '/asset/zoosper-admin/js/dashboard-personalisation.js?v=b0738f9636e9',
+      'sort_order' => 82,
+      'attributes' => array (
+        'defer' => true,
+      ),
     ),
     'zoosper-admin-messages-style' => 
     array (

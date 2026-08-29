@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9a8630d7554b76ae19299c513bbb5304",
+    "content-hash": "415c81bc56fb62616eba97ed869725f6",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1085,11 +1085,12 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-admin",
-                "reference": "6430c0e9de34766e5ab03e451e510ee9e65ac2fb"
+                "reference": "1d02668f3d28d1269ab8da4d8ec64cf9e03fc82b"
             },
             "require": {
                 "marko/admin": "0.8.5",
                 "php": "^8.5",
+                "zoosper/admin-dashboard": "dev-dev",
                 "zoosper/admin-grid": "dev-dev",
                 "zoosper/auth": "dev-dev",
                 "zoosper/core": "dev-dev",
@@ -1109,6 +1110,32 @@
                 "MIT"
             ],
             "description": "Zoosper_Admin module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/admin-dashboard",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "packages/zoosper-admin-dashboard",
+                "reference": "822dd5bfa4ab79b11023a05402d9b44665d75387"
+            },
+            "require": {
+                "php": "^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\AdminDashboard\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Dependency-safe contracts and immutable widget values for the Zoosper Admin Dashboard.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -1234,10 +1261,11 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-auth",
-                "reference": "d9851d8ea1cb39a2a07da909033863a9cf38dd06"
+                "reference": "924a7ec2514058d7c70b049950612eb2d0526518"
             },
             "require": {
                 "php": "^8.5",
+                "zoosper/admin-dashboard": "dev-dev",
                 "zoosper/admin-grid": "dev-dev",
                 "zoosper/core": "dev-dev",
                 "zoosper/grid": "dev-dev",
@@ -9052,6 +9080,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "zoosper/admin": 20,
+        "zoosper/admin-dashboard": 20,
         "zoosper/admin-grid": 20,
         "zoosper/api": 20,
         "zoosper/api-grid": 20,
