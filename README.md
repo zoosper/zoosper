@@ -84,7 +84,7 @@ php8.5 bin/zoosper migrate
 php8.5 bin/zoosper starter:install
 ```
 
-Configure the database, `APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY` and deployment-specific settings in `.env` before booting the application.
+The example is safe for the documented local HTTP server: Secure cookies and login throttling remain disabled until explicitly configured. Configure the database, `APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY` and deployment-specific settings before boot. Staging and production require HTTPS Secure cookies, enforced rate limiting and a strong `RATE_LIMIT_IDENTITY_SALT`.
 
 Useful commands:
 
