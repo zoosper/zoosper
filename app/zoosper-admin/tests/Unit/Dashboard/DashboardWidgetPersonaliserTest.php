@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Zoosper\Admin\Dashboard\DashboardPreference;
 use Zoosper\Admin\Dashboard\DashboardWidgetCollection;
 use Zoosper\Admin\Dashboard\DashboardWidgetPersonaliser;
+use Zoosper\AdminDashboard\DashboardRolePreference;
 use Zoosper\AdminDashboard\DashboardWidget;
 
 function personalisationWidgets(): array
@@ -33,6 +34,33 @@ it('applies stored order and visibility after permission filtering and appends n
     expect(array_column($result->availableWidgets, 'code'))->toBe(['two', 'one', 'new'])
         ->and(array_column($result->visibleWidgets, 'code'))->toBe(['one', 'new'])
         ->and($result->hiddenWidgetCodes)->toBe(['two']);
+});
+
+it('merges configured multi-role defaults as a visible union in deterministic role-code order', function (): void {
+    $result = (new DashboardWidgetPersonaliser())->apply(
+        new DashboardWidgetCollection(personalisationWidgets()),
+        null,
+        [
+            new DashboardRolePreference(2, 'finance', ['one', 'new'], ['two', 'one']),
+            new DashboardRolePreference(1, 'content_manager', ['two', 'new'], ['one', 'two']),
+        ],
+    );
+
+    expect(array_column($result->availableWidgets, 'code'))->toBe(['one', 'two', 'new'])
+        ->and(array_column($result->visibleWidgets, 'code'))->toBe(['one', 'two'])
+        ->and($result->hiddenWidgetCodes)->toBe(['new'])
+        ->and($result->customised)->toBeFalse();
+});
+
+it('keeps an explicit per-user preference authoritative over role defaults', function (): void {
+    $result = (new DashboardWidgetPersonaliser())->apply(
+        new DashboardWidgetCollection(personalisationWidgets()),
+        new DashboardPreference(['one'], ['new', 'one', 'two']),
+        [new DashboardRolePreference(1, 'finance', ['two'], ['two', 'one'])],
+    );
+
+    expect(array_column($result->visibleWidgets, 'code'))->toBe(['new', 'two'])
+        ->and($result->customised)->toBeTrue();
 });
 
 it('normalises a complete permitted submission into hidden and ordered state', function (): void {

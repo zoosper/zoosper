@@ -13,7 +13,9 @@ use Zoosper\Auth\Http\CsrfMiddleware;
 use Zoosper\Auth\Http\RateLimitReportOnlyAdminMiddleware;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
+use Zoosper\AdminDashboard\Contract\DashboardRolePreferenceRepositoryInterface;
 use Zoosper\Auth\Dashboard\AdminUserCountDashboardWidgetContributor;
+use Zoosper\Auth\Dashboard\DashboardRolePreferenceRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
@@ -35,6 +37,8 @@ return [
     SecondFactorRequirementInterface::class => static fn (ServiceContainer $services): SecondFactorRequirementInterface => new RequireSecondFactorByDefault(),
     AdminUserRepository::class => static fn (ServiceContainer $services): AdminUserRepository => new AdminUserRepository($services->get(PDO::class)),
     AdminUserCountDashboardWidgetContributor::class => static fn (ServiceContainer $services): AdminUserCountDashboardWidgetContributor => new AdminUserCountDashboardWidgetContributor($services->get(AdminUserRepository::class)),
+    DashboardRolePreferenceRepository::class => static fn (ServiceContainer $services): DashboardRolePreferenceRepository => new DashboardRolePreferenceRepository($services->get(PDO::class)),
+    DashboardRolePreferenceRepositoryInterface::class => static fn (ServiceContainer $services): DashboardRolePreferenceRepositoryInterface => $services->get(DashboardRolePreferenceRepository::class),
     RoleRepository::class => static fn (ServiceContainer $services): RoleRepository => new RoleRepository($services->get(PDO::class)),
     PasswordHasher::class => static fn (ServiceContainer $services): PasswordHasher => new PasswordHasher(),
     AuthService::class => static fn (ServiceContainer $services): AuthService => new AuthService(

@@ -4,7 +4,7 @@ Dependency-safe contracts and immutable values for module-contributed Zoosper Ad
 
 ## Responsibilities
 
-This library owns `DashboardWidgetContributorInterface` and the escaped-data-only `DashboardWidget` value. It contains no controller, template, module discovery, service container, authentication, persistence, or feature-module dependency. `zoosper/admin` owns discovery, permission filtering, failure isolation, deterministic composition, and rendering. Feature modules own contributor services and data reads.
+This library owns `DashboardWidgetContributorInterface`, the escaped-data-only `DashboardWidget` value, immutable Dashboard role values, and `DashboardRolePreferenceRepositoryInterface`. It contains no controller, template, module discovery, service container, authentication, persistence, or feature-module dependency. `zoosper/admin` owns discovery, permission filtering, composition, and rendering. The role-owning module implements persistence and assignment lookup through the contract; feature modules own contributor services and data reads.
 
 ## Configuration and extension points
 
@@ -18,6 +18,8 @@ return [[
 ```
 
 Every declaration requires a non-empty permission. Admin checks permission before resolving the service, preventing unauthorised contributors from executing. Contributors return immutable widgets containing plain text only; they must not return HTML, scripts, credentials, secrets, or mutation controls.
+
+Role defaults are supplied through `DashboardRolePreferenceRepositoryInterface`. Admin permission-filters the actual user first, applies an explicit per-user layout when present, otherwise merges configured assigned roles as a visible union in deterministic role-code order, and finally falls back to module order. Implementations must preserve tenant/user isolation and return only roles assigned to the requested Admin user.
 
 ## Dependencies
 

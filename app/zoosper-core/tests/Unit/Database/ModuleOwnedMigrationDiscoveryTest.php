@@ -54,6 +54,7 @@ it('discovers and applies migrations from each module\'s own database/migrations
         'admin_login_history',  // app/zoosper-admin/config/db_schema.php
         'admin_activity_log',   // app/zoosper-admin/config/db_schema.php
         'admin_dashboard_preferences', // app/zoosper-admin/config/db_schema.php
+        'admin_role_dashboard_preferences', // app/zoosper-auth/config/db_schema.php
     ];
 
     foreach ($expectedTables as $table) {

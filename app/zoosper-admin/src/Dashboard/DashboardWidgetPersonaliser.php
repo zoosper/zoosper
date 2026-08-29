@@ -5,17 +5,25 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Dashboard;
 
 use InvalidArgumentException;
+use Zoosper\AdminDashboard\DashboardRolePreference;
 use Zoosper\AdminDashboard\DashboardWidget;
 
 final readonly class DashboardWidgetPersonaliser
 {
+    /** @param list<DashboardRolePreference> $rolePreferences */
     public function apply(
         DashboardWidgetCollection $collection,
         ?DashboardPreference $preference,
+        array $rolePreferences = [],
     ): PersonalisedDashboardWidgetCollection {
         $widgetsByCode = [];
         foreach ($collection->widgets as $widget) {
             $widgetsByCode[$widget->code] = $widget;
+        }
+
+        $customised = $preference !== null;
+        if ($preference === null && $rolePreferences !== []) {
+            $preference = $this->mergeRolePreferences($rolePreferences);
         }
 
         if ($preference === null) {
@@ -48,8 +56,26 @@ final readonly class DashboardWidgetPersonaliser
             $visible,
             array_keys($hidden),
             $collection->failureCount,
-            true,
+            $customised,
         );
+    }
+
+    /** @param list<DashboardRolePreference> $preferences */
+    private function mergeRolePreferences(array $preferences): DashboardPreference
+    {
+        usort($preferences, static fn (DashboardRolePreference $a, DashboardRolePreference $b): int => $a->roleCode <=> $b->roleCode);
+
+        $hidden = null;
+        $order = [];
+        foreach ($preferences as $preference) {
+            $roleHidden = array_fill_keys($preference->hiddenWidgetCodes, true);
+            $hidden = $hidden === null ? $roleHidden : array_intersect_key($hidden, $roleHidden);
+            foreach ($preference->widgetOrder as $code) {
+                $order[$code] ??= true;
+            }
+        }
+
+        return new DashboardPreference(array_keys($hidden ?? []), array_keys($order));
     }
 
     /**

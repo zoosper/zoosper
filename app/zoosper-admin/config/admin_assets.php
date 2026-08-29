@@ -35,7 +35,7 @@ return array (
     ),
     'zoosper-dashboard-personalisation-script' =>
     array (
-      'screens' => array ('dashboard'),
+      'screens' => array ('dashboard', 'dashboard-role-defaults'),
       'type' => 'script',
       'path' => '/asset/zoosper-admin/js/dashboard-personalisation.js?v=b0738f9636e9',
       'sort_order' => 82,

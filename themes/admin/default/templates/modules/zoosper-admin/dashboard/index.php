@@ -9,6 +9,7 @@
  * @var string $csrfToken
  * @var string $personalisationUrl
  * @var string $resetPersonalisationUrl
+ * @var ?string $roleDefaultsUrl
  */
 $availableWidgets = $availableWidgets ?? [];
 $widgets = $widgets ?? [];
@@ -22,6 +23,9 @@ $dashboardCustomised = $dashboardCustomised ?? false;
         <h1>Dashboard</h1>
         <p class="muted">Current insights from the enabled modules available to your account.</p>
     </div>
+    <?php if (is_string($roleDefaultsUrl ?? null)): ?>
+        <div class="actions"><a class="button button--secondary" href="<?= $e($roleDefaultsUrl) ?>">Manage role defaults</a></div>
+    <?php endif; ?>
 </header>
 
 <?php if ($widgetFailureCount > 0): ?>

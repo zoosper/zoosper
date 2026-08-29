@@ -30,6 +30,7 @@ Zoosper_Auth module for Zoosper CMS.
 - `config/admin_assets.php`: Admin asset contributions.
 - `config/admin_menu.php`: Admin navigation items.
 - `config/admin_dashboard.php`: the permission-gated active Admin user Dashboard contribution.
+- `admin_role_dashboard_preferences`: Auth-owned role defaults with cascading role cleanup; exposed through the dependency-safe `zoosper/admin-dashboard` repository contract.
 - `config/admin_middleware.php`: Module runtime configuration.
 - `config/admin_routes.php`: Authenticated Admin routes.
 - `config/admin_ui.php`: Module runtime configuration.
@@ -74,6 +75,7 @@ Zoosper_Auth module for Zoosper CMS.
 - `config/admin_assets.php` for Admin assets.
 - `config/admin_menu.php` for Admin navigation.
 - `config/admin_dashboard.php` for the `user.manage`-gated active-user metric through `zoosper/admin-dashboard`; Auth retains ownership of the repository query and does not depend on concrete Admin classes.
+- `DashboardRolePreferenceRepository` owns role-default persistence and assigned-role lookup. It implements the package contract so Admin consumes no concrete Auth repository. Role deletion cascades preference cleanup; defaults contain presentation codes only and cannot grant permissions.
 - `config/console.php` for console commands.
 - `config/services.php` for service bindings and interface implementations.
 

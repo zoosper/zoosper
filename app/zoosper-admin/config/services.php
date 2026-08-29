@@ -43,6 +43,7 @@ use Zoosper\Admin\Navigation\AdminSectionMetadataLoader;
 use Zoosper\Admin\Navigation\AdminSectionBuilder;
 use Zoosper\Admin\UI\AdminComponentRenderer;
 use Zoosper\Admin\UI\AdminViewRenderer;
+use Zoosper\AdminDashboard\Contract\DashboardRolePreferenceRepositoryInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
@@ -71,7 +72,7 @@ return [
     ModuleDashboardWidgetLoader::class => static fn(ServiceContainer $services): ModuleDashboardWidgetLoader => new ModuleDashboardWidgetLoader($services->get(ModuleRegistry::class), $services),
     DashboardPreferenceRepository::class => static fn(ServiceContainer $services): DashboardPreferenceRepository => new DashboardPreferenceRepository($services->get(PDO::class)),
     DashboardWidgetPersonaliser::class => static fn(ServiceContainer $services): DashboardWidgetPersonaliser => new DashboardWidgetPersonaliser(),
-    DashboardPersonalisationService::class => static fn(ServiceContainer $services): DashboardPersonalisationService => new DashboardPersonalisationService($services->get(ModuleDashboardWidgetLoader::class), $services->get(DashboardPreferenceRepository::class), $services->get(DashboardWidgetPersonaliser::class)),
+    DashboardPersonalisationService::class => static fn(ServiceContainer $services): DashboardPersonalisationService => new DashboardPersonalisationService($services->get(ModuleDashboardWidgetLoader::class), $services->get(DashboardPreferenceRepository::class), $services->get(DashboardWidgetPersonaliser::class), $services->has(DashboardRolePreferenceRepositoryInterface::class) ? $services->get(DashboardRolePreferenceRepositoryInterface::class) : null),
     AdminAssetRegistry::class => static fn(ServiceContainer $services): AdminAssetRegistry => new AdminAssetRegistry($services->get(ModuleRegistry::class)),
     AdminAssetViewDataProvider::class => static fn(ServiceContainer $services): AdminAssetViewDataProvider => new AdminAssetViewDataProvider($services->get(AdminAssetRegistry::class)),
     AdminAssetTemplateRenderer::class => static fn(ServiceContainer $services): AdminAssetTemplateRenderer => new AdminAssetTemplateRenderer($services->get(AdminAssetRegistry::class)),

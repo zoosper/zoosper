@@ -46,6 +46,7 @@ return [
         $services->get(AdminUrlGenerator::class),
         $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
+        $services->has(\Zoosper\Core\Audit\AuditLoggerInterface::class) ? $services->get(\Zoosper\Core\Audit\AuditLoggerInterface::class) : null,
     ),
 
     AuditLogController::class => static fn (ServiceContainer $services): AuditLogController => new AuditLogController(

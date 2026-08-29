@@ -161,6 +161,49 @@ return array (
         ),
       ),
     ),
+    'admin_role_dashboard_preferences' =>
+    array (
+      'columns' =>
+      array (
+        'role_id' =>
+        array (
+          'type' => 'integer',
+          'primary' => true,
+          'nullable' => false,
+        ),
+        'hidden_widget_codes_json' =>
+        array (
+          'type' => 'text',
+          'nullable' => false,
+        ),
+        'widget_order_json' =>
+        array (
+          'type' => 'text',
+          'nullable' => false,
+        ),
+        'updated_at' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => false,
+        ),
+      ),
+      'foreign_keys' =>
+      array (
+        'fk_admin_role_dashboard_preferences_role' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'role_id',
+          ),
+          'referenced_table' => 'admin_roles',
+          'referenced_columns' =>
+          array (
+            0 => 'id',
+          ),
+          'on_delete' => 'CASCADE',
+        ),
+      ),
+    ),
     'personal_access_tokens' =>
     array (
       'columns' =>
