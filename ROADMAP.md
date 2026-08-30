@@ -419,8 +419,7 @@ replica.
   `SecretProtector`'s service factory now fails loudly if no real key is
   configured (enforced at point of use, not in the eagerly-loaded config
   file, to avoid breaking unrelated boot paths).
-- [ ] Memoize `SessionGuard::user()` per request — see §15 for why this
-  matters more now (long-lived-worker risk)
+- [x] Memoize `SessionGuard::user()` per request — memoized in-process with explicit reset/cache-clear API for worker runtimes.
 - [~] Admin god-module split — Page/User/Role admin controllers relocated;
   `ThemeAdminController` not yet moved.
 - [x] Batch-load permissions in `AdminUserRepository` (fix N+1) — Phase 1.109
@@ -525,7 +524,7 @@ replica.
   once package asset routing is live, and extend rendered-URL integration coverage.
 
 - [x] Asset registry / resolver / controller (path-safe, MIME allowlist, ETag)
-- [ ] Wire `/asset/{module}/{path}` route + `asset()` helper live
+- [x] Wire `/asset/{module}/{path}` route + `asset()` helper live
 - [x] Cache asset-registry scans per request
 - [x] **Asset resolver adversarial coverage.** Core's `AssetResolver` already has traversal rejection and realpath containment, with direct and URL-encoded traversal tests. Extend coverage for null bytes and symlink edge cases; the containment layer itself is not missing.
 
@@ -544,8 +543,8 @@ replica.
   branch, preventing silently different collation behavior across
   environments running different MariaDB point releases. Only affects
   newly-created tables going forward, not existing live data.
-- [ ] Cache merged translation catalogue per locale
-- [ ] Rate-limit report sink rotation/retention (or DB store)
+- [x] Cache merged translation catalogue per locale
+- [x] Rate-limit report sink rotation/retention (or DB store)
 - [x] Vary page cache key by query string — wired via `Request::queryString()` accessor and `CacheContext` dimension partitioning.
 
 ## 11. Quality, Tooling & Repo Hygiene

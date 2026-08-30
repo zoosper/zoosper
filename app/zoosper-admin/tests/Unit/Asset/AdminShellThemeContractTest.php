@@ -8,7 +8,7 @@ it('keeps the complete Admin shell aligned with the selected colour palette and 
     $css = (string) file_get_contents($stylesheet);
     $manifest = require $root . '/app/zoosper-admin/config/admin_assets.php';
     $asset = $manifest['assets']['zoosper-admin-shell-style'] ?? null;
-    $version = substr((string) hash_file('sha256', $stylesheet), 0, 12);
+    $version = substr(hash('sha256', (string) preg_replace('~\r\n?~', "\n", $css)), 0, 12);
 
     expect($css)->toContain(':root {')
         ->toContain(':root[data-admin-theme="dark"]')

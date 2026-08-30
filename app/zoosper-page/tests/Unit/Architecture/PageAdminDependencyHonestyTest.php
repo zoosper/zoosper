@@ -17,12 +17,13 @@ it('removes the Page dependency on Admin after shared contracts migrate to Core'
         $root . '/app/zoosper-page', FilesystemIterator::SKIP_DOTS,
     ));
     foreach ($iterator as $file) {
-        if ($file->getExtension() !== 'php' || str_contains($file->getPathname(), '/tests/')) {
+        $path = str_replace('\\', '/', $file->getPathname());
+        if ($file->getExtension() !== 'php' || str_contains($path, '/tests/')) {
             continue;
         }
         $source = (string) file_get_contents($file->getPathname());
         if (str_contains($source, 'use Zoosper' . chr(92) . 'Admin' . chr(92))) {
-            $unexpected[] = $file->getPathname();
+            $unexpected[] = $path;
         }
     }
     expect($unexpected)->toBe([]);

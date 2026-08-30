@@ -37,7 +37,7 @@ test('direct host and request-uri superglobal reads are restricted to the reques
             continue;
         }
 
-        $relative = ltrim(str_replace($root, '', $file->getPathname()), '/\\');
+        $relative = str_replace('\\', '/', ltrim(str_replace($root, '', $file->getPathname()), '/\\'));
 
         if (str_contains($relative, '/tests/')) {
             continue;

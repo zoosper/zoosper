@@ -5,11 +5,29 @@ declare(strict_types=1);
 function runCliWithoutDatabase(string $command): array
 {
     $root = dirname(__DIR__, 5);
-    $env = 'DB_CONNECTION=mysql DB_HOST=127.0.0.1 DB_PORT=1 DB_DATABASE=unreachable DB_USERNAME=none DB_PASSWORD=none';
-    $process = $env . ' ' . escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($root . '/bin/zoosper') . ' ' . $command . ' 2>&1';
-    exec($process, $lines, $exitCode);
+    $env = array_merge($_ENV, [
+        'DB_CONNECTION' => 'mysql',
+        'DB_HOST' => '127.0.0.1',
+        'DB_PORT' => '1',
+        'DB_DATABASE' => 'unreachable',
+        'DB_USERNAME' => 'none',
+        'DB_PASSWORD' => 'none',
+    ]);
+    $args = array_merge([PHP_BINARY, $root . '/bin/zoosper'], explode(' ', $command));
+    $process = proc_open($args, [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $root, $env);
+    $stdout = '';
+    $stderr = '';
+    if (is_resource($process)) {
+        $stdout = (string) stream_get_contents($pipes[1]);
+        $stderr = (string) stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        $exitCode = proc_close($process);
+    } else {
+        $exitCode = 1;
+    }
 
-    return ['exitCode' => $exitCode, 'output' => implode("\n", $lines)];
+    return ['exitCode' => $exitCode, 'output' => trim($stdout . ($stderr ? "\n" . $stderr : ''))];
 }
 
 it('keeps help and list available when the configured database is unreachable', function (): void {

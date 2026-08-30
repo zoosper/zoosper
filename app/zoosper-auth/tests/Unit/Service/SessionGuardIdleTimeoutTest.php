@@ -101,3 +101,32 @@ it('clears activity when a standalone pending challenge is explicitly cleared', 
     expect($_SESSION)->not->toHaveKey('pending_2fa_user_id')
         ->not->toHaveKey('admin_last_activity_at');
 });
+
+it('clears per-request memoized user state on reset', function (): void {
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->exec('CREATE TABLE admin_users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, password_hash TEXT, status TEXT, is_active INTEGER, created_at TEXT, updated_at TEXT)');
+    $pdo->exec('CREATE TABLE admin_user_roles (user_id INTEGER, role_id INTEGER)');
+    $pdo->exec('CREATE TABLE admin_role_permissions (role_id INTEGER, permission_id INTEGER)');
+    $pdo->exec('CREATE TABLE admin_permissions (id INTEGER PRIMARY KEY, code TEXT, name TEXT, group_name TEXT)');
+    $pdo->exec("INSERT INTO admin_users (id, name, email, password_hash, status, is_active) VALUES (1, 'Admin', 'admin@example.com', '', 'active', 1)");
+
+    $users = new AdminUserRepository($pdo);
+    $guard = new SessionGuard($users, 7200);
+
+    $_SESSION['admin_user_id'] = 1;
+    $_SESSION['admin_last_activity_at'] = time();
+
+    $user1 = $guard->user();
+    expect($user1)->not->toBeNull()
+        ->and($user1->name)->toBe('Admin');
+
+    $pdo->exec("UPDATE admin_users SET name = 'Updated Admin' WHERE id = 1");
+
+    // Memoized result before reset
+    expect($guard->user()->name)->toBe('Admin');
+
+    $guard->reset();
+
+    // Re-queried result after reset
+    expect($guard->user()->name)->toBe('Updated Admin');
+});

@@ -24,3 +24,4 @@
 
 # Documentation website build output
 /docs-site/build/
+/.output.txt

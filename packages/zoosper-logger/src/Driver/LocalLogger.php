@@ -61,7 +61,9 @@ final class LocalLogger implements LoggerInterface
         if (is_file($this->legacyFile) && !is_link($this->legacyFile)) return;
         if (is_link($this->legacyFile) && readlink($this->legacyFile) === $target) return;
         if (is_link($this->legacyFile)) @unlink($this->legacyFile);
-        @symlink($target, $this->legacyFile);
+        if (!@symlink($target, $this->legacyFile) && !is_file($this->legacyFile)) {
+            @copy($this->rotatedFile, $this->legacyFile);
+        }
     }
     private function redact(array $context): array
     {

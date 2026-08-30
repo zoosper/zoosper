@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Core\View;
 
 use InvalidArgumentException;
+use Zoosper\Core\Asset\AssetUrlGenerator;
 use Zoosper\Core\Cache\CacheContext;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Site\SiteContext;
@@ -24,6 +25,7 @@ final readonly class TemplateViewContextProvider
     public function __construct(
         private CdnUrlResolver $cdnUrlResolver,
         private CacheKeyBuilder $cacheKeyBuilder,
+        private ?AssetUrlGenerator $assetUrlGenerator = null,
     ) {
     }
 
@@ -59,11 +61,14 @@ final readonly class TemplateViewContextProvider
             routeName: $routeName,
         );
 
+        $assetGenerator = $this->assetUrlGenerator ?? new AssetUrlGenerator();
+
         return [
             'siteContext' => $siteContext,
             'cdn' => $this->cdnUrlResolver,
             'cacheContext' => $cacheContext,
             'cacheKeys' => $this->cacheKeyBuilder,
+            'asset' => fn (string $module, string $path, string|int|null $version = null): string => $assetGenerator->url($module, $path, $version),
         ];
     }
 

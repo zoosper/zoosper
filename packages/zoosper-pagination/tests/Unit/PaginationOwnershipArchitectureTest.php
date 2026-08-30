@@ -14,7 +14,7 @@ it('keeps pagination ownership outside Core and Marko behind the Zoosper package
             if (!$file->isFile() || $file->getExtension() !== 'php') {
                 continue;
             }
-            $relative = substr($file->getPathname(), strlen($root) + 1);
+            $relative = str_replace('\\', '/', substr($file->getPathname(), strlen($root) + 1));
             $source = (string) file_get_contents($file->getPathname());
             expect($source)->not->toContain($legacy, 'Legacy Core pagination import: ' . $relative);
             if (str_contains($source, $marko)) {

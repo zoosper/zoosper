@@ -137,3 +137,17 @@ test('template renderer can use explicit site context from data for non-request 
 
     expect($html)->toBe('preview|preview.example');
 });
+
+test('template view context exposes callable asset helper that delegates to AssetUrlGenerator', function () {
+    $provider = requestScopedProvider();
+    $data = $provider->data(
+        themeCode: 'default',
+        routeName: 'home',
+        siteContext: viewSiteContext('main', 'https://main.example'),
+    );
+
+    expect($data)->toHaveKey('asset');
+    expect(is_callable($data['asset']))->toBeTrue();
+    expect(($data['asset'])('zoosper-core', 'css/app.css', '1.0.0'))
+        ->toBe('/asset/zoosper-core/css/app.css?v=1.0.0');
+});

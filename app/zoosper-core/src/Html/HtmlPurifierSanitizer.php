@@ -77,12 +77,12 @@ final readonly class HtmlPurifierSanitizer implements HtmlSanitizerInterface
 
     private function normaliseRuntimeCachePath(string $cachePath, ProjectPathResolver $paths): string
     {
-        if (str_starts_with($cachePath, '/')) {
-            return rtrim($cachePath, '/');
+        if (str_starts_with($cachePath, '/') || str_starts_with($cachePath, '\\') || (strlen($cachePath) > 1 && $cachePath[1] === ':')) {
+            return rtrim($cachePath, '/\\');
         }
 
-        $cachePath = trim($cachePath, '/');
-        if (str_starts_with($cachePath, 'var/')) {
+        $cachePath = trim($cachePath, '/\\');
+        if (str_starts_with($cachePath, 'var/') || str_starts_with($cachePath, 'var\\')) {
             return $paths->varPath(substr($cachePath, 4));
         }
 

@@ -8,7 +8,7 @@ it('leaves compact Grid presentation to the Admin Grid package', function (): vo
     $css = (string) file_get_contents($stylesheet);
     $manifest = require $root . '/app/zoosper-admin/config/admin_assets.php';
     $asset = $manifest['assets']['zoosper-admin-grid-style'] ?? null;
-    $version = substr((string) hash_file('sha256', $stylesheet), 0, 12);
+    $version = substr(hash('sha256', (string) preg_replace('~\r\n?~', "\n", $css)), 0, 12);
 
     expect($css)->toContain('Compact Grid presentation is package-owned by zoosper/admin-grid.')
         ->toContain('BEGIN GRID COLUMN FILTER VISIBILITY')

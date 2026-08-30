@@ -19,14 +19,16 @@ it('publishes the Media visual Grid stylesheet through its module asset root', f
 
     $asset = $manifest['assets']['media.visual-grid'];
 
-    expect($asset['type'])->toBe('style');
-    expect($asset['path'])->toBe(
-        '/asset/zoosper-media/css/media-visual-grid.css?v=87ecda0b8af4'
-    );
-
     $stylesheet = $root . '/resources/admin/css/media-visual-grid.css';
 
     expect($stylesheet)->toBeFile();
+
+    $version = substr(hash_file('sha256', $stylesheet) ?: 'dev', 0, 12);
+
+    expect($asset['type'])->toBe('style');
+    expect($asset['path'])->toBe(
+        '/asset/zoosper-media/css/media-visual-grid.css?v=' . $version
+    );
 
     $css = (string) file_get_contents($stylesheet);
 

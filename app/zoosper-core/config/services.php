@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\Cache\Contract\CacheInterface;
 use Zoosper\Core\App\CmsVersion;
+use Zoosper\Core\Asset\AssetUrlGenerator;
 use Zoosper\Cache\Factory\CacheDriverFactory;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Config\ConfigRepository;
@@ -44,18 +45,21 @@ return [
         $services->has(\Zoosper\Core\Site\SiteLookupInterface::class) ? $services->get(\Zoosper\Core\Site\SiteLookupInterface::class) : null,
     ))->create(),
     CdnUrlResolver::class => static fn (ServiceContainer $services): CdnUrlResolver => (new CdnUrlResolverFactory($services->get(ConfigRepository::class)))->create(),
+    AssetUrlGenerator::class => static fn (ServiceContainer $services): AssetUrlGenerator => new AssetUrlGenerator(),
     CacheKeyBuilder::class => static fn (ServiceContainer $services): CacheKeyBuilder => new CacheKeyBuilder(),
     TemplateViewContextProvider::class => static fn (ServiceContainer $services): TemplateViewContextProvider => new TemplateViewContextProvider(
         $services->get(CdnUrlResolver::class),
         $services->get(CacheKeyBuilder::class),
+        $services->get(AssetUrlGenerator::class),
     ),
     HtmlSanitizerFactory::class => static function (ServiceContainer $services): HtmlSanitizerFactory {
         $config = $services->get(ConfigRepository::class)->array('html_sanitizer');
         $paths = $services->get(ProjectPathResolver::class);
         $cachePath = (string) ($config['cache_path'] ?? 'var/cache/htmlpurifier');
-        $config['cache_path'] = str_starts_with($cachePath, '/')
+        $isAbsolute = str_starts_with($cachePath, '/') || str_starts_with($cachePath, '\\') || (strlen($cachePath) > 1 && $cachePath[1] === ':');
+        $config['cache_path'] = $isAbsolute
             ? $cachePath
-            : $paths->varPath(str_starts_with($cachePath, 'var/') ? substr($cachePath, 4) : $cachePath);
+            : $paths->varPath((str_starts_with($cachePath, 'var/') || str_starts_with($cachePath, 'var\\')) ? substr($cachePath, 4) : $cachePath);
 
         return new HtmlSanitizerFactory($config);
     },

@@ -34,7 +34,7 @@ it('registers the compact disclosure runtime through the canonical Admin asset m
     $manifest = require $root . '/packages/zoosper-admin-grid/config/admin_assets.php';
     $asset = $manifest['assets']['zoosper-admin-grid-compact-workspace-script'] ?? [];
     $scriptPath = $root . '/packages/zoosper-admin-grid/resources/admin/js/grid-compact-workspace.js';
-    $hash = substr(hash_file('sha256', $scriptPath), 0, 12);
+    $hash = substr(hash('sha256', (string) preg_replace('~\r\n?~', "\n", (string) file_get_contents($scriptPath))), 0, 12);
 
     expect($asset['type'] ?? null)->toBe('script')
         ->and($asset['path'] ?? null)

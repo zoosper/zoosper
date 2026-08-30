@@ -8,9 +8,10 @@ it('keeps the unused duplicate method-plugin subsystem retired', function (): vo
         if (!is_dir($base)) continue;
         $iterator=new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base,FilesystemIterator::SKIP_DOTS));
         foreach ($iterator as $file) {
-            if (!$file->isFile() || $file->getExtension()!=='php' || str_contains($file->getPathname(),'/tests/')) continue;
+            $path = str_replace('\\', '/', $file->getPathname());
+            if (!$file->isFile() || $file->getExtension() !== 'php' || str_contains($path, '/tests/')) continue;
             $source=(string)file_get_contents($file->getPathname());
-            if (str_contains($source,'Zoosper\\Core\\Plugin') || str_contains($source,'method_plugins.php')) $scan[]=$file->getPathname();
+            if (str_contains($source,'Zoosper\\Core\\Plugin') || str_contains($source,'method_plugins.php')) $scan[]=$path;
         }
     }
     expect($scan)->toBe([]);

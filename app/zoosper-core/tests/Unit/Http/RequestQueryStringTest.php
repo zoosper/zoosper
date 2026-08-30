@@ -19,7 +19,18 @@ it('captures raw query string and provides accessor', function (): void {
         ->and($request->query('foo'))->toBe('bar')
         ->and($request->query('page'))->toBe('2');
 
-    $siteContext = new SiteContext(siteId: 1, host: 'localhost', isDefault: true);
+    $siteContext = new SiteContext(
+        websiteCode: 'main',
+        websiteName: 'Main Website',
+        storeCode: 'main',
+        storeName: 'Main Store',
+        storeViewCode: 'default',
+        storeViewName: 'Default Store View',
+        locale: 'en_AU',
+        currency: 'AUD',
+        baseUrl: 'https://localhost',
+        siteId: 1,
+    );
     $withSite = $request->withSiteContext($siteContext);
     expect($withSite->queryString())->toBe('foo=bar&page=2');
 

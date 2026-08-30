@@ -21,14 +21,22 @@ namespace Zoosper\Core\I18n;
  * Files must return array<string, string>. Later files override earlier files,
  * allowing project-level config to customise module copy without editing core.
  */
-final readonly class TranslationFileAggregator
+final class TranslationFileAggregator
 {
-    public function __construct(private string $basePath)
+    /** @var array<string, TranslationCatalogue> */
+    private array $cache = [];
+
+    public function __construct(private readonly string $basePath)
     {
     }
 
     public function catalogue(string $locale, string $fallbackLocale = 'en_AU'): TranslationCatalogue
     {
+        $cacheKey = $locale . '|' . $fallbackLocale;
+        if (isset($this->cache[$cacheKey])) {
+            return $this->cache[$cacheKey];
+        }
+
         $messages = [];
 
         if ($fallbackLocale !== $locale) {
@@ -37,7 +45,7 @@ final readonly class TranslationFileAggregator
 
         $messages = $this->mergeLocale($messages, $locale);
 
-        return new TranslationCatalogue($locale, $messages);
+        return $this->cache[$cacheKey] = new TranslationCatalogue($locale, $messages);
     }
 
     /**

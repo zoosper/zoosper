@@ -62,11 +62,15 @@ final readonly class ConnectionFactory
     private function createSqliteConnection(array $connection): PDO
     {
         $database = (string) ($connection['database'] ?? 'storage/database/zoosper.sqlite');
-        $path = str_starts_with($database, '/')
-            ? $database
-            : $this->basePath . '/' . $database;
+        if ($database === ':memory:') {
+            $path = ':memory:';
+        } elseif (str_starts_with($database, '/') || str_starts_with($database, '\\') || (strlen($database) > 1 && $database[1] === ':')) {
+            $path = $database;
+        } else {
+            $path = $this->basePath . '/' . $database;
+        }
 
-        if (!is_dir(dirname($path))) {
+        if ($path !== ':memory:' && !is_dir(dirname($path))) {
             mkdir(dirname($path), 0775, true);
         }
 

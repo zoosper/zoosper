@@ -67,13 +67,31 @@ PHP;
     $scriptPath = sys_get_temp_dir() . '/zoosper-error-handler-test-script-' . bin2hex(random_bytes(6)) . '.php';
     file_put_contents($scriptPath, $scriptContents);
 
-    $command = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($scriptPath) . ' 2>&1';
-    exec($command, $outputLines, $exitCode);
+    $process = proc_open(
+        [PHP_BINARY, $scriptPath],
+        [
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w'],
+        ],
+        $pipes,
+    );
+
+    $stdout = '';
+    $stderr = '';
+    if (is_resource($process)) {
+        $stdout = (string) stream_get_contents($pipes[1]);
+        $stderr = (string) stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        $exitCode = proc_close($process);
+    } else {
+        $exitCode = 1;
+    }
 
     @unlink($scriptPath);
 
     return [
-        'stdout' => implode("\n", $outputLines),
+        'stdout' => trim($stdout . ($stderr ? "\n" . $stderr : '')),
         'exitCode' => $exitCode,
     ];
 }

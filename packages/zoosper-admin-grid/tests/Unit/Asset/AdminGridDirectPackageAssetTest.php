@@ -30,8 +30,8 @@ it('registers content-versioned package URLs in the admin asset registry shape',
     $assets = $manifest['assets'] ?? [];
     $script = $assets['zoosper-admin-grid-column-order-script']['path'] ?? '';
     $style = $assets['zoosper-admin-grid-column-order-style']['path'] ?? '';
-    $scriptHash = substr(hash_file('sha256', $root . '/packages/zoosper-admin-grid/resources/admin/js/grid-compact-column-order.js'), 0, 12);
-    $styleHash = substr(hash_file('sha256', $root . '/packages/zoosper-admin-grid/resources/admin/css/grid-compact-column-order.css'), 0, 12);
+    $scriptHash = substr(hash('sha256', (string) preg_replace('~\r\n?~', "\n", (string) file_get_contents($root . '/packages/zoosper-admin-grid/resources/admin/js/grid-compact-column-order.js'))), 0, 12);
+    $styleHash = substr(hash('sha256', (string) preg_replace('~\r\n?~', "\n", (string) file_get_contents($root . '/packages/zoosper-admin-grid/resources/admin/css/grid-compact-column-order.css'))), 0, 12);
 
     expect($script)->toBe('/asset/zoosper-admin-grid/js/grid-compact-column-order.js?v=' . $scriptHash)
         ->and($style)->toBe('/asset/zoosper-admin-grid/css/grid-compact-column-order.css?v=' . $styleHash)

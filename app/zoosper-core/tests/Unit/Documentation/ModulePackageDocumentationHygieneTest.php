@@ -44,6 +44,8 @@ it('allows only package root READMEs plus the maintained schema reference', func
         }
     }
 
+    $allowed = array_map(static fn(string $p): string => str_replace('\\', '/', $p), $allowed);
+    $actual = array_map(static fn(string $p): string => str_replace('\\', '/', $p), $actual);
     sort($allowed);
     sort($actual);
     expect($actual)->toBe($allowed);

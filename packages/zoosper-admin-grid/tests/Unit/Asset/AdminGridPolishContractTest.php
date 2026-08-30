@@ -9,7 +9,7 @@ it('registers the package-owned polish layer after established Grid assets', fun
     $manifest = require $root . '/packages/zoosper-admin-grid/config/admin_assets.php';
     $asset = $manifest['assets']['zoosper-admin-grid-polish-style'] ?? null;
     $stylesheet = $root . '/packages/zoosper-admin-grid/resources/admin/css/grid-admin-polish.css';
-    $version = substr((string) hash_file('sha256', $stylesheet), 0, 12);
+    $version = substr(hash('sha256', (string) preg_replace('~\r\n?~', "\n", (string) file_get_contents($stylesheet))), 0, 12);
 
     expect($asset)->toBeArray()
         ->and($asset['type'] ?? null)->toBe('style')

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 it('places saved views in the primary command row and fixes field identity', function (): void {
-    $root=dirname(__DIR__,4);$source=file_get_contents($root.'/packages/zoosper-admin-grid/src/GridCompactToolbarRenderer.php');
+    $root=dirname(__DIR__,4);$source=str_replace("\r\n", "\n", (string) file_get_contents($root.'/packages/zoosper-admin-grid/src/GridCompactToolbarRenderer.php'));
     expect($source)->not->toBeFalse()
         ->and($source)->toContain('id="grid-workspace-view"')
         ->and($source)->toContain('name="bookmark_view"')

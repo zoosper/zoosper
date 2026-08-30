@@ -91,8 +91,10 @@ final class AssetResolver
         }
 
         // Containment check: the resolved file must live under the module base.
-        $baseWithSep = rtrim($realBase, '/') . '/';
-        if (!str_starts_with($realFile, $baseWithSep)) {
+        $realBaseNorm = str_replace('\\', '/', $realBase);
+        $realFileNorm = str_replace('\\', '/', $realFile);
+        $baseWithSep = rtrim($realBaseNorm, '/') . '/';
+        if (!str_starts_with($realFileNorm, $baseWithSep)) {
             throw new AssetNotFoundException('Asset path escapes module boundary.');
         }
 

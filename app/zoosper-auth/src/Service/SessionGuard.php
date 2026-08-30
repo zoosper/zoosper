@@ -103,6 +103,16 @@ final class SessionGuard
         return $this->cachedUser;
     }
 
+    public function clearUserCache(): void
+    {
+        $this->cachedUser = false;
+    }
+
+    public function reset(): void
+    {
+        $this->clearUserCache();
+    }
+
     public function requirePermission(string $permission): ?AdminUser
     {
         $user = $this->user();

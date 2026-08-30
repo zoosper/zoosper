@@ -44,7 +44,7 @@ return [
         $services->has(AdminFormProcessorConfigFactory::class)
             ? $services->get(AdminFormProcessorConfigFactory::class)->create($services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class)->array('admin_forms') : [])
             : null,
-        $services->get(EntitySaveLifecycleRunner::class),
+        $services->has(EntitySaveLifecycleRunner::class) ? $services->get(EntitySaveLifecycleRunner::class) : null,
         $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
         $services->get(PageRevisionService::class),
     ),

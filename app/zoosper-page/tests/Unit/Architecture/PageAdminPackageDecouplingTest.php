@@ -9,7 +9,8 @@ it('keeps Page free of Admin imports and Composer dependency', function (): void
     $source = '';
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root . '/app/zoosper-page', FilesystemIterator::SKIP_DOTS));
     foreach ($iterator as $file) {
-        if ($file->getExtension() === 'php' && !str_contains($file->getPathname(), '/tests/')) {
+        $path = str_replace('\\', '/', $file->getPathname());
+        if ($file->getExtension() === 'php' && !str_contains($path, '/tests/')) {
             $source .= (string) file_get_contents($file->getPathname());
         }
     }
