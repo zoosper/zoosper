@@ -23,7 +23,7 @@ final readonly class PageSaveCoordinator
 {
     public function __construct(
         private PageRepository $pages,
-        private ?HtmlSanitizerInterface $sanitizer = null,
+        private HtmlSanitizerInterface $sanitizer,
         private ?ConfigRepository $config = null,
         private ?AdminFormProcessorRegistry $processors = null,
         private ?EntitySaveLifecycleRunner $lifecycle = null,

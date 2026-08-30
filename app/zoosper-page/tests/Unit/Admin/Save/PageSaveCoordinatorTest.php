@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Auth\Model\AdminUser;
+use Zoosper\Core\Html\BasicHtmlSanitizer;
 use Zoosper\Page\Application\Save\PageSaveCoordinator;
 use Zoosper\Page\Repository\PageRepository;
 
@@ -36,7 +37,7 @@ function phase9fnUser(): AdminUser
 
 it('normalises and persists Page create and update through one coordinator', function (): void {
     $repo = new PageRepository(phase9fnPagesPdo());
-    $service = new PageSaveCoordinator($repo);
+    $service = new PageSaveCoordinator($repo, new BasicHtmlSanitizer());
     $user = phase9fnUser();
     $created = $service->create([
         'site_id' => 1, 'title' => '  Home  ', 'slug' => ' Hello World ',
@@ -55,7 +56,7 @@ it('normalises and persists Page create and update through one coordinator', fun
 });
 
 it('returns invalid Editor.js JSON as a typed failure', function (): void {
-    $service = new PageSaveCoordinator(new PageRepository(phase9fnPagesPdo()));
+    $service = new PageSaveCoordinator(new PageRepository(phase9fnPagesPdo()), new BasicHtmlSanitizer());
     $result = $service->create([
         'site_id' => 1, 'title' => 'Bad', 'slug' => 'bad', 'content' => 'x',
         'content_json' => '{invalid',

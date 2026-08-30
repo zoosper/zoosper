@@ -16,16 +16,7 @@ declare(strict_types=1);
  * full safety model and honestly-stated current limitations (no
  * query-string variance; single-theme-per-site assumption).
  */
-$env = static function (string $key, mixed $default = null): mixed {
-    if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
-        return $_ENV[$key];
-    }
-
-    $value = getenv($key);
-    return $value !== false && $value !== '' ? $value : $default;
-};
-
 return [
-    'enabled' => filter_var($env('PAGE_CACHE_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
-    'ttl' => (int) $env('PAGE_CACHE_TTL', 300),
+    'enabled' => filter_var(env('PAGE_CACHE_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+    'ttl' => (int) env('PAGE_CACHE_TTL', 300),
 ];

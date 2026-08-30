@@ -12,7 +12,7 @@ it('uses the authoritative release version for application and Admin presentatio
     expect($version['version'])->toBe('0.3.0-alpha.4-dev')
         ->and($application)
         ->toContain("require __DIR__ . '/version.php'")
-        ->toContain("'version' => \$env('CMS_VERSION', \$release['version'])")
+        ->toContain("'version' => env('CMS_VERSION', \$release['version'])")
         ->not->toContain('0.23.0-dev')
         ->and($layout)
         ->toContain("require dirname(__DIR__, 4) . '/config/version.php'")

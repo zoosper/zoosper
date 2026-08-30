@@ -62,14 +62,15 @@ return [
     // full rotation procedure.
     SecretProtector::class => static function (ServiceContainer $services): SecretProtector {
         $config = $services->get(ConfigRepository::class)->array('two_factor');
-        $encryptionKey = (string) ($config['encryption_key'] ?? '');
+        $encryptionKey = trim((string) ($config['encryption_key'] ?? ''));
 
-        if ($encryptionKey === '') {
+        $isPlaceholder = str_contains(strtolower($encryptionKey), 'change-me')
+            || in_array(strtolower($encryptionKey), ['secret', 'changeme', 'placeholder'], true);
+        if ($encryptionKey === '' || $isPlaceholder) {
             throw new \RuntimeException(
-                'No 2FA encryption key is configured. Set either the TWO_FACTOR_ENCRYPTION_KEY '
-                . 'or APP_KEY environment variable to a strong, random secret before using any '
-                . '2FA feature. Admin two-factor (TOTP) secrets are encrypted using this key — '
-                . 'without a real, unique key, 2FA cannot be considered secure. '
+                'No valid 2FA encryption key is configured. Set the TWO_FACTOR_ENCRYPTION_KEY '
+                . 'environment variable to a strong, unique random secret before using any '
+                . '2FA feature. Known placeholders such as "change-me" are blocked. '
                 . 'Generate one with, for example: php -r "echo bin2hex(random_bytes(32));" '
                 . 'and set it as TWO_FACTOR_ENCRYPTION_KEY in your .env file.'
             );

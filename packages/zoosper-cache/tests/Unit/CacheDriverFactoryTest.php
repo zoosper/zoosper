@@ -56,6 +56,12 @@ it('constructs a RedisCacheDriver object graph correctly WITHOUT requiring a rea
 });
 
 it('performs a REAL Redis set/get roundtrip when Redis is actually reachable (explicitly skipped otherwise)', function (): void {
+    $connection = @fsockopen('127.0.0.1', 6379, $errno, $errstr, 0.2);
+    if (!is_resource($connection)) {
+        $this->markTestSkipped('Could not reach a real Redis server from this test environment.');
+    }
+    fclose($connection);
+
     $driver = cacheDriverFactoryTestInstance(['driver' => 'redis'], ['key' => 'test-signing-key-for-real-redis-roundtrip'])->create();
     $key = 'zoosper-cache-factory-real-redis-test-' . bin2hex(random_bytes(4));
     try {

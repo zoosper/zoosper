@@ -39,7 +39,7 @@ use Zoosper\Page\Console\PageCreateCommand;
 return [
     PageSaveCoordinator::class => static fn (ServiceContainer $services): PageSaveCoordinator => new PageSaveCoordinator(
         $services->get(PageRepository::class),
-        $services->has(HtmlSanitizerInterface::class) ? $services->get(HtmlSanitizerInterface::class) : null,
+        $services->get(HtmlSanitizerInterface::class),
         $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
         $services->has(AdminFormProcessorConfigFactory::class)
             ? $services->get(AdminFormProcessorConfigFactory::class)->create($services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class)->array('admin_forms') : [])

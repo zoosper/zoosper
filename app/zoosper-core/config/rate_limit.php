@@ -25,22 +25,13 @@ declare(strict_types=1);
  * disable. Only 'identity_salt' is env-wired here; every other setting is
  * untouched from the original file).
  */
-$env = static function (string $key, mixed $default = null): mixed {
-    if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') {
-        return $_ENV[$key];
-    }
-
-    $value = getenv($key);
-    return $value !== false && $value !== '' ? $value : $default;
-};
-
-$enabled = filter_var($env('RATE_LIMIT_ENABLED', false), FILTER_VALIDATE_BOOLEAN);
-$mode = strtolower(trim((string) $env('RATE_LIMIT_MODE', 'report_only')));
+$enabled = filter_var(env('RATE_LIMIT_ENABLED', false), FILTER_VALIDATE_BOOLEAN);
+$mode = strtolower(trim((string) env('RATE_LIMIT_MODE', 'report_only')));
 $mode = in_array($mode, ['report_only', 'enforce'], true) ? $mode : 'report_only';
-$loginMaxAttempts = max(1, min(100, (int) $env('RATE_LIMIT_ADMIN_LOGIN_MAX_ATTEMPTS', 5)));
-$loginWindowSeconds = max(1, min(86400, (int) $env('RATE_LIMIT_ADMIN_LOGIN_WINDOW_SECONDS', 300)));
-$twoFactorMaxAttempts = max(1, min(100, (int) $env('RATE_LIMIT_ADMIN_TWO_FACTOR_MAX_ATTEMPTS', 5)));
-$twoFactorWindowSeconds = max(1, min(86400, (int) $env('RATE_LIMIT_ADMIN_TWO_FACTOR_WINDOW_SECONDS', 300)));
+$loginMaxAttempts = max(1, min(100, (int) env('RATE_LIMIT_ADMIN_LOGIN_MAX_ATTEMPTS', 5)));
+$loginWindowSeconds = max(1, min(86400, (int) env('RATE_LIMIT_ADMIN_LOGIN_WINDOW_SECONDS', 300)));
+$twoFactorMaxAttempts = max(1, min(100, (int) env('RATE_LIMIT_ADMIN_TWO_FACTOR_MAX_ATTEMPTS', 5)));
+$twoFactorWindowSeconds = max(1, min(86400, (int) env('RATE_LIMIT_ADMIN_TWO_FACTOR_WINDOW_SECONDS', 300)));
 
 return [
     'enabled' => $enabled,
@@ -54,7 +45,7 @@ return [
      * RateLimitReportOnlyAdminMiddleware for where this is actually
      * enforced (fails loudly if empty AND rate limiting is enabled).
      */
-    'identity_salt' => (string) $env('RATE_LIMIT_IDENTITY_SALT', ''),
+    'identity_salt' => (string) env('RATE_LIMIT_IDENTITY_SALT', ''),
     'policies' => [
         'admin.login' => [
             'scope' => 'admin',

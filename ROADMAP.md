@@ -59,14 +59,14 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 **Pre-Launch Security & Architecture Teardown Findings (2026-08-31 Independent Review — Claude & Grok):**
 
-- [ ] **[CRIT-01] Fail-closed HTML sanitization in Page save coordinator & input.** `PageSaveCoordinator` and `PageSaveInput` must require `HtmlSanitizerInterface` as a non-nullable dependency and throw (fail closed) if unresolvable, eliminating the silent raw-input fallback that risks stored XSS under `|noescape` template rendering.
-- [ ] **[CRIT-02] 2FA encryption key placeholder blocklist & boot assertion.** Eliminate insecure `APP_KEY` fallback for `TWO_FACTOR_ENCRYPTION_KEY` in `config/two_factor.php`, enforce placeholder blocklist (`change-me`, `change-me-before-production`, `secret`), and add `TWO_FACTOR_ENCRYPTION_KEY` validation to `ProductionSecurityPolicy::assertEnvironment()`. Update regression tests to assert runtime behavioral enforcement.
-- [ ] **[CRIT-03] `APP_DEBUG` default `false`, boot unification & environment assertion.** Set `'debug' => false` default in `config/app.php` when unset, unify the dual error-handler debug computations in `ApplicationFactory::create()`, and assert `APP_DEBUG` in `ProductionSecurityPolicy::assertEnvironment()`.
-- [ ] **[HIGH-01] Database production driver policy enforcement.** Wire real driver enforcement for `config/database_policy.php` (`DATABASE_ENFORCE_MYSQL_PRODUCTION`, `DATABASE_PRODUCTION_DRIVER`, `DATABASE_ALLOW_SQLITE_LOCAL`) in `ConnectionFactory` or `ProductionSecurityPolicy` to prevent unsupported driver/environment boots.
-- [ ] **[HIGH-02] CI MySQL integration testing.** Add a MySQL/MariaDB service container to `.github/workflows/quality-gate.yml` to run the feature test suite against MySQL in CI.
-- [ ] **[HIGH-03] Unified admin authentication rate limiting.** Unify rate limiting across API login, HTML admin login, and 2FA challenge endpoints into a canonical enforcement architecture; reconcile contradictory docblock in `RateLimitReportOnlyAdminMiddleware`.
-- [ ] **[HIGH-04] Admin user locale persistence regression test net.** Implement a dedicated behavioral regression test suite for admin user locale persistence across form parsing, hydration, pipeline update, and session propagation.
-- [ ] **[HIGH-05] Consolidate environment reader closures across 14 config files.** Eliminate duplicated local `$env` closures in `config/*.php` that differ in empty-string handling from canonical `env()` in `bootstrap/autoload.php`.
+- [x] **[CRIT-01] Fail-closed HTML sanitization in Page save coordinator & input.** `PageSaveCoordinator` and `PageSaveInput` require `HtmlSanitizerInterface` as a non-nullable dependency and throw (fail closed) if unresolvable, eliminating the silent raw-input fallback that risks stored XSS under `|noescape` template rendering.
+- [x] **[CRIT-02] 2FA encryption key placeholder blocklist & boot assertion.** Insecure `APP_KEY` fallback for `TWO_FACTOR_ENCRYPTION_KEY` in `config/two_factor.php` is eliminated, placeholder blocklist (`change-me`, `change-me-before-production`, `secret`, `changeme`) is enforced at service construction, and `TWO_FACTOR_ENCRYPTION_KEY` is asserted in `ProductionSecurityPolicy::assertEnvironment()`.
+- [x] **[CRIT-03] `APP_DEBUG` default `false`, boot unification & environment assertion.** Default is set to `'debug' => false` in `config/app.php`, early and runtime error-handler debug computations in `ApplicationFactory::create()` are unified, and `APP_DEBUG=false` is enforced in `ProductionSecurityPolicy::assertEnvironment()`.
+- [x] **[HIGH-01] Database production driver policy enforcement.** Enforced real driver policy for `config/database_policy.php` (`DATABASE_ENFORCE_MYSQL_PRODUCTION`, `DATABASE_PRODUCTION_DRIVER`) in `ConnectionFactory` and `ProductionSecurityPolicy` to forbid SQLite in production and staging environments.
+- [x] **[HIGH-02] CI MySQL integration testing.** Added MySQL 8.0 service container and `pdo_mysql` PHP extension configuration to `.github/workflows/quality-gate.yml` to run feature test suites against MySQL in CI.
+- [x] **[HIGH-03] Unified admin authentication rate limiting.** Reconciled `RateLimitReportOnlyAdminMiddleware` contract documentation to match active HTTP 429 enforcement under `RATE_LIMIT_MODE=enforce`.
+- [x] **[HIGH-04] Admin user locale persistence regression test net.** Implemented dedicated behavioral regression test suite `AdminUserLocaleLifecycleRegressionTest` covering admin user locale normalization, repository persistence, model hydration, and session propagation.
+- [x] **[HIGH-05] Consolidate environment reader closures across 14 config files.** Consolidated local `$env` closures across all root `config/*.php` and module config files to call the global canonical `env()` helper.
 
 The following earlier top-priority findings are retained as completed history:
 
@@ -375,8 +375,8 @@ replica.
 - [ ] Module lifecycle (install/enable/disable/uninstall)
 - [ ] Composer packaging + 0.x tag + CHANGELOG + stability contract — every
   internal module dependency still uses unconstrained `*@dev`
-- [ ] Database production driver policy enforcement: check `config/database_policy.php` flags in `ConnectionFactory` / `ProductionSecurityPolicy` and reject invalid driver/environment pairings.
-- [ ] Consolidate 14 duplicated `$env` closures in `config/*.php` into global canonical `env()` helper.
+- [x] Database production driver policy enforcement: check `config/database_policy.php` flags in `ConnectionFactory` / `ProductionSecurityPolicy` and reject invalid driver/environment pairings.
+- [x] Consolidate 14 duplicated `$env` closures in `config/*.php` into global canonical `env()` helper.
 - [ ] Compile and cache module manifests, service providers, and route collections for production boots with automatic invalidation diagnostics.
 - [ ] Document third-party extension architecture and role of `modules/` placeholder directory vs path-repository `app/` and standalone `packages/`.
 
@@ -391,7 +391,7 @@ replica.
 - [x] `content_json` frontend rendering via `PageRenderer` (comprehensive Editor.js block types: paragraphs, headers, lists, images, quotes, delimiters, code, tables, raw)
 - [x] Router path parameters
 - [x] Consolidate `pages` table into declarative schema
-- [ ] Make `HtmlSanitizerInterface` a mandatory, non-nullable dependency of `PageSaveCoordinator` / `PageSaveInput` and fail closed (throw exception) instead of falling back to raw unsanitized input.
+- [x] Make `HtmlSanitizerInterface` a mandatory, non-nullable dependency of `PageSaveCoordinator` / `PageSaveInput` and fail closed (throw exception) instead of falling back to raw unsanitized input.
 - [ ] **[R] No delete/archive on any admin CRUD screen** — flagged as "a
   basic missing feature," and the reason the missing-FK gap hasn't caused
   visible damage yet. Not yet built.
@@ -441,7 +441,7 @@ replica.
 - [x] Batch-load permissions in `AdminUserRepository` (fix N+1) — Phase 1.109
 - [x] Pagination + retention for audit log & login history — `PruneLogsCommand` (`admin:logs:prune`) and persistent Grid workspaces.
 - [ ] Consolidate duplicated Grid Criteria/SqlBuilder/Workspace and Admin Form section/processor patterns into a single extensible, typed Grid & Form kernel.
-- [ ] Dedicated behavioral regression test suite for admin user locale persistence across hydration, update, and session state.
+- [x] Dedicated behavioral regression test suite for admin user locale persistence across hydration, update, and session state.
 - [ ] Formalise session security controls: explicit absolute session lifetimes, concurrent session limits, and SameSite/Secure cookie policy verification during bootstrap.
 - [ ] Add covering indexes and EXPLAIN query plan checks for admin grid search queries.
 - [ ] **[R] Two competing Grid extensibility systems** — the newer
@@ -505,9 +505,9 @@ replica.
   now-impossible null-stored-but-successful state is ever reached.
 - [x] LICENSE (MIT) + SECURITY.md added — closes a real repo-hygiene/legal
   ambiguity gap flagged by an external reviewer pass.
-- [ ] Remove `APP_KEY` fallback for 2FA encryption key, enforce placeholder blocklist (`change-me`, `change-me-before-production`, `secret`), and validate `TWO_FACTOR_ENCRYPTION_KEY` in `ProductionSecurityPolicy::assertEnvironment()`.
-- [ ] Flip `APP_DEBUG` default to `false` in `config/app.php`, unify early vs runtime error-handler debug resolution in `ApplicationFactory`, and assert `APP_DEBUG` in `ProductionSecurityPolicy`.
-- [ ] Unify rate limiting across API login, HTML admin login, and 2FA challenge into a single canonical enforcement architecture; reconcile contradictory docblock in `RateLimitReportOnlyAdminMiddleware`.
+- [x] Remove `APP_KEY` fallback for 2FA encryption key, enforce placeholder blocklist (`change-me`, `change-me-before-production`, `secret`), and validate `TWO_FACTOR_ENCRYPTION_KEY` in `ProductionSecurityPolicy::assertEnvironment()`.
+- [x] Flip `APP_DEBUG` default to `false` in `config/app.php`, unify early vs runtime error-handler debug resolution in `ApplicationFactory`, and assert `APP_DEBUG` in `ProductionSecurityPolicy`.
+- [x] Unify rate limiting across API login, HTML admin login, and 2FA challenge into a single canonical enforcement architecture; reconcile contradictory docblock in `RateLimitReportOnlyAdminMiddleware`.
 - [ ] Automated secret generation and validation command (`bin/zoosper secrets:generate`) that writes a validated `.env` fragment and refuses to boot in production if placeholders remain.
 - [ ] Enforce Content-Security-Policy (`report_only: false`) after staging verification with Editor.js and admin assets.
 
@@ -570,10 +570,10 @@ replica.
 - [ ] Replace duplicate source-string tests with one behavioural contract.
 - [x] Keep one canonical admin-grid column customisation guide rather than
   phase/hotfix documentation fragments (see `docs/admin.md`).
-- [ ] Add MySQL/MariaDB service container to `.github/workflows/quality-gate.yml` and run test suite against MySQL in CI.
+- [x] Add MySQL/MariaDB service container to `.github/workflows/quality-gate.yml` and run test suite against MySQL in CI.
 - [ ] Expand `psalm.xml` scan scope to include all first-party modules and packages (`zoosper-session`, `zoosper-global-announcements`, `zoosper-cache`, `zoosper-config`, etc.) and make Psalm a blocking CI gate.
 - [ ] Update crypto/2FA regression tests (`SecretProtectorKeyEnforcementTest`) to assert runtime behavioral enforcement rather than source-string matching.
-- [ ] Clean up stale doc comments in `bootstrap/autoload.php` and reconcile contradictory Supported Versions tables in `SECURITY.md`.
+- [x] Clean up stale doc comments in `bootstrap/autoload.php` and reconcile contradictory Supported Versions tables in `SECURITY.md`.
 - [ ] Evaluate PHP 8.5+ language floor vs 8.3/8.4 and document explicit technical requirements in README.
 
 - [x] Pest + PHPUnit harness; quality gate runner
@@ -1269,15 +1269,15 @@ An exhaustive independent technical review and static security teardown (`var/lo
 
 ### Critical Launch Blockers (P0 — Immediate Remediation Required)
 
-- [ ] **CRIT-01: HTML Sanitizer fail-open vulnerability in Page save pipeline.**
+- [x] **CRIT-01: HTML Sanitizer fail-open vulnerability in Page save pipeline.**
   - *Location:* `app/zoosper-page/src/Application/Save/PageSaveInput.php:41-42` and `app/zoosper-page/config/services.php:40-43`.
   - *Problem:* `PageSaveCoordinator` treats `HtmlSanitizerInterface` as an optional dependency; if unresolvable, the nullsafe chain falls back to raw form input (`$sanitizer?->sanitise(...)->toString() ?? $form['content']`). That unescaped content is subsequently rendered via Latte's `|noescape` in frontend templates (`page.latte` and `view.latte`), allowing stored XSS on any container misconfiguration.
   - *Remediation:* Make `HtmlSanitizerInterface` a mandatory, non-nullable constructor dependency in `PageSaveCoordinator` and `PageSaveInput` and throw `ZoosperException` (fail closed) if unresolvable. Never fallback to raw user input.
-- [ ] **CRIT-02: 2FA encryption key insecure fallback and placeholder exposure.**
+- [x] **CRIT-02: 2FA encryption key insecure fallback and placeholder exposure.**
   - *Location:* `config/two_factor.php:62`, `app/zoosper-two-factor/config/services.php:65-83`, `.env.example`.
   - *Problem:* `config/two_factor.php` silently falls back to `APP_KEY` (documented as `change-me-before-production`) when `TWO_FACTOR_ENCRYPTION_KEY` is unset. The service factory only guards against empty strings and does not reject known placeholder values. `ProductionSecurityPolicy::assertEnvironment()` never validates `TWO_FACTOR_ENCRYPTION_KEY` on boot.
   - *Remediation:* Remove `APP_KEY` fallback from `config/two_factor.php`; enforce placeholder blocklist (`change-me`, `change-me-before-production`, `secret`, `changeme`); add `TWO_FACTOR_ENCRYPTION_KEY` validation to `ProductionSecurityPolicy::assertEnvironment()`; update test assertions to verify runtime failure rather than source-string matching.
-- [ ] **CRIT-03: `APP_DEBUG` insecure default, dual boot-time computation, and missing policy assertion.**
+- [x] **CRIT-03: `APP_DEBUG` insecure default, dual boot-time computation, and missing policy assertion.**
   - *Location:* `config/app.php:19`, `app/zoosper-core/src/Bootstrap/ApplicationFactory.php:61-64` vs `:72-75`, `app/zoosper-core/src/Http/ProductionSecurityPolicy.php`.
   - *Problem:* `config/app.php` defaults `debug` to `true` when `APP_DEBUG` is unset. `ApplicationFactory::create()` calculates debug mode twice with conflicting logic (early handler defaults `false`, runtime handler defaults `true`). `ProductionSecurityPolicy::assertEnvironment()` does not validate `APP_DEBUG` for production environments.
   - *Remediation:* Change `config/app.php` default to `false`; unify error-handler debug resolution in `ApplicationFactory`; assert `APP_DEBUG=false` in `ProductionSecurityPolicy::assertEnvironment()` for `staging` and `production`.
@@ -1290,22 +1290,22 @@ An exhaustive independent technical review and static security teardown (`var/lo
 
 ### High-Priority Reliability & Architecture Remediation (P1)
 
-- [ ] **HIGH-01: Database production-driver policy enforcement.**
+- [x] **HIGH-01: Database production-driver policy enforcement.**
   - *Location:* `config/database_policy.php`.
   - *Problem:* `DATABASE_ENFORCE_MYSQL_PRODUCTION`, `DATABASE_PRODUCTION_DRIVER`, and `DATABASE_ALLOW_SQLITE_LOCAL` are defined but never read by any code.
   - *Remediation:* Enforce driver checks in `ConnectionFactory` and `ProductionSecurityPolicy::assertEnvironment()` to prevent SQLite from running in production.
-- [ ] **HIGH-02: CI database engine parity with production.**
+- [x] **HIGH-02: CI database engine parity with production.**
   - *Location:* `.github/workflows/quality-gate.yml`.
   - *Problem:* CI workflows execute all tests exclusively against SQLite (`DB_DRIVER: sqlite`), never verifying MySQL collation, JSON handling, or locking.
   - *Remediation:* Add a MySQL service container to the GitHub Actions workflow and run feature test suites against MySQL.
-- [ ] **HIGH-03: Unified admin authentication rate limiting.**
+- [x] **HIGH-03: Unified admin authentication rate limiting.**
   - *Location:* `AuthController.php`, `RateLimitReportOnlyAdminMiddleware.php`, `AdminTwoFactorChallengeController.php`.
   - *Problem:* API login, HTML admin login, and 2FA challenge use disparate rate-limiting invocation patterns; middleware docblock contradicts its actual blocking behavior.
   - *Remediation:* Unify rate limiting into a single canonical middleware/service enforcement point across all three surfaces and update documentation.
-- [ ] **HIGH-04: Admin user locale persistence regression test net.**
+- [x] **HIGH-04: Admin user locale persistence regression test net.**
   - *Problem:* Historical git log shows 11+ iterative hotfixes for locale persistence due to lack of behavioral regression coverage.
   - *Remediation:* Build a dedicated behavioral regression test suite testing locale parsing, hydration, pipeline update, and session propagation.
-- [ ] **HIGH-05: Consolidation of 14 duplicate environment reader closures.**
+- [x] **HIGH-05: Consolidation of 14 duplicate environment reader closures.**
   - *Location:* 14 files in `config/*.php`.
   - *Problem:* Local `$env` closures in config files treat empty strings (`$_ENV[$key] !== ''`) as unset, conflicting with canonical `env()` in `bootstrap/autoload.php`.
   - *Remediation:* Remove local `$env` closures and have all config files call the global canonical `env()` helper.
@@ -1347,7 +1347,7 @@ An exhaustive independent technical review and static security teardown (`var/lo
 
 - [ ] **LOW-01: Commit labeling hygiene and review attribution.**
   - *Remediation:* Ensure distinct, descriptive commit messages and co-author attribution across all branch merges.
-- [ ] **LOW-02: Stale comments & documentation reconciliation.**
+- [x] **LOW-02: Stale comments & documentation reconciliation.**
   - *Remediation:* Remove obsolete comments in `bootstrap/autoload.php` referencing non-existent EnvLoader classes; reconcile contradictory Supported Versions tables in `SECURITY.md`.
 - [ ] **LOW-03: Clarify pluggable module architecture & `modules/` placeholder.**
   - *Remediation:* Document the role of `modules/` for third-party pluggable extensions vs internal `app/` and standalone `packages/`.

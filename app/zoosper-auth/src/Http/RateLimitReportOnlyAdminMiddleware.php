@@ -21,10 +21,9 @@ use Zoosper\Core\Security\RateLimit\ReportOnlyRateLimitMiddleware;
 use Zoosper\Core\Security\RateLimit\StaticRateLimitPolicyResolver;
 
 /**
- * Wires the existing report-only rate-limit stack into the real admin
- * RouteMiddleware pipeline. This middleware never blocks a request. It only
- * records diagnostics when rate limiting is explicitly enabled in report_only
- * mode. HTTP 429 enforcement remains a deliberately deferred future phase.
+ * Wires the admin login rate-limit stack into the RouteMiddleware pipeline.
+ * Supports both report-only diagnostics and active HTTP 429 enforcement based
+ * on the configured rate-limit mode (RATE_LIMIT_MODE=report_only|enforce).
  *
  * SECURITY FIX (confirmed 2026-07-30, external reviewer pass):
  * app/zoosper-core/config/rate_limit.php ships with 'identity_salt' => ''

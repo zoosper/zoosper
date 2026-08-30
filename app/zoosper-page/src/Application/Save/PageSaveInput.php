@@ -30,18 +30,20 @@ final readonly class PageSaveInput
     /** @param array<string, mixed> $form */
     public static function fromForm(
         array $form,
-        ?HtmlSanitizerInterface $sanitizer = null,
+        HtmlSanitizerInterface $sanitizer,
         ?ConfigRepository $config = null,
     ): self {
         $slug = strtolower(trim((string) ($form['slug'] ?? '')));
         $slug = preg_replace('/[^a-z0-9]+/i', '-', $slug) ?: '';
 
+        $rawContent = (string) ($form['content'] ?? '');
+        $sanitized = $sanitizer->sanitise($rawContent);
+
         return new self(
             siteId: (int) ($form['site_id'] ?? 0),
             title: trim((string) ($form['title'] ?? '')),
             slug: trim($slug, '-'),
-            content: $sanitizer?->sanitise((string) ($form['content'] ?? ''))->toString()
-                ?? (string) ($form['content'] ?? ''),
+            content: $sanitized->toString(),
             contentFormat: in_array((string) ($form['content_format'] ?? 'html'), ['html', 'block_json'], true) ? (string) ($form['content_format'] ?? 'html') : 'html',
             publish: isset($form['publish']),
             contentJson: self::normaliseContentJson($form['content_json'] ?? null, $config),

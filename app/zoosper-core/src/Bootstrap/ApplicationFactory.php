@@ -38,29 +38,15 @@ final class ApplicationFactory
 {
     /**
      * Build the HTTP application and load module-owned service providers.
-     *
-     * BOOT-ORDER FIX (confirmed 2026-07-30, external reviewer pass): the
-     * database connection (ConnectionFactory::create()) previously
-     * happened BEFORE ErrorHandler::register(). A database failure during
-     * boot — arguably the single most common real production incident
-     * (wrong credentials, DB server down, network partition) — was
-     * therefore handled by whatever PHP's own display_errors setting
-     * happened to be, rather than by this application's own error
-     * handler, risking a raw stack trace (potentially including
-     * connection details) being shown or logged in an uncontrolled way.
-     *
-     * Fixed by moving the PDO connection to AFTER $errorHandler->register()
-     * — a pure reorder, no other logic changed. ErrorHandler only needs
-     * $config and $basePath, neither of which depend on a working
-     * database connection, so this reorder carries no functional risk.
      */
     public static function create(string $basePath): Application
     {
         // Early error handler registration: catch and redact errors during module discovery and config load.
         $earlyLogManager = new LogManager(ConfigRepository::fromArray([]), $basePath);
+        $earlyDebug = filter_var($_ENV['APP_DEBUG'] ?? getenv('APP_DEBUG') ?: false, FILTER_VALIDATE_BOOLEAN);
         $earlyErrorHandler = new ErrorHandler(
             $earlyLogManager->exceptions(),
-            (bool) (getenv('APP_DEBUG') === 'true' || getenv('APP_DEBUG') === '1'),
+            $earlyDebug,
         );
         $earlyErrorHandler->register();
 
@@ -75,8 +61,6 @@ final class ApplicationFactory
         );
         $errorHandler->register();
 
-        // BOOT-ORDER FIX: this now runs AFTER error-handler registration
-        // (previously ran before it) — see class docblock above.
         $pdo = (new ConnectionFactory($config, $basePath))->create();
 
         $services = new ServiceContainer();

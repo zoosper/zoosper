@@ -9,28 +9,7 @@ use RuntimeException;
 use Zoosper\Core\Config\ConfigRepository;
 
 /**
- * SECURITY/CORRECTNESS FIX (confirmed 2026-07-30, external reviewer pass):
- * createMysqlConnection() previously never set PDO::ATTR_EMULATE_PREPARES
- * explicitly, meaning it used PHP's own default for the mysql PDO driver —
- * which is `true` (client-side "emulated" prepares). Under emulation, bound
- * values are interpolated into the SQL string by the PHP driver itself
- * BEFORE it reaches MySQL/MariaDB, rather than being sent separately over
- * the wire as real, typed protocol parameters and bound server-side. This
- * is weaker in two concrete ways: (1) type safety is looser — e.g. an int
- * bound where the server expects a genuine integer protocol value is
- * instead coerced into a quoted string literal by the client library, and
- * (2) it narrows (though does not eliminate — parameterised queries were
- * already used throughout this codebase) the safety margin true
- * server-side prepared statements provide against injection.
- *
- * Fixed by explicitly setting PDO::ATTR_EMULATE_PREPARES => false so MySQL/
- * MariaDB connections use real, server-side prepared statements. This is a
- * one-line, well-known PDO hardening setting.
- *
- * SQLite is unaffected: SQLite has no client/server split in the same
- * sense, and PDO's own sqlite driver has never supported/needed this
- * attribute the way the mysql driver does — createSqliteConnection() is
- * deliberately left untouched.
+ * Creates PDO database connections for SQLite or MySQL/MariaDB with prepared statement enforcement.
  */
 final readonly class ConnectionFactory
 {
@@ -49,7 +28,19 @@ final readonly class ConnectionFactory
             throw new RuntimeException('Database connection is not configured: ' . $default);
         }
 
-        if (($connection['driver'] ?? $default) === 'mysql') {
+        $driver = (string) ($connection['driver'] ?? $default);
+        $environment = (string) $this->config->get('app.env', 'local');
+        $policy = $this->config->array('database_policy');
+        $enforceMysql = (bool) ($policy['enforce_mysql_in_production'] ?? true);
+
+        if (in_array(strtolower($environment), ['staging', 'production'], true) && $enforceMysql && $driver === 'sqlite') {
+            throw new RuntimeException(
+                'SQLite database driver is not permitted in ' . $environment . ' environments. '
+                . 'Production environments require a MySQL/MariaDB connection.'
+            );
+        }
+
+        if ($driver === 'mysql') {
             return $this->createMysqlConnection($connection);
         }
 

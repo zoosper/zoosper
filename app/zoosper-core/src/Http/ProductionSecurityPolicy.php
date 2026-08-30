@@ -39,6 +39,10 @@ final class ProductionSecurityPolicy
             return;
         }
 
+        if (filter_var($value('APP_DEBUG', false), FILTER_VALIDATE_BOOL)) {
+            throw new RuntimeException(ucfirst($environment) . ' requires APP_DEBUG=false.');
+        }
+
         if (!filter_var($value('SESSION_SECURE', false), FILTER_VALIDATE_BOOL)) {
             throw new RuntimeException(ucfirst($environment) . ' requires SESSION_SECURE=true.');
         }
@@ -54,6 +58,17 @@ final class ProductionSecurityPolicy
         $salt = trim((string) $value('RATE_LIMIT_IDENTITY_SALT', ''));
         if ($salt === '' || in_array(strtolower($salt), ['change-me', 'changeme', 'secret'], true)) {
             throw new RuntimeException(ucfirst($environment) . ' requires a strong RATE_LIMIT_IDENTITY_SALT.');
+        }
+
+        $twoFactorKey = trim((string) $value('TWO_FACTOR_ENCRYPTION_KEY', ''));
+        if ($twoFactorKey === '' || in_array(strtolower($twoFactorKey), ['change-me', 'change-me-before-production', 'secret', 'changeme'], true)) {
+            throw new RuntimeException(ucfirst($environment) . ' requires a strong TWO_FACTOR_ENCRYPTION_KEY.');
+        }
+
+        $driver = strtolower(trim((string) $value('DB_DRIVER', 'mysql')));
+        $enforceMysql = filter_var($value('DATABASE_ENFORCE_MYSQL_PRODUCTION', true), FILTER_VALIDATE_BOOL);
+        if ($enforceMysql && $driver === 'sqlite') {
+            throw new RuntimeException(ucfirst($environment) . ' requires a production database driver (MySQL/MariaDB) and forbids SQLite.');
         }
     }
 }
