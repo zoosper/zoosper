@@ -214,6 +214,88 @@ $durableRegistryIntegrity = static function () use ($root, $durableMap, $manifes
 };
 
 /**
+ * Gate check: JavaScript syntax validation for shipped admin and core assets.
+ */
+$assetsJsSyntax = static function () use ($root): array {
+    $name = 'assets:js-syntax';
+    $details = [];
+    $errors = 0;
+    $scanned = 0;
+
+    $directories = [
+        $root . '/app',
+        $root . '/packages',
+        $root . '/themes',
+        $root . '/assets',
+    ];
+
+    $jsFiles = [];
+    foreach ($directories as $dir) {
+        if (!is_dir($dir)) {
+            continue;
+        }
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS)
+        );
+        foreach ($iterator as $file) {
+            if ($file->isFile() && strtolower($file->getExtension()) === 'js') {
+                $path = $file->getPathname();
+                $normalized = str_replace('\\', '/', $path);
+                if (str_contains($normalized, '/node_modules/') || str_contains($normalized, '/vendor/')) {
+                    continue;
+                }
+                $jsFiles[] = $path;
+            }
+        }
+    }
+
+    $nodeAvailable = false;
+    $nodeBinary = 'node';
+    $nodeVersionOutput = [];
+    $nodeExitCode = 1;
+    @exec($nodeBinary . ' -v 2>&1', $nodeVersionOutput, $nodeExitCode);
+    if ($nodeExitCode === 0) {
+        $nodeAvailable = true;
+    }
+
+    foreach ($jsFiles as $jsFile) {
+        $scanned++;
+        $relPath = str_replace($root . DIRECTORY_SEPARATOR, '', $jsFile);
+        $relPath = str_replace('\\', '/', $relPath);
+
+        if ($nodeAvailable) {
+            $cmd = escapeshellarg($nodeBinary) . ' --check ' . escapeshellarg($jsFile);
+            $output = [];
+            $exitCode = 0;
+            exec($cmd . ' 2>&1', $output, $exitCode);
+            if ($exitCode !== 0) {
+                $errors++;
+                $errorMsg = trim(implode(' ', $output));
+                $details[] = "Syntax error in {$relPath}: {$errorMsg}";
+            }
+        } else {
+            $content = (string) file_get_contents($jsFile);
+            $openBraces = substr_count($content, '{') - substr_count($content, '}');
+            $openParens = substr_count($content, '(') - substr_count($content, ')');
+            if ($openBraces !== 0 || $openParens !== 0) {
+                $errors++;
+                $details[] = "Unbalanced syntax tokens in {$relPath} (braces diff: {$openBraces}, parens diff: {$openParens}).";
+            }
+        }
+    }
+
+    return [
+        'name' => $name,
+        'errors' => $errors,
+        'warnings' => 0,
+        'summary' => $errors === 0
+            ? "Validated syntax of {$scanned} shipped JavaScript asset file(s)."
+            : "{$errors} JavaScript syntax error(s) detected across {$scanned} file(s).",
+        'details' => $details,
+    ];
+};
+
+/**
  * Registered gate checks.
  *
  * @var array<int, callable(): array{name:string,errors:int,warnings:int,summary:string,details:array<int,string>}> $checks
@@ -222,6 +304,7 @@ $checks = [
     $siteLookupAudit,
     $toolsHygiene,
     $durableRegistryIntegrity,
+    $assetsJsSyntax,
 ];
 
 $results = [];

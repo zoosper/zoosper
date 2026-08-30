@@ -374,8 +374,8 @@ replica.
 - [x] Block JSON → HTML rendering + HTML sanitization (HTMLPurifier)
 - [x] Frontend page rendering via themes
 - [~] `content_json` frontend rendering via `PageRenderer` (planned deepening)
-- [ ] Router path parameters
-- [ ] Consolidate `pages` table into declarative schema
+- [x] Router path parameters
+- [x] Consolidate `pages` table into declarative schema
 - [ ] **[R] No delete/archive on any admin CRUD screen** — flagged as "a
   basic missing feature," and the reason the missing-FK gap hasn't caused
   visible damage yet. Not yet built.
@@ -517,7 +517,7 @@ replica.
 
 - [x] API module (Auth, ContentPage, Health, Me)
 - [ ] Headless API parity (roles, themes, url-rewrites CRUD)
-- [ ] ContentPage API exposes structured Editor.js JSON (not serialized HTML)
+- [x] ContentPage API exposes structured Editor.js JSON (not serialized HTML)
 
 ## 9. Modular Asset Pipeline
 - [~] **Module-owned admin grid assets are live through `/asset`.** Remaining:
@@ -527,7 +527,7 @@ replica.
 - [x] Asset registry / resolver / controller (path-safe, MIME allowlist, ETag)
 - [ ] Wire `/asset/{module}/{path}` route + `asset()` helper live
 - [ ] Cache asset-registry scans per request
-- [~] **Asset resolver adversarial coverage.** Core's `AssetResolver` already has traversal rejection and realpath containment, with direct and URL-encoded traversal tests. Extend coverage for null bytes and symlink edge cases; the containment layer itself is not missing.
+- [x] **Asset resolver adversarial coverage.** Core's `AssetResolver` already has traversal rejection and realpath containment, with direct and URL-encoded traversal tests. Extend coverage for null bytes and symlink edge cases; the containment layer itself is not missing.
 
 ## 10. Caching & Performance
 
@@ -551,7 +551,7 @@ replica.
   limitation).
 
 ## 11. Quality, Tooling & Repo Hygiene
-- [ ] Add JavaScript syntax validation for every shipped admin asset.
+- [x] Add JavaScript syntax validation for every shipped admin asset.
 - [ ] Add DOM behavioural coverage for column drag, live reflection, locked
   anchors, dirty state and bookmark reload.
 - [ ] Replace duplicate source-string tests with one behavioural contract.

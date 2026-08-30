@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Api;
 
+use JsonException;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -38,6 +39,16 @@ final readonly class ContentPageController
             return $this->json->error('page_not_found', 'No published page exists for this slug.', 404);
         }
 
+        $document = null;
+        if ($page->contentJson !== null && trim($page->contentJson) !== '') {
+            try {
+                $decoded = json_decode($page->contentJson, true, 512, JSON_THROW_ON_ERROR);
+                $document = is_array($decoded) ? $decoded : null;
+            } catch (JsonException) {
+                $document = null;
+            }
+        }
+
         return $this->json->success([
             'site' => [
                 'id' => $site->id,
@@ -49,6 +60,8 @@ final readonly class ContentPageController
                 'title' => $page->title,
                 'slug' => $page->slug,
                 'content' => $page->content,
+                'content_format' => $page->contentFormat,
+                'content_json' => $document,
                 'status' => $page->status,
                 'published_at' => $page->publishedAt,
             ],
