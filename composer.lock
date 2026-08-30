@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "415c81bc56fb62616eba97ed869725f6",
+    "content-hash": "ff929922b840e8aaa10aae283bcc3292",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1448,6 +1448,35 @@
                 "MIT"
             ],
             "description": "Zoosper's loud-errors exception, sensitive-value redaction, and CLI/web error display package, built on Marko's exception base class and error formatters.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/global-announcements",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "./app/zoosper-global-announcements",
+                "reference": "d362907e5b20194c8782ef3b10b3c106dc072658"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/admin": "dev-dev",
+                "zoosper/auth": "dev-dev",
+                "zoosper/core": "dev-dev"
+            },
+            "type": "zoosper-module",
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\GlobalAnnouncements\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Zoosper_GlobalAnnouncements module for Zoosper CMS.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -9089,6 +9118,7 @@
         "zoosper/config": 20,
         "zoosper/core": 20,
         "zoosper/errors": 20,
+        "zoosper/global-announcements": 20,
         "zoosper/grid": 20,
         "zoosper/install": 20,
         "zoosper/logger": 20,
