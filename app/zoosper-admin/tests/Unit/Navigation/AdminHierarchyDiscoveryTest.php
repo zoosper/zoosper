@@ -64,7 +64,8 @@ it('filters permissions for multi-layer hierarchy before rendering', function ()
             id: 1,
             email: 'editor@example.com',
             name: 'Editor',
-            isActive: true,
+            passwordHash: '',
+            status: 'active',
             permissions: ['user.manage', 'user.create'],
         );
 

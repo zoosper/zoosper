@@ -18,9 +18,7 @@ it('returns structured Editor.js JSON and content format for published pages', f
         id: 1,
         code: 'main',
         name: 'Main Site',
-        host: 'example.com',
         status: 'active',
-        isDefault: true,
         homepageSlug: 'home',
     );
 
