@@ -42,6 +42,7 @@
         real environment.
     -->
     <php>
+        <ini name="extension" value="pdo_sqlite"/>
         <env name="TWO_FACTOR_ENCRYPTION_KEY" value="test-only-not-a-real-secret-do-not-use-in-any-real-environment"/>
     </php>
 

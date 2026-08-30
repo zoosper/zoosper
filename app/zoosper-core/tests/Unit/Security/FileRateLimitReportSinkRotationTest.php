@@ -31,9 +31,17 @@ it('rotates report files when max size is reached', function (): void {
         $sink->record($event);
         expect(is_file($reportPath . '.1'))->toBeTrue();
     } finally {
-        @unlink($reportPath . '.2');
-        @unlink($reportPath . '.1');
-        @unlink($reportPath);
-        @rmdir($tempDir);
+        if (is_file($reportPath . '.2')) {
+            @unlink($reportPath . '.2');
+        }
+        if (is_file($reportPath . '.1')) {
+            @unlink($reportPath . '.1');
+        }
+        if (is_file($reportPath)) {
+            @unlink($reportPath);
+        }
+        if (is_dir($tempDir)) {
+            @rmdir($tempDir);
+        }
     }
 });

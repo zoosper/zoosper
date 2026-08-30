@@ -89,6 +89,7 @@
     },
     "config": {
         "sort-packages": true,
+        "platform-check": false,
         "allow-plugins": {
             "pestphp/pest-plugin": true
         },

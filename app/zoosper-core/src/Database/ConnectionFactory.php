@@ -95,12 +95,15 @@ final readonly class ConnectionFactory
             (string) ($connection['charset'] ?? 'utf8mb4'),
         );
 
-        $pdo = new PDO($dsn, (string) $connection['username'], (string) $connection['password']);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        // SECURITY FIX: use real, server-side prepared statements instead
-        // of PHP's client-side emulated binding (the previous, implicit
-        // default for the mysql PDO driver).
+        $options = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            // SECURITY FIX: use real, server-side prepared statements instead
+            // of PHP's client-side emulated binding.
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ];
+
+        $pdo = new PDO($dsn, (string) $connection['username'], (string) $connection['password'], $options);
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
         return $pdo;

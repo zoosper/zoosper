@@ -106,13 +106,50 @@ final readonly class EmailLogRepository
             'from_email' => $message->from->email,
             'from_name' => $message->from->name,
             'to_emails' => implode(', ', array_map(static fn (EmailAddress $address): string => $address->email, $message->to)),
-            'subject' => mb_substr($message->subject, 0, 255),
-            'text_body' => $message->textBody,
-            'html_body' => $message->htmlBody,
+            'subject' => mb_substr($this->sanitizeContent($message->subject), 0, 255),
+            'text_body' => $this->sanitizeContent($message->textBody),
+            'html_body' => $this->sanitizeContent($message->htmlBody),
             'error_class' => $errorClass,
-            'error_message' => $errorMessage,
+            'error_message' => $errorMessage !== null ? $this->sanitizeContent($errorMessage) : null,
             'sent_at' => $status === 'sent' ? date('Y-m-d H:i:s') : null,
             'failed_at' => $status === 'failed' ? date('Y-m-d H:i:s') : null,
         ]);
+    }
+
+    private function sanitizeContent(?string $content): ?string
+    {
+        if ($content === null || $content === '') {
+            return $content;
+        }
+
+        // Redact reset tokens / secret query params in URLs: ?token=... / ?secret=... / &key=...
+        $sanitized = (string) preg_replace(
+            '/([?&](?:token|key|secret|code|otp|auth|signature|password)=)[^&\s"\'<>]+/i',
+            '$1[redacted]',
+            $content,
+        );
+
+        // Redact Bearer tokens: Bearer <token>
+        $sanitized = (string) preg_replace(
+            '/\b(Bearer\s+)[A-Za-z0-9_\-\.]{12,}/i',
+            '$1[redacted]',
+            $sanitized,
+        );
+
+        // Redact recovery codes: xxxx-xxxx
+        $sanitized = (string) preg_replace(
+            '/\b([0-9a-fA-F]{4}-[0-9a-fA-F]{4})\b/',
+            '[redacted]',
+            $sanitized,
+        );
+
+        // Redact labelled credentials/secrets (e.g. Password: ..., Secret: ..., OTP: ...)
+        $sanitized = (string) preg_replace(
+            '/\b((?:password|passwd|otp|totp|secret|recovery\s*code|pin)[\s:=]+)[^\s<>&"\']+/i',
+            '$1[redacted]',
+            $sanitized,
+        );
+
+        return $sanitized;
     }
 }

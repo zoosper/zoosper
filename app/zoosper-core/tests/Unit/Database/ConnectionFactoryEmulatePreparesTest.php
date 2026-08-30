@@ -57,7 +57,7 @@ it('connects to MySQL with real, server-side prepared statements (EMULATE_PREPAR
 
     // The actual fix under test: real, server-side prepares are in effect,
     // not PHP's client-side emulated binding.
-    expect($pdo->getAttribute(PDO::ATTR_EMULATE_PREPARES))->toBeFalse();
+    expect((bool) $pdo->getAttribute(PDO::ATTR_EMULATE_PREPARES))->toBeFalse();
 
     // Sanity-check the connection is genuinely usable with this setting —
     // a real prepared statement round-trip, not just an attribute read.

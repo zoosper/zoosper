@@ -70,7 +70,7 @@ it('runs migrate() successfully against real MySQL with real prepared statements
 
     // Confirm real prepared statements are genuinely active for this
     // connection — the exact precondition that exposed the original bug.
-    expect($pdo->getAttribute(PDO::ATTR_EMULATE_PREPARES))->toBeFalse();
+    expect((bool) $pdo->getAttribute(PDO::ATTR_EMULATE_PREPARES))->toBeFalse();
 
     $modules = new ModuleRegistry($basePath);
 

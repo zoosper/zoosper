@@ -73,7 +73,7 @@ final readonly class AuditLogRepository implements GridDataSourceInterface
             'summary' => $summary,
             'metadata_json' => json_encode($metadata, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
             'ip_address' => $ipAddress,
-            'user_agent' => $userAgent,
+            'user_agent' => $userAgent !== null ? mb_substr($userAgent, 0, 500) : null,
             'created_at' => gmdate('Y-m-d H:i:s'),
         ]);
     }

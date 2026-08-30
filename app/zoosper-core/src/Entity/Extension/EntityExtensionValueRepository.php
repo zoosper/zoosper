@@ -35,14 +35,42 @@ final readonly class EntityExtensionValueRepository
      */
     public function upsert(EntityExtensionValue $value): void
     {
+        $entityType = trim($value->entityType);
+        $entityId = (int) $value->entityId;
+        $module = trim($value->module);
+        $fieldName = trim($value->fieldName);
+
+        if ($entityType === '' || strlen($entityType) > 100 || !preg_match('/^[a-zA-Z0-9_\-\.]+$/', $entityType)) {
+            throw new \InvalidArgumentException('Invalid entity type provided for extension value.');
+        }
+
+        if ($entityId <= 0) {
+            throw new \InvalidArgumentException('Invalid entity ID provided for extension value.');
+        }
+
+        if ($module === '' || strlen($module) > 120 || !preg_match('/^[a-zA-Z0-9_\-\.]+$/', $module)) {
+            throw new \InvalidArgumentException('Invalid module identifier provided for extension value.');
+        }
+
+        if ($fieldName === '' || strlen($fieldName) > 120 || !preg_match('/^[a-zA-Z0-9_\-\.]+$/', $fieldName)) {
+            throw new \InvalidArgumentException('Invalid field name provided for extension value.');
+        }
+
+        $lowerField = strtolower($fieldName);
+        foreach (['password', 'passwd', 'totp', 'otp', 'recovery_code', 'secret_key', 'private_key'] as $prohibited) {
+            if (str_contains($lowerField, $prohibited)) {
+                throw new \InvalidArgumentException('Sensitive credentials must not be stored in entity extension values.');
+            }
+        }
+
         $now = gmdate('Y-m-d H:i:s');
         $driver = (string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
 
         $params = [
-            'entity_type' => $value->entityType,
-            'entity_id' => (int) $value->entityId,
-            'module' => $value->module,
-            'field_name' => $value->fieldName,
+            'entity_type' => $entityType,
+            'entity_id' => $entityId,
+            'module' => $module,
+            'field_name' => $fieldName,
             'value_json' => json_encode($value->value, JSON_THROW_ON_ERROR),
             'created_at' => $now,
             'updated_at' => $now,

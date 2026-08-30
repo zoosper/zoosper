@@ -43,8 +43,9 @@ function zoosperBootAppCleanly(): \Zoosper\Core\Http\Application
 
     $app = ApplicationFactory::create(zoosperBasePath());
 
-    // ErrorHandler::register() installs one error handler and one exception
-    // handler; undo exactly those so we don't leak global state.
+    // ApplicationFactory installs early + main handlers; undo both so we don't leak global state.
+    restore_error_handler();
+    restore_exception_handler();
     restore_error_handler();
     restore_exception_handler();
 

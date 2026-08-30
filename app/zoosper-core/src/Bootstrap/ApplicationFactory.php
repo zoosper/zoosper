@@ -56,6 +56,14 @@ final class ApplicationFactory
      */
     public static function create(string $basePath): Application
     {
+        // Early error handler registration: catch and redact errors during module discovery and config load.
+        $earlyLogManager = new LogManager(ConfigRepository::fromArray([]), $basePath);
+        $earlyErrorHandler = new ErrorHandler(
+            $earlyLogManager->exceptions(),
+            (bool) (getenv('APP_DEBUG') === 'true' || getenv('APP_DEBUG') === '1'),
+        );
+        $earlyErrorHandler->register();
+
         $modules = new ModuleRegistry($basePath);
         $config = (new ApplicationConfigLoader($basePath, $modules))->load();
         $markoConfig = new MarkoConfigRepositoryAdapter($config);

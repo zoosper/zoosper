@@ -11,7 +11,12 @@ function runFreshInstallCommand(string $root, string $database, array $arguments
         'DB_CONNECTION' => 'sqlite',
         'DB_DATABASE' => $database,
     ]);
-    $command = array_merge([PHP_BINARY, $root . '/bin/zoosper'], $arguments);
+    $phpArgs = [PHP_BINARY];
+    if (extension_loaded('pdo_sqlite')) {
+        $phpArgs[] = '-d';
+        $phpArgs[] = 'extension=pdo_sqlite';
+    }
+    $command = array_merge($phpArgs, [$root . '/bin/zoosper'], $arguments);
     $process = proc_open($command, [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $root, $environment);
     if (!is_resource($process)) {
         throw new RuntimeException('Unable to start Zoosper CLI process.');

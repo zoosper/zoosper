@@ -52,7 +52,7 @@ final readonly class LoginHistoryRepository implements GridDataSourceInterface, 
             'email' => mb_strtolower($email),
             'status' => $status,
             'ip_address' => $ipAddress,
-            'user_agent' => $userAgent,
+            'user_agent' => $userAgent !== null ? mb_substr($userAgent, 0, 500) : null,
             'created_at' => gmdate('Y-m-d H:i:s'),
         ]);
     }

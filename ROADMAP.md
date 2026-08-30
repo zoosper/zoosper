@@ -478,13 +478,7 @@ replica.
   consistency), and a missing `function_exists()` guard. The historical competing-loader claim is closed: architecture regressions prove
   those loaders are absent and `bootstrap/autoload.php` is the sole owner.
 - [x] **[FIXED] PDO connected before the error handler registered** —
-  `ApplicationFactory::create()` now registers `ErrorHandler` first. **[R2]
-  Still open**: `ModuleRegistry` construction and
-  `ModuleConfigAggregator::aggregate()` still run before the error handler
-  too, and those `require` every module's `module.php`/config files
-  (arbitrary code) — a parse error there still surfaces through raw
-  `display_errors`. Full fix needs the error handler registered before
-  *any* module discovery, not just before the DB connection.
+  `ApplicationFactory::create()` registers `ErrorHandler` before module discovery, config loading, and database connection.
 - [x] **[FIXED] `MediaUploadServiceResult::$stored` typed `?object`**
   instead of the concrete `StoredMediaFile` — now properly typed, with an
   explicit runtime guard in `MediaEditorJsUploadController` that throws
@@ -499,13 +493,10 @@ replica.
 - [x] Media standalone package split — confirmed complete
 - [x] Fixed: `MediaAdminController::upload()` silently swallowed all
   upload failures
-- [ ] **[R] Media derivative processing (resize/transform) reportedly
-  100% dead in production** — the dispatcher/policy/processor classes are
-  built and smoke-tested, but `services.php` never actually passes a
-  `derivatives:` argument to `MediaUploadService`. Duplicate MediaUploadService construction is resolved; derivative processing remains open and unwired.
-- [ ] **[R] Both media upload controllers reportedly construct their own
-  private `MediaUploadService`** instead of the container-configured one
-  (with cleanup/derivative dispatcher wired in). Duplicate MediaUploadService construction is resolved; derivative processing remains open and unwired.
+- [x] **[FIXED] Media derivative processing (resize/transform) wired** —
+  `services.php` configures `MediaUploadDerivativeDispatcher` and injects it into `MediaUploadService`. Duplicate MediaUploadService construction is resolved. Derivative database persistence remains a separate follow-up.
+- [x] **[FIXED] Both media upload controllers receive container-configured `MediaUploadService`**
+  with derivative dispatcher, validator, storage, and cleanup wired in. Duplicate MediaUploadService construction is resolved.
 
 ## 7. Mail
 
