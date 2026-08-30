@@ -15,6 +15,8 @@
  * @var string $flashMessagesHtml
  * @var list<\Zoosper\Admin\Theme\AdminColourTheme> $adminColourThemes
  * @var string $logoutFormHtml
+ * @var ?\Zoosper\Admin\Announcement\AdminAnnouncement $activeAnnouncement
+ * @var ?string $csrfToken
  */
 ?>
 <!doctype html>
@@ -97,6 +99,28 @@
         'scripts' => $scripts ?? [],
     ]) ?>
 <?php endif; ?>
+<div id="admin-announcement-modal" class="admin-announcement-modal<?= isset($activeAnnouncement) && $activeAnnouncement !== null ? ' is-visible' : '' ?>" role="dialog" aria-modal="true" aria-labelledby="admin-announcement-title" data-announcement-id="<?= isset($activeAnnouncement) && $activeAnnouncement !== null ? (int) $activeAnnouncement->id : '' ?>"<?= !isset($activeAnnouncement) || $activeAnnouncement === null ? ' hidden' : '' ?>>
+    <div class="admin-announcement-backdrop"></div>
+    <div class="admin-announcement-dialog">
+        <div class="admin-announcement-header">
+            <span class="admin-announcement-badge">Global Announcement</span>
+            <h2 id="admin-announcement-title" class="admin-announcement-title"><?= isset($activeAnnouncement) && $activeAnnouncement !== null ? $e($activeAnnouncement->title) : '' ?></h2>
+        </div>
+        <div id="admin-announcement-body" class="admin-announcement-body">
+            <?= isset($activeAnnouncement) && $activeAnnouncement !== null ? nl2br($e($activeAnnouncement->body)) : '' ?>
+        </div>
+        <div class="admin-announcement-actions">
+            <form method="post" action="/admin/announcements/acknowledge" data-announcement-ack-form>
+                <?php if (isset($csrfToken) && $csrfToken !== ''): ?>
+                    <input type="hidden" name="_csrf_token" value="<?= $e($csrfToken) ?>">
+                <?php endif; ?>
+                <input type="hidden" name="announcement_id" value="<?= isset($activeAnnouncement) && $activeAnnouncement !== null ? (int) $activeAnnouncement->id : '' ?>" data-announcement-id-input>
+                <button type="submit" class="admin-button admin-button--primary" data-announcement-ack-btn>Acknowledge</button>
+                <button type="button" class="admin-button admin-button--secondary" data-announcement-close-btn>Close</button>
+            </form>
+        </div>
+    </div>
+</div>
 <?= $slot('body.end') ?>
 </body>
 </html>

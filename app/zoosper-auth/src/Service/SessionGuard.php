@@ -48,7 +48,9 @@ final class SessionGuard
      */
     public function login(AdminUser $user): void
     {
-        session_regenerate_id(true);
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_regenerate_id(true);
+        }
         unset($_SESSION[self::SESSION_PENDING_2FA_KEY]);
         $_SESSION[self::SESSION_USER_KEY] = $user->id;
         $this->touch();
@@ -132,7 +134,9 @@ final class SessionGuard
      */
     public function beginTwoFactorChallenge(AdminUser $user): void
     {
-        session_regenerate_id(true);
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_regenerate_id(true);
+        }
         unset($_SESSION[self::SESSION_USER_KEY]);
         $_SESSION[self::SESSION_PENDING_2FA_KEY] = $user->id;
         $this->touch();

@@ -11,6 +11,7 @@ declare(strict_types=1);
  * editing this core file.
  */
 
+use Zoosper\Admin\Announcement\AdminAnnouncementRepository;
 use Zoosper\Admin\Asset\AdminAssetRegistry;
 use Zoosper\Admin\Asset\AdminAssetTemplateRenderer;
 use Zoosper\Admin\Asset\AdminAssetViewDataProvider;
@@ -71,6 +72,7 @@ return [
         $services->get(AuditLogRepository::class),
         $services->get(LoginHistoryRepository::class),
     ),
+    AdminAnnouncementRepository::class => static fn(ServiceContainer $services): AdminAnnouncementRepository => new AdminAnnouncementRepository($services->get(PDO::class)),
     LoginHistoryRepository::class => static fn(ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
     AuditLogRepository::class => static fn(ServiceContainer $services): AuditLogRepository => new AuditLogRepository($services->get(PDO::class)),
     AuditLogger::class => static fn(ServiceContainer $services): AuditLogger => new AuditLogger($services->get(AuditLogRepository::class)),
@@ -131,6 +133,7 @@ return [
         $services->get(CsrfTokenManager::class),
         $services->get(AdminUrlGenerator::class),
         $services->get(ModuleAdminColourThemeLoader::class),
+        $services->has(AdminAnnouncementRepository::class) ? $services->get(AdminAnnouncementRepository::class) : null,
     ),
     AdminViewRenderer::class => static fn(ServiceContainer $services): AdminViewRenderer => new AdminViewRenderer(
         $services->get('theme.admin_template_renderer'),

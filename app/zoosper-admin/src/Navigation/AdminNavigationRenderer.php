@@ -13,6 +13,7 @@ final readonly class AdminNavigationRenderer
     /** @var array<string, string> */
     private const array ICONS = [
         'access-tokens' => '<circle cx="12" cy="8" r="3"/><path d="M9.5 10.5 4 16v4h4v-2h2v-2h2l2.5-2.5"/>',
+        'announcements' => '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
         'audit-log' => '<path d="M9 5h10M9 12h10M9 19h10"/><path d="m3.5 5 .8.8L6 4m-2.5 8 .8.8L6 11m-2.5 8 .8.8L6 18"/>',
         'content' => '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/>',
         'dashboard' => '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Layout;
 
+use Zoosper\Admin\Announcement\AdminAnnouncementRepository;
 use Zoosper\Admin\Asset\AdminAssetTemplateRenderer;
 use Zoosper\Admin\Asset\AdminAssetViewDataProvider;
 use Zoosper\Admin\Message\FlashMessageRenderer;
@@ -34,6 +35,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
         private ?CsrfTokenManager $csrf = null,
         private ?AdminUrlGenerator $adminUrls = null,
         private ?ModuleAdminColourThemeLoader $colourThemes = null,
+        private ?AdminAnnouncementRepository $announcements = null,
     ) {
     }
 
@@ -48,13 +50,16 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
     {
         $userName = $user !== null ? $user->name : 'Guest';
         $navigation = $user !== null ? $this->navigation($user, $active) : '';
+        $activeAnnouncement = ($user !== null && $this->announcements !== null)
+            ? $this->announcements->findUnacknowledgedForUser($user->id)
+            : null;
         $release = require dirname(__DIR__, 4) . '/config/version.php';
         $fallbackVersion = (string) ($release['version'] ?? 'unknown');
         $version = 'Zoosper CMS ' . (string) (
             $this->config?->get('app.version', $fallbackVersion)
             ?? $fallbackVersion
         );
-        $templates = $this->templates ?? new TemplateRenderer(new ThemeResolver(dirname(__DIR__, 5) . '/themes/admin', 'default'));
+        $templates = $this->templates ?? new TemplateRenderer(new ThemeResolver(dirname(__DIR__, 4) . '/themes/admin', 'default'));
         $assetData = $this->assetViewData?->data($active) ?? [
             'stylesheets' => [],
             'scripts' => [],
@@ -78,6 +83,8 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
             'flashMessagesHtml' => $flashMessagesHtml,
             'adminColourThemes' => $colourThemes,
             'logoutFormHtml' => $user !== null ? $this->logoutForm() : '',
+            'activeAnnouncement' => $activeAnnouncement,
+            'csrfToken' => $this->csrf?->token() ?? '',
         ]);
     }
 

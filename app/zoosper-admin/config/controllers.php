@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
+use Zoosper\Admin\Announcement\AdminAnnouncementRepository;
 use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Admin\Audit\Grid\OperationalGridPageBuilder;
 use Zoosper\Admin\Audit\Grid\LoginHistoryGridDefinition;
 use Zoosper\Admin\Audit\Grid\AuditLogGridDefinition;
+use Zoosper\Admin\Controller\AnnouncementAdminController;
 use Zoosper\Admin\Controller\AuditLogController;
 use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
@@ -58,6 +60,16 @@ return [
         $services->get(SessionGuard::class), $services->get(LoginHistoryRepository::class), new LoginHistoryGridDefinition(),
         $services->get(OperationalGridPageBuilder::class), $services->get(AdminLayout::class),
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null, $services->get(AdminUrlGenerator::class),
+    ),
+    AnnouncementAdminController::class => static fn (ServiceContainer $services): AnnouncementAdminController => new AnnouncementAdminController(
+        $services->get(SessionGuard::class),
+        $services->get(AdminAnnouncementRepository::class),
+        $services->get(CsrfTokenManager::class),
+        $services->get(AdminLayout::class),
+        $services->get(AdminUrlGenerator::class),
+        $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
+        $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
+        $services->has(\Zoosper\Core\Audit\AuditLoggerInterface::class) ? $services->get(\Zoosper\Core\Audit\AuditLoggerInterface::class) : null,
     ),
 ];
 
