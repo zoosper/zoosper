@@ -21,8 +21,9 @@ return [
      * Set enabled => false to send no CSP header at all.
      */
     'csp' => [
-        'enabled' => true,
-        'report_only' => true,
+        'enabled' => filter_var($_ENV['SECURITY_CSP_ENABLED'] ?? 'true', FILTER_VALIDATE_BOOLEAN),
+        'report_only' => filter_var($_ENV['SECURITY_CSP_REPORT_ONLY'] ?? 'true', FILTER_VALIDATE_BOOLEAN),
+        'report_uri' => $_ENV['SECURITY_CSP_REPORT_URI'] ?? null,
         'policy' => implode('; ', [
             "default-src 'self'",
             "base-uri 'self'",

@@ -31,6 +31,7 @@ final class SessionGuard
 {
     private const SESSION_USER_KEY = 'admin_user_id';
     private const SESSION_PENDING_2FA_KEY = 'pending_2fa_user_id';
+    private const SESSION_PASSWORD_HASH_KEY = 'admin_password_hash_fingerprint';
     private const SESSION_LAST_ACTIVITY_KEY = 'admin_last_activity_at';
 
     /** Per-request cache of the resolved user (false = not yet resolved). */
@@ -53,6 +54,7 @@ final class SessionGuard
         }
         unset($_SESSION[self::SESSION_PENDING_2FA_KEY]);
         $_SESSION[self::SESSION_USER_KEY] = $user->id;
+        $_SESSION[self::SESSION_PASSWORD_HASH_KEY] = hash('sha256', $user->passwordHash);
         $this->touch();
 
         // Prime the per-request cache; no need to re-query immediately.
@@ -97,12 +99,27 @@ final class SessionGuard
         }
 
         $id = $_SESSION[self::SESSION_USER_KEY] ?? null;
-        $this->cachedUser = is_numeric($id) ? $this->users->findById((int) $id) : null;
-        if ($this->cachedUser !== null) {
+        $resolved = is_numeric($id) ? $this->users->findById((int) $id) : null;
+        if ($resolved !== null) {
+            $storedFingerprint = $_SESSION[self::SESSION_PASSWORD_HASH_KEY] ?? null;
+            $currentFingerprint = hash('sha256', $resolved->passwordHash);
+            if ($storedFingerprint !== null && !hash_equals($storedFingerprint, $currentFingerprint)) {
+                $this->logout();
+                return null;
+            }
+            if ($storedFingerprint === null && $resolved->passwordHash !== '') {
+                $_SESSION[self::SESSION_PASSWORD_HASH_KEY] = $currentFingerprint;
+            }
             $this->touch();
         }
+        $this->cachedUser = $resolved;
 
         return $this->cachedUser;
+    }
+
+    public function refreshPasswordHashFingerprint(string $passwordHash): void
+    {
+        $_SESSION[self::SESSION_PASSWORD_HASH_KEY] = hash('sha256', $passwordHash);
     }
 
     public function clearUserCache(): void
@@ -224,6 +241,7 @@ final class SessionGuard
         unset(
             $_SESSION[self::SESSION_USER_KEY],
             $_SESSION[self::SESSION_PENDING_2FA_KEY],
+            $_SESSION[self::SESSION_PASSWORD_HASH_KEY],
             $_SESSION[self::SESSION_LAST_ACTIVITY_KEY],
         );
         $this->cachedUser = null;

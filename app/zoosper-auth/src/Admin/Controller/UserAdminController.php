@@ -248,7 +248,11 @@ final readonly class UserAdminController
                     locale: $this->adminUserLocaleFromForm($form));
 
                 if ($password !== '') {
-                    $this->users->updatePassword($user->id, $this->passwordHasher->hash($password));
+                    $newHash = $this->passwordHasher->hash($password);
+                    $this->users->updatePassword($user->id, $newHash);
+                    if ($actor->id === $user->id) {
+                        $this->guard->refreshPasswordHashFingerprint($newHash);
+                    }
                 }
             });
 

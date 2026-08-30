@@ -457,9 +457,8 @@ replica.
 - [x] Staging and production fail closed unless rate limiting is enabled in
   `enforce` mode with a strong identity salt; the Admin login middleware
   returns a generic HTTP `429` with `Retry-After` when the policy denies.
-- [ ] CSP report-only → enforce (after adding report-uri + resolving the
-  inline-handler conflict — see §3)
-- [x] Password min-length/complexity + `password_needs_rehash()` upgrade path
+- [x] CSP reporting endpoint (`report_uri`) and environment toggles (`SECURITY_CSP_ENABLED`, `SECURITY_CSP_REPORT_ONLY`, `SECURITY_CSP_REPORT_URI`) wired in `config/security.php` and `.env.example`.
+- [x] Password min-length/complexity + `password_needs_rehash()` upgrade path; `SessionGuard` password hash fingerprinting invalidates active sessions across devices upon password update or reset.
 - [x] Staging and production fail closed when `SESSION_SECURE` is unset or false.
 - [x] CSRF decision for stateful `/api/*` session routes — stateless Bearer PATs vs session CSRF model documented in `docs/api.md`.
 - [x] Atomic admin writes (transaction-wrap user/role create+sync) — fixed
@@ -1011,7 +1010,7 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [ ] Either wire a production Media derivative processor and enablement policy or remove/de-scope the inactive processing surface.
 - [ ] Consolidate the two Grid systems and adopt the extensible Grid model across remaining eligible Admin screens.
 - [ ] Consolidate the two Admin Form systems and adopt the section/processor model across remaining forms.
-- [ ] Graduate Admin login rate limiting from report-only observation to an enforced, tested policy.
+- [x] Graduate Admin login rate limiting from report-only observation to an enforced, tested policy — `RATE_LIMIT_MODE=enforce` supported with generic 429 and `Retry-After` header.
 - [x] Add password policy and `password_needs_rehash()` upgrade support.
 - [x] Decide and document the CSRF model for stateful session-based `/api/*` routes.
 - [x] Fail closed in production when secure-session configuration is absent or unsafe.
