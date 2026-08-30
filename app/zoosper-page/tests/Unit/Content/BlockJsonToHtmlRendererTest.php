@@ -15,12 +15,28 @@ test('renders supported Editor.js blocks as conservative HTML', function () {
                 ['content' => 'First'],
                 ['content' => 'Second'],
             ]]],
+            ['type' => 'quote', 'data' => ['text' => 'Inspiring quote', 'caption' => 'Author Name', 'alignment' => 'center']],
+            ['type' => 'delimiter', 'data' => []],
+            ['type' => 'code', 'data' => ['code' => 'const x = 10;']],
+            ['type' => 'table', 'data' => [
+                'withHeadings' => true,
+                'content' => [
+                    ['Header 1', 'Header 2'],
+                    ['Cell 1', 'Cell 2'],
+                ],
+            ]],
+            ['type' => 'raw', 'data' => ['html' => '<div>safe snippet</div>']],
         ],
     ]);
 
     expect($html)->toContain('<h2>Heading</h2>');
     expect($html)->toContain('<p>Paragraph text</p>');
     expect($html)->toContain('<ol><li>First</li><li>Second</li></ol>');
+    expect($html)->toContain('<blockquote class="cms-quote--center"><p>Inspiring quote</p><cite>Author Name</cite></blockquote>');
+    expect($html)->toContain('<hr class="cms-delimiter">');
+    expect($html)->toContain('<pre class="cms-code"><code>const x = 10;</code></pre>');
+    expect($html)->toContain('<table class="cms-table"><tr><th>Header 1</th><th>Header 2</th></tr><tr><td>Cell 1</td><td>Cell 2</td></tr></table>');
+    expect($html)->toContain('&lt;div&gt;safe snippet&lt;/div&gt;');
 });
 
 test('escapes block text before generating frontend HTML', function () {

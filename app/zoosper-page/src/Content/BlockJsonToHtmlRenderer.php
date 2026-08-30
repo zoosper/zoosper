@@ -37,6 +37,11 @@ final readonly class BlockJsonToHtmlRenderer
                 'header' => $this->header($data),
                 'list' => $this->list($data),
                 'image' => $this->image($data),
+                'quote' => $this->quote($data),
+                'delimiter' => $this->delimiter(),
+                'code' => $this->code($data),
+                'table' => $this->table($data),
+                'raw' => $this->raw($data),
                 default => '',
             };
 
@@ -46,6 +51,84 @@ final readonly class BlockJsonToHtmlRenderer
         }
 
         return implode("\n", $html);
+    }
+
+    /** @param array<string, mixed> $data */
+    private function quote(array $data): string
+    {
+        $text = trim((string) ($data['text'] ?? ''));
+        if ($text === '') {
+            return '';
+        }
+
+        $caption = trim((string) ($data['caption'] ?? ''));
+        $alignment = (string) ($data['alignment'] ?? 'left');
+        $alignClass = in_array($alignment, ['center', 'right'], true) ? ' class="cms-quote--' . $alignment . '"' : '';
+
+        $html = '<blockquote' . $alignClass . '><p>' . $this->escape($text) . '</p>';
+        if ($caption !== '') {
+            $html .= '<cite>' . $this->escape($caption) . '</cite>';
+        }
+        $html .= '</blockquote>';
+
+        return $html;
+    }
+
+    private function delimiter(): string
+    {
+        return '<hr class="cms-delimiter">';
+    }
+
+    /** @param array<string, mixed> $data */
+    private function code(array $data): string
+    {
+        $code = (string) ($data['code'] ?? '');
+        if (trim($code) === '') {
+            return '';
+        }
+
+        return '<pre class="cms-code"><code>' . $this->escape($code) . '</code></pre>';
+    }
+
+    /** @param array<string, mixed> $data */
+    private function table(array $data): string
+    {
+        $content = is_array($data['content'] ?? null) ? $data['content'] : [];
+        if ($content === []) {
+            return '';
+        }
+
+        $withHeadings = ($data['withHeadings'] ?? false) === true;
+        $html = '<table class="cms-table">';
+
+        foreach ($content as $rowIndex => $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+
+            $html .= '<tr>';
+            $isHeadingRow = $withHeadings && $rowIndex === 0;
+
+            foreach ($row as $cell) {
+                $cellText = is_scalar($cell) ? trim((string) $cell) : '';
+                $tag = $isHeadingRow ? 'th' : 'td';
+                $html .= '<' . $tag . '>' . $this->escape($cellText) . '</' . $tag . '>';
+            }
+
+            $html .= '</tr>';
+        }
+
+        $html .= '</table>';
+
+        return $html;
+    }
+
+    /** @param array<string, mixed> $data */
+    private function raw(array $data): string
+    {
+        $html = trim((string) ($data['html'] ?? ''));
+
+        return $html === '' ? '' : $this->escape($html);
     }
 
     /** @param array<string, mixed> $data */

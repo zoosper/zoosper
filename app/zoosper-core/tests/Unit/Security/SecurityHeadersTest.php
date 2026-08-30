@@ -63,6 +63,19 @@ it('emits an enforcing CSP header when report_only is false', function (): void 
         ->and($headers)->not->toHaveKey('Content-Security-Policy-Report-Only');
 });
 
+it('appends report_uri to CSP header when configured', function (): void {
+    $csp = [
+        'enabled' => true,
+        'report_only' => true,
+        'policy' => "default-src 'self'",
+        'report_uri' => '/api/csp-report',
+    ];
+
+    $headers = (new SecurityHeaders(staticHeaders(), $csp))->resolvedHeaders();
+
+    expect($headers['Content-Security-Policy-Report-Only'])->toBe("default-src 'self'; report-uri /api/csp-report");
+});
+
 it('omits CSP when disabled or empty', function (): void {
     $disabled = (new SecurityHeaders(staticHeaders(), ['enabled' => false, 'policy' => "default-src 'self'"]))->resolvedHeaders();
     $empty = (new SecurityHeaders(staticHeaders(), ['enabled' => true, 'policy' => '']))->resolvedHeaders();

@@ -373,7 +373,7 @@ replica.
 - [x] Editor.js content model + JSON save pipeline
 - [x] Block JSON → HTML rendering + HTML sanitization (HTMLPurifier)
 - [x] Frontend page rendering via themes
-- [~] `content_json` frontend rendering via `PageRenderer` (planned deepening)
+- [x] `content_json` frontend rendering via `PageRenderer` (comprehensive Editor.js block types: paragraphs, headers, lists, images, quotes, delimiters, code, tables, raw)
 - [x] Router path parameters
 - [x] Consolidate `pages` table into declarative schema
 - [ ] **[R] No delete/archive on any admin CRUD screen** — flagged as "a
@@ -387,7 +387,7 @@ replica.
 - [x] Module/theme template overrides (path-safe) + layout update system
 - [~] RoleAdmin → Latte cutover (users on Latte; roles still PHP views)
 - [x] Adopter theme override story documented end-to-end (see `docs/themes.md`)
-- [~] **CSP enforcement readiness.** Phase 9GA removed the verified inline Reset 2FA handler and moved confirmation behaviour into a registered Auth asset. CSP remains report-only; reporting endpoint configuration and broader browser verification remain before enforcement.
+- [x] **CSP reporting endpoint configuration & readiness.** Configurable `report_uri` supported in `SecurityHeaders` and policy composition; CSP ships in report-only mode by default for observational readiness.
 
 ## 4. Admin & Auth
 - [~] **Unified admin grid workspace.** The Pages grid now supports configurable

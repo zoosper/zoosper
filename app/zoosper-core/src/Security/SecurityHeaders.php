@@ -66,6 +66,11 @@ final readonly class SecurityHeaders
             return null;
         }
 
+        $reportUri = trim((string) ($this->csp['report_uri'] ?? ''));
+        if ($reportUri !== '' && !str_contains($policy, 'report-uri')) {
+            $policy .= '; report-uri ' . $reportUri;
+        }
+
         $name = ($this->csp['report_only'] ?? false) === true
             ? 'Content-Security-Policy-Report-Only'
             : 'Content-Security-Policy';
