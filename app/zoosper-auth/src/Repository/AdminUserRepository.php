@@ -48,10 +48,56 @@ final readonly class AdminUserRepository
     }
 
     /** @return list<AdminUser> */
-    public function allForAssignment(): array
+    public function allForAssignment(?string $term = null, int $limit = 500): array
     {
-        $statement = $this->pdo->query('SELECT * FROM admin_users ORDER BY name ASC, email ASC');
+        $sanitizedLimit = max(1, min($limit, 5000));
+
+        if ($term !== null && trim($term) !== '') {
+            $statement = $this->pdo->prepare('SELECT * FROM admin_users WHERE email LIKE :term OR name LIKE :term ORDER BY name ASC, email ASC LIMIT :limit');
+            $statement->bindValue('term', '%' . trim($term) . '%');
+            $statement->bindValue('limit', $sanitizedLimit, PDO::PARAM_INT);
+            $statement->execute();
+        } else {
+            $statement = $this->pdo->prepare('SELECT * FROM admin_users ORDER BY name ASC, email ASC LIMIT :limit');
+            $statement->bindValue('limit', $sanitizedLimit, PDO::PARAM_INT);
+            $statement->execute();
+        }
+
         return array_map(fn (array $row): AdminUser => $this->hydrateWithoutPermissions($row), $statement->fetchAll());
+    }
+
+    /**
+     * @param list<int> $selectedIds
+     * @return list<AdminUser>
+     */
+    public function findForAssignmentWithSelected(array $selectedIds, ?string $term = null, int $limit = 500): array
+    {
+        $users = $this->allForAssignment($term, $limit);
+        $userMap = [];
+        foreach ($users as $user) {
+            $userMap[$user->id] = $user;
+        }
+
+        $validSelectedIds = array_values(array_filter(
+            $selectedIds,
+            static fn (mixed $id): bool => is_int($id) && $id > 0,
+        ));
+        $missingSelected = array_values(array_diff($validSelectedIds, array_keys($userMap)));
+
+        if ($missingSelected !== []) {
+            $placeholders = implode(',', array_fill(0, count($missingSelected), '?'));
+            $statement = $this->pdo->prepare("SELECT * FROM admin_users WHERE id IN ({$placeholders}) ORDER BY name ASC, email ASC");
+            $statement->execute($missingSelected);
+            foreach ($statement->fetchAll() as $row) {
+                $user = $this->hydrateWithoutPermissions($row);
+                $userMap[$user->id] = $user;
+            }
+        }
+
+        $result = array_values($userMap);
+        usort($result, static fn (AdminUser $a, AdminUser $b): int => [$a->name, $a->email] <=> [$b->name, $b->email]);
+
+        return $result;
     }
 
     /** @return list<AdminUser> */

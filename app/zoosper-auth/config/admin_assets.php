@@ -43,4 +43,19 @@ return [
         'sort_order' => 87,
         'screens' => ['admin-users'],
     ],
+    'zoosper-admin-role-user-assignment-style' => [
+        'type' => 'style',
+        'path' => '/assets/admin/css/user-assignment.css',
+        'sort_order' => 87,
+        'screens' => ['admin-roles'],
+    ],
+    'zoosper-admin-role-user-assignment-runtime' => [
+        'type' => 'script',
+        'path' => '/assets/admin/js/user-assignment.js',
+        'sort_order' => 87,
+        'screens' => ['admin-roles'],
+        'attributes' => [
+            'defer' => true,
+        ],
+    ],
 ];

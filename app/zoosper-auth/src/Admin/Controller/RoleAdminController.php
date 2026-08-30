@@ -231,8 +231,12 @@ final readonly class RoleAdminController
             return 'User assignment requires AdminUserRepository injection.';
         }
 
+        $assignmentUsers = method_exists($this->users, 'findForAssignmentWithSelected')
+            ? $this->users->findForAssignmentWithSelected($selected)
+            : $this->users->allForAssignment();
+
         return $this->renderRoleView('user-assignment.php', [
-            'users' => $this->users->allForAssignment(),
+            'users' => $assignmentUsers,
             'selected' => $selected,
         ]);
     }
