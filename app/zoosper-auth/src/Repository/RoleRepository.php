@@ -53,6 +53,21 @@ final readonly class RoleRepository
         return is_array($row) ? $row : null;
     }
 
+    /** @return array<string, mixed>|null */
+    public function findById(int $id): ?array
+    {
+        return $this->findRoleById($id);
+    }
+
+    /** @return array<string, mixed>|null */
+    public function findRoleByCode(string $code): ?array
+    {
+        $statement = $this->pdo->prepare('SELECT * FROM admin_roles WHERE code = :code LIMIT 1');
+        $statement->execute(['code' => $this->normaliseCode($code)]);
+        $row = $statement->fetch();
+        return is_array($row) ? $row : null;
+    }
+
     /** @return list<int> */
     public function permissionIdsForRole(int $roleId): array
     {
@@ -124,6 +139,30 @@ final readonly class RoleRepository
             }
 
             $this->pdo->commit();
+        } catch (Throwable $exception) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $exception;
+        }
+    }
+
+    public function deleteRole(int $id): bool
+    {
+        if ($this->findRoleById($id) === null) {
+            return false;
+        }
+
+        $this->pdo->beginTransaction();
+
+        try {
+            $this->pdo->prepare('DELETE FROM admin_role_permissions WHERE role_id = :role_id')->execute(['role_id' => $id]);
+            $this->pdo->prepare('DELETE FROM admin_user_roles WHERE role_id = :role_id')->execute(['role_id' => $id]);
+            $this->pdo->prepare('DELETE FROM admin_roles WHERE id = :id')->execute(['id' => $id]);
+
+            $this->pdo->commit();
+            return true;
         } catch (Throwable $exception) {
             if ($this->pdo->inTransaction()) {
                 $this->pdo->rollBack();

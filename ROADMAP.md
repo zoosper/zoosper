@@ -506,7 +506,7 @@ replica.
 ## 8. API
 
 - [x] API module (Auth, ContentPage, Health, Me)
-- [ ] Headless API parity (roles, themes, url-rewrites CRUD)
+- [x] Headless API parity (roles, themes, url-rewrites CRUD)
 - [x] ContentPage API exposes structured Editor.js JSON (not serialized HTML)
 
 ## 9. Modular Asset Pipeline

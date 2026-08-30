@@ -16,6 +16,7 @@ final class PersonalAccessTokenScopePresenter
             'pages' => 'Pages',
             'media' => 'Media',
             'menus' => 'Menus',
+            'roles' => 'Roles & Permissions',
             'url_rewrites' => 'URL rewrites',
             'sites' => 'Sites',
             'themes' => 'Themes',

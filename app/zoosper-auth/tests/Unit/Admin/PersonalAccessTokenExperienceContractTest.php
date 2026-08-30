@@ -14,7 +14,7 @@ it('presents every canonical scope once in stable domain groups', function (): v
         }
     }
 
-    expect(array_column($groups, 'label'))->toBe(['Pages', 'Media', 'Menus', 'URL rewrites', 'Sites', 'Themes'])
+    expect(array_column($groups, 'label'))->toBe(['Pages', 'Media', 'Menus', 'Roles & Permissions', 'URL rewrites', 'Sites', 'Themes'])
         ->and($presented)->toBe(PersonalAccessTokenService::SCOPES)
         ->and(array_filter(
             array_merge(...array_column($groups, 'scopes')),

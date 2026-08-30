@@ -5,7 +5,7 @@ namespace Zoosper\Auth\Token;
 use InvalidArgumentException;
 final readonly class PersonalAccessTokenService
 {
-    public const SCOPES=['pages:read','pages:write','pages:publish','pages:archive','pages:delete','media:read','media:upload','media:delete','menus:read','menus:write','url_rewrites:read','url_rewrites:write','sites:read','sites:write','themes:read','themes:write'];
+    public const SCOPES=['pages:read','pages:write','pages:publish','pages:archive','pages:delete','media:read','media:upload','media:delete','menus:read','menus:write','roles:read','roles:write','url_rewrites:read','url_rewrites:write','sites:read','sites:write','themes:read','themes:write'];
     public function __construct(private PersonalAccessTokenRepository $tokens){}
     /** @param list<string> $scopes @return array{id:int,token:string,public_id:string} */
     public function issue(int $userId,string $name,array $scopes,?string $expiresAt=null):array

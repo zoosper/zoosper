@@ -34,3 +34,22 @@ PAT clients can list request-Site Menus, inspect a Menu and its items, and resol
 ## Menu mutations and lifecycle
 
 PAT clients with `menus:write` and current `menu.manage` can create and update request-Site Menus and items, delete childless items, disable or restore Menus, and permanently delete only inactive empty Menus. Site ownership, same-Menu parent relationships, and published same-Site Page targets are server validated. Audit metadata excludes bearer secrets and Menu content payloads.
+
+
+## Roles and permissions
+
+PAT clients can manage administrative roles and inspect system permissions:
+- `GET /api/v1/roles` (`roles:read` scope + `role.view` or `role.manage` permission)
+- `GET /api/v1/roles/{id}` (`roles:read` scope + `role.view` or `role.manage` permission)
+- `GET /api/v1/permissions` (`roles:read` scope + `role.view` or `role.manage` permission)
+- `POST /api/v1/roles` (`roles:write` scope + `role.manage` permission)
+- `PATCH /api/v1/roles/{id}` (`roles:write` scope + `role.manage` permission)
+- `DELETE /api/v1/roles/{id}` (`roles:write` scope + `role.manage` permission)
+
+Mutations are transacted, sync permission and user mappings atomically, and emit structured audit logs.
+
+
+## Themes and URL rewrites
+
+- **Themes:** `GET /api/v1/themes` (`themes:read`) and `POST /api/v1/sites/{id}/theme` (`themes:write`).
+- **URL Rewrites:** `GET /api/v1/url-rewrites`, `POST /api/v1/url-rewrites`, `PATCH /api/v1/url-rewrites/{id}`, `DELETE /api/v1/url-rewrites/{id}` (`url_rewrites:read` / `url_rewrites:write`).
