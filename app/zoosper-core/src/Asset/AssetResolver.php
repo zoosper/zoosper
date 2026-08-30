@@ -41,6 +41,9 @@ final class AssetResolver
         'txt' => 'text/plain',
     ];
 
+    /** @var array<string, ResolvedAsset> */
+    private array $cache = [];
+
     public function __construct(
         private readonly AssetModuleRegistry $registry,
     ) {
@@ -53,6 +56,10 @@ final class AssetResolver
      */
     public function resolve(string $module, string $relativePath): ResolvedAsset
     {
+        $cacheKey = $module . "\0" . $relativePath;
+        if (isset($this->cache[$cacheKey])) {
+            return $this->cache[$cacheKey];
+        }
         $baseDir = $this->registry->baseDir($module);
         if ($baseDir === null) {
             throw new AssetNotFoundException("Unknown asset module: {$module}");
@@ -93,13 +100,15 @@ final class AssetResolver
         $mtime = (int) filemtime($realFile);
         $etag = '"' . substr(hash('sha256', $realFile . '|' . $size . '|' . $mtime), 0, 32) . '"';
 
-        return new ResolvedAsset(
+        $resolved = new ResolvedAsset(
             absolutePath: $realFile,
             mimeType: self::MIME_TYPES[$extension],
             size: $size,
             etag: $etag,
             lastModified: $mtime,
         );
+
+        return $this->cache[$cacheKey] = $resolved;
     }
 
     /**

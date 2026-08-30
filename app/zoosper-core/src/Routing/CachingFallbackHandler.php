@@ -160,6 +160,7 @@ final readonly class CachingFallbackHandler implements FallbackHandlerInterface
             isAuthenticated: false,
             customerGroup: 'guest',
             routeName: 'frontend.fallback',
+            queryString: $request->queryString(),
         );
 
         $structured = $this->keyBuilder->page($cacheContext);

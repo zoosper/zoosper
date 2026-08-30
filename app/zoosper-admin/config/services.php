@@ -20,6 +20,7 @@ use Zoosper\Admin\Audit\AuditLogRepository;
 use Zoosper\Admin\Audit\LoginHistoryRepository;
 use Zoosper\Admin\Audit\Grid\OperationalGridPageBuilder;
 use Zoosper\Admin\Audit\Grid\OperationalGridPageBuilderFactory;
+use Zoosper\Admin\Console\PruneLogsCommand;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Core\Editor\ContentEditorInterface;
 use Zoosper\Admin\Editor\ContentEditorRegistry;
@@ -66,6 +67,10 @@ use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 return [
     OperationalGridPageBuilderFactory::class => static fn(ServiceContainer $services): OperationalGridPageBuilderFactory => new OperationalGridPageBuilderFactory($services->get(GridViewStateResolver::class)),
     OperationalGridPageBuilder::class => static fn(ServiceContainer $services): OperationalGridPageBuilder => $services->get(OperationalGridPageBuilderFactory::class)->create(),
+    PruneLogsCommand::class => static fn(ServiceContainer $services): PruneLogsCommand => new PruneLogsCommand(
+        $services->get(AuditLogRepository::class),
+        $services->get(LoginHistoryRepository::class),
+    ),
     LoginHistoryRepository::class => static fn(ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
     AuditLogRepository::class => static fn(ServiceContainer $services): AuditLogRepository => new AuditLogRepository($services->get(PDO::class)),
     AuditLogger::class => static fn(ServiceContainer $services): AuditLogger => new AuditLogger($services->get(AuditLogRepository::class)),

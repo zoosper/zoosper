@@ -28,6 +28,7 @@ final readonly class Request
         private array $routeParams = [],
         private array $form = [],
         private array $files = [],
+        private string $queryString = '',
     ) {
     }
 
@@ -51,13 +52,14 @@ final readonly class Request
             clientIp: TrustedProxyResolver::fromEnvironment()->clientIp($_SERVER),
             form: $_POST,
             files: $_FILES,
+            queryString: (string) $queryString,
         );
     }
 
     public function withSiteContext(SiteContext $siteContext): self
     {
         return new self($this->method, $this->path, $this->headers, $this->body, $this->query,
-            $this->host, $this->clientIp, $siteContext, $this->routeParams, $this->form, $this->files);
+            $this->host, $this->clientIp, $siteContext, $this->routeParams, $this->form, $this->files, $this->queryString);
     }
 
     /** @param array<string, scalar|null> $routeParams */
@@ -70,14 +72,14 @@ final readonly class Request
             }
         }
         return new self($this->method, $this->path, $this->headers, $this->body, $this->query,
-            $this->host, $this->clientIp, $this->siteContext, $normalised, $this->form, $this->files);
+            $this->host, $this->clientIp, $this->siteContext, $normalised, $this->form, $this->files, $this->queryString);
     }
 
     /** @param array<string, mixed> $form */
     public function withForm(array $form): self
     {
         return new self($this->method, $this->path, $this->headers, $this->body, $this->query,
-            $this->host, $this->clientIp, $this->siteContext, $this->routeParams, $form, $this->files);
+            $this->host, $this->clientIp, $this->siteContext, $this->routeParams, $form, $this->files, $this->queryString);
     }
 
     public function siteContext(): ?SiteContext { return $this->siteContext; }
@@ -110,6 +112,11 @@ final readonly class Request
     public function queryParams(): array
     {
         return $this->query;
+    }
+
+    public function queryString(): string
+    {
+        return $this->queryString;
     }
 
     public function routeParam(string $key, ?string $default = null): ?string

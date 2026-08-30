@@ -7,6 +7,20 @@ Authentication endpoints and protected identity endpoints are available through 
 API responses must not expose development stack traces or secrets, even when web development diagnostics are enabled elsewhere.
 
 
+## Authentication and CSRF model
+
+Zoosper API endpoints support two distinct authentication contexts with explicit CSRF security policies:
+
+1. **Stateless Token Authentication (Bearer / Personal Access Tokens):**
+   - API clients authenticating via `Authorization: Bearer <token>` operate statelessly without browser session cookies.
+   - Because Bearer tokens are not automatically attached by web browsers on cross-origin requests, CSRF validation is not required for Bearer-authenticated requests.
+
+2. **Stateful Session-Based API Interactions:**
+   - Any stateful `/api/*` mutations invoked within an authenticated web session (such as AJAX calls or browser-based admin extensions relying on session cookies) must include a valid CSRF token.
+   - The CSRF token can be provided either in the `X-CSRF-Token` request header or within the POST payload as `csrf_token`.
+   - Requests without a valid CSRF token in session-authenticated contexts are rejected with a 403 Forbidden status (`csrf_invalid`).
+
+
 ## Page publication and revisions
 
 PAT clients can publish or unpublish a Site-owned Page with `pages:publish`, list revisions with `pages:read`, and restore a revision with `pages:write`. The token scope is always intersected with the owner's current Page permission. These routes are stateless, resolve the active Site from the request host, retain pre-mutation revisions, and emit safe audit metadata without bearer secrets or content payloads.

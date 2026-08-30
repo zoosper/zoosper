@@ -28,6 +28,7 @@ final readonly class CacheContext
         public bool $isAuthenticated = false,
         public string $customerGroup = 'guest',
         public string $routeName = '',
+        public string $queryString = '',
     ) {
     }
 
@@ -42,6 +43,7 @@ final readonly class CacheContext
         bool $isAuthenticated = false,
         string $customerGroup = 'guest',
         string $routeName = '',
+        string $queryString = '',
     ): self {
         return new self(
             websiteCode: $siteContext->websiteCode,
@@ -55,6 +57,7 @@ final readonly class CacheContext
             isAuthenticated: $isAuthenticated,
             customerGroup: $customerGroup,
             routeName: $routeName,
+            queryString: trim($queryString),
         );
     }
 
@@ -65,7 +68,7 @@ final readonly class CacheContext
      */
     public function publicPageDimensions(): array
     {
-        return [
+        $dimensions = [
             'website' => $this->websiteCode,
             'store' => $this->storeCode,
             'store_view' => $this->storeViewCode,
@@ -76,6 +79,12 @@ final readonly class CacheContext
             'path' => $this->path,
             'route' => $this->routeName,
         ];
+
+        if ($this->queryString !== '') {
+            $dimensions['query'] = $this->queryString;
+        }
+
+        return $dimensions;
     }
 
     /**

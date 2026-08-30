@@ -247,3 +247,22 @@ it('produces a genuinely Marko-cache-key-valid key, proven end-to-end against th
     expect($second->body())->toBe('real cache driver body');
     expect($inner->handleCalls)->toBe(1); // second call served from the REAL cache
 });
+
+it('varies cache key when query string differs', function (): void {
+    $cache = new FakeMarkoCacheForCachingFallbackHandlerTest();
+    $inner = new FakeInnerFallbackHandlerForCachingFallbackHandlerTest(Response::html('page body', 200));
+
+    $handler = new CachingFallbackHandler($inner, $cache, new CacheKeyBuilder(), enabled: true, ttlSeconds: 300);
+    $siteContext = cachingFallbackHandlerTestSiteContext();
+
+    $req1 = (new Request(method: 'GET', path: '/page', host: 'site-a.example', queryString: 'page=1'))
+        ->withSiteContext($siteContext);
+    $req2 = (new Request(method: 'GET', path: '/page', host: 'site-a.example', queryString: 'page=2'))
+        ->withSiteContext($siteContext);
+
+    $handler->handle($req1);
+    $handler->handle($req2);
+
+    expect($inner->handleCalls)->toBe(2)
+        ->and($cache->setCalls)->toBe(2);
+});

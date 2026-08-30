@@ -526,7 +526,7 @@ replica.
 
 - [x] Asset registry / resolver / controller (path-safe, MIME allowlist, ETag)
 - [ ] Wire `/asset/{module}/{path}` route + `asset()` helper live
-- [ ] Cache asset-registry scans per request
+- [x] Cache asset-registry scans per request
 - [x] **Asset resolver adversarial coverage.** Core's `AssetResolver` already has traversal rejection and realpath containment, with direct and URL-encoded traversal tests. Extend coverage for null bytes and symlink edge cases; the containment layer itself is not missing.
 
 ## 10. Caching & Performance
@@ -546,9 +546,7 @@ replica.
   newly-created tables going forward, not existing live data.
 - [ ] Cache merged translation catalogue per locale
 - [ ] Rate-limit report sink rotation/retention (or DB store)
-- [ ] Vary page cache key by query string — needs a real
-  `Request::queryString()` accessor first (see §15's honestly-stated
-  limitation).
+- [x] Vary page cache key by query string — wired via `Request::queryString()` accessor and `CacheContext` dimension partitioning.
 
 ## 11. Quality, Tooling & Repo Hygiene
 - [x] Add JavaScript syntax validation for every shipped admin asset.
@@ -576,7 +574,7 @@ replica.
 - [x] **[R2] AI-session and completed one-shot cleanup scripts removed**
   in Phase 2C.
 - [ ] CI workflow (validate, Psalm, Pest+coverage, gate on every PR)
-- [ ] Fix composer `gate` script to `@php` (not hardcoded `php8.5`)
+- [x] Fix composer `gate` script to `@php` (not hardcoded `php8.5`)
 - [x] **[R2] Redundant `bin/pest.sh` removed; `composer test` remains the
   canonical test entry point.**
 - [ ] **[R] Test-suite signal-to-noise ratio** — a `LegacyVerify*Test`
@@ -1024,8 +1022,8 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [ ] Consolidate the two Grid systems and adopt the extensible Grid model across remaining eligible Admin screens.
 - [ ] Consolidate the two Admin Form systems and adopt the section/processor model across remaining forms.
 - [ ] Graduate Admin login rate limiting from report-only observation to an enforced, tested policy.
-- [ ] Add password policy and `password_needs_rehash()` upgrade support.
-- [ ] Decide and document the CSRF model for stateful session-based `/api/*` routes.
+- [x] Add password policy and `password_needs_rehash()` upgrade support.
+- [x] Decide and document the CSRF model for stateful session-based `/api/*` routes.
 - [ ] Fail closed in production when secure-session configuration is absent or unsafe.
 - [ ] Investigate and consolidate environment loading across `Core\Bootstrap\EnvLoader`, `Core\Env`, and the global `env()` helper.
 - [ ] Register the project error handler before module discovery and module configuration execution.
