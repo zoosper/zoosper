@@ -599,3 +599,18 @@
         padding-bottom: .35rem;
     }
 }
+
+
+/* Fable security workspace: stronger creation hierarchy and credential review. */
+.pat-screen { max-width: 92rem; margin-inline: auto; }
+.pat-create { overflow: clip; border-color: color-mix(in srgb,var(--admin-brand-500) 18%,var(--admin-border)); box-shadow: var(--admin-shadow-md); }
+.pat-create > .card__header { background: linear-gradient(135deg,var(--admin-surface),color-mix(in srgb,var(--admin-brand-500) 6%,var(--admin-surface))); }
+.pat-form__fields { padding: .25rem; }
+.pat-scopes { margin-inline: calc(clamp(1rem,1.8vw,1.35rem) * -1); padding: 1.1rem clamp(1rem,1.8vw,1.35rem); border-block: 1px solid var(--admin-border); background: color-mix(in srgb,var(--admin-surface-muted) 72%,var(--admin-surface)); }
+.pat-scopes__toolbar { padding-bottom: .15rem; }
+.admin-content .pat-scope-group { border-radius: var(--admin-radius-lg); box-shadow: var(--admin-shadow-xs); }
+.admin-content .pat-scope-chip { box-shadow: 0 1px 1px rgb(15 23 42 / 3%); }
+.pat-form__footer { position: sticky; z-index: 4; bottom: .5rem; margin: 0 -.35rem -.35rem; padding: .85rem; border: 1px solid var(--admin-border); border-radius: var(--admin-radius-lg); background: color-mix(in srgb,var(--admin-surface) 94%,transparent); box-shadow: var(--admin-shadow-lg); backdrop-filter: blur(12px); }
+.pat-token-list__heading { padding-inline: .15rem; }
+.pat-grid-scroll { border-radius: var(--admin-radius-lg); box-shadow: var(--admin-shadow-xs); }
+@media (max-width:760px) { .pat-scopes { margin-inline:-1rem; padding-inline:1rem; } .pat-form__footer { bottom:0; } }

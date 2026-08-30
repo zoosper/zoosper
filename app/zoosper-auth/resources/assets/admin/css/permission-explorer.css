@@ -90,3 +90,15 @@
     background: color-mix(in srgb, var(--permission-focus) 12%, var(--permission-surface));
     color: var(--permission-text);
 }
+
+
+/* Fable security workspace: permission discovery hierarchy. */
+.permission-explorer { gap: var(--admin-space-4,1rem); }
+.permission-explorer__toolbar { top: calc(var(--admin-topbar-height,4rem) + .5rem); padding: .85rem; border-radius: var(--admin-radius-lg,.875rem); background: color-mix(in srgb,var(--permission-surface) 95%,transparent); box-shadow: var(--admin-shadow-md,0 .5rem 1.5rem rgb(15 35 55 / 10%)); backdrop-filter: blur(12px); }
+.permission-explorer__search { min-height: 2.7rem; background: var(--permission-surface); }
+.permission-explorer__button,.permission-explorer__group-toggle { border-radius: var(--admin-radius-md,.625rem); }
+.permission-explorer fieldset,.permission-explorer .permission-group { padding: 1rem; border-radius: var(--admin-radius-lg,.875rem); box-shadow: var(--admin-shadow-xs,0 1px 2px rgb(15 23 42 / 4%)); }
+.permission-explorer label:has(input[name="permission_ids[]"]) { min-height: 2.45rem; padding: .55rem .65rem; border: 1px solid transparent; }
+.permission-explorer label:has(input[name="permission_ids[]"]):has(input:checked) { border-color: color-mix(in srgb,var(--permission-focus) 35%,var(--permission-border)); background: color-mix(in srgb,var(--permission-focus) 8%,var(--permission-surface)); }
+@media (max-width:56.25rem) { .permission-explorer__toolbar { top:auto; } }
+@media (prefers-reduced-motion:reduce) { .permission-explorer__button,.permission-explorer__group-toggle,.permission-explorer label { transition:none!important; } }

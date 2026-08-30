@@ -55,3 +55,6 @@ The compact shell, native account disclosure, Dashboard hierarchy and responsive
 
 
 The Fable workspace migration now covers Settings and role administration. Settings retains its module-owned assets and scope-aware persistence; role management retains Auth-owned authorization and mutation behaviour. Both use the shared semantic surfaces without introducing duplicate runtimes or fabricated controls.
+
+
+Auth security workspaces now apply the Fable hierarchy to Admin-user identity/preferences/roles, PAT creation and review, and permission discovery. Auth remains the asset and behaviour owner; public copies are parity-tested, cache versions are content-derived for this release line, and no mutation, permission, token secrecy, or tenant boundary is delegated to presentation code.

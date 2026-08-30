@@ -10,7 +10,7 @@ it('keeps the admin 2FA reset confirmation compatible with enforcing CSP', funct
 
     expect($template)->toContain('data-confirm-message="Reset 2FA for this admin user? They will need to enrol again."')
         ->not->toContain('onclick=')
-        ->and($assets)->toHaveKey('zoosper-admin-user-two-factor-reset-runtime')
+        ->and($assets)->toHaveKeys(['zoosper-admin-user-two-factor-reset-runtime', 'zoosper-admin-user-workspace-style'])
         ->and($assets['zoosper-admin-user-two-factor-reset-runtime']['path'])->toBe('/assets/admin/js/admin-user-two-factor-reset.js')
         ->and($script)->toContain("document.addEventListener('submit'")
         ->toContain('event.submitter')

@@ -25,12 +25,34 @@
         const groups = Array.from(tree.querySelectorAll(groupSelector)).filter((group) => group.querySelector(checkboxSelector));
         const toolbar = document.createElement('div');
         toolbar.className = 'permission-explorer__toolbar';
-        toolbar.innerHTML = '<label class="permission-explorer__search-label"><span>Search permissions</span><input type="search" class="permission-explorer__search" placeholder="Code or permission name" autocomplete="off"></label><div class="permission-explorer__actions"><button type="button" data-action="expand">Expand all</button><button type="button" data-action="collapse">Collapse all</button><button type="button" data-action="select-visible">Select visible</button><button type="button" data-action="clear-visible">Clear visible</button></div><output class="permission-explorer__count" aria-live="polite"></output>';
+        const searchLabel = document.createElement('label');
+        searchLabel.className = 'permission-explorer__search-label';
+        const searchText = document.createElement('span');
+        searchText.textContent = 'Search permissions';
+        const searchInput = document.createElement('input');
+        searchInput.type = 'search';
+        searchInput.className = 'permission-explorer__search';
+        searchInput.placeholder = 'Code or permission name';
+        searchInput.autocomplete = 'off';
+        searchLabel.append(searchText, searchInput);
+        const actions = document.createElement('div');
+        actions.className = 'permission-explorer__actions';
+        [['expand', 'Expand all'], ['collapse', 'Collapse all'], ['select-visible', 'Select visible'], ['clear-visible', 'Clear visible']].forEach(([action, label]) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.dataset.action = action;
+            button.textContent = label;
+            actions.append(button);
+        });
+        const selectionCount = document.createElement('output');
+        selectionCount.className = 'permission-explorer__count';
+        selectionCount.setAttribute('aria-live', 'polite');
+        toolbar.append(searchLabel, actions, selectionCount);
         const firstGroup = groups[0] || rows.find(Boolean);
         if (firstGroup) firstGroup.before(toolbar); else tree.prepend(toolbar);
 
-        const search = toolbar.querySelector('.permission-explorer__search');
-        const count = toolbar.querySelector('.permission-explorer__count');
+        const search = searchInput;
+        const count = selectionCount;
         const groupRows = (group) => rows.filter((row) => row && group.contains(row));
         const setCollapsed = (group, collapsed) => {
             if (group.matches('details')) group.open = !collapsed;

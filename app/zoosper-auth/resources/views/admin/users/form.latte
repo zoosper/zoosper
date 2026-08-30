@@ -1,31 +1,51 @@
-{* Admin user create/edit form (Phase 1.26a). Latte auto-escapes all output. *}
-{if $noticeType !== null}<div class="notice notice-{$noticeType}">{$noticeMessage}</div>{/if}
-{if $error !== null}<div class="notice notice-error">{$error}</div>{/if}
-<form method="post" action="{$action}" class="page-form">
-    <input type="hidden" name="_csrf_token" value="{$csrfToken}">
-    <label>Name <input type="text" name="name" value="{$name}" required></label>
-    <div class="admin-form-field admin-form-field--locale">
-        <label for="admin-user-locale">Admin interface locale</label>
-        <select id="admin-user-locale" name="locale">
-            <option value=""{if $currentLocale === ''} selected{/if}>Use configured admin locale</option>
-            <option value="en_AU"{if $currentLocale === 'en_AU'} selected{/if}>English (Australia)</option>
-        </select>
-        <small class="admin-form-help">Leave blank to use the configured admin locale.</small>
-    </div>
-    <label>Email <input type="email" name="email" value="{$email}" required></label>
-    <label>Password <input type="password" name="password" autocomplete="new-password"><span class="muted">Leave blank to keep existing password.</span></label>
-    <label>Status <select name="status"><option value="active"{if $status === 'active'} selected{/if}>Active</option><option value="disabled"{if $status === 'disabled'} selected{/if}>Disabled</option></select></label>
-    <fieldset class="card"><legend>Roles</legend>
-        {foreach $roles as $role}<label class="checkbox"><input type="checkbox" name="role_ids[]" value="{$role['id']}"{if $role['checked']} checked{/if}> {$role['label']}</label>{/foreach}
-    </fieldset>
-    {if $isEdit}
-    <fieldset class="card danger-zone">
-        <legend>Two-factor authentication</legend>
-        <p class="muted">Reset this user's 2FA enrolment so they can set it up again on their next login. This does not display or log OTPs, TOTP secrets, recovery codes or QR data.</p>
-        <button type="submit" name="_action" value="reset_2fa" class="button secondary" data-confirm-message="Reset 2FA for this admin user? They will need to enrol again.">Reset 2FA</button>
-    </fieldset>
-    {/if}
-    <div class="toolbar"><button type="submit">Save user</button><a class="button secondary" href="{$backUrl}">Back</a></div>
-</form>
+{* Auth-owned Admin user create/edit form. Latte auto-escapes all output. *}
+<div class="admin-user-workspace">
+    <header class="page-header admin-user-header">
+        <div class="page-header__copy">
+            <p class="page-header__eyebrow">Users · Access control</p>
+            <h1>{if $isEdit}Edit admin user{else}Create admin user{/if}</h1>
+            <p class="muted">Manage identity, interface preferences, account state and assigned roles without weakening permission boundaries.</p>
+        </div>
+        <a class="button button--secondary" href="{$backUrl}">Back to users</a>
+    </header>
 
-{if isset($lifecycleHtml) && $lifecycleHtml !== ''}{$lifecycleHtml|noescape}{/if}
+    {if $noticeType !== null}<div class="admin-alert admin-alert--{$noticeType}" role="status">{$noticeMessage}</div>{/if}
+    {if $error !== null}<div class="admin-alert admin-alert--danger" role="alert">{$error}</div>{/if}
+
+    <form method="post" action="{$action}" class="admin-user-form">
+        <input type="hidden" name="_csrf_token" value="{$csrfToken}">
+
+        <section class="card admin-user-card" aria-labelledby="admin-user-identity-title">
+            <div class="card__header"><div><h2 class="card__title" id="admin-user-identity-title">Identity</h2><p class="muted">The name and email shown throughout the Admin experience.</p></div></div>
+            <div class="admin-user-fields">
+                <label><span>Name</span><input type="text" name="name" value="{$name}" required autocomplete="name"></label>
+                <label><span>Email</span><input type="email" name="email" value="{$email}" required autocomplete="email"></label>
+                <label><span>Password</span><input type="password" name="password" autocomplete="new-password"><small>Leave blank to keep the existing password.</small></label>
+                <label><span>Status</span><select name="status"><option value="active"{if $status === 'active'} selected{/if}>Active</option><option value="disabled"{if $status === 'disabled'} selected{/if}>Disabled</option></select><small>Disabled users cannot authenticate, while their history remains attributable.</small></label>
+            </div>
+        </section>
+
+        <section class="card admin-user-card" aria-labelledby="admin-user-preferences-title">
+            <div class="card__header"><div><h2 class="card__title" id="admin-user-preferences-title">Admin preferences</h2><p class="muted">User-specific presentation defaults for the administration interface.</p></div></div>
+            <div class="admin-user-fields admin-user-fields--single">
+                <label for="admin-user-locale"><span>Admin interface locale</span><select id="admin-user-locale" name="locale"><option value=""{if $currentLocale === ''} selected{/if}>Use configured admin locale</option><option value="en_AU"{if $currentLocale === 'en_AU'} selected{/if}>English (Australia)</option></select><small>Leave blank to use the configured admin locale.</small></label>
+            </div>
+        </section>
+
+        <section class="card admin-user-card" aria-labelledby="admin-user-roles-title">
+            <div class="card__header"><div><h2 class="card__title" id="admin-user-roles-title">Assigned roles</h2><p class="muted">Roles determine effective permissions. Assignment changes remain subject to role-management authority.</p></div></div>
+            <fieldset class="admin-user-roles"><legend class="visually-hidden">Roles</legend>{foreach $roles as $role}<label class="admin-user-role"><input type="checkbox" name="role_ids[]" value="{$role['id']}"{if $role['checked']} checked{/if}><span>{$role['label']}</span></label>{/foreach}</fieldset>
+        </section>
+
+        {if $isEdit}
+        <section class="card admin-user-card admin-user-danger" aria-labelledby="admin-user-2fa-title">
+            <div class="card__header"><div><h2 class="card__title" id="admin-user-2fa-title">Two-factor authentication</h2><p class="muted">Recovery action for an administrator who can no longer use their enrolled authenticator.</p></div></div>
+            <div class="admin-user-danger__body"><div><strong>Reset 2FA enrolment</strong><p class="muted">The user must enrol again on their next login. Zoosper does not display or log OTPs, TOTP secrets, recovery codes or QR data.</p></div><button type="submit" name="_action" value="reset_2fa" class="button button--danger" data-confirm-message="Reset 2FA for this admin user? They will need to enrol again.">Reset 2FA</button></div>
+        </section>
+        {/if}
+
+        <footer class="admin-user-actions"><a class="button button--secondary" href="{$backUrl}">Cancel</a><button type="submit">Save user</button></footer>
+    </form>
+
+    {if isset($lifecycleHtml) && $lifecycleHtml !== ''}<section class="admin-user-lifecycle" aria-label="Account lifecycle">{$lifecycleHtml|noescape}</section>{/if}
+</div>

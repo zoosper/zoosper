@@ -142,3 +142,8 @@ User lifecycle actions are edit-only: the create form deliberately omits respond
 ### Permission Explorer theme integration
 
 Auth-owned selectors deliberately outrank shared Admin button defaults so Permission Explorer bulk and group controls retain semantic light and dark surfaces. Native buttons, keyboard operation, permission fields, CSRF handling and POST mutation behaviour are unchanged.
+
+
+### Fable security workspaces
+
+Auth owns the responsive Admin-user identity workspace, PAT creation/review surface, and Permission Explorer assets. Source and public copies remain byte-identical. Assets are screen-scoped and content-versioned; the interfaces remain progressively enhanced, CSP-safe, theme-aware, and usable at narrow widths. User and PAT mutations remain POST-only and CSRF-protected, role assignment remains separately permission-gated, PAT rows remain owner-scoped, plaintext tokens remain one-time-only, and the Permission Explorer runtime performs no network or form submission.
