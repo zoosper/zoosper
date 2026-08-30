@@ -57,6 +57,17 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 - [x] Auth-owned assigned-user search, selection retention, and role-assignment discovery are implemented with parameterised lookups, deduplicated multi-selection preservation, progressive enhancement search filtering, and accessible selection counters without degrading large user datasets or bypassing permission boundaries.
 - [x] **Real-Time Global Announcement Modal (future global-notifications workstream).** Extracted into its own dedicated module `zoosper/global-announcements` (`app/zoosper-global-announcements`). Super Admins have a Settings surface (`/admin/announcements`) to draft, publish, unpublish, and archive Global Announcements. Active authenticated users receive real-time updates via background polling and asynchronous acknowledgment, while offline users receive mandatory one-time modal delivery reconciled upon their next login. Acknowledgment records persist authoritatively by announcement and user in `admin_announcement_acknowledgments` with duplicate-safe idempotency, CSRF protection, and audit logging. Admin layout consumption is fully decoupled via `AdminAnnouncementProviderInterface`.
 
+**Pre-Launch Security & Architecture Teardown Findings (2026-08-31 Independent Review — Claude & Grok):**
+
+- [ ] **[CRIT-01] Fail-closed HTML sanitization in Page save coordinator & input.** `PageSaveCoordinator` and `PageSaveInput` must require `HtmlSanitizerInterface` as a non-nullable dependency and throw (fail closed) if unresolvable, eliminating the silent raw-input fallback that risks stored XSS under `|noescape` template rendering.
+- [ ] **[CRIT-02] 2FA encryption key placeholder blocklist & boot assertion.** Eliminate insecure `APP_KEY` fallback for `TWO_FACTOR_ENCRYPTION_KEY` in `config/two_factor.php`, enforce placeholder blocklist (`change-me`, `change-me-before-production`, `secret`), and add `TWO_FACTOR_ENCRYPTION_KEY` validation to `ProductionSecurityPolicy::assertEnvironment()`. Update regression tests to assert runtime behavioral enforcement.
+- [ ] **[CRIT-03] `APP_DEBUG` default `false`, boot unification & environment assertion.** Set `'debug' => false` default in `config/app.php` when unset, unify the dual error-handler debug computations in `ApplicationFactory::create()`, and assert `APP_DEBUG` in `ProductionSecurityPolicy::assertEnvironment()`.
+- [ ] **[HIGH-01] Database production driver policy enforcement.** Wire real driver enforcement for `config/database_policy.php` (`DATABASE_ENFORCE_MYSQL_PRODUCTION`, `DATABASE_PRODUCTION_DRIVER`, `DATABASE_ALLOW_SQLITE_LOCAL`) in `ConnectionFactory` or `ProductionSecurityPolicy` to prevent unsupported driver/environment boots.
+- [ ] **[HIGH-02] CI MySQL integration testing.** Add a MySQL/MariaDB service container to `.github/workflows/quality-gate.yml` to run the feature test suite against MySQL in CI.
+- [ ] **[HIGH-03] Unified admin authentication rate limiting.** Unify rate limiting across API login, HTML admin login, and 2FA challenge endpoints into a canonical enforcement architecture; reconcile contradictory docblock in `RateLimitReportOnlyAdminMiddleware`.
+- [ ] **[HIGH-04] Admin user locale persistence regression test net.** Implement a dedicated behavioral regression test suite for admin user locale persistence across form parsing, hydration, pipeline update, and session propagation.
+- [ ] **[HIGH-05] Consolidate environment reader closures across 14 config files.** Eliminate duplicated local `$env` closures in `config/*.php` that differ in empty-string handling from canonical `env()` in `bootstrap/autoload.php`.
+
 The following earlier top-priority findings are retained as completed history:
 
 **Both items from the 2026-07-29 top-priority list are now confirmed and
@@ -364,6 +375,10 @@ replica.
 - [ ] Module lifecycle (install/enable/disable/uninstall)
 - [ ] Composer packaging + 0.x tag + CHANGELOG + stability contract — every
   internal module dependency still uses unconstrained `*@dev`
+- [ ] Database production driver policy enforcement: check `config/database_policy.php` flags in `ConnectionFactory` / `ProductionSecurityPolicy` and reject invalid driver/environment pairings.
+- [ ] Consolidate 14 duplicated `$env` closures in `config/*.php` into global canonical `env()` helper.
+- [ ] Compile and cache module manifests, service providers, and route collections for production boots with automatic invalidation diagnostics.
+- [ ] Document third-party extension architecture and role of `modules/` placeholder directory vs path-repository `app/` and standalone `packages/`.
 
 ## 2. Sites, Pages & Content
 
@@ -376,6 +391,7 @@ replica.
 - [x] `content_json` frontend rendering via `PageRenderer` (comprehensive Editor.js block types: paragraphs, headers, lists, images, quotes, delimiters, code, tables, raw)
 - [x] Router path parameters
 - [x] Consolidate `pages` table into declarative schema
+- [ ] Make `HtmlSanitizerInterface` a mandatory, non-nullable dependency of `PageSaveCoordinator` / `PageSaveInput` and fail closed (throw exception) instead of falling back to raw unsanitized input.
 - [ ] **[R] No delete/archive on any admin CRUD screen** — flagged as "a
   basic missing feature," and the reason the missing-FK gap hasn't caused
   visible damage yet. Not yet built.
@@ -424,6 +440,10 @@ replica.
   `ThemeAdminController` not yet moved.
 - [x] Batch-load permissions in `AdminUserRepository` (fix N+1) — Phase 1.109
 - [x] Pagination + retention for audit log & login history — `PruneLogsCommand` (`admin:logs:prune`) and persistent Grid workspaces.
+- [ ] Consolidate duplicated Grid Criteria/SqlBuilder/Workspace and Admin Form section/processor patterns into a single extensible, typed Grid & Form kernel.
+- [ ] Dedicated behavioral regression test suite for admin user locale persistence across hydration, update, and session state.
+- [ ] Formalise session security controls: explicit absolute session lifetimes, concurrent session limits, and SameSite/Secure cookie policy verification during bootstrap.
+- [ ] Add covering indexes and EXPLAIN query plan checks for admin grid search queries.
 - [ ] **[R] Two competing Grid extensibility systems** — the newer
   `GridDefinition`/`GridCriteria`/`GridColumnRegistry` genuinely supports
   third-party column contribution for Audit Log and Login History only;
@@ -485,6 +505,11 @@ replica.
   now-impossible null-stored-but-successful state is ever reached.
 - [x] LICENSE (MIT) + SECURITY.md added — closes a real repo-hygiene/legal
   ambiguity gap flagged by an external reviewer pass.
+- [ ] Remove `APP_KEY` fallback for 2FA encryption key, enforce placeholder blocklist (`change-me`, `change-me-before-production`, `secret`), and validate `TWO_FACTOR_ENCRYPTION_KEY` in `ProductionSecurityPolicy::assertEnvironment()`.
+- [ ] Flip `APP_DEBUG` default to `false` in `config/app.php`, unify early vs runtime error-handler debug resolution in `ApplicationFactory`, and assert `APP_DEBUG` in `ProductionSecurityPolicy`.
+- [ ] Unify rate limiting across API login, HTML admin login, and 2FA challenge into a single canonical enforcement architecture; reconcile contradictory docblock in `RateLimitReportOnlyAdminMiddleware`.
+- [ ] Automated secret generation and validation command (`bin/zoosper secrets:generate`) that writes a validated `.env` fragment and refuses to boot in production if placeholders remain.
+- [ ] Enforce Content-Security-Policy (`report_only: false`) after staging verification with Editor.js and admin assets.
 
 ## 6. Media
 
@@ -496,6 +521,7 @@ replica.
   `services.php` configures `MediaUploadDerivativeDispatcher` and injects it into `MediaUploadService`. Duplicate MediaUploadService construction is resolved. Derivative database persistence remains a separate follow-up.
 - [x] **[FIXED] Both media upload controllers receive container-configured `MediaUploadService`**
   with derivative dispatcher, validator, storage, and cleanup wired in. Duplicate MediaUploadService construction is resolved.
+- [ ] Move synchronous GD derivative processing off the upload request path (queue/worker) and apply strict image dimension/size pre-checks before decode to prevent upload DoS.
 
 ## 7. Mail
 
@@ -544,6 +570,11 @@ replica.
 - [ ] Replace duplicate source-string tests with one behavioural contract.
 - [x] Keep one canonical admin-grid column customisation guide rather than
   phase/hotfix documentation fragments (see `docs/admin.md`).
+- [ ] Add MySQL/MariaDB service container to `.github/workflows/quality-gate.yml` and run test suite against MySQL in CI.
+- [ ] Expand `psalm.xml` scan scope to include all first-party modules and packages (`zoosper-session`, `zoosper-global-announcements`, `zoosper-cache`, `zoosper-config`, etc.) and make Psalm a blocking CI gate.
+- [ ] Update crypto/2FA regression tests (`SecretProtectorKeyEnforcementTest`) to assert runtime behavioral enforcement rather than source-string matching.
+- [ ] Clean up stale doc comments in `bootstrap/autoload.php` and reconcile contradictory Supported Versions tables in `SECURITY.md`.
+- [ ] Evaluate PHP 8.5+ language floor vs 8.3/8.4 and document explicit technical requirements in README.
 
 - [x] Pest + PHPUnit harness; quality gate runner
 - [x] **`.gitattributes` (`export-ignore` for `tests/`/dev tooling) added
@@ -1229,3 +1260,94 @@ Current same-layer and cross-layer duplicate module names fail descriptively. St
 ### Phase 10AS-H: Admin experience refinement
 
 The Admin redesign established a permission-aware Dashboard, a fluid responsive shell, coherent light/dark themes, shared accessible components, package-owned Grid presentation, responsive disclosures and paging, and refined feature workspaces. Navigation collapse is owned by the sidebar, feature modules declare semantic destination identifiers, the Admin renderer owns a safe static SVG allow-list, and text-only menu groups cannot be mistaken for destinations. CSP-safe asset registration, permissions, CSRF, POST-only mutations, query state, persistence, and audit boundaries remain unchanged. The accepted source was browser-reviewed and pushed at `364414a4878cde36fd89de8583326e4d1ff1f625`; no deployment was performed.
+
+---
+
+## Pre-launch technical code review and security audit response (2026-08-31)
+
+An exhaustive independent technical review and static security teardown (`var/log/Claude-review.md` and `var/log/grok-review.md`) was conducted across the `dev` branch (~50,400 LOC first-party PHP across 16 `app/` modules and 12 `packages/` packages). The findings establish that while the modular architecture and automated testing foundations are mature (~1,627 tests / 11,500+ assertions), multiple critical launch blockers and structural reliability gaps must be remediated prior to any public production release.
+
+### Critical Launch Blockers (P0 — Immediate Remediation Required)
+
+- [ ] **CRIT-01: HTML Sanitizer fail-open vulnerability in Page save pipeline.**
+  - *Location:* `app/zoosper-page/src/Application/Save/PageSaveInput.php:41-42` and `app/zoosper-page/config/services.php:40-43`.
+  - *Problem:* `PageSaveCoordinator` treats `HtmlSanitizerInterface` as an optional dependency; if unresolvable, the nullsafe chain falls back to raw form input (`$sanitizer?->sanitise(...)->toString() ?? $form['content']`). That unescaped content is subsequently rendered via Latte's `|noescape` in frontend templates (`page.latte` and `view.latte`), allowing stored XSS on any container misconfiguration.
+  - *Remediation:* Make `HtmlSanitizerInterface` a mandatory, non-nullable constructor dependency in `PageSaveCoordinator` and `PageSaveInput` and throw `ZoosperException` (fail closed) if unresolvable. Never fallback to raw user input.
+- [ ] **CRIT-02: 2FA encryption key insecure fallback and placeholder exposure.**
+  - *Location:* `config/two_factor.php:62`, `app/zoosper-two-factor/config/services.php:65-83`, `.env.example`.
+  - *Problem:* `config/two_factor.php` silently falls back to `APP_KEY` (documented as `change-me-before-production`) when `TWO_FACTOR_ENCRYPTION_KEY` is unset. The service factory only guards against empty strings and does not reject known placeholder values. `ProductionSecurityPolicy::assertEnvironment()` never validates `TWO_FACTOR_ENCRYPTION_KEY` on boot.
+  - *Remediation:* Remove `APP_KEY` fallback from `config/two_factor.php`; enforce placeholder blocklist (`change-me`, `change-me-before-production`, `secret`, `changeme`); add `TWO_FACTOR_ENCRYPTION_KEY` validation to `ProductionSecurityPolicy::assertEnvironment()`; update test assertions to verify runtime failure rather than source-string matching.
+- [ ] **CRIT-03: `APP_DEBUG` insecure default, dual boot-time computation, and missing policy assertion.**
+  - *Location:* `config/app.php:19`, `app/zoosper-core/src/Bootstrap/ApplicationFactory.php:61-64` vs `:72-75`, `app/zoosper-core/src/Http/ProductionSecurityPolicy.php`.
+  - *Problem:* `config/app.php` defaults `debug` to `true` when `APP_DEBUG` is unset. `ApplicationFactory::create()` calculates debug mode twice with conflicting logic (early handler defaults `false`, runtime handler defaults `true`). `ProductionSecurityPolicy::assertEnvironment()` does not validate `APP_DEBUG` for production environments.
+  - *Remediation:* Change `config/app.php` default to `false`; unify error-handler debug resolution in `ApplicationFactory`; assert `APP_DEBUG=false` in `ProductionSecurityPolicy::assertEnvironment()` for `staging` and `production`.
+- [ ] **Referential integrity & database cascade reconciliation.**
+  - *Problem:* Foreign keys and cascading deletes are not comprehensively declared or enforced across all entities (Page ↔ Media, Menu ↔ Page, Site ↔ all, PAT ↔ User), risking orphaned rows and data corruption.
+  - *Remediation:* Complete declarative schema foreign keys and application-level lifecycle blocker checks across all entities.
+- [ ] **CSP enforcement graduation.**
+  - *Problem:* `config/security.php` ships CSP with `report_only: true`, meaning violations are not actively blocked.
+  - *Remediation:* Verify Editor.js, admin scripts, and asset endpoints in staging, resolve any inline style/script conflicts, and switch `report_only` to `false` in production.
+
+### High-Priority Reliability & Architecture Remediation (P1)
+
+- [ ] **HIGH-01: Database production-driver policy enforcement.**
+  - *Location:* `config/database_policy.php`.
+  - *Problem:* `DATABASE_ENFORCE_MYSQL_PRODUCTION`, `DATABASE_PRODUCTION_DRIVER`, and `DATABASE_ALLOW_SQLITE_LOCAL` are defined but never read by any code.
+  - *Remediation:* Enforce driver checks in `ConnectionFactory` and `ProductionSecurityPolicy::assertEnvironment()` to prevent SQLite from running in production.
+- [ ] **HIGH-02: CI database engine parity with production.**
+  - *Location:* `.github/workflows/quality-gate.yml`.
+  - *Problem:* CI workflows execute all tests exclusively against SQLite (`DB_DRIVER: sqlite`), never verifying MySQL collation, JSON handling, or locking.
+  - *Remediation:* Add a MySQL service container to the GitHub Actions workflow and run feature test suites against MySQL.
+- [ ] **HIGH-03: Unified admin authentication rate limiting.**
+  - *Location:* `AuthController.php`, `RateLimitReportOnlyAdminMiddleware.php`, `AdminTwoFactorChallengeController.php`.
+  - *Problem:* API login, HTML admin login, and 2FA challenge use disparate rate-limiting invocation patterns; middleware docblock contradicts its actual blocking behavior.
+  - *Remediation:* Unify rate limiting into a single canonical middleware/service enforcement point across all three surfaces and update documentation.
+- [ ] **HIGH-04: Admin user locale persistence regression test net.**
+  - *Problem:* Historical git log shows 11+ iterative hotfixes for locale persistence due to lack of behavioral regression coverage.
+  - *Remediation:* Build a dedicated behavioral regression test suite testing locale parsing, hydration, pipeline update, and session propagation.
+- [ ] **HIGH-05: Consolidation of 14 duplicate environment reader closures.**
+  - *Location:* 14 files in `config/*.php`.
+  - *Problem:* Local `$env` closures in config files treat empty strings (`$_ENV[$key] !== ''`) as unset, conflicting with canonical `env()` in `bootstrap/autoload.php`.
+  - *Remediation:* Remove local `$env` closures and have all config files call the global canonical `env()` helper.
+- [ ] **Automated secrets generation and validation command.**
+  - *Remediation:* Implement `bin/zoosper secrets:generate` to write cryptographically strong keys (`APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY`, `RATE_LIMIT_IDENTITY_SALT`, `CACHE_ENCRYPTION_KEY`) and fail closed on production start if placeholders remain.
+- [ ] **Offload synchronous GD derivative generation from upload request path.**
+  - *Location:* `packages/zoosper-media/src/Processor/GdMediaProcessor.php`, `MediaUploadService.php`.
+  - *Problem:* Synchronous image decoding and derivative generation during multipart uploads creates CPU/memory bottlenecks and DoS vectors.
+  - *Remediation:* Enforce pre-decode dimension and byte bounds, and introduce asynchronous queued derivative processing.
+
+### Medium-Priority Maintainability & Performance Gaps (P2)
+
+- [ ] **MED-01: Psalm static analysis scope expansion & blocking CI gate.**
+  - *Location:* `psalm.xml`, `.github/workflows/quality-gate.yml`.
+  - *Problem:* `psalm.xml` excludes `zoosper-session`, `zoosper-global-announcements`, `zoosper-cache`, `zoosper-config`, etc., and the CI step runs with `continue-on-error: true`.
+  - *Remediation:* Add all first-party modules and packages to `psalm.xml` and enforce Psalm as a blocking CI gate with zero new baseline issues.
+- [ ] **MED-02: Templating engine discipline and variable extraction.**
+  - *Location:* `PhpTemplateEngine.php`, `RoleAdminController.php`.
+  - *Problem:* Coexistence of Latte (auto-escaping) with raw PHP templates using `extract($data, EXTR_SKIP)` creates potential escaping inconsistencies.
+  - *Remediation:* Standardize view rendering on Latte or enforce strict escaping contracts across all PHP template partials.
+- [ ] **MED-03: Behavioral runtime assertions for crypto & security tests.**
+  - *Location:* `SecretProtectorKeyEnforcementTest.php`.
+  - *Problem:* Tests assert source code strings rather than runtime behavior under insecure environment configurations.
+  - *Remediation:* Refactor security tests to assert actual container and service runtime rejection.
+- [ ] **Admin Grid & Form kernel consolidation.**
+  - *Problem:* Repeated Criteria, SqlBuilder, Workspace, and Form sections across Users, Roles, Media, and Pages create code duplication.
+  - *Remediation:* Abstract into a single generic, typed Grid kernel and Form section/processor across all admin screens.
+- [ ] **Production manifest & route compilation.**
+  - *Problem:* Uncached runtime discovery of modules, service providers, and routes on every boot adds latency.
+  - *Remediation:* Cache compiled module manifests, services, and route trees for production environments with automatic invalidation diagnostics.
+- [ ] **Session lifecycle controls.**
+  - *Problem:* PHP session defaults lack explicit absolute session timeouts and concurrent session bounds.
+  - *Remediation:* Add absolute session lifetime, concurrent session limits, and SameSite/Secure cookie policy verification during bootstrap.
+- [ ] **PHP 8.5+ runtime requirement evaluation.**
+  - *Problem:* Hard requirement on PHP 8.5 narrows hosting compatibility without demonstrated necessity.
+  - *Remediation:* Evaluate dropping the language floor to PHP 8.3/8.4 or clearly document non-negotiable language features in README.
+
+### Low / Process & Documentation Hygiene (P3)
+
+- [ ] **LOW-01: Commit labeling hygiene and review attribution.**
+  - *Remediation:* Ensure distinct, descriptive commit messages and co-author attribution across all branch merges.
+- [ ] **LOW-02: Stale comments & documentation reconciliation.**
+  - *Remediation:* Remove obsolete comments in `bootstrap/autoload.php` referencing non-existent EnvLoader classes; reconcile contradictory Supported Versions tables in `SECURITY.md`.
+- [ ] **LOW-03: Clarify pluggable module architecture & `modules/` placeholder.**
+  - *Remediation:* Document the role of `modules/` for third-party pluggable extensions vs internal `app/` and standalone `packages/`.
