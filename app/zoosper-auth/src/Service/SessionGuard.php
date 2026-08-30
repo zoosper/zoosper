@@ -208,15 +208,15 @@ final class SessionGuard
 
     private function expireIfIdle(): bool
     {
-        if ($this->idleTimeoutSeconds === 0) {
-            return false;
-        }
-
         $hasProtectedState = isset(
             $_SESSION[self::SESSION_USER_KEY],
         ) || isset($_SESSION[self::SESSION_PENDING_2FA_KEY]);
         if (!$hasProtectedState) {
             unset($_SESSION[self::SESSION_LAST_ACTIVITY_KEY]);
+            return false;
+        }
+
+        if ($this->idleTimeoutSeconds === 0) {
             return false;
         }
 
@@ -228,7 +228,7 @@ final class SessionGuard
         }
 
         $lastActivity = (int) $lastActivity;
-        if ($lastActivity <= $now && $now - $lastActivity <= $this->idleTimeoutSeconds) {
+        if ($lastActivity <= $now && ($now - $lastActivity) <= $this->idleTimeoutSeconds) {
             return false;
         }
 

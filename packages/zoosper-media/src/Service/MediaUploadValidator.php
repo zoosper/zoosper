@@ -14,6 +14,7 @@ namespace Zoosper\Media\Service;
 final readonly class MediaUploadValidator
 {
     private const MAX_BYTES = 5_242_880;
+    private const MAX_DIMENSION = 8192;
 
     /** @var array<string, list<string>> */
     private const ALLOWED = [
@@ -59,8 +60,11 @@ final readonly class MediaUploadValidator
             $errors[] = 'Uploaded file MIME type does not match the extension.';
         }
 
-        if (!$this->looksLikeImage($tmpName)) {
+        $dimensions = $this->extractDimensions($tmpName);
+        if ($dimensions === null) {
             $errors[] = 'Uploaded file is not a valid image.';
+        } elseif ($dimensions[0] > self::MAX_DIMENSION || $dimensions[1] > self::MAX_DIMENSION) {
+            $errors[] = 'Uploaded image dimensions exceed the maximum allowed size (8192x8192 pixels).';
         }
 
         return $errors === []
@@ -82,8 +86,14 @@ final readonly class MediaUploadValidator
         return (string) finfo_file($finfo, $path);
     }
 
-    private function looksLikeImage(string $path): bool
+    /** @return array{int, int}|null */
+    private function extractDimensions(string $path): ?array
     {
-        return @getimagesize($path) !== false;
+        $info = @getimagesize($path);
+        if (!is_array($info) || !isset($info[0], $info[1]) || (int) $info[0] <= 0 || (int) $info[1] <= 0) {
+            return null;
+        }
+
+        return [(int) $info[0], (int) $info[1]];
     }
 }

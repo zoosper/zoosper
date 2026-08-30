@@ -521,7 +521,7 @@ replica.
   `services.php` configures `MediaUploadDerivativeDispatcher` and injects it into `MediaUploadService`. Duplicate MediaUploadService construction is resolved. Derivative database persistence remains a separate follow-up.
 - [x] **[FIXED] Both media upload controllers receive container-configured `MediaUploadService`**
   with derivative dispatcher, validator, storage, and cleanup wired in. Duplicate MediaUploadService construction is resolved.
-- [ ] Move synchronous GD derivative processing off the upload request path (queue/worker) and apply strict image dimension/size pre-checks before decode to prevent upload DoS.
+- [x] Apply strict image dimension (8192x8192) and file size pre-checks before decode in `MediaUploadValidator` and `GdMediaProcessor` to prevent upload DoS. Moving GD derivative processing to an asynchronous queue/worker remains a separate operational follow-up.
 
 ## 7. Mail
 

@@ -89,6 +89,12 @@ final readonly class GdMediaProcessor implements MediaProcessorInterface
             throw new RuntimeException('Derivative source is not a valid raster image.');
         }
 
+        $width = (int) ($dimensions[0] ?? 0);
+        $height = (int) ($dimensions[1] ?? 0);
+        if ($width <= 0 || $height <= 0 || $width > 8192 || $height > 8192) {
+            throw new RuntimeException('Image dimensions exceed processing limits (8192x8192).');
+        }
+
         $image = match ($dimensions[2] ?? null) {
             IMAGETYPE_JPEG => @imagecreatefromjpeg($path),
             IMAGETYPE_PNG => @imagecreatefrompng($path),
@@ -100,7 +106,7 @@ final readonly class GdMediaProcessor implements MediaProcessorInterface
             throw new RuntimeException('Unable to decode canonical media for derivative processing.');
         }
 
-        return [$image, (int) $dimensions[0], (int) $dimensions[1]];
+        return [$image, $width, $height];
     }
 
     /** @return array{GdImage, int, int} */
