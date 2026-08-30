@@ -14,6 +14,7 @@
  * @var string $assetScriptsHtml
  * @var string $flashMessagesHtml
  * @var list<\Zoosper\Admin\Theme\AdminColourTheme> $adminColourThemes
+ * @var string $logoutFormHtml
  */
 ?>
 <!doctype html>
@@ -58,17 +59,27 @@
                 <strong class="admin-topbar__title"><?= $e($title) ?></strong>
             </div>
             <div class="admin-topbar__actions">
-                <span class="admin-user-name"><?= $e($userName) ?></span>
-                <label class="admin-theme-picker">
-                    <span class="admin-control-label">Colour theme</span>
-                    <select data-admin-theme-selector aria-label="Admin colour theme">
-                        <?php foreach ($adminColourThemes ?? [] as $adminColourTheme): ?>
-                            <option value="<?= $e($adminColourTheme->code) ?>" data-admin-theme-mode="<?= $e($adminColourTheme->mode) ?>">
-                                <?= $e($adminColourTheme->name) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </label>
+                <details class="admin-account-menu">
+                    <summary aria-label="Open account menu">
+                        <span class="admin-account-avatar" aria-hidden="true"><?= $e(strtoupper(substr(trim($userName), 0, 1)) ?: 'U') ?></span>
+                        <span class="admin-account-name"><?= $e($userName) ?></span>
+                        <span class="admin-account-chevron" aria-hidden="true">⌄</span>
+                    </summary>
+                    <div class="admin-account-popover">
+                        <p class="admin-account-popover__identity"><strong><?= $e($userName) ?></strong><span>Administrator</span></p>
+                        <label class="admin-theme-picker">
+                            <span>Colour theme</span>
+                            <select data-admin-theme-selector aria-label="Admin colour theme">
+                                <?php foreach ($adminColourThemes ?? [] as $adminColourTheme): ?>
+                                    <option value="<?= $e($adminColourTheme->code) ?>" data-admin-theme-mode="<?= $e($adminColourTheme->mode) ?>">
+                                        <?= $e($adminColourTheme->name) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </label>
+                        <?= $logoutFormHtml ?? '' ?>
+                    </div>
+                </details>
             </div>
         </header>
         <?= $slot('before.content') ?>

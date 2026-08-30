@@ -47,3 +47,8 @@ PAT creation and revocation remain authenticated, centrally CSRF-protected POST 
 ### Personal Access Token presentation refinement
 
 The Auth-owned Personal Access Tokens workspace uses a four/three/two/one-column responsive scope layout and PAT-specific Grid cell renderers for truncated names, scope chips, dates, status badges and compact revoke actions. These renderers escape all persisted values and retain the owner-scoped query, POST-only revoke form and central CSRF contract. Presentation overrides remain scoped beneath the PAT workspace and do not alter generic Admin Grid behaviour.
+
+
+### Fable bulk presentation pass
+
+The compact shell, native account disclosure, Dashboard hierarchy and responsive customisation surface consume the shared semantic foundation. Logout remains a CSRF-bearing POST form, the existing shell runtime remains the only theme/navigation behaviour owner, and only real permission-filtered module widgets are rendered. No navigation count badges, fabricated search, notifications, routes or records are introduced.

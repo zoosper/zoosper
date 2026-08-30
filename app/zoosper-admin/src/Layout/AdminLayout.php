@@ -77,6 +77,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
             'assetScriptsHtml' => $this->assetRenderer?->scriptsHtml($active) ?? '',
             'flashMessagesHtml' => $flashMessagesHtml,
             'adminColourThemes' => $colourThemes,
+            'logoutFormHtml' => $user !== null ? $this->logoutForm() : '',
         ]);
     }
 
@@ -88,7 +89,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
         return $this->navigationRenderer->render(
             $this->menu->sectionsFor($user),
             $active,
-            $this->logoutForm(),
+            '',
         );
     }
 
@@ -111,10 +112,9 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
                 . '">';
         }
 
-        return '<div class="menu-group">Account</div>'
-            . '<form method="post" action="' . $action . '" class="admin-nav-logout-form">'
+        return '<form method="post" action="' . $action . '" class="admin-account-logout-form">'
             . $tokenInput
-            . '<button type="submit" class="admin-nav-logout-button" data-admin-label="Logout" title="Logout">'
+            . '<button type="submit" class="admin-account-logout-button">'
             . $this->navigationRenderer->renderIcon('logout')
             . '<span>Logout</span></button>'
             . '</form>';

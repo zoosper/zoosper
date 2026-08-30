@@ -126,3 +126,8 @@ The default theme's reusable component templates add semantic card regions, aler
 ## Pagination ownership
 
 This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+
+
+### Fable bulk presentation pass
+
+The compact shell, native account disclosure, Dashboard hierarchy and responsive customisation surface consume the shared semantic foundation. Logout remains a CSRF-bearing POST form, the existing shell runtime remains the only theme/navigation behaviour owner, and only real permission-filtered module widgets are rendered. No navigation count badges, fabricated search, notifications, routes or records are introduced.

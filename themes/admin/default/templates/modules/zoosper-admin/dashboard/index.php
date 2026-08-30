@@ -36,7 +36,8 @@ $dashboardCustomised = $dashboardCustomised ?? false;
 
 <?php if ($availableWidgets !== []): ?>
     <details class="card dashboard-personalisation" data-dashboard-personalisation>
-        <summary>Customise dashboard</summary>
+        <summary><span>Customise dashboard</span><span aria-hidden="true">⚙</span></summary>
+        <div class="dashboard-personalisation__body">
         <p class="muted">Choose visible widgets and arrange them for your account. Your permissions still control which widgets are available.</p>
         <form method="post" action="<?= $e($personalisationUrl) ?>" data-dashboard-personalisation-form>
             <input type="hidden" name="_csrf_token" value="<?= $e($csrfToken) ?>">
@@ -69,6 +70,7 @@ $dashboardCustomised = $dashboardCustomised ?? false;
                 <button type="submit" class="button--secondary">Reset to defaults</button>
             </form>
         <?php endif; ?>
+        </div>
     </details>
 <?php endif; ?>
 
@@ -89,7 +91,7 @@ $dashboardCustomised = $dashboardCustomised ?? false;
         <div class="dashboard-widget-grid" data-dashboard-widget-grid>
             <?php foreach ($availableWidgets as $widget): ?>
                 <?php $visible = !in_array($widget->code, $hiddenWidgetCodes, true); ?>
-                <article class="card admin-stat dashboard-widget" data-dashboard-widget="<?= $e($widget->code) ?>"<?= $visible ? '' : ' hidden' ?>>
+                <article class="card admin-stat dashboard-widget" tabindex="0" data-dashboard-widget="<?= $e($widget->code) ?>"<?= $visible ? '' : ' hidden' ?>>
                     <button type="button" class="button--secondary dashboard-widget__drag" draggable="true" data-dashboard-card-drag aria-label="Drag <?= $e($widget->title) ?> to reorder">Drag</button>
                     <p class="admin-stat__label"><?= $e($widget->title) ?></p>
                     <p class="admin-stat__value"><?= $e($widget->value) ?></p>

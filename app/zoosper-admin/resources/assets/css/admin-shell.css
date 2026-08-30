@@ -771,3 +771,34 @@ body::before {
         max-width: 100%;
     }
 }
+
+
+/* Fable bulk pass: calmer shell hierarchy, compact navigation and account popover. */
+:root { --admin-sidebar-width: 15.25rem; --admin-topbar-height: 4.25rem; }
+.admin-sidebar { padding-inline: .65rem; background: var(--admin-sidebar); box-shadow: none; }
+.admin-sidebar .brand { min-height: var(--admin-topbar-height); padding-inline: .65rem; font-size: 1.05rem; }
+.admin-sidebar .brand::before { width: 1.9rem; height: 1.9rem; border-radius: .55rem; box-shadow: var(--admin-shadow-xs); }
+.admin-nav-section { margin-top: .45rem; }
+.admin-nav .menu-group { padding: .85rem .65rem .3rem; font-size: .62rem; letter-spacing: .14em; }
+.admin-nav a { min-height: 2.35rem; margin: .06rem 0; padding: .5rem .65rem; border-radius: .55rem; font-size: .825rem; }
+.admin-nav a.active { font-weight: 680; }
+.admin-nav a.active::before { left: -.65rem; width: 2px; box-shadow: none; }
+.admin-topbar { min-height: var(--admin-topbar-height); padding-inline: clamp(1rem, 2.4vw, 2.25rem); background: color-mix(in srgb, var(--admin-surface) 92%, transparent); box-shadow: var(--admin-shadow-xs); }
+.admin-topbar__title { color: var(--admin-text-strong); font-size: .9rem; font-weight: 700; }
+.admin-account-menu { position: relative; }
+.admin-account-menu > summary { display: flex; align-items: center; gap: .55rem; min-height: 2.65rem; padding: .3rem .45rem .3rem .3rem; border: 1px solid transparent; border-radius: var(--admin-radius-md); color: var(--admin-text); cursor: pointer; list-style: none; }
+.admin-account-menu > summary::-webkit-details-marker { display: none; }
+.admin-account-menu > summary:hover,.admin-account-menu[open] > summary { border-color: var(--admin-border); background: var(--admin-surface-muted); }
+.admin-account-avatar { display: grid; width: 2rem; height: 2rem; place-items: center; border-radius: 50%; background: var(--admin-brand-700); color: #fff; font-size: .75rem; font-weight: 800; }
+.admin-account-name { max-width: 12rem; overflow: hidden; font-size: .82rem; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.admin-account-chevron { color: var(--admin-text-muted); transition: transform var(--admin-fast) var(--admin-ease); }
+.admin-account-menu[open] .admin-account-chevron { transform: rotate(180deg); }
+.admin-account-popover { position: absolute; z-index: 80; top: calc(100% + .55rem); right: 0; display: grid; gap: .75rem; width: min(19rem, calc(100vw - 2rem)); padding: .85rem; border: 1px solid var(--admin-border); border-radius: var(--admin-radius-lg); background: var(--admin-surface); box-shadow: var(--admin-shadow-lg); }
+.admin-account-popover__identity { display: grid; gap: .1rem; margin: 0; padding: .2rem .15rem .7rem; border-bottom: 1px solid var(--admin-border); }
+.admin-account-popover__identity span { color: var(--admin-text-muted); font-size: .75rem; }
+.admin-account-popover .admin-theme-picker { display: grid; gap: .35rem; }
+.admin-account-popover .admin-theme-picker select { width: 100%; max-width: none; }
+.admin-account-logout-form { margin: 0; }
+.admin-account-logout-button { width: 100%; min-height: 2.5rem; border: 1px solid var(--admin-border); border-radius: var(--admin-radius-md); background: var(--admin-surface); color: var(--admin-danger); cursor: pointer; font-weight: 680; }
+.admin-account-logout-button .admin-nav-icon { display: none; }
+@media (max-width: 680px) { .admin-account-name,.admin-account-chevron { display:none; } .admin-account-menu > summary { padding:.25rem; } }

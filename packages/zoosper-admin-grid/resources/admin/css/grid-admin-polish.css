@@ -792,3 +792,16 @@
         justify-content: center;
     }
 }
+
+
+/* Fable bulk pass: clearer Grid command hierarchy and calmer data surface. */
+.grid-compact-toolbar { border-radius: var(--admin-radius-lg, .875rem); box-shadow: var(--admin-shadow-xs, 0 1px 2px rgb(15 23 42 / 5%)); }
+.grid-compact-actions,.grid-compact-state { padding: .7rem; }
+.grid-compact-actions :is(button,.button,[role="button"]),.grid-compact-state :is(button,.button,[role="button"]),.grid-compact-actions select,.grid-compact-state select { min-height: 2.35rem; border-radius: var(--admin-radius-sm, .375rem); font-size: .82rem; }
+.grid-compact-panel,.grid-workspace__settings:not([hidden]) { border-radius: var(--admin-radius-lg, .875rem); box-shadow: var(--admin-shadow-lg, 0 24px 50px -16px rgb(15 23 32 / 32%)); }
+.grid-table { border-radius: var(--admin-radius-lg, .875rem); box-shadow: var(--admin-shadow-xs, 0 1px 2px rgb(15 23 42 / 5%)); }
+.grid-table th { position: sticky; z-index: 2; top: 0; padding-block: .78rem; background: var(--grid-surface-subtle); font-size: .71rem; letter-spacing: .065em; }
+.grid-table td { padding-block: .85rem; }
+.grid-table tbody tr:hover > td { box-shadow: inset 0 1px 0 var(--grid-header-separator), inset 0 -1px 0 var(--grid-header-separator); }
+.grid-workspace__navigation { padding: .55rem; border: 1px solid var(--grid-border); border-radius: var(--admin-radius-md, .625rem); background: var(--grid-surface); box-shadow: var(--admin-shadow-xs, none); }
+@media (max-width:48rem) { .grid-table th { position:static; } .grid-workspace__navigation { padding:.45rem; } }

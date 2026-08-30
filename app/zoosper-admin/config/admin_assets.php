@@ -24,13 +24,13 @@ return array (
     'zoosper-admin-shell-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/admin-shell.css?v=bf3601d46f2d',
+      'path' => '/asset/zoosper-admin/css/admin-shell.css?v=8392fe5e0df8',
       'sort_order' => 15,
     ),
     'zoosper-admin-components-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/admin-components.css?v=318181950bb2',
+      'path' => '/asset/zoosper-admin/css/admin-components.css?v=2093e6a42ff8',
       'sort_order' => 16,
     ),
     'zoosper-dashboard-personalisation-script' =>
