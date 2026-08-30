@@ -34,12 +34,23 @@ it('preserves existing public properties grouping parenting and ACL behaviour', 
         ->and($item->label)->toBe('Pages')
         ->and($item->url)->toBe('/admin/pages')
         ->and($item->parent)->toBe('content')
+        ->and($item->getParent())->toBe('content')
         ->and($item->group)->toBe('Content')
+        ->and($item->getGroup())->toBe('Content')
+        ->and($item->hasChildren())->toBeFalse()
+        ->and($item->getChildren())->toBe([])
         ->and($unrestricted->permission)->toBeNull()
         ->and($unrestricted->getPermission())->toBe('')
         ->and($unrestricted->isAllowed(static fn (): bool => false))->toBeTrue()
         ->and($item->isAllowed(static fn (string $permission): bool => $permission === 'page.manage'))->toBeTrue()
         ->and($item->isAllowed(static fn (): bool => false))->toBeFalse();
+
+    $child = new AdminMenuItem('pages-create', 'New Page', '/admin/pages/create', 'page.manage', parent: 'pages');
+    $itemWithChildren = $item->withChildren([$child]);
+
+    expect($itemWithChildren->hasChildren())->toBeTrue()
+        ->and($itemWithChildren->getChildren())->toHaveCount(1)
+        ->and($itemWithChildren->getChildren()[0]->getId())->toBe('pages-create');
 });
 
 it('declares the Marko contract dependency in the owning Composer package', function (): void {

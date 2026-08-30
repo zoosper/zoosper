@@ -39,21 +39,8 @@ final readonly class AdminMenuLoader
 
             $declarations = $this->adminPaths?->menu($config) ?? $config;
 
-            foreach ($declarations as $item) {
-                if (!is_array($item)) {
-                    continue;
-                }
-
-                $items[] = new AdminMenuItem(
-                    code: (string) ($item['code'] ?? $item['id'] ?? ''),
-                    label: (string) ($item['label'] ?? $item['title'] ?? ''),
-                    url: (string) ($item['url'] ?? '#'),
-                    permission: isset($item['permission']) ? (string) $item['permission'] : null,
-                    parent: isset($item['parent']) ? (string) $item['parent'] : null,
-                    sortOrder: (int) ($item['sort_order'] ?? $item['sortOrder'] ?? 100),
-                    group: (string) ($item['group'] ?? 'main'),
-                    icon: (string) ($item['icon'] ?? ''),
-                );
+            foreach ($this->parseDeclarations($declarations) as $menuItem) {
+                $items[] = $menuItem;
             }
         }
 
@@ -68,5 +55,44 @@ final readonly class AdminMenuLoader
         );
 
         return array_values($items);
+    }
+
+    /**
+     * @param array<array-key, mixed> $declarations
+     * @return list<AdminMenuItem>
+     */
+    private function parseDeclarations(array $declarations, string $defaultGroup = 'main', ?string $parentCode = null): array
+    {
+        $items = [];
+
+        foreach ($declarations as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+
+            $code = (string) ($item['code'] ?? $item['id'] ?? '');
+            $label = (string) ($item['label'] ?? $item['title'] ?? '');
+            $group = (string) ($item['group'] ?? $defaultGroup);
+            $parent = isset($item['parent']) ? (string) $item['parent'] : $parentCode;
+
+            $items[] = new AdminMenuItem(
+                code: $code,
+                label: $label,
+                url: (string) ($item['url'] ?? '#'),
+                permission: isset($item['permission']) ? (string) $item['permission'] : null,
+                parent: $parent,
+                sortOrder: (int) ($item['sort_order'] ?? $item['sortOrder'] ?? 100),
+                group: $group,
+                icon: (string) ($item['icon'] ?? ''),
+            );
+
+            if (isset($item['children']) && is_array($item['children']) && $code !== '') {
+                foreach ($this->parseDeclarations($item['children'], $group, $code) as $child) {
+                    $items[] = $child;
+                }
+            }
+        }
+
+        return $items;
     }
 }

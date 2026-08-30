@@ -79,11 +79,88 @@ final readonly class AdminNavigationRenderer
         $id = $this->escape($item->getId());
         $url = $this->escape($item->getUrl());
         $label = $this->escape($item->getLabel());
-        $activeAttributes = $item->getId() === $active ? ' class="active" aria-current="page"' : '';
+        $isDirectActive = $item->getId() === $active;
+        $isBranchActive = !$isDirectActive && $this->isBranchActive($item, $active);
 
-        return '<a href="' . $url . '" data-admin-item="' . $id . '" data-admin-label="' . $label
-            . '" title="' . $label . '"' . $activeAttributes . '>' . $this->renderIcon($item->getIcon())
+        $classes = [];
+        if ($isDirectActive) {
+            $classes[] = 'active';
+        }
+        if ($isBranchActive) {
+            $classes[] = 'active-parent';
+        }
+
+        $classAttr = $classes !== [] ? ' class="' . implode(' ', $classes) . '"' : '';
+        $currentAttr = $isDirectActive ? ' aria-current="page"' : '';
+        $branchAttr = $isBranchActive ? ' data-admin-active-branch="true"' : '';
+
+        $html = '<a href="' . $url . '" data-admin-item="' . $id . '" data-admin-label="' . $label
+            . '" title="' . $label . '"' . $classAttr . $currentAttr . $branchAttr . '>'
+            . $this->renderIcon($item->getIcon())
             . '<span>' . $label . '</span></a>';
+
+        if ($item instanceof AdminMenuItem && $item->hasChildren()) {
+            $html .= '<div class="admin-nav-children" data-admin-children-of="' . $id . '">';
+            foreach ($item->getChildren() as $child) {
+                $html .= $this->childLink($child, $active);
+            }
+            $html .= '</div>';
+        }
+
+        return $html;
+    }
+
+    private function childLink(MenuItemInterface $item, string $active): string
+    {
+        $id = $this->escape($item->getId());
+        $url = $this->escape($item->getUrl());
+        $label = $this->escape($item->getLabel());
+        $isDirectActive = $item->getId() === $active;
+        $isBranchActive = !$isDirectActive && $this->isBranchActive($item, $active);
+
+        $classes = ['admin-nav-sub-item'];
+        if ($isDirectActive) {
+            $classes[] = 'active';
+        }
+        if ($isBranchActive) {
+            $classes[] = 'active-parent';
+        }
+
+        $classAttr = ' class="' . implode(' ', $classes) . '"';
+        $currentAttr = $isDirectActive ? ' aria-current="page"' : '';
+        $branchAttr = $isBranchActive ? ' data-admin-active-branch="true"' : '';
+
+        $html = '<a href="' . $url . '" data-admin-item="' . $id . '" data-admin-label="' . $label
+            . '" title="' . $label . '"' . $classAttr . $currentAttr . $branchAttr . '>'
+            . $this->renderIcon($item->getIcon())
+            . '<span>' . $label . '</span></a>';
+
+        if ($item instanceof AdminMenuItem && $item->hasChildren()) {
+            $html .= '<div class="admin-nav-children" data-admin-children-of="' . $id . '">';
+            foreach ($item->getChildren() as $child) {
+                $html .= $this->childLink($child, $active);
+            }
+            $html .= '</div>';
+        }
+
+        return $html;
+    }
+
+    private function isBranchActive(MenuItemInterface $item, string $active): bool
+    {
+        if ($active !== '' && $item->getId() === $active) {
+            return true;
+        }
+
+        if ($item instanceof AdminMenuItem) {
+            foreach ($item->getChildren() as $child) {
+                if ($this->isBranchActive($child, $active)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private function escape(string $value): string

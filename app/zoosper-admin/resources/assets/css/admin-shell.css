@@ -345,9 +345,36 @@ body::before {
 
 .admin-nav a:is(:hover, :focus-visible) .admin-nav-icon,
 .admin-nav-logout-button:is(:hover, :focus-visible) .admin-nav-icon,
-.admin-nav a.active .admin-nav-icon {
+.admin-nav a.active .admin-nav-icon,
+.admin-nav a.active-parent .admin-nav-icon {
     color: var(--admin-sidebar-active-text);
     opacity: 1;
+}
+
+.admin-nav a.active-parent {
+    color: var(--admin-sidebar-active-text);
+    font-weight: 600;
+}
+
+.admin-nav-children {
+    display: flex;
+    flex-direction: column;
+    gap: .1rem;
+    margin: .15rem 0 .25rem .75rem;
+    padding-left: .65rem;
+    border-left: 1px solid var(--admin-sidebar-divider);
+}
+
+.admin-nav .admin-nav-sub-item {
+    min-height: 2.15rem;
+    padding: .4rem .65rem;
+    font-size: .8rem;
+    font-weight: 520;
+}
+
+.admin-nav .admin-nav-sub-item .admin-nav-icon {
+    width: 1rem;
+    height: 1rem;
 }
 
 .admin-nav-logout-form {
@@ -364,6 +391,7 @@ body::before {
 
 .admin-shell[data-sidebar-collapsed="true"] .admin-sidebar .brand span,
 .admin-shell[data-sidebar-collapsed="true"] .admin-nav a > span:not(.admin-nav-icon),
+.admin-shell[data-sidebar-collapsed="true"] .admin-nav-children,
 .admin-shell[data-sidebar-collapsed="true"] .admin-nav-section > .menu-group {
     display: none;
 }

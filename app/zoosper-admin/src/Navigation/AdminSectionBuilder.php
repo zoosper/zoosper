@@ -34,6 +34,11 @@ final readonly class AdminSectionBuilder
         $registry = new AdminSectionRegistry();
         $fallbackOrder = 1000;
         foreach ($groups as $id => $groupItems) {
+            $structuredItems = $this->buildHierarchy($groupItems);
+            if ($structuredItems === []) {
+                continue;
+            }
+
             $definition = $metadata[$id] ?? new AdminSectionMetadata(
                 $id,
                 $fallbackLabels[$id],
@@ -43,7 +48,7 @@ final readonly class AdminSectionBuilder
             $registry->register(new AdminSection(
                 $definition->id,
                 $definition->label,
-                $groupItems,
+                $structuredItems,
                 $definition->icon,
                 $definition->sortOrder,
             ));
@@ -51,6 +56,87 @@ final readonly class AdminSectionBuilder
         }
 
         return $registry->all();
+    }
+
+    /**
+     * @param list<MenuItemInterface> $items
+     * @return list<MenuItemInterface>
+     */
+    private function buildHierarchy(array $items): array
+    {
+        /** @var array<string, AdminMenuItem> $itemsByCode */
+        $itemsByCode = [];
+        /** @var list<MenuItemInterface> $nonAdminItems */
+        $nonAdminItems = [];
+        /** @var array<string, list<AdminMenuItem>> $childrenByParent */
+        $childrenByParent = [];
+        /** @var list<AdminMenuItem> $rootItems */
+        $rootItems = [];
+
+        foreach ($items as $item) {
+            if ($item instanceof AdminMenuItem) {
+                $itemsByCode[$item->code] = $item;
+                if ($item->parent !== null && $item->parent !== '') {
+                    $childrenByParent[$item->parent][] = $item;
+                } else {
+                    $rootItems[] = $item;
+                }
+            } else {
+                $nonAdminItems[] = $item;
+            }
+        }
+
+        $structuredRoots = [];
+        foreach ($rootItems as $root) {
+            $structuredRoots[] = $this->attachChildren($root, $childrenByParent);
+        }
+
+        foreach ($childrenByParent as $parentCode => $orphans) {
+            if (!isset($itemsByCode[$parentCode])) {
+                foreach ($orphans as $orphan) {
+                    $structuredRoots[] = $this->attachChildren($orphan, $childrenByParent);
+                }
+            }
+        }
+
+        $allStructured = array_merge($structuredRoots, $nonAdminItems);
+        usort(
+            $allStructured,
+            static fn (MenuItemInterface $a, MenuItemInterface $b): int => [$a->getSortOrder(), $a->getLabel(), $a->getId()]
+                <=> [$b->getSortOrder(), $b->getLabel(), $b->getId()],
+        );
+
+        return $allStructured;
+    }
+
+    /**
+     * @param array<string, list<AdminMenuItem>> $childrenByParent
+     */
+    private function attachChildren(AdminMenuItem $item, array &$childrenByParent): AdminMenuItem
+    {
+        $directChildren = $childrenByParent[$item->code] ?? [];
+        unset($childrenByParent[$item->code]);
+
+        $nestedChildren = [];
+        foreach ($directChildren as $child) {
+            $nestedChildren[] = $this->attachChildren($child, $childrenByParent);
+        }
+
+        foreach ($item->getChildren() as $existingChild) {
+            if ($existingChild instanceof AdminMenuItem) {
+                $nestedChildren[] = $this->attachChildren($existingChild, $childrenByParent);
+            } else {
+                $nestedChildren[] = $existingChild;
+            }
+        }
+
+        usort(
+            $nestedChildren,
+            static fn (MenuItemInterface $a, MenuItemInterface $b): int => [$a->getSortOrder(), $a->getLabel(), $a->getId()]
+                <=> [$b->getSortOrder(), $b->getLabel(), $b->getId()],
+        );
+
+        return $nestedChildren !== [] ? $item->withChildren($nestedChildren) : $item;
     }
 
     private function normaliseId(string $value): string

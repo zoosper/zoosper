@@ -8,12 +8,15 @@ use Zoosper\Admin\Navigation\AdminSection;
 
 it('renders Marko sections through the live admin navigation presentation', function (): void {
     $renderer = new AdminNavigationRenderer();
+    $childItem = new AdminMenuItem('pages-create', 'New Page', '/control/pages/create', 'page.manage', parent: 'pages', sortOrder: 10, group: 'Content');
+    $parentItem = (new AdminMenuItem('pages', 'Pages', '/control/pages', 'page.manage', sortOrder: 20, group: 'Content'))->withChildren([$childItem]);
+
     $html = $renderer->render([
         new AdminSection('content', 'Content', [
             new AdminMenuItem('dashboard', 'Dashboard', '/control', 'admin.access', sortOrder: 10, group: 'Content', icon: 'home'),
-            new AdminMenuItem('pages', 'Pages', '/control/pages', 'page.manage', sortOrder: 20, group: 'Content'),
+            $parentItem,
         ]),
-    ], 'pages', '<div class="logout-marker">Logout</div>');
+    ], 'pages-create', '<div class="logout-marker">Logout</div>');
 
     expect($html)
         ->toContain('aria-label="Admin navigation"')
@@ -22,7 +25,11 @@ it('renders Marko sections through the live admin navigation presentation', func
         ->toContain('data-admin-label="Pages"')
         ->toContain('title="Pages"')
         ->toContain('href="/control/pages"')
-        ->toContain('class="active" aria-current="page"')
+        ->toContain('class="active-parent" data-admin-active-branch="true"')
+        ->toContain('class="admin-nav-children" data-admin-children-of="pages"')
+        ->toContain('data-admin-item="pages-create"')
+        ->toContain('data-admin-label="New Page"')
+        ->toContain('class="admin-nav-sub-item active" aria-current="page"')
         ->toContain('data-admin-icon="home"')
         ->toContain('logout-marker');
 });
