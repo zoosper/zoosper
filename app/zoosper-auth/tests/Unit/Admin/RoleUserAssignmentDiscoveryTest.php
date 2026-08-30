@@ -80,15 +80,15 @@ it('always preserves selected users even when search excludes them', function ()
 });
 
 it('declares assigned-user runtime and style assets with defer semantics', function (): void {
-    $assets = require dirname(__DIR__, 2) . '/config/admin_assets.php';
+    $assets = require dirname(__DIR__, 3) . '/config/admin_assets.php';
 
     expect($assets)->toHaveKeys(['zoosper-admin-role-user-assignment-style', 'zoosper-admin-role-user-assignment-runtime'])
         ->and($assets['zoosper-admin-role-user-assignment-style']['screens'])->toBe(['admin-roles'])
         ->and($assets['zoosper-admin-role-user-assignment-runtime']['screens'])->toBe(['admin-roles'])
         ->and($assets['zoosper-admin-role-user-assignment-runtime']['attributes']['defer'])->toBeTrue();
 
-    $js = (string) file_get_contents(dirname(__DIR__, 2) . '/resources/assets/admin/js/user-assignment.js');
-    $css = (string) file_get_contents(dirname(__DIR__, 2) . '/resources/assets/admin/css/user-assignment.css');
+    $js = (string) file_get_contents(dirname(__DIR__, 3) . '/resources/assets/admin/js/user-assignment.js');
+    $css = (string) file_get_contents(dirname(__DIR__, 3) . '/resources/assets/admin/css/user-assignment.css');
 
     expect($js)->toContain('data-role-user-assignment')
         ->toContain('data-role-user-search')

@@ -24,7 +24,7 @@ return array (
     'zoosper-admin-shell-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/admin-shell.css?v=8392fe5e0df8',
+      'path' => '/asset/zoosper-admin/css/admin-shell.css?v=32dc79b0b958',
       'sort_order' => 15,
     ),
     'zoosper-admin-components-style' =>

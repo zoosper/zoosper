@@ -10,7 +10,6 @@ use Zoosper\Admin\Navigation\AdminMenuLoader;
 use Zoosper\Admin\Navigation\AdminNavigationRenderer;
 use Zoosper\Admin\Navigation\AdminSectionBuilder;
 use Zoosper\Auth\Model\AdminUser;
-use Zoosper\Core\Module\ModuleInfo;
 use Zoosper\Core\Module\ModuleRegistry;
 
 it('discovers and structures nested menu items into multi-tier sections', function (): void {
@@ -39,8 +38,13 @@ it('discovers and structures nested menu items into multi-tier sections', functi
 });
 
 it('filters permissions for multi-layer hierarchy before rendering', function (): void {
-    $moduleDir = sys_get_temp_dir() . '/zoosper_hierarchy_' . bin2hex(random_bytes(6));
+    $baseDir = sys_get_temp_dir() . '/zoosper_hierarchy_' . bin2hex(random_bytes(6));
+    $moduleDir = $baseDir . '/app/zoosper-test-users';
     mkdir($moduleDir . '/config', 0777, true);
+    file_put_contents(
+        $moduleDir . '/module.php',
+        '<?php return ["name" => "zoosper-test-users", "enabled" => true, "sort_order" => 10];',
+    );
     file_put_contents(
         $moduleDir . '/config/admin_menu.php',
         '<?php return [
@@ -50,34 +54,37 @@ it('filters permissions for multi-layer hierarchy before rendering', function ()
         ];',
     );
 
-    $module = new ModuleInfo('zoosper-test-users', $moduleDir, true);
-    $registry = new ModuleRegistry([$module]);
-    $loader = new AdminMenuLoader($registry);
-    $menu = new AdminMenu($loader);
+    try {
+        $registry = new ModuleRegistry($baseDir);
+        $loader = new AdminMenuLoader($registry);
+        $menu = new AdminMenu($loader);
 
-    // User with user.manage and user.create permissions
-    $user = new AdminUser(
-        id: 1,
-        email: 'editor@example.com',
-        name: 'Editor',
-        isActive: true,
-        permissions: ['user.manage', 'user.create'],
-    );
+        // User with user.manage and user.create permissions
+        $user = new AdminUser(
+            id: 1,
+            email: 'editor@example.com',
+            name: 'Editor',
+            isActive: true,
+            permissions: ['user.manage', 'user.create'],
+        );
 
-    $sections = $menu->sectionsFor($user);
-    expect($sections)->toHaveCount(1)
-        ->and($sections[0]->getId())->toBe('users')
-        ->and($sections[0]->getMenuItems())->toHaveCount(1);
+        $sections = $menu->sectionsFor($user);
+        expect($sections)->toHaveCount(1)
+            ->and($sections[0]->getId())->toBe('users')
+            ->and($sections[0]->getMenuItems())->toHaveCount(1);
 
-    $usersItem = $sections[0]->getMenuItems()[0];
-    expect($usersItem->hasChildren())->toBeTrue()
-        ->and($usersItem->getChildren())->toHaveCount(1)
-        ->and($usersItem->getChildren()[0]->getId())->toBe('users-create');
-
-    // Clean up temporary files
-    unlink($moduleDir . '/config/admin_menu.php');
-    rmdir($moduleDir . '/config');
-    rmdir($moduleDir);
+        $usersItem = $sections[0]->getMenuItems()[0];
+        expect($usersItem->hasChildren())->toBeTrue()
+            ->and($usersItem->getChildren())->toHaveCount(1)
+            ->and($usersItem->getChildren()[0]->getId())->toBe('users-create');
+    } finally {
+        unlink($moduleDir . '/config/admin_menu.php');
+        unlink($moduleDir . '/module.php');
+        rmdir($moduleDir . '/config');
+        rmdir($moduleDir);
+        rmdir($baseDir . '/app');
+        rmdir($baseDir);
+    }
 });
 
 it('renders multi-layer navigation with parent active-branch awareness', function (): void {
