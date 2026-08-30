@@ -543,8 +543,8 @@ replica.
 - [ ] Add DOM behavioural coverage for column drag, live reflection, locked
   anchors, dirty state and bookmark reload.
 - [ ] Replace duplicate source-string tests with one behavioural contract.
-- [ ] Keep one canonical admin-grid column customisation guide rather than
-  phase/hotfix documentation fragments.
+- [x] Keep one canonical admin-grid column customisation guide rather than
+  phase/hotfix documentation fragments (see `docs/admin.md`).
 
 - [x] Pest + PHPUnit harness; quality gate runner
 - [x] **`.gitattributes` (`export-ignore` for `tests/`/dev tooling) added
@@ -571,9 +571,9 @@ replica.
   family and a 15+ file Page Momentum test cluster are largely
   file-content-assertion "tests," not behavioral ones. Real, good tests do
   exist alongside them — this is about ratio, not total absence.
-- [ ] **[R] No public/internal API boundary between feature modules** —
-  `CoreDecouplingArchitectureTest` only enforces Core→feature; nothing
-  enforces boundaries between feature modules.
+- [x] **[R] No public/internal API boundary between feature modules** —
+  `CoreDecouplingArchitectureTest` and `FeatureModuleBoundaryArchitectureTest`
+  enforce Core-to-feature and cross-feature boundary isolation.
 - [x] **Comment-verbosity convention decided**: shift from detailed
   narrative "FIX (confirmed date, reviewer pass)" essays in source
   comments toward shorter, timeless doc-comments — full "why/when/who
@@ -1020,7 +1020,7 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 
 ### P2 process and hygiene
 
-- [ ] Add a mechanical roadmap-summary drift check based on structured status identifiers, not fuzzy prose matching.
+- [x] Add a mechanical roadmap-summary drift check based on structured status identifiers, not fuzzy prose matching — validated in `RoadmapStructureIntegrityTest`.
 - [ ] Commit a Psalm baseline and prevent new advisory errors while reducing the existing baseline.
 - [x] Make `composer.json` and `composer.lock` the source of truth for the dependency scope stated in `SECURITY.md`.
 - [ ] Record behavioural assertion/test coverage evidence for the historical test-file reduction.

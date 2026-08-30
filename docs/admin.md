@@ -30,13 +30,74 @@ Routes must declare permissions. Stateful Admin mutations are protected by authe
 
 The Page edit screen lists retained revisions. Administrators with `page.manage` may preview a historical snapshot or restore it through a CSRF-protected POST action. Restore captures the current Page as a safety revision before applying the selected title, slug, content, publication state, structured content and SEO metadata.
 
-## Admin Grid presentation
+## Admin Grid presentation and column customisation
 
 Admin Grid is a specialised package-owned surface. Its final visual integration layer is registered by `packages/zoosper-admin-grid/config/admin_assets.php` after the established Grid assets. It uses the Admin shell semantic tokens for fluid light and dark themes without moving Grid styling into the generic Admin module.
 
 Compact Grid controls align primary actions, view controls, filters, columns, export, saved state, page size, pagination and direct-page navigation in one package-owned responsive workflow. Filters and Columns have explicit relationships, labelled dismiss controls, mutually exclusive disclosure behaviour, visible keyboard focus, opaque theme-aware surfaces and calm inset spacing. At `390px` (`24.375rem`), controls and panels stack, active-filter chips remain compact wrapping pills, and wide tables retain bounded touch and keyboard-compatible horizontal scrolling. Package-owned odd/even row styling, permanent row separators, restrained vertical cell boundaries and a stronger header boundary apply to both complete Grid workspaces and standalone Grid tables; hover and keyboard focus override the stripe, while selected rows retain the strongest fill plus a leading-edge marker and their checked selection control. The hierarchy is theme-aware and does not make colour the only selection signal.
 
 Grid mutations remain POST-only and retain existing permission, CSRF, application-local path, ownership, persistence, export, and audit boundaries. New Admin screens should compose the shared Admin shell with Admin Grid rather than copying Grid markup or styles into feature modules.
+
+### Contributing custom columns and filters
+
+Feature modules can contribute new columns and filters to existing Admin Grids without modifying the owning module's controller or Grid definition class. This extensibility is enabled through module-discovered `config/grid_columns.php` declarations and `GridColumnRegistry`.
+
+#### Declaration syntax
+
+Each module creates `config/grid_columns.php` returning an associative array keyed by target Grid key (e.g. `login-history`, `admin.audit-log`, `admin.users`, `pages`):
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Zoosper\Grid\GridColumn;
+use Zoosper\Grid\GridFilter;
+
+return [
+    'login-history' => [
+        'columns' => [
+            new GridColumn(
+                key: 'user_agent',
+                label: 'User Agent',
+                sortable: false,
+                align: 'left',
+                render: static function (mixed $value, array $row): string {
+                    $value = (string) ($value ?? '');
+                    if ($value === '') {
+                        return '<span class="muted">&mdash;</span>';
+                    }
+
+                    $display = mb_strlen($value) > 60 ? mb_substr($value, 0, 57) . '...' : $value;
+
+                    return htmlspecialchars($display, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                },
+                toggleable: true,
+                defaultVisible: true,
+            ),
+        ],
+        'filters' => [
+            new GridFilter('user_agent', 'User Agent Search'),
+        ],
+    ],
+];
+```
+
+#### Column configuration options
+
+- `key` (string, required): The database or row field identifier.
+- `label` (string, required): The human-readable column header displayed in table headers and column visibility panels.
+- `sortable` (bool, default `false`): Enables server-side column sorting when supported by the underlying repository.
+- `align` (string, default `'left'`): Cell text alignment (`'left'`, `'right'`, or `'center'`).
+- `render` (?callable, default `null`): Custom cell rendering callable `fn(mixed $value, array $row): string`. If omitted, values are escaped with `htmlspecialchars()` by default.
+- `toggleable` (bool, default `true`): Determines whether users can toggle column visibility in the Grid workspace.
+- `defaultVisible` (bool, default `true`): Controls initial column visibility before user preferences or saved view states apply.
+
+#### Rendering safety rules
+
+1. **Always escape HTML**: Custom render callbacks must explicitly escape untrusted row content using `htmlspecialchars(..., ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')`.
+2. **Never execute SQL in renderers**: Cell render callbacks must consume existing row data provided in `$row` without triggering secondary queries (preventing N+1 query regressions).
+3. **Keep renderers deterministic**: Avoid nondeterministic output or mutating shared state during grid rendering.
 
 ## Personal Access Tokens
 
