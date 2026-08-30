@@ -20,6 +20,8 @@ A planned follow-up will replace navigation repetition with useful dynamic widge
 
 The Admin-owned `admin-components.css` layer provides theme-aware page headers, responsive card grids, cards, controls, forms, toolbars, actions, notices, badges, horizontally scrollable data tables, pagination and empty states. It loads after shell tokens and before feature assets. Default-theme components preserve semantic headings, alert announcements, column scopes and labelled keyboard-scrollable table regions. Responsive controls remain usable at narrow widths and component motion is disabled for `prefers-reduced-motion`.
 
+The shared semantic foundation incorporates the approved Fable design language through the existing `--admin-*` owner: an eight-step spacing scale, three structural radii plus pill, four elevation tiers, stronger text hierarchy and theme-specific Light, Dark and Ocean surfaces. It remains fully fluid; fixed prototype content caps and decorative sidebar count badges are intentionally excluded. Feature packages consume these tokens but do not redefine the global design system.
+
 Feature modules should reuse these presentation contracts for ordinary Admin UI while retaining ownership of domain data and behaviour. Specialised packages such as `zoosper/admin-grid` continue to own their markup, scripts and detailed styles; the shared layer does not create a concrete reverse dependency or move Grid behaviour into the Admin module.
 
 Routes must declare permissions. Stateful Admin mutations are protected by authentication and CSRF middleware. Admin controllers should delegate rendering and domain work to collaborators. Shell redesigns do not alter route methods, permissions, ownership filters or CSRF boundaries.

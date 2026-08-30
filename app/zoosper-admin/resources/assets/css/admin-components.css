@@ -2,7 +2,7 @@
 :root {
     --admin-success: #087a55;
     --admin-success-soft: #ecfdf3;
-    --admin-warning: #a15c07;
+    --admin-warning: #845206;
     --admin-warning-soft: #fffaeb;
     --admin-info: #175cd3;
     --admin-info-soft: #eff8ff;
@@ -12,6 +12,7 @@
     --admin-info-border: #b2ddff;
     --admin-control-height: 2.65rem;
     --admin-content-measure: 72rem;
+    --admin-control-radius: var(--admin-radius-md);
 }
 
 :root[data-admin-theme="dark"] {
@@ -31,7 +32,7 @@
 .admin-content h2,
 .admin-content h3 {
     margin-block: 0 .65em;
-    color: var(--admin-text);
+    color: var(--admin-text-strong);
     font-weight: 720;
     letter-spacing: -.025em;
     line-height: 1.2;
@@ -47,8 +48,8 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    gap: 1rem;
-    margin-bottom: clamp(1.1rem, 2vw, 1.75rem);
+    gap: var(--admin-space-4);
+    margin-bottom: clamp(var(--admin-space-5), 2vw, var(--admin-space-8));
 }
 
 .page-header__copy { min-width: 0; max-width: var(--admin-content-measure); }
@@ -87,7 +88,7 @@
     border: 1px solid var(--admin-border);
     border-radius: var(--admin-radius-lg);
     background: var(--admin-surface);
-    box-shadow: var(--admin-shadow-sm);
+    box-shadow: var(--admin-shadow-xs);
 }
 
 .card__header {
@@ -135,9 +136,9 @@
     gap: .45rem;
     min-height: var(--admin-control-height);
     padding: .62rem .95rem;
-    border: 1px solid var(--admin-brand-600);
-    border-radius: var(--admin-radius-sm);
-    background: var(--admin-brand-600);
+    border: 1px solid var(--admin-brand-700);
+    border-radius: var(--admin-control-radius);
+    background: var(--admin-brand-700);
     box-shadow: 0 1px 2px rgba(16, 24, 40, .08);
     color: #ffffff;
     font: inherit;
@@ -200,9 +201,9 @@
     margin: 0;
     padding: .62rem .75rem;
     border: 1px solid var(--admin-border-strong);
-    border-radius: var(--admin-radius-sm);
+    border-radius: var(--admin-control-radius);
     background: var(--admin-surface);
-    box-shadow: 0 1px 2px rgba(16, 24, 40, .03);
+    box-shadow: var(--admin-shadow-xs);
     color: var(--admin-text);
     font: inherit;
     font-weight: 450;
@@ -293,7 +294,7 @@
     min-height: 1.6rem;
     padding: .2rem .55rem;
     border: 1px solid var(--admin-border);
-    border-radius: 999px;
+    border-radius: var(--admin-radius-pill);
     background: var(--admin-surface-muted);
     color: var(--admin-text-muted);
     font-size: .72rem;

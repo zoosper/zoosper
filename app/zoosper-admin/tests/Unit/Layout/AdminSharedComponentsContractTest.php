@@ -11,7 +11,7 @@ it('registers the Admin-owned component layer after shell tokens and before feat
         ->and($assets['zoosper-admin-components-style'])
         ->toMatchArray([
             'type' => 'style',
-            'path' => '/asset/zoosper-admin/css/admin-components.css?v=84b6d533a2ef',
+            'path' => '/asset/zoosper-admin/css/admin-components.css?v=318181950bb2',
             'sort_order' => 16,
         ])
         ->and($assets['zoosper-admin-shell-style']['sort_order'])

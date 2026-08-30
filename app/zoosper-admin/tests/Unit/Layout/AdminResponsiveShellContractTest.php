@@ -36,7 +36,7 @@ it('registers the CSP-safe Admin-owned shell assets in deterministic order', fun
         ->and($assets['zoosper-admin-shell-style'])
         ->toMatchArray([
             'type' => 'style',
-            'path' => '/asset/zoosper-admin/css/admin-shell.css?v=2d298a1d43e7',
+            'path' => '/asset/zoosper-admin/css/admin-shell.css?v=bf3601d46f2d',
             'sort_order' => 15,
         ])
         ->and($assets['zoosper-admin-shell-script'])

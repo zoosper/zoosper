@@ -99,6 +99,8 @@ Admin owns per-user Dashboard preferences in `admin_dashboard_preferences`; Auth
 
 `resources/assets/css/admin-components.css` is the Admin-owned presentation contract for reusable page hierarchy, cards, forms, buttons, toolbars, notices, badges, tables, pagination and empty states. It consumes shell design tokens, supports light and dark themes, remains fluid at narrow widths and removes component transitions when reduced motion is requested. It is registered immediately after the shell stylesheet and before feature styles so an owning feature package can refine its own specialised UI without copying the shared foundation.
 
+The Fable-informed foundation is reconciled into this existing semantic owner rather than added as a competing stylesheet. Its light palette, strong/body/muted/faint text hierarchy, spacing scale (`4`, `8`, `12`, `16`, `20`, `24`, `32`, `40` pixels), radius scale (`6`, `10`, `14` pixels plus pill), elevation tiers and darker primary action are exposed through `--admin-*` tokens. Dark and Ocean retain independent surface, text, focus and elevation values. The shell remains fluid and navigation remains free of decorative numeric count badges.
+
 The default theme's reusable component templates add semantic card regions, alert announcements, scoped table headings, labelled keyboard-scrollable table regions and live pagination summaries. Templates remain server-rendered and contain no inline style or behaviour. Feature modules may use these semantic classes, but must continue to own domain-specific rendering, routes, permissions and mutations. `zoosper/admin-grid` continues to own Grid workspace structure and behaviour; shared Admin CSS must not replace its package assets.
 
 ## Security and compatibility
