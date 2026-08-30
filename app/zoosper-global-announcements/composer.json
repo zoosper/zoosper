@@ -1,0 +1,17 @@
+{
+    "name": "zoosper/global-announcements",
+    "description": "Zoosper_GlobalAnnouncements module for Zoosper CMS.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "zoosper/core": "dev-dev",
+        "zoosper/auth": "dev-dev",
+        "zoosper/admin": "dev-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\GlobalAnnouncements\\": "src/"
+        }
+    }
+}

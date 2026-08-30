@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Layout;
 
-use Zoosper\Admin\Announcement\AdminAnnouncementRepository;
 use Zoosper\Admin\Asset\AdminAssetTemplateRenderer;
 use Zoosper\Admin\Asset\AdminAssetViewDataProvider;
 use Zoosper\Admin\Message\FlashMessageRenderer;
+use Zoosper\Core\Announcement\AdminAnnouncementProviderInterface;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminNavigationRenderer;
@@ -35,7 +35,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
         private ?CsrfTokenManager $csrf = null,
         private ?AdminUrlGenerator $adminUrls = null,
         private ?ModuleAdminColourThemeLoader $colourThemes = null,
-        private ?AdminAnnouncementRepository $announcements = null,
+        private ?AdminAnnouncementProviderInterface $announcements = null,
     ) {
     }
 

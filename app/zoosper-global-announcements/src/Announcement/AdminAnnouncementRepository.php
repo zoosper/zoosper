@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Announcement;
+namespace Zoosper\GlobalAnnouncements\Announcement;
 
 use DateTimeImmutable;
 use PDO;
+use Zoosper\Core\Announcement\AdminAnnouncementProviderInterface;
 
-final readonly class AdminAnnouncementRepository
+final readonly class AdminAnnouncementRepository implements AdminAnnouncementProviderInterface
 {
     public function __construct(private PDO $pdo)
     {
@@ -157,88 +158,82 @@ final readonly class AdminAnnouncementRepository
         ]);
     }
 
-    public function delete(int $id): void
+    public function acknowledge(int $announcementId, int $userId): void
     {
-        $stmtAck = $this->pdo->prepare('DELETE FROM admin_announcement_acknowledgments WHERE announcement_id = :id');
-        $stmtAck->execute(['id' => $id]);
+        $now = (new DateTimeImmutable())->format('Y-m-d H:i:s');
 
-        $stmt = $this->pdo->prepare('DELETE FROM admin_announcements WHERE id = :id');
-        $stmt->execute(['id' => $id]);
+        // Idempotent duplicate-safe insert
+        $statement = $this->pdo->prepare(
+            'INSERT OR IGNORE INTO admin_announcement_acknowledgments (announcement_id, admin_user_id, acknowledged_at) '
+            . 'VALUES (:announcement_id, :admin_user_id, :acknowledged_at)'
+        );
+
+        try {
+            $statement->execute([
+                'announcement_id' => $announcementId,
+                'admin_user_id' => $userId,
+                'acknowledged_at' => $now,
+            ]);
+        } catch (\PDOException) {
+            // MySQL fallback for INSERT IGNORE vs ON DUPLICATE KEY UPDATE
+            $mysqlStatement = $this->pdo->prepare(
+                'INSERT INTO admin_announcement_acknowledgments (announcement_id, admin_user_id, acknowledged_at) '
+                . 'VALUES (:announcement_id, :admin_user_id, :acknowledged_at) '
+                . 'ON DUPLICATE KEY UPDATE acknowledged_at = VALUES(acknowledged_at)'
+            );
+            $mysqlStatement->execute([
+                'announcement_id' => $announcementId,
+                'admin_user_id' => $userId,
+                'acknowledged_at' => $now,
+            ]);
+        }
     }
 
     public function isAcknowledged(int $announcementId, int $userId): bool
     {
         $statement = $this->pdo->prepare(
-            'SELECT COUNT(*) FROM admin_announcement_acknowledgments WHERE announcement_id = :announcement_id AND admin_user_id = :user_id'
+            'SELECT COUNT(*) FROM admin_announcement_acknowledgments WHERE announcement_id = :announcement_id AND admin_user_id = :admin_user_id'
         );
         $statement->execute([
             'announcement_id' => $announcementId,
-            'user_id' => $userId,
+            'admin_user_id' => $userId,
         ]);
 
         return ((int) $statement->fetchColumn()) > 0;
     }
 
-    public function acknowledge(int $announcementId, int $userId): void
-    {
-        if ($this->isAcknowledged($announcementId, $userId)) {
-            return;
-        }
-
-        $statement = $this->pdo->prepare(
-            'INSERT INTO admin_announcement_acknowledgments (announcement_id, admin_user_id, acknowledged_at) '
-            . 'VALUES (:announcement_id, :user_id, :acknowledged_at)'
-        );
-        $statement->execute([
-            'announcement_id' => $announcementId,
-            'user_id' => $userId,
-            'acknowledged_at' => (new DateTimeImmutable())->format('Y-m-d H:i:s'),
-        ]);
-    }
-
-    public function countAcknowledgments(int $announcementId): int
-    {
-        $statement = $this->pdo->prepare(
-            'SELECT COUNT(*) FROM admin_announcement_acknowledgments WHERE announcement_id = :announcement_id'
-        );
-        $statement->execute(['announcement_id' => $announcementId]);
-
-        return (int) $statement->fetchColumn();
-    }
-
-    /** @return array<int, int> [announcement_id => count] */
+    /** @return array<int, int> */
     public function acknowledgmentCounts(): array
     {
         $statement = $this->pdo->query(
-            'SELECT announcement_id, COUNT(*) as cnt FROM admin_announcement_acknowledgments GROUP BY announcement_id'
+            'SELECT announcement_id, COUNT(*) AS total_count FROM admin_announcement_acknowledgments GROUP BY announcement_id'
         );
+        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+
         $counts = [];
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $counts[(int) $row['announcement_id']] = (int) $row['cnt'];
+        foreach ($rows as $row) {
+            $counts[(int) $row['announcement_id']] = (int) $row['total_count'];
         }
 
         return $counts;
     }
 
+    /** @param array<string, mixed> $row */
     private function hydrate(array $row): AdminAnnouncement
     {
+        $publishedAt = $row['published_at'] ?? null;
+        $createdAt = $row['created_at'] ?? null;
+        $updatedAt = $row['updated_at'] ?? null;
+
         return new AdminAnnouncement(
             id: (int) $row['id'],
             title: (string) $row['title'],
             body: (string) $row['body'],
             status: (string) ($row['status'] ?? 'draft'),
-            publishedAt: isset($row['published_at']) && is_string($row['published_at']) && $row['published_at'] !== ''
-                ? new DateTimeImmutable($row['published_at'])
-                : null,
-            createdByUserId: isset($row['created_by_user_id']) && $row['created_by_user_id'] !== null
-                ? (int) $row['created_by_user_id']
-                : null,
-            createdAt: isset($row['created_at']) && is_string($row['created_at'])
-                ? new DateTimeImmutable($row['created_at'])
-                : null,
-            updatedAt: isset($row['updated_at']) && is_string($row['updated_at'])
-                ? new DateTimeImmutable($row['updated_at'])
-                : null,
+            publishedAt: is_string($publishedAt) && $publishedAt !== '' ? new DateTimeImmutable($publishedAt) : null,
+            createdByUserId: isset($row['created_by_user_id']) && $row['created_by_user_id'] !== null ? (int) $row['created_by_user_id'] : null,
+            createdAt: is_string($createdAt) && $createdAt !== '' ? new DateTimeImmutable($createdAt) : null,
+            updatedAt: is_string($updatedAt) && $updatedAt !== '' ? new DateTimeImmutable($updatedAt) : null,
         );
     }
 }

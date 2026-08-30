@@ -21,6 +21,7 @@
         "zoosper/config": "dev-dev",
         "zoosper/core": "dev-dev",
         "zoosper/errors": "dev-dev",
+        "zoosper/global-announcements": "dev-dev",
         "zoosper/grid": "dev-dev",
         "zoosper/install": "dev-dev",
         "zoosper/logger": "dev-dev",
@@ -46,6 +47,11 @@
         "phpunit/phpunit": "^11.0",
         "vimeo/psalm": "^6.16"
     },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\GlobalAnnouncements\\": "app/zoosper-global-announcements/src/"
+        }
+    },
     "autoload-dev": {
         "psr-4": {
             "Zoosper\\AdminGrid\\Tests\\": "packages/zoosper-admin-grid/tests/",
@@ -54,6 +60,7 @@
             "Zoosper\\Auth\\Tests\\": "app/zoosper-auth/tests/",
             "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
             "Zoosper\\Errors\\Tests\\": "packages/zoosper-errors/tests/",
+            "Zoosper\\GlobalAnnouncements\\Tests\\": "app/zoosper-global-announcements/tests/",
             "Zoosper\\Grid\\Tests\\": "packages/zoosper-grid/tests/",
             "Zoosper\\Media\\Tests\\": "packages/zoosper-media/tests/",
             "Zoosper\\Menu\\Tests\\": "app/zoosper-menu/tests/",
@@ -157,6 +164,13 @@
         {
             "type": "path",
             "url": "./app/zoosper-core",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./app/zoosper-global-announcements",
             "options": {
                 "symlink": true
             }

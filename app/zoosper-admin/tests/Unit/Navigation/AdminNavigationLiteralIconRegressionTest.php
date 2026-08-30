@@ -53,7 +53,7 @@ it('gives every discovered Admin destination a module-owned icon identifier', fu
     );
     sort($files);
 
-    expect($files)->toHaveCount(9);
+    expect($files)->toHaveCount(10);
 
     $renderer = new AdminNavigationRenderer();
     foreach ($files as $file) {

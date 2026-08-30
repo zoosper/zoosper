@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Announcement;
+namespace Zoosper\GlobalAnnouncements\Announcement;
 
 use DateTimeImmutable;
 

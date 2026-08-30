@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Tests\Unit\Layout;
 
 use PDO;
-use Zoosper\Admin\Announcement\AdminAnnouncementRepository;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\Navigation\AdminMenu;
 use Zoosper\Admin\Navigation\AdminMenuLoader;
@@ -13,6 +12,7 @@ use Zoosper\Admin\Navigation\AdminNavigationRenderer;
 use Zoosper\Admin\Navigation\AdminSectionBuilder;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\GlobalAnnouncements\Announcement\AdminAnnouncementRepository;
 
 beforeEach(function (): void {
     $this->pdo = new PDO('sqlite::memory:');

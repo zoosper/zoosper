@@ -33,12 +33,6 @@ return array (
       'path' => '/asset/zoosper-admin/css/admin-components.css?v=79947c9ca73e',
       'sort_order' => 16,
     ),
-    'zoosper-admin-announcement-style' => 
-    array (
-      'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/announcement-modal.css',
-      'sort_order' => 18,
-    ),
     'zoosper-dashboard-personalisation-script' =>
     array (
       'screens' => array ('dashboard', 'dashboard-role-defaults'),
@@ -81,17 +75,7 @@ return array (
       'sort_order' => 10,
       'defer' => true,
     ),
-    'zoosper-admin-announcement-script' => 
-    array (
-      'type' => 'script',
-      'path' => '/asset/zoosper-admin/js/announcement-modal.js',
-      'sort_order' => 12,
-      'attributes' => 
-      array (
-        'defer' => true,
-      ),
-    ),
-    'zoosper-admin-messages-script' => 
+    'zoosper-admin-messages-script' =>
     array (
       'type' => 'script',
       'path' => '/assets/admin/js/zoosper-admin-messages.js?v=1.37l',

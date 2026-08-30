@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Controller;
+namespace Zoosper\GlobalAnnouncements\Controller;
 
 use DateTimeInterface;
 use InvalidArgumentException;
 use RuntimeException;
-use Zoosper\Admin\Announcement\AdminAnnouncementRepository;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Model\AdminUser;
@@ -18,6 +17,7 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Core\Url\AdminUrlGenerator;
+use Zoosper\GlobalAnnouncements\Announcement\AdminAnnouncementRepository;
 
 final readonly class AnnouncementAdminController
 {
@@ -44,7 +44,7 @@ final readonly class AnnouncementAdminController
         if ($this->views !== null) {
             return Response::html($this->views->render(
                 title: 'Global Announcements',
-                template: 'zoosper-admin::announcements/index',
+                template: 'zoosper-global-announcements::announcements/index',
                 data: [
                     'csrfToken' => $this->csrf->token(),
                     'announcements' => $items,
@@ -122,7 +122,7 @@ final readonly class AnnouncementAdminController
         if ($id > 0) {
             $this->announcements->unpublish($id);
             $this->audit?->record($actor, 'announcement.unpublished', 'admin_announcement', (string) $id, 'Unpublished Global Announcement', [], $request);
-            $this->flash?->success('Global Announcement moved to draft.', 'admin.announcements');
+            $this->flash?->success('Global Announcement unpublished.', 'admin.announcements');
         }
 
         return Response::redirect($this->urls->url('announcements'), 303);
@@ -144,57 +144,53 @@ final readonly class AnnouncementAdminController
 
     public function active(Request $request): Response
     {
-        $user = $this->guard->user();
-        if ($user === null) {
-            return Response::json(['active' => false], 401);
-        }
+        $user = $this->currentAdminUser();
+        $unacknowledged = $this->announcements->findUnacknowledgedForUser($user->id);
 
-        $active = $this->announcements->findUnacknowledgedForUser($user->id);
-        if ($active === null) {
-            return Response::json(['active' => false]);
+        if ($unacknowledged === null) {
+            return Response::json([
+                'active' => false,
+                'announcement' => null,
+            ]);
         }
 
         return Response::json([
             'active' => true,
             'announcement' => [
-                'id' => $active->id,
-                'title' => $active->title,
-                'body' => $active->body,
-                'published_at' => $active->publishedAt?->format(DateTimeInterface::ATOM),
+                'id' => $unacknowledged->id,
+                'title' => $unacknowledged->title,
+                'body' => $unacknowledged->body,
+                'published_at' => $unacknowledged->publishedAt?->format(DateTimeInterface::ATOM),
             ],
         ]);
     }
 
     public function acknowledge(Request $request): Response
     {
-        $user = $this->guard->user();
-        if ($user === null) {
-            return Response::json(['success' => false, 'error' => 'Unauthorized'], 401);
+        $user = $this->currentAdminUser();
+        $announcementId = (int) (($request->form())['announcement_id'] ?? 0);
+
+        if ($announcementId <= 0) {
+            return Response::json([
+                'status' => 'error',
+                'message' => 'Missing announcement ID.',
+            ], 400);
         }
 
-        $form = $request->form();
-        $announcementId = (int) ($form['announcement_id'] ?? $request->query('announcement_id') ?? 0);
+        $this->announcements->acknowledge($announcementId, $user->id);
 
-        if ($announcementId > 0) {
-            $this->announcements->acknowledge($announcementId, $user->id);
-            $this->audit?->record($user, 'announcement.acknowledged', 'admin_announcement', (string) $announcementId, 'Acknowledged Global Announcement', [], $request);
-        }
-
-        $isJson = str_contains((string) ($request->header('accept') ?? ''), 'application/json')
-            || str_contains((string) ($request->header('x-requested-with') ?? ''), 'XMLHttpRequest');
-
-        if ($isJson) {
-            return Response::json(['success' => true, 'announcement_id' => $announcementId]);
-        }
-
-        return Response::redirect($this->urls->url(), 303);
+        return Response::json([
+            'status' => 'acknowledged',
+            'announcement_id' => $announcementId,
+            'user_id' => $user->id,
+        ]);
     }
 
     private function currentAdminUser(): AdminUser
     {
         $user = $this->guard->user();
         if ($user === null) {
-            throw new RuntimeException('Authenticated admin user required after middleware guard.');
+            throw new RuntimeException('Admin user is not authenticated.');
         }
 
         return $user;

@@ -2,9 +2,9 @@
 /**
  * @var callable $e
  * @var string $csrfToken
- * @var list<\Zoosper\Admin\Announcement\AdminAnnouncement> $announcements
+ * @var list<\Zoosper\GlobalAnnouncements\Announcement\AdminAnnouncement> $announcements
  * @var array<int, int> $acknowledgmentCounts
- * @var ?\Zoosper\Admin\Announcement\AdminAnnouncement $editItem
+ * @var ?\Zoosper\GlobalAnnouncements\Announcement\AdminAnnouncement $editItem
  * @var string $saveUrl
  * @var string $publishUrl
  * @var string $unpublishUrl
