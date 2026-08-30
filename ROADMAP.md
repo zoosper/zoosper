@@ -386,7 +386,7 @@ replica.
 - [x] Theme repository + per-site theme selection + theme admin
 - [x] Module/theme template overrides (path-safe) + layout update system
 - [~] RoleAdmin → Latte cutover (users on Latte; roles still PHP views)
-- [ ] Adopter theme override story documented end-to-end
+- [x] Adopter theme override story documented end-to-end (see `docs/themes.md`)
 - [~] **CSP enforcement readiness.** Phase 9GA removed the verified inline Reset 2FA handler and moved confirmation behaviour into a registered Auth asset. CSP remains report-only; reporting endpoint configuration and broader browser verification remain before enforcement.
 
 ## 4. Admin & Auth
@@ -423,7 +423,7 @@ replica.
 - [~] Admin god-module split — Page/User/Role admin controllers relocated;
   `ThemeAdminController` not yet moved.
 - [x] Batch-load permissions in `AdminUserRepository` (fix N+1) — Phase 1.109
-- [ ] Pagination + retention for audit log & login history
+- [x] Pagination + retention for audit log & login history — `PruneLogsCommand` (`admin:logs:prune`) and persistent Grid workspaces.
 - [ ] **[R] Two competing Grid extensibility systems** — the newer
   `GridDefinition`/`GridCriteria`/`GridColumnRegistry` genuinely supports
   third-party column contribution for Audit Log and Login History only;
@@ -459,9 +459,9 @@ replica.
   returns a generic HTTP `429` with `Retry-After` when the policy denies.
 - [ ] CSP report-only → enforce (after adding report-uri + resolving the
   inline-handler conflict — see §3)
-- [ ] Password min-length/complexity + `password_needs_rehash()` upgrade path
+- [x] Password min-length/complexity + `password_needs_rehash()` upgrade path
 - [x] Staging and production fail closed when `SESSION_SECURE` is unset or false.
-- [ ] CSRF decision for stateful `/api/*` session routes
+- [x] CSRF decision for stateful `/api/*` session routes — stateless Bearer PATs vs session CSRF model documented in `docs/api.md`.
 - [x] Atomic admin writes (transaction-wrap user/role create+sync) — fixed
   in both `RoleRepository` and `AdminUserRepository`
 - [x] **[FIXED] `Request::form()` read live `$_POST` directly**, breaking
@@ -469,7 +469,7 @@ replica.
   injected). Now reads from an immutable, constructor-provided property,
   captured once in `fromGlobals()`. No backward-compat shim added (per
   explicit project decision — pre-launch, no external users).
-- [ ] Structural email-log body redaction; `entity_extension_values`
+- [x] Structural email-log body redaction; `entity_extension_values`
   write-time field validation; truncate `user_agent` in audit/login-history
 - [x] **[FIXED] `bootstrap/autoload.php` — 4 confirmed bugs**: the dead
   fallback autoloader (only mapped 6 of 12+ namespaces, replaced with a
@@ -563,7 +563,7 @@ replica.
   same directory. Not yet pruned further.
 - [x] **[R2] AI-session and completed one-shot cleanup scripts removed**
   in Phase 2C.
-- [ ] CI workflow (validate, Psalm, Pest+coverage, gate on every PR)
+- [x] CI workflow (validate, Psalm, Pest+coverage, gate on every PR) — `.github/workflows/quality-gate.yml` runs full validation, JavaScript syntax checks, strict quality gate, Psalm baseline, Pest suite, and fresh-install smoke tests.
 - [x] Fix composer `gate` script to `@php` (not hardcoded `php8.5`)
 - [x] **[R2] Redundant `bin/pest.sh` removed; `composer test` remains the
   canonical test entry point.**
@@ -1014,9 +1014,9 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [ ] Graduate Admin login rate limiting from report-only observation to an enforced, tested policy.
 - [x] Add password policy and `password_needs_rehash()` upgrade support.
 - [x] Decide and document the CSRF model for stateful session-based `/api/*` routes.
-- [ ] Fail closed in production when secure-session configuration is absent or unsafe.
-- [ ] Investigate and consolidate environment loading across `Core\Bootstrap\EnvLoader`, `Core\Env`, and the global `env()` helper.
-- [ ] Register the project error handler before module discovery and module configuration execution.
+- [x] Fail closed in production when secure-session configuration is absent or unsafe.
+- [x] Investigate and consolidate environment loading across `Core\Bootstrap\EnvLoader`, `Core\Env`, and the global `env()` helper — consolidated in `bootstrap/autoload.php` and verified by architecture tests.
+- [x] Register the project error handler before module discovery and module configuration execution — `ApplicationFactory::create()` registers `ErrorHandler` before module discovery, config loading, and database connection.
 
 ### P2 process and hygiene
 
