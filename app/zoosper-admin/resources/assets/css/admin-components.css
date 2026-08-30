@@ -488,3 +488,21 @@
 .dashboard-personalisation__body { min-width: 0; }
 .dashboard-personalisation__item { background: var(--admin-surface); box-shadow: var(--admin-shadow-xs); }
 @media (max-width: 680px) { .dashboard-personalisation { margin-left: 0 !important; } .dashboard-personalisation[open] { inset: auto 0 0; width: 100%; max-height: min(84vh, 44rem); border-radius: var(--admin-radius-lg) var(--admin-radius-lg) 0 0; } .dashboard-widget:hover,.dashboard-widget:focus-within { transform:none; } }
+
+
+/* Fable workspace migration: role and permission administration. */
+.admin-role-header { margin-bottom: var(--admin-space-6); }
+.admin-role-list { border-radius: var(--admin-radius-lg); box-shadow: var(--admin-shadow-xs); }
+.admin-role-list .button { min-height: 2.1rem; padding: .35rem .65rem; }
+.admin-role-form { display: grid; gap: var(--admin-space-5); max-width: 78rem; margin-inline: auto; }
+.admin-role-form > .admin-role-header { margin-bottom: 0; }
+.admin-role-identity__fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--admin-space-4); padding: var(--admin-space-5); }
+.admin-role-identity__fields label { margin: 0; }
+.admin-role-section { margin: 0; overflow: visible; }
+.admin-role-section > .card__header { border-bottom: 1px solid var(--admin-border); }
+.admin-role-permission-groups { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,19rem),1fr)); gap: var(--admin-space-3); padding: var(--admin-space-4); }
+.admin-role-permission-groups fieldset { min-width: 0; margin: 0; }
+.admin-role-user-options { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,17rem),1fr)); gap: .55rem; padding: 0 var(--admin-space-5) var(--admin-space-5); }
+.admin-role-user-options label { display: flex; gap: .6rem; align-items: flex-start; min-width: 0; margin: 0; padding: .65rem .75rem; border: 1px solid var(--admin-border); border-radius: var(--admin-radius-md); background: var(--admin-surface-muted); }
+.admin-role-actions { position: sticky; z-index: 8; bottom: 1rem; display: flex; justify-content: flex-end; gap: .6rem; padding: .75rem; border: 1px solid var(--admin-border); border-radius: var(--admin-radius-lg); background: color-mix(in srgb,var(--admin-surface) 94%,transparent); box-shadow: var(--admin-shadow-lg); backdrop-filter: blur(12px); }
+@media (max-width: 42rem) { .admin-role-identity__fields { grid-template-columns: 1fr; } .admin-role-actions { bottom: 0; margin-inline: -.75rem; border-radius: var(--admin-radius-lg) var(--admin-radius-lg) 0 0; } }

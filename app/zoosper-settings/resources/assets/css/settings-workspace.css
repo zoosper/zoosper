@@ -121,3 +121,25 @@
         width:100%;
     }
 }
+
+
+/* Fable workspace migration: quieter Settings catalogue and stronger editing hierarchy. */
+.settings-head { margin-bottom: 1rem; }
+.settings-head h1 { color: var(--admin-text-strong); font-size: clamp(1.55rem,2vw,2rem); letter-spacing: -.025em; }
+.settings-search { min-height: 2.75rem; box-shadow: var(--admin-shadow-xs); }
+.settings-scope { top: calc(var(--admin-topbar-height,4rem) + .5rem); padding: .65rem; border-radius: var(--admin-radius-lg,.875rem); box-shadow: var(--admin-shadow-xs); }
+.settings-workspace { grid-template-columns: 15.5rem minmax(0,1fr); gap: 1.25rem; }
+.settings-nav { top: calc(var(--admin-topbar-height,4rem) + 5rem); padding: .6rem; border-radius: var(--admin-radius-lg,.875rem); box-shadow: var(--admin-shadow-xs); }
+.settings-nav button { min-height: 2.55rem; border-radius: var(--admin-radius-md,.625rem); }
+.settings-nav button[aria-selected="true"] { box-shadow: inset 3px 0 0 var(--settings-focus); }
+.settings-toolbar { padding: .65rem; border-radius: var(--admin-radius-lg,.875rem); box-shadow: var(--admin-shadow-xs); }
+.settings-section { border-radius: var(--admin-radius-lg,.875rem); box-shadow: var(--admin-shadow-xs); }
+.settings-section-head { padding: 1.1rem 1.2rem .85rem; background: linear-gradient(135deg,var(--settings-surface),color-mix(in srgb,var(--settings-focus) 4%,var(--settings-surface))); }
+.settings-group summary { min-height: 3.25rem; padding-inline: 1.2rem; }
+.settings-field { padding: .9rem .15rem; }
+.settings-field-row { align-items: start; }
+.settings-input { min-height: 2.65rem; }
+.settings-actions { position: sticky; z-index: 5; bottom: 0; padding: .75rem 1rem; box-shadow: 0 -8px 20px rgb(15 23 42 / 5%); }
+.settings-more-actions-panel { border-radius: var(--admin-radius-lg,.875rem); }
+@media (max-width:850px) { .settings-workspace { gap: .8rem; } .settings-nav { box-shadow: none; } .settings-actions { bottom: 0; } }
+@media (prefers-reduced-motion:reduce) { .settings-nav button,.settings-section,.settings-group summary { scroll-behavior:auto; transition:none!important; } }

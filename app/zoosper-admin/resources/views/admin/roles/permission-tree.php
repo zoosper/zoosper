@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="/assets/admin/css/permission-explorer.css?v=8d" data-zoosper-permission-explorer-assets>
 <script src="/assets/admin/js/permission-explorer.js?v=6d" defer data-zoosper-permission-explorer-assets></script>
 
+<div class="admin-role-permission-groups">
 <?php foreach ($tree as $group): ?>
     <fieldset>
         <legend><?= $escape($group->label) ?></legend>
@@ -19,3 +20,4 @@
         <?php endforeach; ?>
     </fieldset>
 <?php endforeach; ?>
+</div>

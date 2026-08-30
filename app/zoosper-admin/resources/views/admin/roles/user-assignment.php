@@ -4,6 +4,7 @@
 /** @var callable $escape */
 $hasUsers = false;
 ?>
+<div class="admin-role-user-options">
 <?php foreach ($users as $user): ?>
     <?php $hasUsers = true; ?>
     <label>
@@ -11,6 +12,7 @@ $hasUsers = false;
         <?= $escape($user->name) ?> <?= $escape($user->email) ?>
     </label>
 <?php endforeach; ?>
+</div>
 <?php if (! $hasUsers): ?>
     <p>No admin users found.</p>
 <?php endif; ?>

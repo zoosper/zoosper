@@ -131,3 +131,8 @@ This package directly consumes the stable `Zoosper\Pagination` request/result bo
 ### Fable bulk presentation pass
 
 The compact shell, native account disclosure, Dashboard hierarchy and responsive customisation surface consume the shared semantic foundation. Logout remains a CSRF-bearing POST form, the existing shell runtime remains the only theme/navigation behaviour owner, and only real permission-filtered module widgets are rendered. No navigation count badges, fabricated search, notifications, routes or records are introduced.
+
+
+### Role workspace presentation
+
+Admin-owned role templates use shared cards, responsive permission and assignment grids, semantic table regions, and a sticky action surface. Auth remains the behaviour and authorization owner; role writes remain POST-only and CSRF protected.

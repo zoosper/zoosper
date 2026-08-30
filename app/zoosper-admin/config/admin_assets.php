@@ -30,7 +30,7 @@ return array (
     'zoosper-admin-components-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/admin-components.css?v=2093e6a42ff8',
+      'path' => '/asset/zoosper-admin/css/admin-components.css?v=79947c9ca73e',
       'sort_order' => 16,
     ),
     'zoosper-dashboard-personalisation-script' =>

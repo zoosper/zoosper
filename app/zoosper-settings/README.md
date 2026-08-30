@@ -68,3 +68,8 @@ Module-owned settings catalogue and configuration management for Zoosper CMS.
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+
+
+### Fable workspace presentation
+
+The Settings-owned stylesheet now presents the catalogue as a calm two-pane workspace with a stronger scope bar, category rail, editing hierarchy, and sticky save surface. It consumes Admin semantic tokens and retains the existing module discovery, scope provenance, saved-view runtime, POST/CSRF mutations, print output, and narrow-screen fallback.

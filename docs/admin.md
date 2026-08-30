@@ -52,3 +52,6 @@ The Auth-owned Personal Access Tokens workspace uses a four/three/two/one-column
 ### Fable bulk presentation pass
 
 The compact shell, native account disclosure, Dashboard hierarchy and responsive customisation surface consume the shared semantic foundation. Logout remains a CSRF-bearing POST form, the existing shell runtime remains the only theme/navigation behaviour owner, and only real permission-filtered module widgets are rendered. No navigation count badges, fabricated search, notifications, routes or records are introduced.
+
+
+The Fable workspace migration now covers Settings and role administration. Settings retains its module-owned assets and scope-aware persistence; role management retains Auth-owned authorization and mutation behaviour. Both use the shared semantic surfaces without introducing duplicate runtimes or fabricated controls.
