@@ -30,6 +30,8 @@ class AdminPageFormAcceptanceTest extends TestCase
 
         restore_error_handler();
         restore_exception_handler();
+        restore_error_handler();
+        restore_exception_handler();
 
         return $app;
     }

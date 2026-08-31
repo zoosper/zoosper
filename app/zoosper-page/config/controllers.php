@@ -116,6 +116,7 @@ return [
     ),
     PageAdminController::class => static fn (ServiceContainer $services): PageAdminController => new PageAdminController(
         guard: $services->get(SessionGuard::class),
+        csrf: $services->get(CsrfTokenManager::class),
         pages: $services->get(PageRepository::class),
         layout: $services->get(AdminLayoutRendererInterface::class),
         gridResponder: $services->get(PageAdminGridResponder::class),

@@ -76,7 +76,11 @@ try {
     $operationalCommandFactories = [
         'migrate' => static fn () => new MigrateCommand(new Migrator($connection->get(), $basePath . '/database/migrations', $modules)),
         'compile' => static function () use ($basePath, $connection): CompileCommand {
-            $repo = new ModuleRepository($connection->get());
+            try {
+                $repo = new ModuleRepository($connection->get());
+            } catch (Throwable) {
+                $repo = null;
+            }
             return new CompileCommand(new ModuleManifestCompiler($basePath, null, $repo));
         },
         'module:install' => static function () use ($basePath, $connection, $modules): ModuleInstallCommand {
@@ -191,5 +195,9 @@ function loadModuleCommands(
 
     (new ServiceProviderLoader($modules, $services))->register();
 
-    return (new ModuleConsoleCommandLoader($modules, $services))->load();
+    try {
+        return (new ModuleConsoleCommandLoader($modules, $services))->load();
+    } catch (Throwable) {
+        return [];
+    }
 }

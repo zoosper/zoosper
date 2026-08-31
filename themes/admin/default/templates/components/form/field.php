@@ -1,7 +1,7 @@
 <?php
 /**
  * @var callable $e
- * @var \Zoosper\Admin\Form\AdminFormField $field
+ * @var \Zoosper\Core\Form\AdminFormField $field
  * @var mixed $value
  */
 $config = $field->config;

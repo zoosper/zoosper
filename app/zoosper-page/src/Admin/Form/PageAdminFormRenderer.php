@@ -10,7 +10,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Form\AdminFormConfigProviderFactory;
 use Zoosper\Core\Form\AdminFormProviderRegistry;
-use Zoosper\Core\Form\AdminFormRenderer;
+use Zoosper\Core\Form\AdminLegacyFormRenderer as AdminFormRenderer;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Page\Model\Page;
 use Zoosper\Site\Repository\SiteRepository;

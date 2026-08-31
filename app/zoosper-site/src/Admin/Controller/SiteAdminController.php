@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Site\Admin\Controller;
 
-use Zoosper\Admin\Form\AdminFormRegistry;
-use Zoosper\Admin\Form\AdminFormRenderer;
+use Zoosper\Core\Form\AdminFormRegistry;
+use Zoosper\Core\Form\AdminFormRenderer;
 use RuntimeException;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Auth\Model\AdminUser;
@@ -168,7 +168,8 @@ final readonly class SiteAdminController
                 action: $action,
                 method: 'POST',
                 errors: $error ? ['_form' => $error] : [],
-                cancelUrl: $this->adminUrl('sites')
+                cancelUrl: $this->adminUrl('sites'),
+                csrfToken: $this->csrf->token()
             );
         }
 

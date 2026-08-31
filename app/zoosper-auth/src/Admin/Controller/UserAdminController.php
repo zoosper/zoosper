@@ -9,8 +9,8 @@ use Zoosper\Auth\Admin\Grid\AuthGridQueryState;
 
 use Zoosper\Auth\Admin\Grid\AdminUserGridIndex;
 
-use Zoosper\Admin\Form\AdminFormRegistry;
-use Zoosper\Admin\Form\AdminFormRenderer;
+use Zoosper\Core\Form\AdminFormRegistry;
+use Zoosper\Core\Form\AdminFormRenderer;
 use RuntimeException;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Model\AdminUser;
@@ -427,7 +427,7 @@ final readonly class UserAdminController
 
             // Create a dynamic definition with roles
             $fields = $formDef->fields;
-            $fields[] = new \Zoosper\Admin\Form\AdminFormField(
+            $fields[] = new \Zoosper\Core\Form\AdminFormField(
                 name: 'role_ids',
                 type: 'checkbox-list',
                 label: 'Roles',
@@ -439,7 +439,7 @@ final readonly class UserAdminController
             $sections = $formDef->sections;
             $sections['roles'] = ['title' => 'Assigned roles', 'description' => 'Roles determine effective permissions. Assignment changes remain subject to role-management authority.'];
 
-            $dynamicFormDef = new \Zoosper\Admin\Form\AdminFormDefinition($formDef->handle, $fields, $sections);
+            $dynamicFormDef = new \Zoosper\Core\Form\AdminFormDefinition($formDef->handle, $fields, $sections);
 
             $values = $submitted !== [] ? $submitted : [
                 'name' => $user?->name,
@@ -449,7 +449,7 @@ final readonly class UserAdminController
                 'role_ids' => $user !== null ? array_map('strval', $this->users->roleIdsForUser($user->id)) : [],
             ];
 
-            $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : []);
+            $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : [], null, $this->csrf->token());
 
             $backUrl = $this->adminUrl('users');
             $deleteUrl = $user !== null ? $this->adminUrl('users/' . $user->id . '/delete') : null;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Module;
 
+use Throwable;
 use RuntimeException;
 
 /**
@@ -55,12 +56,16 @@ final readonly class ModuleManifestCompiler
         $modules = $registry->discoverModulesLive();
 
         if ($this->moduleRepository !== null) {
-            $statuses = $this->moduleRepository->allStatuses();
-            $modules = array_filter($modules, static function (Module $m) use ($statuses): bool {
-                $status = $statuses[$m->name] ?? 'enabled';
-                return $status === 'enabled';
-            });
-            $modules = array_values($modules);
+            try {
+                $statuses = $this->moduleRepository->allStatuses();
+                $modules = array_filter($modules, static function (Module $m) use ($statuses): bool {
+                    $status = $statuses[$m->name] ?? 'enabled';
+                    return $status === 'enabled';
+                });
+                $modules = array_values($modules);
+            } catch (Throwable) {
+                // If the database is unreachable, we fail safe and continue with all discovered modules.
+            }
         }
 
         $this->ensureCacheDirectoryExists();

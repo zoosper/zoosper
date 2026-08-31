@@ -4,57 +4,118 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Form;
 
+
 /**
- * Renders a sectioned admin form from registered form sections.
- *
- * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
- * see AdminFormSection.php for the full reasoning. Logic is completely
- * unchanged.
+ * Basic renderer for Admin forms.
  */
 final readonly class AdminFormRenderer
 {
-    /**
-     * @param iterable<AdminFormSection> $sections
-     */
-    public function render(string $action, string $csrfToken, iterable $sections, string $class = 'page-form page-form--sectioned'): string
+    public function __construct()
     {
-        $html = '<form method="post" action="' . $this->escape($action) . '" class="' . $this->escape($class) . '">' . PHP_EOL;
-        $html .= '    <input type="hidden" name="_csrf_token" value="' . $this->escape($csrfToken) . '">' . PHP_EOL;
+    }
 
-        foreach ($sections as $section) {
-            $html .= $this->renderSection($section);
+    /**
+     * @param array<string, mixed> $values
+     * @param array<string, string> $errors
+     */
+    public function render(
+        AdminFormDefinition $form,
+        array $values = [],
+        string $action = '',
+        string $method = 'POST',
+        array $errors = [],
+        ?string $cancelUrl = null,
+        ?string $csrfToken = null
+    ): string {
+        $html = '<form action="' . htmlspecialchars($action, ENT_QUOTES) . '" method="' . htmlspecialchars($method, ENT_QUOTES) . '" class="admin-form">';
+
+        if ($csrfToken !== null) {
+            $html .= '<input type="hidden" name="_csrf_token" value="' . htmlspecialchars($csrfToken, ENT_QUOTES) . '">';
         }
 
+        $fieldsBySection = [];
+        foreach ($form->fields as $field) {
+            $fieldsBySection[$field->section][] = $field;
+        }
+
+        foreach ($fieldsBySection as $sectionHandle => $fields) {
+            $metadata = $form->sections[$sectionHandle] ?? null;
+            $title = $metadata['title'] ?? ($sectionHandle === 'default' ? '' : ucfirst($sectionHandle));
+            $description = $metadata['description'] ?? null;
+
+            if ($title !== '') {
+                $html .= '<section class="card admin-form-section">';
+                $html .= '<div class="card__header"><div><h2 class="card__title">' . htmlspecialchars($title, ENT_QUOTES) . '</h2>';
+                if ($description) {
+                    $html .= '<p class="muted">' . htmlspecialchars($description, ENT_QUOTES) . '</p>';
+                }
+                $html .= '</div></div>';
+                $html .= '<div class="card__body">';
+            }
+
+            foreach ($fields as $field) {
+                $html .= $this->renderField($field, $values[$field->name] ?? null, $errors[$field->name] ?? null);
+            }
+
+            if ($title !== '') {
+                $html .= '</div></section>';
+            }
+        }
+
+        $html .= '<div class="form-actions">';
+        $html .= '<button type="submit" class="button button--primary">Save</button>';
+        if ($cancelUrl !== null) {
+            $html .= ' <a href="' . htmlspecialchars($cancelUrl, ENT_QUOTES) . '" class="button button--secondary">Cancel</a>';
+        }
+        $html .= '</div>';
         $html .= '</form>';
 
         return $html;
     }
 
-    private function renderSection(AdminFormSection $section): string
+    private function renderField(AdminFormField $field, mixed $value, ?string $error): string
     {
-        $modifier = $section->modifierClass ?: 'page-form__section--' . $this->normaliseModifier($section->key);
-        $headingId = $this->normaliseModifier($section->key) . '-heading';
-        $description = $section->description !== null
-            ? '            <p class="muted">' . $this->escape($section->description) . '</p>' . PHP_EOL
-            : '';
+        $label = htmlspecialchars($field->label, ENT_QUOTES);
+        $name = htmlspecialchars($field->name, ENT_QUOTES);
+        $type = htmlspecialchars($field->type, ENT_QUOTES);
+        $errorHtml = $error ? '<div class="field-error">' . htmlspecialchars($error, ENT_QUOTES) . '</div>' : '';
+        $groupClass = $error ? 'form-group has-error' : 'form-group';
 
-        return PHP_EOL
-            . '    <section class="card page-form__section ' . $this->escape($modifier) . '" aria-labelledby="' . $this->escape($headingId) . '">' . PHP_EOL
-            . '        <header class="page-form__section-header">' . PHP_EOL
-            . '            <h2 id="' . $this->escape($headingId) . '">' . $this->escape($section->title) . '</h2>' . PHP_EOL
-            . $description
-            . '        </header>' . PHP_EOL
-            . $section->html . PHP_EOL
-            . '    </section>' . PHP_EOL;
-    }
+        $html = '<div class="' . $groupClass . '">';
+        if ($field->type !== 'checkbox') {
+            $html .= '<label for="' . $name . '">' . $label . '</label>';
+        }
 
-    private function normaliseModifier(string $key): string
-    {
-        return trim((string) preg_replace('/[^a-z0-9]+/i', '-', strtolower($key)), '-');
-    }
+        if ($field->type === 'select') {
+            $html .= '<select id="' . $name . '" name="' . $name . '" class="form-control">';
+            foreach (($field->config['options'] ?? []) as $k => $v) {
+                $selected = (string) $k === (string) ($value ?? '') ? ' selected' : '';
+                $html .= '<option value="' . htmlspecialchars((string) $k, ENT_QUOTES) . '"' . $selected . '>' . htmlspecialchars((string) $v, ENT_QUOTES) . '</option>';
+            }
+            $html .= '</select>';
+        } elseif ($field->type === 'textarea') {
+            $html .= '<textarea id="' . $name . '" name="' . $name . '" class="form-control">' . htmlspecialchars((string) ($value ?? ''), ENT_QUOTES) . '</textarea>';
+        } elseif ($field->type === 'password') {
+            $html .= '<input type="password" id="' . $name . '" name="' . $name . '" value="" class="form-control" autocomplete="new-password">';
+        } elseif ($field->type === 'checkbox') {
+            $checked = $value ? ' checked' : '';
+            $html .= '<div class="checkbox-wrapper"><input type="checkbox" id="' . $name . '" name="' . $name . '" value="1"' . $checked . '> <label for="' . $name . '" class="checkbox-label">' . $label . '</label></div>';
+        } elseif ($field->type === 'checkbox-list') {
+            $html .= '<div class="checkbox-list">';
+            foreach (($field->config['options'] ?? []) as $k => $v) {
+                $checked = in_array((string) $k, array_map('strval', (array) ($value ?? [])), true) ? ' checked' : '';
+                $html .= '<label class="checkbox-list-item"><input type="checkbox" name="' . $name . '[]" value="' . htmlspecialchars((string) $k, ENT_QUOTES) . '"' . $checked . '><span>' . htmlspecialchars((string) $v, ENT_QUOTES) . '</span></label>';
+            }
+            $html .= '</div>';
+        } elseif ($field->type === 'html') {
+            $html .= $field->config['html'] ?? (string) ($value ?? '');
+        } else {
+            $html .= '<input type="' . $type . '" id="' . $name . '" name="' . $name . '" value="' . htmlspecialchars((string) ($value ?? ''), ENT_QUOTES) . '" class="form-control">';
+        }
 
-    private function escape(string $value): string
-    {
-        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        $html .= $errorHtml;
+        $html .= '</div>';
+
+        return $html;
     }
 }

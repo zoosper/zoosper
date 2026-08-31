@@ -9,6 +9,7 @@ use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\I18n\AdminContextTranslatorResolver;
@@ -24,8 +25,8 @@ use Zoosper\Page\Application\Publication\PagePublicationCoordinator;
 use Zoosper\Page\Admin\Lifecycle\PageLifecycleAdminResponder;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
-use Zoosper\Admin\Form\AdminFormRegistry;
-use Zoosper\Admin\Form\AdminFormRenderer;
+use Zoosper\Core\Form\AdminFormRegistry;
+use Zoosper\Core\Form\AdminFormRenderer;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Editor\ContentEditorInterface;
 use Zoosper\Site\Repository\SiteRepository;
@@ -42,6 +43,7 @@ final readonly class PageAdminController
 {
     public function __construct(
         private SessionGuard                     $guard,
+        private CsrfTokenManager                 $csrf,
         private PageRepository                   $pages,
         private AdminLayoutRendererInterface     $layout,
         private ?PageAdminGridResponder           $gridResponder = null,
@@ -124,7 +126,7 @@ final readonly class PageAdminController
         $fields = $formDef->fields;
         foreach ($fields as $key => $field) {
             if ($field->name === 'site_id') {
-                $fields[$key] = new \Zoosper\Admin\Form\AdminFormField(
+                $fields[$key] = new \Zoosper\Core\Form\AdminFormField(
                     $field->name,
                     $field->type,
                     $field->label,
@@ -151,7 +153,7 @@ final readonly class PageAdminController
 
         foreach ($fields as $key => $field) {
             if ($field->name === 'content_html') {
-                $fields[$key] = new \Zoosper\Admin\Form\AdminFormField(
+                $fields[$key] = new \Zoosper\Core\Form\AdminFormField(
                     $field->name,
                     'html',
                     $field->label,
@@ -162,7 +164,7 @@ final readonly class PageAdminController
             }
         }
 
-        $dynamicFormDef = new \Zoosper\Admin\Form\AdminFormDefinition($formDef->handle, $fields, $formDef->sections);
+        $dynamicFormDef = new \Zoosper\Core\Form\AdminFormDefinition($formDef->handle, $fields, $formDef->sections);
 
         $values = $submitted ?: [
             'site_id' => $page?->siteId,
@@ -176,7 +178,7 @@ final readonly class PageAdminController
             'publish' => $page?->isPublished(),
         ];
 
-        $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : [], $this->adminUrl('/pages'));
+        $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : [], $this->adminUrl('/pages'), $this->csrf->token());
 
         $historyHtml = $page !== null ? ($this->revisionResponder?->historyHtml($page, $revisionPage) ?? '') : '';
         $lifecycleHtml = $page !== null ? ($this->lifecycleResponder?->actionsHtml($page) ?? '') : '';

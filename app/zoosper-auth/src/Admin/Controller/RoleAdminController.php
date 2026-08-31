@@ -9,8 +9,8 @@ use Zoosper\Auth\Admin\Grid\AuthGridQueryState;
 
 use Zoosper\Auth\Admin\Grid\RoleGridIndex;
 
-use Zoosper\Admin\Form\AdminFormRegistry;
-use Zoosper\Admin\Form\AdminFormRenderer;
+use Zoosper\Core\Form\AdminFormRegistry;
+use Zoosper\Core\Form\AdminFormRenderer;
 use RuntimeException;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Layout\AdminLayout;
@@ -168,7 +168,7 @@ final readonly class RoleAdminController
             $fields = $formDef->fields;
 
             // Add dynamic components as HTML fields
-            $fields[] = new \Zoosper\Admin\Form\AdminFormField(
+            $fields[] = new \Zoosper\Core\Form\AdminFormField(
                 name: 'permissions',
                 type: 'html',
                 label: 'Permissions',
@@ -178,7 +178,7 @@ final readonly class RoleAdminController
             );
 
             if ($this->users !== null) {
-                $fields[] = new \Zoosper\Admin\Form\AdminFormField(
+                $fields[] = new \Zoosper\Core\Form\AdminFormField(
                     name: 'users',
                     type: 'html',
                     label: 'Users',
@@ -192,14 +192,14 @@ final readonly class RoleAdminController
             $sections['permissions'] = ['title' => 'Permissions', 'description' => 'Select the permissions assigned to this role.'];
             $sections['users'] = ['title' => 'User assignments', 'description' => 'Select users who should be assigned to this role.'];
 
-            $dynamicFormDef = new \Zoosper\Admin\Form\AdminFormDefinition($formDef->handle, $fields, $sections);
+            $dynamicFormDef = new \Zoosper\Core\Form\AdminFormDefinition($formDef->handle, $fields, $sections);
 
             $values = $submitted !== [] ? $submitted : [
                 'code' => (string) ($role['code'] ?? ''),
                 'label' => (string) ($role['label'] ?? ''),
             ];
 
-            $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : []);
+            $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : [], null, $this->csrf->token());
 
             $lifecycleHtml = $roleId !== null && $this->lifecycle !== null
                 ? $this->lifecycle->actionsHtml($roleId, (string) ($role['code'] ?? ''))

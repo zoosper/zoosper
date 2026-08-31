@@ -86,7 +86,7 @@ test('page and theme admin forms still generate csrf tokens for middleware valid
     $themeController = (string) file_get_contents($root . '/app/zoosper-theme/src/Admin/Controller/ThemeAdminController.php');
     $pageFormRenderer = (string) file_get_contents($root . '/app/zoosper-page/src/Admin/Form/PageAdminFormRenderer.php');
 
-    expect($pageController)->not->toContain('$this->csrf->token()');
+    expect($pageController)->toContain('$this->csrf->token()');
     expect($pageFormRenderer)->toContain('$this->csrf->token()');
     expect($themeController)->toContain('$this->csrf->token()');
 });
