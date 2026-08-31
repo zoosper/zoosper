@@ -65,7 +65,7 @@ final class ProductionSecurityPolicy
             throw new RuntimeException(ucfirst($environment) . ' requires a strong TWO_FACTOR_ENCRYPTION_KEY.');
         }
 
-        $driver = strtolower(trim((string) $value('DB_DRIVER', 'mysql')));
+        $driver = strtolower(trim((string) $value('DB_CONNECTION', $value('DB_DRIVER', 'mysql'))));
         $enforceMysql = filter_var($value('DATABASE_ENFORCE_MYSQL_PRODUCTION', true), FILTER_VALIDATE_BOOL);
         if ($enforceMysql && $driver === 'sqlite') {
             throw new RuntimeException(ucfirst($environment) . ' requires a production database driver (MySQL/MariaDB) and forbids SQLite.');

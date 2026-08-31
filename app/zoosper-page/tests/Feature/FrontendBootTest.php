@@ -41,6 +41,15 @@ function zoosperBootAppCleanly(): \Zoosper\Core\Http\Application
 {
     zoosperEnsureRuntimeHelpers();
 
+    $_ENV['APP_ENV'] = 'testing';
+    putenv('APP_ENV=testing');
+    $_ENV['DB_CONNECTION'] = 'sqlite';
+    putenv('DB_CONNECTION=sqlite');
+    $_ENV['DB_DRIVER'] = 'sqlite';
+    putenv('DB_DRIVER=sqlite');
+    $_ENV['DB_DATABASE'] = ':memory:';
+    putenv('DB_DATABASE=:memory:');
+
     $app = ApplicationFactory::create(zoosperBasePath());
 
     // ApplicationFactory installs early + main handlers; undo both so we don't leak global state.

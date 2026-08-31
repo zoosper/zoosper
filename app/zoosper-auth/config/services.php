@@ -48,6 +48,7 @@ return [
     SessionGuard::class => static fn (ServiceContainer $services): SessionGuard => new SessionGuard(
         $services->get(AdminUserRepository::class),
         max(0, (int) $services->get(ConfigRepository::class)->get('admin.session_idle_timeout', 7200)),
+        max(0, (int) $services->get(ConfigRepository::class)->get('admin.session_absolute_lifetime', 86400)),
     ),
     CsrfTokenManager::class => static fn (ServiceContainer $services): CsrfTokenManager => new CsrfTokenManager(),
     AuthenticationMiddleware::class => static fn (ServiceContainer $services): AuthenticationMiddleware => new AuthenticationMiddleware(

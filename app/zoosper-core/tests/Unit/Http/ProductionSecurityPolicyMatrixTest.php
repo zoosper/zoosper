@@ -6,7 +6,7 @@ use Zoosper\Core\Http\ProductionSecurityPolicy;
 
 function setProductionPolicyEnvironment(array $values): void
 {
-    foreach (['APP_ENV', 'APP_DEBUG', 'SESSION_SECURE', 'RATE_LIMIT_ENABLED', 'RATE_LIMIT_MODE', 'RATE_LIMIT_IDENTITY_SALT', 'TWO_FACTOR_ENCRYPTION_KEY', 'DB_DRIVER', 'DATABASE_ENFORCE_MYSQL_PRODUCTION'] as $key) {
+    foreach (['APP_ENV', 'APP_DEBUG', 'SESSION_SECURE', 'RATE_LIMIT_ENABLED', 'RATE_LIMIT_MODE', 'RATE_LIMIT_IDENTITY_SALT', 'TWO_FACTOR_ENCRYPTION_KEY', 'DB_DRIVER', 'DB_CONNECTION', 'DATABASE_ENFORCE_MYSQL_PRODUCTION'] as $key) {
         unset($_ENV[$key]);
         putenv($key);
     }

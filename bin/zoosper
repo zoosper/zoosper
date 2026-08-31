@@ -12,6 +12,7 @@ use Zoosper\Core\Console\ConsoleOutput;
 use Zoosper\Core\Console\ConsoleOptions;
 use Zoosper\Core\Console\BuiltIn\CacheClearCommand;
 use Zoosper\Core\Console\BuiltIn\CompileCommand;
+use Zoosper\Core\Console\BuiltIn\GenerateSecretsCommand;
 use Zoosper\Core\Console\BuiltIn\ManifestCheckCommand;
 use Zoosper\Core\Console\BuiltIn\ManifestStatusCommand;
 use Zoosper\Core\Console\BuiltIn\MigrateCommand;
@@ -77,6 +78,8 @@ try {
         'make:module' => static fn () => new MakeModuleCommand(new ModuleScaffolder($basePath)),
         'make:package-module' => static fn () => new MakePackageModuleCommand(new PackageModuleScaffolder($basePath)),
         'make:command' => static fn () => new MakeConsoleCommand(new ConsoleCommandScaffolder($basePath)),
+        'security:generate-secrets' => static fn () => new GenerateSecretsCommand($basePath),
+        'secrets:generate' => static fn () => new GenerateSecretsCommand($basePath),
         'version' => static fn () => new VersionCommand($basePath),
         'release:check' => static fn () => new ReleaseCheckCommand(new ReleaseCheck($basePath)),
         'schema:foreign-keys:status' => static function () use ($connection, $config, $modules): SchemaForeignKeyStatusCommand {
@@ -121,6 +124,7 @@ function builtInCommands(): array
         'module:manifest:status',
         'module:manifest:check',
         'deploy',
+        'security:generate-secrets [--write] [--check] [--force]',
         'version',
         'release:check',
         'schema:foreign-keys:status',

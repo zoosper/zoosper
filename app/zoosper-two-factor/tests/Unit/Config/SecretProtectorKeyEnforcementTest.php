@@ -118,3 +118,53 @@ it('confirms the insecure literal fallback no longer exists in either file', fun
     expect($configSource)->not->toContain('change-me-before-production');
     expect($servicesSource)->not->toContain('change-me-before-production');
 });
+
+it('throws when constructing SecretProtector service from container with placeholder or missing keys', function (string $insecureKey): void {
+    $basePath = dirname(__DIR__, 5);
+    $servicesConfig = require $basePath . '/app/zoosper-two-factor/config/services.php';
+    $secretProtectorFactory = $servicesConfig[SecretProtector::class];
+
+    $config = ConfigRepository::fromArray([
+        'two_factor' => [
+            'encryption_key' => $insecureKey,
+            'previous_encryption_keys' => [],
+        ],
+    ]);
+
+    $container = new ServiceContainer();
+    $container->set(ConfigRepository::class, $config);
+
+    expect(fn () => $secretProtectorFactory($container))
+        ->toThrow(RuntimeException::class, 'No valid 2FA encryption key is configured');
+})->with([
+    [''],
+    ['change-me'],
+    ['change-me-before-production'],
+    ['secret'],
+    ['changeme'],
+    ['placeholder'],
+]);
+
+it('successfully constructs working SecretProtector from container when a strong key is configured', function (): void {
+    $basePath = dirname(__DIR__, 5);
+    $servicesConfig = require $basePath . '/app/zoosper-two-factor/config/services.php';
+    $secretProtectorFactory = $servicesConfig[SecretProtector::class];
+
+    $config = ConfigRepository::fromArray([
+        'two_factor' => [
+            'encryption_key' => 'd8a39e87b64921f045c36190ab74e1d3e89a54f2c019d678b4a2e5c7f8901234',
+            'previous_encryption_keys' => [],
+        ],
+    ]);
+
+    $container = new ServiceContainer();
+    $container->set(ConfigRepository::class, $config);
+
+    $protector = $secretProtectorFactory($container);
+    expect($protector)->toBeInstanceOf(SecretProtector::class);
+
+    $plain = 'KRSXG5CTMVRXEZLU';
+    $encrypted = $protector->protect($plain);
+    expect($encrypted)->not->toBe($plain)
+        ->and($protector->reveal($encrypted))->toBe($plain);
+});

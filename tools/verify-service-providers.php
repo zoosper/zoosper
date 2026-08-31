@@ -50,7 +50,12 @@ foreach ($critical as $id) {
         $service = $services->get($id);
         print '- ' . $id . ': ok (' . $service::class . ')' . PHP_EOL;
     } catch (Throwable $exception) {
-        print '- ' . $id . ': FAIL - ' . $exception->getMessage() . PHP_EOL;
+        $msg = $exception->getMessage();
+        $prev = $exception;
+        while ($prev = $prev->getPrevious()) {
+            $msg .= ' -> ' . $prev->getMessage();
+        }
+        print '- ' . $id . ': FAIL - ' . $msg . PHP_EOL;
         $failed = true;
     }
 }

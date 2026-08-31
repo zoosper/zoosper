@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', env('DB_DRIVER', 'sqlite')),
     'connections' => [
         'sqlite' => [
             'driver' => 'sqlite',

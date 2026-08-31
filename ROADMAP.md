@@ -1309,8 +1309,8 @@ An exhaustive independent technical review and static security teardown (`var/lo
   - *Location:* 14 files in `config/*.php`.
   - *Problem:* Local `$env` closures in config files treat empty strings (`$_ENV[$key] !== ''`) as unset, conflicting with canonical `env()` in `bootstrap/autoload.php`.
   - *Remediation:* Remove local `$env` closures and have all config files call the global canonical `env()` helper.
-- [ ] **Automated secrets generation and validation command.**
-  - *Remediation:* Implement `bin/zoosper secrets:generate` to write cryptographically strong keys (`APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY`, `RATE_LIMIT_IDENTITY_SALT`, `CACHE_ENCRYPTION_KEY`) and fail closed on production start if placeholders remain.
+- [x] **Automated secrets generation and validation command.**
+  - *Remediation:* Implemented `bin/zoosper security:generate-secrets` (alias `secrets:generate`) to generate and audit cryptographically strong keys (`APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY`, `RATE_LIMIT_IDENTITY_SALT`, `CACHE_ENCRYPTION_KEY`) with `--write`, `--check`, and `--force` options.
 - [ ] **Offload synchronous GD derivative generation from upload request path.**
   - *Location:* `packages/zoosper-media/src/Processor/GdMediaProcessor.php`, `MediaUploadService.php`.
   - *Problem:* Synchronous image decoding and derivative generation during multipart uploads creates CPU/memory bottlenecks and DoS vectors.
@@ -1326,19 +1326,19 @@ An exhaustive independent technical review and static security teardown (`var/lo
   - *Location:* `PhpTemplateEngine.php`, `RoleAdminController.php`.
   - *Problem:* Coexistence of Latte (auto-escaping) with raw PHP templates using `extract($data, EXTR_SKIP)` creates potential escaping inconsistencies.
   - *Remediation:* Standardize view rendering on Latte or enforce strict escaping contracts across all PHP template partials.
-- [ ] **MED-03: Behavioral runtime assertions for crypto & security tests.**
+- [x] **MED-03: Behavioral runtime assertions for crypto & security tests.**
   - *Location:* `SecretProtectorKeyEnforcementTest.php`.
   - *Problem:* Tests assert source code strings rather than runtime behavior under insecure environment configurations.
-  - *Remediation:* Refactor security tests to assert actual container and service runtime rejection.
+  - *Remediation:* Refactored security tests to assert actual container and service runtime rejection across empty keys and known placeholders (`change-me`, `secret`, `changeme`, `placeholder`).
 - [ ] **Admin Grid & Form kernel consolidation.**
   - *Problem:* Repeated Criteria, SqlBuilder, Workspace, and Form sections across Users, Roles, Media, and Pages create code duplication.
   - *Remediation:* Abstract into a single generic, typed Grid kernel and Form section/processor across all admin screens.
 - [ ] **Production manifest & route compilation.**
   - *Problem:* Uncached runtime discovery of modules, service providers, and routes on every boot adds latency.
   - *Remediation:* Cache compiled module manifests, services, and route trees for production environments with automatic invalidation diagnostics.
-- [ ] **Session lifecycle controls.**
+- [x] **Session lifecycle controls.**
   - *Problem:* PHP session defaults lack explicit absolute session timeouts and concurrent session bounds.
-  - *Remediation:* Add absolute session lifetime, concurrent session limits, and SameSite/Secure cookie policy verification during bootstrap.
+  - *Remediation:* Added configurable `ADMIN_SESSION_ABSOLUTE_LIFETIME` (`session_absolute_lifetime`), idle timeout resetting on active navigation, and password-update session invalidation in `SessionGuard`.
 - [ ] **PHP 8.5+ runtime requirement evaluation.**
   - *Problem:* Hard requirement on PHP 8.5 narrows hosting compatibility without demonstrated necessity.
   - *Remediation:* Evaluate dropping the language floor to PHP 8.3/8.4 or clearly document non-negotiable language features in README.
@@ -1349,5 +1349,5 @@ An exhaustive independent technical review and static security teardown (`var/lo
   - *Remediation:* Ensure distinct, descriptive commit messages and co-author attribution across all branch merges.
 - [x] **LOW-02: Stale comments & documentation reconciliation.**
   - *Remediation:* Remove obsolete comments in `bootstrap/autoload.php` referencing non-existent EnvLoader classes; reconcile contradictory Supported Versions tables in `SECURITY.md`.
-- [ ] **LOW-03: Clarify pluggable module architecture & `modules/` placeholder.**
-  - *Remediation:* Document the role of `modules/` for third-party pluggable extensions vs internal `app/` and standalone `packages/`.
+- [x] **LOW-03: Clarify pluggable module architecture & `modules/` placeholder.**
+  - *Remediation:* Documented the distinct roles of `app/` (internal modules), `packages/` (standalone Composer packages), and `modules/` (pluggable drop-in extensions) in `docs/modules.md`.

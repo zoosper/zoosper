@@ -175,40 +175,48 @@ final readonly class ScopeConfigRepository
 
     private function find(string $path, ScopeType $scopeType, ?string $scopeKey): ?string
     {
-        $sql = 'SELECT config_value FROM ' . $this->table
-            . ' WHERE config_path = :path AND scope_type = :scope_type'
-            . ($scopeKey === null ? ' AND scope_key IS NULL' : ' AND scope_key = :scope_key')
-            . ' LIMIT 1';
+        try {
+            $sql = 'SELECT config_value FROM ' . $this->table
+                . ' WHERE config_path = :path AND scope_type = :scope_type'
+                . ($scopeKey === null ? ' AND scope_key IS NULL' : ' AND scope_key = :scope_key')
+                . ' LIMIT 1';
 
-        $statement = $this->pdo->prepare($sql);
-        $params = ['path' => $path, 'scope_type' => $scopeType->value];
-        if ($scopeKey !== null) {
-            $params['scope_key'] = $scopeKey;
+            $statement = $this->pdo->prepare($sql);
+            $params = ['path' => $path, 'scope_type' => $scopeType->value];
+            if ($scopeKey !== null) {
+                $params['scope_key'] = $scopeKey;
+            }
+            $statement->execute($params);
+
+            $value = $statement->fetchColumn();
+
+            return $value === false ? null : (string) $value;
+        } catch (\Throwable) {
+            return null;
         }
-        $statement->execute($params);
-
-        $value = $statement->fetchColumn();
-
-        return $value === false ? null : (string) $value;
     }
 
     private function findRowId(string $path, ScopeType $scopeType, ?string $scopeKey): ?int
     {
-        $sql = 'SELECT id FROM ' . $this->table
-            . ' WHERE config_path = :path AND scope_type = :scope_type'
-            . ($scopeKey === null ? ' AND scope_key IS NULL' : ' AND scope_key = :scope_key')
-            . ' LIMIT 1';
+        try {
+            $sql = 'SELECT id FROM ' . $this->table
+                . ' WHERE config_path = :path AND scope_type = :scope_type'
+                . ($scopeKey === null ? ' AND scope_key IS NULL' : ' AND scope_key = :scope_key')
+                . ' LIMIT 1';
 
-        $statement = $this->pdo->prepare($sql);
-        $params = ['path' => $path, 'scope_type' => $scopeType->value];
-        if ($scopeKey !== null) {
-            $params['scope_key'] = $scopeKey;
+            $statement = $this->pdo->prepare($sql);
+            $params = ['path' => $path, 'scope_type' => $scopeType->value];
+            if ($scopeKey !== null) {
+                $params['scope_key'] = $scopeKey;
+            }
+            $statement->execute($params);
+
+            $id = $statement->fetchColumn();
+
+            return $id === false ? null : (int) $id;
+        } catch (\Throwable) {
+            return null;
         }
-        $statement->execute($params);
-
-        $id = $statement->fetchColumn();
-
-        return $id === false ? null : (int) $id;
     }
 
     private function assertValidScopeKey(ScopeType $scopeType, ?string $scopeKey): void

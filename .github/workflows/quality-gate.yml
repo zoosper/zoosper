@@ -13,6 +13,7 @@ concurrency:
 env:
   COMPOSER_NO_INTERACTION: "1"
   COMPOSER_CACHE_DIR: ${{ github.workspace }}/.cache/composer
+  DB_CONNECTION: sqlite
   DB_DRIVER: sqlite
   DB_DATABASE: ${{ github.workspace }}/var/ci.sqlite
 jobs:

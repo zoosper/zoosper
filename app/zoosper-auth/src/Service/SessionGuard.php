@@ -33,15 +33,27 @@ final class SessionGuard
     private const SESSION_PENDING_2FA_KEY = 'pending_2fa_user_id';
     private const SESSION_PASSWORD_HASH_KEY = 'admin_password_hash_fingerprint';
     private const SESSION_LAST_ACTIVITY_KEY = 'admin_last_activity_at';
+    private const SESSION_CREATED_AT_KEY = 'admin_session_created_at';
 
     /** Per-request cache of the resolved user (false = not yet resolved). */
     private AdminUser|false|null $cachedUser = false;
 
+    private readonly int $absoluteLifetimeSeconds;
+    private readonly ?\Closure $clock;
+
     public function __construct(
         private readonly AdminUserRepository $users,
         private readonly int $idleTimeoutSeconds = 7200,
-        private readonly ?\Closure $clock = null,
+        int|\Closure|null $absoluteLifetimeSecondsOrClock = 86400,
+        ?\Closure $clock = null,
     ) {
+        if ($absoluteLifetimeSecondsOrClock instanceof \Closure) {
+            $this->absoluteLifetimeSeconds = 86400;
+            $this->clock = $absoluteLifetimeSecondsOrClock;
+        } else {
+            $this->absoluteLifetimeSeconds = $absoluteLifetimeSecondsOrClock ?? 86400;
+            $this->clock = $clock;
+        }
     }
 
     /**
@@ -55,6 +67,9 @@ final class SessionGuard
         unset($_SESSION[self::SESSION_PENDING_2FA_KEY]);
         $_SESSION[self::SESSION_USER_KEY] = $user->id;
         $_SESSION[self::SESSION_PASSWORD_HASH_KEY] = hash('sha256', $user->passwordHash);
+        if (!isset($_SESSION[self::SESSION_CREATED_AT_KEY])) {
+            $_SESSION[self::SESSION_CREATED_AT_KEY] = $this->now();
+        }
         $this->touch();
 
         // Prime the per-request cache; no need to re-query immediately.
@@ -156,6 +171,9 @@ final class SessionGuard
         }
         unset($_SESSION[self::SESSION_USER_KEY]);
         $_SESSION[self::SESSION_PENDING_2FA_KEY] = $user->id;
+        if (!isset($_SESSION[self::SESSION_CREATED_AT_KEY])) {
+            $_SESSION[self::SESSION_CREATED_AT_KEY] = $this->now();
+        }
         $this->touch();
         $this->cachedUser = null;
     }
@@ -202,7 +220,7 @@ final class SessionGuard
     {
         unset($_SESSION[self::SESSION_PENDING_2FA_KEY]);
         if (!isset($_SESSION[self::SESSION_USER_KEY])) {
-            unset($_SESSION[self::SESSION_LAST_ACTIVITY_KEY]);
+            unset($_SESSION[self::SESSION_LAST_ACTIVITY_KEY], $_SESSION[self::SESSION_CREATED_AT_KEY]);
         }
     }
 
@@ -212,8 +230,22 @@ final class SessionGuard
             $_SESSION[self::SESSION_USER_KEY],
         ) || isset($_SESSION[self::SESSION_PENDING_2FA_KEY]);
         if (!$hasProtectedState) {
-            unset($_SESSION[self::SESSION_LAST_ACTIVITY_KEY]);
+            unset($_SESSION[self::SESSION_LAST_ACTIVITY_KEY], $_SESSION[self::SESSION_CREATED_AT_KEY]);
             return false;
+        }
+
+        $now = $this->now();
+
+        if ($this->absoluteLifetimeSeconds > 0) {
+            $createdAt = $_SESSION[self::SESSION_CREATED_AT_KEY] ?? null;
+            if ($createdAt === null) {
+                $_SESSION[self::SESSION_CREATED_AT_KEY] = $now;
+                $createdAt = $now;
+            }
+            if (!is_numeric($createdAt) || ($now - (int) $createdAt) > $this->absoluteLifetimeSeconds) {
+                $this->clearAuthenticationState();
+                return true;
+            }
         }
 
         if ($this->idleTimeoutSeconds === 0) {
@@ -221,7 +253,6 @@ final class SessionGuard
         }
 
         $lastActivity = $_SESSION[self::SESSION_LAST_ACTIVITY_KEY] ?? null;
-        $now = $this->now();
         if (!is_numeric($lastActivity)) {
             $this->clearAuthenticationState();
             return true;
@@ -243,6 +274,7 @@ final class SessionGuard
             $_SESSION[self::SESSION_PENDING_2FA_KEY],
             $_SESSION[self::SESSION_PASSWORD_HASH_KEY],
             $_SESSION[self::SESSION_LAST_ACTIVITY_KEY],
+            $_SESSION[self::SESSION_CREATED_AT_KEY],
         );
         $this->cachedUser = null;
     }
