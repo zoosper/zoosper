@@ -27,4 +27,23 @@ final readonly class MediaDerivativePlan
     {
         return array_map(static fn (MediaDerivativeProfile $profile): string => $profile->code, $this->profiles);
     }
+
+    /** @return array<string, mixed> */
+    public function toArray(): array
+    {
+        return [
+            'profiles' => array_map(static fn (MediaDerivativeProfile $p): array => $p->toArray(), $this->profiles),
+        ];
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self
+    {
+        $profiles = array_map(
+            static fn (array $p): MediaDerivativeProfile => MediaDerivativeProfile::fromArray($p),
+            (array) ($data['profiles'] ?? [])
+        );
+
+        return new self(...$profiles);
+    }
 }

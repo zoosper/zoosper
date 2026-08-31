@@ -82,7 +82,9 @@ final readonly class AdminFormRenderer
         $groupClass = $error ? 'form-group has-error' : 'form-group';
 
         $html = '<div class="' . $groupClass . '">';
-        $html .= '<label for="' . $name . '">' . $label . '</label>';
+        if ($field->type !== 'checkbox') {
+            $html .= '<label for="' . $name . '">' . $label . '</label>';
+        }
 
         if ($field->type === 'select') {
             $html .= '<select id="' . $name . '" name="' . $name . '" class="form-control">';
@@ -95,6 +97,9 @@ final readonly class AdminFormRenderer
             $html .= '<textarea id="' . $name . '" name="' . $name . '" class="form-control">' . htmlspecialchars((string) ($value ?? ''), ENT_QUOTES) . '</textarea>';
         } elseif ($field->type === 'password') {
             $html .= '<input type="password" id="' . $name . '" name="' . $name . '" value="" class="form-control" autocomplete="new-password">';
+        } elseif ($field->type === 'checkbox') {
+            $checked = $value ? ' checked' : '';
+            $html .= '<div class="checkbox-wrapper"><input type="checkbox" id="' . $name . '" name="' . $name . '" value="1"' . $checked . '> <label for="' . $name . '" class="checkbox-label">' . $label . '</label></div>';
         } elseif ($field->type === 'checkbox-list') {
             $html .= '<div class="checkbox-list">';
             foreach (($field->config['options'] ?? []) as $k => $v) {

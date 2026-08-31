@@ -12,6 +12,8 @@ use Zoosper\Media\Model\MediaAsset;
 /** Generates bounded, deterministic raster derivatives from canonical originals. */
 final readonly class GdMediaProcessor implements MediaProcessorInterface
 {
+    private const MAX_BYTES = 5_242_880;
+
     public function __construct(
         private string $basePath,
         private ?MediaProcessingPolicy $policy = null,
@@ -84,6 +86,10 @@ final readonly class GdMediaProcessor implements MediaProcessorInterface
     /** @return array{GdImage, int, int} */
     private function decode(string $path): array
     {
+        if (filesize($path) > self::MAX_BYTES) {
+            throw new RuntimeException('Media file exceeds processing size limit (5MB).');
+        }
+
         $dimensions = @getimagesize($path);
         if (!is_array($dimensions)) {
             throw new RuntimeException('Derivative source is not a valid raster image.');

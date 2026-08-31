@@ -33,7 +33,7 @@ final readonly class MediaUploadDerivativeDispatcher
         if ($assetOrStoragePath instanceof MediaAsset) {
             $plan = $this->plan ?? (new MediaProcessingPolicy())->defaultPlan();
             $result = $this->processor->process($assetOrStoragePath, $plan);
-            if ($result->successful) {
+            if ($result->successful && !$result->queued) {
                 $this->derivatives?->replaceForAsset($assetOrStoragePath, $plan);
             }
             return $result;

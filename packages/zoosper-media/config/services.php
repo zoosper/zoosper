@@ -14,6 +14,8 @@ use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
 use Zoosper\Media\Processing\MediaProcessingPolicy;
 use Zoosper\Media\Processing\MediaProcessorInterface;
 use Zoosper\Media\Processing\GdMediaProcessor;
+use Zoosper\Media\Processing\QueuedMediaProcessor;
+use Zoosper\Media\Console\ProcessMediaQueueCommand;
 use Zoosper\Media\Processing\MediaUploadDerivativeDispatcher;
 use Zoosper\Media\Processing\MediaUploadDerivativePolicy;
 use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
@@ -56,9 +58,12 @@ return [
     ),
     EditorJsImageBlockSanitizer::class => static fn (ServiceContainer $services): EditorJsImageBlockSanitizer => new EditorJsImageBlockSanitizer(),
     MediaProcessingPolicy::class => static fn (ServiceContainer $services): MediaProcessingPolicy => new MediaProcessingPolicy(),
-    MediaProcessorInterface::class => static fn (ServiceContainer $services): MediaProcessorInterface => new GdMediaProcessor(
+    GdMediaProcessor::class => static fn (ServiceContainer $services): GdMediaProcessor => new GdMediaProcessor(
         dirname(__DIR__, 3),
         $services->get(MediaProcessingPolicy::class),
+    ),
+    MediaProcessorInterface::class => static fn (ServiceContainer $services): MediaProcessorInterface => new QueuedMediaProcessor(
+        $services->get(PDO::class)
     ),
     MediaUploadDerivativePolicy::class => static fn (ServiceContainer $services): MediaUploadDerivativePolicy => new MediaUploadDerivativePolicy(true),
     MediaUploadDerivativeDispatcher::class => static fn (ServiceContainer $services): MediaUploadDerivativeDispatcher => new MediaUploadDerivativeDispatcher(
@@ -74,5 +79,11 @@ return [
         derivatives: $services->get(MediaDerivativeRepository::class),
         references: $services->get(MediaReferenceInspector::class),
         audit: $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
+    ),
+    ProcessMediaQueueCommand::class => static fn (ServiceContainer $services): ProcessMediaQueueCommand => new ProcessMediaQueueCommand(
+        $services->get(PDO::class),
+        $services->get(MediaAssetRepository::class),
+        $services->get(GdMediaProcessor::class),
+        $services->get(MediaDerivativeRepository::class)
     ),
 ];

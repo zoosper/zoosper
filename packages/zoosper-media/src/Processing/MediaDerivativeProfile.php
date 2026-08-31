@@ -39,4 +39,30 @@ final readonly class MediaDerivativeProfile
             throw new InvalidArgumentException('Unsupported media derivative fit mode: ' . $fit);
         }
     }
+
+    /** @return array<string, mixed> */
+    public function toArray(): array
+    {
+        return [
+            'code' => $this->code,
+            'width' => $this->width,
+            'height' => $this->height,
+            'format' => $this->format,
+            'quality' => $this->quality,
+            'fit' => $this->fit,
+        ];
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            code: (string) ($data['code'] ?? ''),
+            width: (int) ($data['width'] ?? 1),
+            height: (int) ($data['height'] ?? 1),
+            format: (string) ($data['format'] ?? 'webp'),
+            quality: (int) ($data['quality'] ?? 82),
+            fit: (string) ($data['fit'] ?? 'contain'),
+        );
+    }
 }

@@ -56,7 +56,6 @@ use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Grid\GridColumnRegistry;
-use PDO;
 
 return [
     PageAdminGridResponder::class => static function (ServiceContainer $services): PageAdminGridResponder {

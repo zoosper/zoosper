@@ -17,18 +17,24 @@ final readonly class MediaProcessingResult
         public bool $successful,
         public array $derivatives = [],
         public array $errors = [],
+        public bool $queued = false,
     ) {
     }
 
     /** @param array<string, string> $derivatives */
     public static function success(array $derivatives): self
     {
-        return new self(true, $derivatives, []);
+        return new self(true, $derivatives, [], false);
+    }
+
+    public static function queued(): self
+    {
+        return new self(true, [], [], true);
     }
 
     /** @param list<string> $errors */
     public static function failure(array $errors): self
     {
-        return new self(false, [], $errors);
+        return new self(false, [], $errors, false);
     }
 }

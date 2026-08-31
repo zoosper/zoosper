@@ -8,7 +8,8 @@ it('locks the completed Page runtime ownership boundaries', function (): void {
     $factory = (string) file_get_contents($root . '/app/zoosper-page/config/controllers.php');
     expect($controller)->toContain('PageAdminGridResponder')
         ->toContain('PageAdminPreviewResponder')
-        ->toContain('PageAdminFormRenderer')
+        ->toContain('LegacyPageFormRenderer')
+        ->toContain('AdminFormRenderer')
         ->toContain('PageSaveCoordinator')
         ->toContain('PagePublicationCoordinator')
         ->not->toContain('PageGridQueryState::fromQuery')
@@ -17,7 +18,8 @@ it('locks the completed Page runtime ownership boundaries', function (): void {
         ->not->toContain('PageEvents::PUBLISHED')
         ->and($factory)->toContain('gridResponder: $services->get(PageAdminGridResponder::class)')
         ->toContain('previewResponder: new PageAdminPreviewResponder(')
-        ->toContain('formRenderer: new PageAdminFormRenderer(')
+        ->toContain('legacyFormRenderer: new PageAdminFormRenderer(')
+        ->toContain('formRenderer: $services->has(AdminFormRenderer::class)')
         ->toContain('pageSaver: $services->get(PageSaveCoordinator::class)')
         ->toContain('publication: new PagePublicationCoordinator(');
 });

@@ -16,7 +16,7 @@ use Zoosper\Core\I18n\IdentityTranslator;
 use Zoosper\Core\I18n\TranslatorInterface;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Page\Application\Save\PageSaveCoordinator;
-use Zoosper\Page\Admin\Form\PageAdminFormRenderer;
+use Zoosper\Page\Admin\Form\PageAdminFormRenderer as LegacyPageFormRenderer;
 use Zoosper\Page\Admin\PageAdminGridResponder;
 use Zoosper\Page\Admin\PageAdminPreviewResponder;
 use Zoosper\Page\Admin\PageRevisionAdminResponder;
@@ -24,6 +24,11 @@ use Zoosper\Page\Application\Publication\PagePublicationCoordinator;
 use Zoosper\Page\Admin\Lifecycle\PageLifecycleAdminResponder;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
+use Zoosper\Admin\Form\AdminFormRegistry;
+use Zoosper\Admin\Form\AdminFormRenderer;
+use Zoosper\Auth\UI\AdminViewRendererInterface;
+use Zoosper\Core\Editor\ContentEditorInterface;
+use Zoosper\Site\Repository\SiteRepository;
 
 /**
  * Thin Admin HTTP adapter for CMS Pages.
@@ -44,12 +49,17 @@ final readonly class PageAdminController
         private ?FlashMessageStoreInterface      $flashMessages = null,
         private ?TranslatorInterface             $translator = null,
         private ?AdminContextTranslatorResolver  $adminContextTranslatorResolver = null,
-        private ?PageAdminFormRenderer           $formRenderer = null,
+        private ?LegacyPageFormRenderer          $legacyFormRenderer = null,
         private ?PageSaveCoordinator              $pageSaver = null,
         private ?PagePublicationCoordinator       $publication = null,
         private ?AdminUrlGenerator                 $adminUrls = null,
         private ?PageRevisionAdminResponder         $revisionResponder = null,
         private ?PageLifecycleAdminResponder        $lifecycleResponder = null,
+        private ?AdminFormRegistry                 $formRegistry = null,
+        private ?AdminFormRenderer                 $formRenderer = null,
+        private ?AdminViewRendererInterface        $views = null,
+        private ?SiteRepository                    $sites = null,
+        private ?ContentEditorInterface            $contentEditor = null,
     )
     {
     }
@@ -91,18 +101,113 @@ final readonly class PageAdminController
 
     public function createForm(Request $request): Response
     {
-        $this->currentAdminUser();
+        $user = $this->currentAdminUser();
+
+        if ($this->formRegistry !== null && $this->formRenderer !== null && $this->views !== null) {
+            return Response::html($this->renderUnifiedForm('Create page', $this->adminUrl('/pages/create'), null, []), 200);
+        }
 
         return $this->html('Create page', $this->renderForm($this->adminUrl('/pages/create')));
+    }
+
+    private function renderUnifiedForm(string $title, string $action, ?Page $page = null, array $submitted = [], ?string $error = null, int $revisionPage = 1): string
+    {
+        $formDef = $this->formRegistry->get('admin.pages.form');
+
+        $siteOptions = [];
+        if ($this->sites !== null) {
+            foreach ($this->sites->allActive() as $site) {
+                $siteOptions[(string) $site->id] = $site->name . ' (' . $site->code . ')';
+            }
+        }
+
+        $fields = $formDef->fields;
+        foreach ($fields as $key => $field) {
+            if ($field->name === 'site_id') {
+                $fields[$key] = new \Zoosper\Admin\Form\AdminFormField(
+                    $field->name,
+                    $field->type,
+                    $field->label,
+                    $field->sortOrder,
+                    $field->section,
+                    ['options' => $siteOptions]
+                );
+            }
+        }
+
+        $content = (string) ($submitted['content'] ?? $page?->content ?? '');
+        $contentJson = (string) ($submitted['content_json'] ?? $page?->contentJson ?? '');
+
+        $editorHtml = '';
+        if ($this->contentEditor !== null) {
+            $editorHtml = $this->contentEditor->render('content', $content, [
+                'label' => 'Content', 'rows' => 14, 'required' => true,
+                'page' => $page, 'content_json' => $contentJson,
+            ]);
+        } else {
+            $editorHtml = '<input type="hidden" name="content_json" value="' . htmlspecialchars($contentJson, ENT_QUOTES) . '">'
+                . '<textarea name="content" rows="14" class="form-control" required>' . htmlspecialchars($content, ENT_QUOTES) . '</textarea>';
+        }
+
+        foreach ($fields as $key => $field) {
+            if ($field->name === 'content_html') {
+                $fields[$key] = new \Zoosper\Admin\Form\AdminFormField(
+                    $field->name,
+                    'html',
+                    $field->label,
+                    $field->sortOrder,
+                    $field->section,
+                    ['html' => $editorHtml]
+                );
+            }
+        }
+
+        $dynamicFormDef = new \Zoosper\Admin\Form\AdminFormDefinition($formDef->handle, $fields, $formDef->sections);
+
+        $values = $submitted ?: [
+            'site_id' => $page?->siteId,
+            'title' => $page?->title,
+            'slug' => $page?->slug,
+            'status' => $page?->status ?? 'draft',
+            'meta_title' => $page?->metaTitle,
+            'meta_description' => $page?->metaDescription,
+            'meta_keywords' => $page?->metaKeywords,
+            'canonical_url' => $page?->canonicalUrl,
+            'publish' => $page?->isPublished(),
+        ];
+
+        $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : [], $this->adminUrl('/pages'));
+
+        $historyHtml = $page !== null ? ($this->revisionResponder?->historyHtml($page, $revisionPage) ?? '') : '';
+        $lifecycleHtml = $page !== null ? ($this->lifecycleResponder?->actionsHtml($page) ?? '') : '';
+
+        $html = '
+        <div class="admin-page-workspace">
+            <header class="page-header">
+                <div class="page-header__copy">
+                    <p class="page-header__eyebrow">Pages · Content</p>
+                    <h1>' . ($page ? 'Edit page' : 'Create page') . '</h1>
+                </div>
+                <div class="page-header__actions">
+                    <a class="button button--secondary" href="' . htmlspecialchars($this->adminUrl('/pages'), ENT_QUOTES) . '">Back to pages</a>
+                </div>
+            </header>
+            ' . ($error ? '<div class="admin-alert admin-alert--danger">' . htmlspecialchars($error, ENT_QUOTES) . '</div>' : '') . '
+            ' . $formHtml . '
+            ' . ($historyHtml !== '' ? '<section class="admin-page-history">' . $historyHtml . '</section>' : '') . '
+            ' . ($lifecycleHtml !== '' ? '<section class="admin-page-lifecycle">' . $lifecycleHtml . '</section>' : '') . '
+        </div>';
+
+        return $this->views->render($title, 'zoosper-admin::admin/raw_content', ['content' => $html], $this->guard->user(), 'pages');
     }
 
     /** @param array<string, mixed> $submitted */
     private function renderForm(string $action, ?Page $page = null, ?string $error = null, array $submitted = []): string
     {
-        if ($this->formRenderer === null) {
+        if ($this->legacyFormRenderer === null) {
             throw new RuntimeException('Page Admin form renderer is unavailable.');
         }
-        return $this->formRenderer->render($action, $page, $error, $submitted);
+        return $this->legacyFormRenderer->render($action, $page, $error, $submitted);
     }
 
     public function create(Request $request): Response
@@ -116,6 +221,11 @@ final readonly class PageAdminController
         if (!$result->successful) {
             $key = $result->processorRejected ? 'page.processor_create_failed' : 'page.create_failed';
             $this->flashMessages?->error($this->t('Unable to create page. Please review the form.'), $key);
+
+            if ($this->formRegistry !== null && $this->formRenderer !== null && $this->views !== null) {
+                return Response::html($this->renderUnifiedForm('Create page', $this->adminUrl('/pages/create'), null, $form, $result->error), 422);
+            }
+
             return $this->html('Create page', $this->renderForm($this->adminUrl('/pages/create'), error: $result->error, submitted: $form), 422);
         }
         $this->flashMessages?->success($this->t('Page created successfully.'), 'page.created');
@@ -146,6 +256,20 @@ final readonly class PageAdminController
         $page = $this->pageFromRequest($request);
         if ($page === null) {
             return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
+        }
+
+        if ($this->formRegistry !== null && $this->formRenderer !== null && $this->views !== null) {
+            $revisionPage = $request->query('revision_page');
+            $revisionPage = $revisionPage !== null && ctype_digit($revisionPage) ? max(1, (int) $revisionPage) : 1;
+
+            return Response::html($this->renderUnifiedForm(
+                'Edit page',
+                $this->adminUrl('/pages/' . $page->id . '/edit'),
+                $page,
+                [],
+                null,
+                $revisionPage
+            ), 200);
         }
 
         $content = $this->renderForm($this->adminUrl('/pages/' . $page->id . '/edit'), $page);
@@ -179,6 +303,11 @@ final readonly class PageAdminController
         if (!$result->successful) {
             $key = $result->processorRejected ? 'page.processor_save_failed' : 'page.save_failed';
             $this->flashMessages?->error($this->t('Unable to save page. Please review the form.'), $key);
+
+            if ($this->formRegistry !== null && $this->formRenderer !== null && $this->views !== null) {
+                return Response::html($this->renderUnifiedForm($this->t('Edit page'), $this->adminUrl('/pages/' . $page->id . '/edit'), $page, $form, $result->error), 422);
+            }
+
             return $this->html('Edit page', $this->renderForm($this->adminUrl('/pages/' . $page->id . '/edit'), $page, $result->error, $form), 422);
         }
         $this->flashMessages?->success($this->t('Page saved successfully.'), 'page.saved');
@@ -293,6 +422,11 @@ final readonly class PageAdminController
         }
 
         return $user;
+    }
+
+    private function e(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 }
 

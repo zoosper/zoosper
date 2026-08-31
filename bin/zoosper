@@ -12,6 +12,10 @@ use Zoosper\Core\Console\ConsoleOutput;
 use Zoosper\Core\Console\ConsoleOptions;
 use Zoosper\Core\Console\BuiltIn\CacheClearCommand;
 use Zoosper\Core\Console\BuiltIn\CompileCommand;
+use Zoosper\Core\Console\BuiltIn\ModuleInstallCommand;
+use Zoosper\Core\Console\BuiltIn\ModuleUninstallCommand;
+use Zoosper\Core\Console\BuiltIn\ModuleEnableCommand;
+use Zoosper\Core\Console\BuiltIn\ModuleDisableCommand;
 use Zoosper\Core\Console\BuiltIn\GenerateSecretsCommand;
 use Zoosper\Core\Console\BuiltIn\ManifestCheckCommand;
 use Zoosper\Core\Console\BuiltIn\ManifestStatusCommand;
@@ -40,6 +44,7 @@ use Zoosper\Logger\Manager\LogManager;
 use Zoosper\Core\Module\ModuleManifestCompiler;
 use Zoosper\Core\Module\ModuleManifestStatus;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\Module\ModuleRepository;
 use Zoosper\Core\Scaffold\ConsoleCommandScaffolder;
 use Zoosper\Core\Scaffold\ModuleScaffolder;
 use Zoosper\Core\Scaffold\PackageModuleScaffolder;
@@ -70,11 +75,34 @@ $connection = new PdoConnectionProvider(
 try {
     $operationalCommandFactories = [
         'migrate' => static fn () => new MigrateCommand(new Migrator($connection->get(), $basePath . '/database/migrations', $modules)),
-        'compile' => static fn () => new CompileCommand(new ModuleManifestCompiler($basePath)),
+        'compile' => static function () use ($basePath, $connection): CompileCommand {
+            $repo = new ModuleRepository($connection->get());
+            return new CompileCommand(new ModuleManifestCompiler($basePath, null, $repo));
+        },
+        'module:install' => static function () use ($basePath, $connection, $modules): ModuleInstallCommand {
+            $repo = new ModuleRepository($connection->get());
+            $compiler = new ModuleManifestCompiler($basePath, null, $repo);
+            return new ModuleInstallCommand($repo, $compiler, $modules, new Migrator($connection->get(), $basePath . '/database/migrations', $modules));
+        },
+        'module:uninstall' => static function () use ($basePath, $connection): ModuleUninstallCommand {
+            $repo = new ModuleRepository($connection->get());
+            return new ModuleUninstallCommand($repo, new ModuleManifestCompiler($basePath, null, $repo));
+        },
+        'module:enable' => static function () use ($basePath, $connection): ModuleEnableCommand {
+            $repo = new ModuleRepository($connection->get());
+            return new ModuleEnableCommand($repo, new ModuleManifestCompiler($basePath, null, $repo));
+        },
+        'module:disable' => static function () use ($basePath, $connection): ModuleDisableCommand {
+            $repo = new ModuleRepository($connection->get());
+            return new ModuleDisableCommand($repo, new ModuleManifestCompiler($basePath, null, $repo));
+        },
         'cache:clear' => static fn () => new CacheClearCommand(new ModuleManifestCompiler($basePath)),
         'module:manifest:status' => static fn () => new ManifestStatusCommand(new ModuleManifestStatus($basePath)),
         'module:manifest:check' => static fn () => new ManifestCheckCommand(new ModuleManifestStatus($basePath)),
-        'deploy' => static fn () => new DeployCommand(new Migrator($connection->get(), $basePath . '/database/migrations', $modules), new ModuleManifestCompiler($basePath), new ModuleManifestStatus($basePath)),
+        'deploy' => static function () use ($basePath, $connection, $modules): DeployCommand {
+            $repo = new ModuleRepository($connection->get());
+            return new DeployCommand(new Migrator($connection->get(), $basePath . '/database/migrations', $modules), new ModuleManifestCompiler($basePath, null, $repo), new ModuleManifestStatus($basePath));
+        },
         'make:module' => static fn () => new MakeModuleCommand(new ModuleScaffolder($basePath)),
         'make:package-module' => static fn () => new MakePackageModuleCommand(new PackageModuleScaffolder($basePath)),
         'make:command' => static fn () => new MakeConsoleCommand(new ConsoleCommandScaffolder($basePath)),
@@ -100,7 +128,8 @@ try {
     }
 
     if ($command === 'help' || $command === 'list') {
-        $application = new ConsoleApplication(builtInCommands());
+        $moduleCommands = loadModuleCommands($basePath, $config, $connection, $modules);
+        $application = new ConsoleApplication(builtInCommands(), $moduleCommands);
 
         exit($application->run($command, [], new ConsoleOutput()));
     }
@@ -120,6 +149,10 @@ function builtInCommands(): array
     return [
         'migrate',
         'compile',
+        'module:install <name>',
+        'module:uninstall <name>',
+        'module:enable <name>',
+        'module:disable <name>',
         'cache:clear',
         'module:manifest:status',
         'module:manifest:check',

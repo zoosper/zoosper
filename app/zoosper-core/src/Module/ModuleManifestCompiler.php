@@ -32,8 +32,11 @@ final readonly class ModuleManifestCompiler
     private string $cachePath;
     private string $cacheDir;
 
-    public function __construct(private string $basePath, ?string $cachePath = null)
-    {
+    public function __construct(
+        private string $basePath,
+        ?string $cachePath = null,
+        private ?ModuleRepository $moduleRepository = null
+    ) {
         $this->cachePath = $cachePath ?? rtrim($basePath, '/\\') . '/var/cache/modules.php';
         $this->cacheDir = dirname($this->cachePath);
     }
@@ -50,6 +53,15 @@ final readonly class ModuleManifestCompiler
     {
         $registry = new ModuleRegistry($this->basePath);
         $modules = $registry->discoverModulesLive();
+
+        if ($this->moduleRepository !== null) {
+            $statuses = $this->moduleRepository->allStatuses();
+            $modules = array_filter($modules, static function (Module $m) use ($statuses): bool {
+                $status = $statuses[$m->name] ?? 'enabled';
+                return $status === 'enabled';
+            });
+            $modules = array_values($modules);
+        }
 
         $this->ensureCacheDirectoryExists();
         $this->writeManifest($this->renderCacheFile($modules));

@@ -126,7 +126,7 @@ return [
         flashMessages: $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         translator: $services->has(TranslatorInterface::class) ? $services->get(TranslatorInterface::class) : null,
         adminContextTranslatorResolver: $services->has(AdminContextTranslatorResolver::class) ? $services->get(AdminContextTranslatorResolver::class) : null,
-        formRenderer: new PageAdminFormRenderer(
+        legacyFormRenderer: new PageAdminFormRenderer(
             $services->get(CsrfTokenManager::class),
             $services->get(SiteRepository::class),
             $services->has(ContentEditorInterface::class) ? $services->get(ContentEditorInterface::class) : null,
@@ -157,5 +157,10 @@ return [
             $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
             $services->get(AdminUrlGenerator::class),
         ),
+        formRegistry: $services->has(AdminFormRegistry::class) ? $services->get(AdminFormRegistry::class) : null,
+        formRenderer: $services->has(AdminFormRenderer::class) ? $services->get(AdminFormRenderer::class) : null,
+        views: $services->has(AdminViewRendererInterface::class) ? $services->get(AdminViewRendererInterface::class) : null,
+        sites: $services->get(SiteRepository::class),
+        contentEditor: $services->has(ContentEditorInterface::class) ? $services->get(ContentEditorInterface::class) : null,
     ),
 ];

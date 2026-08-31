@@ -20,6 +20,9 @@
 - **[x] Phase 10AU:** implemented aggregated discovery manifestation. `ModuleRegistry` and `Module` now include a `discovery` map tracking configuration files (services, routes, etc.) across modules. `ModuleManifestCompiler` caches this map in `var/cache/modules.php`, eliminating hundreds of redundant `is_file()` and `glob()` calls during production boot. Loaders for services, routes, commands, events, and admin UI now consume this map.
 - **[x] Phase 10AV:** graduated Content Security Policy (CSP) from report-only to full enforcement. Default configured to `report_only => false` in `config/security.php` and `.env.example`.
 - **[x] Phase 10AW:** completed Admin Grid & Form kernel consolidation. Migrated `UserAdminController`, `RoleAdminController`, and `SiteAdminController` to the unified `AdminFormRenderer` with support for sections and Danger Zone deletions.
+- **[x] Phase 10AX:** migrated `PageAdminController` to the unified `AdminFormRenderer`, enhancing the renderer to support `checkbox` and `html` blocks (Editor.js). Verified with `AdminPageFormAcceptanceTest`.
+- **[x] Phase 10AY:** implemented media derivative offloading. Introduced `media_processing_queue`, `QueuedMediaProcessor`, and the `media:process-queue` worker command. Added pre-decode resource limits to `GdMediaProcessor`.
+- **[x] Phase 10AZ:** built the Module Lifecycle kernel. Added database-backed module registry with `module:install`, `module:uninstall`, `module:enable`, and `module:disable` commands that dynamically filter the compiled module manifest.
 
 ---
 
