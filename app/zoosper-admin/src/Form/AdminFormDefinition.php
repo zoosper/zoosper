@@ -6,8 +6,14 @@ namespace Zoosper\Admin\Form;
 
 final readonly class AdminFormDefinition
 {
-    /** @param list<AdminFormField> $fields */
-    public function __construct(public string $handle, public array $fields)
-    {
+    /**
+     * @param list<AdminFormField> $fields
+     * @param array<string, array{title: string, description?: string}> $sections
+     */
+    public function __construct(
+        public string $handle,
+        public array $fields,
+        public array $sections = []
+    ) {
     }
 }

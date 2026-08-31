@@ -12,6 +12,7 @@ final readonly class AdminFormField
         public string $type,
         public string $label,
         public int $sortOrder,
+        public string $section = 'default',
         public array $config = [],
     ) {
     }
@@ -24,6 +25,7 @@ final readonly class AdminFormField
             type: (string) ($config['type'] ?? 'text'),
             label: (string) ($config['label'] ?? ucfirst(str_replace('_', ' ', $name))),
             sortOrder: (int) ($config['sort_order'] ?? 100),
+            section: (string) ($config['section'] ?? 'default'),
             config: $config,
         );
     }

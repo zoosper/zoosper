@@ -8,6 +8,7 @@ use Throwable;
 use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
 use Zoosper\Core\Site\SiteContextResolver;
+use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Error\ErrorHandler;
 
 final readonly class Application
@@ -15,10 +16,16 @@ final readonly class Application
     public function __construct(
         private Router $router,
         private SecurityHeaders $securityHeaders,
+        private ServiceContainer $services,
         private ?SiteContextResolver $siteResolver = null,
         private ?ErrorHandler $errorHandler = null,
         private ?\SessionHandlerInterface $sessionHandler = null,
     ) {
+    }
+
+    public function services(): ServiceContainer
+    {
+        return $this->services;
     }
 
     public function handle(): void

@@ -23,6 +23,9 @@ final class ServiceContainer
     /** @var array<string, callable(self): object> */
     private array $factories = [];
 
+    /** @var array<string, bool> */
+    private array $loading = [];
+
     public function set(string $id, object $service): void
     {
         $this->services[$id] = $service;
@@ -70,41 +73,61 @@ final class ServiceContainer
             return $this->services[$id];
         }
 
-        if (isset($this->factories[$id])) {
-            try {
+        if (isset($this->loading[$id])) {
+            throw new ZoosperException(
+                message: 'Circular dependency detected for: ' . $id,
+                context: 'The service container was already resolving this ID when a recursive request for the same ID occurred.',
+                suggestion: 'Refactor your constructors to break the circularity, or use a lazy proxy/factory decorator.',
+                details: ['service_id' => $id, 'loading_stack' => array_keys($this->loading)]
+            );
+        }
+
+        $this->loading[$id] = true;
+
+        try {
+            if (isset($this->factories[$id])) {
                 $service = ($this->factories[$id])($this);
-            } catch (Throwable $exception) {
-                throw new ZoosperException(
-                    message: 'Service factory failed while creating: ' . $id,
-                    context: 'A lazy service factory was registered, but it threw an exception during construction.',
-                    suggestion: 'Check the module config/services.php file that registers this service. Then run `php tools/verify-service-providers.php` for the detailed failing service.',
-                    docsUrl: 'docs/operations/troubleshooting-helpful-errors.md',
-                    details: [
-                        'service_id' => $id,
-                        'registered_service_ids' => $this->ids(),
-                    ],
-                    previous: $exception,
-                );
+
+                if (!is_object($service)) {
+                    throw new ZoosperException(
+                        message: 'Service factory did not return an object for: ' . $id,
+                        context: 'Factories in config/services.php must return an object instance. Scalars, arrays and null are invalid service definitions.',
+                        suggestion: 'Update the factory to return a class instance, for example: `SomeService::class => static fn (ServiceContainer $services): SomeService => new SomeService()`.',
+                        docsUrl: 'docs/operations/module-development.md',
+                        details: ['service_id' => $id],
+                    );
+                }
+
+                $this->services[$id] = $service;
+
+                return $service;
             }
 
-            if (!is_object($service)) {
-                throw new ZoosperException(
-                    message: 'Service factory did not return an object for: ' . $id,
-                    context: 'Factories in config/services.php must return an object instance. Scalars, arrays and null are invalid service definitions.',
-                    suggestion: 'Update the factory to return a class instance, for example: `SomeService::class => static fn (ServiceContainer $services): SomeService => new SomeService()`.',
-                    docsUrl: 'docs/operations/module-development.md',
-                    details: ['service_id' => $id],
-                );
+            if (class_exists($id)) {
+                return $this->autowire($id);
+            }
+        } catch (Throwable $exception) {
+            if ($exception instanceof ZoosperException) {
+                throw $exception;
             }
 
-            $this->services[$id] = $service;
-
-            return $service;
+            throw new ZoosperException(
+                message: 'Service resolution failed for: ' . $id,
+                context: 'An error occurred while trying to resolve or autowire the requested service.',
+                suggestion: 'Check the error message and previous exception for details. If autowiring, ensure all dependencies are registrable or autowireable.',
+                details: [
+                    'service_id' => $id,
+                    'registered_service_ids' => $this->ids(),
+                ],
+                previous: $exception,
+            );
+        } finally {
+            unset($this->loading[$id]);
         }
 
         throw new ZoosperException(
             message: 'Service is not registered: ' . $id,
-            context: 'A service was requested from the container, but no enabled module registered an instance or factory for this ID.',
+            context: 'A service was requested from the container, but no enabled module registered an instance or factory for this ID, and it could not be autowired.',
             suggestion: 'Add a service definition to your module config/services.php, enable the module that provides this service, or check for a typo in the service ID. Then run `php tools/verify-service-providers.php`.',
             docsUrl: 'docs/operations/module-development.md',
             details: [
@@ -112,6 +135,68 @@ final class ServiceContainer
                 'registered_service_ids' => $this->ids(),
             ],
         );
+    }
+
+    private function autowire(string $class): object
+    {
+        $reflection = new \ReflectionClass($class);
+        if (!$reflection->isInstantiable()) {
+            throw new ZoosperException(
+                message: 'Cannot autowire non-instantiable class: ' . $class,
+                context: 'The requested class exists but is abstract, an interface, or has a private constructor.',
+                suggestion: 'Ensure you are requesting a concrete class, or register a manual factory for the interface.'
+            );
+        }
+
+        $constructor = $reflection->getConstructor();
+        if ($constructor === null) {
+            $service = new $class();
+            $this->services[$class] = $service;
+            return $service;
+        }
+
+        $dependencies = [];
+        foreach ($constructor->getParameters() as $parameter) {
+            $type = $parameter->getType();
+            
+            if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
+                $dependencies[] = $this->get($type->getName());
+                continue;
+            }
+
+            if ($type instanceof \ReflectionUnionType) {
+                $resolved = false;
+                foreach ($type->getTypes() as $unionType) {
+                    if ($unionType instanceof \ReflectionNamedType && !$unionType->isBuiltin()) {
+                        try {
+                            $dependencies[] = $this->get($unionType->getName());
+                            $resolved = true;
+                            break;
+                        } catch (Throwable) {
+                            // Try next type in union
+                        }
+                    }
+                }
+                if ($resolved) {
+                    continue;
+                }
+            }
+
+            if ($parameter->isDefaultValueAvailable()) {
+                $dependencies[] = $parameter->getDefaultValue();
+                continue;
+            }
+
+            throw new ZoosperException(
+                message: 'Cannot autowire parameter `' . $parameter->getName() . '` for: ' . $class,
+                context: 'The constructor requires a parameter that could not be automatically resolved (unsupported type, builtin type, or no matching registered service).',
+                suggestion: 'Manually register a factory for this class in config/services.php to provide specific arguments.'
+            );
+        }
+
+        $service = $reflection->newInstanceArgs($dependencies);
+        $this->services[$class] = $service;
+        return $service;
     }
 
     public function has(string $id): bool

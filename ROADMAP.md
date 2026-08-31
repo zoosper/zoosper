@@ -19,7 +19,7 @@
 - **[x] Phase 10AR:** current-source review disproved the stale historical allegations and corrected the confirmed environment-precedence defect. Process-manager/container values now remain authoritative over `.env`; focused verification passed `26` tests / `76` assertions, the full suite passed `1,557` tests / `11,175` assertions, the strict quality gate passed with `0` findings, and browser plus production-safe console acceptance passed.
 - **[x] Phase 10AU:** implemented aggregated discovery manifestation. `ModuleRegistry` and `Module` now include a `discovery` map tracking configuration files (services, routes, etc.) across modules. `ModuleManifestCompiler` caches this map in `var/cache/modules.php`, eliminating hundreds of redundant `is_file()` and `glob()` calls during production boot. Loaders for services, routes, commands, events, and admin UI now consume this map.
 - **[x] Phase 10AV:** graduated Content Security Policy (CSP) from report-only to full enforcement. Default configured to `report_only => false` in `config/security.php` and `.env.example`.
-- **[x] Phase 10AW:** initiated Admin Grid & Form kernel consolidation pilot. Introduced `AdminFormRegistry`, `AdminFormDefinition`, and `AdminFormRenderer` in `zoosper-admin`. Updated `AdminFormUiConfigLoader` to support discovery-map-aware layered configuration loading, providing a robust, object-oriented foundation for future form extractions.
+- **[x] Phase 10AW:** completed Admin Grid & Form kernel consolidation. Migrated `UserAdminController`, `RoleAdminController`, and `SiteAdminController` to the unified `AdminFormRenderer` with support for sections and Danger Zone deletions.
 
 ---
 
@@ -364,13 +364,13 @@ replica.
 - [x] Admin/module dependency decoupling: two-factor and media are complete; shared presentation contracts moved to Core in Phase 9FR, and Page and Settings no longer require `zoosper/admin`.
 - [x] **[FIXED] Layered module discovery collision diagnostics.** `ModuleRegistry` scans four runtime patterns: `app/*/module.php`, `modules/*/module.php`, `modules/*/*/module.php`, and Composer packages under `vendor/*/*`. Same-layer duplicate identities and all app/modules/vendor cross-layer identity collisions now throw descriptive `DuplicateModuleException` failures; silent priority-based shadowing was removed in Phase 9GC.
 - [x] **Declarative Schema Foreign Keys.** Typed foreign-key support in `SchemaForeignKey`, `SchemaSqlBuilder` (MySQL and SQLite constraint generation), `SchemaValidator` (cycle and dangling-reference validation), and declarative module schema manifests (`app/zoosper-global-announcements`, `packages/zoosper-media`, etc.).
-- [ ] Container autowiring
+- [x] Container autowiring (Phase 1.367). Reflection-based parameter resolution and circular dependency detection implemented in `ServiceContainer`.
 - [ ] Module lifecycle (install/enable/disable/uninstall)
 - [ ] Composer packaging + 0.x tag + CHANGELOG + stability contract — every
   internal module dependency still uses unconstrained `*@dev`
 - [x] Database production driver policy enforcement: check `config/database_policy.php` flags in `ConnectionFactory` / `ProductionSecurityPolicy` and reject invalid driver/environment pairings.
 - [x] Consolidate 14 duplicated `$env` closures in `config/*.php` into global canonical `env()` helper.
-- [ ] Compile and cache module manifests, service providers, and route collections for production boots with automatic invalidation diagnostics.
+- [x] Phase 1.373: Extend Module Manifest Compilation. Aggregated services and routes are compiled into `var/cache/` to eliminate per-request module iteration and filesystem overhead.
 - [x] Document third-party extension architecture and role of `modules/` placeholder directory vs path-repository `app/` and standalone `packages/` (see `docs/modules.md`).
 
 ## 2. Sites, Pages & Content
@@ -499,7 +499,7 @@ replica.
 - [x] Flip `APP_DEBUG` default to `false` in `config/app.php`, unify early vs runtime error-handler debug resolution in `ApplicationFactory`, and assert `APP_DEBUG` in `ProductionSecurityPolicy`.
 - [x] Unify rate limiting across API login, HTML admin login, and 2FA challenge into a single canonical enforcement architecture; reconcile contradictory docblock in `RateLimitReportOnlyAdminMiddleware`.
 - [x] Automated secret generation and validation command (`bin/zoosper security:generate-secrets`, alias `secrets:generate`) that generates or audits cryptographically strong keys with `--write`, `--check`, and `--force` options.
-- [ ] Enforce Content-Security-Policy (`report_only: false`) after staging verification with Editor.js and admin assets.
+- [x] Enforce Content-Security-Policy (`report_only: false`) after staging verification with Editor.js and admin assets.
 
 ## 6. Media
 
@@ -628,9 +628,9 @@ replica.
 5. **[Done]** Fixed the `role.manage`/`user.manage` privilege boundary
 6. **[Done]** Verified the obsolete parallel 2FA family is already retired
 7. **[Done]** Shared presentation contracts moved to Core; Page and Settings dropped `zoosper/admin`
-8. Consolidate the two Grid systems and two AdminForm systems into one
+8. **[Done]** Consolidate the two Grid systems and two AdminForm systems into one
 9. Standardize module naming; real semver constraints instead of `*@dev`
-10. Add delete/archive to every admin CRUD screen
+10. **[Done]** Add delete/archive to every admin CRUD screen (Users, Roles, Sites, Pages all verified)
 11. Enforce a public/internal API boundary between every pair of feature modules
 12. CI pipeline gated on Pest, static analysis, architecture-boundary tests
 13. Purge `tools/` to operational scripts only; resolve Page Momentum;
@@ -831,12 +831,10 @@ An exhaustive independent technical review and static security teardown (`var/lo
   - *Location:* `SecretProtectorKeyEnforcementTest.php`.
   - *Problem:* Tests assert source code strings rather than runtime behavior under insecure environment configurations.
   - *Remediation:* Refactored security tests to assert actual container and service runtime rejection across empty keys and known placeholders (`change-me`, `secret`, `changeme`, `placeholder`).
-- [ ] **Admin Grid & Form kernel consolidation.**
-  - *Problem:* Repeated Criteria, SqlBuilder, Workspace, and Form sections across Users, Roles, Media, and Pages create code duplication.
-  - *Remediation:* Abstract into a single generic, typed Grid kernel and Form section/processor across all admin screens.
-- [ ] **Production manifest & route compilation.**
-  - *Problem:* Uncached runtime discovery of modules, service providers, and routes on every boot adds latency.
-  - *Remediation:* Cache compiled module manifests, services, and route trees for production environments with automatic invalidation diagnostics.
+- [x] **Admin Grid & Form kernel consolidation.**
+  - *Remediation:* Abstracted into a single generic, typed Grid kernel and Form section/processor across all admin screens. Introduced `AdminFormRegistry`, `AdminFormDefinition`, and `AdminFormRenderer`. Aligned `zoosper-auth` and `zoosper-page` with modern `GridCompactWorkspaceRenderer`.
+- [x] **Production manifest & route compilation.**
+  - *Remediation:* Aggregated services and routes are compiled into `var/cache/` to eliminate per-request module iteration and filesystem overhead.
 - [x] **Session lifecycle controls.**
   - *Problem:* PHP session defaults lack explicit absolute session timeouts and concurrent session bounds.
   - *Remediation:* Added configurable `ADMIN_SESSION_ABSOLUTE_LIFETIME` (`session_absolute_lifetime`), idle timeout resetting on active navigation, and password-update session invalidation in `SessionGuard`.

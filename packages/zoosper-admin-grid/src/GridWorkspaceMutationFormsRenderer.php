@@ -107,7 +107,7 @@ final readonly class GridWorkspaceMutationFormsRenderer
         }
         $html .= $this->hidden('sort_by', (string) ($state->criteria->sortBy ?? ''));
         $html .= $this->hidden('sort_dir', $state->criteria->sortDir);
-        $html .= $this->hidden('page_size', (string) $state->criteria->pager->pageSize);
+        $html .= $this->hidden('workspace_page_size', (string) $state->criteria->pager->pageSize);
         foreach ($state->visibleColumns as $key) {
             $html .= $this->hidden('visible_columns[]', $key);
         }

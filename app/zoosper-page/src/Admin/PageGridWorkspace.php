@@ -20,7 +20,7 @@ final readonly class PageGridWorkspace
     public function __construct(
         private PageGridDefinition $definition,
         private GridViewStateResolver $resolver,
-        private GridWorkspaceRenderer|GridCompactWorkspaceRenderer $renderer,
+        private GridCompactWorkspaceRenderer $renderer,
         private ?GridColumnOrderer $columnOrderer = null,
         private ?AdminUrlGenerator $adminUrls = null,
     ) {

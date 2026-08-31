@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Site\Admin\Controller;
 
+use Zoosper\Admin\Form\AdminFormRegistry;
+use Zoosper\Admin\Form\AdminFormRenderer;
 use RuntimeException;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Auth\Model\AdminUser;
@@ -36,6 +38,8 @@ final readonly class SiteAdminController
         private ?SiteGrid $grid = null,
         private ?AdminCollectionGrid $collectionGrid = null,
         private ?SiteLifecycleAdminResponder $lifecycle = null,
+        private ?AdminFormRegistry $formRegistry = null,
+        private ?AdminFormRenderer $formRenderer = null,
     ) {
     }
 
@@ -139,6 +143,35 @@ final readonly class SiteAdminController
 
     private function form(string $action, ?Site $site = null, ?string $error = null, array $submitted = []): string
     {
+        if ($this->formRegistry !== null && $this->formRenderer !== null) {
+            $formDef = $this->formRegistry->get('admin.sites.form');
+
+            $values = $submitted !== [] ? $submitted : ($site !== null ? [
+                'name' => $site->name,
+                'code' => $site->code,
+                'status' => $site->status,
+                'homepage_slug' => $site->homepageSlug,
+                'theme_code' => $site->themeCode,
+                'locale' => $site->locale,
+                'currency' => $site->currency,
+                'base_url' => $site->baseUrl,
+                'website_code' => $site->websiteCode,
+                'store_code' => $site->storeCode,
+                'store_view_code' => $site->storeViewCode,
+                'path_prefix' => $site->pathPrefix,
+                'host' => '',
+            ] : []);
+
+            return $this->formRenderer->render(
+                form: $formDef,
+                values: $values,
+                action: $action,
+                method: 'POST',
+                errors: $error ? ['_form' => $error] : [],
+                cancelUrl: $this->adminUrl('sites')
+            );
+        }
+
         $value = static fn (string $key, mixed $fallback = ''): string => htmlspecialchars((string) ($submitted[$key] ?? $fallback), ENT_QUOTES, 'UTF-8');
         $status = (string) ($submitted['status'] ?? $site?->status ?? 'active');
         $errorHtml = $error !== null ? '<p class="error">' . $this->e($error) . '</p>' : '';

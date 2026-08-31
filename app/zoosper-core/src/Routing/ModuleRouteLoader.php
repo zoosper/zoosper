@@ -31,27 +31,36 @@ final readonly class ModuleRouteLoader
      *
      * @param list<RouteMiddleware> $middleware
      */
-    public function registerAdminRoutes(Router $router, array $middleware = []): void
+    public function registerAdminRoutes(Router $router, array $middleware = [], ?string $basePath = null): void
     {
-        $this->registerRoutesFromConfig($router, 'admin_routes.php', $middleware);
+        $this->registerRoutesFromConfig($router, 'admin_routes.php', $middleware, $basePath);
     }
 
-    public function registerApiRoutes(Router $router): void
+    public function registerApiRoutes(Router $router, ?string $basePath = null): void
     {
-        $this->registerRoutesFromConfig($router, 'api_routes.php', []);
+        $this->registerRoutesFromConfig($router, 'api_routes.php', [], $basePath);
     }
 
     /** @param list<RouteMiddleware> $middleware */
-    private function registerRoutesFromConfig(Router $router, string $configFile, array $middleware): void
+    private function registerRoutesFromConfig(Router $router, string $configFile, array $middleware, ?string $basePath = null): void
     {
-        foreach ($this->load($configFile) as $route) {
+        foreach ($this->load($configFile, $basePath) as $route) {
             $router->map($route->method, $route->path, $this->handlerFor($route, $middleware), $route->stateless);
         }
     }
 
     /** @return list<ModuleRouteDefinition> */
-    private function load(string $configFile): array
+    private function load(string $configFile, ?string $basePath = null): array
     {
+        if ($basePath !== null) {
+            $compiledFileName = $configFile === 'admin_routes.php' ? 'routes_admin_compiled.php' : 'routes_api_compiled.php';
+            $compiledFile = rtrim($basePath, '/\\') . '/var/cache/' . $compiledFileName;
+            if (is_file($compiledFile)) {
+                $config = require $compiledFile;
+                return $this->processConfig($config, $configFile, $compiledFile, 'aggregated_cache');
+            }
+        }
+
         $routes = [];
         $discoveryKey = $configFile === 'admin_routes.php' ? 'routes_admin' : 'routes_api';
 
@@ -61,40 +70,46 @@ final readonly class ModuleRouteLoader
             }
 
             $file = $module->configPath($configFile);
-
             $config = require $file;
-            if (!is_array($config)) {
-                throw new ZoosperException(
-                    message: 'Route config must return an array: ' . $file,
-                    context: 'Module `' . $module->name . '` has a route config file that did not return an array.',
-                    suggestion: 'Return a list of route arrays with method, path, controller and action keys.',
-                    docsUrl: 'docs/operations/troubleshooting-helpful-errors.md',
-                    details: ['module' => $module->name, 'file' => $file, 'returned_type' => get_debug_type($config)],
-                );
-            }
-
-            $declarations = $configFile === 'admin_routes.php' && $this->adminPaths !== null
-                ? $this->adminPaths->routes($config)
-                : $config;
-
-            foreach ($declarations as $route) {
-                if (!is_array($route)) {
-                    continue;
-                }
-                $routes[] = new ModuleRouteDefinition(
-                    method: strtoupper((string) ($route['method'] ?? 'GET')),
-                    path: (string) ($route['path'] ?? ''),
-                    controller: (string) ($route['controller'] ?? ''),
-                    action: (string) ($route['action'] ?? '__invoke'),
-                    permissions: ModuleRouteDefinition::normalisePermissions($route['permission'] ?? null),
-                    public: (bool) ($route['public'] ?? false),
-                    stateless: (bool) ($route['stateless'] ?? false),
-                );
-            }
+            $routes = array_merge($routes, $this->processConfig($config, $configFile, $file, $module->name));
         }
 
-        foreach ($routes as $route) {
-            $this->assertValid($route);
+        return $routes;
+    }
+
+    /** @return list<ModuleRouteDefinition> */
+    private function processConfig(mixed $config, string $configFile, string $file, string $moduleName): array
+    {
+        if (!is_array($config)) {
+            throw new ZoosperException(
+                message: 'Route config must return an array: ' . $file,
+                context: 'Module `' . $moduleName . '` has a route config file that did not return an array.',
+                suggestion: 'Return a list of route arrays with method, path, controller and action keys.',
+                docsUrl: 'docs/operations/troubleshooting-helpful-errors.md',
+                details: ['module' => $moduleName, 'file' => $file, 'returned_type' => get_debug_type($config)],
+            );
+        }
+
+        $declarations = $configFile === 'admin_routes.php' && $this->adminPaths !== null
+            ? $this->adminPaths->routes($config)
+            : $config;
+
+        $routes = [];
+        foreach ($declarations as $route) {
+            if (!is_array($route)) {
+                continue;
+            }
+            $definition = new ModuleRouteDefinition(
+                method: strtoupper((string) ($route['method'] ?? 'GET')),
+                path: (string) ($route['path'] ?? ''),
+                controller: (string) ($route['controller'] ?? ''),
+                action: (string) ($route['action'] ?? '__invoke'),
+                permissions: ModuleRouteDefinition::normalisePermissions($route['permission'] ?? null),
+                public: (bool) ($route['public'] ?? false),
+                stateless: (bool) ($route['stateless'] ?? false),
+            );
+            $this->assertValid($definition);
+            $routes[] = $definition;
         }
 
         return $routes;

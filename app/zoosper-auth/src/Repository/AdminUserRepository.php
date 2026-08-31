@@ -354,4 +354,14 @@ final readonly class AdminUserRepository
         $statement = $this->pdo->prepare('UPDATE admin_users SET locale = :locale WHERE id = :id');
         $statement->execute(['locale' => $locale, 'id' => $id]);
     }
+
+    public function delete(int $id): void
+    {
+        $statement = $this->pdo->prepare('DELETE FROM admin_users WHERE id = :id');
+        $statement->execute(['id' => $id]);
+
+        if ($statement->rowCount() !== 1) {
+            throw new RuntimeException('Admin User deletion did not affect exactly one row.');
+        }
+    }
 }

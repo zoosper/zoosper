@@ -28,8 +28,11 @@ use Zoosper\Admin\Editor\Config\ContentEditorRuntimeConfig;
 use Zoosper\Admin\Editor\Config\ContentEditorRuntimeConfigFactory;
 use Zoosper\Admin\Editor\EditorJsContentEditor;
 use Zoosper\Admin\Editor\TextareaContentEditor;
+use Zoosper\Admin\Form\AdminFormRegistry;
+use Zoosper\Admin\Form\AdminFormRenderer;
 use Zoosper\Admin\Form\AdminFormUiConfigLoader;
 use Zoosper\Admin\Layout\AdminLayout;
+use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Admin\Message\FlashMessageRenderer;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Admin\Message\SessionFlashMessageStore;
@@ -47,7 +50,6 @@ use Zoosper\Admin\UI\AdminComponentRenderer;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\AdminDashboard\Contract\DashboardRolePreferenceRepositoryInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
-use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Announcement\AdminAnnouncementProviderInterface;
 use Zoosper\Core\Audit\AuditLoggerInterface;
@@ -75,6 +77,8 @@ return [
     LoginHistoryRepository::class => static fn(ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
     AuditLogRepository::class => static fn(ServiceContainer $services): AuditLogRepository => new AuditLogRepository($services->get(PDO::class)),
     AuditLogger::class => static fn(ServiceContainer $services): AuditLogger => new AuditLogger($services->get(AuditLogRepository::class)),
+    AdminFormRegistry::class => static fn(): AdminFormRegistry => new AdminFormRegistry(),
+    AdminFormRenderer::class => static fn(ServiceContainer $services): AdminFormRenderer => new AdminFormRenderer($services->get(CsrfTokenManager::class)),
     AdminFormUiConfigLoader::class => static fn(ServiceContainer $services): AdminFormUiConfigLoader => new AdminFormUiConfigLoader($services->get(ModuleRegistry::class)),
     ModuleDashboardWidgetLoader::class => static fn(ServiceContainer $services): ModuleDashboardWidgetLoader => new ModuleDashboardWidgetLoader($services->get(ModuleRegistry::class), $services),
     DashboardPreferenceRepository::class => static fn(ServiceContainer $services): DashboardPreferenceRepository => new DashboardPreferenceRepository($services->get(PDO::class)),

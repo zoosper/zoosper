@@ -29,11 +29,12 @@ use RuntimeException;
  */
 final readonly class ModuleManifestCompiler
 {
-    private string $cachePath;
+    private string $cacheDir;
 
     public function __construct(private string $basePath, ?string $cachePath = null)
     {
-        $this->cachePath = $cachePath ?? rtrim($basePath, '/\\') . '/var/cache/modules.php';
+        $path = $cachePath ?? rtrim($basePath, '/\\') . '/var/cache/modules.php';
+        $this->cacheDir = dirname($path);
     }
 
     /**
@@ -50,9 +51,79 @@ final readonly class ModuleManifestCompiler
         $modules = $registry->discoverModulesLive();
 
         $this->ensureCacheDirectoryExists();
-        $this->writeAtomically($this->renderCacheFile($modules));
+        $this->writeAtomically($this->cachePath(), $this->renderCacheFile($modules));
+
+        $this->compileServices($modules);
+        $this->compileRoutes($modules, 'admin_routes.php', 'routes_admin_compiled.php');
+        $this->compileRoutes($modules, 'api_routes.php', 'routes_api_compiled.php');
 
         return $modules;
+    }
+
+    private function compileServices(array $modules): void
+    {
+        $services = [];
+        $decorators = [];
+
+        foreach ($modules as $module) {
+            if ($module->discovery['services'] ?? false) {
+                $services[] = $module->configPath('services.php');
+            }
+            if ($module->discovery['service_decorators'] ?? false) {
+                $decorators[] = $module->configPath('service_decorators.php');
+            }
+        }
+
+        $this->writeAtomically(
+            $this->cacheDir . '/services_compiled.php',
+            $this->renderAggregatedFile($services, $decorators)
+        );
+    }
+
+    private function compileRoutes(array $modules, string $configFileName, string $cacheFileName): void
+    {
+        $discoveryKey = $configFileName === 'admin_routes.php' ? 'routes_admin' : 'routes_api';
+        $files = [];
+
+        foreach ($modules as $module) {
+            if ($module->discovery[$discoveryKey] ?? false) {
+                $files[] = $module->configPath($configFileName);
+            }
+        }
+
+        $this->writeAtomically(
+            $this->cacheDir . '/' . $cacheFileName,
+            $this->renderAggregatedFile($files)
+        );
+    }
+
+    private function renderAggregatedFile(array $files, array $decorators = []): string
+    {
+        $generatedAt = gmdate('c');
+        $content = "<?php\n\ndeclare(strict_types=1);\n\n/**\n * COMPILED AGGREGATED CONFIG — Generated: {$generatedAt}\n */\n\n";
+
+        if (empty($decorators)) {
+            $content .= "return array_merge(\n";
+            foreach ($files as $file) {
+                $content .= "    require " . var_export($file, true) . ",\n";
+            }
+            $content .= ");\n";
+        } else {
+            // Special case for services + decorators
+            $content .= "\$definitions = array_merge(\n";
+            foreach ($files as $file) {
+                $content .= "    require " . var_export($file, true) . ",\n";
+            }
+            $content .= ");\n\n";
+            $content .= "\$decorators = array_merge(\n";
+            foreach ($decorators as $file) {
+                $content .= "    require " . var_export($file, true) . ",\n";
+            }
+            $content .= ");\n\n";
+            $content .= "return ['definitions' => \$definitions, 'decorators' => \$decorators];\n";
+        }
+
+        return $content;
     }
 
     /**
@@ -65,45 +136,57 @@ final readonly class ModuleManifestCompiler
      */
     public function clear(): bool
     {
-        if (!is_file($this->cachePath)) {
-            return true;
+        $files = [
+            $this->cachePath(),
+            $this->cacheDir . '/services_compiled.php',
+            $this->cacheDir . '/routes_admin_compiled.php',
+            $this->cacheDir . '/routes_api_compiled.php',
+        ];
+
+        $allCleared = true;
+        foreach ($files as $file) {
+            if (!is_file($file)) {
+                continue;
+            }
+
+            if (!unlink($file)) {
+                $allCleared = false;
+                continue;
+            }
+
+            if (function_exists('opcache_invalidate')) {
+                opcache_invalidate($file, true);
+            }
         }
 
-        $cleared = unlink($this->cachePath);
-        if ($cleared && function_exists('opcache_invalidate')) {
-            opcache_invalidate($this->cachePath, true);
-        }
-
-        return $cleared;
+        return $allCleared;
     }
 
     public function cachePath(): string
     {
-        return $this->cachePath;
+        return $this->cacheDir . '/modules.php';
     }
 
     public function isCompiled(): bool
     {
-        return is_file($this->cachePath);
+        return is_file($this->cachePath());
     }
 
     private function ensureCacheDirectoryExists(): void
     {
-        $directory = dirname($this->cachePath);
-
-        if (is_dir($directory)) {
+        if (is_dir($this->cacheDir)) {
             return;
         }
 
-        if (!mkdir($directory, 0775, true) && !is_dir($directory)) {
-            throw new RuntimeException('Unable to create module cache directory: ' . $directory);
+        if (!mkdir($this->cacheDir, 0775, true) && !is_dir($this->cacheDir)) {
+            throw new RuntimeException('Unable to create module cache directory: ' . $this->cacheDir);
         }
     }
 
-    private function writeAtomically(string $contents): void
+    private function writeAtomically(string $path, string $contents): void
     {
-        $directory = dirname($this->cachePath);
-        $temporaryPath = tempnam($directory, '.modules-');
+        $directory = dirname($path);
+        $temporaryPath = tempnam($directory, '.' . basename($path) . '-');
         if ($temporaryPath === false) {
             throw new RuntimeException(
                 'Unable to create temporary module cache file in: ' . $directory,
@@ -118,14 +201,14 @@ final readonly class ModuleManifestCompiler
                 );
             }
 
-            if (!rename($temporaryPath, $this->cachePath)) {
+            if (!rename($temporaryPath, $path)) {
                 throw new RuntimeException(
-                    'Unable to atomically replace module cache file: ' . $this->cachePath,
+                    'Unable to atomically replace module cache file: ' . $path,
                 );
             }
 
             if (function_exists('opcache_invalidate')) {
-                opcache_invalidate($this->cachePath, true);
+                opcache_invalidate($path, true);
             }
         } finally {
             if (is_file($temporaryPath)) {

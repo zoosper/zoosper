@@ -9,6 +9,8 @@ use Zoosper\Auth\Admin\Grid\AuthGridQueryState;
 
 use Zoosper\Auth\Admin\Grid\AdminUserGridIndex;
 
+use Zoosper\Admin\Form\AdminFormRegistry;
+use Zoosper\Admin\Form\AdminFormRenderer;
 use RuntimeException;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Model\AdminUser;
@@ -49,6 +51,8 @@ final readonly class UserAdminController
         private ?AdminUserGridIndex $gridIndex = null,
         private ?AdminUrlGenerator $adminUrls = null,
         private ?AdminUserLifecycleAdminResponder $lifecycle = null,
+        private ?AdminFormRegistry $formRegistry = null,
+        private ?AdminFormRenderer $formRenderer = null,
     ) {
     }
 
@@ -215,6 +219,24 @@ final readonly class UserAdminController
     public function restore(\Zoosper\Core\Http\Request $request): \Zoosper\Core\Http\Response
     {
         return $this->lifecycleOperation($request, 'restore');
+    }
+
+    public function delete(Request $request): Response
+    {
+        $actor = $this->currentAdminUser();
+        $user = $this->userFromRequest($request);
+
+        if ($user === null) {
+            return $this->renderMessage('Admin User Not Found', 'Admin user not found.', 404);
+        }
+
+        if ($user->id === $actor->id) {
+            return Response::redirect($this->adminUrl('users/edit', ['id' => $user->id, 'notice' => 'cannot_delete_self']));
+        }
+
+        $this->users->delete($user->id);
+
+        return Response::redirect($this->adminUrl('users', ['notice' => 'deleted']));
     }
 
     private function lifecycleOperation(\Zoosper\Core\Http\Request $request, string $operation): \Zoosper\Core\Http\Response
@@ -395,6 +417,99 @@ final readonly class UserAdminController
         ?string $noticeType = null,
         string $noticeMessage = '',
     ): Response {
+        if ($this->formRegistry !== null && $this->formRenderer !== null) {
+            $formDef = $this->formRegistry->get('admin.users.form');
+
+            $roleOptions = [];
+            foreach ($this->roles->allRoles() as $role) {
+                $roleOptions[(string) $role['id']] = (string) $role['label'];
+            }
+
+            // Create a dynamic definition with roles
+            $fields = $formDef->fields;
+            $fields[] = new \Zoosper\Admin\Form\AdminFormField(
+                name: 'role_ids',
+                type: 'checkbox-list',
+                label: 'Roles',
+                sortOrder: 100,
+                section: 'roles',
+                config: ['options' => $roleOptions]
+            );
+
+            $sections = $formDef->sections;
+            $sections['roles'] = ['title' => 'Assigned roles', 'description' => 'Roles determine effective permissions. Assignment changes remain subject to role-management authority.'];
+
+            $dynamicFormDef = new \Zoosper\Admin\Form\AdminFormDefinition($formDef->handle, $fields, $sections);
+
+            $values = $submitted !== [] ? $submitted : [
+                'name' => $user?->name,
+                'email' => $user?->email,
+                'status' => $user?->status ?? 'active',
+                'locale' => $user?->locale,
+                'role_ids' => $user !== null ? array_map('strval', $this->users->roleIdsForUser($user->id)) : [],
+            ];
+
+            $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : []);
+
+            $backUrl = $this->adminUrl('users');
+            $deleteUrl = $user !== null ? $this->adminUrl('users/' . $user->id . '/delete') : null;
+            $csrfToken = $this->csrf->token();
+            $isEdit = $user !== null;
+
+            $noticeHtml = $noticeType !== null ? '<div class="admin-alert admin-alert--' . htmlspecialchars($noticeType, ENT_QUOTES) . '" role="status">' . htmlspecialchars($noticeMessage, ENT_QUOTES) . '</div>' : '';
+            $errorHtml = $error !== null ? '<div class="admin-alert admin-alert--danger" role="alert">' . htmlspecialchars($error, ENT_QUOTES) . '</div>' : '';
+
+            $dangerZoneHtml = '';
+            if ($isEdit && $this->guard->user()?->id !== $user->id) {
+                $dangerZoneHtml = '
+                <section class="card admin-user-card admin-user-danger" aria-labelledby="admin-user-delete-title">
+                    <div class="card__header"><div><h2 class="card__title" id="admin-user-delete-title">Danger Zone</h2><p class="muted">Irreversible account actions.</p></div></div>
+                    <div class="admin-user-danger__body">
+                        <div><strong>Delete admin user</strong><p class="muted">Permanently remove this user and all their role assignments. This action cannot be undone.</p></div>
+                        <form method="post" action="' . htmlspecialchars($deleteUrl, ENT_QUOTES) . '">
+                            <input type="hidden" name="_csrf_token" value="' . htmlspecialchars($csrfToken, ENT_QUOTES) . '">
+                            <button type="submit" class="button button--danger" data-confirm-message="Permanently delete this admin user? This cannot be undone.">Delete user</button>
+                        </form>
+                    </div>
+                </section>';
+            }
+
+            $lifecycleHtml = $user !== null && $this->lifecycle !== null
+                ? $this->lifecycle->actionsHtml(
+                    $user,
+                    $this->guard->user() ?? throw new RuntimeException('Authenticated Admin User required while rendering the Admin User form.'),
+                )
+                : '';
+
+            if ($lifecycleHtml !== '') {
+                $lifecycleHtml = '<section class="admin-user-lifecycle" aria-label="Account lifecycle">' . $lifecycleHtml . '</section>';
+            }
+
+            $html = '
+            <div class="admin-user-workspace">
+                <header class="page-header admin-user-header">
+                    <div class="page-header__copy">
+                        <p class="page-header__eyebrow">Users · Access control</p>
+                        <h1>' . ($isEdit ? 'Edit admin user' : 'Create admin user') . '</h1>
+                    </div>
+                    <a class="button button--secondary" href="' . htmlspecialchars($backUrl, ENT_QUOTES) . '">Back to users</a>
+                </header>
+                ' . $noticeHtml . '
+                ' . $errorHtml . '
+                ' . $formHtml . '
+                ' . $dangerZoneHtml . '
+                ' . $lifecycleHtml . '
+            </div>';
+
+            return Response::html($this->views->render(
+                $title,
+                'zoosper-admin::admin/raw_content',
+                ['content' => $html],
+                $this->guard->user(),
+                'admin-users',
+            ), $status);
+        }
+
         $selectedRoleIds = $submitted !== []
             ? $this->roleIdsFromForm($submitted)
             : ($user !== null ? $this->users->roleIdsForUser($user->id) : []);
@@ -426,6 +541,7 @@ final readonly class UserAdminController
             'currentLocale' => $currentLocale,
             'roles' => $roles,
             'isEdit' => $user !== null,
+            'deleteUrl' => $user !== null ? $this->adminUrl('users/' . $user->id . '/delete') : null,
             'error' => $error,
             'noticeType' => $noticeType,
             'noticeMessage' => $noticeMessage,

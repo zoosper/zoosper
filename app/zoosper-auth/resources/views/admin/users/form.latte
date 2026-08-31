@@ -47,5 +47,18 @@
         <footer class="admin-user-actions"><a class="button button--secondary" href="{$backUrl}">Cancel</a><button type="submit">Save user</button></footer>
     </form>
 
+    {if $isEdit && $guard->user()->id !== $user->id}
+    <section class="card admin-user-card admin-user-danger" aria-labelledby="admin-user-delete-title">
+        <div class="card__header"><div><h2 class="card__title" id="admin-user-delete-title">Danger Zone</h2><p class="muted">Irreversible account actions.</p></div></div>
+        <div class="admin-user-danger__body">
+            <div><strong>Delete admin user</strong><p class="muted">Permanently remove this user and all their role assignments. This action cannot be undone.</p></div>
+            <form method="post" action="{$deleteUrl}">
+                <input type="hidden" name="_csrf_token" value="{$csrfToken}">
+                <button type="submit" class="button button--danger" data-confirm-message="Permanently delete this admin user? This cannot be undone.">Delete user</button>
+            </form>
+        </div>
+    </section>
+    {/if}
+
     {if isset($lifecycleHtml) && $lifecycleHtml !== ''}<section class="admin-user-lifecycle" aria-label="Account lifecycle">{$lifecycleHtml|noescape}</section>{/if}
 </div>

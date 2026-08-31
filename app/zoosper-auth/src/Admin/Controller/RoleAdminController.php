@@ -9,6 +9,8 @@ use Zoosper\Auth\Admin\Grid\AuthGridQueryState;
 
 use Zoosper\Auth\Admin\Grid\RoleGridIndex;
 
+use Zoosper\Admin\Form\AdminFormRegistry;
+use Zoosper\Admin\Form\AdminFormRenderer;
 use RuntimeException;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Layout\AdminLayout;
@@ -44,6 +46,8 @@ final readonly class RoleAdminController
         private ?RoleLifecycleAdminResponder $lifecycle = null,
         private ?TemplateRenderer $templates = null,
         private ?AdminViewRendererInterface $views = null,
+        private ?AdminFormRegistry $formRegistry = null,
+        private ?AdminFormRenderer $formRenderer = null,
     ) {
     }
 
@@ -150,6 +154,75 @@ final readonly class RoleAdminController
     /** @param array<string, mixed>|null $role @param array<string, mixed> $submitted */
     private function form(string $action, ?array $role = null, ?string $error = null, array $submitted = []): string
     {
+        if ($this->formRegistry !== null && $this->formRenderer !== null) {
+            $formDef = $this->formRegistry->get('admin.roles.form');
+
+            $roleId = $role !== null ? (int) $role['id'] : null;
+            $selectedPermissions = $submitted !== []
+                ? $this->idsFromForm($submitted, 'permission_ids')
+                : ($roleId !== null ? $this->roles->permissionIdsForRole($roleId) : []);
+            $selectedUsers = $submitted !== []
+                ? $this->idsFromForm($submitted, 'user_ids')
+                : ($roleId !== null ? $this->roles->userIdsForRole($roleId) : []);
+
+            $fields = $formDef->fields;
+
+            // Add dynamic components as HTML fields
+            $fields[] = new \Zoosper\Admin\Form\AdminFormField(
+                name: 'permissions',
+                type: 'html',
+                label: 'Permissions',
+                sortOrder: 100,
+                section: 'permissions',
+                config: ['html' => $this->permissionTree($selectedPermissions)]
+            );
+
+            if ($this->users !== null) {
+                $fields[] = new \Zoosper\Admin\Form\AdminFormField(
+                    name: 'users',
+                    type: 'html',
+                    label: 'Users',
+                    sortOrder: 110,
+                    section: 'users',
+                    config: ['html' => $this->userAssignment($selectedUsers)]
+                );
+            }
+
+            $sections = $formDef->sections;
+            $sections['permissions'] = ['title' => 'Permissions', 'description' => 'Select the permissions assigned to this role.'];
+            $sections['users'] = ['title' => 'User assignments', 'description' => 'Select users who should be assigned to this role.'];
+
+            $dynamicFormDef = new \Zoosper\Admin\Form\AdminFormDefinition($formDef->handle, $fields, $sections);
+
+            $values = $submitted !== [] ? $submitted : [
+                'code' => (string) ($role['code'] ?? ''),
+                'label' => (string) ($role['label'] ?? ''),
+            ];
+
+            $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : []);
+
+            $lifecycleHtml = $roleId !== null && $this->lifecycle !== null
+                ? $this->lifecycle->actionsHtml($roleId, (string) ($role['code'] ?? ''))
+                : '';
+
+            if ($lifecycleHtml !== '') {
+                $lifecycleHtml = '<section class="admin-role-lifecycle" aria-label="Role lifecycle">' . $lifecycleHtml . '</section>';
+            }
+
+            return '
+            <div class="admin-role-workspace">
+                <header class="page-header admin-role-header">
+                    <div class="page-header__copy">
+                        <p class="page-header__eyebrow">Roles · Access control</p>
+                        <h1>' . ($roleId !== null ? 'Edit role' : 'Create role') . '</h1>
+                    </div>
+                    <a class="button button--secondary" href="' . htmlspecialchars($this->adminUrl('roles'), ENT_QUOTES) . '">Back to roles</a>
+                </header>
+                ' . $formHtml . '
+                ' . $lifecycleHtml . '
+            </div>';
+        }
+
         $roleId = $role !== null ? (int) $role['id'] : null;
         $selectedPermissions = $submitted !== []
             ? $this->idsFromForm($submitted, 'permission_ids')

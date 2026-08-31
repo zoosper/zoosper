@@ -33,6 +33,9 @@ use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
 use Zoosper\Core\Routing\FallbackHandlerInterface;
 use Zoosper\Core\Routing\NullFallbackHandler;
+use Zoosper\Admin\Form\AdminFormRegistry;
+use Zoosper\Admin\Form\AdminFormRenderer;
+use Zoosper\Admin\Form\AdminFormUiConfigLoader;
 
 final class ApplicationFactory
 {
@@ -61,22 +64,25 @@ final class ApplicationFactory
         );
         $errorHandler->register();
 
-        $pdo = (new ConnectionFactory($config, $basePath))->create();
-
         $services = new ServiceContainer();
         $services->set(ConfigRepository::class, $config);
         $services->set(ConfigRepositoryInterface::class, $markoConfig);
         $services->set(ModuleRegistry::class, $modules);
-        $services->set(PDO::class, $pdo);
+        $services->factory(PDO::class, static fn (ServiceContainer $services): PDO => (new ConnectionFactory($services->get(ConfigRepository::class), $basePath))->create());
         $services->set(LogManager::class, $logManager);
         $services->set(ErrorHandler::class, $errorHandler);
         $services->set('logger.default', $logManager->default());
         $services->set('logger.exception', $logManager->exceptions());
 
         (new ModuleLoggerProviderLoader($modules, $logManager, $services))->register();
-        (new ServiceProviderLoader($modules, $services))->register();
+        (new ServiceProviderLoader($modules, $services))->register($basePath);
+
         // Load root service providers before controller providers are created.
         (new ServiceProviderManifestLoader($basePath))->load($services);
+
+        if ($services->has(AdminFormUiConfigLoader::class) && $services->has(AdminFormRegistry::class)) {
+            $services->get(AdminFormUiConfigLoader::class)->registerAll($services->get(AdminFormRegistry::class));
+        }
 
         $sessionHandler = $services->has(\SessionHandlerInterface::class)
             ? $services->get(\SessionHandlerInterface::class)
@@ -91,8 +97,8 @@ final class ApplicationFactory
         );
 
         $adminMiddleware = (new ModuleAdminMiddlewareLoader($modules, $services))->load();
-        $routeLoader->registerAdminRoutes($router, $adminMiddleware);
-        $routeLoader->registerApiRoutes($router);
+        $routeLoader->registerAdminRoutes($router, $adminMiddleware, $basePath);
+        $routeLoader->registerApiRoutes($router, $basePath);
 
         $assetPipelineConfig = $config->array('asset_pipeline');
         $assetModules = new AssetModuleRegistry();
@@ -132,6 +138,7 @@ final class ApplicationFactory
         return new Application(
             $router,
             new SecurityHeaders($config->array('security.headers'), $config->array('security.csp'), $config->array('security.hsts')),
+            $services,
             $services->get(\Zoosper\Core\Site\SiteContextResolver::class),
             $errorHandler,
             $sessionHandler,

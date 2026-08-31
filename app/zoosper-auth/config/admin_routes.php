@@ -21,6 +21,7 @@ return [
 
     ['method' => 'POST', 'path' => '/admin/users/{id:\d+}/disable', 'controller' => UserAdminController::class, 'action' => 'disable', 'permission' => 'user.manage'],
     ['method' => 'POST', 'path' => '/admin/users/{id:\d+}/restore', 'controller' => UserAdminController::class, 'action' => 'restore', 'permission' => 'user.manage'],
+    ['method' => 'POST', 'path' => '/admin/users/{id:\d+}/delete', 'controller' => UserAdminController::class, 'action' => 'delete', 'permission' => 'user.manage'],
     ['method' => 'POST', 'path' => '/admin/roles/{id:\d+}/delete', 'controller' => RoleAdminController::class, 'action' => 'deletePermanently', 'permission' => 'role.manage'],
     ['method' => 'GET', 'path' => '/admin/access-tokens', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'index'],
     ['method' => 'POST', 'path' => '/admin/access-tokens/create', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'create'],

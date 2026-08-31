@@ -25,6 +25,8 @@ final readonly class AdminFormUiConfigLoader
     {
         /** @var array<string, array<string, mixed>> $fields */
         $fields = [];
+        /** @var array<string, array{title: string, description?: string}> $sections */
+        $sections = [];
         /** @var list<string> $removed */
         $removed = [];
 
@@ -43,6 +45,10 @@ final readonly class AdminFormUiConfigLoader
             $fragment = $config[$handle] ?? null;
             if (!is_array($fragment)) {
                 continue;
+            }
+
+            if (isset($fragment['sections']) && is_array($fragment['sections'])) {
+                $sections = array_replace_recursive($sections, $fragment['sections']);
             }
 
             foreach (($fragment['remove'] ?? []) as $fieldName) {
@@ -86,6 +92,31 @@ final readonly class AdminFormUiConfigLoader
 
         usort($objects, static fn (AdminFormField $a, AdminFormField $b): int => [$a->sortOrder, $a->label] <=> [$b->sortOrder, $b->label]);
 
-        return new AdminFormDefinition($handle, $objects);
+        return new AdminFormDefinition($handle, $objects, $sections);
+    }
+
+    public function registerAll(AdminFormRegistry $registry): void
+    {
+        $handles = [];
+        foreach ($this->modules->enabledModules() as $module) {
+            $hasUi = $module->discovery['admin_ui'] ?? is_file($module->configPath('admin_ui.php'));
+            if ($hasUi) {
+                $file = $module->configPath('admin_ui.php');
+                if (!is_file($file)) {
+                    continue;
+                }
+                $config = require $file;
+                if (is_array($config)) {
+                    foreach (array_keys($config) as $handle) {
+                        $handles[] = (string) $handle;
+                    }
+                }
+            }
+        }
+
+        $uniqueHandles = array_unique($handles);
+        foreach ($uniqueHandles as $handle) {
+            $registry->register($this->load($handle));
+        }
     }
 }

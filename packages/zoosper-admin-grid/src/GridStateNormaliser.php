@@ -35,7 +35,7 @@ final readonly class GridStateNormaliser
         $sortDir = strtolower(GridFilterValue::one($state['sort_dir'] ?? $definition->defaultSortDir)) === 'asc'
             ? 'asc' : 'desc';
         $page = max(1, (int) GridFilterValue::one($state['page'] ?? 1));
-        $pageSize = max(5, min(200, (int) GridFilterValue::one($state['page_size'] ?? 20)));
+        $pageSize = max(5, min(200, (int) GridFilterValue::one($state['page_size'] ?? $state['workspace_page_size'] ?? 20)));
         $allowed = array_fill_keys($definition->allColumnKeys(), true);
 
         $submittedColumns = array_key_exists('visible_columns', $state)
