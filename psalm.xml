@@ -7,6 +7,7 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
     findUnusedBaselineEntry="true"
     findUnusedCode="true"
+    errorBaseline="psalm-baseline.xml"
 >
     <projectFiles>
         <directory name="app/zoosper-admin/src" />
@@ -15,22 +16,23 @@
         <directory name="app/zoosper-core/src" />
         <directory name="app/zoosper-editor/src" />
         <directory name="app/zoosper-global-announcements/src" />
-        <directory name="app/zoosper-install/src" />
         <directory name="app/zoosper-mail/src" />
         <directory name="app/zoosper-menu/src" />
         <directory name="app/zoosper-page/src" />
         <directory name="app/zoosper-seo/src" />
-        <directory name="app/zoosper-session/src" />
         <directory name="app/zoosper-settings/src" />
         <directory name="app/zoosper-site/src" />
         <directory name="app/zoosper-theme/src" />
         <directory name="app/zoosper-two-factor/src" />
         <directory name="app/zoosper-url-rewrite/src" />
         <directory name="packages/zoosper-admin-dashboard/src" />
+        <directory name="packages/zoosper-admin-form/src" />
         <directory name="packages/zoosper-admin-grid/src" />
         <directory name="packages/zoosper-api-grid/src" />
+        <directory name="packages/zoosper-audit/src" />
         <directory name="packages/zoosper-cache/src" />
         <directory name="packages/zoosper-config/src" />
+        <directory name="packages/zoosper-database/src" />
         <directory name="packages/zoosper-errors/src" />
         <directory name="packages/zoosper-grid/src" />
         <directory name="packages/zoosper-logger/src" />

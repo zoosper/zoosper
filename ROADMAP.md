@@ -565,8 +565,8 @@ replica.
 - [x] Keep one canonical admin-grid column customisation guide rather than
   phase/hotfix documentation fragments (see `docs/admin.md`).
 - [x] Add MySQL/MariaDB service container to `.github/workflows/quality-gate.yml` and run test suite against MySQL in CI.
-- [ ] Expand `psalm.xml` scan scope to include all first-party modules and packages (`zoosper-session`, `zoosper-global-announcements`, `zoosper-cache`, `zoosper-config`, etc.) and make Psalm a blocking CI gate.
-- [ ] Update crypto/2FA regression tests (`SecretProtectorKeyEnforcementTest`) to assert runtime behavioral enforcement rather than source-string matching.
+- [x] Expand `psalm.xml` scan scope to include all first-party modules and packages (`zoosper-session`, `zoosper-global-announcements`, `zoosper-cache`, `zoosper-config`, etc.) and make Psalm a blocking CI gate.
+- [x] Update crypto/2FA regression tests (`SecretProtectorKeyEnforcementTest`) to assert runtime behavioral enforcement rather than source-string matching.
 - [x] Clean up stale doc comments in `bootstrap/autoload.php` and reconcile contradictory Supported Versions tables in `SECURITY.md`.
 - [ ] Evaluate PHP 8.5+ language floor vs 8.3/8.4 and document explicit technical requirements in README.
 
@@ -761,7 +761,7 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 ### P2 process and hygiene
 
 - [x] Add a mechanical roadmap-summary drift check based on structured status identifiers, not fuzzy prose matching — validated in `RoadmapStructureIntegrityTest`.
-- [ ] Commit a Psalm baseline and prevent new advisory errors while reducing the existing baseline.
+- [x] Commit a Psalm baseline and prevent new advisory errors while reducing the existing baseline.
 - [x] Make `composer.json` and `composer.lock` the source of truth for the dependency scope stated in `SECURITY.md`.
 - [ ] Record behavioural assertion/test coverage evidence for the historical test-file reduction.
 - [ ] Define semver constraints for extracted first-party packages instead of publishing `dev-dev` as the only compatibility signal.
