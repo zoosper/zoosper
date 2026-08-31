@@ -1660,7 +1660,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-media",
-                "reference": "b4befa226dad273951d9d9590153d9bf39fcbd3c"
+                "reference": "c09f1f9f47c2d13d4981bbe7808909946c365ca2"
             },
             "require": {
                 "ext-pdo": "*",
