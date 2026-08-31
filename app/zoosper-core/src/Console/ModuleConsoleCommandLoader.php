@@ -32,10 +32,11 @@ final readonly class ModuleConsoleCommandLoader
         $commands = [];
 
         foreach ($this->modules->enabledModules() as $module) {
-            $file = $module->configPath('console.php');
-            if (!is_file($file)) {
+            if (!($module->discovery['console'] ?? is_file($module->configPath('console.php')))) {
                 continue;
             }
+
+            $file = $module->configPath('console.php');
 
             $config = require $file;
             if (!is_array($config)) {

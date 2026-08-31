@@ -22,7 +22,7 @@ return [
      */
     'csp' => [
         'enabled' => filter_var(env('SECURITY_CSP_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
-        'report_only' => filter_var(env('SECURITY_CSP_REPORT_ONLY', true), FILTER_VALIDATE_BOOLEAN),
+        'report_only' => filter_var(env('SECURITY_CSP_REPORT_ONLY', false), FILTER_VALIDATE_BOOLEAN),
         'report_uri' => env('SECURITY_CSP_REPORT_URI'),
         'policy' => implode('; ', [
             "default-src 'self'",

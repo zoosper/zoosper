@@ -53,12 +53,14 @@ final readonly class ModuleRouteLoader
     private function load(string $configFile): array
     {
         $routes = [];
+        $discoveryKey = $configFile === 'admin_routes.php' ? 'routes_admin' : 'routes_api';
 
         foreach ($this->modules->enabledModules() as $module) {
-            $file = $module->configPath($configFile);
-            if (!is_file($file)) {
+            if (!($module->discovery[$discoveryKey] ?? is_file($module->configPath($configFile)))) {
                 continue;
             }
+
+            $file = $module->configPath($configFile);
 
             $config = require $file;
             if (!is_array($config)) {

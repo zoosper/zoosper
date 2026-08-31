@@ -148,6 +148,7 @@ final readonly class ModuleManifestCompiler
                 'version' => $module->version,
                 'sortOrder' => $module->sortOrder,
                 'source' => $module->source,
+                'discovery' => $module->discovery,
             ];
         }
 

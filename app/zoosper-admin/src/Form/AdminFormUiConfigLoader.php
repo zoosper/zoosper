@@ -29,10 +29,11 @@ final readonly class AdminFormUiConfigLoader
         $removed = [];
 
         foreach ($this->modules->enabledModules() as $module) {
-            $file = $module->configPath('admin_ui.php');
-            if (!is_file($file)) {
+            if (!($module->discovery['admin_ui'] ?? is_file($module->configPath('admin_ui.php')))) {
                 continue;
             }
+
+            $file = $module->configPath('admin_ui.php');
 
             $config = require $file;
             if (!is_array($config)) {

@@ -16,6 +16,7 @@ final readonly class Module
         public string $version = '0.1.0',
         public int $sortOrder = 100,
         public string $source = 'app',
+        public array $discovery = [],
     ) {
     }
 

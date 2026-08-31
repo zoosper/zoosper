@@ -19,10 +19,11 @@ final readonly class ServiceProviderLoader
     public function register(): void
     {
         foreach ($this->modules->enabledModules() as $module) {
-            $file = $module->configPath('services.php');
-            if (!is_file($file)) {
+            if (!($module->discovery['services'] ?? is_file($module->configPath('services.php')))) {
                 continue;
             }
+
+            $file = $module->configPath('services.php');
 
             $definitions = require $file;
             if (!is_array($definitions)) {
@@ -79,8 +80,11 @@ final readonly class ServiceProviderLoader
         }
 
         foreach ($this->modules->enabledModules() as $module) {
+            if (!($module->discovery['service_decorators'] ?? is_file($module->configPath('service_decorators.php')))) {
+                continue;
+            }
+
             $file = $module->configPath('service_decorators.php');
-            if (!is_file($file)) continue;
             $decorators = require $file;
             if (!is_array($decorators)) throw new ZoosperException(message: 'Service decorators must return an array.', context: $file);
             foreach ($decorators as $id => $decorator) {

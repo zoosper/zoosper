@@ -17,6 +17,9 @@
 - **[x] Phase 10AQ:** module-discovery status now matches the Phase 9GC fail-closed implementation; stale silent-override claims and the obsolete false-signal override test were removed while the dedicated same-layer and cross-layer contracts remain authoritative.
 - **Phase 10AS-H completed in source, browser-accepted, and pushed:** the Admin now has a permission-aware Dashboard, fluid light/dark shell and shared components, package-owned responsive Grid workflows, screen-scoped assets, theme-coherent feature surfaces, a sidebar-owned collapse control, semantic destination icons, and non-interactive navigation groups. Final accepted source is `364414a4878cde36fd89de8583326e4d1ff1f625`, verified by `1,550` tests with `11,157` assertions and a `3`-check standard quality gate with `0` errors and `0` warnings. This phase was not deployed.
 - **[x] Phase 10AR:** current-source review disproved the stale historical allegations and corrected the confirmed environment-precedence defect. Process-manager/container values now remain authoritative over `.env`; focused verification passed `26` tests / `76` assertions, the full suite passed `1,557` tests / `11,175` assertions, the strict quality gate passed with `0` findings, and browser plus production-safe console acceptance passed.
+- **[x] Phase 10AU:** implemented aggregated discovery manifestation. `ModuleRegistry` and `Module` now include a `discovery` map tracking configuration files (services, routes, etc.) across modules. `ModuleManifestCompiler` caches this map in `var/cache/modules.php`, eliminating hundreds of redundant `is_file()` and `glob()` calls during production boot. Loaders for services, routes, commands, events, and admin UI now consume this map.
+- **[x] Phase 10AV:** graduated Content Security Policy (CSP) from report-only to full enforcement. Default configured to `report_only => false` in `config/security.php` and `.env.example`.
+- **[x] Phase 10AW:** initiated Admin Grid & Form kernel consolidation pilot. Introduced `AdminFormRegistry`, `AdminFormDefinition`, and `AdminFormRenderer` in `zoosper-admin`. Updated `AdminFormUiConfigLoader` to support discovery-map-aware layered configuration loading, providing a robust, object-oriented foundation for future form extractions.
 
 ---
 
@@ -204,15 +207,7 @@ monorepo, not separately-exported packages — `export-ignore` would be
 inert for them today (there is no "export" event happening). Add it when
 each module gets extracted, not before.
 
-**Next extraction candidate: logger.** `LogManager`/`LocalLogger` (in
-`zoosper-core`) map almost one-to-one onto `marko/log` + `marko/log-file`
-(confirmed real via a targeted search: a PSR-3-compatible `LoggerInterface`,
-`LogLevel` enum, `LogRecord`, `LineFormatter`, file rotation) — genuinely
-the next-cleanest extraction candidate after errors, per the project
-owner's explicit request. **Not yet started** — needs the same
-read-real-source-first discipline applied before designing the extraction
-(check `marko/log`'s real constructor/interface shape, confirm no
-circular-dependency trap the way config nearly had one).
+- **[Done]** Extract logger (`marko/log` + `marko/log-file`) as a standalone package (`packages/zoosper-logger`) following the `zoosper/errors` template. `LogManager` and `LocalLogger` map onto Marko's daily-rotated file logging with structural redaction and multi-channel support.
 
 ### Evaluated and explicitly deferred: `marko/database`, `marko/database-mysql`
 
@@ -643,7 +638,7 @@ replica.
 14. **[Done]** Reconciled the `marko/framework` roadmap claim — root
     `composer.json` cleaned of every unused Marko package; real, verified
     adoption continues per-module (`zoosper/errors`, `zoosper/core`) — see §14
-15. **[New]** Extract logger (`marko/log`/`marko/log-file`) as the next
+15. **[Done]** Extract logger (`marko/log`/`marko/log-file`) as the next
     `zoosper-core` → standalone-package candidate — see §14
 
 ---
@@ -793,9 +788,8 @@ An exhaustive independent technical review and static security teardown (`var/lo
   - *Remediation:* Change `config/app.php` default to `false`; unify error-handler debug resolution in `ApplicationFactory`; assert `APP_DEBUG=false` in `ProductionSecurityPolicy::assertEnvironment()` for `staging` and `production`.
 - [x] **Referential integrity & database cascade reconciliation.**
   - *Remediation:* Declarative schema foreign keys (`SchemaForeignKey`, `SchemaSqlBuilder`, `SchemaValidator`) with typed constraints, restrict/cascade semantics, and application lifecycle checks are implemented across entities.
-- [ ] **CSP enforcement graduation.**
-  - *Problem:* `config/security.php` ships CSP with `report_only: true`, meaning violations are not actively blocked.
-  - *Remediation:* Verify Editor.js, admin scripts, and asset endpoints in staging, resolve any inline style/script conflicts, and switch `report_only` to `false` in production.
+- [x] **CSP enforcement graduation.**
+  - *Remediation:* CSP graduated from `report_only` to full enforcement; default configured to `false` in `config/security.php` and `.env.example`.
 
 ### High-Priority Reliability & Architecture Remediation (P1)
 

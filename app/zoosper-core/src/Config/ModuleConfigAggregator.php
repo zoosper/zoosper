@@ -28,19 +28,56 @@ final readonly class ModuleConfigAggregator
     ) {
     }
 
-    /** @return array<string, mixed> */
     public function aggregate(): array
     {
-        $directories = [];
+        $items = [];
 
         foreach ($this->modules->enabledModules() as $module) {
-            $directories[] = $module->configPath('settings');
+            $settings = $module->discovery['settings'] ?? null;
+            $directory = $module->configPath('settings');
+
+            if ($settings === null) {
+                // Fallback to live scan if discovery map is missing (e.g. not compiled)
+                $files = glob(rtrim($directory, '/') . '/*.php') ?: [];
+            } else {
+                $files = array_map(fn (string $name): string => $directory . '/' . $name . '.php', $settings);
+            }
+
+            foreach ($files as $file) {
+                if (!is_file($file)) {
+                    continue;
+                }
+                $key = basename($file, '.php');
+                $value = require $file;
+
+                if (!is_array($value)) {
+                    continue;
+                }
+
+                if (array_key_exists($key, $items) && is_array($items[$key])) {
+                    $items[$key] = self::mergeConfig($items[$key], $value);
+                } else {
+                    $items[$key] = $value;
+                }
+            }
         }
 
-        // Root config has the highest priority, so it is merged last.
-        $directories[] = rtrim($this->rootConfigPath, '/');
+        // Root config has the highest priority
+        $rootConfig = rtrim($this->rootConfigPath, '/');
+        foreach (glob($rootConfig . '/*.php') ?: [] as $file) {
+            $key = basename($file, '.php');
+            $value = require $file;
+            if (!is_array($value)) {
+                continue;
+            }
+            if (array_key_exists($key, $items) && is_array($items[$key])) {
+                $items[$key] = self::mergeConfig($items[$key], $value);
+            } else {
+                $items[$key] = $value;
+            }
+        }
 
-        return self::fromDirectories($directories);
+        return $items;
     }
 
     /**

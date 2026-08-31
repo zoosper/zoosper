@@ -192,6 +192,7 @@ final class ModuleRegistry
                 version: (string) ($entry['version'] ?? '0.1.0'),
                 sortOrder: (int) ($entry['sortOrder'] ?? 100),
                 source: (string) ($entry['source'] ?? 'app'),
+                discovery: (array) ($entry['discovery'] ?? []),
             );
         }
 
@@ -383,7 +384,41 @@ final class ModuleRegistry
             version: $version,
             sortOrder: (int) ($metadata['sort_order'] ?? 100),
             source: $source,
+            discovery: $this->scanDiscovery($modulePath),
         );
+    }
+
+    /** @return array<string, mixed> */
+    private function scanDiscovery(string $modulePath): array
+    {
+        $config = $modulePath . '/config';
+        $settings = $config . '/settings';
+        
+        return [
+            'services' => is_file($config . '/services.php'),
+            'service_decorators' => is_file($config . '/service_decorators.php'),
+            'routes_admin' => is_file($config . '/admin_routes.php'),
+            'routes_api' => is_file($config . '/api_routes.php'),
+            'console' => is_file($config . '/console.php'),
+            'events' => is_file($config . '/events.php'),
+            'acl' => is_file($config . '/acl.php'),
+            'assets' => is_file($config . '/assets.php'),
+            'admin_menu' => is_file($config . '/admin_menu.php'),
+            'admin_assets' => is_file($config . '/admin_assets.php'),
+            'admin_dashboard' => is_file($config . '/admin_dashboard.php'),
+            'admin_ui' => is_file($config . '/admin_ui.php'),
+            'admin_sections' => is_file($config . '/admin_sections.php'),
+            'admin_colour_themes' => is_file($config . '/admin_colour_themes.php'),
+            'entity_save_listeners' => is_file($config . '/entity_save_listeners.php'),
+            'settings' => array_map(
+                fn (string $f): string => basename($f, '.php'),
+                glob($settings . '/*.php') ?: []
+            ),
+            'translations' => array_map(
+                fn (string $f): string => basename($f, '.php'),
+                glob($config . '/translations/*.php') ?: []
+            ),
+        ];
     }
 }
 

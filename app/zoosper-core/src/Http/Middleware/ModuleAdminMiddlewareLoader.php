@@ -28,10 +28,11 @@ final readonly class ModuleAdminMiddlewareLoader
         $middleware = [];
 
         foreach ($this->modules->enabledModules() as $module) {
-            $file = $module->configPath('admin_middleware.php');
-            if (!is_file($file)) {
+            if (!($module->discovery['admin_middleware'] ?? is_file($module->configPath('admin_middleware.php')))) {
                 continue;
             }
+
+            $file = $module->configPath('admin_middleware.php');
 
             $config = require $file;
             if (!is_array($config)) {
