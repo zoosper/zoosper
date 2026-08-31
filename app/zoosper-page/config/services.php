@@ -104,7 +104,8 @@ return [
         $services->get(PageRevisionService::class),
     ),
     PageSeoContributor::class => static fn (ServiceContainer $services): PageSeoContributor => new PageSeoContributor(),
-    PageSitemapContributor::class => static fn (ServiceContainer $services): PageSitemapContributor => new PageSitemapContributor($services->get(\Zoosper\Page\Repository\PageRepository::class)),    PageReferenceInspector::class => static fn (ServiceContainer $services): PageReferenceInspector => new PageReferenceInspector($services->get(PDO::class)),
+    PageSitemapContributor::class => static fn (ServiceContainer $services): PageSitemapContributor => new PageSitemapContributor($services->get(\Zoosper\Page\Repository\PageRepository::class)),
+    PageReferenceInspector::class => static fn (ServiceContainer $services): PageReferenceInspector => new PageReferenceInspector($services->get(PDO::class)),
     PageLifecycleCoordinator::class => static fn (ServiceContainer $services): PageLifecycleCoordinator => new PageLifecycleCoordinator(
         $services->get(PDO::class),
         $services->get(PageRepository::class),
