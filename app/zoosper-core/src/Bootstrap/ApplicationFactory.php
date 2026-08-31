@@ -33,9 +33,6 @@ use Zoosper\Core\Routing\Router;
 use Zoosper\Core\Security\SecurityHeaders;
 use Zoosper\Core\Routing\FallbackHandlerInterface;
 use Zoosper\Core\Routing\NullFallbackHandler;
-use Zoosper\Admin\Form\AdminFormRegistry;
-use Zoosper\Admin\Form\AdminFormRenderer;
-use Zoosper\Admin\Form\AdminFormUiConfigLoader;
 
 final class ApplicationFactory
 {
@@ -79,10 +76,6 @@ final class ApplicationFactory
 
         // Load root service providers before controller providers are created.
         (new ServiceProviderManifestLoader($basePath))->load($services);
-
-        if ($services->has(AdminFormUiConfigLoader::class) && $services->has(AdminFormRegistry::class)) {
-            $services->get(AdminFormUiConfigLoader::class)->registerAll($services->get(AdminFormRegistry::class));
-        }
 
         $sessionHandler = $services->has(\SessionHandlerInterface::class)
             ? $services->get(\SessionHandlerInterface::class)

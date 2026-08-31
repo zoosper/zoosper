@@ -38,6 +38,11 @@ final readonly class ModuleRouteLoader
 
     public function registerApiRoutes(Router $router, ?string $basePath = null): void
     {
+        if ($basePath === null) {
+            $this->registerRoutesFromConfig($router, 'api_routes.php', []);
+            return;
+        }
+
         $this->registerRoutesFromConfig($router, 'api_routes.php', [], $basePath);
     }
 

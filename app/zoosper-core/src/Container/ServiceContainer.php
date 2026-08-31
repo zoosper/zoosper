@@ -104,7 +104,10 @@ final class ServiceContainer
             }
 
             if (class_exists($id)) {
-                return $this->autowire($id);
+                $service = $this->autowire($id);
+                $this->services[$id] = $service;
+
+                return $service;
             }
         } catch (Throwable $exception) {
             if ($exception instanceof ZoosperException) {

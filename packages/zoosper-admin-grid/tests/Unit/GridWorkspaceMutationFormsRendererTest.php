@@ -62,7 +62,7 @@ test('complete view state is posted for save-view operations', function (): void
         ->toContain('name="filters[site_id][]" value="9"')
         ->toContain('name="sort_by" value="title"')
         ->toContain('name="sort_dir" value="asc"')
-        ->toContain('name="page_size" value="50"')
+        ->toContain('name="workspace_page_size" value="50"')
         ->toContain('name="visible_columns[]" value="id"')
         ->toContain('name="column_order[]" value="title"');
 });

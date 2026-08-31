@@ -15,6 +15,6 @@ it('keeps PageAdminController thin after Grid form save publication and preview 
         ->not->toContain('new GridWorkspaceRequest(')
         ->not->toContain('$this->renderer->render(')
         ->not->toContain('<h1>Page not found</h1>')
-        ->and($factory)->toContain('gridResponder: new PageAdminGridResponder(')
+        ->and($factory)->toContain('gridResponder: $services->get(PageAdminGridResponder::class)')
         ->toContain('previewResponder: new PageAdminPreviewResponder(');
 });

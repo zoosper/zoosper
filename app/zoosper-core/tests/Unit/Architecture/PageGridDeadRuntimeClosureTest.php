@@ -15,10 +15,10 @@ it('retires superseded Page Grid integration scaffolding', function (): void {
 
 it('keeps the deployed Page Grid path explicit', function (): void {
     $root = dirname(__DIR__, 5);
-    $factory = (string) file_get_contents($root . '/app/zoosper-page/config/controllers.php');
+    $factory = (string) file_get_contents($root . '/app/zoosper-page/config/services.php');
     $responder = (string) file_get_contents($root . '/app/zoosper-page/src/Admin/PageAdminGridResponder.php');
 
-    expect($factory)->toContain('new PageAdminGridResponder(')
+    expect($factory)->toContain('PageAdminGridResponder::class => static function')
         ->toContain('new PageGridWorkspace(')
         ->toContain('new PageGridMutationCoordinator(')
         ->and($responder)->toContain('PageGridWorkspace')

@@ -77,7 +77,14 @@ return [
     LoginHistoryRepository::class => static fn(ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
     AuditLogRepository::class => static fn(ServiceContainer $services): AuditLogRepository => new AuditLogRepository($services->get(PDO::class)),
     AuditLogger::class => static fn(ServiceContainer $services): AuditLogger => new AuditLogger($services->get(AuditLogRepository::class)),
-    AdminFormRegistry::class => static fn(): AdminFormRegistry => new AdminFormRegistry(),
+    AdminFormRegistry::class => static function (ServiceContainer $services): AdminFormRegistry {
+        $registry = new AdminFormRegistry();
+        if ($services->has(AdminFormUiConfigLoader::class)) {
+            $services->get(AdminFormUiConfigLoader::class)->registerAll($registry);
+        }
+
+        return $registry;
+    },
     AdminFormRenderer::class => static fn(ServiceContainer $services): AdminFormRenderer => new AdminFormRenderer($services->get(CsrfTokenManager::class)),
     AdminFormUiConfigLoader::class => static fn(ServiceContainer $services): AdminFormUiConfigLoader => new AdminFormUiConfigLoader($services->get(ModuleRegistry::class)),
     ModuleDashboardWidgetLoader::class => static fn(ServiceContainer $services): ModuleDashboardWidgetLoader => new ModuleDashboardWidgetLoader($services->get(ModuleRegistry::class), $services),

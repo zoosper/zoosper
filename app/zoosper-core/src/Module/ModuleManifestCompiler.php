@@ -29,12 +29,13 @@ use RuntimeException;
  */
 final readonly class ModuleManifestCompiler
 {
+    private string $cachePath;
     private string $cacheDir;
 
     public function __construct(private string $basePath, ?string $cachePath = null)
     {
-        $path = $cachePath ?? rtrim($basePath, '/\\') . '/var/cache/modules.php';
-        $this->cacheDir = dirname($path);
+        $this->cachePath = $cachePath ?? rtrim($basePath, '/\\') . '/var/cache/modules.php';
+        $this->cacheDir = dirname($this->cachePath);
     }
 
     /**
@@ -51,7 +52,7 @@ final readonly class ModuleManifestCompiler
         $modules = $registry->discoverModulesLive();
 
         $this->ensureCacheDirectoryExists();
-        $this->writeAtomically($this->cachePath(), $this->renderCacheFile($modules));
+        $this->writeManifest($this->renderCacheFile($modules));
 
         $this->compileServices($modules);
         $this->compileRoutes($modules, 'admin_routes.php', 'routes_admin_compiled.php');
@@ -164,12 +165,46 @@ final readonly class ModuleManifestCompiler
 
     public function cachePath(): string
     {
-        return $this->cacheDir . '/modules.php';
+        return $this->cachePath;
     }
 
     public function isCompiled(): bool
     {
-        return is_file($this->cachePath());
+        return is_file($this->cachePath);
+    }
+
+    private function writeManifest(string $contents): void
+    {
+        $directory = dirname($this->cachePath);
+        $temporaryPath = tempnam($directory, '.' . basename($this->cachePath) . '-');
+        if ($temporaryPath === false) {
+            throw new RuntimeException(
+                'Unable to create temporary module cache file in: ' . $directory,
+            );
+        }
+
+        try {
+            $bytes = file_put_contents($temporaryPath, $contents, LOCK_EX);
+            if ($bytes === false || $bytes !== strlen($contents)) {
+                throw new RuntimeException(
+                    'Unable to write complete module cache file: ' . $temporaryPath,
+                );
+            }
+
+            if (!rename($temporaryPath, $this->cachePath)) {
+                throw new RuntimeException(
+                    'Unable to atomically replace module cache file: ' . $this->cachePath,
+                );
+            }
+
+            if (function_exists('opcache_invalidate')) {
+                opcache_invalidate($this->cachePath, true);
+            }
+        } finally {
+            if (is_file($temporaryPath)) {
+                unlink($temporaryPath);
+            }
+        }
     }
 
     private function ensureCacheDirectoryExists(): void
@@ -256,7 +291,6 @@ declare(strict_types=1);
  *
  * Composer-Lock-SHA256: {$composerLockHash}
  * First-Party-Modules-SHA256: {$firstPartyModulesHash}
- * Generated: {$generatedAt}
  */
 
 return {$this->exportArray($export)};

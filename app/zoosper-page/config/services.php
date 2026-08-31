@@ -36,7 +36,63 @@ use Zoosper\Page\Service\PageRenderer;
 use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Page\Console\PageCreateCommand;
 
+use Zoosper\Page\Admin\PageGridDataSource;
+use Zoosper\Page\Admin\PageGridDefinition;
+use Zoosper\Page\Admin\PageGridRepository;
+use Zoosper\Page\Admin\PageGridWorkspace;
+use Zoosper\Page\Admin\PageAdminGridResponder;
+use Zoosper\Page\Admin\PageGridSiteFilter;
+use Zoosper\Page\Admin\PageSiteFilterOptions;
+use Zoosper\AdminGrid\GridCompactWorkspaceRenderer;
+use Zoosper\AdminGrid\GridViewStateResolver;
+use Zoosper\Grid\GridHtmlRenderer;
+use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
+use Zoosper\AdminGrid\GridBulkActionManifestRenderer;
+use Zoosper\Page\Admin\PageGridMutationCoordinator;
+use Zoosper\Page\Admin\PageGridMutationHandler;
+use Zoosper\AdminGrid\GridWorkspaceMutationGuard;
+use Zoosper\AdminGrid\GridViewMutationService;
+use Zoosper\Core\Url\AdminUrlGenerator;
+use Zoosper\Auth\UI\AdminViewRendererInterface;
+use Zoosper\Auth\Service\CsrfTokenManager;
+use Zoosper\Grid\GridColumnRegistry;
+use PDO;
+
 return [
+    PageAdminGridResponder::class => static function (ServiceContainer $services): PageAdminGridResponder {
+        $definition = new PageGridDefinition(
+            $services->has(GridColumnRegistry::class) ? $services->get(GridColumnRegistry::class) : null,
+            new PageGridSiteFilter(new PageSiteFilterOptions($services->get(SiteRepository::class))),
+            $services->get(AdminUrlGenerator::class),
+        );
+
+        return new PageAdminGridResponder(
+            pages: $services->get(PageRepository::class),
+            sites: $services->get(SiteRepository::class),
+            views: $services->get(AdminViewRendererInterface::class),
+            csrf: $services->get(CsrfTokenManager::class),
+            definition: $definition,
+            dataSource: new PageGridDataSource(new PageGridRepository($services->get(PDO::class))),
+            gridRenderer: new GridHtmlRenderer(),
+            workspace: new PageGridWorkspace(
+                $definition,
+                $services->get(GridViewStateResolver::class),
+                new GridCompactWorkspaceRenderer(),
+                adminUrls: $services->get(AdminUrlGenerator::class),
+            ),
+            mutationForms: $services->get(GridWorkspaceMutationFormsRenderer::class),
+            bulkManifest: new GridBulkActionManifestRenderer(),
+            mutations: new PageGridMutationCoordinator(
+                new PageGridMutationHandler(
+                    $definition,
+                    $services->get(GridViewMutationService::class),
+                ),
+                $services->get(GridWorkspaceMutationGuard::class),
+            ),
+            flashMessages: $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
+            adminUrls: $services->get(AdminUrlGenerator::class),
+        );
+    },
     PageSaveCoordinator::class => static fn (ServiceContainer $services): PageSaveCoordinator => new PageSaveCoordinator(
         $services->get(PageRepository::class),
         $services->get(HtmlSanitizerInterface::class),

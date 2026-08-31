@@ -17,7 +17,7 @@ use Zoosper\Grid\{
 
 final readonly class SiteGrid implements GridDataSourceInterface
 {
-    public const KEY = 'admin.sites';
+    public const KEY='admin.sites';
 
     public function __construct(
         private PDO $pdo,

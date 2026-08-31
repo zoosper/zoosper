@@ -118,38 +118,7 @@ return [
         guard: $services->get(SessionGuard::class),
         pages: $services->get(PageRepository::class),
         layout: $services->get(AdminLayoutRendererInterface::class),
-        gridResponder: new PageAdminGridResponder(
-            $services->get(PageRepository::class),
-            $services->get(SiteRepository::class),
-            $services->get(AdminViewRendererInterface::class),
-            $services->get(CsrfTokenManager::class),
-            $pageGridDefinition = new PageGridDefinition(
-                $services->has(GridColumnRegistry::class) ? $services->get(GridColumnRegistry::class) : null,
-                new PageGridSiteFilter(new PageSiteFilterOptions($services->get(SiteRepository::class))),
-                $services->get(AdminUrlGenerator::class),
-            ),
-            new PageGridDataSource($pageGrid = new PageGridRepository($services->get(\PDO::class))),
-            new GridHtmlRenderer(),
-            $services->has(GridViewStateResolver::class)
-                ? new PageGridWorkspace(
-                    $pageGridDefinition,
-                    $services->get(GridViewStateResolver::class),
-                    new GridCompactWorkspaceRenderer(),
-                    adminUrls: $services->get(AdminUrlGenerator::class),
-                )
-                : null,
-            $services->get(GridWorkspaceMutationFormsRenderer::class),
-            new GridBulkActionManifestRenderer(),
-            new PageGridMutationCoordinator(
-                new PageGridMutationHandler(
-                    $pageGridDefinition,
-                    $services->get(\Zoosper\AdminGrid\GridViewMutationService::class),
-                ),
-                $services->get(GridWorkspaceMutationGuard::class),
-            ),
-            $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
-            $services->get(AdminUrlGenerator::class),
-        ),
+        gridResponder: $services->get(PageAdminGridResponder::class),
         previewResponder: new PageAdminPreviewResponder(
             $services->get(SiteRepository::class),
             $services->get(PageRenderer::class),
