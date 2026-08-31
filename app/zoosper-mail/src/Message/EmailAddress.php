@@ -35,3 +35,13 @@ final readonly class EmailAddress
         return '"' . $safeName . '" <' . $this->email . '>';
     }
 }
+
+
+
+
+
+
+
+
+
+

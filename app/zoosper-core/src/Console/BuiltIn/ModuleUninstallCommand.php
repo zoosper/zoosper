@@ -49,3 +49,13 @@ final readonly class ModuleUninstallCommand implements ConsoleCommandInterface
         return 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

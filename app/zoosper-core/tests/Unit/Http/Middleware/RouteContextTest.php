@@ -35,3 +35,13 @@ test('public flag and path are retained alongside permissions', function () {
     expect($context->path)->toBe('/admin/login');
     expect($context->requiresAnyPermission())->toBe([]);
 });
+
+
+
+
+
+
+
+
+
+

@@ -20,3 +20,6 @@ $totalPages = $pagination->totalPages();
         <?php endif; ?>
     </div>
 </nav>
+
+
+

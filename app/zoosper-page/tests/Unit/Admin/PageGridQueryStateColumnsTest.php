@@ -15,3 +15,13 @@ test('explicit column visibility and order survive Page query normalisation', fu
     expect($state['visible_columns'])->toBe(['title', 'status', 'site_name']);
     expect($state['column_order'])->toBe(['id', 'title', 'slug', 'status', 'site_name', 'actions']);
 });
+
+
+
+
+
+
+
+
+
+

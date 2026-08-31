@@ -7,7 +7,7 @@ namespace Zoosper\Auth\Tests\Feature;
 use Zoosper\Core\Bootstrap\ApplicationFactory;
 use Zoosper\Auth\Admin\Controller\UserAdminController;
 use Zoosper\Core\Testing\TestCase;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Http\Request;
 
@@ -118,3 +118,13 @@ class AdminUserFormAcceptanceTest extends TestCase
         $this->assertStringContainsString('/admin/users/2/delete', $html);
     }
 }
+
+
+
+
+
+
+
+
+
+

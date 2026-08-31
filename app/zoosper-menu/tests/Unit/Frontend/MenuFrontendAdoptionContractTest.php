@@ -24,3 +24,13 @@ it('protects new-window links and emits accessible breadcrumb state', function (
     expect($navigation)->toContain('noopener noreferrer')->toContain('site-menu__item')
         ->and($breadcrumbs)->toContain('aria-current="page"')->toContain('<ol');
 });
+
+
+
+
+
+
+
+
+
+

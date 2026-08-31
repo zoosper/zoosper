@@ -8,3 +8,14 @@ final readonly class MediaDerivativeLookup
     public function __construct(private MediaDerivativeRepository $derivatives) {}
     public function publicPath(MediaAsset $asset,string $profile='original'):?string { return $profile==='original'?$asset->publicPath:$this->derivatives->findProfile($asset->id,$profile)?->publicPath; }
 }
+
+
+
+
+
+
+
+
+
+
+

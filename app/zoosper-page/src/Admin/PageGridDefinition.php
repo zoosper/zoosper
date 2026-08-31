@@ -49,3 +49,13 @@ final readonly class PageGridDefinition
         return $this->columns?->apply(self::KEY,$definition)??$definition;
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -10,3 +10,14 @@ it('supports a declarative native date filter type', function (): void {
     $filter = new GridFilter('placed_from', 'Placed From', 'date');
     expect($filter->type)->toBe('date');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -49,3 +49,13 @@ final readonly class TotpVerifier
         return str_pad((string) ($value % (10 ** $this->digits)), $this->digits, '0', STR_PAD_LEFT);
     }
 }
+
+
+
+
+
+
+
+
+
+

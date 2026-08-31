@@ -8,7 +8,7 @@ use RuntimeException;
 use Zoosper\Core\Console\ConsoleCommandInterface;
 use Zoosper\Core\Console\ConsoleOptions;
 use Zoosper\Core\Console\ConsoleOutput;
-use Zoosper\Core\Schema\SchemaForeignKeyReconciliationService;
+use Zoosper\Database\Schema\SchemaForeignKeyReconciliationService;
 
 /** Guarded MySQL-only apply command; dry-run delegates to the status command. */
 final readonly class SchemaForeignKeyApplyCommand implements ConsoleCommandInterface
@@ -50,3 +50,13 @@ final readonly class SchemaForeignKeyApplyCommand implements ConsoleCommandInter
         return 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

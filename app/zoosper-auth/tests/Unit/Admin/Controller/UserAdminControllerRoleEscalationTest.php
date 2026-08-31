@@ -10,7 +10,7 @@ use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Auth\Service\SessionGuard;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
 
@@ -232,3 +232,13 @@ it('still allows a role.manage admin to create a new user with a chosen role (no
     expect($created)->not->toBeNull();
     expect($users->roleIdsForUser($created->id))->toBe([$roleIds['userManageRoleId']]);
 });
+
+
+
+
+
+
+
+
+
+

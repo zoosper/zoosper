@@ -25,3 +25,13 @@ it('does not hijack Enter outside search navigation contexts', function (): void
     expect($view)->toContain('if(!inSearch&&!inSearchActions)return')
         ->toContain('event.preventDefault();event.stopPropagation()');
 });
+
+
+
+
+
+
+
+
+
+

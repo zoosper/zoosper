@@ -15,3 +15,13 @@ final class SettingValidationException extends RuntimeException
         parent::__construct('One or more settings are invalid.');
     }
 }
+
+
+
+
+
+
+
+
+
+

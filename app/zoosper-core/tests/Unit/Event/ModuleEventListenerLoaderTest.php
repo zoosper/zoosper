@@ -68,3 +68,13 @@ test('throws when listener list is not iterable', function () {
     expect(fn () => $loader->attachFromConfig($dispatcher, ['demo.event' => 'nope']))
         ->toThrow(ZoosperException::class);
 });
+
+
+
+
+
+
+
+
+
+

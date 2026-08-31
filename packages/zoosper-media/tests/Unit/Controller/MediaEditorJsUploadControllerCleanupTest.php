@@ -17,3 +17,14 @@ test('editorjs upload controller delegates upload persistence to shared service'
     expect($source)->not->toContain('$this->storage->store($file');
     expect($source)->not->toContain('$this->assets->create(');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -15,3 +15,11 @@ return [
     'frontend_path' => rtrim((string) env('FRONTEND_ASSET_PATH', '/assets/frontend'), '/'),
     'module_path' => rtrim((string) env('MODULE_ASSET_PATH', '/assets/modules'), '/'),
 ];
+
+
+
+
+
+
+
+

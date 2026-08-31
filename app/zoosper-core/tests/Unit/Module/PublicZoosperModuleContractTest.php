@@ -12,3 +12,13 @@ it('keeps the public module contract Zoosper-only', function (): void {
     }
     expect((string) file_get_contents($root . '/docs/modules.md'))->toContain('zoosper-module');
 });
+
+
+
+
+
+
+
+
+
+

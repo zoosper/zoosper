@@ -3,3 +3,13 @@ declare(strict_types=1);
 namespace Zoosper\Seo\Sitemap;
 use Zoosper\Seo\Contract\SitemapContributorInterface;use Zoosper\Site\Model\Site;
 final readonly class SitemapAggregator{/** @param list<SitemapContributorInterface> $contributors */public function __construct(private array $contributors){}public function xml(Site $site):string{$urls=[];foreach($this->contributors as $c){foreach($c->entries($site) as $e){if($e instanceof SitemapEntry&&$this->valid($e->url))$urls[]=$e->url;}}$urls=array_values(array_unique($urls));sort($urls,SORT_STRING);$rows=array_map(static fn(string $u):string=>'  <url><loc>'.htmlspecialchars($u,ENT_XML1|ENT_QUOTES,'UTF-8').'</loc></url>',$urls);return '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'.($rows===[]?'':"\n".implode("\n",$rows)."\n").'</urlset>'."\n";}public function sitemapUrl(Site $site):?string{$b=rtrim(trim($site->baseUrl),'/');return $this->valid($b)?$b.'/sitemap.xml':null;}private function valid(string $u):bool{$p=parse_url($u);return is_array($p)&&isset($p['host'])&&in_array(strtolower((string)($p['scheme']??'')),['http','https'],true);}}
+
+
+
+
+
+
+
+
+
+

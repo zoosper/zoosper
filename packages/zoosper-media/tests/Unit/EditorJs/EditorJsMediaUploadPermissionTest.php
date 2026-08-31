@@ -23,3 +23,14 @@ test('editorjs media upload route allows page managers as well as media managers
     expect($uploadRoute['controller'])->toBe(MediaEditorJsUploadController::class);
     expect(ModuleRouteDefinition::normalisePermissions($uploadRoute['permission'] ?? null))->toBe(['media.manage', 'page.manage']);
 });
+
+
+
+
+
+
+
+
+
+
+

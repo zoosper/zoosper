@@ -40,3 +40,13 @@ it('routes local development requests through the public front controller', func
         ->toContain('str_starts_with($candidate, $publicRoot . DIRECTORY_SEPARATOR)')
         ->toContain('return false;');
 });
+
+
+
+
+
+
+
+
+
+

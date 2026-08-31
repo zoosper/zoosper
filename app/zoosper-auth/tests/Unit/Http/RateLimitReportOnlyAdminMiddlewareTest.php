@@ -239,3 +239,13 @@ it('SECURITY: works correctly and produces a genuinely salted hash when a real i
     expect($event['identity_hash'])->not->toBe($unsaltedHash);
     expect($event['identity_hash'])->toMatch('/^[a-f0-9]{64}$/');
 });
+
+
+
+
+
+
+
+
+
+

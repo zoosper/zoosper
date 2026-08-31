@@ -13,7 +13,7 @@ use Zoosper\Menu\Contract\MenuAdminRepositoryInterface;
 use Zoosper\Menu\Contract\MenuProviderInterface;
 use Zoosper\Menu\Application\{MenuAdminService,MenuItemDeletionService,MenuMutationGuard};
 use Zoosper\Menu\Lifecycle\{MenuLifecycleCoordinator,MenuLifecycleResult};
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use InvalidArgumentException;
 use RuntimeException;
 use Zoosper\Menu\Model\Menu;
@@ -123,3 +123,13 @@ final readonly class MenuApiController
     /** @return array<string,mixed> */
     private function normaliseItem(MenuItem $item): array{return ['id'=>$item->id,'menu_id'=>$item->menuId,'parent_id'=>$item->parentId,'page_id'=>$item->pageId,'label'=>$item->label,'url'=>$item->url,'target'=>$item->target,'position'=>$item->position,'status'=>$item->status];}
 }
+
+
+
+
+
+
+
+
+
+

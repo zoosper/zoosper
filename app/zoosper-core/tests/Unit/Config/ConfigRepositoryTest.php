@@ -25,3 +25,13 @@ test('array returns an empty array for a missing key', function () {
 
     expect($config->array('missing'))->toBe([]);
 });
+
+
+
+
+
+
+
+
+
+

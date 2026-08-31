@@ -10,3 +10,14 @@ test('writes through the real Marko file logger with daily rotation and a legacy
     expect($dated)->toBeFile()->and(file_get_contents($dated))->toContain('phase-10ax-real-marko')->not->toContain('must-not-leak')->and($root . '/var/log/system.log')->toBeFile();
     exec('rm -rf ' . escapeshellarg($root));
 });
+
+
+
+
+
+
+
+
+
+
+

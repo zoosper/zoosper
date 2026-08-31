@@ -24,3 +24,13 @@ interface ConsoleCommandInterface
      */
     public function run(array $args, ConsoleOutput $output): int;
 }
+
+
+
+
+
+
+
+
+
+

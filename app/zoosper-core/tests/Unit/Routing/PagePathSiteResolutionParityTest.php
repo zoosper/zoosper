@@ -22,7 +22,7 @@ test('page hot path controllers no longer depend on legacy SiteResolver', functi
     ] as $file) {
         $source = (string) file_get_contents(projectPath($file));
 
-        expect($source)->not->toContain('Zoosper\\Site\\Service\\SiteResolver');
+        expect($source)->not->toContain('Zoosper\Site\Service\SiteResolver');
         expect($source)->not->toContain('private SiteResolver');
         expect($source)->not->toContain('siteResolver');
         expect($source)->not->toContain('->resolve($request->host())');
@@ -37,7 +37,7 @@ test('page hot path factories no longer inject legacy SiteResolver', function ()
     ] as $file) {
         $source = (string) file_get_contents(projectPath($file));
 
-        expect($source)->not->toContain('Zoosper\\Site\\Service\\SiteResolver');
+        expect($source)->not->toContain('Zoosper\Site\Service\SiteResolver');
         expect($source)->not->toContain('SiteResolver::class');
     }
 });
@@ -47,3 +47,13 @@ test('application factory loads root service providers only once', function () {
 
     expect(substr_count($source, 'ServiceProviderManifestLoader'))->toBe(1);
 });
+
+
+
+
+
+
+
+
+
+

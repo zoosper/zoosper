@@ -16,3 +16,14 @@ test('view-state resolver requires explicit admin and grid identity', function (
     expect($parameters[1]->getName())->toBe('gridKey');
     expect((string) $parameters[1]->getType())->toBe('string');
 });
+
+
+
+
+
+
+
+
+
+
+

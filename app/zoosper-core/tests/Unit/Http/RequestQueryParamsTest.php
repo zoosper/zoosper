@@ -9,3 +9,13 @@ it('exposes the immutable request query map without reading globals', function (
     expect($request->queryParams())->toBe(['q' => 'home', 'page' => '2'])
         ->and($request->query('q'))->toBe('home');
 });
+
+
+
+
+
+
+
+
+
+

@@ -24,3 +24,13 @@ it('verifies the compiled manifest before deploy reports completion', function (
         ->and($verification)->toBeLessThan($completion)
         ->and($source)->toContain('Compiled module manifest failed post-compile verification:');
 });
+
+
+
+
+
+
+
+
+
+

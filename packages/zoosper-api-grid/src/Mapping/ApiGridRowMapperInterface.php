@@ -12,3 +12,14 @@ interface ApiGridRowMapperInterface
      */
     public function map(array $record): array|object;
 }
+
+
+
+
+
+
+
+
+
+
+

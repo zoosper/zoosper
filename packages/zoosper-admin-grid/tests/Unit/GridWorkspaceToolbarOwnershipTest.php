@@ -22,3 +22,14 @@ it('hides saved-view management when a page has no mutation form target', functi
     $root=dirname(__DIR__,4);$script=file_get_contents($root.'/packages/zoosper-admin-grid/resources/admin/js/grid-workspace-command-bar.js');
     expect($script)->toContain('if(!settings){if(toggle)toggle.hidden=true;return;}');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -37,3 +37,14 @@ final class LogManager
     }
     private function value(string $key, mixed $default): mixed { return $this->config->get($key, $default); }
 }
+
+
+
+
+
+
+
+
+
+
+

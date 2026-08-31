@@ -37,3 +37,13 @@ test('application config loader layers module defaults below root overrides', fu
     expect($config->get('example.nested.preserved'))->toBeTrue();
     expect($config->get('example.nested.winner'))->toBe('root');
 });
+
+
+
+
+
+
+
+
+
+

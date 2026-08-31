@@ -64,7 +64,7 @@ function consoleCommandTempRoot(): string
 
 test('loads module console commands from config file', function () {
     $root = consoleCommandTempRoot();
-    file_put_contents($root . '/app/acme-console/config/console.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn [\\Zoosper\\Core\\Tests\\Unit\\Console\\ExampleDiscoveredCommand::class];\n");
+    file_put_contents($root . '/app/acme-console/config/console.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn [\Zoosper\Core\Tests\Unit\Console\ExampleDiscoveredCommand::class];\n");
 
     $commands = (new ModuleConsoleCommandLoader(new ModuleRegistry($root), new ServiceContainer()))->load();
 
@@ -73,7 +73,7 @@ test('loads module console commands from config file', function () {
 
 test('resolves dependency-backed console commands from the service container', function () {
     $root = consoleCommandTempRoot();
-    file_put_contents($root . '/app/acme-console/config/console.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn [\\Zoosper\\Core\\Tests\\Unit\\Console\\ExampleServiceCommand::class];\n");
+    file_put_contents($root . '/app/acme-console/config/console.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn [\Zoosper\Core\Tests\Unit\Console\ExampleServiceCommand::class];\n");
 
     $services = new ServiceContainer();
     $services->set(ExampleServiceCommand::class, new ExampleServiceCommand('From container'));
@@ -90,3 +90,13 @@ test('throws a helpful error when console config is not an array', function () {
 
     (new ModuleConsoleCommandLoader(new ModuleRegistry($root), new ServiceContainer()))->load();
 })->throws(ZoosperException::class, 'Console command config must return an array');
+
+
+
+
+
+
+
+
+
+

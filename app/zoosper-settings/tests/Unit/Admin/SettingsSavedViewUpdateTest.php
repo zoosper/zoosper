@@ -11,3 +11,13 @@ it('updates a selected saved view from normalised current workspace state after 
         ->toContain('views[name]=normaliseSavedState(workspaceState())')
         ->toContain("copyStatus.textContent='Updated saved workspace view '");
 });
+
+
+
+
+
+
+
+
+
+

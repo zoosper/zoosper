@@ -13,3 +13,14 @@ test('media package registers image block sanitizer service', function () {
     expect($source)->toContain(EditorJsImageBlockSanitizer::class);
     expect($source)->toContain('new EditorJsImageBlockSanitizer()');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -23,3 +23,13 @@ it('returns the ciphertext only for an active enrolment', function (): void {
         ->and($repo->findProtectedSecret(21))->toBeNull()
         ->and($repo->findProtectedSecret(999))->toBeNull();
 });
+
+
+
+
+
+
+
+
+
+

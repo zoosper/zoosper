@@ -8,3 +8,13 @@ final readonly class PdoMenuItemRepository implements MenuItemRepositoryInterfac
  public function wouldCreateCycle(int $menuId,int $itemId,?int $parentId): bool{if($parentId===null)return false;if($parentId===$itemId)return true;$seen=[];$current=$parentId;$s=$this->pdo->prepare('SELECT parent_id FROM menu_items WHERE id=:id AND menu_id=:menu');while($current!==null){if(isset($seen[$current])||$current===$itemId)return true;$seen[$current]=true;$s->execute(['id'=>$current,'menu'=>$menuId]);$v=$s->fetchColumn();$current=$v===false||$v===null?null:(int)$v;}return false;}
  private function hydrate(array $r): MenuItem{return new MenuItem((int)$r['id'],(int)$r['menu_id'],$r['parent_id']===null?null:(int)$r['parent_id'],$r['page_id']===null?null:(int)$r['page_id'],(string)$r['label'],$r['url']===null?null:(string)$r['url'],(string)$r['target'],(int)$r['position'],(string)$r['status']);}
 }
+
+
+
+
+
+
+
+
+
+

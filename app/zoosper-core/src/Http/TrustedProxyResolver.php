@@ -77,3 +77,13 @@ final readonly class TrustedProxyResolver
         return filter_var($value, FILTER_VALIDATE_IP) !== false ? $value : null;
     }
 }
+
+
+
+
+
+
+
+
+
+

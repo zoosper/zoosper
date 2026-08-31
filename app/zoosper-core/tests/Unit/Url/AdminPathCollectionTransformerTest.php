@@ -15,7 +15,7 @@ function adminPathTransformer(string $base = '/control-centre'): AdminPathCollec
 
 it('expands route paths without mutating unrelated route metadata', function (): void {
     $routes = [[
-        'method' => 'POST', 'path' => '/admin/pages/{id:\\d+}',
+        'method' => 'POST', 'path' => '/admin/pages/{id:\d+}',
         'controller' => 'PageController', 'action' => 'save',
         'permission' => ['page.manage'],
     ], [
@@ -24,11 +24,11 @@ it('expands route paths without mutating unrelated route metadata', function ():
 
     $expanded = adminPathTransformer()->routes($routes);
 
-    expect($expanded[0]['path'])->toBe('/control-centre/pages/{id:\\d+}')
+    expect($expanded[0]['path'])->toBe('/control-centre/pages/{id:\d+}')
         ->and($expanded[0]['method'])->toBe('POST')
         ->and($expanded[0]['permission'])->toBe(['page.manage'])
         ->and($expanded[1])->toBe($routes[1])
-        ->and($routes[0]['path'])->toBe('/admin/pages/{id:\\d+}');
+        ->and($routes[0]['path'])->toBe('/admin/pages/{id:\d+}');
 });
 
 it('expands menu URLs while preserving query strings and fragments', function (): void {
@@ -60,3 +60,13 @@ it('rejects non-absolute route and menu paths', function (array $rows, string $m
     'empty menu URL' => [[['url' => '']], 'menu'],
     'non-string route' => [[['path' => 42]], 'routes'],
 ]);
+
+
+
+
+
+
+
+
+
+

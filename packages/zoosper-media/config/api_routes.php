@@ -13,3 +13,14 @@ return [
     ['method' => 'POST', 'path' => '/api/v1/media/{id:\d+}/restore', 'controller' => MediaApiController::class, 'action' => 'restore', 'public' => true, 'stateless' => true],
     ['method' => 'DELETE', 'path' => '/api/v1/media/{id:\d+}', 'controller' => MediaApiController::class, 'action' => 'deletePermanently', 'public' => true, 'stateless' => true],
 ];
+
+
+
+
+
+
+
+
+
+
+

@@ -58,3 +58,13 @@ it('rejects an empty password', function (): void {
 
     expect($policy->isValid(''))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

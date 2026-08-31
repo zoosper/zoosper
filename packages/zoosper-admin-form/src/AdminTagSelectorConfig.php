@@ -52,3 +52,14 @@ final readonly class AdminTagSelectorConfig
         return max(5, (int) ($this->config->get('tag_selector.max_visible_options', 25) ?? 25));
     }
 }
+
+
+
+
+
+
+
+
+
+
+

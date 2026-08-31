@@ -36,3 +36,14 @@ it('keeps all admin Grid scripts deferred', function (): void {
         expect($script['defer'] ?? false)->toBeTrue();
     }
 });
+
+
+
+
+
+
+
+
+
+
+

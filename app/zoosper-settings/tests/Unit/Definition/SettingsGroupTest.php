@@ -22,3 +22,13 @@ it('rejects drift between grouped and flattened settings', function (): void {
     expect(fn () => new SettingsSection('sample.general', 'Sample', 'general', 'sample', [$flat], groups: [new SettingsGroup('general', 'General', [$grouped])]))
         ->toThrow(\InvalidArgumentException::class);
 });
+
+
+
+
+
+
+
+
+
+

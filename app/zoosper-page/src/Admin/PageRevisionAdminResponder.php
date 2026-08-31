@@ -7,7 +7,7 @@ namespace Zoosper\Page\Admin;
 use Throwable;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Core\Url\AdminUrlGenerator;
@@ -145,3 +145,13 @@ final readonly class PageRevisionAdminResponder
     private function url(string $path): string { return $this->urls?->url($path) ?? '/admin/' . ltrim($path, '/'); }
     private function e(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 }
+
+
+
+
+
+
+
+
+
+

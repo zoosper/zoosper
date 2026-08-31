@@ -59,7 +59,7 @@ return [
         $isAbsolute = str_starts_with($cachePath, '/') || str_starts_with($cachePath, '\\') || (strlen($cachePath) > 1 && $cachePath[1] === ':');
         $config['cache_path'] = $isAbsolute
             ? $cachePath
-            : $paths->varPath((str_starts_with($cachePath, 'var/') || str_starts_with($cachePath, 'var\\')) ? substr($cachePath, 4) : $cachePath);
+            : $paths->varPath((str_starts_with($cachePath, 'var/') || str_starts_with($cachePath, 'var\')) ? substr($cachePath, 4) : $cachePath);
 
         return new HtmlSanitizerFactory($config);
     },
@@ -78,3 +78,13 @@ return [
         return $dispatcher;
     },
 ];
+
+
+
+
+
+
+
+
+
+

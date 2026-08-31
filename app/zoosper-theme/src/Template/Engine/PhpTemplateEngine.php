@@ -30,3 +30,13 @@ final readonly class PhpTemplateEngine implements TemplateEngineInterface
         return (string) ob_get_clean();
     }
 }
+
+
+
+
+
+
+
+
+
+

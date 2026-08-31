@@ -25,3 +25,13 @@ it('publishes and unpublishes with the established Page events', function (): vo
     expect($events->names)->toBe([PageEvents::PUBLISHED, PageEvents::UNPUBLISHED])
         ->and($repo->findById($id)?->status)->toBe('draft');
 });
+
+
+
+
+
+
+
+
+
+

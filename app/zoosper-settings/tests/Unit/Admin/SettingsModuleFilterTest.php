@@ -21,3 +21,13 @@ it('composes remembered module filtering with search and source views', function
         ->toContain("localStorage.removeItem('zoosper.settings.moduleFilter')")
         ->toContain("module!=='all'?'Module: '");
 });
+
+
+
+
+
+
+
+
+
+

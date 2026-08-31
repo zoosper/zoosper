@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Database\MigrationInterface;
+use Zoosper\Database\MigrationInterface;
 
 return new class implements MigrationInterface {
     public function name(): string
@@ -24,3 +24,13 @@ return new class implements MigrationInterface {
         $pdo->exec("CREATE TABLE IF NOT EXISTS site_domains (id INTEGER PRIMARY KEY AUTOINCREMENT, site_id INTEGER NOT NULL, host TEXT NOT NULL UNIQUE, is_primary INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, FOREIGN KEY(site_id) REFERENCES sites(id) ON DELETE CASCADE)");
     }
 };
+
+
+
+
+
+
+
+
+
+

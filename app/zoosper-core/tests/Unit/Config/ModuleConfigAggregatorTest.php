@@ -58,3 +58,13 @@ test('non-array config files are ignored', function () {
 
     expect(ModuleConfigAggregator::fromDirectories([$root]))->toBe([]);
 });
+
+
+
+
+
+
+
+
+
+

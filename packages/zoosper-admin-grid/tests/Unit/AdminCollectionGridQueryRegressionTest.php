@@ -101,3 +101,14 @@ it('replaces complete query lists instead of retaining bookmark list tails', fun
         ->and($state->visibleColumns)->not->toContain('status', 'created_at')
         ->and($state->columnOrder)->toBe(['title', 'id', 'actions', 'status', 'created_at']);
 });
+
+
+
+
+
+
+
+
+
+
+

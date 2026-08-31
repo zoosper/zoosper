@@ -14,3 +14,13 @@ it('resolves the authenticated actor in the Admin User lifecycle data expression
         ->not->toContain("\$this->lifecycle?->actionsHtml(\$user,")
         ->not->toContain('actionsHtml($user, $actor)');
 });
+
+
+
+
+
+
+
+
+
+

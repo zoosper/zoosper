@@ -18,3 +18,13 @@ final readonly class PageLifecycleApiResponder
         return $this->json->success(['operation' => $result->operation, 'page_id' => $result->pageId, 'previous_status' => $result->previousStatus, 'current_status' => $page?->status ?? $result->currentStatus, 'deleted' => $result->operation === 'delete', 'page' => $page === null ? null : ['id' => $page->id, 'site_id' => $page->siteId, 'status' => $page->status]]);
     }
 }
+
+
+
+
+
+
+
+
+
+

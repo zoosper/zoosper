@@ -209,3 +209,14 @@ it('ScopeContext::fromSiteArray() treats missing/empty fields as absent', functi
         ->and($context->storeCode)->toBeNull()
         ->and($context->websiteCode)->toBeNull();
 });
+
+
+
+
+
+
+
+
+
+
+

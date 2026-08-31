@@ -19,3 +19,14 @@ final readonly class GridWorkspacePage
         return $this->workspaceHtml . $this->gridHtml;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

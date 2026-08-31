@@ -27,3 +27,13 @@ it('retires fixed public workspace action constants without losing compatibility
             ->toContain('private ?AdminUrlGenerator $adminUrls = null');
     }
 });
+
+
+
+
+
+
+
+
+
+

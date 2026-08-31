@@ -27,3 +27,13 @@ it('keeps the Permission Explorer theme-aware responsive and source-aligned', fu
         ->not->toMatch('/\son[a-z]+\s*=/i')
         ->not->toContain('<script');
 });
+
+
+
+
+
+
+
+
+
+

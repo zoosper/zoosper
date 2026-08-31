@@ -35,3 +35,13 @@ it('falls back safely for unsupported engine and empty cache values', function (
     expect($config->engine())->toBe('latte')
         ->and($config->cacheDirectory())->toBe('/srv/zoosper/var/cache/templates');
 });
+
+
+
+
+
+
+
+
+
+

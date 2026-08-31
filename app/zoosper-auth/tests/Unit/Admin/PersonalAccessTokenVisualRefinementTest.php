@@ -50,3 +50,13 @@ it('renders escaped compact PAT cells without weakening owner scoped mutations',
         ->not->toContain('token_hash')
         ->not->toContain('innerHTML');
 });
+
+
+
+
+
+
+
+
+
+

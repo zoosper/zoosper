@@ -38,3 +38,13 @@ final readonly class RateLimitDecision
         return new self(false, $attempts, $maxAttempts, $retryAfterSeconds);
     }
 }
+
+
+
+
+
+
+
+
+
+

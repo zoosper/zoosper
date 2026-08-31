@@ -63,3 +63,14 @@ test('media module registers media processing policy as a service', function () 
     expect($source)->toContain(MediaProcessingPolicy::class);
     expect($source)->toContain('new MediaProcessingPolicy()');
 });
+
+
+
+
+
+
+
+
+
+
+

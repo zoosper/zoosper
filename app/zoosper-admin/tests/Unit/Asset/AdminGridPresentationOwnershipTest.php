@@ -22,3 +22,13 @@ it('leaves compact Grid presentation to the Admin Grid package', function (): vo
         ->and($asset['path'] ?? null)->toBe('/asset/zoosper-admin/css/zoosper-grid.css?v=' . $version)
         ->and($asset['sort_order'] ?? null)->toBe(35);
 });
+
+
+
+
+
+
+
+
+
+

@@ -38,3 +38,14 @@ test('rejects path traversal', function () {
     expect(fn () => $storage->absolutePath('../secrets/file.png'))
         ->toThrow(RuntimeException::class);
 });
+
+
+
+
+
+
+
+
+
+
+

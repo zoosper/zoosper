@@ -42,3 +42,13 @@ final readonly class ScopeConfigSettingStore implements ScopedSettingStoreInterf
         $this->repository->clear($path, $scopeType, $scopeKey);
     }
 }
+
+
+
+
+
+
+
+
+
+

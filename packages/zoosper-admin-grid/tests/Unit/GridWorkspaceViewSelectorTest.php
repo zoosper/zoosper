@@ -19,3 +19,14 @@ it('publishes selector assets', function (): void {
     $root=dirname(__DIR__,4);$assets=require $root.'/packages/zoosper-admin-grid/config/admin_assets.php';
     expect($assets['assets'])->toHaveKeys(['zoosper-admin-grid-view-selector-style','zoosper-admin-grid-view-selector-script']);
 });
+
+
+
+
+
+
+
+
+
+
+

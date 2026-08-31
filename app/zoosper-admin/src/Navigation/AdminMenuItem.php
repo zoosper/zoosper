@@ -104,3 +104,13 @@ final readonly class AdminMenuItem implements MenuItemInterface
         return $this->permission === null || $permissionChecker($this->permission);
     }
 }
+
+
+
+
+
+
+
+
+
+

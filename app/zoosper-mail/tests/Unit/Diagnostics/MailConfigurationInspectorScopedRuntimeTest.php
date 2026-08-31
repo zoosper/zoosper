@@ -14,3 +14,13 @@ it('takes transport from SmtpConfig and keeps password redacted to a configured 
         ->and($summary->passwordConfigured)->toBeTrue()
         ->and((array) $summary)->not->toContain('never-render-this');
 });
+
+
+
+
+
+
+
+
+
+

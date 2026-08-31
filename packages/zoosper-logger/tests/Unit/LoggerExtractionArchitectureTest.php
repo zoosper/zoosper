@@ -8,6 +8,17 @@ test('keeps logging ownership outside Core Log and root owns only zoosper logger
         ->and($composer['require'])->toHaveKey('zoosper/logger', 'dev-dev')->not->toHaveKeys(['marko/log', 'marko/log-file'])
         ->and($module['require'])->toHaveKey('marko/log', '0.8.5')->toHaveKey('marko/log-file', '0.8.5');
     foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root . '/app/zoosper-core/src', FilesystemIterator::SKIP_DOTS)) as $file) {
-        if ($file->isFile() && $file->getExtension() === 'php') expect((string) file_get_contents($file->getPathname()))->not->toContain('Zoosper\\Core\\Log');
+        if ($file->isFile() && $file->getExtension() === 'php') expect((string) file_get_contents($file->getPathname()))->not->toContain('Zoosper\Core\Log');
     }
 });
+
+
+
+
+
+
+
+
+
+
+

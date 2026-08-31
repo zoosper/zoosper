@@ -18,3 +18,13 @@ final readonly class ConsoleKernel
         return new ConsoleApplication([], $commands);
     }
 }
+
+
+
+
+
+
+
+
+
+

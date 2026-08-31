@@ -14,3 +14,14 @@ test('workspace styles include responsive focus and reduced-motion treatment', f
         ->toContain('@media (prefers-reduced-motion:reduce)')
         ->toContain('.is-dragging');
 });
+
+
+
+
+
+
+
+
+
+
+

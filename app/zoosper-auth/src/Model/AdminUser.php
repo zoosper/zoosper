@@ -30,3 +30,13 @@ final readonly class AdminUser
         return in_array($permission, $this->permissions, true);
     }
 }
+
+
+
+
+
+
+
+
+
+

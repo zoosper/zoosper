@@ -42,3 +42,14 @@ it('publishes the Media visual Grid stylesheet through its module asset root', f
         ->not->toContain('var(--admin-muted')
         ->not->toMatch('/<script|\son[a-z]+\s*=|javascript:/i');
 });
+
+
+
+
+
+
+
+
+
+
+

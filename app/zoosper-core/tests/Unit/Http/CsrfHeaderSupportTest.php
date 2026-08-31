@@ -19,3 +19,13 @@ test('csrf middleware accepts x csrf token header for async editor uploads', fun
     expect($source)->toContain("header('x-csrf-token'");
     expect($source)->toContain('_csrf_token');
 });
+
+
+
+
+
+
+
+
+
+

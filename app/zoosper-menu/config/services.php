@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 use Marko\View\ViewInterface; use Zoosper\AdminGrid\{AdminCollectionGrid,GridViewStateResolver}; use Zoosper\Menu\Frontend\MenuFrontendNavigationContributor; use Zoosper\Page\Contract\FrontendNavigationContributorInterface; use Zoosper\Auth\Service\CsrfTokenManager; use Zoosper\Auth\UI\AdminViewRendererInterface; use Zoosper\Core\Container\ServiceContainer; use Zoosper\Core\Url\AdminUrlGenerator; use Zoosper\Menu\Admin\{MenuAdminChoicesProvider,MenuAdminResponder}; use Zoosper\Menu\Application\{MenuAdminService,MenuItemDeletionService,MenuMutationGuard}; use Zoosper\Menu\Contract\{BreadcrumbProviderInterface,MenuAdminRepositoryInterface,MenuItemRepositoryInterface,MenuProviderInterface,MenuRepositoryInterface}; use Zoosper\Menu\Repository\{PdoMenuAdminRepository,PdoMenuItemRepository,PdoMenuRepository}; use Zoosper\Menu\Service\{BreadcrumbProvider,MenuProvider,MenuTreeBuilder};
- use Zoosper\Menu\Admin\Lifecycle\MenuLifecycleAdminResponder; use Zoosper\Menu\Lifecycle\{MenuLifecycleCoordinator,MenuReferenceInspector}; use Zoosper\Core\Audit\AuditLoggerInterface; use Zoosper\Core\Message\FlashMessageStoreInterface;
+ use Zoosper\Menu\Admin\Lifecycle\MenuLifecycleAdminResponder; use Zoosper\Menu\Lifecycle\{MenuLifecycleCoordinator,MenuReferenceInspector}; use Zoosper\Audit\Contract\AuditLoggerInterface; use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Menu\Admin\Grid\MenuGrid;
 return [
  MenuGrid::class=>static fn(ServiceContainer $s):MenuGrid=>new MenuGrid($s->get(PDO::class),$s->get(AdminUrlGenerator::class)),
@@ -12,3 +12,13 @@ return [
  MenuAdminRepositoryInterface::class=>static fn(ServiceContainer $s)=>new PdoMenuAdminRepository($s->get(PDO::class),$s->get(MenuItemRepositoryInterface::class)), MenuAdminService::class=>static fn(ServiceContainer $s)=>new MenuAdminService($s->get(MenuAdminRepositoryInterface::class)), MenuMutationGuard::class=>static fn(ServiceContainer $s)=>new MenuMutationGuard($s->get(PDO::class),$s->get(MenuAdminRepositoryInterface::class)), MenuAdminChoicesProvider::class=>static fn(ServiceContainer $s)=>new MenuAdminChoicesProvider($s->get(PDO::class)),
  MenuReferenceInspector::class=>static fn(ServiceContainer $s)=>new MenuReferenceInspector($s->get(PDO::class)), MenuLifecycleCoordinator::class=>static fn(ServiceContainer $s)=>new MenuLifecycleCoordinator($s->get(PDO::class),$s->get(MenuReferenceInspector::class),$s->has(AuditLoggerInterface::class)?$s->get(AuditLoggerInterface::class):null), MenuLifecycleAdminResponder::class=>static fn(ServiceContainer $s)=>new MenuLifecycleAdminResponder($s->get(MenuLifecycleCoordinator::class),$s->get(CsrfTokenManager::class),$s->get(AdminUrlGenerator::class),$s->has(FlashMessageStoreInterface::class)?$s->get(FlashMessageStoreInterface::class):null), MenuItemDeletionService::class=>static fn(ServiceContainer $s)=>new MenuItemDeletionService($s->get(MenuAdminRepositoryInterface::class),$s->get(MenuReferenceInspector::class)), MenuAdminResponder::class=>static fn(ServiceContainer $s)=>new MenuAdminResponder($s->get(MenuAdminRepositoryInterface::class),$s->get(AdminViewRendererInterface::class),$s->get(CsrfTokenManager::class),$s->get(AdminUrlGenerator::class),$s->get(MenuAdminChoicesProvider::class),$s->get(MenuLifecycleAdminResponder::class),$s->get(MenuGrid::class),new AdminCollectionGrid($s->get(GridViewStateResolver::class))),
 ];
+
+
+
+
+
+
+
+
+
+

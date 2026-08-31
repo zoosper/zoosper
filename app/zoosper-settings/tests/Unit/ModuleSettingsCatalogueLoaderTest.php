@@ -24,3 +24,13 @@ PHP);
         ->and($catalogue->all()[0]->settings[0]->type)->toBe('boolean');
     exec('rm -rf ' . escapeshellarg($root));
 });
+
+
+
+
+
+
+
+
+
+

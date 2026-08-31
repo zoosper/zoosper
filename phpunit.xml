@@ -20,7 +20,16 @@
             <directory>app/*/tests/Unit</directory>
             <directory>modules/*/tests/Unit</directory>
             <directory>modules/*/*/tests/Unit</directory>
-            <directory>packages/*/tests/Unit</directory>
+            <directory>packages/zoosper-database/tests/Unit</directory>
+            <directory>packages/zoosper-audit/tests/Unit</directory>
+            <directory>packages/zoosper-admin-form/tests/Unit</directory>
+            <directory>packages/zoosper-admin-grid/tests/Unit</directory>
+            <directory>packages/zoosper-api-grid/tests/Unit</directory>
+            <directory>packages/zoosper-errors/tests/Unit</directory>
+            <directory>packages/zoosper-grid/tests/Unit</directory>
+            <directory>packages/zoosper-logger/tests/Unit</directory>
+            <directory>packages/zoosper-media/tests/Unit</directory>
+            <directory>packages/zoosper-pagination/tests/Unit</directory>
         </testsuite>
         <testsuite name="Feature">
             <directory>app/*/tests/Feature</directory>

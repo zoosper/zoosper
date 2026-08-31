@@ -51,3 +51,13 @@ final readonly class AdminTwoFactorLoginRedirectService
         return rtrim($this->adminBasePath, '/') . '/' . ltrim($path, '/');
     }
 }
+
+
+
+
+
+
+
+
+
+

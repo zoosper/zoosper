@@ -46,3 +46,13 @@ final readonly class TemplateRuntimeConfig
         return (string) ($this->scoped->get($path, $this->scope ?? ScopeContext::default(), $projectValue) ?? $projectValue);
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -18,7 +18,7 @@ use Zoosper\Site\Admin\Lifecycle\SiteLifecycleAdminResponder;
 use Zoosper\Site\Lifecycle\SiteLifecycleCoordinator;
 use Zoosper\Site\Lifecycle\SiteReferenceInspector;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Site\Api\SiteApiController;
@@ -53,3 +53,13 @@ return [
         collectionGrid: new AdminCollectionGrid($services->get(GridViewStateResolver::class)),
     ),
 ];
+
+
+
+
+
+
+
+
+
+

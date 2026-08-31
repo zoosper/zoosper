@@ -70,3 +70,13 @@ it('maps generic Grid criteria into the Roles read boundary', function (): void 
         ->and($repository->received?->pager->page)->toBe(2)
         ->and($repository->received?->pager->pageSize)->toBe(100);
 });
+
+
+
+
+
+
+
+
+
+

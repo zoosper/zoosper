@@ -32,3 +32,14 @@ it('enables movable compact columns at runtime while locking ID and Actions', fu
         ->not->toContain('innerHTML')
         ->not->toContain('eval(');
 });
+
+
+
+
+
+
+
+
+
+
+

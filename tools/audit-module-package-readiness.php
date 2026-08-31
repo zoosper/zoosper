@@ -56,3 +56,6 @@ foreach ($moduleFiles as $moduleFile) {
 print 'Review items: ' . $review . PHP_EOL;
 print 'Result: ' . ($review === 0 ? 'OK' : 'REVIEW_REQUIRED') . PHP_EOL;
 exit(0);
+
+
+

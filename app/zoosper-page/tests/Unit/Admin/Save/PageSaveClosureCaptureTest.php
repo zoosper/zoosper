@@ -10,3 +10,13 @@ it('captures the existing Page in the persistence closure used for update revisi
         ->toContain('capturePage($page, $user->id)')
         ->not->toContain('use ($action, $input, $user, &$pageId)');
 });
+
+
+
+
+
+
+
+
+
+

@@ -14,3 +14,13 @@ it('orders configured engine extensions first without removing pluggable engines
     expect($registry->extensions())->toBe(['php', 'latte'])
         ->and($registry->forPath('view.latte'))->toBe($custom);
 });
+
+
+
+
+
+
+
+
+
+

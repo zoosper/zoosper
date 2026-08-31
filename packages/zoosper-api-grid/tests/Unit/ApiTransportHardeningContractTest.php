@@ -44,3 +44,14 @@ it('retains a non-success boundary for replaceable transports', function (): voi
         ->and($source)->toContain('if (!$response->isSuccessful())')
         ->and($source)->toContain('ApiTransportException::NON_SUCCESS');
 });
+
+
+
+
+
+
+
+
+
+
+

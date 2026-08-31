@@ -46,3 +46,11 @@ return [
     'allowed_schemes' => (string) env('HTML_SANITIZER_ALLOWED_SCHEMES', 'http,https,mailto,tel'),
     'strip_empty' => filter_var(env('HTML_SANITIZER_STRIP_EMPTY', true), FILTER_VALIDATE_BOOLEAN),
 ];
+
+
+
+
+
+
+
+

@@ -40,3 +40,14 @@ it('normalises unique identities and enforces the action maximum', function (): 
     expect($selection->identities)->toBe(['3', '2', '1'])->and($selection->count())->toBe(3);
     expect(fn () => new GridBulkSelection([1, 2, 3], 2))->toThrow(InvalidArgumentException::class, 'maximum');
 });
+
+
+
+
+
+
+
+
+
+
+

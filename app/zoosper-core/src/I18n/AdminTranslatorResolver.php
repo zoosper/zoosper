@@ -32,3 +32,13 @@ final readonly class AdminTranslatorResolver
         return (new ConfiguredLocaleResolver($this->i18nConfig))->resolveAdminLocale();
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -15,3 +15,13 @@ interface LocaleResolverInterface
     /** @param array<string, mixed> $context */
     public function resolveSiteLocale(array $context = []): LocaleResolution;
 }
+
+
+
+
+
+
+
+
+
+

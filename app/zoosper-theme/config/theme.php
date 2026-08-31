@@ -6,3 +6,13 @@ return [
     'default' => env('THEME_CODE', 'default'),
     'template_extension' => '.php',
 ];
+
+
+
+
+
+
+
+
+
+

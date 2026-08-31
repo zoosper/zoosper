@@ -49,6 +49,16 @@ test('site services no longer register the retired resolver', function (): void 
     $basePath = dirname(__DIR__, 5);
     $services = (string) file_get_contents($basePath . '/app/zoosper-site/config/services.php');
 
-    expect($services)->not->toContain('Site\\Service\\SiteResolver');
+    expect($services)->not->toContain('Site\Service\SiteResolver');
     expect($services)->not->toContain('SiteResolver::class');
 });
+
+
+
+
+
+
+
+
+
+

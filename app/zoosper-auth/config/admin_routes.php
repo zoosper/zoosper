@@ -27,3 +27,13 @@ return [
     ['method' => 'POST', 'path' => '/admin/access-tokens/create', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'create'],
     ['method' => 'POST', 'path' => '/admin/access-tokens/{id:\d+}/revoke', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'revoke'],
 ];
+
+
+
+
+
+
+
+
+
+

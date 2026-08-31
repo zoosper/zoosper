@@ -21,3 +21,14 @@ it('preserves Grid query state and validates direct page entry', function (): vo
         ->and($script)->toContain("workspace.classList.add('grid-page-size-relocated')")
         ->and($script)->not->toContain('innerHTML');
 });
+
+
+
+
+
+
+
+
+
+
+

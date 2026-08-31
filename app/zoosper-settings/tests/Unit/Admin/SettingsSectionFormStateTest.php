@@ -36,3 +36,13 @@ it('reports visible results for the active category only', function (): void {
         ->toContain("+' in '+label")
         ->not->toContain("summary.textContent=visibleFields+");
 });
+
+
+
+
+
+
+
+
+
+

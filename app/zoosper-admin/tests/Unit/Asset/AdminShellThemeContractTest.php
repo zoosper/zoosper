@@ -50,3 +50,13 @@ it('retains the CSP-safe persisted theme control contract', function (): void {
         ->toContain('window.localStorage.setItem(key, value)')
         ->not->toContain('innerHTML');
 });
+
+
+
+
+
+
+
+
+
+

@@ -14,3 +14,13 @@ return [
     ['method' => 'DELETE', 'path' => '/api/v1/menus/{id:\d+}', 'controller' => MenuApiController::class, 'action' => 'deletePermanently', 'public' => true, 'stateless' => true],
     ['method' => 'GET', 'path' => '/api/v1/menus/{id:\d+}', 'controller' => MenuApiController::class, 'action' => 'show', 'public' => true, 'stateless' => true],
     ['method' => 'GET', 'path' => '/api/v1/menus/{id:\d+}/tree', 'controller' => MenuApiController::class, 'action' => 'tree', 'public' => true, 'stateless' => true],['method'=>'GET','path'=>'/api/v1/menu','controller'=>MenuController::class,'action'=>'show','public'=>true,'stateless'=>true]];
+
+
+
+
+
+
+
+
+
+

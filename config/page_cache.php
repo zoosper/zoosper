@@ -20,3 +20,11 @@ return [
     'enabled' => filter_var(env('PAGE_CACHE_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
     'ttl' => (int) env('PAGE_CACHE_TTL', 300),
 ];
+
+
+
+
+
+
+
+

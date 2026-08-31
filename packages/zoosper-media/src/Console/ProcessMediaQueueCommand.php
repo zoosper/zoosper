@@ -105,3 +105,14 @@ final readonly class ProcessMediaQueueCommand implements ConsoleCommandInterface
         $this->pdo->prepare($sql)->execute($params);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

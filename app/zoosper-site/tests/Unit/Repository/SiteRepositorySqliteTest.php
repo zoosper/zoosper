@@ -94,3 +94,13 @@ it('updates a site theme via updateTheme', function (): void {
     expect($site)->not->toBeNull()
         ->and($site->themeCode)->toBe('midnight');
 });
+
+
+
+
+
+
+
+
+
+

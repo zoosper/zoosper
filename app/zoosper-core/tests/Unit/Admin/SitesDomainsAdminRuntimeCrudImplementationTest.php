@@ -49,3 +49,13 @@ test('site admin menu entries are module owned', function () {
     expect($adminMenu)->not->toContain("'label' => 'Sites'");
     expect($adminMenu)->not->toContain("'label' => 'Site Domains'");
 });
+
+
+
+
+
+
+
+
+
+

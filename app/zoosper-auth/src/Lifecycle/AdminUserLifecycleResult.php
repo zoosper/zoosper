@@ -20,3 +20,13 @@ final readonly class AdminUserLifecycleResult
         return new self(false, $message);
     }
 }
+
+
+
+
+
+
+
+
+
+

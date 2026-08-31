@@ -129,7 +129,7 @@ final readonly class ModuleConsoleCommandLoader
             throw new ZoosperException(
                 message: 'Console command must implement ConsoleCommandInterface: ' . $entry,
                 context: 'The resolved command is not a valid Zoosper console command.',
-                suggestion: 'Implement Zoosper\\Core\\Console\\ConsoleCommandInterface on the command class.',
+                suggestion: 'Implement Zoosper\Core\Console\ConsoleCommandInterface on the command class.',
                 docsUrl: 'docs/contributor/module-console-commands.md',
                 details: ['module' => $moduleName, 'file' => $file, 'command' => $entry, 'resolved_type' => get_debug_type($command)],
             );
@@ -138,3 +138,13 @@ final readonly class ModuleConsoleCommandLoader
         return $command;
     }
 }
+
+
+
+
+
+
+
+
+
+

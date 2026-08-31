@@ -60,3 +60,13 @@ test('javascript scheme hrefs are neutralised', function () {
     // Assert
     expect($html)->not->toContain('javascript:');
 });
+
+
+
+
+
+
+
+
+
+

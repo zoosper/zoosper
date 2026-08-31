@@ -13,3 +13,14 @@ test('workspace mutations have stable explicit action names', function (): void 
     expect(GridWorkspaceMutationContract::DELETE_VIEW)->toBe('delete_view');
     expect(GridWorkspaceMutationContract::SET_DEFAULT_VIEW)->toBe('set_default_view');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -19,3 +19,13 @@ it('retains the static narrow-screen action panel', function (): void {
 
     expect($view)->toContain('.settings-more-actions-panel{position:static;grid-template-columns:1fr;width:100%;max-width:none;box-shadow:none}');
 });
+
+
+
+
+
+
+
+
+
+

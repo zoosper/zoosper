@@ -65,3 +65,13 @@ final readonly class ProjectPathResolver
         return $path === '' ? $root : $root . '/' . $path;
     }
 }
+
+
+
+
+
+
+
+
+
+

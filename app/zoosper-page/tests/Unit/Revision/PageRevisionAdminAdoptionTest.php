@@ -11,5 +11,15 @@ it('wires complete Page revision capture history preview and restore', function 
     expect($repository)->toContain('restoreRevision(')->not->toContain('private function createRevision(')
         ->and($save)->toContain('capturePage($page, $user->id)')
         ->and($controller)->toContain('PageRevisionAdminResponder')->toContain('restoreRevision(')
-        ->and($routes)->toContain('/revisions/{revisionId:\\d+}/preview')->toContain('/revisions/{revisionId:\\d+}/restore');
+        ->and($routes)->toContain('/revisions/{revisionId:\d+}/preview')->toContain('/revisions/{revisionId:\d+}/restore');
 });
+
+
+
+
+
+
+
+
+
+

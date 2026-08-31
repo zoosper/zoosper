@@ -10,3 +10,13 @@ it('requires dedicated lifecycle scopes and current Page management permission',
 it('maps lifecycle blockers without exposing content or credentials', function (): void {
  $root=dirname(__DIR__,5);$source=(string)file_get_contents($root.'/app/zoosper-page/src/Api/PageLifecycleApiResponder.php');expect($source)->toContain("'blockers' => \$result->blockers")->toContain("'page_lifecycle_conflict'")->toContain("'current_status' => \$page?->status ?? \$result->currentStatus")->not->toContain('content')->not->toContain('token')->not->toContain('authorization');
 });
+
+
+
+
+
+
+
+
+
+

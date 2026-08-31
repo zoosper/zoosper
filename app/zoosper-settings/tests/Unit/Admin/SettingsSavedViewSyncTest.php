@@ -12,3 +12,13 @@ it('refreshes saved-view controls when another tab changes local storage', funct
         ->toContain("copyStatus.textContent='Saved views updated in another tab'")
         ->toContain('if(event.key===defaultSavedViewKey)');
 });
+
+
+
+
+
+
+
+
+
+

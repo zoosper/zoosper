@@ -7,3 +7,14 @@ final readonly class MediaVisualGridRenderer
  public function __construct(private AdminUrlGenerator $urls){}
  /** @param list<string> $visible */ public function render(PaginationResult $page,GridCriteria $criteria,array $visible,string $csrf):string{$show=array_fill_keys($visible,true);$e=static fn(mixed $v):string=>htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');$out='<div class="media-visual-grid" data-grid-key="admin.media">';if($page->items===[])$out.='<p class="muted">No media assets match this view.</p>';foreach($page->items as $row){$id=(int)$row['id'];$path=(string)($row['public_path']??'');$out.='<article class="media-card" data-row-id="'.$id.'">';if($path!==''&&isset($show['preview']))$out.='<img loading="lazy" src="'.$e($path).'" alt="'.$e($row['original_filename']).'">';$out.='<div class="media-card__body"><strong>'.$e($row['original_filename']).'</strong>';if(isset($show['mime_type']))$out.='<span>'.$e($row['mime_type']).'</span>';if(isset($show['extension']))$out.='<span>.'.$e($row['extension']).'</span>';if(isset($show['size_bytes']))$out.='<span>'.number_format(((int)$row['size_bytes'])/1024,1).' KB</span>';if(isset($show['status']))$out.='<span>'.$e($row['status']).'</span>';if(isset($show['created_at']))$out.='<span>'.$e($row['created_at']).'</span>';$out.='</div><div class="media-card__actions">';$action=$row['status']==='archived'?'restore':'archive';$out.='<form method="post" action="'.$e($this->urls->url('media/'.$id.'/'.$action)).'"><input type="hidden" name="_csrf_token" value="'.$e($csrf).'"><button type="submit" class="button">'.ucfirst($action).'</button></form>';if($row['status']==='archived')$out.='<form method="post" action="'.$e($this->urls->url('media/'.$id.'/delete')).'"><input type="hidden" name="_csrf_token" value="'.$e($csrf).'"><button type="submit" class="button button--danger">Delete permanently</button></form>';$out.='</div></article>';}$out.='</div>';$params=$criteria->linkParameters();$previous=$page->page>1?$page->page-1:null;$next=$page->page*$page->pageSize<$page->total?$page->page+1:null;$out.='<nav class="grid-pagination" aria-label="Media pagination">';if($previous!==null){$params['page']=$previous;$out.='<a class="button" href="'.$e($this->urls->url('media',$params)).'">Previous</a>';} $out.='<span>Page '.number_format($page->page).' | '.number_format($page->total).' assets</span>';if($next!==null){$params['page']=$next;$out.='<a class="button" href="'.$e($this->urls->url('media',$params)).'">Next</a>';}$out.='</nav>';return$out;}
 }
+
+
+
+
+
+
+
+
+
+
+

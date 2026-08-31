@@ -21,3 +21,13 @@ interface SiteLookupInterface
 
     public function findDefault(): ?ResolvedSite;
 }
+
+
+
+
+
+
+
+
+
+

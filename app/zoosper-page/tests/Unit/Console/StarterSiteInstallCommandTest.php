@@ -19,3 +19,13 @@ it('declares a compact idempotent starter-site command without overwriting conte
         ->and($console)->toContain('StarterSiteInstallCommand::class')
         ->and($services)->toContain('StarterSiteInstallCommand::class');
 });
+
+
+
+
+
+
+
+
+
+

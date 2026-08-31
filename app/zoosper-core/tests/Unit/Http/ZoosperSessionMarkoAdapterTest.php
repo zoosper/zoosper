@@ -15,10 +15,20 @@ it('keeps third-party session packages behind the Zoosper Session module', funct
         ->not->toHaveKey('marko/session-database')
         ->and($moduleComposer['require'])->toHaveKey('marko/session-file', '0.8.5')
         ->and($root . '/app/zoosper-session/config/settings/session.php')->toBeFile()
-        ->and($factory)->toContain('$services->has(\\SessionHandlerInterface::class)')
-        ->not->toContain('Marko\\Session')
+        ->and($factory)->toContain('$services->has(\SessionHandlerInterface::class)')
+        ->not->toContain('Marko\Session')
         ->not->toContain('FileSessionHandler')
-        ->and($application)->toContain('private ?\\SessionHandlerInterface $sessionHandler = null')
+        ->and($application)->toContain('private ?\SessionHandlerInterface $sessionHandler = null')
         ->toContain('session_set_save_handler($this->sessionHandler, true)')
-        ->not->toContain('Marko\\Session');
+        ->not->toContain('Marko\Session');
 });
+
+
+
+
+
+
+
+
+
+

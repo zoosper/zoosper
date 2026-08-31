@@ -1,1 +1,11 @@
 <?php declare(strict_types=1);it('owns PAT Site reads and guarded lifecycle',function(){ $r=(string)file_get_contents(dirname(__DIR__,3).'/config/api_routes.php');expect($r)->toContain('/api/v1/sites')->toContain("'action'=>'disable'")->toContain("'action'=>'deletePermanently'");});
+
+
+
+
+
+
+
+
+
+

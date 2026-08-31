@@ -55,3 +55,14 @@ final readonly class ScopeContext
         return new self($siteId, $storeCode, $websiteCode);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

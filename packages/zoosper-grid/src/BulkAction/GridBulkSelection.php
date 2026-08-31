@@ -39,3 +39,14 @@ final readonly class GridBulkSelection
         return count($this->identities);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

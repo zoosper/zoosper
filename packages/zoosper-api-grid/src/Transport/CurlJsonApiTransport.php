@@ -105,3 +105,14 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
         return new ApiResponse($status, $decoded);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

@@ -33,3 +33,13 @@ final readonly class AjaxFragmentDefinition
         return !$this->seoCritical;
     }
 }
+
+
+
+
+
+
+
+
+
+

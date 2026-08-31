@@ -34,3 +34,13 @@ it('hides default scope value server-side and publishes filtered category counts
         ->toContain('data-total=')
         ->toContain('badge.hidden=');
 });
+
+
+
+
+
+
+
+
+
+

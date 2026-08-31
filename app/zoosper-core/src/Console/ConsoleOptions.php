@@ -65,3 +65,13 @@ final class ConsoleOptions
         return trim($slug, '-');
     }
 }
+
+
+
+
+
+
+
+
+
+

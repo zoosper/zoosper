@@ -47,3 +47,14 @@ it('retires the application compatibility bridge and registrations', function ()
         ->and($root . '/app/zoosper-admin/resources/assets/js/zoosper-grid-column-drag.js')->not->toBeFile()
         ->and($root . '/app/zoosper-admin/resources/assets/css/zoosper-grid-column-drag.css')->not->toBeFile();
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -32,3 +32,14 @@ test('media module registers editorjs response service and controller factory', 
     expect($services)->toContain('EditorJsImageUploadResponseFactory::class');
     expect($controllers)->toContain('MediaEditorJsUploadController::class');
 });
+
+
+
+
+
+
+
+
+
+
+

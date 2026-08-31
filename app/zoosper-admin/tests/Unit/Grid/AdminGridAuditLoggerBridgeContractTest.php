@@ -14,5 +14,15 @@ test('Admin provides the host audit bridge without leaking Admin into Grid', fun
     expect($reflection->implementsInterface(GridWorkspaceAuditLoggerInterface::class))->toBeTrue();
     expect((string) file_get_contents(
         dirname(__DIR__, 5) . '/packages/zoosper-admin-grid/src/GridWorkspaceExportAuditLoggerAdapter.php',
-    ))->not->toContain('Zoosper\\Admin\\');
+    ))->not->toContain('Zoosper\Admin\');
 });
+
+
+
+
+
+
+
+
+
+

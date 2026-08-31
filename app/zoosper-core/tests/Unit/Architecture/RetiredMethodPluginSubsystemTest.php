@@ -11,13 +11,13 @@ it('keeps the unused duplicate method-plugin subsystem retired', function (): vo
             $path = str_replace('\\', '/', $file->getPathname());
             if (!$file->isFile() || $file->getExtension() !== 'php' || str_contains($path, '/tests/')) continue;
             $source=(string)file_get_contents($file->getPathname());
-            if (str_contains($source,'Zoosper\\Core\\Plugin') || str_contains($source,'method_plugins.php')) $scan[]=$path;
+            if (str_contains($source,'Zoosper\Core\Plugin') || str_contains($source,'method_plugins.php')) $scan[]=$path;
         }
     }
     expect($scan)->toBe([]);
     $decision=(string)file_get_contents($root.'/docs/architecture-decisions/marko-extensibility-ownership.md');
-    expect($decision)->toContain('Phase 10BE removed the unused `Zoosper\\Core\\Plugin` subsystem')
-        ->toContain('Do not recreate `Zoosper\\Core\\Plugin`');
+    expect($decision)->toContain('Phase 10BE removed the unused `Zoosper\Core\Plugin` subsystem')
+        ->toContain('Do not recreate `Zoosper\Core\Plugin`');
 });
 it('records staged bridge ownership without pretending inactive dependencies are gone', function (): void {
     $root=dirname(__DIR__,5);
@@ -28,3 +28,13 @@ it('records staged bridge ownership without pretending inactive dependencies are
         ->toContain('Phase 10BJ extracted `zoosper/config`')
         ->toContain('Encryption is not extracted independently');
 });
+
+
+
+
+
+
+
+
+
+

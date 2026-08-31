@@ -21,3 +21,13 @@ final readonly class EntityExtensionValue
     ) {
     }
 }
+
+
+
+
+
+
+
+
+
+

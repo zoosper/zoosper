@@ -7,7 +7,7 @@ use Zoosper\Auth\Lifecycle\RoleLifecycleCoordinator;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\PasswordHasher;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Module\ModuleRegistry;
 
 function identityLifecyclePdo(): PDO
@@ -58,3 +58,13 @@ it('protects system and assigned Roles and deletes an unassigned custom Role', f
     $deleted->execute(['id' => $freeId]);
     expect((int) $deleted->fetchColumn())->toBe(0);
 });
+
+
+
+
+
+
+
+
+
+

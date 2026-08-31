@@ -28,3 +28,13 @@ test('schema CLI does not declare a second env helper or load vendor autoload di
     expect($source)->not->toContain("'/vendor/autoload.php'");
     expect($source)->not->toContain('ConfigRepository::fromPath(');
 });
+
+
+
+
+
+
+
+
+
+

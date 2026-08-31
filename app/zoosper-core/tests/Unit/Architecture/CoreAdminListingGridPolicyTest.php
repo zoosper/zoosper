@@ -22,3 +22,13 @@ it('forbids direct basic Grid renderer construction in first-party Admin listing
  foreach([$root.'/app',$root.'/packages'] as $base){$iterator=new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base,FilesystemIterator::SKIP_DOTS));foreach($iterator as $file){$path=$file->getPathname();if(!$file->isFile()||!str_ends_with($path,'Controller.php'))continue;$source=(string)file_get_contents($path);if(str_contains($source,'function index(')&&str_contains($source,'new GridHtmlRenderer('))$violations[]=str_replace($root.'/','',$path);}}
  expect($violations)->toBe([]);
 });
+
+
+
+
+
+
+
+
+
+

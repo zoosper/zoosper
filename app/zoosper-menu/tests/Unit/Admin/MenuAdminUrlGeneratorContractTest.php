@@ -18,3 +18,13 @@ it('uses the installed AdminUrlGenerator public path method', function (): void 
             ->not->toContain('->to(');
     }
 });
+
+
+
+
+
+
+
+
+
+

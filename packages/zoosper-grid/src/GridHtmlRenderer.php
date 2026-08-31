@@ -127,3 +127,14 @@ final class GridHtmlRenderer
     private function url(string $baseUrl,array $params):string{$filtered=array_filter($params,static fn(mixed $v):bool=>$v!==null&&$v!=='');$q=http_build_query($filtered);return $q!==''?$baseUrl.'?'.$q:$baseUrl;}
     private function e(string $value):string{return htmlspecialchars($value,ENT_QUOTES,'UTF-8');}
 }
+
+
+
+
+
+
+
+
+
+
+

@@ -63,3 +63,13 @@ final readonly class ModuleDependencyValidator
         return array_values(array_unique($normalised));
     }
 }
+
+
+
+
+
+
+
+
+
+

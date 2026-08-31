@@ -14,7 +14,17 @@ test('autoload synchronizer discovers package path modules after app compatibili
 
     $mappings = (new ModuleAutoloadSynchronizer($root))->discoverMappings();
 
-    expect($mappings['autoload'])->toHaveKey('Zoosper\\Media\\');
-    expect($mappings['autoload']['Zoosper\\Media\\'])->toBe('packages/zoosper-media/src/');
-    expect($mappings['autoload-dev']['Zoosper\\Media\\Tests\\'])->toBe('packages/zoosper-media/tests/');
+    expect($mappings['autoload'])->toHaveKey('Zoosper\Media\');
+    expect($mappings['autoload']['Zoosper\Media\'])->toBe('packages/zoosper-media/src/');
+    expect($mappings['autoload-dev']['Zoosper\Media\Tests\'])->toBe('packages/zoosper-media/tests/');
 });
+
+
+
+
+
+
+
+
+
+

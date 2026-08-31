@@ -10,3 +10,11 @@ return [
     'debug' => filter_var(env('APP_DEBUG', false), FILTER_VALIDATE_BOOLEAN),
     'version' => env('CMS_VERSION', $release['version']),
 ];
+
+
+
+
+
+
+
+

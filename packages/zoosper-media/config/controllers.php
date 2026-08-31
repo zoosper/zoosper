@@ -6,7 +6,7 @@ use Zoosper\AdminForm\AdminFormRegistry;
 use Zoosper\AdminForm\AdminFormRenderer;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Media\Api\MediaApiController;
@@ -52,3 +52,14 @@ return [
         responses: $services->get(EditorJsImageUploadResponseFactory::class),
     ),
 ];
+
+
+
+
+
+
+
+
+
+
+

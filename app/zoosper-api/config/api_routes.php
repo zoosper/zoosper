@@ -15,3 +15,13 @@ return [
     ['method' => 'GET', 'path' => '/api/v1/me', 'controller' => MeController::class, 'action' => 'show'],
     ['method' => 'GET', 'path' => '/api/v1/token/me', 'controller' => \Zoosper\Api\Controller\TokenMeController::class, 'action' => 'show', 'public' => true, 'stateless' => true],
 ];
+
+
+
+
+
+
+
+
+
+

@@ -64,3 +64,13 @@ it('declares the Marko contract dependency in the owning Composer package', func
 
     expect($composer['require']['marko/admin'] ?? null)->toBe('0.8.5');
 });
+
+
+
+
+
+
+
+
+
+

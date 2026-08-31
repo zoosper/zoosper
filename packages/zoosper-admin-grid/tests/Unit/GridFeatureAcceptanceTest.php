@@ -29,3 +29,14 @@ test('legacy page output cannot be declared complete', function (): void {
         ->toContain('legacy_hidden_page_size_removed')
         ->toContain('legacy_site_id_input_removed');
 });
+
+
+
+
+
+
+
+
+
+
+

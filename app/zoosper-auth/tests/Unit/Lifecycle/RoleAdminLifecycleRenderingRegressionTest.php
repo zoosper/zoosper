@@ -8,7 +8,7 @@ it('renders Role lifecycle actions only for an existing persisted Role ID', func
 
     expect($source)
         ->toContain('\'lifecycleHtml\' => $roleId !== null && $this->lifecycle !== null')
-        ->toContain('$this->lifecycle->actionsHtml($roleId, (string) ($role[\'code\'] ?? \'\'))')
+        ->toContain('$this->lifecycle->actionsHtml($roleId, (string) ($role[\'code\'] ?? \'\\'))')
         ->not->toContain('actionsHtml($id,');
 });
 
@@ -21,3 +21,13 @@ it('keeps create and edit Role forms on the same nullable persisted-role contrac
         ->toContain('$this->form($this->adminUrl(\'roles/create\'))')
         ->toContain('$this->form($this->adminUrl(\'roles/edit\', [\'id\' => (int) $role[\'id\']]), $role)');
 });
+
+
+
+
+
+
+
+
+
+

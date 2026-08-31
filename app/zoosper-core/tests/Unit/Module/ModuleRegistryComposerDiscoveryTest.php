@@ -46,3 +46,13 @@ test('composer installed module exposes config path and source metadata', functi
     expect($media->configPath('services.php'))->toEndWith('/vendor/zoosper/media/config/services.php');
 });
 
+
+
+
+
+
+
+
+
+
+

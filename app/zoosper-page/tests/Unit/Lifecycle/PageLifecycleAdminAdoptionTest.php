@@ -6,7 +6,7 @@ it('exposes Page lifecycle mutations only as protected POST routes', function ()
     $root=dirname(__DIR__,5); $routes=require $root.'/app/zoosper-page/config/admin_routes.php';
     $found=[]; foreach($routes as $route){ if(in_array($route['action']??'',['archive','restore','deletePermanently'],true)){$found[$route['action']]=$route;} }
     expect($found)->toHaveKeys(['archive','restore','deletePermanently']);
-    foreach($found as $route){ expect($route['method'])->toBe('POST')->and($route['permission'])->toBe('page.manage')->and($route['path'])->toContain('/admin/pages/{id:\\d+}/'); }
+    foreach($found as $route){ expect($route['method'])->toBe('POST')->and($route['permission'])->toBe('page.manage')->and($route['path'])->toContain('/admin/pages/{id:\d+}/'); }
 });
 
 it('keeps lifecycle orchestration out of the thin Page controller', function (): void {
@@ -32,3 +32,13 @@ it('adds archived Pages to the Grid status filter and wires the responder explic
         ->and($factory)->toContain('lifecycleResponder: new PageLifecycleAdminResponder(')
         ->toContain('$services->get(PageLifecycleCoordinator::class)');
 });
+
+
+
+
+
+
+
+
+
+

@@ -29,9 +29,9 @@ declare(strict_types=1);
  * autoloaded namespaces — no dirname()-based path arithmetic involved.
  */
 it('confirms the dead 2FA enrolment/crypto stack has been removed', function (): void {
-    expect(class_exists('Zoosper\\TwoFactor\\Service\\AdminTwoFactorEnrolmentService'))->toBeFalse();
-    expect(class_exists('Zoosper\\TwoFactor\\Service\\TwoFactorSecretProtector'))->toBeFalse();
-    expect(class_exists('Zoosper\\TwoFactor\\Repository\\AdminTwoFactorRepository'))->toBeFalse();
+    expect(class_exists('Zoosper\TwoFactor\Service\AdminTwoFactorEnrolmentService'))->toBeFalse();
+    expect(class_exists('Zoosper\TwoFactor\Service\TwoFactorSecretProtector'))->toBeFalse();
+    expect(class_exists('Zoosper\TwoFactor\Repository\AdminTwoFactorRepository'))->toBeFalse();
 });
 
 it('confirms the live 2FA stack these dead classes were never wired to replace remains intact', function (): void {
@@ -42,3 +42,13 @@ it('confirms the live 2FA stack these dead classes were never wired to replace r
     expect(class_exists(\Zoosper\TwoFactor\Service\AdminTwoFactorEnrollmentService::class))->toBeTrue();
     expect(class_exists(\Zoosper\TwoFactor\Repository\AdminTwoFactorEnrollmentRepository::class))->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

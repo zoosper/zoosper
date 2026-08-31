@@ -47,3 +47,14 @@ final readonly class MediaDerivativePlan
         return new self(...$profiles);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

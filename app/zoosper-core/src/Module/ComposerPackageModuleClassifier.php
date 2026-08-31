@@ -27,3 +27,13 @@ final class ComposerPackageModuleClassifier
         return ($marko['module'] ?? false) === true;
     }
 }
+
+
+
+
+
+
+
+
+
+

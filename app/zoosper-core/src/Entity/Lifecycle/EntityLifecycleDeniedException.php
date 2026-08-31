@@ -25,3 +25,13 @@ final class EntityLifecycleDeniedException extends RuntimeException
         ));
     }
 }
+
+
+
+
+
+
+
+
+
+

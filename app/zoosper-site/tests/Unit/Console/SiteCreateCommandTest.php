@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Console\ConsoleOutput;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Site\Console\SiteCreateCommand;
 use Zoosper\Site\Repository\SiteRepository;
@@ -75,3 +75,13 @@ it('rejects a duplicate site code with a clear message and non-zero exit code', 
     expect($exitCode)->toBe(1);
     expect(siteCommandTestReadStream($stderr))->toContain('already exists');
 });
+
+
+
+
+
+
+
+
+
+

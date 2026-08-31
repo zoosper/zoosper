@@ -18,3 +18,13 @@ it('has exactly one canonical site-main page-shell layout boundary', function ()
     expect($matches)->toHaveCount(2)
         ->and(implode(' ', $matches))->toContain('layout.php')->toContain('layout.latte');
 });
+
+
+
+
+
+
+
+
+
+

@@ -28,3 +28,13 @@ it('removes literal admin page links from migrated Pages fallback templates', fu
     $assets = (string) file_get_contents($root . '/app/zoosper-page/config/admin_assets.php');
     expect($assets)->toContain('/assets/admin/');
 });
+
+
+
+
+
+
+
+
+
+

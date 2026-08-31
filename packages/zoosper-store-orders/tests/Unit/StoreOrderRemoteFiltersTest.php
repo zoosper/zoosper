@@ -68,3 +68,14 @@ it('rejects invalid dates and reversed placed ranges before transport', function
         $context,
     ))->toThrow(InvalidArgumentException::class, 'Placed From');
 });
+
+
+
+
+
+
+
+
+
+
+

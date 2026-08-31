@@ -174,3 +174,13 @@ it('successfully constructs working SecretProtector from container when a strong
     expect($encrypted)->not->toBe($plain)
         ->and($protector->reveal($encrypted))->toBe($plain);
 });
+
+
+
+
+
+
+
+
+
+

@@ -40,3 +40,14 @@ it('rejects paths outside canonical original storage', function (): void {
     $result = (new GdMediaProcessor(sys_get_temp_dir()))->processStoragePath('../unsafe.png');
     expect($result->successful)->toBeFalse()->and($result->errors[0])->toContain('Unsafe source media storage path');
 });
+
+
+
+
+
+
+
+
+
+
+

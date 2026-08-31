@@ -12,7 +12,7 @@ use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
@@ -188,3 +188,13 @@ final readonly class DashboardController
         return $user;
     }
 }
+
+
+
+
+
+
+
+
+
+

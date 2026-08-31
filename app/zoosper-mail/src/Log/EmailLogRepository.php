@@ -153,3 +153,13 @@ final readonly class EmailLogRepository
         return $sanitized;
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -26,3 +26,13 @@ it('keeps both Theme Admin views semantic secure and contract-compatible', funct
             ->not->toContain('<script');
     }
 });
+
+
+
+
+
+
+
+
+
+

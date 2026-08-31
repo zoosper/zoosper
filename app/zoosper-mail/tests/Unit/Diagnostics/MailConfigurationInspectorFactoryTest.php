@@ -20,3 +20,13 @@ it('creates scope-aware redacted diagnostics without exposing password plaintext
     expect($summary->passwordConfigured)->toBeTrue()
         ->and(json_encode($summary, JSON_THROW_ON_ERROR))->not->toContain('site-secret');
 });
+
+
+
+
+
+
+
+
+
+

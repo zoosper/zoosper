@@ -123,3 +123,13 @@ test('stores values per module and entity independently', function () {
     expect($seo)->toHaveKey('score');
     expect($seo)->not->toHaveKey('reading_time');
 });
+
+
+
+
+
+
+
+
+
+

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ba2af669470615ff0c063a73a1c4658",
+    "content-hash": "a372f9599ff0eb78f65303ce7d6db3a3",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1085,13 +1085,15 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-admin",
-                "reference": "53b83e2fa7996f990420e7b28968f4396165b56d"
+                "reference": "10a9169a2e60a2c8cd4928406f0aef8422cfbb47"
             },
             "require": {
                 "marko/admin": "0.8.5",
                 "php": "^8.5",
                 "zoosper/admin-dashboard": "dev-dev",
+                "zoosper/admin-form": "dev-dev",
                 "zoosper/admin-grid": "dev-dev",
+                "zoosper/audit": "dev-dev",
                 "zoosper/auth": "dev-dev",
                 "zoosper/core": "dev-dev",
                 "zoosper/errors": "dev-dev",
@@ -1289,6 +1291,44 @@
             }
         },
         {
+            "name": "zoosper/audit",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "packages/zoosper-audit",
+                "reference": "ee13c67c810a7c8cd23e6049445b5d3b8e2ea55b"
+            },
+            "require": {
+                "php": ">=8.5",
+                "zoosper/grid": "dev-dev",
+                "zoosper/pagination": "dev-dev"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Audit\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Audit\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Admin activity and login history auditing for Zoosper CMS",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "zoosper/auth",
             "version": "dev-dev",
             "dist": {
@@ -1408,13 +1448,14 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-core",
-                "reference": "ac1f9f624eb20cb1be633c21a4938ed799094e1b"
+                "reference": "11f9e841481bb4ac5d3422e7b2742e881ed84089"
             },
             "require": {
                 "ext-pdo": "*",
                 "php": "^8.5",
                 "zoosper/cache": "dev-dev",
                 "zoosper/config": "dev-dev",
+                "zoosper/database": "dev-dev",
                 "zoosper/errors": "dev-dev",
                 "zoosper/logger": "dev-dev",
                 "zoosper/scoped-config": "dev-dev"
@@ -1434,6 +1475,43 @@
                 "MIT"
             ],
             "description": "Zoosper_Core module for Zoosper CMS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/database",
+            "version": "dev-dev",
+            "dist": {
+                "type": "path",
+                "url": "packages/zoosper-database",
+                "reference": "22d9d5187d40e12736988effdf9b868604c4779a"
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": ">=8.5"
+            },
+            "type": "zoosper-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\Database\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\Database\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Database connection and schema management for Zoosper CMS",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -9176,10 +9254,12 @@
         "zoosper/admin-grid": 20,
         "zoosper/api": 20,
         "zoosper/api-grid": 20,
+        "zoosper/audit": 20,
         "zoosper/auth": 20,
         "zoosper/cache": 20,
         "zoosper/config": 20,
         "zoosper/core": 20,
+        "zoosper/database": 20,
         "zoosper/editor": 20,
         "zoosper/errors": 20,
         "zoosper/global-announcements": 20,

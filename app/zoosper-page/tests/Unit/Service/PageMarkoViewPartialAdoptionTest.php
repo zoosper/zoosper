@@ -45,3 +45,13 @@ it('keeps the pre-existing TemplateRenderer fallback for isolated Page tests and
         ->toContain(': $templates->render(')
         ->toContain("'zoosper-page::page/view'");
 });
+
+
+
+
+
+
+
+
+
+

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Audit\AuditLogRepository;
-use Zoosper\Admin\Audit\LoginHistoryRepository;
-use Zoosper\Admin\Audit\Grid\OperationalGridPageBuilder;
-use Zoosper\Admin\Audit\Grid\LoginHistoryGridDefinition;
-use Zoosper\Admin\Audit\Grid\AuditLogGridDefinition;
+use Zoosper\Audit\AuditLogRepository;
+use Zoosper\Audit\LoginHistoryRepository;
+use Zoosper\Audit\Admin\Grid\OperationalGridPageBuilder;
+use Zoosper\Audit\Admin\Grid\LoginHistoryGridDefinition;
+use Zoosper\Audit\Admin\Grid\AuditLogGridDefinition;
 use Zoosper\Admin\Controller\AuditLogController;
 use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
@@ -46,7 +46,7 @@ return [
         $services->get(AdminUrlGenerator::class),
         $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
-        $services->has(\Zoosper\Core\Audit\AuditLoggerInterface::class) ? $services->get(\Zoosper\Core\Audit\AuditLoggerInterface::class) : null,
+        $services->has(\Zoosper\Audit\Contract\AuditLoggerInterface::class) ? $services->get(\Zoosper\Audit\Contract\AuditLoggerInterface::class) : null,
     ),
 
     AuditLogController::class => static fn (ServiceContainer $services): AuditLogController => new AuditLogController(
@@ -60,4 +60,14 @@ return [
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null, $services->get(AdminUrlGenerator::class),
     ),
 ];
+
+
+
+
+
+
+
+
+
+
 

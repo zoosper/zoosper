@@ -107,3 +107,14 @@ test('view names are escaped before rendering into controls', function (): void 
     expect($html)->toContain('&quot; autofocus onfocus=&quot;alert(1)')
         ->not->toContain(' onfocus="alert(1)');
 });
+
+
+
+
+
+
+
+
+
+
+

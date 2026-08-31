@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Console\ConsoleOutput;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Page\Console\PageCreateCommand;
 use Zoosper\Page\Repository\PageRepository;
@@ -90,3 +90,13 @@ it('fails with a clear message when required options are missing', function (): 
     expect($exitCode)->toBe(1);
     expect(pageCommandTestReadStream($stderr))->toContain('Missing required option');
 });
+
+
+
+
+
+
+
+
+
+

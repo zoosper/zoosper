@@ -53,3 +53,13 @@ final readonly class MarkoViewAdapter implements ViewInterface
         return $template;
     }
 }
+
+
+
+
+
+
+
+
+
+

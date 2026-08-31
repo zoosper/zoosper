@@ -43,3 +43,13 @@ it('url-encodes a version value that contains special characters', function (): 
     expect($generator->url('zoosper-admin', 'css/zoosper-grid.css', 'a b&c'))
         ->toBe('/asset/zoosper-admin/css/zoosper-grid.css?v=a%20b%26c');
 });
+
+
+
+
+
+
+
+
+
+

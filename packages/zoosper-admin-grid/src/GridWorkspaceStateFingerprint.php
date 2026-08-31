@@ -57,3 +57,14 @@ final readonly class GridWorkspaceStateFingerprint
         return $values;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

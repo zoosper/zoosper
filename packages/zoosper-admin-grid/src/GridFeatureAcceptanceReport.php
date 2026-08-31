@@ -23,3 +23,14 @@ final readonly class GridFeatureAcceptanceReport
         return $this->failed === [];
     }
 }
+
+
+
+
+
+
+
+
+
+
+

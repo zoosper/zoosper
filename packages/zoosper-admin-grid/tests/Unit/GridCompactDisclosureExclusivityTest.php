@@ -42,3 +42,14 @@ it('registers the compact disclosure runtime through the canonical Admin asset m
         ->and($asset['sort_order'] ?? null)->toBe(80)
         ->and($asset['attributes']['defer'] ?? false)->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+
+

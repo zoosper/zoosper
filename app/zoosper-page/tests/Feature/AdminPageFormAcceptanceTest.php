@@ -7,7 +7,7 @@ namespace Zoosper\Page\Tests\Feature;
 use Zoosper\Core\Bootstrap\ApplicationFactory;
 use Zoosper\Page\Admin\Controller\PageAdminController;
 use Zoosper\Core\Testing\TestCase;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Http\Request;
 
@@ -120,3 +120,13 @@ class AdminPageFormAcceptanceTest extends TestCase
         $this->assertStringContainsString('class="admin-page-lifecycle"', $html);
     }
 }
+
+
+
+
+
+
+
+
+
+

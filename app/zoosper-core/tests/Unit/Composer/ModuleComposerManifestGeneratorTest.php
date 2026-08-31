@@ -16,7 +16,7 @@ test('generates package manifest for a module identity', function () {
 
     expect($manifest['name'])->toBe('zoosper/media');
     expect($manifest['type'])->toBe('zoosper-module');
-    expect($manifest['autoload']['psr-4']['Zoosper\\Media\\'])->toBe('src/');
+    expect($manifest['autoload']['psr-4']['Zoosper\Media\'])->toBe('src/');
     expect($manifest['require'])->toHaveKey('zoosper/core');
 });
 
@@ -30,3 +30,13 @@ test('generated core manifest requires ext-pdo', function () {
     expect($manifest['name'])->toBe('zoosper/core');
     expect($manifest['require']['ext-pdo'])->toBe('*');
 });
+
+
+
+
+
+
+
+
+
+

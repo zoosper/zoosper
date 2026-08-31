@@ -30,3 +30,14 @@ final readonly class MediaUploadValidationResult
         return new self(false, $errors);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

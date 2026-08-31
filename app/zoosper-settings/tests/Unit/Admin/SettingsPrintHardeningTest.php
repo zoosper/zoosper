@@ -27,3 +27,13 @@ it('removes target and search outlines from print output', function (): void {
         ->toContain('.settings-group summary:after{display:none!important}')
         ->toContain('.settings-icon-button,.settings-actions');
 });
+
+
+
+
+
+
+
+
+
+

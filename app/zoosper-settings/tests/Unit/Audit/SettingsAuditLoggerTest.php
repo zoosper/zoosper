@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Settings\Audit\SettingsAuditLogger;
 use Zoosper\Settings\Definition\SettingDefinition;
 use Zoosper\Settings\Definition\SettingsSection;
@@ -36,3 +36,13 @@ it('is optional and best effort', function (): void {
     $section = new SettingsSection('settings.catalogue', 'Catalogue', 'advanced', 'settings', []);
     expect(fn () => (new SettingsAuditLogger(null))->sectionSaved(null, null, $section, 'default', '', []))->not->toThrow(\Throwable::class);
 });
+
+
+
+
+
+
+
+
+
+

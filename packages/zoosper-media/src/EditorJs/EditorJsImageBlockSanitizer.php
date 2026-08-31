@@ -42,3 +42,14 @@ final readonly class EditorJsImageBlockSanitizer
         return str_starts_with($url, '/media/');
     }
 }
+
+
+
+
+
+
+
+
+
+
+

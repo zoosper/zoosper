@@ -15,3 +15,13 @@ it('centralises forwarded proxy interpretation in TrustedProxyResolver', functio
         ->toContain("\$server['HTTP_X_FORWARDED_FOR']")
         ->toContain("\$server['HTTP_X_FORWARDED_PROTO']");
 });
+
+
+
+
+
+
+
+
+
+

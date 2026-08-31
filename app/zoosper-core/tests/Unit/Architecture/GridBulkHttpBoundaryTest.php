@@ -9,8 +9,18 @@ it('keeps the shared HTTP boundary free of Page and Store Orders dependencies', 
     foreach (glob($directory . '/*.php') ?: [] as $file) {
         $source .= (string) file_get_contents($file);
     }
-    expect($source)->not->toContain('Zoosper\\Page')
+    expect($source)->not->toContain('Zoosper\Page')
         ->not->toContain('StoreOrder')
         ->not->toContain('$_POST')
         ->not->toContain('session_start');
 });
+
+
+
+
+
+
+
+
+
+

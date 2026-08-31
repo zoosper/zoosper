@@ -32,3 +32,13 @@ it('keeps Admin Users Grid HTML inside the trusted template branch', function ()
         ->toContain('{else}')
         ->toContain('{/if}');
 });
+
+
+
+
+
+
+
+
+
+

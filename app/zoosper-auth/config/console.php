@@ -7,3 +7,13 @@ use Zoosper\Auth\Console\AdminCreateCommand;
 return [
     AdminCreateCommand::class,
 ];
+
+
+
+
+
+
+
+
+
+

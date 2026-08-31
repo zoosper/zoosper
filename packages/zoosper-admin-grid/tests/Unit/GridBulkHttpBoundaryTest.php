@@ -40,3 +40,14 @@ it('requires action-bound confirmation for mutating definitions', function (): v
     $guard->assertConfirmed($definition, ['confirmed_action' => 'page.publish']);
     expect(true)->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+
+

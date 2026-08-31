@@ -3,3 +3,13 @@ declare(strict_types=1);
 namespace Zoosper\Menu\Service;
 use PDO; use Zoosper\Menu\Contract\{MenuProviderInterface,MenuRepositoryInterface,MenuItemRepositoryInterface};
 final readonly class MenuProvider implements MenuProviderInterface { public function __construct(private MenuRepositoryInterface $menus,private MenuItemRepositoryInterface $items,private MenuTreeBuilder $trees,private PDO $pdo){} public function tree(int $siteId,string $code,string $currentPath='/'): array{$menu=$this->menus->findActiveBySiteAndCode($siteId,$code);if($menu===null)return [];$items=$this->items->activeForMenu($menu->id);$ids=array_values(array_unique(array_filter(array_map(static fn($i)=>$i->pageId,$items))));$urls=[];if($ids!==[]){$marks=implode(',',array_fill(0,count($ids),'?'));$s=$this->pdo->prepare("SELECT id,slug FROM pages WHERE id IN ($marks) AND site_id=? AND status='published'");$s->execute([...$ids,$siteId]);foreach($s->fetchAll(PDO::FETCH_ASSOC) as $r)$urls[(int)$r['id']]='/'.trim((string)$r['slug'],'/');}return $this->trees->build($items,$urls,$currentPath);} }
+
+
+
+
+
+
+
+
+
+

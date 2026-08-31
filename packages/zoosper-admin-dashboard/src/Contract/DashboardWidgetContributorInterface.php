@@ -11,3 +11,14 @@ interface DashboardWidgetContributorInterface
     /** @return iterable<DashboardWidget> */
     public function widgets(): iterable;
 }
+
+
+
+
+
+
+
+
+
+
+

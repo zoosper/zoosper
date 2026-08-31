@@ -35,3 +35,13 @@ final readonly class Module
         return rtrim($this->path, '/\\') . '/module.php';
     }
 }
+
+
+
+
+
+
+
+
+
+

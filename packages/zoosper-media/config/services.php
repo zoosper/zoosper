@@ -20,7 +20,7 @@ use Zoosper\Media\Processing\MediaUploadDerivativeDispatcher;
 use Zoosper\Media\Processing\MediaUploadDerivativePolicy;
 use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
 use Zoosper\Media\Lifecycle\MediaReferenceInspector;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Repository\MediaDerivativeRepository;
 use Zoosper\Media\Service\MediaDerivativeLookup;
@@ -87,3 +87,14 @@ return [
         $services->get(MediaDerivativeRepository::class)
     ),
 ];
+
+
+
+
+
+
+
+
+
+
+

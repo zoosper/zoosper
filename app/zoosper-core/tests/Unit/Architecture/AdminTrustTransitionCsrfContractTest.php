@@ -31,3 +31,13 @@ it('rotates CSRF after successful two-factor promotion', function (): void {
         ->and($rotate)->not->toBeFalse()
         ->and($promote)->toBeLessThan($rotate);
 });
+
+
+
+
+
+
+
+
+
+

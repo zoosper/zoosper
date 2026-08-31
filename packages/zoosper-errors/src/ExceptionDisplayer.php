@@ -51,3 +51,14 @@ final readonly class ExceptionDisplayer
         echo $this->formatHtml($exception);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

@@ -29,3 +29,13 @@ it('keeps executable CSS and JavaScript out of the Settings template', function 
         ->and($js)->toContain('localStorage')
         ->toContain("window.addEventListener('beforeprint'");
 });
+
+
+
+
+
+
+
+
+
+

@@ -31,3 +31,14 @@ test('every stable mutation action has a success message', function (): void {
         expect(GridWorkspaceMutationMessages::forAction($action))->not->toBe('');
     }
 });
+
+
+
+
+
+
+
+
+
+
+

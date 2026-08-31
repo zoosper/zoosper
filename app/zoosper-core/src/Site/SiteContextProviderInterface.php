@@ -12,3 +12,13 @@ interface SiteContextProviderInterface
 {
     public function resolve(object $request): ?SiteContext;
 }
+
+
+
+
+
+
+
+
+
+

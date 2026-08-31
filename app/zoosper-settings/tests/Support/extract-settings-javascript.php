@@ -31,3 +31,13 @@ if ($blocks === []) {
 }
 file_put_contents($argv[2], implode("\n", $blocks));
 echo 'Extracted ' . count($blocks) . " executable JavaScript block(s).\n";
+
+
+
+
+
+
+
+
+
+

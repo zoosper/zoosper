@@ -84,3 +84,14 @@ test('mutation forms reject missing CSRF data and external form actions', functi
     expect(fn (): string => $renderer->render(mutationFormState(), 'https://example.invalid', '_csrf', 'token'))
         ->toThrow(\InvalidArgumentException::class, 'application-local');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -33,3 +33,13 @@ final readonly class MenuLifecycleAdminResponder
     private function form(string $path,string $token,string $label,string $class,bool $destructive=false):string{$description=$destructive?'<p class="muted">This cannot be undone. Database cascades are not used as an Admin item-deletion shortcut.</p>':'';return '<form method="post" action="'.$this->e($this->urls->url($path)).'" class="menu-lifecycle-form"><input type="hidden" name="_csrf_token" value="'.$token.'">'.$description.'<button type="submit" class="'.$this->e($class).'">'.$this->e($label).'</button></form>';}
     private function e(string $value):string{return htmlspecialchars($value,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');}
 }
+
+
+
+
+
+
+
+
+
+

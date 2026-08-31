@@ -23,3 +23,13 @@ final readonly class AdminViewRenderer implements AdminViewRendererInterface
         return $this->layout->render($title, $content, $user, $active);
     }
 }
+
+
+
+
+
+
+
+
+
+

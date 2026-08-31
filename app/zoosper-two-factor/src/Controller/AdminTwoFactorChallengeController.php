@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\TwoFactor\Controller;
 
-use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
+use Zoosper\Audit\Contract\LoginHistoryRecorderInterface;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
@@ -199,3 +199,13 @@ HTML;
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 }
+
+
+
+
+
+
+
+
+
+

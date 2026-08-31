@@ -10,3 +10,13 @@ it('marks pinned views in the selector and refreshes pin changes across tabs', f
         ->toContain('if(event.key===pinnedSavedViewsKey)')
         ->toContain("copyStatus.textContent='Pinned saved views updated in another tab'");
 });
+
+
+
+
+
+
+
+
+
+

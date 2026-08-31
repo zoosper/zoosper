@@ -9,8 +9,8 @@ use Zoosper\Core\Console\BuiltIn\SchemaForeignKeyApplyCommand;
 use Zoosper\Core\Console\BuiltIn\SchemaForeignKeyStatusCommand;
 use Zoosper\Core\Console\ConsoleOutput;
 use Zoosper\Core\Module\ModuleRegistry;
-use Zoosper\Core\Schema\SchemaForeignKeyReconciliationService;
-use Zoosper\Core\Schema\SchemaLoader;
+use Zoosper\Database\Schema\SchemaForeignKeyReconciliationService;
+use Zoosper\Database\Schema\SchemaLoader;
 
 function fkOperatorOutput(): array
 {
@@ -57,3 +57,13 @@ it('wires both operational commands lazily in the thin executable', function ():
         ->toContain('new SchemaForeignKeyReconciliationService(')
         ->toContain('$connection->get()');
 });
+
+
+
+
+
+
+
+
+
+

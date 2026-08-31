@@ -11,3 +11,14 @@ it('ships the package module marker required by Composer module discovery', func
     expect($moduleFile)->toBeFile()
         ->and(require $moduleFile)->toBeArray();
 });
+
+
+
+
+
+
+
+
+
+
+

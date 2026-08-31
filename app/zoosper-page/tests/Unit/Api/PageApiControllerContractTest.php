@@ -9,3 +9,13 @@ it('requires PAT scope and owner permission while preserving Site isolation and 
         ->toContain("page->siteId===\$request->siteContext()?->siteId")
         ->not->toContain('tokenHash')->not->toContain('authorization]');
 });
+
+
+
+
+
+
+
+
+
+

@@ -23,3 +23,13 @@ it('exits safely before reading Settings-only DOM on unrelated Admin screens', f
         ->toContain("workspaceRoot=document.getElementById('settings-workspace');if(!workspaceRoot)return;")
         ->not->toContain("JSON.parse(document.getElementById('settings-scope-options').textContent)");
 });
+
+
+
+
+
+
+
+
+
+

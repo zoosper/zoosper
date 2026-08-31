@@ -43,3 +43,13 @@ test('page index template renders the shared grid output instead of a manual tab
     expect($template)->not->toContain('page-filters.php');
     expect($template)->not->toContain('pagination.php');
 });
+
+
+
+
+
+
+
+
+
+

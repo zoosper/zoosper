@@ -18,3 +18,13 @@ interface TranslatorInterface
      */
     public function translate(string $message, array $parameters = []): string;
 }
+
+
+
+
+
+
+
+
+
+

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Theme\Admin\Controller;
 
 use RuntimeException;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Service\CsrfTokenManager;
@@ -97,3 +97,13 @@ final readonly class ThemeAdminController
         return $user;
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -40,3 +40,14 @@ final readonly class GridWorkspacePageRenderer
         return new GridWorkspacePage($state, $workspace, $grid);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

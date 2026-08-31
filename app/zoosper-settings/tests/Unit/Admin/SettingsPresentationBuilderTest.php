@@ -40,3 +40,13 @@ it('redacts secrets and prepares multiselect and numeric input metadata', functi
         ->and($data['fieldPresentation']['tax.rate']['inputType'])->toBe('number')
         ->and($data['fieldPresentation']['tax.rate']['step'])->toBe('any');
 });
+
+
+
+
+
+
+
+
+
+

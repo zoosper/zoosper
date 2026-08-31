@@ -6,7 +6,7 @@ use Zoosper\Auth\Console\AdminCreateCommand;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Core\Console\ConsoleOutput;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Module\ModuleRegistry;
 
 /**
@@ -91,3 +91,13 @@ it('fails with a clear message when required options are missing', function (): 
     expect($exitCode)->toBe(1);
     expect(authCommandTestReadStream($stderr))->toContain('Missing required option');
 });
+
+
+
+
+
+
+
+
+
+

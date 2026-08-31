@@ -22,7 +22,7 @@ use Zoosper\Page\Admin\Form\PageSeoSectionProvider;
  *
  * File placement: app/zoosper-core/tests/Unit/Form/PageAdminFormCoreRelocationTest.php
  */
-it('confirms all 9 relocated admin-form classes exist under Zoosper\\AdminForm', function (): void {
+it('confirms all 9 relocated admin-form classes exist under Zoosper\AdminForm', function (): void {
     expect(class_exists(AdminFormSection::class))->toBeTrue();
     expect(interface_exists(AdminFormSectionProviderInterface::class))->toBeTrue();
     expect(class_exists(AdminFormProviderRegistry::class))->toBeTrue();
@@ -40,4 +40,14 @@ it('confirms all four page form section providers implement the Core interface',
     expect(is_subclass_of(PageSeoSectionProvider::class, AdminFormSectionProviderInterface::class))->toBeTrue();
     expect(is_subclass_of(PagePublishingSectionProvider::class, AdminFormSectionProviderInterface::class))->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+
 

@@ -35,3 +35,14 @@ final readonly class CacheDriverFactory
     private function resolvePath(string $path): string { if(str_starts_with($path,'/')) return rtrim($path,'/'); $path=trim($path,'/'); return rtrim($this->basePath,'/').'/'.(str_starts_with($path,'var/')?$path:'var/'.$path); }
 }
 final readonly class ArrayConfig { public function __construct(private array $values) {} public function get(string $key,mixed $default=null):mixed { $v=$this->values; foreach(explode('.',$key) as $part){if(!is_array($v)||!array_key_exists($part,$v)) return $default;$v=$v[$part];} return $v; } }
+
+
+
+
+
+
+
+
+
+
+

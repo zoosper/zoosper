@@ -31,3 +31,13 @@ it('keeps aria-expanded synchronised with native details state', function (): vo
     expect($view)->toContain("setAttribute('aria-expanded',String(panel.open))")
         ->toContain("setAttribute('aria-expanded','false')");
 });
+
+
+
+
+
+
+
+
+
+

@@ -127,3 +127,13 @@ final readonly class CacheContext
         return $path === '/' ? '/' : rtrim($path, '/');
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -72,3 +72,13 @@ final readonly class MenuGrid implements GridDataSourceInterface
         return new PaginationResult($st->fetchAll(PDO::FETCH_ASSOC) ?: [], (int)$n->fetchColumn(), $c->pager->page, $c->pager->pageSize);
     }
 }
+
+
+
+
+
+
+
+
+
+

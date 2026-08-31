@@ -42,3 +42,13 @@ test('throws when a middleware entry is invalid', function () {
 
     expect(fn () => $loader->resolveEntries([123]))->toThrow(ZoosperException::class);
 });
+
+
+
+
+
+
+
+
+
+

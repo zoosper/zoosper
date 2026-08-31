@@ -19,3 +19,13 @@ it('continues to expose valid absolute and relative external links',function(){
  $tree=(new MenuTreeBuilder())->build($items,[],'/');
  expect($tree[0]->href)->toBe('https://docs.zoosper.com')->and($tree[1]->href)->toBe('/');
 });
+
+
+
+
+
+
+
+
+
+

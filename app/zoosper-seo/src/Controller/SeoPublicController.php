@@ -3,3 +3,13 @@ declare(strict_types=1);
 namespace Zoosper\Seo\Controller;
 use Zoosper\Core\Http\{Request,Response};use Zoosper\Seo\Sitemap\SitemapAggregator;use Zoosper\Site\Repository\SiteRepository;
 final readonly class SeoPublicController{public function __construct(private SiteRepository $sites,private SitemapAggregator $sitemap){}public function sitemap(Request $r):Response{$s=$this->site($r);return $s===null?Response::raw("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"></urlset>\n",404,['Content-Type'=>'application/xml; charset=utf-8','Cache-Control'=>'no-store']):Response::raw($this->sitemap->xml($s),200,['Content-Type'=>'application/xml; charset=utf-8','Cache-Control'=>'public, max-age=300']);}public function robots(Request $r):Response{$s=$this->site($r);$lines=['User-agent: *','Allow: /'];$u=$s===null?null:$this->sitemap->sitemapUrl($s);if($u!==null)$lines[]='Sitemap: '.$u;return Response::raw(implode("\n",$lines)."\n",200,['Content-Type'=>'text/plain; charset=utf-8','Cache-Control'=>'public, max-age=300']);}private function site(Request $r):?\Zoosper\Site\Model\Site{$id=$r->siteContext()?->siteId;$s=$id===null?null:$this->sites->findById($id);return $s!==null&&$s->status==='active'?$s:null;}}
+
+
+
+
+
+
+
+
+
+

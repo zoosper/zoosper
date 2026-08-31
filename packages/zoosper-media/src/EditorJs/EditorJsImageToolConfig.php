@@ -44,3 +44,14 @@ final readonly class EditorJsImageToolConfig
         ];
     }
 }
+
+
+
+
+
+
+
+
+
+
+

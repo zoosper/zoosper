@@ -33,3 +33,13 @@ test('rejects invalid console command names', function () {
 
     (new ConsoleCommandScaffolder($root))->scaffold('Acme_Blog', 'ReindexPostsCommand', 'not-valid', 'Bad.');
 })->throws(\Zoosper\Errors\ZoosperException::class, 'Invalid console command name');
+
+
+
+
+
+
+
+
+
+

@@ -60,3 +60,13 @@ final class PageContentSanitizationResult
         return $this->changedRows;
     }
 }
+
+
+
+
+
+
+
+
+
+

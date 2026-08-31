@@ -8,8 +8,8 @@ use JsonException;
 use Zoosper\Core\Console\ConsoleCommandInterface;
 use Zoosper\Core\Console\ConsoleOptions;
 use Zoosper\Core\Console\ConsoleOutput;
-use Zoosper\Core\Schema\SchemaForeignKeyReconciliation;
-use Zoosper\Core\Schema\SchemaForeignKeyReconciliationService;
+use Zoosper\Database\Schema\SchemaForeignKeyReconciliation;
+use Zoosper\Database\Schema\SchemaForeignKeyReconciliationService;
 
 /** Read-only foreign-key reconciliation status and dry-run command. */
 final readonly class SchemaForeignKeyStatusCommand implements ConsoleCommandInterface
@@ -76,3 +76,13 @@ final readonly class SchemaForeignKeyStatusCommand implements ConsoleCommandInte
         return $blocked ? 1 : 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

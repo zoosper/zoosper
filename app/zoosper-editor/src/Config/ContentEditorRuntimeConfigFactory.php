@@ -31,3 +31,13 @@ final readonly class ContentEditorRuntimeConfigFactory
         return $this->forScope(ScopeContext::default());
     }
 }
+
+
+
+
+
+
+
+
+
+

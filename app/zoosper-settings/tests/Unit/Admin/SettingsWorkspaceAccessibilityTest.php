@@ -27,3 +27,13 @@ it('keeps scope and category navigation sticky while preserving mobile fallback'
         ->toContain('.settings-nav{position:sticky;top:4.6rem')
         ->toContain('@media(max-width:850px)');
 });
+
+
+
+
+
+
+
+
+
+

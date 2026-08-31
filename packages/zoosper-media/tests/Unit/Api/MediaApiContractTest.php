@@ -6,7 +6,7 @@ it('owns stateless PAT Media reads upload and reversible lifecycle routes', func
     $root = dirname(__DIR__, 3);
     $routes = (string) file_get_contents($root . '/config/api_routes.php');
     $controller = (string) file_get_contents($root . '/src/Api/MediaApiController.php');
-    foreach (['/api/v1/media', '/api/v1/media/{id:\\d+}', '/api/v1/media/{id:\\d+}/derivatives', '/api/v1/media/{id:\\d+}/archive', '/api/v1/media/{id:\\d+}/restore'] as $path) {
+    foreach (['/api/v1/media', '/api/v1/media/{id:\d+}', '/api/v1/media/{id:\d+}/derivatives', '/api/v1/media/{id:\d+}/archive', '/api/v1/media/{id:\d+}/restore'] as $path) {
         expect($routes)->toContain($path);
     }
     expect(substr_count($routes, "'stateless' => true"))->toBe(7)
@@ -23,3 +23,14 @@ it('exposes permanent deletion only through the shared reference-safe lifecycle'
     $controller = (string) file_get_contents($root . '/src/Api/MediaApiController.php');
     expect($routes)->toContain("'method' => 'DELETE'")->and($controller)->toContain('deletePermanentlyGuarded')->toContain("'blockers' => \$result->blockers");
 });
+
+
+
+
+
+
+
+
+
+
+

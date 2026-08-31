@@ -92,3 +92,13 @@ it('provides theme, responsive, keyboard and reduced-motion shell contracts', fu
         ->not->toContain('document.write')
         ->not->toContain('eval(');
 });
+
+
+
+
+
+
+
+
+
+

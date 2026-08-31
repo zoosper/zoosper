@@ -22,3 +22,13 @@ it('rejects unsupported field types and unmarked secrets', function (): void {
     expect(fn () => new SettingDefinition('example.invalid', 'Invalid', 'html'))->toThrow(InvalidArgumentException::class)
         ->and(fn () => new SettingDefinition('example.secret', 'Secret', 'secret'))->toThrow(InvalidArgumentException::class);
 });
+
+
+
+
+
+
+
+
+
+

@@ -1,1 +1,11 @@
 <?php declare(strict_types=1);it('keeps the Theme Admin adapter in the Theme module and uses shared assignment',function(){$root=dirname(__DIR__,3);expect($root.'/src/Admin/Controller/ThemeAdminController.php')->toBeFile()->and(dirname($root).'/zoosper-admin/src/Controller/ThemeAdminController.php')->not->toBeFile();$source=(string)file_get_contents($root.'/src/Admin/Controller/ThemeAdminController.php');expect($source)->toContain('ThemeAssignmentService')->toContain('AuditLoggerInterface')->not->toContain('updateTheme(');});
+
+
+
+
+
+
+
+
+
+

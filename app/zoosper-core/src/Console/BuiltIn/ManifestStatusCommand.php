@@ -25,3 +25,13 @@ final readonly class ManifestStatusCommand implements ConsoleCommandInterface
         return 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

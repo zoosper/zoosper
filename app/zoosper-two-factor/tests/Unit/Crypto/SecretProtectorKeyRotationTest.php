@@ -111,3 +111,13 @@ it('still works correctly with no key rotation at all (no regression for the com
     expect($protector->reveal($protected))->toBe($secret);
     expect($protector->needsReprotection($protected))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

@@ -107,3 +107,13 @@ final readonly class SecretProtector
         return [$this->keyMaterial, ...$this->previousKeyMaterials];
     }
 }
+
+
+
+
+
+
+
+
+
+

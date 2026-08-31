@@ -24,3 +24,13 @@ interface ContentEditorInterface
      */
     public function render(string $fieldName, string $value, array $context = []): string;
 }
+
+
+
+
+
+
+
+
+
+

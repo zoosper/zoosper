@@ -17,3 +17,13 @@ final readonly class SiteLifecycleResult
         public ?string $message = null,
     ) {}
 }
+
+
+
+
+
+
+
+
+
+

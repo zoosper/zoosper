@@ -24,3 +24,13 @@ test('compact Grid behaviour uses one package-owned secured runtime', function (
     $definitions = require $root . '/app/zoosper-admin/config/assets.php';
     expect($definitions['assets'] ?? null)->toBe('resources/assets');
 });
+
+
+
+
+
+
+
+
+
+

@@ -14,3 +14,13 @@ it('anchors shared view management inside the Grid workspace boundary',function(
  $root=dirname(__DIR__,5);$js=file_get_contents($root.'/packages/zoosper-admin-grid/resources/admin/js/grid-workspace-command-bar.js');
  expect($js)->toContain("closest('[data-grid-workspace]')")->toContain('boundaryLeft')->toContain('boundaryRight');
 });
+
+
+
+
+
+
+
+
+
+

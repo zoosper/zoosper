@@ -79,3 +79,13 @@ final readonly class ModulePackageIdentity
         return strtolower((string) preg_replace('/(?<!^)[A-Z]/', '-$0', $value));
     }
 }
+
+
+
+
+
+
+
+
+
+

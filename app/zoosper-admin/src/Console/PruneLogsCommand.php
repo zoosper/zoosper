@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Console;
 
-use Zoosper\Admin\Audit\AuditLogRepository;
-use Zoosper\Admin\Audit\LoginHistoryRepository;
+use Zoosper\Audit\AuditLogRepository;
+use Zoosper\Audit\LoginHistoryRepository;
 use Zoosper\Core\Console\ConsoleCommandInterface;
 use Zoosper\Core\Console\ConsoleOptions;
 use Zoosper\Core\Console\ConsoleOutput;
@@ -51,3 +51,13 @@ final readonly class PruneLogsCommand implements ConsoleCommandInterface
         return 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

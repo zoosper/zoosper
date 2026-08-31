@@ -11,3 +11,13 @@ it('marks and clears the browser-local default view', function (): void {
         ->toContain("localStorage.removeItem(defaultSavedViewKey)")
         ->toContain("copyStatus.textContent='Default workspace view cleared'");
 });
+
+
+
+
+
+
+
+
+
+

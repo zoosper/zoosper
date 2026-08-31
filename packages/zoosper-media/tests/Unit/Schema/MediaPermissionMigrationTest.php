@@ -16,3 +16,14 @@ it('owns an idempotent Media permission migration with ACL tree metadata', funct
         ->toContain('INSERT IGNORE')
         ->toContain('INSERT OR IGNORE');
 });
+
+
+
+
+
+
+
+
+
+
+

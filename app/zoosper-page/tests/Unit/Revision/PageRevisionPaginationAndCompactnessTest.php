@@ -40,3 +40,13 @@ it('removes duplicate Content guidance and makes revision history compact and CS
         ->and($controller)->toContain('$request->query(\'revision_page\')')
         ->toContain('historyHtml($page, $revisionPage)');
 });
+
+
+
+
+
+
+
+
+
+

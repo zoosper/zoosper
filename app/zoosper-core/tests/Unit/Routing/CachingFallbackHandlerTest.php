@@ -266,3 +266,13 @@ it('varies cache key when query string differs', function (): void {
     expect($inner->handleCalls)->toBe(2)
         ->and($cache->setCalls)->toBe(2);
 });
+
+
+
+
+
+
+
+
+
+

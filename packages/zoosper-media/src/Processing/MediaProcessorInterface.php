@@ -16,3 +16,14 @@ interface MediaProcessorInterface
 {
     public function process(MediaAsset $asset, MediaDerivativePlan $plan): MediaProcessingResult;
 }
+
+
+
+
+
+
+
+
+
+
+

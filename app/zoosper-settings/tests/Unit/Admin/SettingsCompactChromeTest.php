@@ -28,3 +28,13 @@ it('uses a static action panel and scope bar on narrow screens', function (): vo
     expect($view)->toContain('.settings-more-actions-panel{position:static;grid-template-columns:1fr;width:100%;max-width:none;box-shadow:none}')
         ->toContain('.settings-scope{position:static}');
 });
+
+
+
+
+
+
+
+
+
+

@@ -58,3 +58,14 @@ test('visible columns update and clear without duplicate rows', function (): voi
     $repository->clear(10, 'admin.pages');
     expect($repository->findVisibleColumns(10, 'admin.pages'))->toBeNull();
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -56,3 +56,14 @@ it('uses the shell title once and publishes feature-owned page-size choices', fu
         ->and($workspace)->toContain('$apiDefinition = StoreOrderGrid::definition()')
         ->toContain('pageSizeOptions: $apiDefinition->pageSizes');
 });
+
+
+
+
+
+
+
+
+
+
+

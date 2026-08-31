@@ -131,3 +131,14 @@ it('shows an accurate "showing X-Y of Z" summary', function (): void {
     expect($html)->toContain('Showing 21&ndash;40 of 45');
 });
 
+
+
+
+
+
+
+
+
+
+
+

@@ -19,3 +19,13 @@ final readonly class Role
         return in_array($permission, $this->permissions, true);
     }
 }
+
+
+
+
+
+
+
+
+
+

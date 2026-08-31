@@ -19,3 +19,13 @@ test('admin module no longer declares admin grid persistence tables', function (
     $owned = require $basePath . '/packages/zoosper-admin-grid/config/db_schema.php';
     expect($owned['tables'] ?? [])->toHaveKeys(['admin_grid_preferences', 'admin_grid_bookmarks']);
 });
+
+
+
+
+
+
+
+
+
+

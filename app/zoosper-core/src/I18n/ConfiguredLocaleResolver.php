@@ -43,3 +43,13 @@ final readonly class ConfiguredLocaleResolver implements LocaleResolverInterface
         return $locale === '' ? $fallback : $locale;
     }
 }
+
+
+
+
+
+
+
+
+
+

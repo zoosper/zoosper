@@ -33,3 +33,14 @@ it('owns the canonical key-driven column order runtime', function (): void {
     exec(escapeshellarg($node) . ' --check ' . escapeshellarg($path) . ' 2>&1', $output, $status);
     expect($status)->toBe(0, implode(PHP_EOL, $output));
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -55,3 +55,13 @@ PHP);
 
     expect($definition->allColumnKeys())->toContain('updated_at');
 });
+
+
+
+
+
+
+
+
+
+

@@ -38,3 +38,13 @@ it('does not install Marko admin panel or authentication implementations yet', f
         ->not->toHaveKey('marko/admin-auth')
         ->not->toHaveKey('marko/admin-api');
 });
+
+
+
+
+
+
+
+
+
+

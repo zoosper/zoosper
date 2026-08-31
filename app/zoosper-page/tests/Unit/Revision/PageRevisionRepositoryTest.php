@@ -2,3 +2,13 @@
 declare(strict_types=1);
 use Zoosper\Page\Repository\PageRevisionRepository;
 it('captures full snapshots, scopes lookup to a page and prunes retention', function():void{$pdo=new PDO('sqlite::memory:');$pdo->exec('CREATE TABLE page_revisions (id INTEGER PRIMARY KEY AUTOINCREMENT,page_id INTEGER,title TEXT,slug TEXT,content TEXT,status TEXT,content_format TEXT,content_json TEXT,meta_title TEXT,meta_description TEXT,meta_keywords TEXT,canonical_url TEXT,created_by INTEGER,created_at TEXT)');$repo=new PageRevisionRepository($pdo);for($i=1;$i<=3;$i++){$repo->capture(7,['title'=>'T'.$i,'slug'=>'s'.$i,'content'=>'c'.$i,'status'=>'draft','content_format'=>'editorjs','content_json'=>'{}'],9);}expect($repo->forPage(7))->toHaveCount(3)->and($repo->findForPage(1,8))->toBeNull()->and($repo->prune(7,2))->toBe(1)->and($repo->forPage(7))->toHaveCount(2);});
+
+
+
+
+
+
+
+
+
+

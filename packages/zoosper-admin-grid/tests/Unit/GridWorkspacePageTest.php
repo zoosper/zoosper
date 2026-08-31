@@ -16,3 +16,14 @@ test('workspace CSRF value requires both host-provided components', function ():
     expect(fn () => new GridWorkspaceCsrf('_csrf', ''))
         ->toThrow(\InvalidArgumentException::class, 'must be non-empty');
 });
+
+
+
+
+
+
+
+
+
+
+

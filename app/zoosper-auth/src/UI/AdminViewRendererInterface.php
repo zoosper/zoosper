@@ -12,3 +12,13 @@ interface AdminViewRendererInterface
     /** @param array<string, mixed> $data */
     public function render(string $title, string $template, array $data, ?AdminUser $user, string $active = 'dashboard'): string;
 }
+
+
+
+
+
+
+
+
+
+

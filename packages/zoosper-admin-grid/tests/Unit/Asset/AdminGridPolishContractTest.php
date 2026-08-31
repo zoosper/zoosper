@@ -154,3 +154,14 @@ it('composes toolbar state and pagination as a dense responsive surface', functi
         ->toContain('[data-grid-workspace] .grid-compact-panel:not([hidden])')
         ->toContain('position: static;');
 });
+
+
+
+
+
+
+
+
+
+
+

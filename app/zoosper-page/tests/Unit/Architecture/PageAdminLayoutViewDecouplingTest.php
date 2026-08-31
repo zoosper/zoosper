@@ -53,6 +53,16 @@ it('confirms PageAdminController.php no longer directly imports the concrete Adm
     $file = $basePath . '/app/zoosper-page/src/Admin/Controller/PageAdminController.php';
     $contents = (string) file_get_contents($file);
 
-    expect($contents)->not->toContain('use Zoosper\\Admin\\Layout\\AdminLayout;');
-    expect($contents)->not->toContain('use Zoosper\\Admin\\UI\\AdminViewRenderer;');
+    expect($contents)->not->toContain('use Zoosper\Admin\Layout\AdminLayout;');
+    expect($contents)->not->toContain('use Zoosper\Admin\UI\AdminViewRenderer;');
 });
+
+
+
+
+
+
+
+
+
+

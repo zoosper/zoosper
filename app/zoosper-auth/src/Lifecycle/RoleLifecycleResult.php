@@ -20,3 +20,13 @@ final readonly class RoleLifecycleResult
         return new self(false, $message, $assignmentCount);
     }
 }
+
+
+
+
+
+
+
+
+
+

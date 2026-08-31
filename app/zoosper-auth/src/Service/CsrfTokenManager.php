@@ -32,3 +32,13 @@ final readonly class CsrfTokenManager
         return is_string($token) && hash_equals($this->token(), $token);
     }
 }
+
+
+
+
+
+
+
+
+
+

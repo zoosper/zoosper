@@ -15,3 +15,13 @@ it('provides reusable kernel and service-composition boundaries', function (): v
     expect($root . '/app/zoosper-core/src/Console/ConsoleKernel.php')->toBeFile()
         ->and($root . '/app/zoosper-core/src/Console/ConsoleServiceFactory.php')->toBeFile();
 });
+
+
+
+
+
+
+
+
+
+

@@ -56,3 +56,13 @@ final readonly class CsrfMiddleware implements RouteMiddleware
             . '<a href="' . htmlspecialchars($this->adminHomePath, ENT_QUOTES, 'UTF-8') . '">Back to admin</a></main></body></html>';
     }
 }
+
+
+
+
+
+
+
+
+
+

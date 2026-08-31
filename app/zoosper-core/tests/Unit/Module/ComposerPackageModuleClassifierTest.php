@@ -30,3 +30,13 @@ it('rejects unrelated Composer libraries', function (): void {
         'type' => 'library',
     ]))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

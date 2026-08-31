@@ -81,3 +81,14 @@ final readonly class ConsoleExceptionFormatter
         return json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '[unprintable]';
     }
 }
+
+
+
+
+
+
+
+
+
+
+

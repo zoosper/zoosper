@@ -64,3 +64,13 @@ final readonly class AdminPathCollectionTransformer
         return $result;
     }
 }
+
+
+
+
+
+
+
+
+
+

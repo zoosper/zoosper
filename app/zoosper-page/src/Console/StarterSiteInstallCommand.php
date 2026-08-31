@@ -93,3 +93,13 @@ final readonly class StarterSiteInstallCommand implements ConsoleCommandInterfac
         return 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

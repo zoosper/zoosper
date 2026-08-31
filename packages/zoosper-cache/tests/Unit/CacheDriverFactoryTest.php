@@ -80,3 +80,14 @@ it('performs a REAL Redis set/get roundtrip when Redis is actually reachable (ex
     expect($value)->toBe('a-real-value');
     $driver->delete($key);
 });
+
+
+
+
+
+
+
+
+
+
+

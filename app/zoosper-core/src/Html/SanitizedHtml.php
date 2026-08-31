@@ -34,3 +34,13 @@ final readonly class SanitizedHtml
         return $this->html;
     }
 }
+
+
+
+
+
+
+
+
+
+

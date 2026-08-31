@@ -32,3 +32,14 @@ final readonly class ApiRequest
         return new self($this->method, $this->endpoint, $this->query, [...$this->headers, ...$headers]);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

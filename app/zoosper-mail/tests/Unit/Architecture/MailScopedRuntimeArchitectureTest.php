@@ -23,3 +23,13 @@ it('keeps the catalogue read-only until secret writes are explicitly supported',
     expect(substr_count($settings, "'read_only' => true"))->toBe(9)
         ->and($settings)->toContain("'secret' => true");
 });
+
+
+
+
+
+
+
+
+
+

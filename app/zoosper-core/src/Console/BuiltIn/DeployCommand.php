@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Zoosper\Core\Console\BuiltIn;
 use Zoosper\Core\Console\ConsoleCommandInterface;
 use Zoosper\Core\Console\ConsoleOutput;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Module\ModuleManifestCompiler;
 use Zoosper\Core\Module\ModuleManifestStatus;
 final readonly class DeployCommand implements ConsoleCommandInterface
@@ -26,3 +26,13 @@ final readonly class DeployCommand implements ConsoleCommandInterface
         return 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

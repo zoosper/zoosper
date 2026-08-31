@@ -36,3 +36,13 @@ $get = static function (mixed $item, string $key, mixed $default = ''): mixed {
     <label>Meta title <input type="text" name="meta_title" value="<?= $e((string) $get($page ?? [], 'metaTitle', $get($page ?? [], 'meta_title', ''))) ?>"></label>
     <div class="toolbar"><button type="submit">Save page</button><a class="button secondary" href="<?= $e($backUrl) ?>">Back</a></div>
 </form>
+
+
+
+
+
+
+
+
+
+

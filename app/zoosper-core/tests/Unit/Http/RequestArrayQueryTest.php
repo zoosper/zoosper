@@ -18,3 +18,13 @@ test('request keeps list query parameters without scalar conversion', function (
     expect($request->queryList('visible_columns'))->toBe(['title', 'slug']);
     expect($request->queryParams()['column_order'])->toBe(['id', 'title', 'slug', 'actions']);
 });
+
+
+
+
+
+
+
+
+
+

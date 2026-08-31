@@ -36,3 +36,14 @@ it('publishes the single named-view layout stylesheet', function (): void {
         ->and($style['path'] ?? null)->toBe('/asset/zoosper-admin-grid/css/grid-workspace-single-view.css?v=7c-ui2')
         ->and(is_file($root . '/packages/zoosper-admin-grid/resources/admin/css/grid-workspace-single-view.css'))->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -25,3 +25,13 @@ return static function (\PDO $pdo, string $driver): void {
         . 'MODIFY html_body LONGTEXT NULL',
     );
 };
+
+
+
+
+
+
+
+
+
+

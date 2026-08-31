@@ -18,3 +18,13 @@ final readonly class ModuleScaffoldResult
     ) {
     }
 }
+
+
+
+
+
+
+
+
+
+

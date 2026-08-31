@@ -151,3 +151,13 @@ test('template view context exposes callable asset helper that delegates to Asse
     expect(($data['asset'])('zoosper-core', 'css/app.css', '1.0.0'))
         ->toBe('/asset/zoosper-core/css/app.css?v=1.0.0');
 });
+
+
+
+
+
+
+
+
+
+

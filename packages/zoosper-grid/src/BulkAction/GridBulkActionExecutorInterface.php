@@ -17,3 +17,14 @@ interface GridBulkActionExecutorInterface
         GridBulkExecutionContext $context,
     ): GridBulkActionExecutionResult;
 }
+
+
+
+
+
+
+
+
+
+
+

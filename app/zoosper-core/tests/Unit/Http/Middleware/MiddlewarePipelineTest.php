@@ -95,3 +95,13 @@ test('a short-circuiting middleware stops the core handler running', function ()
 
     expect($coreRan)->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

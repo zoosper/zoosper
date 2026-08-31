@@ -7,7 +7,7 @@ namespace Zoosper\Media\Lifecycle;
 use PDO;
 use RuntimeException;
 use Throwable;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Media\Model\MediaAsset;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Repository\MediaDerivativeRepository;
@@ -108,3 +108,14 @@ final readonly class MediaLifecycleCoordinator
         ]);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

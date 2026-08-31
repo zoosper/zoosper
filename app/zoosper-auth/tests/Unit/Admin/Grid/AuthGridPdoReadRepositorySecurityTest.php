@@ -18,3 +18,13 @@ it('keeps Auth Grid PDO projections narrow and parameterised', function (): void
         ->not->toContain('permission')
         ->not->toContain('$_GET');
 });
+
+
+
+
+
+
+
+
+
+

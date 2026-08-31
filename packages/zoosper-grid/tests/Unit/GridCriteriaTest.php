@@ -95,3 +95,14 @@ it('toggles sort direction only for the currently active column', function (): v
         ->and($criteria->toggledSortDir('other_column', 'asc'))->toBe('asc'); // not active -> default
 });
 
+
+
+
+
+
+
+
+
+
+
+

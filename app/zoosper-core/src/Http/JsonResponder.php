@@ -32,3 +32,13 @@ final readonly class JsonResponder
         ], $statusCode);
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -9,3 +9,13 @@ return [
     ['method' => 'POST', 'path' => '/admin/settings/save', 'controller' => SettingsCatalogueController::class, 'action' => 'save', 'permission' => 'settings.manage'],
     ['method' => 'POST', 'path' => '/admin/settings/clear', 'controller' => SettingsCatalogueController::class, 'action' => 'clear', 'permission' => 'settings.manage'],
 ];
+
+
+
+
+
+
+
+
+
+

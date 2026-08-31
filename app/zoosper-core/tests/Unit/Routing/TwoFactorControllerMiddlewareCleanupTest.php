@@ -62,3 +62,13 @@ test('two-factor setup still generates csrf tokens and validates authenticator c
     expect($source)->toContain('confirm($user->id, $secret');
     expect($source)->toContain('pending_2fa_secret');
 });
+
+
+
+
+
+
+
+
+
+

@@ -31,3 +31,14 @@ it('preserves direct-constructor edge semantics while Pager normalizes requests'
         ->and($result->hasPrevious())->toBeFalse()
         ->and($result->hasNext())->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+
+

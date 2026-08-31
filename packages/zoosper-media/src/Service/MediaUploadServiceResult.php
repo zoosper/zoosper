@@ -45,3 +45,14 @@ final readonly class MediaUploadServiceResult
         return new self(false, $statusCode, $message);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

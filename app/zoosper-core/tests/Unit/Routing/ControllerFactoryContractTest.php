@@ -80,3 +80,13 @@ test('every controller factory named argument is a real constructor parameter', 
         }
     }
 });
+
+
+
+
+
+
+
+
+
+

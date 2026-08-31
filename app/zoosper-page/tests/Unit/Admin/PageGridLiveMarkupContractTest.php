@@ -29,3 +29,13 @@ test('legacy Pages markup is rejected with actionable missing markers', function
     expect(fn () => PageGridLiveMarkupContract::assertComplete($legacy))
         ->toThrow(\RuntimeException::class, 'Pages Grid live cutover is incomplete');
 });
+
+
+
+
+
+
+
+
+
+

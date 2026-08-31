@@ -33,3 +33,13 @@ test('scaffolds a module folder with core convention files', function () {
     expect(is_file($root . '/app/acme-blog/tests/Pest.php'))->toBeTrue();
 });
 
+
+
+
+
+
+
+
+
+
+

@@ -70,3 +70,14 @@ it('rejects an invalid response envelope', function (): void {
         new GridQuery(),
     ))->toThrow(UnexpectedValueException::class);
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -25,3 +25,13 @@ final class CdnUrlType
         return [self::DYNAMIC, self::MEDIA, self::STATIC];
     }
 }
+
+
+
+
+
+
+
+
+
+

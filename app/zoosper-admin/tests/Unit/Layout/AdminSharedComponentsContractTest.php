@@ -70,3 +70,13 @@ it('keeps shared theme components semantic and free from inline production behav
         ->not->toMatch('/\sstyle\s*=/i')
         ->not->toContain('<script');
 });
+
+
+
+
+
+
+
+
+
+

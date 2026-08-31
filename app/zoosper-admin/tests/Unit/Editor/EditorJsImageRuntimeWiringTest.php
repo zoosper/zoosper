@@ -45,3 +45,13 @@ test('admin editor bundle source exposes editorjs image tool', function () {
     expect($entry)->toContain('ImageTool,');
     expect($package)->toContain('"@editorjs/image"');
 });
+
+
+
+
+
+
+
+
+
+

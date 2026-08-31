@@ -74,3 +74,13 @@ final readonly class SettingsCatalogueResponder
         return $value === true || in_array(strtolower((string) $value), ['1', 'true', 'on', 'yes'], true);
     }
 }
+
+
+
+
+
+
+
+
+
+

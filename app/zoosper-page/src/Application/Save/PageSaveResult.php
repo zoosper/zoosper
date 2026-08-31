@@ -20,3 +20,13 @@ final readonly class PageSaveResult
         return new self(false, error: $error, processorRejected: $processorRejected);
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -38,3 +38,13 @@ final readonly class AdminMenu
         return $this->sections->build($this->itemsFor($user));
     }
 }
+
+
+
+
+
+
+
+
+
+

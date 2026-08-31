@@ -20,3 +20,13 @@ it('adds a healthy boolean while preserving strict check exit codes in JSON mode
         ->toContain('return $healthy ? 0 : 1;')
         ->toContain('Module manifest check passed: fresh');
 });
+
+
+
+
+
+
+
+
+
+

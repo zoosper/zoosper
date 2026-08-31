@@ -15,3 +15,13 @@ test('Pages page builder uses one resolved state for query and rendering', funct
         ->not->toContain('$_GET')
         ->not->toContain('$_POST');
 });
+
+
+
+
+
+
+
+
+
+

@@ -25,7 +25,7 @@ test('scaffolds a package module under packages with composer metadata and tests
     expect($composer['type'])->toBe('zoosper-module');
     expect($composer['extra']['marko']['module'] ?? null)->not->toBeTrue();
     expect($composer['extra'] ?? [])->not->toHaveKey('zoosper');
-    expect($composer['autoload']['psr-4'])->toHaveKey('Acme\\MovieLibrary\\');
+    expect($composer['autoload']['psr-4'])->toHaveKey('Acme\MovieLibrary\');
     expect($composer['require']['zoosper/core'])->toBe('dev-dev');
 
     $module = require $root . '/packages/acme-movie-library/module.php';
@@ -47,4 +47,14 @@ test('bin zoosper exposes package module scaffolding command', function () {
     expect($source)->toContain('make:package-module');
     expect($source)->toContain(PackageModuleScaffolder::class);
 });
+
+
+
+
+
+
+
+
+
+
 

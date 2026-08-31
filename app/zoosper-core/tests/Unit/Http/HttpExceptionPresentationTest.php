@@ -52,3 +52,13 @@ it('wires both caught HTTP boundaries to the same environment-aware presenter', 
         ->and($factory)->toContain("\$config->get('app.debug', false)")
         ->toContain('$errorHandler,');
 });
+
+
+
+
+
+
+
+
+
+

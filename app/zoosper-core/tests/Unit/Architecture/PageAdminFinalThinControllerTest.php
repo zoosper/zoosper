@@ -18,3 +18,13 @@ it('keeps PageAdminController thin after Grid form save publication and preview 
         ->and($factory)->toContain('gridResponder: $services->get(PageAdminGridResponder::class)')
         ->toContain('previewResponder: new PageAdminPreviewResponder(');
 });
+
+
+
+
+
+
+
+
+
+

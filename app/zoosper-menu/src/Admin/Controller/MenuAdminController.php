@@ -34,3 +34,13 @@ final readonly class MenuAdminController {
  }
  private function id(Request $r,string $name): int{$v=$r->routeParam($name);if($v===null||!ctype_digit($v))throw new RuntimeException("Valid {$name} is required.");return(int)$v;} private function user(): AdminUser{return $this->guard->user()??throw new RuntimeException('Authenticated admin user required after middleware guard.');}
 }
+
+
+
+
+
+
+
+
+
+

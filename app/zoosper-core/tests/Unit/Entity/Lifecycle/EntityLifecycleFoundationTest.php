@@ -81,3 +81,13 @@ it('validates lifecycle value objects and denied decisions', function (): void {
             [],
         ))->toThrow(InvalidArgumentException::class, 'at least one blocker');
 });
+
+
+
+
+
+
+
+
+
+

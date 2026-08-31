@@ -9,3 +9,14 @@ it('does not use the PHP 8.5 deprecated GD destruction function', function (): v
         ->not->toContain('imagedestroy(')
         ->toContain('unset($image)');
 });
+
+
+
+
+
+
+
+
+
+
+

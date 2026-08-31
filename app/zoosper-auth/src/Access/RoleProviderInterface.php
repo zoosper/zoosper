@@ -8,3 +8,13 @@ interface RoleProviderInterface
 {
     public function get(string $code): ?Role;
 }
+
+
+
+
+
+
+
+
+
+

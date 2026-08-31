@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Database\MigrationInterface;
+use Zoosper\Database\MigrationInterface;
 
 return new class implements MigrationInterface {
     public function name(): string
@@ -73,3 +73,14 @@ return new class implements MigrationInterface {
         }
     }
 };
+
+
+
+
+
+
+
+
+
+
+

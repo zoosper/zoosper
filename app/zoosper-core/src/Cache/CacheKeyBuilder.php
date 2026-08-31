@@ -100,3 +100,13 @@ final readonly class CacheKeyBuilder
         return $value !== '' ? $value : 'default';
     }
 }
+
+
+
+
+
+
+
+
+
+

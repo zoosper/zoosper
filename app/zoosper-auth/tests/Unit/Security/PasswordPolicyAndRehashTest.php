@@ -18,3 +18,13 @@ it('detects legacy password hashes that need an automatic upgrade', function ():
         ->and($hasher->needsRehash($legacy))->toBeTrue()
         ->and($hasher->needsRehash($hasher->hash('ChangeMe123!')))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

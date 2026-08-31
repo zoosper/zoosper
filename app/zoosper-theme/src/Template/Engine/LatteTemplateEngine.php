@@ -24,7 +24,7 @@ final class LatteTemplateEngine implements TemplateEngineInterface
         if (!class_exists(LatteEngine::class)) {
             throw new ZoosperException(
                 message: 'Latte template engine package is not installed.',
-                context: 'Zoosper selected the Latte template engine, but Latte\\Engine could not be loaded from Composer autoload.',
+                context: 'Zoosper selected the Latte template engine, but Latte\Engine could not be loaded from Composer autoload.',
                 suggestion: 'Run `composer require latte/latte:^3.1` and `composer dump-autoload`, then run `php tools/verify-latte-template-engine.php`.',
                 docsUrl: 'docs/operations/latte-template-engine-setup.md',
                 details: ['expected_class' => LatteEngine::class],
@@ -68,3 +68,13 @@ final class LatteTemplateEngine implements TemplateEngineInterface
         }
     }
 }
+
+
+
+
+
+
+
+
+
+

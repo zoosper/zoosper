@@ -50,3 +50,13 @@ it('falls back from empty values without restricting custom registered codes', f
     expect($config->preferred())->toBe('editorjs')
         ->and($config->fallback())->toBe('textarea');
 });
+
+
+
+
+
+
+
+
+
+

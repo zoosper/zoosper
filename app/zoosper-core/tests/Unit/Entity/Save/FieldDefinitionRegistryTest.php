@@ -56,3 +56,13 @@ test('registerMany and get round-trip preserves storage type', function () {
     expect($registry->all())->toHaveCount(3);
     expect($registry->get('missing'))->toBeNull();
 });
+
+
+
+
+
+
+
+
+
+

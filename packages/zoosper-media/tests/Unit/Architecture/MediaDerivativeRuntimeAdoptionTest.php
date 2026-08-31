@@ -13,5 +13,16 @@ it('wires enabled GD derivatives into the canonical upload service', function ()
         ->toContain('derivatives: $services->get(MediaUploadDerivativeDispatcher::class)')
         ->and($upload)
         ->toContain('!$derivativeResult->successful')
-        ->toContain('throw new \\RuntimeException');
+        ->toContain('throw new \RuntimeException');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -15,3 +15,13 @@ test('Page workspace gives explicit visible column query state precedence', func
         ->toContain('!$column->toggleable')
         ->toContain('GridColumnOrderer');
 });
+
+
+
+
+
+
+
+
+
+

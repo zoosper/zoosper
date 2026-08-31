@@ -24,3 +24,13 @@ it('declares the supported Pages export and publish-selected actions', function 
         ->and($actions[1]->maximumSelection)->toBe(100)
         ->and($actions[1]->auditRequired)->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

@@ -47,3 +47,14 @@ final readonly class GridFeatureAcceptance
         return new GridFeatureAcceptanceReport($gridKey, $passed, $failed);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

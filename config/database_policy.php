@@ -16,3 +16,11 @@ return [
     'enforce_mysql_in_production' => filter_var(env('DATABASE_ENFORCE_MYSQL_PRODUCTION', true), FILTER_VALIDATE_BOOLEAN),
     'mysql_family_drivers' => ['mysql'],
 ];
+
+
+
+
+
+
+
+

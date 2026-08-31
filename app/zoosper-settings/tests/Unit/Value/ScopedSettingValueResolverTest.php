@@ -52,3 +52,13 @@ it('redacts secret scoped values', function (): void {
         ->and($value->value)->toBeNull()
         ->and($value->secret)->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

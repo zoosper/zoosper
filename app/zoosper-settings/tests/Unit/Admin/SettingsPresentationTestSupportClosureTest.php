@@ -33,3 +33,13 @@ it('retires duplicated three-file setup from Settings Admin contract tests', fun
             ->not->toContain("resources/assets/js/settings-workspace.js')");
     }
 });
+
+
+
+
+
+
+
+
+
+

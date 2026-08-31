@@ -46,3 +46,14 @@ final readonly class GridResult
         return (int) ceil($this->total / $this->pageSize);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

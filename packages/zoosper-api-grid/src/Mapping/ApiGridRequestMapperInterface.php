@@ -11,3 +11,14 @@ interface ApiGridRequestMapperInterface
 {
     public function map(GridQuery $query, ApiGridContext $context): ApiRequest;
 }
+
+
+
+
+
+
+
+
+
+
+

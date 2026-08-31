@@ -36,3 +36,13 @@ it('composes production registries with mandatory event and audit services', fun
     expect($source)->not->toContain('?EventDispatcherInterface');
     expect($source)->not->toContain('?AuditLoggerInterface');
 });
+
+
+
+
+
+
+
+
+
+

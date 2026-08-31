@@ -83,3 +83,13 @@ final readonly class ModuleDashboardWidgetLoader
         return new DashboardWidgetCollection($widgets, $failures);
     }
 }
+
+
+
+
+
+
+
+
+
+

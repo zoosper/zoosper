@@ -24,3 +24,13 @@ it('retains backwards-compatible layout construction fallback', function (): voi
     expect($layout)->toContain("\$this->config?->array('admin') ?? []")
         ->toContain("\$adminConfig['base_path'] ?? '/admin'");
 });
+
+
+
+
+
+
+
+
+
+

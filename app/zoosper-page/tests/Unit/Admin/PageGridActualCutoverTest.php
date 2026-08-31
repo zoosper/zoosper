@@ -16,3 +16,13 @@ test('live Page controller is wired to compact workspace instead of legacy filte
     expect(array_column($assets['stylesheets'],'path'))->toContain('resources/admin/css/grid-compact-workspace.css');
     expect(array_column($assets['scripts'],'path'))->toContain('resources/admin/js/grid-compact-workspace.js');
 });
+
+
+
+
+
+
+
+
+
+

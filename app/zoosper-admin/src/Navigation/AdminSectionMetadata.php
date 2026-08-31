@@ -14,3 +14,13 @@ final readonly class AdminSectionMetadata
     ) {
     }
 }
+
+
+
+
+
+
+
+
+
+

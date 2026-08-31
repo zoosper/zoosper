@@ -35,3 +35,13 @@ final readonly class SettingsAdminUrls
             : $this->url('settings', ['scope' => $type, 'scope_key' => $key]);
     }
 }
+
+
+
+
+
+
+
+
+
+

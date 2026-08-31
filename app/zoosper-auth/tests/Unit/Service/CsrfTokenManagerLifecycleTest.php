@@ -32,3 +32,13 @@ it('does not accept null or an unrelated token', function (): void {
     expect($csrf->isValid(null))->toBeFalse()
         ->and($csrf->isValid(str_repeat('0', 64)))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

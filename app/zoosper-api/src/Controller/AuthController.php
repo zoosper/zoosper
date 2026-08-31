@@ -64,3 +64,13 @@ final readonly class AuthController
         return $this->json->success(['message' => 'Logged out.']);
     }
 }
+
+
+
+
+
+
+
+
+
+

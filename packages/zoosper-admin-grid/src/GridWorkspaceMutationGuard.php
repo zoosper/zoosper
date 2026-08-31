@@ -32,3 +32,14 @@ final readonly class GridWorkspaceMutationGuard
         return $action;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

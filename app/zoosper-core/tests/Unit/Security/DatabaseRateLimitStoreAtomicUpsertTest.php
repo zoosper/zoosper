@@ -102,3 +102,13 @@ it('resets a bucket correctly', function (): void {
     $decisionAfterReset = $store->recordAttempt($rule, $identityHash, $now);
     expect($decisionAfterReset->attempts)->toBe(1);
 });
+
+
+
+
+
+
+
+
+
+

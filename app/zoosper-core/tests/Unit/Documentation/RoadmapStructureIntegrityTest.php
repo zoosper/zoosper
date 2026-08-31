@@ -49,3 +49,13 @@ it('maintains expected major roadmap section headings in canonical order', funct
         ->toContain('## 10. Caching & Performance')
         ->toContain('## 11. Quality, Tooling & Repo Hygiene');
 });
+
+
+
+
+
+
+
+
+
+

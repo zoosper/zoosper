@@ -8,6 +8,7 @@
         "php": "^8.5",
         "zoosper/cache": "dev-dev",
         "zoosper/config": "dev-dev",
+        "zoosper/database": "dev-dev",
         "zoosper/errors": "dev-dev",
         "zoosper/logger": "dev-dev",
         "zoosper/scoped-config": "dev-dev"

@@ -25,3 +25,13 @@ test('Page Grid workspace accepts both standard and compact shared renderers', f
     expect($types)->toContain(GridWorkspaceRenderer::class)
         ->toContain(GridCompactWorkspaceRenderer::class);
 });
+
+
+
+
+
+
+
+
+
+

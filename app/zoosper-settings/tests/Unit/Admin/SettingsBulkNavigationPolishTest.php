@@ -21,3 +21,13 @@ it('keeps the search control full width in its workspace column', function (): v
     expect($view)->toContain('grid-template-columns:minmax(0,1fr) minmax(18rem,30rem)')
         ->toContain('.settings-search{width:100%');
 });
+
+
+
+
+
+
+
+
+
+

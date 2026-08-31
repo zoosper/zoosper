@@ -51,3 +51,13 @@ final class Base32
         return $binary;
     }
 }
+
+
+
+
+
+
+
+
+
+

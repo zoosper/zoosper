@@ -27,3 +27,14 @@ final class ApiTransportException extends RuntimeException
         parent::__construct($message, 0, $previous);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

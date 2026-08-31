@@ -11,3 +11,13 @@ interface AdminUserGridReadRepositoryInterface
     /** @return PaginationResult<array<string, mixed>> */
     public function paginate(AdminUserGridCriteria $criteria): PaginationResult;
 }
+
+
+
+
+
+
+
+
+
+

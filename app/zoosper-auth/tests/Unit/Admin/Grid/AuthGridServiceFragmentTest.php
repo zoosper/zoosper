@@ -44,3 +44,13 @@ it('keeps the service fragment read-side only', function (): void {
         ->not->toContain('AdminUserRepository')
         ->not->toContain('RoleRepository');
 });
+
+
+
+
+
+
+
+
+
+

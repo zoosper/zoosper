@@ -94,3 +94,13 @@ it('proves a disposable alpha install from zero through bootstrap and idempotent
         @unlink((string) $database);
     }
 });
+
+
+
+
+
+
+
+
+
+

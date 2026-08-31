@@ -82,10 +82,20 @@ final readonly class HtmlPurifierSanitizer implements HtmlSanitizerInterface
         }
 
         $cachePath = trim($cachePath, '/\\');
-        if (str_starts_with($cachePath, 'var/') || str_starts_with($cachePath, 'var\\')) {
+        if (str_starts_with($cachePath, 'var/') || str_starts_with($cachePath, 'var\')) {
             return $paths->varPath(substr($cachePath, 4));
         }
 
         return $paths->varPath($cachePath);
     }
 }
+
+
+
+
+
+
+
+
+
+

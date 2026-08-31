@@ -122,3 +122,13 @@ final readonly class PageLifecycleAdminResponder
     private function url(string $path): string { return $this->urls?->url($path) ?? '/admin/' . ltrim($path, '/'); }
     private function e(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 }
+
+
+
+
+
+
+
+
+
+

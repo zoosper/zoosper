@@ -11,10 +11,20 @@ test('normalises a valid module name', function () {
     $name = ModuleName::fromInput('Acme_Blog');
 
     expect($name->raw)->toBe('Acme_Blog');
-    expect($name->namespace)->toBe('Acme\\Blog');
+    expect($name->namespace)->toBe('Acme\Blog');
     expect($name->folderName)->toBe('acme-blog');
 });
 
 test('rejects invalid module names with a descriptive exception', function () {
     expect(fn () => ModuleName::fromInput('bad-name'))->toThrow(ZoosperException::class);
 });
+
+
+
+
+
+
+
+
+
+

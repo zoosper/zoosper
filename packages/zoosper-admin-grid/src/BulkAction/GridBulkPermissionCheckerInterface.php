@@ -9,3 +9,14 @@ interface GridBulkPermissionCheckerInterface
 {
     public function isAllowed(string $permission): bool;
 }
+
+
+
+
+
+
+
+
+
+
+

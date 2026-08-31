@@ -9,7 +9,7 @@ use Zoosper\Core\Console\ConsoleOutput;
 use Zoosper\Core\Module\ModuleRepository;
 use Zoosper\Core\Module\ModuleManifestCompiler;
 use Zoosper\Core\Module\ModuleRegistry;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 
 /**
  * Installs a module by enabling it and running migrations.
@@ -70,3 +70,13 @@ final readonly class ModuleInstallCommand implements ConsoleCommandInterface
         return 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

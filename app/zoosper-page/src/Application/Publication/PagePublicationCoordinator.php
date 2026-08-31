@@ -32,3 +32,13 @@ final readonly class PagePublicationCoordinator
         $this->events?->dispatch(PageEvents::UNPUBLISHED, new PageUnpublishedEvent($page->id, $adminUserId));
     }
 }
+
+
+
+
+
+
+
+
+
+

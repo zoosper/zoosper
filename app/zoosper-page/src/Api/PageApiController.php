@@ -7,7 +7,7 @@ namespace Zoosper\Page\Api;
 use JsonException;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Auth\Token\PersonalAccessTokenPrincipal;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -186,3 +186,13 @@ final readonly class PageApiController
     /** @return array<string,mixed> */
     private function normalise(Page $page): array { $document=null;if($page->contentJson!==null&&trim($page->contentJson)!==''){try{$decoded=json_decode($page->contentJson,true,512,JSON_THROW_ON_ERROR);$document=is_array($decoded)?$decoded:null;}catch(JsonException){$document=null;}}return ['id'=>$page->id,'site_id'=>$page->siteId,'title'=>$page->title,'slug'=>$page->slug,'status'=>$page->status,'content_format'=>$page->contentFormat,'content_json'=>$document,'content_html'=>$page->content,'seo'=>['meta_title'=>$page->metaTitle,'meta_description'=>$page->metaDescription,'meta_keywords'=>$page->metaKeywords,'canonical_url'=>$page->canonicalUrl],'published_at'=>$page->publishedAt,'created_at'=>$page->createdAt,'updated_at'=>$page->updatedAt]; }
 }
+
+
+
+
+
+
+
+
+
+

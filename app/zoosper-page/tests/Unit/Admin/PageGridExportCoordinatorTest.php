@@ -16,5 +16,15 @@ test('Pages export requires a resolved Grid view state', function (): void {
         ->getParameters();
 
     expect($parameters[0]->getName())->toBe('state');
-    expect((string) $parameters[0]->getType())->toBe('Zoosper\\AdminGrid\\GridViewState');
+    expect((string) $parameters[0]->getType())->toBe('Zoosper\AdminGrid\GridViewState');
 });
+
+
+
+
+
+
+
+
+
+

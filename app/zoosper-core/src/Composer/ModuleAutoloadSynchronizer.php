@@ -75,7 +75,7 @@ final readonly class ModuleAutoloadSynchronizer
 
             $testsDir = $moduleDir . '/tests';
             if (is_dir($testsDir)) {
-                $autoloadDev[$identity->namespace . 'Tests\\'] = $this->relativeDirectory($testsDir);
+                $autoloadDev[$identity->namespace . 'Tests\'] = $this->relativeDirectory($testsDir);
             }
         }
 
@@ -151,3 +151,13 @@ final readonly class ModuleAutoloadSynchronizer
         return str_starts_with($path, '/') ? $path : rtrim($this->basePath, '/') . '/' . ltrim($path, '/');
     }
 }
+
+
+
+
+
+
+
+
+
+

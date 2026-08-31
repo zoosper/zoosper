@@ -49,3 +49,14 @@ test('page size has a minimum and non-toggleable columns remain visible', functi
     expect($state['page_size'])->toBe(5)->and($state['page'])->toBe(1)
         ->and($state['visible_columns'])->toBe(['id','actions']);
 });
+
+
+
+
+
+
+
+
+
+
+

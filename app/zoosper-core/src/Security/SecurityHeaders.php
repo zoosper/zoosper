@@ -106,3 +106,13 @@ final readonly class SecurityHeaders
         return $value;
     }
 }
+
+
+
+
+
+
+
+
+
+

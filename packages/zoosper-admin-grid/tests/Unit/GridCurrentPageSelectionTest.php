@@ -14,7 +14,7 @@ it('publishes content-versioned shared current-page selection assets', function 
 it('requires unique non-empty row identities before enabling selection', function (): void {
     $root=dirname(__DIR__,4);$script=file_get_contents($root.'/packages/zoosper-admin-grid/resources/admin/js/grid-page-selection.js');
     expect($script)->not->toBeFalse()
-        ->and($script)->toContain("/^id(?:\\s*[▲▼])?$/i")
+        ->and($script)->toContain("/^id(?:\s*[▲▼])?$/i")
         ->and($script)->toContain("identities.every((value) => value !== '')")
         ->and($script)->toContain('new Set(identities).size === identities.length')
         ->and($script)->toContain("checkbox.name = 'selected_ids[]'")
@@ -28,3 +28,14 @@ it('keeps executable bulk actions disabled and identifies the form field', funct
         ->toContain('action.disabled = true')
         ->toContain("action.innerHTML = '<option>Bulk actions</option>'");
 });
+
+
+
+
+
+
+
+
+
+
+

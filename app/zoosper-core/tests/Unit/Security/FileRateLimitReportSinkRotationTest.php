@@ -45,3 +45,13 @@ it('rotates report files when max size is reached', function (): void {
         }
     }
 });
+
+
+
+
+
+
+
+
+
+

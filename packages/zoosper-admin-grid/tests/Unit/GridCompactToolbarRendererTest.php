@@ -12,3 +12,14 @@ test('compact toolbar exposes toggles count page size and export', function (): 
         ->toContain('value="50" selected')->toContain('data-grid-export')
         ->toContain('Unsaved')->not->toContain('<script');
 });
+
+
+
+
+
+
+
+
+
+
+

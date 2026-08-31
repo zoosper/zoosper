@@ -24,3 +24,13 @@ final readonly class MailConfigurationInspectorFactory
         return new MailConfigurationInspector($this->smtp->forDefaultScope());
     }
 }
+
+
+
+
+
+
+
+
+
+

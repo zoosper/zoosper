@@ -15,3 +15,13 @@ test('package module scaffolder interpolates generated package test filename', f
     expect(is_file($root . '/packages/acme-movie-library/tests/Unit/MovieLibraryPackageTest.php'))->toBeTrue();
     expect(is_file($root . '/packages/acme-movie-library/tests/Unit/{$classPrefix}PackageTest.php'))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

@@ -22,3 +22,13 @@ test('page template cutover uses shared grid output', function (): void {
     expect($template)->toContain('$gridHtml');
     expect($template)->not->toContain('<table>');
 });
+
+
+
+
+
+
+
+
+
+

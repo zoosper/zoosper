@@ -107,3 +107,13 @@ it('passes the active screen through both Admin layout asset rendering paths', f
         ->and($manifest['assets']['zoosper-admin-editorjs-bundle']['screens'])->toBe(['pages'])
         ->and($manifest['assets']['zoosper-admin-editor-script']['screens'])->toBe(['pages']);
 });
+
+
+
+
+
+
+
+
+
+

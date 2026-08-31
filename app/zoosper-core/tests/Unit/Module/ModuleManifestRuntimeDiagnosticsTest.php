@@ -62,3 +62,13 @@ it('reports missing freshness stamps and falls back safely', function (): void {
 
     exec('rm -rf ' . escapeshellarg($root));
 });
+
+
+
+
+
+
+
+
+
+

@@ -26,3 +26,13 @@ it('keeps the page-shell visual contract in the default theme stylesheet', funct
         ->toContain('max-width')
         ->toContain('margin');
 });
+
+
+
+
+
+
+
+
+
+

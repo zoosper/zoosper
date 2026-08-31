@@ -9,3 +9,14 @@ interface GridBulkCsrfVerifierInterface
 {
     public function assertValid(string $token): void;
 }
+
+
+
+
+
+
+
+
+
+
+

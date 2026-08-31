@@ -39,3 +39,13 @@ return [
 
     TokenMeController::class => static fn (ServiceContainer $services): TokenMeController => new TokenMeController($services->get(JsonResponder::class), $services->get(PersonalAccessTokenAuthenticator::class)),
 ];
+
+
+
+
+
+
+
+
+
+

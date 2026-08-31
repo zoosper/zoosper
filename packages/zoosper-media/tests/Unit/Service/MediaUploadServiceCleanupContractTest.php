@@ -58,3 +58,14 @@ test('media module registers shared media upload service', function () {
     expect($source)->toContain('new MediaUploadService(');
     expect($source)->toContain('basePath: dirname(__DIR__, 3)');
 });
+
+
+
+
+
+
+
+
+
+
+

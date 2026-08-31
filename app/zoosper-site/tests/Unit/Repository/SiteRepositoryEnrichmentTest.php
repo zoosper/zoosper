@@ -115,3 +115,13 @@ test('hydration falls back to defaults when enriched columns are absent', functi
     expect($site->storeViewCode)->toBe('default');
     expect($site->themeCode)->toBe('default');
 });
+
+
+
+
+
+
+
+
+
+

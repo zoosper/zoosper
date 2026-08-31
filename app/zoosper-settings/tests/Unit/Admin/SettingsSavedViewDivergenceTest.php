@@ -11,3 +11,13 @@ it('reports whether the selected saved view matches the current workspace', func
         ->toContain("'Saved view active':'Modified from saved view'")
         ->toContain('refreshSavedViewState()');
 });
+
+
+
+
+
+
+
+
+
+

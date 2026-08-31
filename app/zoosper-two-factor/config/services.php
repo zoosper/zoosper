@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Auth\Contract\SecondFactorRequirementInterface;
 use Zoosper\TwoFactor\Service\AdminSecondFactorRequirement;
 use Zoosper\Core\Config\ConfigRepository;
@@ -26,8 +26,8 @@ return [
     SecondFactorRequirementInterface::class => static fn (ServiceContainer $services): SecondFactorRequirementInterface => new AdminSecondFactorRequirement($services->get(AdminTwoFactorEnrollmentService::class)),
     AdminTwoFactorResetRepository::class => static fn (ServiceContainer $services): AdminTwoFactorResetRepository => new AdminTwoFactorResetRepository($services->get(PDO::class)),
 
-    // Phase 1.41: depends on Zoosper\Core\Audit\AuditLoggerInterface instead
-    // of the concrete Zoosper\Admin\Audit\AuditLogger. If no module binds
+    // Phase 1.41: depends on Zoosper\Audit\Contract\AuditLoggerInterface instead
+    // of the concrete Zoosper\Audit\AuditLogger. If no module binds
     // this interface (e.g. Admin is not installed), $services->has(...)
     // correctly returns false and resets simply skip audit logging.
     AdminTwoFactorResetService::class => static fn (ServiceContainer $services): AdminTwoFactorResetService => new AdminTwoFactorResetService(
@@ -115,3 +115,13 @@ return [
     },
     TotpQrCodeSvgRenderer::class => static fn (ServiceContainer $services): TotpQrCodeSvgRenderer => new TotpQrCodeSvgRenderer(),
 ];
+
+
+
+
+
+
+
+
+
+

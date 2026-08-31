@@ -15,3 +15,14 @@ it('rejects invalid actor identities', function (): void {
     expect(fn () => new GridBulkActor(0))->toThrow(InvalidArgumentException::class, 'positive');
     expect(fn () => new GridBulkActor(1, ''))->toThrow(InvalidArgumentException::class, 'email');
 });
+
+
+
+
+
+
+
+
+
+
+

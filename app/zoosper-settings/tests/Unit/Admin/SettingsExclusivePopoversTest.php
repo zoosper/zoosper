@@ -23,3 +23,13 @@ it('closes floating panels on outside pointer, Escape, category activation and p
         ->toContain('function activate(category,focus=false,updateHash=true){closeFloatingPanels(null);')
         ->toContain("window.addEventListener('beforeprint',()=>{closeFloatingPanels(null);");
 });
+
+
+
+
+
+
+
+
+
+

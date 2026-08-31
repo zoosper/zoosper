@@ -37,3 +37,13 @@ final readonly class TotpProvisioningUriGenerator
         return 'otpauth://totp/' . $label . '?' . $query;
     }
 }
+
+
+
+
+
+
+
+
+
+

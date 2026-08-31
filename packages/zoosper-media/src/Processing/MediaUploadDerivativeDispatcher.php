@@ -48,3 +48,14 @@ final readonly class MediaUploadDerivativeDispatcher
         ]);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

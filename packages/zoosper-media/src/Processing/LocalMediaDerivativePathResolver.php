@@ -67,3 +67,14 @@ final readonly class LocalMediaDerivativePathResolver
         return $extension;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

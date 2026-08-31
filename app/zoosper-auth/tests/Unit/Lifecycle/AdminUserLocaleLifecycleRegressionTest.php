@@ -120,3 +120,13 @@ it('persists and hydrates locale across repository operations and session authen
     expect($guard->user())->not->toBeNull()
         ->and($guard->user()?->locale)->toBe('en_GB');
 });
+
+
+
+
+
+
+
+
+
+

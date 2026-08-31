@@ -35,3 +35,13 @@ final readonly class AdminAnnouncement
         return $this->status === 'archived';
     }
 }
+
+
+
+
+
+
+
+
+
+

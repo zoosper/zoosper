@@ -45,8 +45,8 @@ it('ships a CSP-safe responsive Auth-owned PAT experience', function (): void {
         ->toContain('name="_csrf_token"')
         ->toContain('method="post"')
         ->toContain('{$gridHtml|noescape}')
-        ->not->toMatch('/<(?:script|style)\\b/i')
-        ->not->toMatch('/\\son[a-z]+\\s*=/i')
+        ->not->toMatch('/<(?:script|style)\b/i')
+        ->not->toMatch('/\son[a-z]+\s*=/i')
         ->not->toContain('style=')
         ->and($sourceJs)->not->toContain('innerHTML')
         ->not->toContain('insertAdjacentHTML')
@@ -70,7 +70,7 @@ it('retains owner-scoped POST-only PAT security boundaries', function (): void {
     expect($map)->toHaveKeys([
         'GET /admin/access-tokens',
         'POST /admin/access-tokens/create',
-        'POST /admin/access-tokens/{id:\\d+}/revoke',
+        'POST /admin/access-tokens/{id:\d+}/revoke',
     ])->and($controller)->toContain('allForUser($user->id)')
         ->toContain('revoke($id, $user->id')
         ->toContain("'personal_access_token.issued'")
@@ -79,3 +79,13 @@ it('retains owner-scoped POST-only PAT security boundaries', function (): void {
         ->and($repository)->toContain('admin_user_id=:owner')
         ->toContain('admin_user_id=:id');
 });
+
+
+
+
+
+
+
+
+
+

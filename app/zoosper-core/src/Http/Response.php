@@ -106,3 +106,13 @@ final readonly class Response
         echo $this->body;
     }
 }
+
+
+
+
+
+
+
+
+
+

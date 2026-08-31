@@ -26,3 +26,13 @@ final readonly class ManifestCheckCommand implements ConsoleCommandInterface
         return 1;
     }
 }
+
+
+
+
+
+
+
+
+
+

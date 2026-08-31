@@ -31,3 +31,14 @@ test('page-size configuration rejects unsafe or unordered values', function (): 
     expect(fn () => new GridWorkspacePageSizeOptions([20, 1000]))
         ->toThrow(\InvalidArgumentException::class, 'between 1 and 500');
 });
+
+
+
+
+
+
+
+
+
+
+

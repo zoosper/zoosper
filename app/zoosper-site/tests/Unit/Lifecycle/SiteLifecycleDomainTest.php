@@ -10,3 +10,13 @@ function siteLifecycleDb(): PDO { $pdo=new PDO('sqlite::memory:');$pdo->setAttri
 it('makes a Site inactive and restores it using existing status vocabulary',function(){ $pdo=siteLifecycleDb();$repo=new SiteRepository($pdo);$id=$repo->create('main','Main','main.test');$life=new SiteLifecycleCoordinator($pdo,$repo,new SiteReferenceInspector($pdo));$life->disable($repo->findById($id),1,'a');expect($repo->findById($id)->status)->toBe('inactive');$life->restore($repo->findById($id),1,'a');expect($repo->findById($id)->status)->toBe('active');});
 it('blocks permanent deletion until inactive and completely unreferenced',function(){ $pdo=siteLifecycleDb();$repo=new SiteRepository($pdo);$id=$repo->create('main','Main','main.test');$life=new SiteLifecycleCoordinator($pdo,$repo,new SiteReferenceInspector($pdo));expect($life->deletePermanently($repo->findById($id),1,'a')->successful)->toBeFalse();$life->disable($repo->findById($id),1,'a');$blocked=$life->deletePermanently($repo->findById($id),1,'a');expect($blocked->successful)->toBeFalse()->and($blocked->blockers['domains'])->toBe(1);});
 it('permanently deletes an inactive Site only after references are removed',function(){ $pdo=siteLifecycleDb();$repo=new SiteRepository($pdo);$id=$repo->create('main','Main','main.test');$life=new SiteLifecycleCoordinator($pdo,$repo,new SiteReferenceInspector($pdo));$life->disable($repo->findById($id),1,'a');$pdo->exec('DELETE FROM site_domains WHERE site_id='.$id);expect($life->deletePermanently($repo->findById($id),1,'a')->successful)->toBeTrue()->and($repo->findById($id))->toBeNull();});
+
+
+
+
+
+
+
+
+
+

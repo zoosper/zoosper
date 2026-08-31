@@ -19,3 +19,13 @@ test('obsolete Admin compact v2 presentation is not required after package owner
             $root . '/app/zoosper-admin/resources/assets/css/zoosper-grid-compact-v2.css',
         ))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

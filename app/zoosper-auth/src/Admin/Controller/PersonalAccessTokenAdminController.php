@@ -17,7 +17,7 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
@@ -189,3 +189,13 @@ final readonly class PersonalAccessTokenAdminController
         return $date->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
     }
 }
+
+
+
+
+
+
+
+
+
+

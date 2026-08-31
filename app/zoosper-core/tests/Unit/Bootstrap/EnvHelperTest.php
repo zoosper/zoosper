@@ -90,7 +90,7 @@ it('does NOT strip an unmatched trailing quote character from an otherwise-unquo
     // no matching opening quote — must be preserved exactly.
     $result = envHelperTestRun("DB_PASS=abc'\n", 'DB_PASS');
 
-    expect($result)->toBe("'abc\\''");
+    expect($result)->toBe("'abc\''");
 });
 
 it('strips a trailing inline comment from an unquoted value', function (): void {
@@ -122,3 +122,13 @@ it('ignores comment lines and blank lines correctly (no regression)', function (
 
     expect($result)->toBe("'real-value'");
 });
+
+
+
+
+
+
+
+
+
+

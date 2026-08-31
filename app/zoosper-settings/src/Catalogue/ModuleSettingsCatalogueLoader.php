@@ -132,3 +132,13 @@ final readonly class ModuleSettingsCatalogueLoader
         return $settings;
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -31,3 +31,14 @@ final class MarkoConfigRepositoryAdapter implements ConfigRepositoryInterface
     public function withScope(string $scope): ConfigRepositoryInterface { throw new ConfigException('MarkoConfigRepositoryAdapter does not support withScope().', 'Application and persisted scoped configuration remain separate boundaries.', 'Use the scoped configuration repository explicitly.'); }
     private function typeError(string $key,string $expected,mixed $value): ConfigException { return new ConfigException(sprintf('Configuration key "%s" is not a %s',$key,$expected),sprintf('Expected %s, got %s',$expected,get_debug_type($value)),'Correct the module or project configuration value.'); }
 }
+
+
+
+
+
+
+
+
+
+
+

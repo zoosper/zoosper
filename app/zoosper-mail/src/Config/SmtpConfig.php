@@ -82,3 +82,13 @@ final readonly class SmtpConfig
         return is_int($default) ? (int) ($resolved ?? $default) : (string) ($resolved ?? $default);
     }
 }
+
+
+
+
+
+
+
+
+
+

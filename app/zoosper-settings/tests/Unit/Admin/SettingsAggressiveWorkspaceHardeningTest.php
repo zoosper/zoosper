@@ -31,3 +31,13 @@ it('provides strong focus-visible treatment and closes overlays during form acti
         ->toContain("form.addEventListener('submit',()=>{closeFloatingPanels(null);")
         ->toContain("reset.addEventListener('click',()=>{closeFloatingPanels(null);");
 });
+
+
+
+
+
+
+
+
+
+

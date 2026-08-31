@@ -105,3 +105,14 @@ final readonly class MediaReferenceInspector
         return strtolower((string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)) === 'sqlite';
     }
 }
+
+
+
+
+
+
+
+
+
+
+

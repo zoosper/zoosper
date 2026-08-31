@@ -18,3 +18,13 @@ test('package module scaffolder accepts slash underscore and dash separators', f
     ['Acme_MovieLibrary', 'acme/movie-library'],
     ['acme-movie-library', 'acme/movie-library'],
 ]);
+
+
+
+
+
+
+
+
+
+

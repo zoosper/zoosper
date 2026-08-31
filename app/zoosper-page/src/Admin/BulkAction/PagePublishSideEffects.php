@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Admin\BulkAction;
 
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Event\EventDispatcherInterface;
 use Zoosper\Grid\BulkAction\GridBulkExecutionContext;
 use Zoosper\Page\Event\PageEvents;
@@ -50,3 +50,13 @@ final readonly class PagePublishSideEffects implements PagePublishSideEffectsInt
         );
     }
 }
+
+
+
+
+
+
+
+
+
+

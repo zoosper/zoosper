@@ -17,3 +17,13 @@ it('does not report save update or import success after a storage failure', func
     expect($view)->toContain('if(!writeSavedViews(views))return;renderSavedViews(name)')
         ->toContain("if(!writeSavedViews(bounded))return;renderSavedViews('')");
 });
+
+
+
+
+
+
+
+
+
+

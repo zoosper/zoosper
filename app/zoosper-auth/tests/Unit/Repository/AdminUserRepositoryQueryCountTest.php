@@ -87,3 +87,13 @@ it('allForAssignment() never queries permissions at all', function (): void {
         expect($user->permissions)->toBe([]);
     }
 });
+
+
+
+
+
+
+
+
+
+

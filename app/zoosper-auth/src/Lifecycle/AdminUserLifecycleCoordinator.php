@@ -7,7 +7,7 @@ namespace Zoosper\Auth\Lifecycle;
 use PDO;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Repository\AdminUserRepository;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 
 /** Applies reversible Admin-user status changes without deleting identity history. */
 final readonly class AdminUserLifecycleCoordinator
@@ -57,3 +57,13 @@ final readonly class AdminUserLifecycleCoordinator
         return (int) $this->pdo->query("SELECT COUNT(DISTINCT u.id) FROM admin_users u INNER JOIN admin_user_roles ur ON ur.user_id = u.id INNER JOIN admin_roles r ON r.id = ur.role_id WHERE u.status = 'active' AND r.code = 'super_admin'")->fetchColumn();
     }
 }
+
+
+
+
+
+
+
+
+
+

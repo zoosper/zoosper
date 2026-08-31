@@ -20,3 +20,13 @@ it('keeps the default pointer coherent across rename delete and clear all', func
         ->toContain('localStorage.getItem(defaultSavedViewKey)===name')
         ->toContain('localStorage.removeItem(defaultSavedViewKey)');
 });
+
+
+
+
+
+
+
+
+
+

@@ -79,3 +79,14 @@ it('rejects duplicate executor registrations', function (): void {
     expect(fn () => $registry->register(gridTestExecutor()))
         ->toThrow(InvalidArgumentException::class, 'already registered');
 });
+
+
+
+
+
+
+
+
+
+
+

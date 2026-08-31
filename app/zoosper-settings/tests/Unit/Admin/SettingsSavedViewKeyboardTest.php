@@ -14,3 +14,13 @@ it('supports apply delete and set-default keyboard commands from the saved-view 
         ->toContain('deleteView.click()')
         ->toContain('defaultView.click()');
 });
+
+
+
+
+
+
+
+
+
+

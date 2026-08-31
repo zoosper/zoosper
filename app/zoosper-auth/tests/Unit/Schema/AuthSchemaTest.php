@@ -14,10 +14,10 @@ namespace Zoosper\Auth\Tests\Unit\Schema;
  * PCI-aware: schema describes structure only; no secrets here.
  */
 
-use Zoosper\Core\Schema\SchemaLoader;
-use Zoosper\Core\Schema\SchemaRegistry;
-use Zoosper\Core\Schema\SchemaTable;
-use Zoosper\Core\Schema\SchemaValidator;
+use Zoosper\Database\Schema\SchemaLoader;
+use Zoosper\Database\Schema\SchemaRegistry;
+use Zoosper\Database\Schema\SchemaTable;
+use Zoosper\Database\Schema\SchemaValidator;
 
 /** @return array<string, mixed> */
 function authSchemaConfig(): array
@@ -62,3 +62,13 @@ test('auth schema validates under the unified engine', function () {
 
     expect((new SchemaValidator())->validate($registry)->isValid())->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

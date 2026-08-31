@@ -47,3 +47,14 @@ test('auditor factory uses an explicit null object when host audit is absent', f
     expect(GridWorkspaceExportAuditorFactory::create(null))
         ->toBeInstanceOf(NullGridWorkspaceExportAuditor::class);
 });
+
+
+
+
+
+
+
+
+
+
+

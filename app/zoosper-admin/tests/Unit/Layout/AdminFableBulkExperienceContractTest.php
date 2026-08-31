@@ -28,3 +28,13 @@ it('composes the compact shell account Dashboard and Grid without fabricated cap
         ->toContain('position: sticky')
         ->not->toContain('javascript:');
 });
+
+
+
+
+
+
+
+
+
+

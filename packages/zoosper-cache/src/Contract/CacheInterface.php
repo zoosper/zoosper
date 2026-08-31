@@ -13,3 +13,14 @@ interface CacheInterface
     public function deleteMultiple(array $keys): bool;
     public function increment(string $key, int $ttl): int;
 }
+
+
+
+
+
+
+
+
+
+
+

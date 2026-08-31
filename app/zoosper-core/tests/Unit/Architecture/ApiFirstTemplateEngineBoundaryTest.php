@@ -39,7 +39,7 @@ test('API and core source do not depend on the Latte implementation', function (
             ++$scanned;
 
             expect($source)->not->toContain(
-                'Latte\\',
+                'Latte\',
                 'API/core source must not import Latte directly: ' . $file,
             );
             expect($source)->not->toContain(
@@ -64,3 +64,13 @@ test('the theme module owns the default Latte binding behind the engine contract
     expect($contract)->toContain('public function extensions(): array;');
     expect($contract)->toContain('public function renderFile(string $path, array $data): string;');
 });
+
+
+
+
+
+
+
+
+
+

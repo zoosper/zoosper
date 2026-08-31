@@ -29,3 +29,13 @@ it('ships Auth-owned Fable security workspaces without weakening mutations', fun
         ->not->toContain('fetch(')
         ->not->toContain('.submit(');
 });
+
+
+
+
+
+
+
+
+
+

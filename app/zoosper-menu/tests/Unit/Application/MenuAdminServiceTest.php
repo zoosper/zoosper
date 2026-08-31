@@ -2,3 +2,13 @@
 declare(strict_types=1);
 use Zoosper\Menu\Application\MenuAdminService; use Zoosper\Menu\Contract\MenuAdminRepositoryInterface; use Zoosper\Menu\Model\{Menu,MenuItem};
 it('validates and normalises menu application input',function(){ $repo=new class implements MenuAdminRepositoryInterface{public array $saved=[];public function all():array{return [];}public function find(int $id):?Menu{return null;}public function items(int $menuId):array{return [];}public function saveMenu(?int $id,int $siteId,string $code,string $label,string $status):int{$this->saved=func_get_args();return 7;}public function saveItem(?int $id,int $menuId,?int $parentId,?int $pageId,string $label,?string $url,string $target,int $position,string $status):int{return 1;}public function deleteMenu(int $id):void{}public function deleteItem(int $id):void{}};$id=(new MenuAdminService($repo))->saveMenu(['site_id'=>'2','code'=>'Main_Nav','label'=>'Main','status'=>'active']);expect($id)->toBe(7)->and($repo->saved[2])->toBe('main_nav');});
+
+
+
+
+
+
+
+
+
+

@@ -349,3 +349,6 @@ if ($effectiveErrors === 0) {
 }
 
 exit($effectiveErrors === 0 ? 0 : 1);
+
+
+

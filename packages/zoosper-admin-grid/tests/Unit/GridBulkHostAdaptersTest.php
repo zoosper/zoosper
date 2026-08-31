@@ -52,3 +52,14 @@ it('rejects unsafe success redirects', function (string $path): void {
         GridBulkActionExecutionResult::success('Done.'), $path,
     ))->toThrow(InvalidArgumentException::class, 'redirect path');
 })->with(['https://example.test/admin', '//example.test/admin', 'admin/pages', '']);
+
+
+
+
+
+
+
+
+
+
+

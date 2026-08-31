@@ -33,3 +33,13 @@ it('uses a bounded three-column desktop panel and one-column mobile panel', func
         ->toContain('width:min(38rem,calc(100vw - 2rem))')
         ->toContain('.settings-more-actions-panel{position:static;grid-template-columns:1fr;width:100%');
 });
+
+
+
+
+
+
+
+
+
+

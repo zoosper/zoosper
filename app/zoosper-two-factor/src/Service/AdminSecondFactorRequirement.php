@@ -8,3 +8,13 @@ final readonly class AdminSecondFactorRequirement implements SecondFactorRequire
     public function __construct(private AdminTwoFactorEnrollmentService $enrollment) {}
     public function requiresSecondFactor(int $adminUserId): bool { return !$this->enrollment->requiresEnrollment($adminUserId); }
 }
+
+
+
+
+
+
+
+
+
+

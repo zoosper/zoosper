@@ -34,3 +34,13 @@ test('Zoosper package type remains authoritative when legacy metadata is present
         ->and($modules[0]->name)->toBe('acme-legacy')
         ->and($modules[0]->source)->toBe('vendor');
 });
+
+
+
+
+
+
+
+
+
+

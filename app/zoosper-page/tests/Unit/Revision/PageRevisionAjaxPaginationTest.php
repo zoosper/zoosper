@@ -8,7 +8,7 @@ it('serves Page revision pagination through a protected fragment endpoint', func
     expect($route)->not->toBeNull()
         ->and($route['method'])->toBe('GET')
         ->and($route['permission'])->toBe('page.manage')
-        ->and($route['path'])->toBe('/admin/pages/{id:\\d+}/revisions');
+        ->and($route['path'])->toBe('/admin/pages/{id:\d+}/revisions');
 });
 
 it('progressively enhances revision pagination without removing link fallback', function (): void {
@@ -31,3 +31,13 @@ it('registers the revision pagination script through the Page Admin asset manife
     $root=dirname(__DIR__,5); $source=(string)file_get_contents($root.'/app/zoosper-page/config/admin_assets.php');
     expect($source)->toContain('/assets/page/js/page-revision-pagination.js');
 });
+
+
+
+
+
+
+
+
+
+

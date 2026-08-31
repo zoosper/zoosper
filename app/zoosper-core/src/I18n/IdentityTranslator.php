@@ -27,3 +27,13 @@ final readonly class IdentityTranslator implements TranslatorInterface
         return strtr($message, $replacements);
     }
 }
+
+
+
+
+
+
+
+
+
+

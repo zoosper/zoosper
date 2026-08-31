@@ -37,3 +37,14 @@ test('navigation omits unavailable page links and rejects external URLs', functi
         'https://example.invalid',
     ))->toThrow(\InvalidArgumentException::class, 'application-local');
 });
+
+
+
+
+
+
+
+
+
+
+

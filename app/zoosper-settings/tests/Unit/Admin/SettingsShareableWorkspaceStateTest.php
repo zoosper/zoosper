@@ -29,3 +29,13 @@ it('clears workspace query state while preserving scope and fragment', function 
         ->toContain('resetUrl.pathname+resetUrl.search+resetUrl.hash')
         ->toContain("linkState.textContent='Workspace link state cleared'");
 });
+
+
+
+
+
+
+
+
+
+

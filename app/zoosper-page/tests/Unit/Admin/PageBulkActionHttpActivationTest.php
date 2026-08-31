@@ -41,3 +41,13 @@ it('exposes Publish selected after protected endpoint activation', function (): 
 
     expect($ids)->toBe(['export.selected', 'page.publish']);
 });
+
+
+
+
+
+
+
+
+
+

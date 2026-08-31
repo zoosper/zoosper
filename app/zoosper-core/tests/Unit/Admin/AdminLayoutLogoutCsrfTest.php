@@ -31,3 +31,13 @@ test('admin logout route remains post only and protected by middleware', functio
     expect($logout['method'])->toBe('POST');
     expect($logout['permission'])->toBe('admin.access');
 });
+
+
+
+
+
+
+
+
+
+

@@ -9,7 +9,7 @@ declare(strict_types=1);
 $basePath = require __DIR__ . '/bootstrap.php';
 
 $config = \Zoosper\Core\Config\ConfigRepository::fromPath($basePath . '/config');
-$pdo = (new \Zoosper\Core\Database\ConnectionFactory($config, $basePath))->create();
+$pdo = (new \Zoosper\Database\ConnectionFactory($config, $basePath))->create();
 $modules = new \Zoosper\Core\Module\ModuleRegistry($basePath);
 $logManager = new \Zoosper\Logger\Manager\LogManager($config, $basePath);
 $errorHandler = new \Zoosper\Core\Error\ErrorHandler($logManager->exceptions());
@@ -63,3 +63,6 @@ foreach ($critical as $id) {
 print "\nRegistered service IDs: " . count($services->ids()) . PHP_EOL;
 print "Result: " . ($failed ? 'FAIL' : 'OK') . PHP_EOL;
 exit($failed ? 2 : 0);
+
+
+

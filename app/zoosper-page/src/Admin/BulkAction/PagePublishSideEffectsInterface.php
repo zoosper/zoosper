@@ -16,3 +16,13 @@ interface PagePublishSideEffectsInterface
         int $selectedCount,
     ): void;
 }
+
+
+
+
+
+
+
+
+
+

@@ -9,3 +9,14 @@ final readonly class MediaGridSource implements GridDataSourceInterface
  public function definition():GridDefinition{return new GridDefinition('Media',[new GridColumn('id','ID',true,align:'right',toggleable:false),new GridColumn('preview','Preview',toggleable:false),new GridColumn('original_filename','Filename',true),new GridColumn('mime_type','MIME type',true),new GridColumn('extension','Extension',true),new GridColumn('size_bytes','Size',true),new GridColumn('status','Status',true),new GridColumn('created_at','Created',true),new GridColumn('actions','Actions',toggleable:false)],[new GridFilter('q','Filename'),new GridFilter('status','Status','select',[['value'=>'active','label'=>'Active'],['value'=>'archived','label'=>'Archived']]),new GridFilter('mime_type','MIME type'),new GridFilter('extension','Extension')],'created_at','desc','No media assets exist yet.');}
  public function paginate(GridCriteria $c):PaginationResult{$w=['1=1'];$p=[];$q=trim((string)($c->filters['q']??''));if($q!==''){$w[]='(filename LIKE :filename_q OR original_filename LIKE :original_filename_q)';$p['filename_q']='%'.$q.'%';$p['original_filename_q']='%'.$q.'%';}$status=(string)($c->filters['status']??'');if(in_array($status,['active','archived'],true)){$w[]='status=:status';$p['status']=$status;}$mime=trim((string)($c->filters['mime_type']??''));if($mime!==''){$w[]='mime_type=:mime';$p['mime']=$mime;}$ext=trim((string)($c->filters['extension']??''));if($ext!==''){$w[]='extension=:extension';$p['extension']=$ext;}$base=' FROM media_assets WHERE '.implode(' AND ',$w);$count=$this->pdo->prepare('SELECT COUNT(*)'.$base);$count->execute($p);$sort=['id'=>'id','original_filename'=>'original_filename','mime_type'=>'mime_type','extension'=>'extension','size_bytes'=>'size_bytes','status'=>'status','created_at'=>'created_at'][$c->sortBy??'created_at']??'created_at';$dir=$c->sortDir==='asc'?'ASC':'DESC';$st=$this->pdo->prepare('SELECT id,uuid,filename,original_filename,mime_type,extension,size_bytes,public_path,status,created_at,updated_at'.$base." ORDER BY $sort $dir,id $dir LIMIT :limit OFFSET :offset");foreach($p as $k=>$v)$st->bindValue(':'.$k,$v);$st->bindValue(':limit',$c->pager->pageSize,PDO::PARAM_INT);$st->bindValue(':offset',($c->pager->page-1)*$c->pager->pageSize,PDO::PARAM_INT);$st->execute();return new PaginationResult($st->fetchAll(PDO::FETCH_ASSOC)?:[],(int)$count->fetchColumn(),$c->pager->page,$c->pager->pageSize);}
 }
+
+
+
+
+
+
+
+
+
+
+

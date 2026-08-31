@@ -16,3 +16,13 @@ test('audited Pages export requires authenticated admin identity', function (): 
     expect((string) $parameters[0]->getType())->toBe('int');
     expect(PageGridWorkspace::GRID_KEY)->toBe('admin.pages');
 });
+
+
+
+
+
+
+
+
+
+

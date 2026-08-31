@@ -20,3 +20,13 @@ it('rejects invalid, secret and read-only input', function (): void {
         ->and(fn () => $normaliser->normalise(new SettingDefinition('x.secret', 'Secret', 'secret', secret: true), 'x'))->toThrow(SettingValidationException::class)
         ->and(fn () => $normaliser->normalise(new SettingDefinition('x.locked', 'Locked', readOnly: true), 'x'))->toThrow(SettingValidationException::class);
 });
+
+
+
+
+
+
+
+
+
+

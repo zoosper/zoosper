@@ -27,3 +27,14 @@ test('creates and hydrates media asset records', function () {
     expect($asset->publicPath)->toBe('/media/uuid-1.png');
     expect($asset->createdBy)->toBe(7);
 });
+
+
+
+
+
+
+
+
+
+
+

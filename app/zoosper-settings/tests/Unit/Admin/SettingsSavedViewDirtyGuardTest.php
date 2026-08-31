@@ -12,3 +12,13 @@ it('guards navigation-changing saved-view operations when settings forms are dir
         ->toContain("guardWorkspaceOperation('Unsaved configuration changes may remain hidden.')")
         ->toContain("guardWorkspaceOperation('Importing views changes workspace navigation.')");
 });
+
+
+
+
+
+
+
+
+
+

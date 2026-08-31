@@ -38,3 +38,13 @@ it('keeps project configuration immutable and scoped database configuration sepa
         ->not->toContain('ScopeConfigRepository')
         ->not->toContain('private PDO ');
 });
+
+
+
+
+
+
+
+
+
+

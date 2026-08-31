@@ -58,3 +58,13 @@ it('registers the ErrorHandler before creating the database connection', functio
     // BEFORE the ConnectionFactory instantiation in the source.
     expect($errorHandlerRegisterPos)->toBeLessThan($connectionFactoryPos);
 });
+
+
+
+
+
+
+
+
+
+

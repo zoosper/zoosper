@@ -26,3 +26,14 @@ it('declares every Media Admin route and menu permission in the Media ACL manife
     expect(array_values(array_unique($used)))->toBe(['media.manage'])
         ->and($declared)->toContain('media.manage');
 });
+
+
+
+
+
+
+
+
+
+
+

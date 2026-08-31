@@ -10,3 +10,14 @@ interface ApiAuthenticationInterface
 {
     public function apply(ApiRequest $request): ApiRequest;
 }
+
+
+
+
+
+
+
+
+
+
+

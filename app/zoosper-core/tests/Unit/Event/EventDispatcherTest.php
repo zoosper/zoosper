@@ -49,3 +49,13 @@ test('a throwing listener does not stop later listeners', function () {
 
     expect($called)->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

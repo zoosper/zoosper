@@ -17,3 +17,13 @@ it('retains stateless metadata for static parameterised and implicit HEAD routes
         ->and($router->isStateless(new Request('GET', '/api/v1/items/12')))->toBeTrue()
         ->and($router->isStateless(new Request('POST', '/api/v1/auth/login')))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

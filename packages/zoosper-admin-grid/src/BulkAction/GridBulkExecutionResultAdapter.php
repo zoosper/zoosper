@@ -27,3 +27,14 @@ final readonly class GridBulkExecutionResultAdapter
             : new GridBulkHttpResult(422, $result->message);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

@@ -11,3 +11,13 @@ interface RoleGridReadRepositoryInterface
     /** @return PaginationResult<array<string, mixed>> */
     public function paginate(RoleGridCriteria $criteria): PaginationResult;
 }
+
+
+
+
+
+
+
+
+
+

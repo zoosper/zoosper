@@ -3,3 +3,13 @@ declare(strict_types=1);
 namespace Zoosper\Theme\Api;
 use RuntimeException;use Zoosper\Auth\Token\{PersonalAccessTokenAuthenticator,PersonalAccessTokenPrincipal};use Zoosper\Core\Http\{JsonResponder,Request,Response};use Zoosper\Theme\Application\ThemeAssignmentService;use Zoosper\Theme\Theme\ThemeRepository;
 final readonly class ThemeApiController{public function __construct(private JsonResponder $json,private PersonalAccessTokenAuthenticator $auth,private ThemeRepository $themes,private ThemeAssignmentService $assignment){}public function index(Request $r):Response{$p=$this->principal($r,'themes:read');if($p instanceof Response)return$p;return$this->json->success(['themes'=>array_map(static fn(array $t):array=>['code'=>$t['code'],'name'=>$t['name'],'version'=>$t['version']],$this->themes->all())]);}public function assign(Request $r):Response{$p=$this->principal($r,'themes:write');if($p instanceof Response)return$p;$code=trim((string)($r->json()['theme_code']??''));try{$this->assignment->assign((int)$r->routeParam('id','0'),$code);}catch(RuntimeException $e){return$this->json->error('theme_assignment_failed',$e->getMessage(),422);}return$this->json->success(['site_id'=>(int)$r->routeParam('id','0'),'theme_code'=>$code]);}private function principal(Request $r,string $scope):PersonalAccessTokenPrincipal|Response{$p=$this->auth->authenticate($r->header('authorization'));if($p===null)return$this->json->error('invalid_bearer_token','A valid bearer token is required.',401);if(!$p->allows($scope)||!$p->user->can('settings.manage'))return$this->json->error('insufficient_scope','The bearer token cannot perform this Theme operation.',403);return$p;}}
+
+
+
+
+
+
+
+
+
+

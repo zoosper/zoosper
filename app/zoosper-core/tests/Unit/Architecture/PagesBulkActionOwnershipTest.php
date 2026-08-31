@@ -15,3 +15,13 @@ it('keeps Pages as a declarative bulk-action consumer', function (): void {
         ->and($gridResponder)->toContain('GridBulkActionManifestRenderer')
         ->not->toContain('new GridBulkActionDefinition');
 });
+
+
+
+
+
+
+
+
+
+

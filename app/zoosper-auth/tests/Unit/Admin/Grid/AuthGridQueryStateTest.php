@@ -40,3 +40,13 @@ it('accepts only positive decimal bookmark identifiers', function (): void {
         ->and(AuthGridQueryState::bookmarkId(['bookmark_id' => '1 OR 1=1']))->toBeNull()
         ->and(AuthGridQueryState::bookmarkId(['bookmark_id' => ['12']]))->toBeNull();
 });
+
+
+
+
+
+
+
+
+
+

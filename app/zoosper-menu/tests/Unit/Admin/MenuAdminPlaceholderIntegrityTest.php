@@ -12,3 +12,13 @@ it('keeps Menu URL placeholders as plain attribute text', function (): void {
         ->and(substr_count($template, 'placeholder="https://example.com or /relative-path"'))
         ->toBe(2);
 });
+
+
+
+
+
+
+
+
+
+

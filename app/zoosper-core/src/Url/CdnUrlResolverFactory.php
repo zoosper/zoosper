@@ -27,3 +27,13 @@ final readonly class CdnUrlResolverFactory
         return new CdnUrlResolver($this->config->array('cdn'));
     }
 }
+
+
+
+
+
+
+
+
+
+

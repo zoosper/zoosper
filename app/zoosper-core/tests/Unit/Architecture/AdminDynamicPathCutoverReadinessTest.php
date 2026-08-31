@@ -17,3 +17,13 @@ it('keeps admin declaration expansion central generic and immutable', function (
         ->not->toContain('$_SERVER')
         ->not->toContain('$_ENV');
 });
+
+
+
+
+
+
+
+
+
+

@@ -25,3 +25,13 @@ it('registers the adapter without replacing the existing frontend renderer', fun
         ->toContain('module::path naming convention')
         ->toContain('$this->templates->render(');
 });
+
+
+
+
+
+
+
+
+
+

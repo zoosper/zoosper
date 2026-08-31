@@ -63,3 +63,13 @@ it('returns invalid Editor.js JSON as a typed failure', function (): void {
     ], phase9fnUser());
     expect($result->successful)->toBeFalse()->and($result->error)->toContain('Invalid Editor.js JSON payload');
 });
+
+
+
+
+
+
+
+
+
+

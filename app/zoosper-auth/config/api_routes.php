@@ -12,3 +12,13 @@ return [
     ['method' => 'PATCH', 'path' => '/api/v1/roles/{id:\d+}', 'controller' => RoleApiController::class, 'action' => 'update', 'public' => true, 'stateless' => true],
     ['method' => 'DELETE', 'path' => '/api/v1/roles/{id:\d+}', 'controller' => RoleApiController::class, 'action' => 'delete', 'public' => true, 'stateless' => true],
 ];
+
+
+
+
+
+
+
+
+
+

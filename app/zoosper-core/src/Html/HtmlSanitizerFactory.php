@@ -96,3 +96,13 @@ final readonly class HtmlSanitizerFactory
         return new BasicHtmlSanitizer();
     }
 }
+
+
+
+
+
+
+
+
+
+

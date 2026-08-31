@@ -6,3 +6,11 @@ return [
     'enabled' => true,
     'default_redirect_type' => 301,
 ];
+
+
+
+
+
+
+
+

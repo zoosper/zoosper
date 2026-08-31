@@ -16,3 +16,13 @@ it('renders Permission Explorer through published public assets', function (): v
     expect(is_file($project . '/public/assets/admin/css/permission-explorer.css'))->toBeTrue();
     expect(is_file($project . '/public/assets/admin/js/permission-explorer.js'))->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

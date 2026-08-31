@@ -6,3 +6,13 @@ return [
     'theme.default' => 'Default theme',
     'theme.footer.powered_by' => 'Powered by :version',
 ];
+
+
+
+
+
+
+
+
+
+

@@ -14,3 +14,13 @@ it('supports explicit groups and normalises legacy settings into General', funct
         ->not->toHaveKey('settings')
         ->and($config[0]['groups'])->toHaveCount(3);
 });
+
+
+
+
+
+
+
+
+
+

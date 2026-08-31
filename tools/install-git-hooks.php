@@ -85,3 +85,6 @@ if ($written === false) {
 echo "Installed strict-gate pre-push hook.\n";
 echo "Override the PHP binary with: PHP_BIN=php ...\n";
 exit(0);
+
+
+

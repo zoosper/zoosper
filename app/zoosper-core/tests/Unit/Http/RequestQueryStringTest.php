@@ -42,3 +42,13 @@ it('captures raw query string and provides accessor', function (): void {
     expect($withForm->queryString())->toBe('foo=bar&page=2')
         ->and($withForm->form())->toBe(['csrf' => 'token']);
 });
+
+
+
+
+
+
+
+
+
+

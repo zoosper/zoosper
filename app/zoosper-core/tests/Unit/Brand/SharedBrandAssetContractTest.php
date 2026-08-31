@@ -27,3 +27,13 @@ it('uses shared branding in Admin frontend and documentation builds', function (
     expect((string) file_get_contents($root . '/docs-site/build.php'))
         ->toContain("app/zoosper-theme/resources/brand/mark.svg");
 });
+
+
+
+
+
+
+
+
+
+

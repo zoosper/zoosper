@@ -9,9 +9,19 @@ it('keeps reusable host adapters free of feature dependencies and globals', func
     foreach (glob($directory . '/*.php') ?: [] as $file) {
         $source .= (string) file_get_contents($file);
     }
-    expect($source)->not->toContain('Zoosper\\Page')
+    expect($source)->not->toContain('Zoosper\Page')
         ->not->toContain('StoreOrder')
         ->not->toContain('$_POST')
         ->not->toContain('$_SESSION')
         ->not->toContain('header(');
 });
+
+
+
+
+
+
+
+
+
+

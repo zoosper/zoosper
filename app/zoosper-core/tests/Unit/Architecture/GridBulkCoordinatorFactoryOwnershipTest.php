@@ -14,8 +14,18 @@ it('keeps protected coordinator construction in the shared Admin Grid package', 
     expect($factory)->not->toBeFalse();
     expect($bindings)->not->toBeFalse();
     expect($factory)->toContain('new GridBulkHttpCoordinator(');
-    expect($factory)->not->toContain('Zoosper\\Page');
+    expect($factory)->not->toContain('Zoosper\Page');
     expect($factory)->not->toContain('StoreOrder');
     expect($bindings)->not->toContain('$_POST');
     expect($bindings)->not->toContain('$_SESSION');
 });
+
+
+
+
+
+
+
+
+
+

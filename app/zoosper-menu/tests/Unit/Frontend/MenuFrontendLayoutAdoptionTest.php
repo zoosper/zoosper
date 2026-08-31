@@ -35,3 +35,13 @@ it('adopts navigation and breadcrumbs in the live default frontend layout', func
     expect($mainStart)->not->toBeFalse()
         ->and($breadcrumbs)->toBeGreaterThan($mainStart);
 });
+
+
+
+
+
+
+
+
+
+

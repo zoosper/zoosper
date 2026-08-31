@@ -22,3 +22,14 @@ final readonly class GridWorkspaceDirtyState
             !== $this->fingerprint->fromArray($savedState);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

@@ -38,3 +38,13 @@ it('keeps Page runtime free of superglobal request access', function (): void {
             ->not->toContain('$_SERVER');
     }
 });
+
+
+
+
+
+
+
+
+
+

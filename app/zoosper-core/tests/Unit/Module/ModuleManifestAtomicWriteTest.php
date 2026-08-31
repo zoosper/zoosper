@@ -67,3 +67,13 @@ test('compiler source does not write directly onto the live manifest path', func
         'file_put_contents($this->cachePath, $this->renderCacheFile($modules))',
     );
 });
+
+
+
+
+
+
+
+
+
+

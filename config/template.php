@@ -17,3 +17,11 @@ return [
     'php_templates_enabled' => true,
     'template_cache_path' => 'var/cache/templates',
 ];
+
+
+
+
+
+
+
+

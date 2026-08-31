@@ -17,3 +17,13 @@ final readonly class PersonalAccessTokenService
         $id=$this->tokens->create($userId,$publicId,$name,hash('sha256',$plain),$scopes,$expiresAt,$now);return ['id'=>$id,'token'=>$plain,'public_id'=>$publicId];
     }
 }
+
+
+
+
+
+
+
+
+
+

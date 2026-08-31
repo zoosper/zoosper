@@ -7,9 +7,9 @@ namespace Zoosper\Grid\Tests\Unit;
 test('grid package fixtures use the extracted public namespace', function (): void {
     $source = (string) file_get_contents(__DIR__ . '/GridColumnRegistryTest.php');
 
-    expect($source)->toContain('Zoosper\\\\Grid\\\\GridColumn');
-    expect($source)->toContain('Zoosper\\\\Grid\\\\GridFilter');
-    expect($source)->not->toContain('Zoosper\\\\Core\\\\Grid\\\\');
+    expect($source)->toContain('Zoosper\Grid\GridColumn');
+    expect($source)->toContain('Zoosper\Grid\GridFilter');
+    expect($source)->not->toContain('Zoosper\Core\Grid\');
 });
 
 test('grid package is a library with a bounded core dependency', function (): void {
@@ -24,3 +24,14 @@ test('grid package is a library with a bounded core dependency', function (): vo
     expect($manifest['require'] ?? [])->not->toHaveKey('zoosper/core');
     expect($manifest['extra'] ?? [])->not->toHaveKey('marko');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -15,11 +15,11 @@ use Zoosper\Admin\Asset\AdminAssetRegistry;
 use Zoosper\Admin\Asset\AdminAssetTemplateRenderer;
 use Zoosper\Admin\Asset\AdminAssetViewDataProvider;
 use Zoosper\Admin\Asset\AssetPathResolver;
-use Zoosper\Admin\Audit\AuditLogger;
-use Zoosper\Admin\Audit\AuditLogRepository;
-use Zoosper\Admin\Audit\LoginHistoryRepository;
-use Zoosper\Admin\Audit\Grid\OperationalGridPageBuilder;
-use Zoosper\Admin\Audit\Grid\OperationalGridPageBuilderFactory;
+use Zoosper\Audit\AuditLogger;
+use Zoosper\Audit\AuditLogRepository;
+use Zoosper\Audit\LoginHistoryRepository;
+use Zoosper\Audit\Admin\Grid\OperationalGridPageBuilder;
+use Zoosper\Audit\Admin\Grid\OperationalGridPageBuilderFactory;
 use Zoosper\Admin\Console\PruneLogsCommand;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Core\Editor\ContentEditorInterface;
@@ -52,8 +52,8 @@ use Zoosper\AdminDashboard\Contract\DashboardRolePreferenceRepositoryInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Announcement\AdminAnnouncementProviderInterface;
-use Zoosper\Core\Audit\AuditLoggerInterface;
-use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
+use Zoosper\Audit\Contract\LoginHistoryRecorderInterface;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\ScopedConfig\ScopeConfigRepository;
 use Zoosper\ScopedConfig\ScopeContext;
@@ -142,4 +142,14 @@ return [
     AdminLayoutRendererInterface::class => static fn(ServiceContainer $services): AdminLayoutRendererInterface => $services->get(AdminLayout::class),
     AdminViewRendererInterface::class => static fn(ServiceContainer $services): AdminViewRendererInterface => $services->get(AdminViewRenderer::class),
 ];
+
+
+
+
+
+
+
+
+
+
 

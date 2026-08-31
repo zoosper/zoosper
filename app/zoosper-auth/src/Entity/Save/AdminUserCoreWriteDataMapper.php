@@ -31,3 +31,13 @@ final readonly class AdminUserCoreWriteDataMapper
         return ($this->registryFactory ?? new AdminUserFieldRegistryFactory())->create();
     }
 }
+
+
+
+
+
+
+
+
+
+

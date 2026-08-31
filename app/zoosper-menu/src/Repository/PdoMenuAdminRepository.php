@@ -14,3 +14,13 @@ final readonly class PdoMenuAdminRepository implements MenuAdminRepositoryInterf
  private function menu(array $r): Menu{return new Menu((int)$r['id'],(int)$r['site_id'],(string)$r['code'],(string)$r['label'],(string)$r['status'],(string)$r['created_at'],(string)$r['updated_at']);}
  private function item(array $r): MenuItem{return new MenuItem((int)$r['id'],(int)$r['menu_id'],$r['parent_id']===null?null:(int)$r['parent_id'],$r['page_id']===null?null:(int)$r['page_id'],(string)$r['label'],$r['url']===null?null:(string)$r['url'],(string)$r['target'],(int)$r['position'],(string)$r['status']);}
 }
+
+
+
+
+
+
+
+
+
+

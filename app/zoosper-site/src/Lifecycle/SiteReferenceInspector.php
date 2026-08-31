@@ -43,3 +43,13 @@ final readonly class SiteReferenceInspector
         return (int) $statement->fetchColumn() > 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

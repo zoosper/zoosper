@@ -24,3 +24,13 @@ it('publishes accessible copy feedback and field target focus', function (): voi
         ->toContain("copyStatus.textContent='Copied '+path")
         ->toContain('.settings-field:target');
 });
+
+
+
+
+
+
+
+
+
+

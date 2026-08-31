@@ -164,7 +164,7 @@ final class Router
                 }
 
                 $constraint = $matches[2] ?? '[^/]+';
-                $constraint = str_replace('#', '\\#', $constraint);
+                $constraint = str_replace('#', '\#', $constraint);
                 $params[] = $name;
                 $regexParts[] = '(?P<' . $name . '>' . $constraint . ')';
                 continue;
@@ -206,3 +206,13 @@ final class Router
         return $normalised === '//' ? '/' : $normalised;
     }
 }
+
+
+
+
+
+
+
+
+
+

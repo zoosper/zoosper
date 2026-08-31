@@ -33,3 +33,13 @@ it('verifies that module config files load correctly', function (): void {
             AdminAnnouncementProviderInterface::class,
         ]);
 });
+
+
+
+
+
+
+
+
+
+

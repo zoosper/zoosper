@@ -97,3 +97,14 @@ final readonly class MediaUploadValidator
         return [(int) $info[0], (int) $info[1]];
     }
 }
+
+
+
+
+
+
+
+
+
+
+

@@ -182,3 +182,13 @@ final class SmtpMailer implements MailerInterface
         return implode("\r\n", $lines);
     }
 }
+
+
+
+
+
+
+
+
+
+

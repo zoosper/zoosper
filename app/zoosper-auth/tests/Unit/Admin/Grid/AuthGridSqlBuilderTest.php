@@ -65,3 +65,13 @@ it('never interpolates submitted values into SQL fragments', function (): void {
     expect($plan->whereSql)->not->toContain($hostile)
         ->and($plan->parameters['grid_query'])->toBe('%' . $hostile . '%');
 });
+
+
+
+
+
+
+
+
+
+

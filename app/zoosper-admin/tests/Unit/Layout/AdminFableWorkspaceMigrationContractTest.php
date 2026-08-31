@@ -24,3 +24,13 @@ it('migrates Settings and role administration without changing their security ow
         ->toContain('@media (prefers-reduced-motion:reduce)')
         ->and($components)->toContain('/* Fable workspace migration: role and permission administration. */');
 });
+
+
+
+
+
+
+
+
+
+

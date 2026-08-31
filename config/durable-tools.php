@@ -25,3 +25,11 @@ return [
         'reason' => 'Durable developer-experience tool that installs the strict quality-gate pre-push hook.',
     ],
 ];
+
+
+
+
+
+
+
+

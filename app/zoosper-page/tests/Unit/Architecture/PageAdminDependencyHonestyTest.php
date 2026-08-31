@@ -42,6 +42,16 @@ it('keeps concrete Admin editor and UI implementations out of Page runtime', fun
     }
     expect($source)->not->toContain('EditorJsContentEditor')
         ->not->toContain('TextareaContentEditor')
-        ->not->toContain('Zoosper\\Admin\\Layout\\AdminLayout')
-        ->not->toContain('Zoosper\\Admin\\UI\\AdminViewRenderer');
+        ->not->toContain('Zoosper\Admin\Layout\AdminLayout')
+        ->not->toContain('Zoosper\Admin\UI\AdminViewRenderer');
 });
+
+
+
+
+
+
+
+
+
+

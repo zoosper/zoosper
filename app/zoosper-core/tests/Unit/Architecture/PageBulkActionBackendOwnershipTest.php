@@ -15,3 +15,13 @@ it('keeps Page bulk backend composition feature-owned and browser-inactive', fun
     expect($declarations)->toContain('serverDefinitions');
     expect(substr_count($declarations, "id: 'export.selected'"))->toBe(1);
 });
+
+
+
+
+
+
+
+
+
+

@@ -31,3 +31,13 @@ final readonly class TwoFactorChallengeResult
         return new self(false, null, 'invalid_or_expired');
     }
 }
+
+
+
+
+
+
+
+
+
+

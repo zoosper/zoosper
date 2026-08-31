@@ -24,3 +24,13 @@ it('publishes read-only built-in choices without restricting module-owned editor
         ->and($registry)->toContain('public function __construct(ContentEditorInterface ...$editors)')
         ->toContain('public function register(ContentEditorInterface $editor): void');
 });
+
+
+
+
+
+
+
+
+
+

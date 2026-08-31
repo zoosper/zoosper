@@ -77,3 +77,14 @@ it('rejects duplicate registrations and invalid data-source services', function 
     $builder = new ApiGridPageBuilder($registry, new ApiGridQueryFactory(), static fn (): object => new \stdClass());
     expect(fn () => $builder->build('sample.records', []))->toThrow(InvalidArgumentException::class, 'GridDataSourceInterface');
 });
+
+
+
+
+
+
+
+
+
+
+

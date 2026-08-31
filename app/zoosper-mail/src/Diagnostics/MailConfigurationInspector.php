@@ -69,3 +69,13 @@ final readonly class MailConfigurationInspector
         return $warnings;
     }
 }
+
+
+
+
+
+
+
+
+
+

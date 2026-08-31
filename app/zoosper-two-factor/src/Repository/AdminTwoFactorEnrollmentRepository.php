@@ -63,3 +63,13 @@ final readonly class AdminTwoFactorEnrollmentRepository
         $statement->execute(['id' => $adminUserId, 'secret' => $protectedSecret]);
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -23,3 +23,14 @@ final readonly class MediaUploadDerivativePolicy
         return $this->enabled;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

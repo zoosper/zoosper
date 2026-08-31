@@ -162,3 +162,13 @@ final readonly class ErrorHandler
         $this->logger->exception($exception, $context);
     }
 }
+
+
+
+
+
+
+
+
+
+

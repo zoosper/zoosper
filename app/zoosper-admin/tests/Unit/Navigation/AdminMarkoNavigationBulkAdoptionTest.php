@@ -43,3 +43,13 @@ it('implements the Marko registry with loud lookup and stable replacement', func
     $source = (string) file_get_contents((new ReflectionClass(AdminMenu::class))->getFileName());
     expect($source)->toContain('list<AdminSectionInterface>')->toContain('sectionsFor(')->toContain('$this->sections->build($this->itemsFor($user))');
 });
+
+
+
+
+
+
+
+
+
+

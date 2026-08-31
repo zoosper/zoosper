@@ -21,8 +21,18 @@ test('grid consumers use the package namespace rather than the retired core name
         foreach ($iterator as $file) {
             if ($file->isFile() && $file->getExtension() === 'php') {
                 expect((string) file_get_contents($file->getPathname()))
-                    ->not->toContain('Zoosper\\Core\\Grid\\');
+                    ->not->toContain('Zoosper\Core\Grid\');
             }
         }
     }
 });
+
+
+
+
+
+
+
+
+
+

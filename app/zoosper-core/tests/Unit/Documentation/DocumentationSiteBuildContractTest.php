@@ -17,3 +17,13 @@ it('preserves deployment metadata and uses canonical shared brand assets', funct
     expect($root . '/app/zoosper-theme/resources/brand/mark.svg')->toBeFile()
         ->and($root . '/public/assets/brand/favicon.svg')->toBeFile();
 });
+
+
+
+
+
+
+
+
+
+

@@ -56,3 +56,14 @@ it('computes a correct, bounded offset at the exact max page boundary', function
     expect($pager->page)->toBe(100_000);
     expect($pager->offset())->toBe(99_999 * 20);
 });
+
+
+
+
+
+
+
+
+
+
+

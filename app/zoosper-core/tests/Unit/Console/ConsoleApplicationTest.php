@@ -80,3 +80,13 @@ test('unknown commands return a non-zero status', function () {
     expect($status)->toBe(1);
     expect(bufferedConsoleContents($stderr))->toContain('Unknown command: missing:command');
 });
+
+
+
+
+
+
+
+
+
+

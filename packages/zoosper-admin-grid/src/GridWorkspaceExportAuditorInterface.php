@@ -9,3 +9,14 @@ interface GridWorkspaceExportAuditorInterface
 {
     public function record(GridWorkspaceExportAudit $audit): void;
 }
+
+
+
+
+
+
+
+
+
+
+

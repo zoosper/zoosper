@@ -24,3 +24,13 @@ final readonly class UrlRewriteResolver
         return $this->rewrites->findActiveByRequestPath($siteId, trim($requestPath, '/'));
     }
 }
+
+
+
+
+
+
+
+
+
+

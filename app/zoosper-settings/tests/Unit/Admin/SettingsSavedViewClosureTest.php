@@ -13,3 +13,13 @@ it('resets all personal Settings workspace metadata without touching configurati
         ->toContain("copyStatus.textContent='Reset personal Settings workspace'")
         ->not->toContain('clearConfigurationValues');
 });
+
+
+
+
+
+
+
+
+
+

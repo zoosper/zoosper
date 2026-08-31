@@ -31,3 +31,14 @@ final readonly class GridWorkspaceViewActionsDecorator
             . substr($workspaceHtml, $insertAt);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

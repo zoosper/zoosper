@@ -50,3 +50,13 @@ final readonly class TotpQrCodeSvgRenderer
         return (new Writer($renderer))->writeString($provisioningUri);
     }
 }
+
+
+
+
+
+
+
+
+
+

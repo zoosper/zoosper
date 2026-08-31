@@ -64,3 +64,13 @@ return [
     ),
     TemplateRenderer::class => static fn (ServiceContainer $services): TemplateRenderer => $services->get('theme.frontend_template_renderer'),
 ];
+
+
+
+
+
+
+
+
+
+

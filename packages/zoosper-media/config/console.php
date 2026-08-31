@@ -7,3 +7,14 @@ use Zoosper\Media\Console\ProcessMediaQueueCommand;
 return [
     ProcessMediaQueueCommand::class,
 ];
+
+
+
+
+
+
+
+
+
+
+

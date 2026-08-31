@@ -17,3 +17,13 @@ final readonly class PageLifecycleResult
         public ?string $message = null,
     ) {}
 }
+
+
+
+
+
+
+
+
+
+

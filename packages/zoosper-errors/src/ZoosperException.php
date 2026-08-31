@@ -77,3 +77,14 @@ class ZoosperException extends MarkoException
         return $this->details;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

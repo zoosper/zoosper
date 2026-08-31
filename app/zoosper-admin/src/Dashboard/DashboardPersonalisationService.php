@@ -151,3 +151,13 @@ final readonly class DashboardPersonalisationService
         return array_values(array_unique([...$merged, ...$remaining]));
     }
 }
+
+
+
+
+
+
+
+
+
+

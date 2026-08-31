@@ -11,7 +11,7 @@ use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Error\ErrorHandler;
 use Zoosper\Page\Lifecycle\PageLifecycleCoordinator;
 use Zoosper\Page\Lifecycle\PageReferenceInspector;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Page\Service\PageRevisionService;
 use Zoosper\Page\Console\StarterSiteInstallCommand;
 use Zoosper\Page\Seo\PageSeoContributor;
@@ -167,4 +167,14 @@ return [
         $services->has(\Zoosper\Core\Event\EventDispatcherInterface::class) ? $services->get(\Zoosper\Core\Event\EventDispatcherInterface::class) : null,
     ),
 ];
+
+
+
+
+
+
+
+
+
+
 

@@ -13,3 +13,13 @@ it('presents the existing Admin brand as compact text only', function (): void {
         ->toContain('.admin-sidebar .brand span{display:inline-block}')
         ->toContain('/* Admin text-brand override: end */');
 });
+
+
+
+
+
+
+
+
+
+

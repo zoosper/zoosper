@@ -17,3 +17,13 @@ test('restoring a server-hidden column submits the canonical Grid form', functio
         ->toContain("page.value = '1'")
         ->toContain('form.requestSubmit()');
 });
+
+
+
+
+
+
+
+
+
+

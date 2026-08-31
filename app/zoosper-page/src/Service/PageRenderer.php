@@ -125,3 +125,13 @@ final readonly class PageRenderer
         return $prefix === '/' ? '' : rtrim($prefix, '/');
     }
 }
+
+
+
+
+
+
+
+
+
+

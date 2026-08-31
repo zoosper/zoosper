@@ -27,3 +27,13 @@ test('nginx hardening explicitly blocks packages source', function (): void {
 
     expect($nginx)->toContain('location ^~ /packages/ { return 404; }');
 });
+
+
+
+
+
+
+
+
+
+

@@ -34,3 +34,13 @@ it('renders a searchable module-owned catalogue without persistence controls', f
         ->toContain('action="<?= $e($saveUrl) ?>"')
         ->not->toContain('type="password"');
 });
+
+
+
+
+
+
+
+
+
+

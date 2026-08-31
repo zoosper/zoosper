@@ -27,3 +27,13 @@ final readonly class AdminUrlGenerator
         return $filteredQuery !== [] ? $url . '?' . http_build_query($filteredQuery) : $url;
     }
 }
+
+
+
+
+
+
+
+
+
+

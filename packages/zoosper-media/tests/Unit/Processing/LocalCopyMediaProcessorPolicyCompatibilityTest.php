@@ -15,3 +15,14 @@ test('local copy processor tolerates media processing policy without original st
     expect($source)->toContain("DEFAULT_ORIGINAL_STORAGE_ROOT = 'storage/media/original'");
     expect($source)->not->toContain('$policy->originalStorageRoot();\n        $originalRoot');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -11,3 +11,13 @@ it('retires the obsolete Page Momentum menu and stylesheet', function (): void {
         ->and($menu)->not->toContain('Page momentum')
         ->and(is_file($root . '/app/zoosper-admin/resources/assets/admin/css/page-momentum.css'))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

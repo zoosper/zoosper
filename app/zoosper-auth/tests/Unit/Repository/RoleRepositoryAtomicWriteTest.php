@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Service\PasswordHasher;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Module\ModuleRegistry;
 
 /**
@@ -175,3 +175,13 @@ it('still succeeds normally end to end when nothing fails', function (): void {
     unset($pdo);
     @unlink($dbPath);
 });
+
+
+
+
+
+
+
+
+
+

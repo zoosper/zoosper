@@ -44,3 +44,13 @@ it('performs no writes when any editable field is invalid', function (): void {
     expect(fn () => $writer->write($section, ScopeType::Default, null, ['mail.enabled' => 'on', 'mail.sender' => 'invalid']))->toThrow(SettingValidationException::class);
     expect($repository->get('mail.enabled', ScopeContext::default()))->toBeNull();
 });
+
+
+
+
+
+
+
+
+
+

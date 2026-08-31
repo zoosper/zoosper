@@ -46,3 +46,13 @@ final readonly class MailConfigurationSummary
         ];
     }
 }
+
+
+
+
+
+
+
+
+
+

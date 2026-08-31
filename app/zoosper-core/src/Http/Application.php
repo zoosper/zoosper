@@ -117,3 +117,13 @@ final readonly class Application
         return TrustedProxyResolver::fromEnvironment()->isHttps($_SERVER);
     }
 }
+
+
+
+
+
+
+
+
+
+

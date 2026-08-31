@@ -71,3 +71,13 @@ test('template and page render hot paths no longer depend on CurrentSiteContext 
         expect($source)->not->toContain('CurrentSiteContext');
     }
 });
+
+
+
+
+
+
+
+
+
+

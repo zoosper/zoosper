@@ -54,7 +54,7 @@ final readonly class ConsoleCommandScaffolder
             mkdir(dirname($commandPath), 0775, true);
         }
 
-        $fqcn = $module->namespace . '\\Console\\' . $className;
+        $fqcn = $module->namespace . '\Console\' . $className;
         file_put_contents($commandPath, $this->commandClass($module->namespace, $className, $commandName, $description));
 
         $consoleConfigRelative = 'config/console.php';
@@ -108,7 +108,7 @@ final readonly class ConsoleCommandScaffolder
 
     private function commandClass(string $namespaceRoot, string $className, string $commandName, string $description): string
     {
-        $namespace = $namespaceRoot . '\\Console';
+        $namespace = $namespaceRoot . '\Console';
         $safeCommandName = var_export($commandName, true);
         $safeDescription = var_export($description, true);
 
@@ -199,3 +199,13 @@ return [
 PHP;
     }
 }
+
+
+
+
+
+
+
+
+
+

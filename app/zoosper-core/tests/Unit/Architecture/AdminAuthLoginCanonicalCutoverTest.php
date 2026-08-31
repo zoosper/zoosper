@@ -30,3 +30,13 @@ it('routes every login controller destination through the canonical generator', 
         ->not->toContain('action="/admin/login"')
         ->and($wiring)->toContain('$services->get(AdminUrlGenerator::class)');
 });
+
+
+
+
+
+
+
+
+
+

@@ -36,3 +36,14 @@ it('exports only explicitly selected rendered rows as escaped CSV', function ():
         ->and($manifest)->toContain("definition.id === 'export.selected'")
         ->and($manifest)->toContain("action.add(new Option(String(definition.label), String(definition.id)))");
 });
+
+
+
+
+
+
+
+
+
+
+

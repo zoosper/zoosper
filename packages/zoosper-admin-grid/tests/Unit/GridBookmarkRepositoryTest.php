@@ -52,3 +52,14 @@ test('deleting a bookmark cannot delete another users bookmark', function (): vo
     $repository->delete(10, 'admin.pages', $bookmark['id']);
     expect($repository->allForUser(10, 'admin.pages'))->toBe([]);
 });
+
+
+
+
+
+
+
+
+
+
+

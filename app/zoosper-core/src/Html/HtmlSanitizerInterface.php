@@ -19,3 +19,13 @@ interface HtmlSanitizerInterface
      */
     public function sanitise(string $html): SanitizedHtml;
 }
+
+
+
+
+
+
+
+
+
+

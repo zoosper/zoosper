@@ -26,3 +26,13 @@ final readonly class RecoveryCodeGenerator
         return password_hash($code, PASSWORD_DEFAULT);
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -32,3 +32,13 @@ final readonly class SmtpConfigFactory
         return $this->forScope(ScopeContext::default());
     }
 }
+
+
+
+
+
+
+
+
+
+

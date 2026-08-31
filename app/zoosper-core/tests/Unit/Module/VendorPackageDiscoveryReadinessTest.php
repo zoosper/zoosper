@@ -70,3 +70,9 @@ function createVendorModuleFixture(string $root, string $packagePath, string $pa
     file_put_contents($root . '/vendor/composer/installed.php', "<?php\nreturn ['versions' => ['{$packageName}' => ['type' => 'zoosper-module', 'install_path' => __DIR__ . '/{$installPath}', 'extra' => ['marko' => ['module' => true]]]]];\n");
 }
 
+
+
+
+
+
+

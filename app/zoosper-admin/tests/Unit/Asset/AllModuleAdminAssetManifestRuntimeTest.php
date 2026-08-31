@@ -31,3 +31,13 @@ it('contains no raw declarations inside canonical wrapped manifests', function (
         }
     }
 });
+
+
+
+
+
+
+
+
+
+

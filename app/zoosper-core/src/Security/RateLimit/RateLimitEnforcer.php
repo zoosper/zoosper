@@ -26,3 +26,13 @@ final class RateLimitEnforcer
         return $this->store->recordAttempt($policy->rule, $identityHash, $now);
     }
 }
+
+
+
+
+
+
+
+
+
+

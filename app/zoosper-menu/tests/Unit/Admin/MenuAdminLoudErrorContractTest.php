@@ -9,3 +9,13 @@ it('renders a loud Marko error instead of raw exception text',function(){
   ->and($responder)->toContain('zoosper-menu::admin/menu/error.latte')
   ->and($view)->toContain('Marko runtime error')->toContain('role="alert"')->toContain('Technical details');
 });
+
+
+
+
+
+
+
+
+
+

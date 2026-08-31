@@ -33,3 +33,13 @@ return [
     ),
     MailerInterface::class => static fn (ServiceContainer $services): MailerInterface => $services->get(LoggedMailer::class),
 ];
+
+
+
+
+
+
+
+
+
+

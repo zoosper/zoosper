@@ -13,3 +13,13 @@ it('retains scope, typed fields, save, clear, search and source contracts', func
     $root=dirname(__DIR__,5);$view = settingsPresentationBundle($root);
     expect($view)->toContain('method="get"')->toContain('action="<?= $e($saveUrl) ?>"')->toContain('method="post"')->toContain('formaction="<?= $e($clearUrl) ?>"')->toContain('name="_csrf_token"')->toContain('data-settings-card')->toContain('Search settings, modules and paths')->toContain('Source:')->toContain('$setting->type===\'boolean\'')->toContain('$setting->type===\'multiselect\'');
 });
+
+
+
+
+
+
+
+
+
+

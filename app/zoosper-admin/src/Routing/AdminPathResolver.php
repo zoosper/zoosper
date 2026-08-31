@@ -48,3 +48,13 @@ final readonly class AdminPathResolver
         return $requestPath === $basePath || str_starts_with($requestPath, $basePath . '/');
     }
 }
+
+
+
+
+
+
+
+
+
+

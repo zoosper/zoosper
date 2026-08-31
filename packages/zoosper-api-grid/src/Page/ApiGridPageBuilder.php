@@ -39,3 +39,14 @@ final readonly class ApiGridPageBuilder
         return new ApiGridPage($definition, $query, $source->fetch($query), $capabilities);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

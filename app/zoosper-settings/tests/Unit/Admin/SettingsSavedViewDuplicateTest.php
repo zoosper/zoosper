@@ -12,3 +12,13 @@ it('duplicates a selected view through bounded normalisation', function (): void
         ->toContain("copyStatus.textContent='Duplicated workspace view as '")
         ->toContain("copyStatus.textContent='Saved view limit reached'");
 });
+
+
+
+
+
+
+
+
+
+

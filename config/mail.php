@@ -20,3 +20,11 @@ return [
         'timeout_seconds' => (int) env('SMTP_TIMEOUT_SECONDS', 15),
     ],
 ];
+
+
+
+
+
+
+
+

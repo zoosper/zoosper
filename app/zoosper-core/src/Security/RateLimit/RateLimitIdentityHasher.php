@@ -27,3 +27,13 @@ final class RateLimitIdentityHasher
         return hash('sha256', $salt . '|' . implode('|', $normalised));
     }
 }
+
+
+
+
+
+
+
+
+
+

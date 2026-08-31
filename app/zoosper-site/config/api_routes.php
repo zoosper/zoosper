@@ -10,3 +10,13 @@ return [
  ['method'=>'POST','path'=>'/api/v1/sites/{id:\d+}/restore','controller'=>SiteApiController::class,'action'=>'restore','public'=>true,'stateless'=>true],
  ['method'=>'DELETE','path'=>'/api/v1/sites/{id:\d+}','controller'=>SiteApiController::class,'action'=>'deletePermanently','public'=>true,'stateless'=>true],
 ];
+
+
+
+
+
+
+
+
+
+

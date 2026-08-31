@@ -13,3 +13,13 @@ it('copies value-free saved-view diagnostics', function (): void {
         ->toContain("copyStatus.textContent='Copied saved-view diagnostics'")
         ->not->toContain('configurationValues:');
 });
+
+
+
+
+
+
+
+
+
+

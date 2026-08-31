@@ -56,3 +56,14 @@ it('uses distinct portable placeholders for both filename search predicates', fu
         ->toContain('original_filename LIKE :original_filename_q')
         ->not->toContain('filename LIKE :q OR original_filename LIKE :q');
 });
+
+
+
+
+
+
+
+
+
+
+

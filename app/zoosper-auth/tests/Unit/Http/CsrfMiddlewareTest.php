@@ -69,3 +69,13 @@ test('a POST with an invalid token is blocked before the handler', function () {
 
     expect($reached)->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-use Zoosper\Core\Database\MigrationInterface;
+use Zoosper\Database\MigrationInterface;
 return new class implements MigrationInterface {
  public function name(): string { return '202608100001_create_menu_tables'; }
  public function up(PDO $pdo,string $driver): void {
@@ -15,3 +15,13 @@ return new class implements MigrationInterface {
   $pdo->exec('CREATE INDEX IF NOT EXISTS idx_menu_items_menu_parent_position ON menu_items(menu_id,parent_id,position)'); $pdo->exec('CREATE INDEX IF NOT EXISTS idx_menu_items_page ON menu_items(page_id)');
  }
 };
+
+
+
+
+
+
+
+
+
+

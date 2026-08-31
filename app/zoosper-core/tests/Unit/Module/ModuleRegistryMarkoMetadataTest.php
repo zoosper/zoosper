@@ -61,3 +61,13 @@ test('generic Marko framework modules are recognised through private compatibili
         ->and($modules[0]->name)->toBe('marko-example')
         ->and($modules[0]->source)->toBe('vendor');
 });
+
+
+
+
+
+
+
+
+
+

@@ -76,3 +76,13 @@ it('does not call the non-existent view() method on the fallback contract', func
         ->and($interface->hasMethod('handle'))->toBeTrue()
         ->and($interface->hasMethod('view'))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

@@ -10,3 +10,13 @@ it('lists Pages only for the requested Site', function (): void {
     $repo=new PageRepository($pdo);$repo->create(1,'One','one','one');$repo->create(2,'Two','two','two');
     expect($repo->allForSite(1))->toHaveCount(1)->and($repo->allForSite(1)[0]->title)->toBe('One');
 });
+
+
+
+
+
+
+
+
+
+

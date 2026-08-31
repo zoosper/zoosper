@@ -16,7 +16,7 @@ it('keeps the Site database lookup adapter out of core service ownership', funct
     $coreServices = file_get_contents($root . '/app/zoosper-core/config/services.php') ?: '';
 
     expect($coreServices)->not->toContain('DatabaseSiteLookup');
-    expect($coreServices)->not->toContain('Zoosper\\Site\\Infrastructure\\DatabaseSiteLookup');
+    expect($coreServices)->not->toContain('Zoosper\Site\Infrastructure\DatabaseSiteLookup');
 });
 
 it('does not reintroduce direct Site module references into core Site runtime source', function (): void {
@@ -33,7 +33,7 @@ it('does not reintroduce direct Site module references into core Site runtime so
         $relative = str_replace($root . '/', '', $file->getPathname());
         $source = file_get_contents($file->getPathname()) ?: '';
 
-        foreach (['Zoosper\\Site\\', 'SiteRepository', 'DbSite'] as $needle) {
+        foreach (['Zoosper\Site\', 'SiteRepository', 'DbSite'] as $needle) {
             if (str_contains($source, $needle)) {
                 $violations[] = $relative . ' contains ' . $needle;
             }
@@ -42,3 +42,13 @@ it('does not reintroduce direct Site module references into core Site runtime so
 
     expect($violations)->toBe([]);
 });
+
+
+
+
+
+
+
+
+
+

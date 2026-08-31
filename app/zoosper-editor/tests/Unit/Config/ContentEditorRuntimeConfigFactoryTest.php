@@ -33,3 +33,13 @@ it('builds scoped editor runtime configuration using explicit site scopes', func
     expect($defaultConfig->preferred())->toBe('editorjs')
         ->and($siteConfig->preferred())->toBe('textarea');
 });
+
+
+
+
+
+
+
+
+
+

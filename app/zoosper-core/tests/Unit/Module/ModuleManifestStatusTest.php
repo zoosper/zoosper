@@ -62,3 +62,13 @@ it('reports a rejected stale manifest and the Phase 8D reason', function (): voi
 
     exec('rm -rf ' . escapeshellarg($root));
 });
+
+
+
+
+
+
+
+
+
+

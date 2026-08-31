@@ -118,3 +118,13 @@ it('processes asynchronous acknowledgment posts', function (): void {
 
     expect($this->repository->isAcknowledged($announcement->id, 7))->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

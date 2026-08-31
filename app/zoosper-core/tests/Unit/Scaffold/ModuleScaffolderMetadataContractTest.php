@@ -30,3 +30,13 @@ test('all module scaffolders generate Composer-owned metadata', function (): voi
         expect($module)->toBe([]);
     }
 });
+
+
+
+
+
+
+
+
+
+

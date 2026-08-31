@@ -6,3 +6,14 @@ interface MediaCanonicalizerInterface
 {
     public function canonicalize(string $sourcePath, string $destinationPath, string $extension): void;
 }
+
+
+
+
+
+
+
+
+
+
+

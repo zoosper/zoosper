@@ -16,3 +16,14 @@ it('reads Store Orders pagination through resolved workspace criteria', function
         ->and($source)->not->toContain('page: $criteria->pager->page,')
         ->and($source)->not->toContain('pageSize: $criteria->pager->pageSize,');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -26,3 +26,14 @@ test('only explicit workspace actions are accepted', function (): void {
         post: ['action' => 'delete_everything'],
     )))->toThrow(\InvalidArgumentException::class, 'Unsupported');
 });
+
+
+
+
+
+
+
+
+
+
+

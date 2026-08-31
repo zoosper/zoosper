@@ -7,3 +7,13 @@ final readonly class RequireSecondFactorByDefault implements SecondFactorRequire
 {
     public function requiresSecondFactor(int $adminUserId): bool { return true; }
 }
+
+
+
+
+
+
+
+
+
+

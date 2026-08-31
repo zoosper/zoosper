@@ -19,3 +19,14 @@ final readonly class MediaDerivativeRepository
     }
     /** @param array<string,mixed> $r */ private function hydrate(array $r):MediaDerivative{return new MediaDerivative((int)$r['id'],(int)$r['media_asset_id'],(string)$r['profile'],(string)$r['format'],(int)$r['width'],(int)$r['height'],(int)$r['size_bytes'],(string)$r['storage_path'],(string)$r['public_path'],(string)$r['created_at'],(string)$r['updated_at']);}
 }
+
+
+
+
+
+
+
+
+
+
+

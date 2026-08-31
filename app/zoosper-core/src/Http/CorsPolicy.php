@@ -29,3 +29,13 @@ final readonly class CorsPolicy
         return $h;
     }
 }
+
+
+
+
+
+
+
+
+
+

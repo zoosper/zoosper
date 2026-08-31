@@ -7,7 +7,7 @@ namespace Zoosper\Page\Admin\BulkAction;
 use Zoosper\AdminGrid\BulkAction\GridBulkHostBindings;
 use Zoosper\AdminGrid\BulkAction\GridBulkHttpCoordinator;
 use Zoosper\AdminGrid\BulkAction\GridBulkHttpCoordinatorFactory;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Event\EventDispatcherInterface;
 use Zoosper\Grid\BulkAction\GridBulkActionExecutorRegistry;
 use Zoosper\Grid\BulkAction\GridBulkActionRegistry;
@@ -44,3 +44,13 @@ final readonly class PageBulkActionBackend
         );
     }
 }
+
+
+
+
+
+
+
+
+
+

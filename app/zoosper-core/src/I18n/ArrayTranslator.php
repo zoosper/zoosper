@@ -33,3 +33,13 @@ final readonly class ArrayTranslator implements TranslatorInterface
         return strtr($translated, $replacements);
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -12,3 +12,13 @@ interface PageGridExportDataSourceInterface
     /** @return iterable<array<string, mixed>> */
     public function exportRows(GridCriteria $criteria): iterable;
 }
+
+
+
+
+
+
+
+
+
+

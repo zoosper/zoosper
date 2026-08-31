@@ -50,3 +50,13 @@ it('uses the supplied scope context with site store website and Default inherita
 
     expect($config->fromName())->toBe('Site Sender');
 });
+
+
+
+
+
+
+
+
+
+

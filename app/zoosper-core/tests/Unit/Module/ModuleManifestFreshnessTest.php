@@ -53,3 +53,13 @@ it('embeds both freshness stamps and invalidates opcache after replacement', fun
     expect($compiler)->toContain('opcache_invalidate($this->cachePath, true)');
     exec('rm -rf ' . escapeshellarg($root));
 });
+
+
+
+
+
+
+
+
+
+

@@ -28,3 +28,13 @@ it('guards the alpha critical route and asset inventory', function (): void {
         ->and($root . '/public/assets/brand/favicon.svg')->toBeFile()
         ->and($root . '/public/assets/admin/js/editorjs.bundle.js')->toBeFile();
 });
+
+
+
+
+
+
+
+
+
+

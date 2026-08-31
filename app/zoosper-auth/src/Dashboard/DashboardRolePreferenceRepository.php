@@ -122,3 +122,13 @@ final readonly class DashboardRolePreferenceRepository implements DashboardRoleP
         return new DashboardRolePreference((int) $row['role_id'], (string) $row['role_code'], $hidden, $order);
     }
 }
+
+
+
+
+
+
+
+
+
+

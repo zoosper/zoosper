@@ -37,3 +37,13 @@ it('fails descriptively for modules and vendor identity collisions', function ()
     expect(fn () => (new ModuleRegistry(crossLayerModuleFixture('modules/acme-shared', 'vendor/acme/shared')))->discoverModulesLive())
         ->toThrow(DuplicateModuleException::class, 'discovery layers');
 });
+
+
+
+
+
+
+
+
+
+

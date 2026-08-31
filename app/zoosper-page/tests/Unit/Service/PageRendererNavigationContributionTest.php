@@ -13,3 +13,13 @@ it('keeps PageRenderer optionally extensible through a Page-owned navigation con
         ->toContain("'breadcrumbsHtml'")
         ->and($template)->not->toContain('{$navigationHtml|noescape}')->not->toContain('{$breadcrumbsHtml|noescape}');
 });
+
+
+
+
+
+
+
+
+
+

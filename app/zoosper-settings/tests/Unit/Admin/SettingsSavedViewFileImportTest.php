@@ -12,3 +12,13 @@ it('imports saved views from a bounded JSON file', function (): void {
         ->toContain('applyImportedViews(await file.text())')
         ->toContain("copyStatus.textContent='Saved views JSON is too large'");
 });
+
+
+
+
+
+
+
+
+
+

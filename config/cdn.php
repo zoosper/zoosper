@@ -49,3 +49,11 @@ return [
         'path_prefix' => (string) env('CDN_STATIC_PATH_PREFIX', '/static'),
     ],
 ];
+
+
+
+
+
+
+
+

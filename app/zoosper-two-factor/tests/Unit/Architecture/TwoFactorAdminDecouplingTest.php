@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Zoosper\Admin\Audit\AuditLogger;
-use Zoosper\Admin\Audit\LoginHistoryRepository;
+use Zoosper\Audit\AuditLogger;
+use Zoosper\Audit\LoginHistoryRepository;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
-use Zoosper\Core\Audit\AuditLoggerInterface;
-use Zoosper\Core\Audit\LoginHistoryRecorderInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
+use Zoosper\Audit\Contract\LoginHistoryRecorderInterface;
 use Zoosper\TwoFactor\Controller\AdminTwoFactorChallengeController;
 use Zoosper\TwoFactor\Controller\AdminTwoFactorSetupController;
 use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
@@ -23,7 +23,7 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
  * File placement: app/zoosper-two-factor/tests/Unit/Architecture/TwoFactorAdminDecouplingTest.php
  * — 5 levels up to repo root, matching other per-module tests in this repo.
  */
-it('contains zero direct "use Zoosper\\Admin\\" imports anywhere in zoosper-two-factor/src', function (): void {
+it('contains zero direct "use Zoosper\Admin\" imports anywhere in zoosper-two-factor/src', function (): void {
     $basePath = dirname(__DIR__, 5);
     $srcPath = $basePath . '/app/zoosper-two-factor/src';
 
@@ -36,12 +36,12 @@ it('contains zero direct "use Zoosper\\Admin\\" imports anywhere in zoosper-two-
         }
 
         $contents = file_get_contents($file->getPathname());
-        if ($contents !== false && preg_match('/use\s+Zoosper\\\\Admin\\\\/', $contents) === 1) {
+        if ($contents !== false && preg_match('/use\s+Zoosper\Admin\/', $contents) === 1) {
             $offendingFiles[] = str_replace($basePath . '/', '', $file->getPathname());
         }
     }
 
-    expect($offendingFiles)->toBe([], 'Found direct Zoosper\\Admin\\ imports in: ' . implode(', ', $offendingFiles));
+    expect($offendingFiles)->toBe([], 'Found direct Zoosper\Admin\ imports in: ' . implode(', ', $offendingFiles));
 });
 
 it('confirms two-factor composer.json no longer requires zoosper/admin', function (): void {
@@ -99,3 +99,13 @@ it('confirms Admin\'s concrete classes correctly implement the new interfaces', 
     expect(is_subclass_of(LoginHistoryRepository::class, LoginHistoryRecorderInterface::class))->toBeTrue();
     expect(is_subclass_of(AdminLayout::class, AdminLayoutRendererInterface::class))->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

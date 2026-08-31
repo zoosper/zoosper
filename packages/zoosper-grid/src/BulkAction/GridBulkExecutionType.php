@@ -12,3 +12,14 @@ enum GridBulkExecutionType: string
     case SERVER_MUTATION = 'server_mutation';
     case REMOTE_MUTATION = 'remote_mutation';
 }
+
+
+
+
+
+
+
+
+
+
+

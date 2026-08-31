@@ -20,3 +20,13 @@ return [
     ['method' => 'GET', 'path' => '/admin/audit-log', 'controller' => AuditLogController::class, 'action' => 'index', 'permission' => 'role.manage'],
     ['method' => 'GET', 'path' => '/admin/login-history', 'controller' => LoginHistoryController::class, 'action' => 'index', 'permission' => 'role.manage'],
 ];
+
+
+
+
+
+
+
+
+
+

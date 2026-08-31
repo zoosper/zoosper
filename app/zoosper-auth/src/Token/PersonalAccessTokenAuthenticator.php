@@ -14,3 +14,13 @@ final readonly class PersonalAccessTokenAuthenticator
         $now=time();$this->tokens->touch($token->id,gmdate('Y-m-d H:i:s',$now),gmdate('Y-m-d H:i:s',$now-300));return new PersonalAccessTokenPrincipal($token,$user);
     }
 }
+
+
+
+
+
+
+
+
+
+

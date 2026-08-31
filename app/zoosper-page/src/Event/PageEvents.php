@@ -9,3 +9,13 @@ final readonly class PageEvents
     public const PUBLISHED = 'page.published';
     public const UNPUBLISHED = 'page.unpublished';
 }
+
+
+
+
+
+
+
+
+
+

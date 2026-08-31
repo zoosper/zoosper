@@ -43,3 +43,13 @@ final readonly class SectionSettingsWriter
         $this->store->writeMany($normalised, $scope, $scopeKey);
     }
 }
+
+
+
+
+
+
+
+
+
+

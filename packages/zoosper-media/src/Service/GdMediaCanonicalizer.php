@@ -25,3 +25,14 @@ final readonly class GdMediaCanonicalizer implements MediaCanonicalizerInterface
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+

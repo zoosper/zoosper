@@ -33,3 +33,14 @@ it('publishes Store Orders transport defaults through module settings aggregatio
         ->and($aggregated['store_orders']['request_timeout_ms'])->toBeInt()->toBeGreaterThan(0)
         ->and($aggregated['store_orders']['maximum_response_bytes'])->toBeInt()->toBeGreaterThan(0);
 });
+
+
+
+
+
+
+
+
+
+
+

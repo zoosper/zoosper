@@ -144,3 +144,13 @@ final readonly class AdminSectionBuilder
         return trim(strtolower((string) preg_replace('/[^a-z0-9]+/i', '-', trim($value))), '-');
     }
 }
+
+
+
+
+
+
+
+
+
+

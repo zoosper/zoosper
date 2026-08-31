@@ -41,3 +41,13 @@ it('publishes documented module-owned metadata and explicit service wiring', fun
         ->toContain('$services->get(AdminSectionBuilder::class)')
         ->and($readme)->toContain('config/admin_sections.php');
 });
+
+
+
+
+
+
+
+
+
+

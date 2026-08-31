@@ -31,3 +31,13 @@ it('uses only the module-discovered permission-filtered widget boundary', functi
         ->not->toContain('DashboardQuickLinks')
         ->not->toContain('/admin/users');
 });
+
+
+
+
+
+
+
+
+
+

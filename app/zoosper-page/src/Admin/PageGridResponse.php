@@ -32,3 +32,13 @@ final readonly class PageGridResponse
         return new self(303, ['Location' => $path], '');
     }
 }
+
+
+
+
+
+
+
+
+
+

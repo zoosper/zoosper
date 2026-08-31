@@ -23,3 +23,14 @@ it('forbids private upload-service reconstruction in media controllers', functio
             ->not->toContain('MediaUploadService $uploads = null');
     }
 });
+
+
+
+
+
+
+
+
+
+
+

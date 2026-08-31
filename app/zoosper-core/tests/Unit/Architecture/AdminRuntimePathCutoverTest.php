@@ -28,3 +28,13 @@ it('leaves API route declarations outside admin path expansion', function (): vo
     expect($routes)->toContain("\$configFile === 'admin_routes.php'")
         ->toContain("registerRoutesFromConfig(\$router, 'api_routes.php', [])");
 });
+
+
+
+
+
+
+
+
+
+

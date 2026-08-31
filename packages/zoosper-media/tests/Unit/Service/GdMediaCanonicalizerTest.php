@@ -13,3 +13,14 @@ it('preserves PNG transparency through canonical output',function():void{
  $source=tempnam(sys_get_temp_dir(),'media-png-');$destination=tempnam(sys_get_temp_dir(),'media-output-');$image=imagecreatetruecolor(2,2);imagealphablending($image,false);imagesavealpha($image,true);$transparent=imagecolorallocatealpha($image,0,0,0,127);imagefill($image,0,0,$transparent);imagepng($image,$source);unset($image);
  (new GdMediaCanonicalizer())->canonicalize($source,$destination,'png');expect(@getimagesize($destination)[2])->toBe(IMAGETYPE_PNG);@unlink($source);@unlink($destination);
 });
+
+
+
+
+
+
+
+
+
+
+

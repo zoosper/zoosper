@@ -14,3 +14,13 @@ final readonly class SiteApiController{
  private function site(Request $r):?Site{return$this->sites->findById((int)$r->routeParam('id','0'));}
  private function row(?Site $s):array{return$s===null?[]:['id'=>$s->id,'code'=>$s->code,'name'=>$s->name,'status'=>$s->status,'homepage_slug'=>$s->homepageSlug,'theme_code'=>$s->themeCode,'locale'=>$s->locale,'currency'=>$s->currency,'base_url'=>$s->baseUrl,'website_code'=>$s->websiteCode,'store_code'=>$s->storeCode,'store_view_code'=>$s->storeViewCode,'path_prefix'=>$s->pathPrefix];}
 }
+
+
+
+
+
+
+
+
+
+

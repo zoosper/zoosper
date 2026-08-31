@@ -20,3 +20,13 @@ test('explicit column state is validated against the complete definition', funct
         ->not->toContain('$known = $state->definition->allColumnKeys();')
         ->not->toContain('->apply($state->definition, $order)');
 });
+
+
+
+
+
+
+
+
+
+

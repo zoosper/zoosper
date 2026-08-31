@@ -95,3 +95,13 @@ it('requires the compatibility light and dark palettes', function (): void {
         removeAdminColourThemeFixture($base);
     }
 });
+
+
+
+
+
+
+
+
+
+

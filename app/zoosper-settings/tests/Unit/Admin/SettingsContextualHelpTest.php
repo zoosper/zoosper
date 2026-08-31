@@ -37,3 +37,13 @@ it('consolidates visible workspace feedback into one compact status line', funct
         ->toContain('id="settings-link-state" class="settings-hidden"')
         ->toContain('id="settings-url-state" class="settings-hidden"');
 });
+
+
+
+
+
+
+
+
+
+

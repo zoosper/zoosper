@@ -44,3 +44,13 @@ it('keeps module-qualified templates at the Marko view boundary', function (): v
         ->toContain('zoosper-menu::frontend/menu/navigation.latte')
         ->toContain('zoosper-menu::frontend/menu/breadcrumbs.latte');
 });
+
+
+
+
+
+
+
+
+
+

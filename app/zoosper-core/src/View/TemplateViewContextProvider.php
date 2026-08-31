@@ -96,3 +96,13 @@ final readonly class TemplateViewContextProvider
         return $path === '/' ? '/' : rtrim($path, '/');
     }
 }
+
+
+
+
+
+
+
+
+
+

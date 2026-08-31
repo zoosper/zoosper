@@ -20,3 +20,13 @@ it('keeps frontend and admin renderers on the same pluggable registry service', 
         ->and($services)->toContain("'theme.frontend_template_renderer'")
         ->toContain("'theme.admin_template_renderer'");
 });
+
+
+
+
+
+
+
+
+
+

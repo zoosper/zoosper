@@ -19,3 +19,14 @@ it('uses the application env helper only for Store Orders transport configuratio
         ->and($source)->not->toContain("env('STORE_ORDERS_KIOSK_WEBSITE_ID'")
         ->and($source)->not->toContain('getenv(');
 });
+
+
+
+
+
+
+
+
+
+
+

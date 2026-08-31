@@ -27,3 +27,13 @@ test('same-layer duplicate module identities fail loudly', function (): void {
     expect(fn (): array => (new ModuleRegistry(moduleConflictFixture()))->discoverModulesLive())
         ->toThrow(DuplicateModuleException::class, 'Duplicate module identity "shared-module"');
 });
+
+
+
+
+
+
+
+
+
+

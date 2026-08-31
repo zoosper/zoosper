@@ -13,3 +13,14 @@ it('avoids deprecated GD destruction and warning-prone missing-file unlink calls
         ->toContain('$this->unlinkIfPresent($privatePath)')
         ->toContain('$this->unlinkIfPresent($publicPath)');
 });
+
+
+
+
+
+
+
+
+
+
+

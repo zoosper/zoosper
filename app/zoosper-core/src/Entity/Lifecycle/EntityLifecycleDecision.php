@@ -41,3 +41,13 @@ final readonly class EntityLifecycleDecision
         return $this->blockers === [];
     }
 }
+
+
+
+
+
+
+
+
+
+

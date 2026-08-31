@@ -9,3 +9,13 @@ function menuLifecycleFixture(PDO $pdo):array{$rules=new class implements MenuIt
 it('makes a Menu inactive and restores it while frontend active lookup semantics remain valid',function(){ $pdo=menuLifecycleDb();[$repo,$menu,$life]=menuLifecycleFixture($pdo);$life->disable($menu,1,'a');expect($repo->find($menu->id)->status)->toBe('inactive');$life->restore($repo->find($menu->id),1,'a');expect($repo->find($menu->id)->status)->toBe('active');});
 it('blocks Menu deletion until inactive and empty',function(){ $pdo=menuLifecycleDb();[$repo,$menu,$life]=menuLifecycleFixture($pdo);expect($life->deletePermanently($menu,1,'a')->successful)->toBeFalse();$life->disable($menu,1,'a');$repo->saveItem(null,$menu->id,null,null,'Home','/','_self',0,'active');$blocked=$life->deletePermanently($repo->find($menu->id),1,'a');expect($blocked->successful)->toBeFalse()->and($blocked->blockers['menu_items'])->toBe(1);});
 it('deletes an inactive empty Menu transactionally',function(){ $pdo=menuLifecycleDb();[$repo,$menu,$life]=menuLifecycleFixture($pdo);$life->disable($menu,1,'a');expect($life->deletePermanently($repo->find($menu->id),1,'a')->successful)->toBeTrue()->and($repo->find($menu->id))->toBeNull();});
+
+
+
+
+
+
+
+
+
+

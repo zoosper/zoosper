@@ -117,3 +117,14 @@ it('enforces the declared maximum before execution', function (): void {
         ]),
     ))->toThrow(InvalidArgumentException::class, 'maximum');
 });
+
+
+
+
+
+
+
+
+
+
+

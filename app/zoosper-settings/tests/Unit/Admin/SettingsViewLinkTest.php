@@ -12,3 +12,13 @@ it('supports copying and clearing the current workspace target', function (): vo
         ->toContain("history.replaceState(null,'',location.pathname+location.search)")
         ->not->toContain('data-copy-setting-value');
 });
+
+
+
+
+
+
+
+
+
+

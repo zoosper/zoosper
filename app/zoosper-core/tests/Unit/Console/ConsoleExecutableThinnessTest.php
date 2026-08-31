@@ -9,3 +9,13 @@ it('keeps deploy verification before completion in its command owner', function 
  $source=(string)file_get_contents(dirname(__DIR__,5).'/app/zoosper-core/src/Console/BuiltIn/DeployCommand.php');
  expect(strpos($source,'Module manifest post-compile verification passed.'))->toBeLessThan(strpos($source,'== Deploy complete =='));
 });
+
+
+
+
+
+
+
+
+
+

@@ -20,3 +20,13 @@ final readonly class CompileCommand implements ConsoleCommandInterface
         return 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

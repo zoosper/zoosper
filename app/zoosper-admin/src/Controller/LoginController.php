@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Admin\Controller;
 
-use Zoosper\Admin\Audit\LoginHistoryRepository;
+use Zoosper\Audit\LoginHistoryRepository;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Service\AuthService;
@@ -172,3 +172,13 @@ HTML;
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 }
+
+
+
+
+
+
+
+
+
+

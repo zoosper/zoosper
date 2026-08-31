@@ -26,3 +26,13 @@ final readonly class MenuMutationGuard
     private function itemBelongs(int $menuId,int $itemId):bool{$s=$this->pdo->prepare('SELECT COUNT(*) FROM menu_items WHERE id=:item AND menu_id=:menu');$s->execute(['item'=>$itemId,'menu'=>$menuId]);return(int)$s->fetchColumn()===1;}
     private function publishedPageBelongs(int $pageId,int $siteId):bool{$s=$this->pdo->prepare("SELECT COUNT(*) FROM pages WHERE id=:page AND site_id=:site AND status='published'");$s->execute(['page'=>$pageId,'site'=>$siteId]);return(int)$s->fetchColumn()===1;}
 }
+
+
+
+
+
+
+
+
+
+

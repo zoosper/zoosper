@@ -9,3 +9,14 @@ interface ApiTransportInterface
     /** @throws ApiTransportException */
     public function send(ApiRequest $request, ApiReliabilityPolicy $policy): ApiResponse;
 }
+
+
+
+
+
+
+
+
+
+
+

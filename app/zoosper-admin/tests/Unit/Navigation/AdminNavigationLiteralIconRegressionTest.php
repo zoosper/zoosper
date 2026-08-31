@@ -80,3 +80,13 @@ it('renders a neutral safe fallback for empty and unknown identifiers', function
         ->toContain('data-admin-icon="third-party-icon"')
         ->toContain('<circle cx="12" cy="12" r="8"/>');
 });
+
+
+
+
+
+
+
+
+
+

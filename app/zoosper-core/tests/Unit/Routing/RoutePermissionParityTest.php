@@ -62,3 +62,13 @@ test('single-permission admin routes still normalise to one permission', functio
     expect($map)->toHaveKey('GET /admin/roles');
     expect($map['GET /admin/roles'])->toBe(['role.manage']);
 });
+
+
+
+
+
+
+
+
+
+

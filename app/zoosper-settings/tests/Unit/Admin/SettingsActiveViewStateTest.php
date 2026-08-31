@@ -12,3 +12,13 @@ it('summarises active search, source view and density without values', function 
         ->toContain("density.value!=='comfortable'?'Density: '")
         ->toContain(".filter(Boolean).join(' · ')");
 });
+
+
+
+
+
+
+
+
+
+

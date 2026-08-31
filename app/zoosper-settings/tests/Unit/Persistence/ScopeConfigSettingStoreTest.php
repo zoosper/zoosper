@@ -16,3 +16,13 @@ it('writes resolves and clears scoped values through one Settings boundary', fun
     $store->clear('mail.enabled', ScopeType::Website, 'main');
     expect($store->resolve('mail.enabled', new ScopeContext(websiteCode: 'main'))['resolvedScope'])->toBeNull();
 });
+
+
+
+
+
+
+
+
+
+

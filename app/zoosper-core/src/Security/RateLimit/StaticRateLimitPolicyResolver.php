@@ -23,3 +23,13 @@ final class StaticRateLimitPolicyResolver implements RateLimitPolicyResolverInte
         return RateLimitPolicy::enabled($this->rules[$key]);
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -22,3 +22,14 @@ final readonly class ApiResponse
         return $this->statusCode >= 200 && $this->statusCode < 300;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

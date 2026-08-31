@@ -16,3 +16,14 @@ enum ScopeType: string
     case Store = 'store';
     case Site = 'site';
 }
+
+
+
+
+
+
+
+
+
+
+

@@ -25,7 +25,7 @@ use Zoosper\AdminGrid\{AdminCollectionGrid,GridViewStateResolver};
  * updated below; no other change in this file).
  */
 
-use Zoosper\Admin\Audit\AuditLogger;
+use Zoosper\Audit\AuditLogger;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\Admin\Controller\RoleAdminController;
@@ -37,7 +37,7 @@ use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Auth\Repository\AdminUserRepository;
@@ -90,3 +90,13 @@ return [
         $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
     ),
 ];
+
+
+
+
+
+
+
+
+
+

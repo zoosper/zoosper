@@ -11,3 +11,13 @@ interface RateLimitPolicyResolverInterface
 {
     public function resolve(string $key): RateLimitPolicy;
 }
+
+
+
+
+
+
+
+
+
+

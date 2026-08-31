@@ -43,3 +43,13 @@ it('keeps both auth grids extensible through stable Grid keys', function (): voi
     expect((new AdminUserGridDefinition($registry))->build())->not->toBeNull()
         ->and((new RoleGridDefinition($registry))->build())->not->toBeNull();
 });
+
+
+
+
+
+
+
+
+
+

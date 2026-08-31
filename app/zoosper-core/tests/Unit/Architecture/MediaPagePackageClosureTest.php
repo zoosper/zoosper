@@ -34,9 +34,19 @@ it('keeps Media source free of concrete Admin imports', function (): void {
             continue;
         }
         $source = (string) file_get_contents($file->getPathname());
-        if (str_contains($source, 'use Zoosper\\Admin\\')) {
+        if (str_contains($source, 'use Zoosper\Admin\')) {
             $offenders[] = $file->getPathname();
         }
     }
     expect($offenders)->toBe([]);
 });
+
+
+
+
+
+
+
+
+
+

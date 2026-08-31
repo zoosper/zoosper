@@ -33,3 +33,13 @@ it('removes match decoration from print output', function (): void {
     $root=dirname(__DIR__,5);$view = settingsPresentationBundle($root);
     expect($view)->toContain('.settings-field:target,.settings-field.settings-match,.settings-field.settings-current-match{outline:none!important;background:transparent!important}');
 });
+
+
+
+
+
+
+
+
+
+

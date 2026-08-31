@@ -32,3 +32,13 @@ final readonly class ScopedSettingClearer
         throw new InvalidArgumentException("Unknown setting path for section '{$section->id}': {$path}");
     }
 }
+
+
+
+
+
+
+
+
+
+

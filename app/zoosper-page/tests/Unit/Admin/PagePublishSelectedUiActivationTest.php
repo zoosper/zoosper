@@ -19,3 +19,13 @@ it('posts selected Page identities through the protected endpoint', function ():
     expect($script)->toContain("add('selected_ids[]', identity)");
     expect($script)->toContain('window.confirm');
 });
+
+
+
+
+
+
+
+
+
+

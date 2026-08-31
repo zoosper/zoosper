@@ -27,3 +27,13 @@ it('never exposes secret values', function (): void {
         ->and($value->secret)->toBeTrue()
         ->and($value->readOnly)->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

@@ -27,3 +27,13 @@ it('wires Media library and Editor.js runtime URLs through the canonical generat
         ->and($services)->toContain("->url('media/editorjs/upload')")
         ->and($upload)->not->toContain('href="/admin/media"');
 });
+
+
+
+
+
+
+
+
+
+

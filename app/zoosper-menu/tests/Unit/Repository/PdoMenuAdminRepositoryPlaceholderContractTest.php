@@ -15,3 +15,13 @@ it('uses every named PDO placeholder only once per insert statement', function (
     preg_match_all("/'([a-z_]+)'\s*=>/", $source, $matches);
     expect($matches[1])->toContain('created_at')->toContain('updated_at');
 });
+
+
+
+
+
+
+
+
+
+

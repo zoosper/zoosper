@@ -88,3 +88,6 @@ file_put_contents($logPath, implode(PHP_EOL, $log) . PHP_EOL);
 
 echo implode(PHP_EOL, $log) . PHP_EOL;
 exit(0);
+
+
+

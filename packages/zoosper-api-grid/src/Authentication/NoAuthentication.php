@@ -13,3 +13,14 @@ final class NoAuthentication implements ApiAuthenticationInterface
         return $request;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

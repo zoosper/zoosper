@@ -34,3 +34,13 @@ it('rejects undeclared and locked paths', function (): void {
     expect(fn () => $clearer->clear($section, 'unknown.path', ScopeType::Default, null))->toThrow(\InvalidArgumentException::class)
         ->and(fn () => $clearer->clear($section, 'settings.locked', ScopeType::Default, null))->toThrow(SettingValidationException::class);
 });
+
+
+
+
+
+
+
+
+
+

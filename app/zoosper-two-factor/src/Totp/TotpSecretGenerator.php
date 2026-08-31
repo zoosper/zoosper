@@ -17,3 +17,13 @@ final readonly class TotpSecretGenerator
         return Base32::encode(random_bytes($bytes));
     }
 }
+
+
+
+
+
+
+
+
+
+

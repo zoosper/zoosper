@@ -6,7 +6,7 @@ namespace Zoosper\Auth\Lifecycle;
 
 use PDO;
 use Zoosper\Auth\Model\AdminUser;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 
 /** Guards permanent deletion of unassigned, non-system Admin roles. */
 final readonly class RoleLifecycleCoordinator
@@ -58,3 +58,13 @@ final readonly class RoleLifecycleCoordinator
         return (int) $statement->fetchColumn();
     }
 }
+
+
+
+
+
+
+
+
+
+

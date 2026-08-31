@@ -14,3 +14,6 @@ $bodyHtml = $renderedContent ?? $page->content;
     </header>
     <div class="page-content"><?= $bodyHtml ?></div>
 </article>
+
+
+

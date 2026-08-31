@@ -17,3 +17,13 @@ interface ScopedSettingStoreInterface
 
     public function clear(string $path, ScopeType $scopeType, ?string $scopeKey): void;
 }
+
+
+
+
+
+
+
+
+
+

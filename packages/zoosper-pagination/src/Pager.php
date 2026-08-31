@@ -39,3 +39,14 @@ final readonly class Pager
         return ($this->page - 1) * $this->pageSize;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

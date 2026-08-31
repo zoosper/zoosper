@@ -33,3 +33,13 @@ it('keeps the default theme conditional so an absent menu emits no empty landmar
         ->toContain("{if (\$breadcrumbsHtml ?? '') !== ''}")
         ->toContain('{$breadcrumbsHtml|noescape}');
 });
+
+
+
+
+
+
+
+
+
+

@@ -23,3 +23,14 @@ it('keeps mutation actions compact and responsive', function (): void {
         ->and($css)->toContain('grid-template-columns')
         ->and($css)->toContain('@media (max-width: 720px)');
 });
+
+
+
+
+
+
+
+
+
+
+

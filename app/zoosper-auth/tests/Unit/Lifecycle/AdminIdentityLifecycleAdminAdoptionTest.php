@@ -5,9 +5,9 @@ declare(strict_types=1);
 it('exposes identity lifecycle only through protected POST routes', function (): void {
     $routes = require dirname(__DIR__, 3) . '/config/admin_routes.php';
     $expected = [
-        '/admin/users/{id:\\d+}/disable' => 'user.manage',
-        '/admin/users/{id:\\d+}/restore' => 'user.manage',
-        '/admin/roles/{id:\\d+}/delete' => 'role.manage',
+        '/admin/users/{id:\d+}/disable' => 'user.manage',
+        '/admin/users/{id:\d+}/restore' => 'user.manage',
+        '/admin/roles/{id:\d+}/delete' => 'role.manage',
     ];
     foreach ($expected as $path => $permission) {
         $matches = array_values(array_filter($routes, static fn(array $route): bool => ($route['path'] ?? '') === $path));
@@ -28,3 +28,13 @@ it('keeps identity lifecycle persistence out of Auth controllers and presentatio
         ->and($userResponder)->toContain('_csrf_token')->not->toContain('onclick=')->not->toContain('confirm(')
         ->and($roleResponder)->toContain('_csrf_token')->not->toContain('onclick=')->not->toContain('confirm(');
 });
+
+
+
+
+
+
+
+
+
+

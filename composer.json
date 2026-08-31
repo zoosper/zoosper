@@ -17,10 +17,12 @@
         "zoosper/admin-grid": "dev-dev",
         "zoosper/api": "dev-dev",
         "zoosper/api-grid": "dev-dev",
+        "zoosper/audit": "dev-dev",
         "zoosper/auth": "dev-dev",
         "zoosper/cache": "dev-dev",
         "zoosper/config": "dev-dev",
         "zoosper/core": "dev-dev",
+        "zoosper/database": "dev-dev",
         "zoosper/editor": "dev-dev",
         "zoosper/errors": "dev-dev",
         "zoosper/global-announcements": "dev-dev",
@@ -60,8 +62,10 @@
             "Zoosper\\AdminGrid\\Tests\\": "packages/zoosper-admin-grid/tests/",
             "Zoosper\\Admin\\Tests\\": "app/zoosper-admin/tests/",
             "Zoosper\\ApiGrid\\Tests\\": "packages/zoosper-api-grid/tests/",
+            "Zoosper\\Audit\\Tests\\": "packages/zoosper-audit/tests/",
             "Zoosper\\Auth\\Tests\\": "app/zoosper-auth/tests/",
             "Zoosper\\Core\\Tests\\": "app/zoosper-core/tests/",
+            "Zoosper\\Database\\Tests\\": "packages/zoosper-database/tests/",
             "Zoosper\\Editor\\Tests\\": "app/zoosper-editor/tests/",
             "Zoosper\\Errors\\Tests\\": "packages/zoosper-errors/tests/",
             "Zoosper\\GlobalAnnouncements\\Tests\\": "app/zoosper-global-announcements/tests/",
@@ -109,6 +113,20 @@
         }
     },
     "repositories": [
+        {
+            "type": "path",
+            "url": "packages/zoosper-database",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/zoosper-audit",
+            "options": {
+                "symlink": true
+            }
+        },
         {
             "type": "path",
             "url": "packages/zoosper-admin-form",

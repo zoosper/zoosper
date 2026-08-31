@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Schema\SchemaLoader;
-use Zoosper\Core\Schema\SchemaRegistry;
-use Zoosper\Core\Schema\SchemaValidator;
+use Zoosper\Database\Schema\SchemaLoader;
+use Zoosper\Database\Schema\SchemaRegistry;
+use Zoosper\Database\Schema\SchemaValidator;
 
 it('declares the local and referenced columns required by the Page revision foreign key', function (): void {
     $root = dirname(__DIR__, 5);
@@ -35,3 +35,13 @@ it('validates the standalone Page declarative schema with the revision relations
     expect($validation->errors)->toBe([])
         ->and($validation->isValid())->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

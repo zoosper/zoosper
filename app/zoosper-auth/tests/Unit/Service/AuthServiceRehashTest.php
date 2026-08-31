@@ -111,3 +111,13 @@ it('does not rehash an inactive user even with the correct password', function (
     $unchangedHash = (string) $pdo->query("SELECT password_hash FROM admin_users WHERE email = 'dave@example.test'")->fetchColumn();
     expect($unchangedHash)->toBe($weakHash);
 });
+
+
+
+
+
+
+
+
+
+

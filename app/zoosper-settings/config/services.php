@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\ScopedConfig\ScopeConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
@@ -57,3 +57,13 @@ return [
         $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
     ),
 ];
+
+
+
+
+
+
+
+
+
+

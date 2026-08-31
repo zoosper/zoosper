@@ -29,3 +29,13 @@ it('rejects root reserved and malformed admin paths', function (string $path): v
         ConfigRepository::fromArray(['admin' => ['base_path' => $path]]),
     ))->toThrow(\InvalidArgumentException::class);
 })->with(['/', '/api', '/assets/admin', '/bad path', '/bad?path']);
+
+
+
+
+
+
+
+
+
+

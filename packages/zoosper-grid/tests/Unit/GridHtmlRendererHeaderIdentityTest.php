@@ -20,3 +20,14 @@ it('keeps header identity escaped and key driven', function (): void {
 
     expect($source)->toContain('$this->e($column->key)');
 });
+
+
+
+
+
+
+
+
+
+
+

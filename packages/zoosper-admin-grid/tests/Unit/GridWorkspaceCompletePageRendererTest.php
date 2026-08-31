@@ -43,3 +43,14 @@ test('pagination metadata rejects impossible page ranges', function (): void {
     expect(fn () => new \Zoosper\AdminGrid\GridWorkspacePagination(3, 2, 40))
         ->toThrow(\InvalidArgumentException::class, 'cannot exceed');
 });
+
+
+
+
+
+
+
+
+
+
+

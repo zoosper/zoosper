@@ -45,3 +45,13 @@ final readonly class PageReferenceInspector
         return (int) $statement->fetchColumn() > 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

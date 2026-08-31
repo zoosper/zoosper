@@ -21,3 +21,13 @@ it('keeps explicit JSON branches in both manifest command objects', function ():
     expect($status)->toContain("if (\$format === 'json')")
         ->and($check)->toContain("if (\$format === 'json')");
 });
+
+
+
+
+
+
+
+
+
+

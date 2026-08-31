@@ -21,3 +21,14 @@ return [
      */
     ['method' => 'POST', 'path' => '/admin/media/editorjs/upload', 'controller' => MediaEditorJsUploadController::class, 'action' => 'upload', 'permission' => ['media.manage', 'page.manage']],
 ];
+
+
+
+
+
+
+
+
+
+
+

@@ -39,3 +39,14 @@ test('local derivative writer creates directories and writes derivative bytes', 
     expect(is_file($path->absolutePath))->toBeTrue();
     expect(file_get_contents($path->absolutePath))->toBe('image-bytes');
 });
+
+
+
+
+
+
+
+
+
+
+

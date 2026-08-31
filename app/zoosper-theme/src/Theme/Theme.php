@@ -15,3 +15,13 @@ final readonly class Theme
         return rtrim($this->path, '/') . '/templates/' . ltrim($template, '/');
     }
 }
+
+
+
+
+
+
+
+
+
+

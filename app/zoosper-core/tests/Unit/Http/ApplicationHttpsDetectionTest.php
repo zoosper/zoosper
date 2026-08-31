@@ -67,3 +67,13 @@ it('detects https via the canonical 443 port', function (): void {
 
     expect(Application::requestIsHttps())->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

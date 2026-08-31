@@ -48,3 +48,13 @@ test('page renderer service injects media image sanitizer when available', funct
     expect($source)->toContain('new BlockJsonToHtmlRenderer(');
     expect($source)->toContain('$services->has(EditorJsImageBlockSanitizer::class)');
 });
+
+
+
+
+
+
+
+
+
+

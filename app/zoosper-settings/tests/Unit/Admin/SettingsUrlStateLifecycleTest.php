@@ -27,3 +27,13 @@ it('reapplies validated URL state during browser history navigation', function (
         ->not->toContain('id="settings-apply-url-state"')
         ->toContain("linkState.textContent='Applied workspace state from link'");
 });
+
+
+
+
+
+
+
+
+
+

@@ -10,3 +10,14 @@ interface GridWorkspaceAuditLoggerInterface
     /** @param array<string, mixed> $context */
     public function logAction(string $action, array $context = []): void;
 }
+
+
+
+
+
+
+
+
+
+
+

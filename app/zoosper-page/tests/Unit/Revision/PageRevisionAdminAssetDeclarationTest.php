@@ -41,3 +41,13 @@ it('keeps the registered public script present', function (): void {
     $root = dirname(__DIR__, 5);
     expect(is_file($root . '/public/assets/page/js/page-revision-pagination.js'))->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

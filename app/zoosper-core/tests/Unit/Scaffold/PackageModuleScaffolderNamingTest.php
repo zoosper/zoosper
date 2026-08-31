@@ -15,3 +15,13 @@ test('package module scaffolder preserves camel case boundaries in package names
     expect($result->packageName)->toBe('acme/movie-library');
     expect($result->packagePath)->toEndWith('/packages/acme-movie-library');
 });
+
+
+
+
+
+
+
+
+
+

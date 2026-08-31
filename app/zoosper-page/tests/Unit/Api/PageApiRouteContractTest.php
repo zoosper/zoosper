@@ -9,3 +9,13 @@ it('declares stateless Page list and detail reads', function (): void {
         ->and($map['GET /api/v1/pages']['stateless'])->toBeTrue()
         ->and($map['GET /api/v1/pages/{id:\d+}']['stateless'])->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

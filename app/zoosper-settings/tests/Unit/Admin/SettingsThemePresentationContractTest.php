@@ -55,3 +55,13 @@ it('keeps normal Settings toolbar controls aligned', function (): void {
     expect($css)->toContain('.settings-toolbar :is(button,.button,select,.settings-more-actions>summary){min-height:2.5rem')
         ->toContain('.settings-more-actions>summary{display:inline-flex;justify-content:center;white-space:nowrap}');
 });
+
+
+
+
+
+
+
+
+
+

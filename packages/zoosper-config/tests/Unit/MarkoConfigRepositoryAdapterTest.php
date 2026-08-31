@@ -47,3 +47,14 @@ it('all() and withScope() fail loudly rather than silently returning wrong data'
     expect(fn () => $adapter->all())->toThrow(ConfigException::class);
     expect(fn () => $adapter->withScope('anything'))->toThrow(ConfigException::class);
 });
+
+
+
+
+
+
+
+
+
+
+

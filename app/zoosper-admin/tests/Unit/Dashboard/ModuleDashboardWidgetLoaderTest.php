@@ -76,3 +76,13 @@ it('rejects malformed declarations and duplicate widget codes without breaking h
     $result = (new ModuleDashboardWidgetLoader(new ModuleRegistry($root), $services))->forUser(dashboardTestUser(['reports.view']));
     expect($result->widgets)->toBe([])->and($result->failureCount)->toBe(2);
 });
+
+
+
+
+
+
+
+
+
+

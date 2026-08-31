@@ -13,3 +13,13 @@ interface EventDispatcherInterface
     /** @return list<callable|EventListenerInterface> */
     public function listeners(string $eventName): array;
 }
+
+
+
+
+
+
+
+
+
+

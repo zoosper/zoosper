@@ -8,7 +8,7 @@ use RuntimeException;
 use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Auth\Token\PersonalAccessTokenPrincipal;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -235,3 +235,13 @@ final readonly class RoleApiController
         return $p;
     }
 }
+
+
+
+
+
+
+
+
+
+

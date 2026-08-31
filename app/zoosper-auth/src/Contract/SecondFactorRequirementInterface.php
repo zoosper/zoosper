@@ -6,3 +6,13 @@ interface SecondFactorRequirementInterface
 {
     public function requiresSecondFactor(int $adminUserId): bool;
 }
+
+
+
+
+
+
+
+
+
+

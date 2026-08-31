@@ -24,3 +24,13 @@ it('creates editor configuration for Default and explicit scopes', function (): 
         ->and($factory->forScope(new ScopeContext(siteId: 42))->preferred())->toBe('textarea')
         ->and($factory->forScope(new ScopeContext(siteId: 42))->fallback())->toBe('textarea');
 });
+
+
+
+
+
+
+
+
+
+

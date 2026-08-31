@@ -39,3 +39,13 @@ final readonly class ConsoleOutput
         $this->error($message . PHP_EOL);
     }
 }
+
+
+
+
+
+
+
+
+
+

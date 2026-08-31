@@ -12,3 +12,13 @@ it('pins views locally and sorts pinned names first', function (): void {
         ->toContain('Number(pinned.includes(b))-Number(pinned.includes(a))')
         ->toContain("copyStatus.textContent=(next.includes(name)?'Pinned ':'Unpinned ')+name");
 });
+
+
+
+
+
+
+
+
+
+

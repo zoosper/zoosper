@@ -23,3 +23,14 @@ test('local copy media processor signature matches media processor interface', f
 test('local copy processor keeps a transitional storage path helper for package smoke tools', function () {
     expect(method_exists(LocalCopyMediaProcessor::class, 'processStoragePath'))->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+
+

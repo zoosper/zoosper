@@ -29,3 +29,13 @@ it('publishes the environment-owned session timeout as read-only security metada
         ->and($security[0]['settings'][8]['path'])->toBe('rate_limit.admin_two_factor.max_attempts')
         ->and($security[0]['settings'][9]['path'])->toBe('rate_limit.admin_two_factor.window_seconds');
 });
+
+
+
+
+
+
+
+
+
+

@@ -118,3 +118,13 @@ $secret = (string) ($_SESSION['pending_2fa_secret'] ?? '');
         return $user;
     }
 }
+
+
+
+
+
+
+
+
+
+

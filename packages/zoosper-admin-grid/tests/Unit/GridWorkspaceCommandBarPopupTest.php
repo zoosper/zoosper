@@ -36,3 +36,14 @@ it('publishes the current workspace-bound popup asset', function (): void {
         ->and($assets['assets']['zoosper-admin-grid-command-bar-script']['path'])
         ->toBe('/asset/zoosper-admin-grid/js/grid-workspace-command-bar.js?v=7g1');
 });
+
+
+
+
+
+
+
+
+
+
+

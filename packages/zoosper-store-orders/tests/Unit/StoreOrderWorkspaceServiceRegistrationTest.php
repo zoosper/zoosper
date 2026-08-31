@@ -16,3 +16,14 @@ it('registers the workspace as a service rather than a controller', function ():
         ->and($controllers)->toHaveKey(StoreOrderAdminController::class)
         ->and($controllers)->not->toHaveKey(StoreOrderGridWorkspace::class);
 });
+
+
+
+
+
+
+
+
+
+
+

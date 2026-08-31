@@ -126,3 +126,13 @@ it('omits HSTS entirely when disabled even on HTTPS', function (): void {
 
     expect($headers)->not->toHaveKey('Strict-Transport-Security');
 });
+
+
+
+
+
+
+
+
+
+

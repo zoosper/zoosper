@@ -19,3 +19,13 @@ it('creates immutable Mail configuration for explicit and Default scopes', funct
     expect($factory->forDefaultScope()->fromName())->toBe('Default Sender')
         ->and($factory->forScope(new ScopeContext(siteId: 42))->fromName())->toBe('Site Sender');
 });
+
+
+
+
+
+
+
+
+
+

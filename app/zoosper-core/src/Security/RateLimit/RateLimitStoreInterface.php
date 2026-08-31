@@ -16,3 +16,13 @@ interface RateLimitStoreInterface
 
     public function reset(RateLimitRule $rule, string $identityHash): void;
 }
+
+
+
+
+
+
+
+
+
+

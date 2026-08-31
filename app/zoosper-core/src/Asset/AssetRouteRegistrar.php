@@ -73,3 +73,13 @@ final class AssetRouteRegistrar
         $router->map('HEAD', self::ROUTE_PATTERN, $handler);
     }
 }
+
+
+
+
+
+
+
+
+
+

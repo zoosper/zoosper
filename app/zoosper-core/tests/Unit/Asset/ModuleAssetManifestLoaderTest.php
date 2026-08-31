@@ -64,3 +64,13 @@ it('treats an empty manifest as a no-op', function (): void {
     expect($registered)->toBe([])
         ->and($registry->all())->toBe([]);
 });
+
+
+
+
+
+
+
+
+
+

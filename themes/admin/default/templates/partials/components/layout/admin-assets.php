@@ -19,3 +19,6 @@
 <?php foreach (($scripts ?? []) as $asset): ?>
     <script src="<?= $e($asset->path) ?>"<?= $asset->defer ? ' defer' : '' ?>></script>
 <?php endforeach; ?>
+
+
+

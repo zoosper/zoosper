@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Grid;
 
 use Zoosper\AdminGrid\GridWorkspaceAuditLoggerInterface;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 
 /** Bridges the Admin Grid package contract to Zoosper's existing audit logger. */
 final readonly class AdminGridAuditLoggerBridge implements GridWorkspaceAuditLoggerInterface
@@ -19,3 +19,13 @@ final readonly class AdminGridAuditLoggerBridge implements GridWorkspaceAuditLog
         $this->audit->logAction($action, $context);
     }
 }
+
+
+
+
+
+
+
+
+
+

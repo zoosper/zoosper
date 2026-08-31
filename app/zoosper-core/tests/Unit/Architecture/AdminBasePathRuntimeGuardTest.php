@@ -16,3 +16,13 @@ it('keeps canonical admin URL expansion deterministic and request independent', 
         ->not->toContain('$_SESSION')
         ->not->toContain('getenv(');
 });
+
+
+
+
+
+
+
+
+
+

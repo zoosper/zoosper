@@ -138,3 +138,13 @@ it('orders enabled modules by sort_order then name, unaffected by caching', func
         removeDirRecursive($base);
     }
 });
+
+
+
+
+
+
+
+
+
+

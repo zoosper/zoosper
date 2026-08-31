@@ -24,3 +24,13 @@ it('keeps Mail secrets redacted and excludes password controls', function (): vo
         ->toContain('$effective->secret')
         ->not->toContain('type="password"');
 });
+
+
+
+
+
+
+
+
+
+

@@ -77,3 +77,14 @@ test('query URL rejects external paths and never emits identity selectors', func
     expect(fn (): string => $query->url('https://example.invalid', queryState()))
         ->toThrow(\InvalidArgumentException::class, 'application-local');
 });
+
+
+
+
+
+
+
+
+
+
+

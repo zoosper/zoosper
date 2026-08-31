@@ -25,3 +25,13 @@ it('keeps CI commands available locally through Composer', function (): void {
     $composer = json_decode((string) file_get_contents($root . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
     expect($composer['scripts'])->toHaveKeys(['test', 'compile', 'gate:strict', 'analyse', 'ci:js']);
 });
+
+
+
+
+
+
+
+
+
+

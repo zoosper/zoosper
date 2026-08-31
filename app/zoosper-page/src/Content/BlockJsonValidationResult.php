@@ -25,3 +25,13 @@ final readonly class BlockJsonValidationResult
         return new self(false, $errors);
     }
 }
+
+
+
+
+
+
+
+
+
+

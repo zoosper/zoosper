@@ -12,3 +12,13 @@ it('keeps Page publication orchestration in the Page module', function (): void 
     expect($executor)->not->toContain('$_SESSION');
     expect($executor)->not->toContain('header(');
 });
+
+
+
+
+
+
+
+
+
+

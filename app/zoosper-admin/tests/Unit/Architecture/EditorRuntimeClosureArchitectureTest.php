@@ -34,3 +34,13 @@ it('keeps Media optional at the editor adapter boundary', function (): void {
         ->and($editor)->toContain('private ?EditorJsImageToolConfig $imageToolConfig = null')
         ->toContain('private ?CsrfTokenManager $csrf = null');
 });
+
+
+
+
+
+
+
+
+
+

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Theme\Admin\Controller\ThemeAdminController;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
@@ -32,3 +32,13 @@ return [
         $services->get(AdminUrlGenerator::class),
     ),
 ];
+
+
+
+
+
+
+
+
+
+

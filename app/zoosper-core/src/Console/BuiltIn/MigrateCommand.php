@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Zoosper\Core\Console\BuiltIn;
 use Zoosper\Core\Console\ConsoleCommandInterface;
 use Zoosper\Core\Console\ConsoleOutput;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 final readonly class MigrateCommand implements ConsoleCommandInterface
 {
     public function __construct(private Migrator $migrator) {}
@@ -16,3 +16,13 @@ final readonly class MigrateCommand implements ConsoleCommandInterface
         return 0;
     }
 }
+
+
+
+
+
+
+
+
+
+

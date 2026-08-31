@@ -24,3 +24,13 @@ final readonly class BasicHtmlSanitizer implements HtmlSanitizerInterface
         return new SanitizedHtml($clean);
     }
 }
+
+
+
+
+
+
+
+
+
+

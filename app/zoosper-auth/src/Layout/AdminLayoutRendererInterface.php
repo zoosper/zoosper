@@ -33,3 +33,13 @@ interface AdminLayoutRendererInterface
 {
     public function render(string $title, string $content, ?AdminUser $user, string $active = 'dashboard'): string;
 }
+
+
+
+
+
+
+
+
+
+

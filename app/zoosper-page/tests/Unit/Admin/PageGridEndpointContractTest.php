@@ -22,5 +22,15 @@ test('complete page build requires authenticated identity and CSRF value object'
     expect($parameters[0]->getName())->toBe('authenticatedAdminUserId');
     expect((string) $parameters[0]->getType())->toBe('int');
     expect($parameters[2]->getName())->toBe('csrf');
-    expect((string) $parameters[2]->getType())->toBe('Zoosper\\AdminGrid\\GridWorkspaceCsrf');
+    expect((string) $parameters[2]->getType())->toBe('Zoosper\AdminGrid\GridWorkspaceCsrf');
 });
+
+
+
+
+
+
+
+
+
+

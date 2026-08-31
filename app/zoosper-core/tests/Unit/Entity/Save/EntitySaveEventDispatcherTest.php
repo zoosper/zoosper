@@ -108,3 +108,13 @@ test('an object listener implementing the interface is invoked', function () {
     // Assert
     expect($listener->handled)->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

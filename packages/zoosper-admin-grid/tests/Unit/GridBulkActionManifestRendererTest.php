@@ -15,6 +15,17 @@ it('renders an inert escaped JSON bulk-action manifest', function (): void {
     $html = (new GridBulkActionManifestRenderer())->render($manifest);
     expect($html)->toContain('type="application/json"')
         ->toContain('data-grid-bulk-action-manifest')
-        ->toContain('\\u003Cselected\\u003E')
+        ->toContain('\u003Cselected\u003E')
         ->not->toContain('<selected>');
 });
+
+
+
+
+
+
+
+
+
+
+

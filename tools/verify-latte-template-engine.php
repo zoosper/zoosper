@@ -48,3 +48,6 @@ try {
 
 print "\nResult: " . ($failed ? 'FAIL' : 'OK') . PHP_EOL;
 exit($failed ? 2 : 0);
+
+
+

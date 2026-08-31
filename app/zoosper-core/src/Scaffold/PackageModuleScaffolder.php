@@ -52,11 +52,11 @@ final readonly class PackageModuleScaffolder
     private function normaliseIdentity(string $input): array
     {
         $input = trim($input);
-        if ($input === '' || !preg_match('~^[A-Za-z][A-Za-z0-9]*(?:[\\/_-][A-Za-z][A-Za-z0-9]*)+$~', $input)) {
+        if ($input === '' || !preg_match('~^[A-Za-z][A-Za-z0-9]*(?:[\/_-][A-Za-z][A-Za-z0-9]*)+$~', $input)) {
             throw new RuntimeException('Package module name must look like Vendor/Module, Vendor_Module or vendor/module.');
         }
 
-        $parts = preg_split('~[\\/_-]+~', $input) ?: [];
+        $parts = preg_split('~[\/_-]+~', $input) ?: [];
         if (count($parts) < 2) {
             throw new RuntimeException('Package module name must include vendor and module parts.');
         }
@@ -106,7 +106,7 @@ final readonly class PackageModuleScaffolder
     private function files(array $identity): array
     {
         $namespace = $identity['namespace'];
-        $namespaceEscaped = str_replace('\\', '\\\\', $namespace);
+        $namespaceEscaped = str_replace('\\', '\\', $namespace);
         $packageName = $identity['package_name'];
         $moduleName = $identity['module_name'];
         $classPrefix = $identity['class_prefix'];
@@ -134,7 +134,7 @@ final readonly class PackageModuleScaffolder
     },
     "autoload-dev": {
         "psr-4": {
-            "{$namespaceEscaped}Tests\\\\": "tests/"
+            "{$namespaceEscaped}Tests\": "tests/"
         }
     }
 }
@@ -266,4 +266,14 @@ YML,
         ];
     }
 }
+
+
+
+
+
+
+
+
+
+
 

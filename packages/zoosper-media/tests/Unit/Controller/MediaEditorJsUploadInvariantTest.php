@@ -91,3 +91,14 @@ it('the guard-clause logic added to the controller correctly rejects a forced-im
     expect(fn () => $performInvariantCheck($result))
         ->toThrow(RuntimeException::class, 'MediaUploadServiceResult reported success but $stored is null');
 });
+
+
+
+
+
+
+
+
+
+
+

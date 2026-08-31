@@ -20,3 +20,13 @@ final readonly class ConsoleCommandScaffoldResult
     ) {
     }
 }
+
+
+
+
+
+
+
+
+
+

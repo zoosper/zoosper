@@ -11,7 +11,7 @@ use Zoosper\AdminGrid\BulkAction\GridBulkHostBindings;
 use Zoosper\AdminGrid\BulkAction\GridBulkHttpRequest;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Event\EventDispatcherInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -71,3 +71,13 @@ final readonly class PageBulkActionController
         }
     }
 }
+
+
+
+
+
+
+
+
+
+

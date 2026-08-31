@@ -69,3 +69,13 @@ it('rejects invalid query and result states', function (): void {
             nextCursor: 'invalid',
         ))->toThrow(InvalidArgumentException::class);
 });
+
+
+
+
+
+
+
+
+
+

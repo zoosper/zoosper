@@ -37,3 +37,14 @@ final readonly class GridWorkspaceStatusDecorator
             . substr($workspaceHtml, $insertAt);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

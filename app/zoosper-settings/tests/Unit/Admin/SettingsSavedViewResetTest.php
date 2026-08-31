@@ -11,3 +11,13 @@ it('restores the selected view and clears a stale field fragment', function (): 
         ->toContain("copyStatus.textContent='Restored saved workspace view '")
         ->toContain('restoreView.addEventListener');
 });
+
+
+
+
+
+
+
+
+
+

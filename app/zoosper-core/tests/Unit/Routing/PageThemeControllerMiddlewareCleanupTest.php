@@ -88,3 +88,13 @@ test('page and theme admin forms still generate csrf tokens for middleware valid
     expect($pageController)->toContain('$this->csrf->token()');
     expect($themeController)->toContain('$this->csrf->token()');
 });
+
+
+
+
+
+
+
+
+
+

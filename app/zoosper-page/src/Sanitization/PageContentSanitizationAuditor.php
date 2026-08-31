@@ -157,3 +157,13 @@ final readonly class PageContentSanitizationAuditor
         return $patterns;
     }
 }
+
+
+
+
+
+
+
+
+
+

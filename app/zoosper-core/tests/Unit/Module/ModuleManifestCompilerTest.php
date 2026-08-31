@@ -153,3 +153,13 @@ it('clear() is safe to call even when nothing has been compiled yet', function (
 
     exec('rm -rf ' . escapeshellarg($tmp));
 });
+
+
+
+
+
+
+
+
+
+

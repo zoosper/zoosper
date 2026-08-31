@@ -43,7 +43,7 @@ test('module admin routes may declare constrained path parameters and still run 
     mkdir($root . '/app/acme-test/config', 0775, true);
 
     file_put_contents($root . '/app/acme-test/module.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn ['name' => 'Acme_Test', 'enabled' => true];\n");
-    file_put_contents($root . '/app/acme-test/config/admin_routes.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn [[\n    'method' => 'GET',\n    'path' => '/admin/examples/{id:\\\\d+}',\n    'controller' => \\" . RouteParameterTestController::class . "::class,\n    'action' => 'show',\n    'permission' => 'example.manage',\n]];\n");
+    file_put_contents($root . '/app/acme-test/config/admin_routes.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn [[\n    'method' => 'GET',\n    'path' => '/admin/examples/{id:\d+}',\n    'controller' => \" . RouteParameterTestController::class . "::class,\n    'action' => 'show',\n    'permission' => 'example.manage',\n]];\n");
 
     RouteParameterTestController::$capturedId = null;
     RouteParameterRecordingMiddleware::$ran = false;
@@ -55,6 +55,16 @@ test('module admin routes may declare constrained path parameters and still run 
     $router->dispatch(new Request('GET', '/admin/examples/42'));
 
     expect(RouteParameterRecordingMiddleware::$ran)->toBeTrue();
-    expect(RouteParameterRecordingMiddleware::$contextPath)->toBe('/admin/examples/{id:\\d+}');
+    expect(RouteParameterRecordingMiddleware::$contextPath)->toBe('/admin/examples/{id:\d+}');
     expect(RouteParameterTestController::$capturedId)->toBe('42');
 });
+
+
+
+
+
+
+
+
+
+

@@ -58,3 +58,13 @@ final readonly class RateLimitRuntimeConfig
         return $this->enabled && $this->mode === 'enforce';
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -21,3 +21,13 @@ function pageLifecycleFixture(PDO $pdo,string $status='published'): array { $pag
 it('archives with a safety revision and restores archived pages to draft',function(){ $pdo=pageLifecycleDb();[$page,$life,$revisions]=pageLifecycleFixture($pdo);$archived=$life->archive($page,9,'admin@example.test');expect($archived->successful)->toBeTrue()->and($revisions->forPage($page->id))->toHaveCount(1);$stored=(new PageRepository($pdo))->findById($page->id);expect($stored->status)->toBe('archived');$restored=$life->restore($stored,9,'admin@example.test');expect($restored->successful)->toBeTrue()->and((new PageRepository($pdo))->findById($page->id)->status)->toBe('draft')->and($revisions->forPage($page->id))->toHaveCount(2); });
 it('blocks permanent deletion until archived and unreferenced',function(){ $pdo=pageLifecycleDb();[$page,$life]=pageLifecycleFixture($pdo,'draft');expect($life->deletePermanently($page,9,'a')->successful)->toBeFalse();$life->archive($page,9,'a');$archived=(new PageRepository($pdo))->findById($page->id);$pdo->exec("INSERT INTO menu_items(id,page_id) VALUES(1,{$page->id})");$blocked=$life->deletePermanently($archived,9,'a');expect($blocked->successful)->toBeFalse()->and($blocked->blockers['menu_items'])->toBe(1); });
 it('deletes an archived unreferenced page and all revisions transactionally',function(){ $pdo=pageLifecycleDb();[$page,$life,$revisions]=pageLifecycleFixture($pdo);$life->archive($page,9,'a');$archived=(new PageRepository($pdo))->findById($page->id);expect($life->deletePermanently($archived,9,'a')->successful)->toBeTrue()->and((new PageRepository($pdo))->findById($page->id))->toBeNull()->and($revisions->forPage($page->id))->toBe([]); });
+
+
+
+
+
+
+
+
+
+

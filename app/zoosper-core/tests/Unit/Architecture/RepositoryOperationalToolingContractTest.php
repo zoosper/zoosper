@@ -33,3 +33,13 @@ test('Composer owns the canonical Pest entry points', function (): void {
     expect($scripts['test:feature'] ?? null)->toBe('@php pest --testsuite=Feature');
     expect($scripts['test:coverage'] ?? null)->toBe('@php pest --coverage --min=60');
 });
+
+
+
+
+
+
+
+
+
+

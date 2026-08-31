@@ -38,3 +38,13 @@ final readonly class MenuAdminService {
  }
  private function status(array $f): string{return ($f['status']??'active')==='inactive'?'inactive':'active';} private function id(mixed $v): ?int{$i=(int)$v;return $i>0?$i:null;}
 }
+
+
+
+
+
+
+
+
+
+

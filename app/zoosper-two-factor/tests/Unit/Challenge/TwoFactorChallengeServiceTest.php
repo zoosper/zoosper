@@ -189,3 +189,13 @@ it('deleteExpired removes consumed and expired rows', function (): void {
     $remaining = (int) $pdo->query('SELECT COUNT(*) FROM admin_two_factor_challenges')->fetchColumn();
     expect($remaining)->toBe(1);
 });
+
+
+
+
+
+
+
+
+
+

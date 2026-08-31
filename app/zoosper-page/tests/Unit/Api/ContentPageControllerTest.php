@@ -116,3 +116,13 @@ it('returns structured Editor.js JSON and content format for published pages', f
         ->and($data['data']['page']['content_json']['blocks'][0]['data']['text'])->toBe('Welcome')
         ->and($data['data']['page']['content'])->toBe('<p>Welcome</p>');
 });
+
+
+
+
+
+
+
+
+
+

@@ -20,7 +20,7 @@ function legacyLocalModuleBoundaryFixture(): string
         json_encode([
             'name' => 'lowes/auspost',
             'type' => 'library',
-            'autoload' => ['psr-4' => ['Lowes\\Auspost\\' => 'src/']],
+            'autoload' => ['psr-4' => ['Lowes\Auspost\' => 'src/']],
         ], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT),
     );
     file_put_contents(
@@ -60,3 +60,13 @@ test('first-party architecture scope uses direct package homes only', function (
     expect($manifests)->toBe([$root . '/app/acme-blog/composer.json']);
     expect($manifests)->not->toContain($root . '/app/code/Lowes/Auspost/composer.json');
 });
+
+
+
+
+
+
+
+
+
+

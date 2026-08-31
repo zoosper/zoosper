@@ -22,3 +22,13 @@ final readonly class ModuleDefinition
         return $this->path . '/config/' . ltrim($file, '/');
     }
 }
+
+
+
+
+
+
+
+
+
+

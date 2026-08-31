@@ -22,3 +22,14 @@ final readonly class GridBulkPermissionChecker implements GridBulkPermissionChec
         return $permission !== '' && (bool) ($this->checker)($permission);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

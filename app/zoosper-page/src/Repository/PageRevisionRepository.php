@@ -70,3 +70,13 @@ final readonly class PageRevisionRepository
         return new PageRevision((int)$row['id'],(int)$row['page_id'],(string)$row['title'],(string)($row['slug']??''),(string)$row['content'],(string)($row['status']??'draft'),(string)($row['content_format']??'html'),isset($row['content_json'])?(string)$row['content_json']:null,isset($row['meta_title'])?(string)$row['meta_title']:null,isset($row['meta_description'])?(string)$row['meta_description']:null,isset($row['meta_keywords'])?(string)$row['meta_keywords']:null,isset($row['canonical_url'])?(string)$row['canonical_url']:null,isset($row['created_by'])?(int)$row['created_by']:null,(string)$row['created_at']);
     }
 }
+
+
+
+
+
+
+
+
+
+

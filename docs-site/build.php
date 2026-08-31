@@ -252,3 +252,6 @@ foreach ($iterator as $file) {
 if ($errors !== []) { throw new RuntimeException("Broken internal links:\n" . implode("\n", $errors)); }
 
 printf("Built %d documentation pages into %s\n", count($known), $outputRoot);
+
+
+

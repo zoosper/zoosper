@@ -15,3 +15,13 @@ it('keeps Settings application services behind the scoped persistence contract',
             ->not->toContain('private PDO ');
     }
 });
+
+
+
+
+
+
+
+
+
+

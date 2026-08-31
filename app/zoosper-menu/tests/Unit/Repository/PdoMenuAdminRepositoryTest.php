@@ -19,3 +19,13 @@ it('updates a Menu item with exactly the update placeholders',function(){
  $row=$pdo->query('SELECT * FROM menu_items WHERE id=1')->fetch(PDO::FETCH_ASSOC);
  expect($row['label'])->toBe('Home')->and((int)$row['page_id'])->toBe(4)->and($row['url'])->toBeNull()->and((int)$row['position'])->toBe(0);
 });
+
+
+
+
+
+
+
+
+
+

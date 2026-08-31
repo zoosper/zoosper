@@ -130,3 +130,13 @@ it('clears per-request memoized user state on reset', function (): void {
     // Re-queried result after reset
     expect($guard->user()->name)->toBe('Updated Admin');
 });
+
+
+
+
+
+
+
+
+
+

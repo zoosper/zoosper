@@ -31,6 +31,14 @@ it('returns CSV through Response raw with attachment headers', function (): void
         expect($source)->not->toBeFalse()
             ->and($source)->toContain('Response::raw')
             ->and($source)->toContain('->headers()')
-            ->and($source)->toContain('\\xEF\\xBB\\xBF');
+            ->and($source)->toContain('\xEF\xBB\xBF');
     }
 });
+
+
+
+
+
+
+
+

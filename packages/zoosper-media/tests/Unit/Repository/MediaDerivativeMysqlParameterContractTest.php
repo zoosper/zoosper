@@ -12,3 +12,14 @@ it('uses one distinct bound parameter for every derivative insert placeholder', 
         ->toContain("'updated_at'=>\$now")
         ->not->toContain(':now, :now');
 });
+
+
+
+
+
+
+
+
+
+
+

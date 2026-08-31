@@ -119,3 +119,13 @@ it('encodes url path segments safely', function (): void {
 
     expect($url)->toBe('/asset/mod/css/with%20space.css');
 });
+
+
+
+
+
+
+
+
+
+

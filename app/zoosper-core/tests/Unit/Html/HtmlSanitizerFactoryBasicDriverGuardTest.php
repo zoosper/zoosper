@@ -65,3 +65,13 @@ it('still throws for a genuinely unsupported driver, unrelated to the basic-driv
     expect(fn () => $factory->create())
         ->toThrow(ZoosperException::class, 'Unsupported HTML sanitizer driver: not-a-real-driver');
 });
+
+
+
+
+
+
+
+
+
+

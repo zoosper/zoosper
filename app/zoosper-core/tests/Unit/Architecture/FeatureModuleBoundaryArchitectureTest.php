@@ -33,24 +33,24 @@ it('enforces isolation boundaries for decoupled infrastructure and utility modul
 
     $boundaryRules = [
         'app/zoosper-site/src' => [
-            'Zoosper\\Page\\',
-            'Zoosper\\Media\\',
-            'Zoosper\\Theme\\',
-            'Zoosper\\TwoFactor\\',
-            'Zoosper\\Mail\\',
+            'Zoosper\Page\',
+            'Zoosper\Media\',
+            'Zoosper\Theme\',
+            'Zoosper\TwoFactor\',
+            'Zoosper\Mail\',
         ],
         'app/zoosper-mail/src' => [
-            'Zoosper\\Page\\',
-            'Zoosper\\Media\\',
-            'Zoosper\\Theme\\',
-            'Zoosper\\TwoFactor\\',
-            'Zoosper\\Site\\',
+            'Zoosper\Page\',
+            'Zoosper\Media\',
+            'Zoosper\Theme\',
+            'Zoosper\TwoFactor\',
+            'Zoosper\Site\',
         ],
         'app/zoosper-two-factor/src' => [
-            'Zoosper\\Page\\',
-            'Zoosper\\Media\\',
-            'Zoosper\\Theme\\',
-            'Zoosper\\Site\\',
+            'Zoosper\Page\',
+            'Zoosper\Media\',
+            'Zoosper\Theme\',
+            'Zoosper\Site\',
         ],
     ];
 
@@ -77,3 +77,13 @@ it('enforces isolation boundaries for decoupled infrastructure and utility modul
         "Feature modules must maintain boundary isolation. Detected violations:\n- " . implode("\n- ", $violations)
     );
 });
+
+
+
+
+
+
+
+
+
+

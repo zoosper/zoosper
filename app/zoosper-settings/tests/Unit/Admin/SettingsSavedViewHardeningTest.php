@@ -29,3 +29,13 @@ it('supports rename and value-free JSON export', function (): void {
         ->toContain("copyStatus.textContent='Copied saved views JSON'")
         ->not->toContain('data-copy-setting-value');
 });
+
+
+
+
+
+
+
+
+
+

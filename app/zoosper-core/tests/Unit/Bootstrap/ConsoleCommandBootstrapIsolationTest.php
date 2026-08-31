@@ -13,3 +13,13 @@ it('keeps console command discovery on the canonical environment bootstrap', fun
         ->not->toContain("if (!function_exists('env'))")
         ->not->toContain('function env(string $key');
 });
+
+
+
+
+
+
+
+
+
+

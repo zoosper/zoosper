@@ -11,3 +11,13 @@ enum EntityLifecycleOperation: string
     case Disable = 'disable';
     case Delete = 'delete';
 }
+
+
+
+
+
+
+
+
+
+

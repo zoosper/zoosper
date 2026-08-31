@@ -9,3 +9,13 @@ it('ships a reusable executable-JavaScript extractor', function (): void {
         ->toContain("No executable JavaScript blocks found")
         ->toContain('file_put_contents($argv[2]');
 });
+
+
+
+
+
+
+
+
+
+

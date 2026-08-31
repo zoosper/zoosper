@@ -90,3 +90,13 @@ final readonly class SiteGrid implements GridDataSourceInterface
         return new PaginationResult($s->fetchAll(PDO::FETCH_ASSOC) ?: [], (int)$n->fetchColumn(), $c->pager->page, $c->pager->pageSize);
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -36,3 +36,13 @@ test('Composer package identity overrides conflicting module metadata', function
     expect($modules[0]->name)->toBe('acme-content');
     expect($modules[0]->version)->toBe('0.4.0');
 });
+
+
+
+
+
+
+
+
+
+

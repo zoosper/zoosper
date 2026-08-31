@@ -18,3 +18,13 @@ final readonly class AdminComponentRenderer
         return $this->templates->render('components/' . ltrim($component, '/'), $data, 'default', 'admin.component');
     }
 }
+
+
+
+
+
+
+
+
+
+

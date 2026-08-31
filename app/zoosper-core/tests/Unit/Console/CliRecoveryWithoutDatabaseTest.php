@@ -62,3 +62,13 @@ it('uses shared layered configuration and keeps PDO lazy until requested', funct
         ->toContain('PdoConnectionProvider $connection')
         ->toContain('static fn (): PDO => $connection->get()');
 });
+
+
+
+
+
+
+
+
+
+

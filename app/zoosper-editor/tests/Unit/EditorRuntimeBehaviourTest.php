@@ -46,3 +46,13 @@ it('selects a module-registered custom editor code without changing the registry
     expect($registry->preferred('custom-blocks', 'textarea'))->toBe($custom)
         ->and($custom->render('content', ''))->toBe('custom:content');
 });
+
+
+
+
+
+
+
+
+
+

@@ -30,3 +30,14 @@ final readonly class GridDataSourceCapabilities
         return in_array($field, $this->filterableFields, true);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

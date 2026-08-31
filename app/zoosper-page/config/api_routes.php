@@ -20,3 +20,13 @@ return [
     ['method' => 'POST', 'path' => '/api/v1/pages/{id:\d+}/revisions/{revisionId:\d+}/restore', 'controller' => PageApiController::class, 'action' => 'restoreRevision', 'public' => true, 'stateless' => true],
     ['method' => 'GET', 'path' => '/api/v1/content/page', 'controller' => ContentPageController::class, 'action' => 'show', 'public' => true, 'stateless' => true],
 ];
+
+
+
+
+
+
+
+
+
+

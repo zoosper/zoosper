@@ -38,3 +38,14 @@ final readonly class MediaProcessingResult
         return new self(false, [], $errors, false);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

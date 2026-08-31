@@ -38,3 +38,14 @@ it('rejects invalid request scope before transport', function (): void {
         ['store_code' => 'bad', 'kiosk_website_id' => 55],
     ))->toThrow(InvalidArgumentException::class);
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -20,3 +20,13 @@ it('preserves the public variadic registry and late extension replacement', func
     expect($registry->get('textarea'))->toBe($replacement)
         ->and($registry->preferred('missing', 'textarea'))->toBe($replacement);
 });
+
+
+
+
+
+
+
+
+
+

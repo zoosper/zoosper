@@ -88,3 +88,13 @@ final class EntityDataObject
         return $this->extensionData[$module] ?? [];
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -11,3 +11,13 @@ interface EntitySaveEventDispatcherInterface
 {
     public function dispatch(string $eventName, EntitySaveContext $context): EntitySaveContext;
 }
+
+
+
+
+
+
+
+
+
+

@@ -50,3 +50,13 @@ it('rejects a role default write for a missing role', function (): void {
 
     expect(fn () => $repository->saveForRole(999, [], []))->toThrow(RuntimeException::class, 'Dashboard role does not exist.');
 });
+
+
+
+
+
+
+
+
+
+

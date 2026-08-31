@@ -15,3 +15,13 @@ interface AdminAuthenticationRateLimiterInterface
 
     public function resetTwoFactor(int $adminUserId, ?string $clientIp): void;
 }
+
+
+
+
+
+
+
+
+
+

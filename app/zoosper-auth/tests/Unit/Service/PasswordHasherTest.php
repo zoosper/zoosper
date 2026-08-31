@@ -32,3 +32,13 @@ it('hash() output can always be verified by verify()', function (): void {
     expect($hasher->verify('CorrectHorseBattery1', $hash))->toBeTrue()
         ->and($hasher->verify('WrongPassword', $hash))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

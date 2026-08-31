@@ -53,3 +53,13 @@ final readonly class AuthenticationMiddleware implements RouteMiddleware
         return Response::redirect($this->loginPath);
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -27,3 +27,14 @@ test('workspace enhancement supports drag and explicit keyboard-operable movemen
         ->toContain("[data-column-move]")
         ->toContain('syncOrderInputs');
 });
+
+
+
+
+
+
+
+
+
+
+

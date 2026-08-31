@@ -39,3 +39,13 @@ final readonly class TranslationCatalogue
         return $this->messages;
     }
 }
+
+
+
+
+
+
+
+
+
+

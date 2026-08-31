@@ -11,3 +11,13 @@ interface EntityLifecyclePolicyInterface
 
     public function decide(EntityLifecycleSubject $subject, EntityLifecycleOperation $operation): EntityLifecycleDecision;
 }
+
+
+
+
+
+
+
+
+
+

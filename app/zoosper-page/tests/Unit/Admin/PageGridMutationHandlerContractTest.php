@@ -16,3 +16,13 @@ test('Pages mutation handler requires explicit authenticated admin identity', fu
     expect($parameters[1]->getName())->toBe('action');
     expect((string) $parameters[1]->getType())->toBe('string');
 });
+
+
+
+
+
+
+
+
+
+

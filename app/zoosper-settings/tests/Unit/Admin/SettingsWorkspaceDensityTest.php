@@ -35,3 +35,13 @@ it('provides a print view without settings mutation controls', function (): void
         ->toContain('.settings-icon-button,.settings-actions,.settings-copy-status,.settings-edit-control{display:none!important}')
         ->toContain('.settings-print-header{display:flex!important;');
 });
+
+
+
+
+
+
+
+
+
+

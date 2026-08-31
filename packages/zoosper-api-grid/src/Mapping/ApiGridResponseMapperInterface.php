@@ -12,3 +12,14 @@ interface ApiGridResponseMapperInterface
 {
     public function map(ApiResponse $response, GridQuery $query): GridResult;
 }
+
+
+
+
+
+
+
+
+
+
+

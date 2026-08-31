@@ -24,9 +24,9 @@ use Zoosper\Core\Console\BuiltIn\ReleaseCheckCommand;
 use Zoosper\Core\Console\BuiltIn\VersionCommand;
 use Zoosper\Core\Console\BuiltIn\SchemaForeignKeyApplyCommand;
 use Zoosper\Core\Console\BuiltIn\SchemaForeignKeyStatusCommand;
-use Zoosper\Core\Schema\SchemaForeignKeyReconciliationService;
-use Zoosper\Core\Schema\SchemaLoader;
-use Zoosper\Core\Schema\SchemaSnapshotRepository;
+use Zoosper\Database\Schema\SchemaForeignKeyReconciliationService;
+use Zoosper\Database\Schema\SchemaLoader;
+use Zoosper\Database\Schema\SchemaSnapshotRepository;
 use Zoosper\Core\Release\ReleaseCheck;
 use Zoosper\Core\Console\BuiltIn\DeployCommand;
 use Zoosper\Core\Console\BuiltIn\MakeConsoleCommand;
@@ -35,9 +35,9 @@ use Zoosper\Core\Console\BuiltIn\MakePackageModuleCommand;
 use Zoosper\Core\Console\ModuleConsoleCommandLoader;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
-use Zoosper\Core\Database\ConnectionFactory;
-use Zoosper\Core\Database\Migrator;
-use Zoosper\Core\Database\PdoConnectionProvider;
+use Zoosper\Database\ConnectionFactory;
+use Zoosper\Database\Migrator;
+use Zoosper\Database\PdoConnectionProvider;
 use Zoosper\Errors\ConsoleExceptionFormatter;
 use Zoosper\Core\Error\ErrorHandler;
 use Zoosper\Logger\Manager\LogManager;
@@ -201,3 +201,4 @@ function loadModuleCommands(
         return [];
     }
 }
+

@@ -23,3 +23,13 @@ it('uses an Auth-owned fail-closed contract with a Two Factor implementation', f
     expect($default)->toContain('return true;')
         ->and($provider)->toContain('return !$this->enrollment->requiresEnrollment($adminUserId);');
 });
+
+
+
+
+
+
+
+
+
+

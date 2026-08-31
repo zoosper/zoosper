@@ -108,3 +108,13 @@ it('audits existing secrets and passes when all are strong', function (): void {
         @rmdir($tempDir);
     }
 });
+
+
+
+
+
+
+
+
+
+

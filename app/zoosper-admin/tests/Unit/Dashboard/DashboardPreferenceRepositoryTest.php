@@ -39,3 +39,13 @@ it('clears only the requested user and treats malformed stored state as defaults
     expect($repository->findForUser(10))->toBeNull()
         ->and($repository->findForUser(11))->toBeNull();
 });
+
+
+
+
+
+
+
+
+
+

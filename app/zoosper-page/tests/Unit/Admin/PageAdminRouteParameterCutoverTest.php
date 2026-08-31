@@ -17,3 +17,13 @@ it('keeps the legacy query identifier available during compatibility cutover', f
     expect($request->routeParam('id'))->toBeNull()
         ->and($request->query('id'))->toBe('42');
 });
+
+
+
+
+
+
+
+
+
+

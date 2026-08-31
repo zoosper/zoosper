@@ -26,3 +26,13 @@ final readonly class AdminSection implements AdminSectionInterface
     /** @return list<MenuItemInterface> */
     public function getMenuItems(): array { return $this->items; }
 }
+
+
+
+
+
+
+
+
+
+

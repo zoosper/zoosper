@@ -15,3 +15,13 @@ it('uses one unique named PDO placeholder per bound value occurrence', function 
         ->not->toContain('last_used_at=:now,updated_at=:now')
         ->not->toContain('revoked_at=:now,updated_at=:now');
 });
+
+
+
+
+
+
+
+
+
+

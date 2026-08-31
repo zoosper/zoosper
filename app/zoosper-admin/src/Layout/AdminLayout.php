@@ -142,3 +142,13 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
         return rtrim($basePath, '/') . '/' . ltrim($path, '/');
     }
 }
+
+
+
+
+
+
+
+
+
+

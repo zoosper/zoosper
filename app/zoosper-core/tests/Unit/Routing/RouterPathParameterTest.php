@@ -59,7 +59,7 @@ test('inline route parameter constraints accept matching values', function () {
     $router = new Router();
     $captured = null;
 
-    $router->get('/admin/pages/edit/{id:\\d+}', function (Request $request) use (&$captured): Response {
+    $router->get('/admin/pages/edit/{id:\d+}', function (Request $request) use (&$captured): Response {
         $captured = $request->routeParam('id');
         return Response::html('ok');
     });
@@ -74,7 +74,7 @@ test('inline route parameter constraints reject non matching values', function (
     $matched = false;
     $fallback = false;
 
-    $router->get('/admin/pages/edit/{id:\\d+}', function () use (&$matched): Response {
+    $router->get('/admin/pages/edit/{id:\d+}', function () use (&$matched): Response {
         $matched = true;
         return Response::html('matched');
     });
@@ -129,3 +129,13 @@ test('invalid parameter segments are rejected when routes are registered', funct
     expect(fn () => $router->get('/admin/pages/{bad-name}', static fn (): Response => Response::html('bad')))
         ->toThrow(InvalidArgumentException::class);
 });
+
+
+
+
+
+
+
+
+
+

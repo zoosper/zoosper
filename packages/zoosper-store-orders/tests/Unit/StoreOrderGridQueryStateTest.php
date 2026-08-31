@@ -60,3 +60,14 @@ it('makes the controller pass normalised query state into the workspace', functi
         ->and($source)->toContain('queryState: $queryState')
         ->and($source)->not->toContain('queryState: $values');
 });
+
+
+
+
+
+
+
+
+
+
+

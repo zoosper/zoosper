@@ -34,3 +34,13 @@ it('keeps section and scope authority on the server', function (): void {
         ->toContain('$effective->source === \'project\'')
         ->not->toContain('$_POST');
 });
+
+
+
+
+
+
+
+
+
+

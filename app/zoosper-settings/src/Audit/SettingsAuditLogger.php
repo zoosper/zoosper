@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Settings\Audit;
 
 use Throwable;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Settings\Definition\SettingsSection;
 
 /** Best-effort, value-free audit events for successful settings mutations. */
@@ -80,3 +80,13 @@ final readonly class SettingsAuditLogger
         }
     }
 }
+
+
+
+
+
+
+
+
+
+

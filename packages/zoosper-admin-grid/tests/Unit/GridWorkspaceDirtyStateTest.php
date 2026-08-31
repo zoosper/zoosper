@@ -79,3 +79,14 @@ test('default workspace without a saved view is not presented as dirty', functio
 
     expect($dirty->isDirty(dirtyStateFixture(), null))->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+
+

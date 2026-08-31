@@ -13,3 +13,13 @@ interface FrontendNavigationContributorInterface
     /** @return array{navigationHtml:string,breadcrumbsHtml:string} */
     public function contribute(SiteContext $siteContext, Request $request): array;
 }
+
+
+
+
+
+
+
+
+
+

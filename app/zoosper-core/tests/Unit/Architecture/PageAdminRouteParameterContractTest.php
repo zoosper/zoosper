@@ -9,7 +9,7 @@ it('makes constrained Page path routes canonical while preserving legacy compati
     $grid = (string) file_get_contents($root . '/app/zoosper-page/src/Admin/PageGridDefinition.php');
 
     foreach (['edit', 'preview', 'publish', 'unpublish'] as $action) {
-        expect($routes)->toContain('/admin/pages/{id:\\d+}/' . $action);
+        expect($routes)->toContain('/admin/pages/{id:\d+}/' . $action);
     }
     expect($routes)->toContain("'/admin/pages/edit'")
         ->toContain("'/admin/pages/preview'")
@@ -17,3 +17,13 @@ it('makes constrained Page path routes canonical while preserving legacy compati
         ->and($grid)->toContain("'pages/' . \$id . '/edit'")
         ->toContain("'pages/' . \$id . '/preview'");
 });
+
+
+
+
+
+
+
+
+
+

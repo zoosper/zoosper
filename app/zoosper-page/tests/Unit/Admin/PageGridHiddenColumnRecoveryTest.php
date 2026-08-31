@@ -17,3 +17,13 @@ test('hidden columns remain available in the Columns chooser for recovery', func
         ->toContain("'state' => \$state")
         ->toContain("'html' => \$this->renderer->render(\$workspaceState, \$this->action())");
 });
+
+
+
+
+
+
+
+
+
+

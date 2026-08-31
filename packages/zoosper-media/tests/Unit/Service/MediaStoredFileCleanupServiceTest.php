@@ -47,3 +47,14 @@ test('cleanup service maps public media URLs to public media files', function ()
     expect($service->candidatePaths('/media/2026/07/example.png'))
         ->toBe([$root . '/public/media/2026/07/example.png']);
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -69,3 +69,13 @@ it('cuts the live AdminLayout over from flat items to Marko sections', function 
         ->toContain('AdminNavigationRenderer::class')
         ->toContain('$services->get(AdminNavigationRenderer::class)');
 });
+
+
+
+
+
+
+
+
+
+

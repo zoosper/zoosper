@@ -25,3 +25,14 @@ interface DashboardRolePreferenceRepositoryInterface
 
     public function clearForRole(int $roleId): void;
 }
+
+
+
+
+
+
+
+
+
+
+

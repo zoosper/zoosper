@@ -15,3 +15,13 @@ it('renders Admin templates through the menu module namespace', function (): voi
     expect($root . '/resources/views/admin/menu/index.latte')->toBeFile()
         ->and($root . '/resources/views/admin/menu/edit.latte')->toBeFile();
 });
+
+
+
+
+
+
+
+
+
+

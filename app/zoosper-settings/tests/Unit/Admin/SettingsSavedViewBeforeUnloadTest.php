@@ -11,3 +11,13 @@ it('warns before leaving the page with dirty settings forms', function (): void 
         ->toContain("event.returnValue=''" )
         ->toContain("form.dataset.dirty='false'");
 });
+
+
+
+
+
+
+
+
+
+

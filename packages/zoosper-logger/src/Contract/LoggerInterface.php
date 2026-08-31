@@ -14,3 +14,14 @@ interface LoggerInterface
     public function debug(string $message, array $context = []): void;
     public function exception(Throwable $exception, array $context = []): void;
 }
+
+
+
+
+
+
+
+
+
+
+

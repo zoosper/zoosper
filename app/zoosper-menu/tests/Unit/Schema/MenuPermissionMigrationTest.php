@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Module\ModuleRegistry;
 
 it('seeds menu management permission for default content roles', function (): void {
@@ -23,3 +23,13 @@ it('seeds menu management permission for default content roles', function (): vo
 
     expect($statement->fetchAll(PDO::FETCH_COLUMN))->toBe(['content_admin', 'super_admin']);
 });
+
+
+
+
+
+
+
+
+
+

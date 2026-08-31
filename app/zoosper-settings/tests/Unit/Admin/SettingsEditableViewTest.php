@@ -11,3 +11,13 @@ it('provides an editable-only view from server-authoritative metadata', function
         ->toContain("source==='editable'?field.dataset.settingEditable==='true'")
         ->not->toContain('data-setting-value');
 });
+
+
+
+
+
+
+
+
+
+

@@ -18,3 +18,13 @@ final readonly class PersonalAccessTokenRepository
     /** @return list<PersonalAccessToken> */ public function allForUser(int $userId):array{$s=$this->pdo->prepare('SELECT * FROM personal_access_tokens WHERE admin_user_id=:id ORDER BY id DESC');$s->execute(['id'=>$userId]);return array_map(fn(array $r)=>$this->hydrate($r),$s->fetchAll(PDO::FETCH_ASSOC));}
     /** @param array<string,mixed> $r */ private function hydrate(array $r):PersonalAccessToken{$scopes=json_decode((string)$r['scopes_json'],true,512,JSON_THROW_ON_ERROR);return new PersonalAccessToken((int)$r['id'],(string)$r['public_id'],(int)$r['admin_user_id'],(string)$r['name'],(string)$r['token_hash'],array_values(array_filter($scopes,'is_string')),$r['expires_at']!==null?(string)$r['expires_at']:null,$r['last_used_at']!==null?(string)$r['last_used_at']:null,$r['revoked_at']!==null?(string)$r['revoked_at']:null,(string)$r['created_at']);}
 }
+
+
+
+
+
+
+
+
+
+

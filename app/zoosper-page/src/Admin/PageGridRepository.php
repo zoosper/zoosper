@@ -50,3 +50,13 @@ final readonly class PageGridRepository
     private function bind(\PDOStatement $statement,array $params):void
     {foreach($params as $name=>$value){$statement->bindValue(':'.$name,$value,is_int($value)?PDO::PARAM_INT:PDO::PARAM_STR);}}
 }
+
+
+
+
+
+
+
+
+
+

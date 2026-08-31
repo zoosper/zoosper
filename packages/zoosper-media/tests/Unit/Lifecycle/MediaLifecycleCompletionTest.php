@@ -96,3 +96,14 @@ it('wires guarded Admin feedback and mandatory runtime inspectors', function ():
         ->and($services)->toContain('derivatives: $services->get(MediaDerivativeRepository::class)')->toContain('references: $services->get(MediaReferenceInspector::class)')
         ->and($coordinator)->not->toContain('$this->references?->')->not->toContain('$this->derivatives?->');
 });
+
+
+
+
+
+
+
+
+
+
+

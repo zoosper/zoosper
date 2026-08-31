@@ -39,3 +39,13 @@ it('paginates projected Role rows', function (): void {
     expect($result->total)->toBe(1)
         ->and($result->items)->toBe([[ 'id' => 2, 'label' => 'Content Admin', 'code' => 'content_admin' ]]);
 });
+
+
+
+
+
+
+
+
+
+

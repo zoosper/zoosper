@@ -10,3 +10,13 @@ return [
     AdminAnnouncementRepository::class => static fn (ServiceContainer $services): AdminAnnouncementRepository => new AdminAnnouncementRepository($services->get(\PDO::class)),
     AdminAnnouncementProviderInterface::class => static fn (ServiceContainer $services): AdminAnnouncementProviderInterface => $services->get(AdminAnnouncementRepository::class),
 ];
+
+
+
+
+
+
+
+
+
+

@@ -24,3 +24,13 @@ it('resolves Settings composition collaborators instead of constructing them in 
         ->not->toContain('new SettingsScopeSelection(')
         ->not->toContain('new SettingsAdminUrls(');
 });
+
+
+
+
+
+
+
+
+
+

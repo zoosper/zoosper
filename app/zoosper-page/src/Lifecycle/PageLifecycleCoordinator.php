@@ -7,7 +7,7 @@ namespace Zoosper\Page\Lifecycle;
 use PDO;
 use RuntimeException;
 use Throwable;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Repository\PageRevisionRepository;
@@ -79,3 +79,13 @@ final readonly class PageLifecycleCoordinator
         ]);
     }
 }
+
+
+
+
+
+
+
+
+
+

@@ -15,3 +15,13 @@ test('Page presentation requires host-provided CSRF field and token', function (
     expect($parameters[3]->getName())->toBe('csrfToken');
     expect((string) $parameters[3]->getType())->toBe('string');
 });
+
+
+
+
+
+
+
+
+
+

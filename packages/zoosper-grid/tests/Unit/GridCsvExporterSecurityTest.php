@@ -97,3 +97,14 @@ test('CSV export neutralises a contributed column label', function (): void {
     expect($rows[0][0])->toBe("'=WEBSERVICE(\"https://example.invalid\")");
     expect($rows[1][0])->toBe('safe');
 });
+
+
+
+
+
+
+
+
+
+
+

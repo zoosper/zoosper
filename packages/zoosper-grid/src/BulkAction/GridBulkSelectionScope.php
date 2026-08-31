@@ -11,3 +11,14 @@ enum GridBulkSelectionScope: string
     case EXPLICIT_IDENTITIES = 'explicit_identities';
     case ALL_MATCHING = 'all_matching';
 }
+
+
+
+
+
+
+
+
+
+
+

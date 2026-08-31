@@ -12,7 +12,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\PasswordHasher;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Media\Controller\MediaAdminController;
@@ -239,3 +239,14 @@ it('still redirects to the media library on a successful upload', function (): v
     unlink($tmpFile);
     mediaUploadErrorTestEndSession();
 });
+
+
+
+
+
+
+
+
+
+
+

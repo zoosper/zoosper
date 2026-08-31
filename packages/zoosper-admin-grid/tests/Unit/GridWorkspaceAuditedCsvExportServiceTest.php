@@ -42,3 +42,14 @@ test('completed export records authenticated identity and bounded result', funct
     expect($auditor->recorded->filters)->toBe(['status' => 'published']);
     expect($auditor->recorded->visibleColumns)->toBe(['title']);
 });
+
+
+
+
+
+
+
+
+
+
+

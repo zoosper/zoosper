@@ -8,7 +8,7 @@ use Zoosper\Core\Bootstrap\ApplicationFactory;
 use Zoosper\AdminGrid\GridFeatureAcceptance;
 use Zoosper\Page\Admin\PageAdminGridResponder;
 use Zoosper\Core\Testing\TestCase;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Http\Request;
 use Zoosper\Auth\Model\AdminUser;
@@ -84,3 +84,13 @@ class AdminPageGridAcceptanceTest extends TestCase
         );
     }
 }
+
+
+
+
+
+
+
+
+
+

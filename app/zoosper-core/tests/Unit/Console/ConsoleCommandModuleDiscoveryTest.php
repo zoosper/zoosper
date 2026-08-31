@@ -7,7 +7,7 @@ use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Console\ModuleConsoleCommandLoader;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
-use Zoosper\Core\Database\Migrator;
+use Zoosper\Database\Migrator;
 use Zoosper\Core\Error\ErrorHandler;
 use Zoosper\Logger\Manager\LogManager;
 use Zoosper\Core\Module\ModuleRegistry;
@@ -69,3 +69,13 @@ it('discovers admin:create, site:create and page:create as module-owned console 
     expect($commands)->toHaveKey('site:create');
     expect($commands)->toHaveKey('page:create');
 });
+
+
+
+
+
+
+
+
+
+

@@ -17,3 +17,13 @@ it('keeps the admin 2FA reset confirmation compatible with enforcing CSP', funct
         ->toContain('window.confirm(message)')
         ->toContain('event.preventDefault()');
 });
+
+
+
+
+
+
+
+
+
+

@@ -75,3 +75,13 @@ test('dashboard still generates csrf token data for admin templates', function (
 
     expect($source)->toContain('$this->csrf->token()');
 });
+
+
+
+
+
+
+
+
+
+

@@ -30,9 +30,19 @@ it('moves Page form presentation out of the controller and removes Page runtime 
         ->not->toContain('private function renderContentEditor(')
         ->not->toContain('private function siteOptions(')
         ->not->toContain('private function defaultPageFormSectionRegistry(')
-        ->not->toContain('use Zoosper\\Admin\\Form\\AdminFormConfigAggregator;')
+        ->not->toContain('use Zoosper\Admin\Form\AdminFormConfigAggregator;')
         ->not->toContain('new AdminFormConfigAggregator(')
         ->and($pageSource)->not->toContain('$_GET')
         ->and($factory)->not->toContain('legacyFormRenderer: new PageAdminFormRenderer(')
         ->toContain('formRenderer: $services->has(AdminFormRenderer::class) ? $services->get(AdminFormRenderer::class) : null');
 });
+
+
+
+
+
+
+
+
+
+

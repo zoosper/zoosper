@@ -17,3 +17,13 @@ it('expires the browser session cookie with the active cookie policy before dest
         ->toContain("'httponly' => \$params['httponly']")
         ->toContain("'samesite' => \$params['samesite'] ?? 'Lax'");
 });
+
+
+
+
+
+
+
+
+
+

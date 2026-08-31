@@ -31,3 +31,14 @@ final readonly class GridDefinition
     public function withVisibleColumnKeys(array $visibleKeys): self { $filtered=array_values(array_filter($this->columns, static fn(GridColumn $c): bool => !$c->toggleable || in_array($c->key,$visibleKeys,true))); if($filtered===[]){$filtered=$this->columns;} return new self($this->title,$filtered,$this->filters,$this->defaultSort,$this->defaultSortDir,$this->emptyMessage); }
 }
 
+
+
+
+
+
+
+
+
+
+
+

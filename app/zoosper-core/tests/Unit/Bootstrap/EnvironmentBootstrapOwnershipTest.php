@@ -32,3 +32,13 @@ test('shared tool bootstrap returns the repository root', function (): void {
     expect($returnedPath)->toBe($basePath);
     expect(function_exists('env'))->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

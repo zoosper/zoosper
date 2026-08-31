@@ -12,7 +12,7 @@ it('filters the live admin menu through the Marko permission contract', function
     $source = (string) file_get_contents($reflection->getFileName());
 
     expect($returnDoc)->toContain('list<MenuItemInterface>')
-        ->and($source)->toContain('use Marko\\Admin\\Contracts\\MenuItemInterface;')
+        ->and($source)->toContain('use Marko\Admin\Contracts\MenuItemInterface;')
         ->toContain('static function (MenuItemInterface $item)')
         ->toContain('$item->getPermission()')
         ->not->toContain('$item->isAllowed(')
@@ -46,3 +46,13 @@ it('keeps loading and presentation compatibility outside the filtering boundary'
         ->toContain('parent:')
         ->toContain('AdminPathCollectionTransformer');
 });
+
+
+
+
+
+
+
+
+
+

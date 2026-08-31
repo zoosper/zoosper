@@ -20,3 +20,6 @@ $bodyHtml = $renderedContent ?? $page->content ?? '';
         <?= $bodyHtml ?>
     </div>
 </article>
+
+
+

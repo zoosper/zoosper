@@ -49,3 +49,13 @@ it('rejects an empty code without touching the store', function (): void {
     $unused = (int) $pdo->query('SELECT COUNT(*) FROM admin_user_recovery_codes WHERE used_at IS NULL')->fetchColumn();
     expect($unused)->toBe(1);
 });
+
+
+
+
+
+
+
+
+
+

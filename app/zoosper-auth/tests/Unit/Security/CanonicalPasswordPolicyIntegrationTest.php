@@ -11,8 +11,8 @@ it('uses one canonical configured PasswordPolicy across HTTP and admin:create', 
 
     expect($root . '/src/Service/PasswordPolicy.php')->not->toBeFile()
         ->and($root . '/src/Security/PasswordPolicy.php')->toBeFile()
-        ->and($services)->toContain('use Zoosper\\Auth\\Security\\PasswordPolicy;')
-        ->not->toContain('use Zoosper\\Auth\\Service\\PasswordPolicy;')
+        ->and($services)->toContain('use Zoosper\Auth\Security\PasswordPolicy;')
+        ->not->toContain('use Zoosper\Auth\Service\PasswordPolicy;')
         ->toContain('minCharacterClasses:')
         ->and($controllers)->toContain('passwordPolicy: $services->get(PasswordPolicy::class)')
         ->and($userController)->toContain('$policy->violations($password)')
@@ -29,3 +29,13 @@ it('keeps automatic password rehash in the established authentication runtime', 
         ->toContain('$this->users->updatePassword(')
         ->and($hasher)->toContain('password_needs_rehash($hash, PASSWORD_DEFAULT)');
 });
+
+
+
+
+
+
+
+
+
+

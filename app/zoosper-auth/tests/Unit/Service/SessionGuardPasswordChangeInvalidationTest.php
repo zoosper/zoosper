@@ -108,3 +108,13 @@ it('preserves authenticated session when password fingerprint is refreshed', fun
     expect($guard->user())->not->toBeNull()
         ->and($guard->user()->id)->toBe($userId);
 });
+
+
+
+
+
+
+
+
+
+

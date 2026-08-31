@@ -97,3 +97,14 @@ it('does not convert a non-success response into an empty Grid', function (): vo
     expect(fn (): GridResult => $source->fetch(new GridQuery()))
         ->toThrow(RuntimeException::class, 'non-success');
 });
+
+
+
+
+
+
+
+
+
+
+

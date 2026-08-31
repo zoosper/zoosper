@@ -31,3 +31,13 @@ it('removes migrated literal admin page URLs while retaining static asset URLs',
     $assets = (string) file_get_contents($root . '/app/zoosper-admin/resources/views/admin/roles/permission-tree.php');
     expect($assets)->toContain('/assets/admin/');
 });
+
+
+
+
+
+
+
+
+
+

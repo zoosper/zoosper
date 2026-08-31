@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Zoosper\Core\Database\MigrationInterface;
+use Zoosper\Database\MigrationInterface;
 
 return new class implements MigrationInterface {
     public function name(): string
@@ -30,3 +30,13 @@ return new class implements MigrationInterface {
         $pdo->exec("CREATE TABLE IF NOT EXISTS admin_role_permissions (role_id INTEGER NOT NULL, permission_id INTEGER NOT NULL, PRIMARY KEY(role_id, permission_id), FOREIGN KEY(role_id) REFERENCES admin_roles(id) ON DELETE CASCADE, FOREIGN KEY(permission_id) REFERENCES admin_permissions(id) ON DELETE CASCADE)");
     }
 };
+
+
+
+
+
+
+
+
+
+

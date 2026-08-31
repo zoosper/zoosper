@@ -21,3 +21,13 @@ it('keeps the engine registry pluggable and the Theme catalogue read-only', func
     expect($registry)->toContain('public function __construct(TemplateEngineInterface ...$engines)')->toContain('public function prioritise(array $priority): self')
         ->and(substr_count($settings, "'read_only' => true"))->toBe(2);
 });
+
+
+
+
+
+
+
+
+
+

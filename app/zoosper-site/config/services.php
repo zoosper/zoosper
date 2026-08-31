@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Url\AdminUrlGenerator;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Site\Application\SiteMutationService;
 use Zoosper\Site\Lifecycle\SiteLifecycleCoordinator;
 use Zoosper\Site\Lifecycle\SiteReferenceInspector;
@@ -37,4 +37,14 @@ return [
         $services->get(SiteRepository::class)
     ),
 ];
+
+
+
+
+
+
+
+
+
+
 

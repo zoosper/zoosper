@@ -20,3 +20,13 @@ test('compact Grid behaviour is package-owned while generic columns remain Admin
         ->and(is_file($root . '/public/assets/admin/js/zoosper-grid-compact.js'))
         ->toBeFalse();
 });
+
+
+
+
+
+
+
+
+
+

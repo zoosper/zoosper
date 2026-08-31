@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\StoreOrders\Tests\Unit;
 
 use PDO;
-use Zoosper\Core\Database\MigrationInterface;
+use Zoosper\Database\MigrationInterface;
 
 it('seeds Store Orders permissions idempotently with ACL tree metadata', function (): void {
     if (!in_array('sqlite', PDO::getAvailableDrivers(), true)) {
@@ -59,3 +59,14 @@ it('does not misuse module ACL config as a permission persistence mechanism', fu
     $root = dirname(__DIR__, 4);
     expect(require $root . '/packages/zoosper-store-orders/config/acl.php')->toBe([]);
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -17,3 +17,14 @@ final readonly class MarkoCacheAdapter implements CacheInterface
     public function increment(string $key, int $ttl): int { return $this->driver->increment($key, $ttl); }
     public function markoDriver(): MarkoCacheInterface { return $this->driver; }
 }
+
+
+
+
+
+
+
+
+
+
+

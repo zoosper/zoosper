@@ -51,3 +51,13 @@ final readonly class AdminAssetTemplateRenderer
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 }
+
+
+
+
+
+
+
+
+
+

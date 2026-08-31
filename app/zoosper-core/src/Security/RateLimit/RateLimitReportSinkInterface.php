@@ -11,3 +11,13 @@ interface RateLimitReportSinkInterface
 {
     public function record(RateLimitReportEvent $event): void;
 }
+
+
+
+
+
+
+
+
+
+

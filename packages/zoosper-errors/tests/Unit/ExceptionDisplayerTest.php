@@ -53,3 +53,14 @@ it('returns Marko web HTML without emitting it', function (): void {
     expect($html)->toContain('RuntimeException')
         ->toContain('Web formatter contract.');
 });
+
+
+
+
+
+
+
+
+
+
+

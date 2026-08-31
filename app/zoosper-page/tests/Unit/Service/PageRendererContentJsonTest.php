@@ -49,3 +49,13 @@ test('PageRenderer falls back to HTML when block_json cannot be decoded', functi
     expect((new PageRenderer(blockJsonRenderer: new BlockJsonToHtmlRenderer()))->renderContent($page))
         ->toBe('<p>Safe fallback</p>');
 });
+
+
+
+
+
+
+
+
+
+

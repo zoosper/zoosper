@@ -137,3 +137,13 @@ it('logs AND displays together for the same exception (both halves of the fix wo
 
     @unlink($logFilePath);
 });
+
+
+
+
+
+
+
+
+
+

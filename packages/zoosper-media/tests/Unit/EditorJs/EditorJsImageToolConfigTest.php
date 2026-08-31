@@ -15,3 +15,14 @@ test('builds Editor.js image tool config with upload endpoint and csrf header', 
     expect($config['additionalRequestHeaders']['X-CSRF-Token'])->toBe('csrf-token');
     expect($config['features']['caption'])->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+
+

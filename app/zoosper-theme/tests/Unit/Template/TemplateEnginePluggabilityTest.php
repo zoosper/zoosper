@@ -62,3 +62,13 @@ test('an application module can override an extension without changing the regis
     expect($registry->forPath('page.mdview'))->toBe($override);
     expect($registry->forPath('page.md'))->toBe($default);
 });
+
+
+
+
+
+
+
+
+
+

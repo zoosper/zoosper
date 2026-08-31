@@ -20,3 +20,13 @@ it('uses Settings-owned print source metadata and hides the screen result summar
         ->toContain('#settings-result-summary{display:none!important}')
         ->not->toContain('data-copy-setting-value');
 });
+
+
+
+
+
+
+
+
+
+

@@ -75,3 +75,13 @@ final readonly class PageController
         return $prefix === '/' ? '' : rtrim($prefix, '/');
     }
 }
+
+
+
+
+
+
+
+
+
+

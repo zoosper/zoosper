@@ -31,3 +31,13 @@ test('package workflow exact matches are classified before verify migration rule
     expect($verifyRulePosition)->not->toBeFalse();
     expect($exactPosition)->toBeLessThan($verifyRulePosition);
 });
+
+
+
+
+
+
+
+
+
+

@@ -13,3 +13,14 @@ test('image tool runtime config provides endpoint field and csrf header', functi
     expect($config['field'])->toBe('image');
     expect($config['additionalRequestHeaders']['X-CSRF-Token'])->toBe('token-123');
 });
+
+
+
+
+
+
+
+
+
+
+

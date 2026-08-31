@@ -47,3 +47,13 @@ test('withRouteParams preserves existing request metadata and site context', fun
     expect($request->siteContext())->toBe($siteContext);
     expect($request->routeParam('id'))->toBe('42');
 });
+
+
+
+
+
+
+
+
+
+

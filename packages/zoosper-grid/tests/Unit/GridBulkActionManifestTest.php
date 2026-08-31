@@ -30,3 +30,14 @@ it('filters unauthorised definitions before presentation', function (): void {
     $allowed = (new GridBulkActionAuthoriser())->authorised($definitions, static fn (string $permission): bool => false);
     expect($allowed)->toHaveCount(1)->and($allowed[0]->id)->toBe('export.selected');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -92,3 +92,14 @@ test('decorator fails loudly rather than silently emitting detached status', fun
         '<section>No workspace toolbar</section>',
     ))->toThrow(\RuntimeException::class, 'toolbar marker was not found');
 });
+
+
+
+
+
+
+
+
+
+
+

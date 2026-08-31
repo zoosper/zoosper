@@ -15,3 +15,14 @@ test('page-size enhancement resets pagination and submits the existing GET form'
         ->not->toContain('fetch(')
         ->not->toContain('innerHTML');
 });
+
+
+
+
+
+
+
+
+
+
+

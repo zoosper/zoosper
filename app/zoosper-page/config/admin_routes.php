@@ -31,3 +31,13 @@ return [
     ['method' => 'POST', 'path' => '/admin/pages/publish', 'controller' => PageAdminController::class, 'action' => 'publish', 'permission' => 'page.manage'],
     ['method' => 'POST', 'path' => '/admin/pages/unpublish', 'controller' => PageAdminController::class, 'action' => 'unpublish', 'permission' => 'page.manage'],
 ];
+
+
+
+
+
+
+
+
+
+

@@ -16,3 +16,13 @@ it('keeps presentation calculations out of the Settings template', function (): 
         ->toContain("'fieldPresentation'")
         ->toContain("'scopeOptionsJson'");
 });
+
+
+
+
+
+
+
+
+
+

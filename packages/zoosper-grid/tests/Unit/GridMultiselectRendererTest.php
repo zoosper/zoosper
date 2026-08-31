@@ -57,3 +57,14 @@ test('multiselect renderer rejects any other filter type', function (): void {
         new GridFilter('site_id', 'Site', 'text'),
     ))->toThrow(\InvalidArgumentException::class, 'requires a multiselect filter');
 });
+
+
+
+
+
+
+
+
+
+
+

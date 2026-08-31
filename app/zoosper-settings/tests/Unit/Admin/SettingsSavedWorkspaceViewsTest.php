@@ -37,3 +37,13 @@ it('supports save apply and delete lifecycle with accessible status feedback', f
         ->toContain("copyStatus.textContent='Applied saved view '")
         ->toContain("copyStatus.textContent='Deleted workspace view '");
 });
+
+
+
+
+
+
+
+
+
+

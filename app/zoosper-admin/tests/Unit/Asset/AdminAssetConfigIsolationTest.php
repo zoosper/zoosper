@@ -10,3 +10,13 @@ it('isolates module admin asset manifest variables from the registry accumulator
         ->toContain('static fn (string $manifest): mixed => require $manifest')
         ->not->toContain('$config = require $file');
 });
+
+
+
+
+
+
+
+
+
+

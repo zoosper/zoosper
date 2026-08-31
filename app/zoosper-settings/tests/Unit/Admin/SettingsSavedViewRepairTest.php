@@ -12,3 +12,13 @@ it('repairs stale default and pin metadata then rewrites canonical storage', fun
         ->toContain('if(!writeSavedViews(views))return')
         ->toContain("copyStatus.textContent='Repaired saved workspace views'");
 });
+
+
+
+
+
+
+
+
+
+

@@ -229,3 +229,14 @@ final readonly class ScopeConfigRepository
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+

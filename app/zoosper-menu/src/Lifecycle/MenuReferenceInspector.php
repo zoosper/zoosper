@@ -33,3 +33,13 @@ final readonly class MenuReferenceInspector
         return (int) $statement->fetchColumn() === 1;
     }
 }
+
+
+
+
+
+
+
+
+
+

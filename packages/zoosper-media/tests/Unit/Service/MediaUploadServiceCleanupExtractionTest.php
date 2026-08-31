@@ -29,3 +29,14 @@ test('media service config registers explicit cleanup service', function () {
     expect($source)->toContain('new MediaStoredFileCleanupService(dirname(__DIR__, 3))');
     expect($source)->toContain('cleanup: $services->get(MediaStoredFileCleanupService::class)');
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -7,7 +7,7 @@ namespace Zoosper\Menu\Lifecycle;
 use PDO;
 use RuntimeException;
 use Throwable;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Menu\Model\Menu;
 
 /** Menu-owned inactive, restore, and guarded permanent-delete transaction boundary. */
@@ -44,3 +44,13 @@ final readonly class MenuLifecycleCoordinator
     private function status(int $id,string $status): void{$statement=$this->pdo->prepare('UPDATE menus SET status=:status,updated_at=:updated_at WHERE id=:id');$statement->execute(['id'=>$id,'status'=>$status,'updated_at'=>gmdate('Y-m-d H:i:s')]);}
     private function log(int $actorId,string $email,string $action,Menu $menu,?string $newStatus): void{$this->audit?->logAction($actorId,$email,$action,'menu',(string)$menu->id,$action,['menu_id'=>$menu->id,'site_id'=>$menu->siteId,'previous_status'=>$menu->status,'new_status'=>$newStatus]);}
 }
+
+
+
+
+
+
+
+
+
+

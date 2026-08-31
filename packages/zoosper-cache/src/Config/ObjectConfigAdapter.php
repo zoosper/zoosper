@@ -17,3 +17,14 @@ final readonly class ObjectConfigAdapter implements ConfigRepositoryInterface
     public function all(?string $scope = null): array { throw new ConfigException('ObjectConfigAdapter does not support all().'); }
     public function withScope(string $scope): ConfigRepositoryInterface { throw new ConfigException('ObjectConfigAdapter does not support withScope().'); }
 }
+
+
+
+
+
+
+
+
+
+
+

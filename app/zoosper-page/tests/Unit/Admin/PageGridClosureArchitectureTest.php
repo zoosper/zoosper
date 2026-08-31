@@ -15,3 +15,13 @@ test('Page Grid closure keeps one modern rendering path', function (): void {
         ->toContain('data-grid-export')
         ->toContain('legacy_site_id_input_removed');
 });
+
+
+
+
+
+
+
+
+
+

@@ -7,7 +7,7 @@ it('registers a stateless Site-scoped Page revision detail route', function (): 
     $matches = array_values(array_filter($routes, static fn (array $route): bool => ($route['action'] ?? '') === 'revision'));
     expect($matches)->toHaveCount(1)
         ->and($matches[0]['method'])->toBe('GET')
-        ->and($matches[0]['path'])->toBe('/api/v1/pages/{id:\\d+}/revisions/{revisionId:\\d+}')
+        ->and($matches[0]['path'])->toBe('/api/v1/pages/{id:\d+}/revisions/{revisionId:\d+}')
         ->and($matches[0]['controller'])->toBe(PageApiController::class)
         ->and($matches[0]['public'])->toBeTrue()
         ->and($matches[0]['stateless'])->toBeTrue();
@@ -28,3 +28,13 @@ it('bounds revision page size and preserves the established default', function (
         ->toContain("'max_range' => 100")
         ->toContain('$requestedPageSize === false ? 20 : $requestedPageSize');
 });
+
+
+
+
+
+
+
+
+
+

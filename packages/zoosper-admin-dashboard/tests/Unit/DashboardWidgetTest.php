@@ -34,3 +34,14 @@ it('rejects duplicate role Dashboard preference codes', function (): void {
     expect(fn (): DashboardRolePreference => new DashboardRolePreference(1, 'finance', ['one', 'one'], ['one']))
         ->toThrow(InvalidArgumentException::class);
 });
+
+
+
+
+
+
+
+
+
+
+

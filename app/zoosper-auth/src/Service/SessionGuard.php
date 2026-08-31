@@ -277,3 +277,13 @@ final class SessionGuard
         return $this->clock !== null ? (int) ($this->clock)() : time();
     }
 }
+
+
+
+
+
+
+
+
+
+

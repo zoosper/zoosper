@@ -19,3 +19,13 @@ it('keeps production web session policy centralised in Core Application', functi
         expect((string) file_get_contents($file))->not->toContain('session_set_cookie_params(');
     }
 });
+
+
+
+
+
+
+
+
+
+

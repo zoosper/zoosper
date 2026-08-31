@@ -25,3 +25,14 @@ it('keeps the bounded transport free of redirects writes and deprecated handle c
         ->and($source)->toContain('CURLPROTO_HTTP | CURLPROTO_HTTPS')
         ->and($source)->not->toContain('curl_close(');
 });
+
+
+
+
+
+
+
+
+
+
+

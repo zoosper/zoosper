@@ -21,3 +21,13 @@ it('keeps SameSite None conditional on a secure cookie in the bootstrap source',
         ->toContain("'secure' => \$secure")
         ->toContain("'httponly' => true");
 });
+
+
+
+
+
+
+
+
+
+

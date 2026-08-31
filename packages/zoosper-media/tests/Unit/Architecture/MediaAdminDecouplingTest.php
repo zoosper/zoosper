@@ -6,7 +6,7 @@ use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Media\Controller\MediaAdminController;
 
-it('contains zero direct "use Zoosper\\Admin\\" imports anywhere in zoosper-media/src', function (): void {
+it('contains zero direct "use Zoosper\Admin\" imports anywhere in zoosper-media/src', function (): void {
     $basePath = dirname(__DIR__, 5);
     $srcPath = $basePath . '/packages/zoosper-media/src';
     $offendingFiles = [];
@@ -14,11 +14,11 @@ it('contains zero direct "use Zoosper\\Admin\\" imports anywhere in zoosper-medi
     foreach ($iterator as $file) {
         if ($file->getExtension() !== 'php') continue;
         $contents = file_get_contents($file->getPathname());
-        if ($contents !== false && preg_match('/use\s+Zoosper\\\\Admin\\\\/', $contents) === 1) {
+        if ($contents !== false && preg_match('/use\s+Zoosper\Admin\/', $contents) === 1) {
             $offendingFiles[] = str_replace($basePath . '/', '', $file->getPathname());
         }
     }
-    expect($offendingFiles)->toBe([], 'Found direct Zoosper\\Admin\\ imports in: ' . implode(', ', $offendingFiles));
+    expect($offendingFiles)->toBe([], 'Found direct Zoosper\Admin\ imports in: ' . implode(', ', $offendingFiles));
 });
 
 it('confirms media composer.json no longer requires zoosper/admin', function (): void {
@@ -46,3 +46,14 @@ it('confirms MediaAdminController depends on AdminViewRendererInterface, not the
 it('confirms AdminViewRenderer implements the new interface', function (): void {
     expect(is_subclass_of(AdminViewRenderer::class, AdminViewRendererInterface::class))->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -40,3 +40,13 @@ it('renders controls from the complete definition while returning filtered table
         ->not->toContain('$_GET')
         ->not->toContain('$_POST');
 });
+
+
+
+
+
+
+
+
+
+

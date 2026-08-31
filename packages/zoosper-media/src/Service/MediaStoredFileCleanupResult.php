@@ -29,3 +29,14 @@ final readonly class MediaStoredFileCleanupResult
         return count($this->skipped);
     }
 }
+
+
+
+
+
+
+
+
+
+
+

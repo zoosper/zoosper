@@ -15,3 +15,13 @@ it('keeps Page bulk HTTP activation POST-only and feature-owned', function (): v
     expect($routes)->toContain("'method' => 'POST', 'path' => '/admin/pages/bulk-action'");
     expect($factories)->toContain('PageBulkActionController::class');
 });
+
+
+
+
+
+
+
+
+
+

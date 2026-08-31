@@ -8,3 +8,13 @@ interface AdminAnnouncementProviderInterface
 {
     public function findUnacknowledgedForUser(int $userId): ?object;
 }
+
+
+
+
+
+
+
+
+
+

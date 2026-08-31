@@ -41,3 +41,13 @@ test('packages is source layout only and vendor is the runtime package home', fu
     expect($names)->not->toContain('source-only');
     expect($modules[0]->source)->toBe('vendor');
 });
+
+
+
+
+
+
+
+
+
+

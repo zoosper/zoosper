@@ -15,3 +15,14 @@ test('modern admin grid workspace enables the complete interaction set by defaul
     expect($capabilities->bookmarks)->toBeTrue();
     expect($capabilities->csvExport)->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+
+

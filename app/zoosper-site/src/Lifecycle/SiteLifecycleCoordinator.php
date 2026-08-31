@@ -7,7 +7,7 @@ namespace Zoosper\Site\Lifecycle;
 use PDO;
 use RuntimeException;
 use Throwable;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Site\Model\Site;
 use Zoosper\Site\Repository\SiteRepository;
 
@@ -60,3 +60,13 @@ final readonly class SiteLifecycleCoordinator
         $this->audit?->logAction($actorId, $email, $action, 'site', (string) $site->id, $action, ['site_id' => $site->id, 'previous_status' => $site->status, 'new_status' => $newStatus]);
     }
 }
+
+
+
+
+
+
+
+
+
+

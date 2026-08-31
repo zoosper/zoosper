@@ -20,3 +20,13 @@ it('does not change the transport interface to smuggle scope through send', func
     expect($interface)->toContain('public function send(EmailMessage $message): void;')
         ->not->toContain('ScopeContext');
 });
+
+
+
+
+
+
+
+
+
+

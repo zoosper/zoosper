@@ -32,3 +32,13 @@ it('documents that menu API lookup is request-site scoped',function(){
  $root=dirname(__DIR__,3);$source=(string)file_get_contents($root.'/src/Api/MenuController.php');
  expect($source)->toContain("'site_scoped'=>true")->toContain('resolved request site and code');
 });
+
+
+
+
+
+
+
+
+
+

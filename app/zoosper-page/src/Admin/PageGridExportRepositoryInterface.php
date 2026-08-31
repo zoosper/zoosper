@@ -10,3 +10,13 @@ interface PageGridExportRepositoryInterface
     /** @return iterable<array<string, mixed>> */
     public function stream(PageGridExportCriteria $criteria): iterable;
 }
+
+
+
+
+
+
+
+
+
+

@@ -45,3 +45,14 @@ it('blocks referenced deletion and permits archived unreferenced deletion', func
     $deleted = $lifecycle->deletePermanentlyGuarded($asset, 1, 'admin@example.test');
     expect($deleted->successful)->toBeTrue()->and($repository->findById(7))->toBeNull();
 });
+
+
+
+
+
+
+
+
+
+
+

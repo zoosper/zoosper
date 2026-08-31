@@ -50,3 +50,13 @@ test('BlockJsonValidator keeps image support when config allowed types are older
 
     expect($result->valid)->toBeTrue();
 });
+
+
+
+
+
+
+
+
+
+

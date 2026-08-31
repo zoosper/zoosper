@@ -22,3 +22,14 @@ it('ships compact persistence layout without interpolating source assertions', f
         ->and($css)->not->toBeFalse()
         ->and($css)->toContain('.grid-workspace__mutations');
 });
+
+
+
+
+
+
+
+
+
+
+

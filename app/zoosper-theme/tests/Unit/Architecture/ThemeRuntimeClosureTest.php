@@ -22,3 +22,13 @@ it('preserves the public variadic registry constructor and additive priority API
         ->toContain('public function prioritise(array $priority): self')
         ->not->toContain('public function __construct(array $priority');
 });
+
+
+
+
+
+
+
+
+
+

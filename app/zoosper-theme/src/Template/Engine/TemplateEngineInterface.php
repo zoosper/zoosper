@@ -28,3 +28,13 @@ interface TemplateEngineInterface
      */
     public function renderFile(string $path, array $data): string;
 }
+
+
+
+
+
+
+
+
+
+

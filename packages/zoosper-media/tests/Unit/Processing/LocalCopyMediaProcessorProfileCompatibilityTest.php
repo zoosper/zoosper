@@ -27,3 +27,14 @@ test('local copy processor falls back to resolved target public path when writer
     expect($source)->toContain('return $target->publicPath;');
     expect($source)->toContain('$derivatives[$profileName] = $this->publicDerivativePath($target, $written);');
 });
+
+
+
+
+
+
+
+
+
+
+

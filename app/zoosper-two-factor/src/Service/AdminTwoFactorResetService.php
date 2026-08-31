@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\TwoFactor\Service;
 
 use Throwable;
-use Zoosper\Core\Audit\AuditLoggerInterface;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\TwoFactor\Repository\AdminTwoFactorResetRepository;
 
 /**
@@ -16,8 +16,8 @@ use Zoosper\TwoFactor\Repository\AdminTwoFactorResetRepository;
  * and writes an audit-safe event without sensitive secret material.
  *
  * Phase 1.41 (dependency graph correction): now depends on
- * Zoosper\Core\Audit\AuditLoggerInterface instead of the concrete
- * Zoosper\Admin\Audit\AuditLogger — removes this module's need for
+ * Zoosper\Audit\Contract\AuditLoggerInterface instead of the concrete
+ * Zoosper\Audit\AuditLogger — removes this module's need for
  * zoosper/admin to be installed at all.
  *
  * BUG FIX (discovered during this phase): the previous auditReset() call
@@ -81,3 +81,13 @@ final readonly class AdminTwoFactorResetService
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
