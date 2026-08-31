@@ -106,7 +106,7 @@ final readonly class PackageModuleScaffolder
     private function files(array $identity): array
     {
         $namespace = $identity['namespace'];
-        $namespaceEscaped = str_replace('\\', '\\', $namespace);
+        $namespaceEscaped = str_replace('\\', '\\\\', $namespace);
         $packageName = $identity['package_name'];
         $moduleName = $identity['module_name'];
         $classPrefix = $identity['class_prefix'];
@@ -134,7 +134,7 @@ final readonly class PackageModuleScaffolder
     },
     "autoload-dev": {
         "psr-4": {
-            "{$namespaceEscaped}Tests\": "tests/"
+            "{$namespaceEscaped}Tests\\\\": "tests/"
         }
     }
 }

@@ -19,9 +19,10 @@ test('grid consumers use the package namespace rather than the retired core name
             new \RecursiveDirectoryIterator($basePath . '/' . $relativeRoot),
         );
         foreach ($iterator as $file) {
-            if ($file->isFile() && $file->getExtension() === 'php') {
+            $path = str_replace('\\', '/', $file->getPathname());
+            if ($file->isFile() && $file->getExtension() === 'php' && !str_contains($path, '/tests/')) {
                 expect((string) file_get_contents($file->getPathname()))
-                    ->not->toContain('Zoosper\Core\Grid\');
+                    ->not->toContain('Zoosper\Core\Grid\\');
             }
         }
     }

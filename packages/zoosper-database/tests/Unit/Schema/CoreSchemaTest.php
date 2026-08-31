@@ -25,7 +25,7 @@ use Zoosper\Database\Schema\SchemaValidator;
 /** @return array<string, mixed> */
 function coreSchemaConfig(): array
 {
-    return require dirname(__DIR__, 3) . '/config/db_schema.php';
+    return require dirname(__DIR__, 5) . '/app/zoosper-core/config/db_schema.php';
 }
 
 /** @return list<SchemaTable> */

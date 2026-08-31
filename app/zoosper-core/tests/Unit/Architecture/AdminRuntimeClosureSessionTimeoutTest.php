@@ -22,8 +22,8 @@ it('adds central idle timeout enforcement without weakening pending 2FA isolatio
 it('cuts over remaining active Admin Mail Theme and Site runtime URLs', function (): void {
     $root = dirname(__DIR__, 5);
     $files = [
-        '/app/zoosper-admin/src/Controller/AuditLogController.php',
-        '/app/zoosper-admin/src/Controller/LoginHistoryController.php',
+        '/packages/zoosper-audit/src/Controller/AuditLogController.php',
+        '/packages/zoosper-audit/src/Controller/LoginHistoryController.php',
         '/app/zoosper-theme/src/Admin/Controller/ThemeAdminController.php',
         '/app/zoosper-mail/src/Controller/EmailLogAdminController.php',
         '/app/zoosper-site/src/Admin/Controller/SiteAdminController.php',

@@ -23,33 +23,33 @@ test('discovers module source and test psr-4 mappings from module metadata', fun
     $root = autoloadSyncFixture();
     $mappings = (new ModuleAutoloadSynchronizer($root))->discoverMappings();
 
-    expect($mappings['autoload'])->toHaveKey('Zoosper\Media\');
-    expect($mappings['autoload']['Zoosper\Media\'])->toBe('app/zoosper-media/src/');
-    expect($mappings['autoload-dev'])->toHaveKey('Zoosper\Media\Tests\');
-    expect($mappings['autoload-dev']['Zoosper\Media\Tests\'])->toBe('app/zoosper-media/tests/');
+    expect($mappings['autoload'])->toHaveKey('Zoosper\Media\\');
+    expect($mappings['autoload']['Zoosper\Media\\'])->toBe('app/zoosper-media/src/');
+    expect($mappings['autoload-dev'])->toHaveKey('Zoosper\Media\Tests\\');
+    expect($mappings['autoload-dev']['Zoosper\Media\Tests\\'])->toBe('app/zoosper-media/tests/');
 });
 
 test('discovers historical kebab named modules too', function () {
     $root = autoloadSyncFixture();
     $mappings = (new ModuleAutoloadSynchronizer($root))->discoverMappings();
 
-    expect($mappings['autoload'])->toHaveKey('Zoosper\Page\');
-    expect($mappings['autoload']['Zoosper\Page\'])->toBe('app/zoosper-page/src/');
+    expect($mappings['autoload'])->toHaveKey('Zoosper\Page\\');
+    expect($mappings['autoload']['Zoosper\Page\\'])->toBe('app/zoosper-page/src/');
 });
 
 test('sync updates composer json without replacing existing mappings', function () {
     $root = autoloadSyncFixture();
     $composer = json_decode((string) file_get_contents($root . '/composer.json'), true);
-    $composer['autoload']['psr-4']['Existing\'] = 'existing/src/';
+    $composer['autoload']['psr-4']['Existing\\'] = 'existing/src/';
     file_put_contents($root . '/composer.json', json_encode($composer, JSON_PRETTY_PRINT));
 
     $result = (new ModuleAutoloadSynchronizer($root))->sync();
     $updated = json_decode((string) file_get_contents($root . '/composer.json'), true);
 
     expect($result['changed'])->toBeTrue();
-    expect($updated['autoload']['psr-4']['Existing\'])->toBe('existing/src/');
-    expect($updated['autoload']['psr-4']['Zoosper\Media\'])->toBe('app/zoosper-media/src/');
-    expect($updated['autoload']['psr-4']['Zoosper\Page\'])->toBe('app/zoosper-page/src/');
+    expect($updated['autoload']['psr-4']['Existing\\'])->toBe('existing/src/');
+    expect($updated['autoload']['psr-4']['Zoosper\Media\\'])->toBe('app/zoosper-media/src/');
+    expect($updated['autoload']['psr-4']['Zoosper\Page\\'])->toBe('app/zoosper-page/src/');
 });
 
 

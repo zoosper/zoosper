@@ -8,7 +8,7 @@ it('renders Role lifecycle actions only for an existing persisted Role ID', func
 
     expect($source)
         ->toContain('\'lifecycleHtml\' => $roleId !== null && $this->lifecycle !== null')
-        ->toContain('$this->lifecycle->actionsHtml($roleId, (string) ($role[\'code\'] ?? \'\\'))')
+        ->toContain('$this->lifecycle->actionsHtml($roleId, (string) ($role[\'code\'] ?? \'\'))')
         ->not->toContain('actionsHtml($id,');
 });
 

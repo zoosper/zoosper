@@ -14,7 +14,7 @@ it('contains zero direct "use Zoosper\Admin\" imports anywhere in zoosper-media/
     foreach ($iterator as $file) {
         if ($file->getExtension() !== 'php') continue;
         $contents = file_get_contents($file->getPathname());
-        if ($contents !== false && preg_match('/use\s+Zoosper\Admin\/', $contents) === 1) {
+        if ($contents !== false && preg_match('/use\s+Zoosper\\\\Admin\\\\/', $contents) === 1) {
             $offendingFiles[] = str_replace($basePath . '/', '', $file->getPathname());
         }
     }

@@ -14,7 +14,7 @@ it('keeps Page free of Admin imports and Composer dependency', function (): void
             $source .= (string) file_get_contents($file->getPathname());
         }
     }
-    expect($source)->not->toContain('use Zoosper\Admin\')
+    expect($source)->not->toContain('use Zoosper\Admin\\')
         ->toContain('Zoosper\Core\Editor\ContentEditorInterface')
         ->toContain('Zoosper\Core\Message\FlashMessageStoreInterface')
         ->toContain('Zoosper\AdminForm\AdminFormRegistry')

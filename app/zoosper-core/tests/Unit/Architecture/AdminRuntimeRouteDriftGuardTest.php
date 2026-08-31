@@ -5,8 +5,8 @@ declare(strict_types=1);
 it('keeps migrated runtime consumers on the canonical Admin URL boundary', function (): void {
     $root = dirname(__DIR__, 5);
     $required = [
-        '/app/zoosper-admin/src/Controller/AuditLogController.php' => "->url('audit-log')",
-        '/app/zoosper-admin/src/Controller/LoginHistoryController.php' => "->url('login-history')",
+        '/packages/zoosper-audit/src/Controller/AuditLogController.php' => "->url('audit-log')",
+        '/packages/zoosper-audit/src/Controller/LoginHistoryController.php' => "->url('login-history')",
         '/app/zoosper-theme/src/Admin/Controller/ThemeAdminController.php' => "->url('themes')",
         '/app/zoosper-mail/src/Controller/EmailLogAdminController.php' => "->url('mail-logs')",
         '/app/zoosper-site/src/Admin/Controller/SiteAdminController.php' => 'private function adminUrl(',

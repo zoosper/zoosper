@@ -20,7 +20,7 @@ it('keeps core site runtime files free from direct Site module namespaces', func
         $relative = str_replace($root . '/', '', $file->getPathname());
         $source = file_get_contents($file->getPathname()) ?: '';
 
-        if (str_contains($source, 'Zoosper\Site\')) {
+        if (str_contains($source, 'Zoosper\Site\\')) {
             $violations[] = $relative;
         }
     }
@@ -35,7 +35,7 @@ it('keeps SiteContextResolver behind the SiteLookupInterface boundary', function
     expect($source)->toContain('SiteLookupInterface');
     expect($source)->not->toContain('SiteRepository');
     expect($source)->not->toContain('DbSite');
-    expect($source)->not->toContain('Zoosper\Site\');
+    expect($source)->not->toContain('Zoosper\Site\\');
 });
 
 it('keeps SiteLookupInterface compatible with active host lookup', function (): void {

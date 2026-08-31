@@ -13,7 +13,7 @@ test('package module scaffolder preserves camel case boundaries in module name a
     $result = (new PackageModuleScaffolder($root))->scaffold('Acme/MovieLibrary');
 
     expect($result->moduleName)->toBe('Acme_MovieLibrary');
-    expect($result->namespace)->toBe('Acme\MovieLibrary\');
+    expect($result->namespace)->toBe('Acme\MovieLibrary\\');
     expect(is_file($root . '/packages/acme-movie-library/tests/Unit/MovieLibraryPackageTest.php'))->toBeTrue();
 });
 

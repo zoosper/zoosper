@@ -12,7 +12,7 @@ it('keeps the fallback handler contract core-owned', function (): void {
     $source = file_get_contents($root . '/app/zoosper-core/src/Routing/FallbackHandlerInterface.php');
 
     expect(interface_exists(FallbackHandlerInterface::class))->toBeTrue();
-    expect($source)->not->toContain('Zoosper\Page\');
+    expect($source)->not->toContain('Zoosper\Page\\');
     expect($source)->toContain('supports(object $request): bool');
     expect($source)->toContain('handle(object $request): mixed');
 });

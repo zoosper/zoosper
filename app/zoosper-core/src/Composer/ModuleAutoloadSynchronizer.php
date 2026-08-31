@@ -75,7 +75,7 @@ final readonly class ModuleAutoloadSynchronizer
 
             $testsDir = $moduleDir . '/tests';
             if (is_dir($testsDir)) {
-                $autoloadDev[$identity->namespace . 'Tests\'] = $this->relativeDirectory($testsDir);
+                $autoloadDev[$identity->namespace . 'Tests\\'] = $this->relativeDirectory($testsDir);
             }
         }
 

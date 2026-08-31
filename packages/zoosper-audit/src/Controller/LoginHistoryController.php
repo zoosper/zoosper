@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Zoosper\Admin\Controller;
+namespace Zoosper\Audit\Controller;
 use RuntimeException;
 use Zoosper\Audit\LoginHistoryRepository;
 use Zoosper\Audit\Admin\Grid\LoginHistoryGridDefinition;
@@ -21,7 +21,7 @@ final readonly class LoginHistoryController
   $definition=$this->definition->build(); $action=$this->adminUrls?->url('login-history')??'/admin/login-history';
   $page=$this->pages->build('Login History',$user->id,LoginHistoryGridDefinition::KEY,$action,$definition,$this->source,OperationalGridQueryState::fromRequest($request,$definition),OperationalGridQueryState::bookmarkId($request));
   $html=$page->workspaceHtml.$page->gridHtml;
-  if($this->views!==null)return Response::html($this->views->render(title:'Login History',template:'zoosper-admin::login-history/index',data:['workspaceHtml'=>$page->workspaceHtml,'gridHtml'=>$page->gridHtml],user:$user,active:'login-history'));
+  if($this->views!==null)return Response::html($this->views->render(title:'Login History',template:'zoosper-audit::login-history/index',data:['workspaceHtml'=>$page->workspaceHtml,'gridHtml'=>$page->gridHtml],user:$user,active:'login-history'));
   return Response::html($this->layout->render('Login History',$html,$user,'login-history'));
  }
  private function currentAdminUser()
@@ -32,6 +32,7 @@ final readonly class LoginHistoryController
  }
 
 }
+
 
 
 

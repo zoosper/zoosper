@@ -20,7 +20,7 @@ function legacyLocalModuleBoundaryFixture(): string
         json_encode([
             'name' => 'lowes/auspost',
             'type' => 'library',
-            'autoload' => ['psr-4' => ['Lowes\Auspost\' => 'src/']],
+            'autoload' => ['psr-4' => ['Lowes\Auspost\\' => 'src/']],
         ], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT),
     );
     file_put_contents(

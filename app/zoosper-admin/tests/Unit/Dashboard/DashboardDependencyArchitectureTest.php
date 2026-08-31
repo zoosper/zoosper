@@ -20,7 +20,7 @@ it('keeps Dashboard contracts dependency-safe and concrete feature code out of A
         ->and($controller)->not->toContain('ServiceContainer')
         ->not->toContain('Zoosper\Auth\Repository')
         ->and($dashboardSources)->not->toContain('Zoosper\AdminGrid')
-        ->and($contributor)->not->toContain("Zoosper\Admin\");
+        ->and($contributor)->not->toContain('Zoosper\Admin\\');
 });
 
 

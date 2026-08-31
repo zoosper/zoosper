@@ -105,7 +105,7 @@ final readonly class ModuleComposerManifestGenerator
         if (is_dir($moduleDir . '/tests')) {
             $manifest['autoload-dev'] = [
                 'psr-4' => [
-                    $identity->namespace . 'Tests\' => 'tests/',
+                    $identity->namespace . 'Tests\\' => 'tests/',
                 ],
             ];
         }

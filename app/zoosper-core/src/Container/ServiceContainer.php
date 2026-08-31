@@ -140,7 +140,7 @@ final class ServiceContainer
         );
     }
 
-    private function autowire(string $class): object
+    public function autowire(string $class): object
     {
         $reflection = new \ReflectionClass($class);
         if (!$reflection->isInstantiable()) {

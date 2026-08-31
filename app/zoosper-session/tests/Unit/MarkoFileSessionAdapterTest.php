@@ -29,7 +29,7 @@ it('resolves session storage independently of the PHP-FPM working directory', fu
     expect($configurationSource)
         ->toContain('$basePath = dirname(__DIR__, 4);')
         ->toContain("env('SESSION_STORAGE_PATH', 'var/sessions')")
-        ->toContain('$basePath . \'/\' . ltrim($configuredPath, \'/\\')')
+        ->toContain('$basePath . \'/\' . ltrim($configuredPath, \'/\\\\\')')
         ->toContain("'path' => \$storagePath")
         ->not->toContain("'path' => trim((string) env('SESSION_STORAGE_PATH', 'var/sessions'))");
 });

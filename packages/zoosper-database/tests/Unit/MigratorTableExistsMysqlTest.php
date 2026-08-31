@@ -89,8 +89,7 @@ it('runs migrate() successfully against real MySQL with real prepared statements
 });
 
 it('confirms the fixed tableExists() query uses information_schema.TABLES for MySQL', function (): void {
-    $basePath = dirname(__DIR__, 4);
-    $source = (string) file_get_contents($basePath . '/app/zoosper-core/src/Database/Migrator.php');
+    $source = (string) file_get_contents(dirname(__DIR__, 2) . '/src/Migrator.php');
 
     // Asserting the PRESENCE of the correct, fixed pattern is a more
     // reliable proof than asserting the ABSENCE of the old pattern's exact

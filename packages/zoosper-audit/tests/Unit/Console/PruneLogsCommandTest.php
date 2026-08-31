@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Admin\Tests\Unit\Console;
+namespace Zoosper\Audit\Tests\Unit\Console;
 
 use PDO;
 use Zoosper\Audit\AuditLogRepository;
 use Zoosper\Audit\LoginHistoryRepository;
-use Zoosper\Admin\Console\PruneLogsCommand;
+use Zoosper\Audit\Console\PruneLogsCommand;
 use Zoosper\Core\Console\ConsoleOutput;
 
 it('prunes audit logs and login history older than given days', function (): void {
@@ -63,13 +63,3 @@ it('prunes audit logs and login history older than given days', function (): voi
     expect($auditRemaining)->toBe(1)
         ->and($loginRemaining)->toBe(1);
 });
-
-
-
-
-
-
-
-
-
-

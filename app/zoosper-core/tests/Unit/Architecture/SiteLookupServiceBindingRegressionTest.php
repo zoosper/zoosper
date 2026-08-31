@@ -33,7 +33,7 @@ it('does not reintroduce direct Site module references into core Site runtime so
         $relative = str_replace($root . '/', '', $file->getPathname());
         $source = file_get_contents($file->getPathname()) ?: '';
 
-        foreach (['Zoosper\Site\', 'SiteRepository', 'DbSite'] as $needle) {
+        foreach (['Zoosper\Site\\', 'SiteRepository', 'DbSite'] as $needle) {
             if (str_contains($source, $needle)) {
                 $violations[] = $relative . ' contains ' . $needle;
             }

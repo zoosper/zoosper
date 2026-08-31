@@ -9,7 +9,7 @@ test('grid package fixtures use the extracted public namespace', function (): vo
 
     expect($source)->toContain('Zoosper\Grid\GridColumn');
     expect($source)->toContain('Zoosper\Grid\GridFilter');
-    expect($source)->not->toContain('Zoosper\Core\Grid\');
+    expect($source)->not->toContain('Zoosper\Core\Grid\\');
 });
 
 test('grid package is a library with a bounded core dependency', function (): void {

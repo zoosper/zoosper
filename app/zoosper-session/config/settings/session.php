@@ -7,7 +7,7 @@ $basePath = dirname(__DIR__, 4);
 $configuredPath = trim((string) env('SESSION_STORAGE_PATH', 'var/sessions'));
 $storagePath = str_starts_with($configuredPath, '/') || str_contains($configuredPath, '://')
     ? $configuredPath
-    : $basePath . '/' . ltrim($configuredPath, '/');
+    : $basePath . '/' . ltrim($configuredPath, '/\\');
 
 return [
     'driver' => 'file',

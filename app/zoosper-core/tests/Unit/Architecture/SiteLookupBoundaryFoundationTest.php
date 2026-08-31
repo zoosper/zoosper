@@ -12,7 +12,7 @@ it('keeps the site lookup contract core-owned', function (): void {
     $source = file_get_contents($root . '/app/zoosper-core/src/Site/SiteLookupInterface.php');
 
     expect(interface_exists(SiteLookupInterface::class))->toBeTrue();
-    expect($source)->not->toContain('Zoosper\Site\');
+    expect($source)->not->toContain('Zoosper\Site\\');
 });
 
 it('provides a safe null site lookup implementation', function (): void {

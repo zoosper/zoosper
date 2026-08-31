@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pages - Zoosper Admin</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg">
+            <link rel="stylesheet" href="/assets/admin/css/admin.css?v=1.37l">
+<link rel="stylesheet" href="/asset/zoosper-admin/css/admin-shell.css?v=32dc79b0b958">
+<link rel="stylesheet" href="/asset/zoosper-admin/css/admin-components.css?v=79947c9ca73e">
+<link rel="stylesheet" href="/assets/admin/css/zoosper-admin-messages.css?v=1.37l">
+<link rel="stylesheet" href="/asset/zoosper-global-announcements/css/announcement-modal.css?v=4ac9b74410c1">
+<link rel="stylesheet" href="/assets/admin/css/zoosper-content-editor.css?v=1.37l">
+<link rel="stylesheet" href="/asset/zoosper-admin/css/zoosper-grid.css?v=1dd2d73b4d17">
+<link rel="stylesheet" href="/assets/admin/css/zoosper-tag-selector.css">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-compact-column-order.css?v=6cd15d8f4e96">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-workspace-actions.css?v=7c-ui1">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-workspace-single-view.css?v=7c-ui2">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-workspace-view-selector.css?v=7d1">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-workspace-progressive-disclosure.css?v=7e1">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-workspace-command-bar.css?v=7f1">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-workspace-command-bar-popup.css?v=7f2">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-workspace-toolbar-ownership.css?v=7f3">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-workspace-panel-position.css?v=7h1">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-page-jump.css?v=de3b8f15713e">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-page-selection.css?v=7j1">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-export-selected.css?v=7k1">
+<link rel="stylesheet" href="/asset/zoosper-admin-grid/css/grid-admin-polish.css?v=bc94362a8cb8">
+<link rel="stylesheet" href="/asset/zoosper-media/css/media-visual-grid.css?v=e222996959d5">
+    </head>
+<body>
+<a class="admin-skip-link" href="#admin-content">Skip to main content</a>
+<div class="admin-shell" data-admin-shell>
+    <aside class="admin-sidebar" id="admin-navigation" data-admin-sidebar aria-label="Primary">
+        <a class="brand" href="/admin" aria-label="Zoosper Admin home">
+            <img src="/assets/brand/logo.svg" alt="" width="32" height="32">
+            <span>Zoosper</span>
+        </a>
+        <nav class="admin-nav" aria-label="Admin navigation"><section class="admin-nav-section" data-admin-section="users"><h2 class="menu-group"><span>Users</span></h2><a href="/admin/access-tokens" data-admin-item="access-tokens" data-admin-label="Access Tokens" title="Access Tokens"><span class="admin-nav-icon" aria-hidden="true" data-admin-icon="access-tokens"><svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M9.5 10.5 4 16v4h4v-2h2v-2h2l2.5-2.5"/></svg></span><span>Access Tokens</span></a></section></nav>        <button class="admin-shell-control admin-sidebar-toggle" type="button" data-admin-sidebar-toggle aria-controls="admin-navigation" aria-pressed="false">
+            <span aria-hidden="true" data-admin-collapse-icon>‹</span>
+            <span class="admin-control-label">Collapse navigation</span>
+        </button>
+    </aside>
+    <button class="admin-navigation-scrim" type="button" data-admin-navigation-close aria-label="Close navigation" aria-hidden="true" tabindex="-1"></button>
+    <section class="admin-main">
+        <header class="admin-topbar">
+            <div class="admin-topbar__leading">
+                <button class="admin-shell-control admin-menu-toggle" type="button" data-admin-navigation-toggle aria-controls="admin-navigation" aria-expanded="false">
+                    <span aria-hidden="true">☰</span>
+                    <span class="admin-control-label">Open navigation</span>
+                </button>
+                <strong class="admin-topbar__title">Pages</strong>
+            </div>
+            <div class="admin-topbar__actions">
+                <details class="admin-account-menu">
+                    <summary aria-label="Open account menu">
+                        <span class="admin-account-avatar" aria-hidden="true">A</span>
+                        <span class="admin-account-name">Admin</span>
+                        <span class="admin-account-chevron" aria-hidden="true">⌄</span>
+                    </summary>
+                    <div class="admin-account-popover">
+                        <p class="admin-account-popover__identity"><strong>Admin</strong><span>Administrator</span></p>
+                        <label class="admin-theme-picker">
+                            <span>Colour theme</span>
+                            <select data-admin-theme-selector aria-label="Admin colour theme">
+                                                                    <option value="light" data-admin-theme-mode="light">
+                                        Light                                    </option>
+                                                                    <option value="dark" data-admin-theme-mode="dark">
+                                        Dark                                    </option>
+                                                                    <option value="ocean" data-admin-theme-mode="dark">
+                                        Ocean                                    </option>
+                                                            </select>
+                        </label>
+                        <form method="post" action="/admin/logout" class="admin-account-logout-form"><input type="hidden" name="_csrf_token" value="032a44979f84c6d08d900f7eb66837dcb3d9c25c3a52744c7265e426bd4afd9e"><button type="submit" class="admin-account-logout-button"><span class="admin-nav-icon" aria-hidden="true" data-admin-icon="logout"><svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M10 4H5v16h5M14 8l4 4-4 4M8 12h10"/></svg></span><span>Logout</span></button></form>                    </div>
+                </details>
+            </div>
+        </header>
+                        <main class="admin-content" id="admin-content" tabindex="-1"><div class="toolbar"><a class="button" href="/admin/pages/create">Create page</a></div>
+
+    <section data-grid-workspace><div class="grid-compact-toolbar"><div class="grid-compact-actions" aria-label="Grid controls"><span class="grid-compact-display-tools"><button type="button" data-grid-toggle="filters" aria-controls="grid-filters-panel" aria-expanded="false">Filters</button><button type="button" data-grid-toggle="columns" aria-controls="grid-columns-panel" aria-expanded="false">Columns</button></span><span class="grid-compact-view-tools"><label class="grid-compact-view-selector"><span class="sr-only">View</span><select id="grid-workspace-view" name="bookmark_view" data-grid-view-selector aria-label="Saved view"><option value="/admin/pages" selected>Default view</option></select></label><button type="button" data-grid-settings-toggle aria-expanded="false" aria-controls="grid-workspace-settings" title="Manage saved views" aria-label="Manage saved views">&#8942;</button></span><a class="button" data-grid-export href="/admin/pages/export">Export current page</a></div><div class="grid-compact-state"><span class="grid-compact-status" role="status">Saved</span><label>Per page <select name="page_size" data-grid-page-size aria-label="Rows per page"><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option><option value="200">200</option></select></label></div></div><form method="get" action="/admin/pages" data-grid-filter-form><input type="hidden" name="page" value="1"><input type="hidden" name="columns_submitted" value="1"><div id="grid-filters-panel" class="grid-compact-panel" hidden data-grid-panel="filters" aria-labelledby="grid-filters-title"><div class="grid-compact-panel__head"><strong id="grid-filters-title">Filters</strong><button type="button" data-grid-panel-close aria-label="Close filters">×</button></div><div class="grid-compact-filters"><label data-grid-filter-columns=""><span>Search</span><input type="text" name="q" value=""></label><label data-grid-filter-columns="title"><span>Title</span><input type="text" name="title" value=""></label><label data-grid-filter-columns="slug"><span>Slug</span><input type="text" name="slug" value=""></label><label data-grid-filter-columns="status"><span>Status</span><select name="status"><option value="">All</option><option value="" selected>All statuses</option><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></label><label data-grid-filter-columns="site_name"><span>Site</span><select name="site_id[]" multiple></select></label><div class="grid-compact-panel__actions"><a href="/admin/pages">Clear all</a><button type="submit">Apply filters</button></div></div></div><div id="grid-columns-panel" class="grid-compact-panel" hidden data-grid-panel="columns" aria-labelledby="grid-columns-title"><div class="grid-compact-panel__head"><strong id="grid-columns-title">Columns</strong><button type="button" data-grid-panel-close aria-label="Close columns">×</button></div><div class="grid-compact-columns" data-grid-column-list><label class="grid-compact-column" draggable="true" data-column-key="id"><input type="checkbox" name="visible_columns[]" value="id" checked disabled> ID<input type="hidden" name="column_order[]" value="id"></label><label class="grid-compact-column" draggable="true" data-column-key="title"><input type="checkbox" name="visible_columns[]" value="title" checked> Title<input type="hidden" name="column_order[]" value="title"></label><label class="grid-compact-column" draggable="true" data-column-key="slug"><input type="checkbox" name="visible_columns[]" value="slug" checked> Slug<input type="hidden" name="column_order[]" value="slug"></label><label class="grid-compact-column" draggable="true" data-column-key="status"><input type="checkbox" name="visible_columns[]" value="status" checked> Status<input type="hidden" name="column_order[]" value="status"></label><label class="grid-compact-column" draggable="true" data-column-key="site_name"><input type="checkbox" name="visible_columns[]" value="site_name" checked> Site<input type="hidden" name="column_order[]" value="site_name"></label><label class="grid-compact-column" draggable="true" data-column-key="actions"><input type="checkbox" name="visible_columns[]" value="actions" checked disabled> Actions<input type="hidden" name="column_order[]" value="actions"></label></div><div class="grid-compact-panel__actions"><button type="submit">Apply columns</button></div></div><input type="hidden" name="sort" value="id"><input type="hidden" name="dir" value="desc"></form><div class="grid-filter-chips" data-grid-filter-chips></div></section><details id="grid-workspace-settings" class="grid-workspace__settings" data-grid-settings hidden><summary><strong>Grid settings</strong><span>Columns and saved views</span></summary><div class="grid-workspace__settings-header"><strong>Manage saved views</strong><span>Save or update the current workspace.</span><button type="button" class="grid-workspace__settings-close" data-grid-settings-close aria-label="Close saved-view management">&times;</button></div><section class="grid-workspace__mutations" data-grid-mutations aria-label="Saved Grid settings"><div class="grid-workspace__mutations-title"><strong>Saved Grid settings</strong><span>Persist columns or save this workspace as a named view.</span></div><div class="grid-workspace__column-actions" aria-label="Column preferences"><form class="grid-workspace__mutation-form" data-grid-column-state-form method="post" action="/admin/pages/grid"><input type="hidden" name="_csrf" value="032a44979f84c6d08d900f7eb66837dcb3d9c25c3a52744c7265e426bd4afd9e"><input type="hidden" name="visible_columns[]" value="id"><input type="hidden" name="visible_columns[]" value="title"><input type="hidden" name="visible_columns[]" value="slug"><input type="hidden" name="visible_columns[]" value="status"><input type="hidden" name="visible_columns[]" value="site_name"><input type="hidden" name="visible_columns[]" value="actions"><input type="hidden" name="column_order[]" value="id"><input type="hidden" name="column_order[]" value="title"><input type="hidden" name="column_order[]" value="slug"><input type="hidden" name="column_order[]" value="status"><input type="hidden" name="column_order[]" value="site_name"><input type="hidden" name="column_order[]" value="actions"><button type="submit" name="action" value="save_columns">Save columns</button></form><form class="grid-workspace__mutation-form" method="post" action="/admin/pages/grid"><input type="hidden" name="_csrf" value="032a44979f84c6d08d900f7eb66837dcb3d9c25c3a52744c7265e426bd4afd9e"><button type="submit" name="action" value="reset_columns" class="is-secondary">Reset columns</button></form></div><form class="grid-workspace__mutation-form grid-workspace__named-view-form" data-grid-column-state-form method="post" action="/admin/pages/grid"><input type="hidden" name="_csrf" value="032a44979f84c6d08d900f7eb66837dcb3d9c25c3a52744c7265e426bd4afd9e"><label>View name <input name="view_name" maxlength="120" required autocomplete="off"></label><input type="hidden" name="sort_by" value="id"><input type="hidden" name="sort_dir" value="desc"><input type="hidden" name="workspace_page_size" value="20"><input type="hidden" name="visible_columns[]" value="id"><input type="hidden" name="visible_columns[]" value="title"><input type="hidden" name="visible_columns[]" value="slug"><input type="hidden" name="visible_columns[]" value="status"><input type="hidden" name="visible_columns[]" value="site_name"><input type="hidden" name="visible_columns[]" value="actions"><input type="hidden" name="column_order[]" value="id"><input type="hidden" name="column_order[]" value="title"><input type="hidden" name="column_order[]" value="slug"><input type="hidden" name="column_order[]" value="status"><input type="hidden" name="column_order[]" value="site_name"><input type="hidden" name="column_order[]" value="actions"><div class="grid-workspace__named-view-actions"><button type="submit" name="action" value="save_view">Save view</button><button type="submit" name="action" value="set_default_view" class="is-secondary">Save &amp; make default</button></div></form></section></details><script type="application/json" data-grid-bulk-action-manifest data-csrf-token="032a44979f84c6d08d900f7eb66837dcb3d9c25c3a52744c7265e426bd4afd9e" data-server-action="/admin/pages/bulk-action">{"gridKey":"admin.pages","actions":[{"id":"export.selected","label":"Export selected","selectionScope":"explicit_identities","executionType":"client_download","confirmationPolicy":"none","maximumSelection":100,"auditRequired":false},{"id":"page.publish","label":"Publish selected","selectionScope":"explicit_identities","executionType":"server_mutation","confirmationPolicy":"confirm","maximumSelection":100,"auditRequired":true}]}</script><table class="grid-table"><thead><tr><th data-grid-column="id" class="grid-sortable grid-sort--active"><a href="/admin/pages?page_size=20&amp;sort=id&amp;dir=asc">ID ▼</a></th><th data-grid-column="title" class="grid-sortable"><a href="/admin/pages?page_size=20&amp;sort=title&amp;dir=asc">Title</a></th><th data-grid-column="slug" class="grid-sortable"><a href="/admin/pages?page_size=20&amp;sort=slug&amp;dir=asc">Slug</a></th><th data-grid-column="status" class="grid-sortable"><a href="/admin/pages?page_size=20&amp;sort=status&amp;dir=asc">Status</a></th><th data-grid-column="site_name">Site</th><th data-grid-column="actions">Actions</th></tr></thead><tbody><tr><td colspan="6" class="grid-empty">No pages found.</td></tr></tbody></table>
+
+
+
+
+
+
+
+
+
+</main>
+            </section>
+</div>
+<footer class="cms-version-footer">Zoosper CMS 0.3.0-alpha.4-dev</footer>
+
+
+
+    <script src="/asset/zoosper-admin/js/admin-shell.js?v=7070538c82e0" defer></script>
+<script src="/assets/admin/js/zoosper-admin-messages.js?v=1.37l" defer></script>
+<script src="/asset/zoosper-global-announcements/js/announcement-modal.js?v=eb71bbce6752" defer></script>
+<script src="/assets/admin/js/editorjs.bundle.js?v=1.37l" defer></script>
+<script src="/assets/admin/js/zoosper-content-editor.js?v=1.37l" defer></script>
+<script src="/assets/admin/js/zoosper-tag-selector.js" defer></script>
+<script src="/asset/zoosper-admin-grid/js/grid-compact-workspace.js?v=b27199c8cc5c" defer></script>
+<script src="/asset/zoosper-admin-grid/js/grid-compact-column-order.js?v=d35a14b14d05" defer></script>
+<script src="/asset/zoosper-admin/js/zoosper-grid-columns.js?v=1.37l" defer></script>
+<script src="/asset/zoosper-admin-grid/js/grid-workspace-view-selector.js?v=7d1" defer></script>
+<script src="/asset/zoosper-admin-grid/js/grid-workspace-command-bar.js?v=7g1" defer></script>
+<script src="/asset/zoosper-admin-grid/js/grid-workspace-panel-position.js?v=7h1" defer></script>
+<script src="/asset/zoosper-admin-grid/js/grid-page-jump.js?v=2adfc6b4205e" defer></script>
+<script src="/asset/zoosper-admin-grid/js/grid-page-selection.js?v=7b63d80e2fb8" defer></script>
+<script src="/asset/zoosper-admin-grid/js/grid-export-selected.js?v=7n1" defer></script>
+<script src="/asset/zoosper-admin-grid/js/grid-bulk-action-manifest.js?v=7n1" defer></script>
+<script src="/asset/zoosper-admin-grid/js/grid-server-mutation.js?v=7z1" defer></script>
+<script src="/assets/page/js/page-revision-pagination.js" defer></script>
+<div id="admin-announcement-modal" class="admin-announcement-modal" role="dialog" aria-modal="true" aria-labelledby="admin-announcement-title" data-announcement-id="" hidden>
+    <div class="admin-announcement-backdrop"></div>
+    <div class="admin-announcement-dialog">
+        <div class="admin-announcement-header">
+            <span class="admin-announcement-badge">Global Announcement</span>
+            <h2 id="admin-announcement-title" class="admin-announcement-title"></h2>
+        </div>
+        <div id="admin-announcement-body" class="admin-announcement-body">
+                    </div>
+        <div class="admin-announcement-actions">
+            <form method="post" action="/admin/announcements/acknowledge" data-announcement-ack-form>
+                                    <input type="hidden" name="_csrf_token" value="032a44979f84c6d08d900f7eb66837dcb3d9c25c3a52744c7265e426bd4afd9e">
+                                <input type="hidden" name="announcement_id" value="" data-announcement-id-input>
+                <button type="submit" class="admin-button admin-button--primary" data-announcement-ack-btn>Acknowledge</button>
+                <button type="button" class="admin-button admin-button--secondary" data-announcement-close-btn>Close</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+

@@ -6,8 +6,8 @@ it('keeps pagination ownership outside Core and Marko behind the Zoosper package
     $root = dirname(__DIR__, 4);
     expect($root . '/app/zoosper-core/src/Pagination')->not->toBeDirectory();
 
-    $legacy = 'Zoosper\Core\' . 'Pagination';
-    $marko = 'Marko\' . 'Pagination';
+    $legacy = 'Zoosper\Core\\' . 'Pagination';
+    $marko = 'Marko\\' . 'Pagination';
     foreach (['app', 'packages', 'themes'] as $base) {
         $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root . '/' . $base, FilesystemIterator::SKIP_DOTS));
         foreach ($iterator as $file) {

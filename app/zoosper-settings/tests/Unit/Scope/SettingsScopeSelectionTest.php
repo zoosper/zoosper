@@ -35,7 +35,7 @@ it('keeps Request query parsing behind the HTTP adapter', function (): void {
     $source = file_get_contents(dirname(__DIR__, 5) . '/app/zoosper-settings/src/Scope/SettingsScopeSelection.php');
 
     expect($source)->toContain('$request->query(\'scope\', \'default\')')
-        ->toContain('$request->query(\'scope_key\', \'\\')')
+        ->toContain('$request->query(\'scope_key\', \'\')')
         ->not->toContain('$_GET');
 });
 

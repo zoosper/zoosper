@@ -21,6 +21,7 @@ function adminCoreMailControllerCleanupRoutePermissions(): array
     foreach ([
         $root . '/app/zoosper-admin/config/admin_routes.php',
         $root . '/app/zoosper-mail/config/admin_routes.php',
+        $root . '/packages/zoosper-audit/config/admin_routes.php',
     ] as $file) {
         $config = require $file;
         foreach (is_array($config) ? $config : [] as $route) {
@@ -57,9 +58,9 @@ test('core admin and mail log routes keep middleware permission coverage', funct
 test('core admin and mail log controllers no longer duplicate permission gates', function () {
     $root = dirname(__DIR__, 5);
     foreach ([
-        'app/zoosper-admin/src/Controller/AuditLogController.php',
+        'packages/zoosper-audit/src/Controller/AuditLogController.php',
         'app/zoosper-admin/src/Controller/DashboardController.php',
-        'app/zoosper-admin/src/Controller/LoginHistoryController.php',
+        'packages/zoosper-audit/src/Controller/LoginHistoryController.php',
         'app/zoosper-mail/src/Controller/EmailLogAdminController.php',
     ] as $relative) {
         $source = (string) file_get_contents($root . '/' . $relative);

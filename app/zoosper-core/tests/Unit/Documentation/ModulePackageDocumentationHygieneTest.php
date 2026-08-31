@@ -29,7 +29,7 @@ it('requires one meaningful root README for every first-party Composer package',
 
 it('allows only package root READMEs plus the maintained schema reference', function (): void {
     $root = dirname(__DIR__, 5);
-    $allowed = [$root . '/app/zoosper-core/src/Schema/README.md'];
+    $allowed = [$root . '/packages/zoosper-database/src/Schema/README.md'];
     foreach (array_merge(glob($root . '/app/*/composer.json') ?: [], glob($root . '/packages/*/composer.json') ?: []) as $composerFile) {
         $allowed[] = dirname($composerFile) . '/README.md';
     }

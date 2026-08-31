@@ -15,11 +15,6 @@ use Zoosper\Admin\Asset\AdminAssetRegistry;
 use Zoosper\Admin\Asset\AdminAssetTemplateRenderer;
 use Zoosper\Admin\Asset\AdminAssetViewDataProvider;
 use Zoosper\Admin\Asset\AssetPathResolver;
-use Zoosper\Audit\AuditLogger;
-use Zoosper\Audit\AuditLogRepository;
-use Zoosper\Audit\LoginHistoryRepository;
-use Zoosper\Audit\Admin\Grid\OperationalGridPageBuilder;
-use Zoosper\Audit\Admin\Grid\OperationalGridPageBuilderFactory;
 use Zoosper\Admin\Console\PruneLogsCommand;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Core\Editor\ContentEditorInterface;
@@ -52,8 +47,6 @@ use Zoosper\AdminDashboard\Contract\DashboardRolePreferenceRepositoryInterface;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Announcement\AdminAnnouncementProviderInterface;
-use Zoosper\Audit\Contract\AuditLoggerInterface;
-use Zoosper\Audit\Contract\LoginHistoryRecorderInterface;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\ScopedConfig\ScopeConfigRepository;
 use Zoosper\ScopedConfig\ScopeContext;
@@ -68,15 +61,10 @@ use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 
 return [
-    OperationalGridPageBuilderFactory::class => static fn(ServiceContainer $services): OperationalGridPageBuilderFactory => new OperationalGridPageBuilderFactory($services->get(GridViewStateResolver::class)),
-    OperationalGridPageBuilder::class => static fn(ServiceContainer $services): OperationalGridPageBuilder => $services->get(OperationalGridPageBuilderFactory::class)->create(),
     PruneLogsCommand::class => static fn(ServiceContainer $services): PruneLogsCommand => new PruneLogsCommand(
-        $services->get(AuditLogRepository::class),
-        $services->get(LoginHistoryRepository::class),
+        $services->get(\Zoosper\Audit\AuditLogRepository::class),
+        $services->get(\Zoosper\Audit\LoginHistoryRepository::class),
     ),
-    LoginHistoryRepository::class => static fn(ServiceContainer $services): LoginHistoryRepository => new LoginHistoryRepository($services->get(PDO::class)),
-    AuditLogRepository::class => static fn(ServiceContainer $services): AuditLogRepository => new AuditLogRepository($services->get(PDO::class)),
-    AuditLogger::class => static fn(ServiceContainer $services): AuditLogger => new AuditLogger($services->get(AuditLogRepository::class)),
     AdminFormRegistry::class => static function (ServiceContainer $services): AdminFormRegistry {
         $registry = new AdminFormRegistry();
         if ($services->has(AdminFormUiConfigLoader::class)) {
@@ -137,8 +125,6 @@ return [
 // Phase 1.41: bind Core interfaces to the real Admin implementations, so
 // feature modules (two-factor, and later media/page) can depend on the
 // interface instead of these concrete Admin classes directly.
-    AuditLoggerInterface::class => static fn(ServiceContainer $services): AuditLoggerInterface => $services->get(AuditLogger::class),
-    LoginHistoryRecorderInterface::class => static fn(ServiceContainer $services): LoginHistoryRecorderInterface => $services->get(LoginHistoryRepository::class),
     AdminLayoutRendererInterface::class => static fn(ServiceContainer $services): AdminLayoutRendererInterface => $services->get(AdminLayout::class),
     AdminViewRendererInterface::class => static fn(ServiceContainer $services): AdminViewRendererInterface => $services->get(AdminViewRenderer::class),
 ];

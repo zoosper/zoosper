@@ -3,8 +3,8 @@ declare(strict_types=1);
 it('requires every first-party tabular Admin index listing to use the Admin Grid workspace',function():void{
  $root=dirname(__DIR__,5);
  $listings=[
-  'admin.audit-log'=>$root.'/app/zoosper-admin/src/Controller/AuditLogController.php',
-  'admin.login-history'=>$root.'/app/zoosper-admin/src/Controller/LoginHistoryController.php',
+  'admin.audit-log'=>$root.'/packages/zoosper-audit/src/Controller/AuditLogController.php',
+  'admin.login-history'=>$root.'/packages/zoosper-audit/src/Controller/LoginHistoryController.php',
   'admin.users'=>$root.'/app/zoosper-auth/src/Admin/Grid/AdminUserGridIndex.php',
   'admin.roles'=>$root.'/app/zoosper-auth/src/Admin/Grid/RoleGridIndex.php',
   'admin.pages'=>$root.'/app/zoosper-page/src/Admin/PageAdminGridResponder.php',

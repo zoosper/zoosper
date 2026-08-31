@@ -54,7 +54,7 @@ final readonly class ModuleScaffolder
     private function files(ModuleName $name): array
     {
         $ns = $name->namespace;
-        $namespaceEscaped = str_replace('\\', '\\', $ns . '\\');
+        $namespaceEscaped = str_replace('\\', '\\\\', $ns . '\\');
         $raw = $name->raw;
         $folder = $name->folderName;
         $packageName = strtolower($name->vendor) . '/' . strtolower(

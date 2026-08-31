@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Zoosper\Admin\Controller;
+namespace Zoosper\Audit\Controller;
 use RuntimeException;
 use Zoosper\Audit\AuditLogRepository;
 use Zoosper\Audit\Admin\Grid\AuditLogGridDefinition;
@@ -21,7 +21,7 @@ final readonly class AuditLogController
   $definition=$this->definition->build(); $action=$this->adminUrls?->url('audit-log')??'/admin/audit-log';
   $page=$this->pages->build('Audit Log',$user->id,AuditLogGridDefinition::KEY,$action,$definition,$this->source,OperationalGridQueryState::fromRequest($request,$definition),OperationalGridQueryState::bookmarkId($request));
   $html=$page->workspaceHtml.$page->gridHtml;
-  if($this->views!==null)return Response::html($this->views->render(title:'Audit Log',template:'zoosper-admin::audit-log/index',data:['workspaceHtml'=>$page->workspaceHtml,'gridHtml'=>$page->gridHtml],user:$user,active:'audit-log'));
+  if($this->views!==null)return Response::html($this->views->render(title:'Audit Log',template:'zoosper-audit::audit-log/index',data:['workspaceHtml'=>$page->workspaceHtml,'gridHtml'=>$page->gridHtml],user:$user,active:'audit-log'));
   return Response::html($this->layout->render('Audit Log',$html,$user,'audit-log'));
  }
  private function currentAdminUser()
@@ -32,6 +32,7 @@ final readonly class AuditLogController
  }
 
 }
+
 
 
 

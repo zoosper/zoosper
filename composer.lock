@@ -1085,7 +1085,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-admin",
-                "reference": "10a9169a2e60a2c8cd4928406f0aef8422cfbb47"
+                "reference": "69d2a92c160710b56f2c347e8968de706a88475c"
             },
             "require": {
                 "marko/admin": "0.8.5",
@@ -1123,7 +1123,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-admin-dashboard",
-                "reference": "31bba407d0c124f99b4be8263f364bcfbdf8bc1b"
+                "reference": "822dd5bfa4ab79b11023a05402d9b44665d75387"
             },
             "require": {
                 "php": "^8.5"
@@ -1182,7 +1182,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-admin-grid",
-                "reference": "de01e4cbcb0b5e72d39d052044c5ac94f79dc2b5"
+                "reference": "1dcc01f3554bfaab775d77ac219211f7644059d5"
             },
             "require": {
                 "ext-pdo": "*",
@@ -1230,7 +1230,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-api",
-                "reference": "bbd9c08e018c6c2f108c765333c6cd36bf4ca069"
+                "reference": "5f8901db820ce146d9f1e056e1d3fa62484bee12"
             },
             "require": {
                 "php": "^8.5",
@@ -1258,7 +1258,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-api-grid",
-                "reference": "3ae5b0280f20b998ae4840a905567a8326e6d1a4"
+                "reference": "02f98ee05e2cca84b11ef6455b2c39d708b970a5"
             },
             "require": {
                 "ext-curl": "*",
@@ -1334,7 +1334,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-auth",
-                "reference": "e89babcf387c2ec21fbdc3854d0d7c7c3cd64421"
+                "reference": "924a7ec2514058d7c70b049950612eb2d0526518"
             },
             "require": {
                 "php": "^8.5",
@@ -1370,7 +1370,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/zoosper-cache",
-                "reference": "4a7c53913d6ccd5bd1343bf4c2a56db2ea2a2189"
+                "reference": "9359da8d5d24e82b9cd5318a27b585282a7a7664"
             },
             "require": {
                 "marko/cache": "0.8.5",
@@ -1411,7 +1411,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/zoosper-config",
-                "reference": "631efa84d4bca93d8ab9ec7b63bb7f0fd699a85f"
+                "reference": "007cd94c04855fca75fd97eefc49e6131a0278ea"
             },
             "require": {
                 "marko/config": "0.8.5",
@@ -1448,7 +1448,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-core",
-                "reference": "11f9e841481bb4ac5d3422e7b2742e881ed84089"
+                "reference": "25ac08c931a1c4cb2fb4c6c56b57ed28d5e02a08"
             },
             "require": {
                 "ext-pdo": "*",
@@ -1552,7 +1552,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-errors",
-                "reference": "312a323cf30f7b00fc5faed1f170fea63a1725d1"
+                "reference": "d70231cda2d95611001eee0fecdd441a710a0e84"
             },
             "require": {
                 "marko/core": "^0.8",
@@ -1628,7 +1628,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-grid",
-                "reference": "461d9d39c736e9afe58bf6914892aa03d27d2f9b"
+                "reference": "e80c154f75e7af431a209247c7425caf234858c2"
             },
             "require": {
                 "php": "^8.5",
@@ -1673,7 +1673,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-install",
-                "reference": "4ab37779d79eeeb507208c1479190606ad58dac4"
+                "reference": "b32673a7bd6021a2cdf7c510ada54fe51a041dc9"
             },
             "require": {
                 "php": "^8.5",
@@ -1705,7 +1705,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/zoosper-logger",
-                "reference": "708398b416913a48bb05e7335836be26770c0b02"
+                "reference": "ef480501cf5db6716f54f77e4806c969c63b1460"
             },
             "require": {
                 "marko/log": "0.8.5",
@@ -1743,7 +1743,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-mail",
-                "reference": "4020552618a748ffce02d841c101885c568813a2"
+                "reference": "cb4c722bcb51e0b9b0c107723fb1f977af161388"
             },
             "require": {
                 "php": "^8.5",
@@ -1771,7 +1771,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-media",
-                "reference": "c09f1f9f47c2d13d4981bbe7808909946c365ca2"
+                "reference": "ef83aae4c0def5e1a1a2ffe7104303985abf8869"
             },
             "require": {
                 "ext-pdo": "*",
@@ -1821,7 +1821,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-menu",
-                "reference": "3d0401135a593ac1f05d05b3ebe018ad087e23b0"
+                "reference": "c685b2f92ee32707bfd32518a7cb18e4baa7b759"
             },
             "require": {
                 "php": "^8.3 || ^8.5",
@@ -1859,7 +1859,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-page",
-                "reference": "420277750067f91c664f9bb40057117f44b95483"
+                "reference": "e6fd556eefbae8e5e62fe04b5c629920cdd5efdf"
             },
             "require": {
                 "php": "^8.5",
@@ -1899,7 +1899,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-pagination",
-                "reference": "90e14b509394d360723ee68868379a6f6a62b86e"
+                "reference": "f2da3b5cf4d9a691d3d6fbcf991f016cba04430d"
             },
             "require": {
                 "marko/pagination": "0.8.5",
@@ -1944,7 +1944,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/zoosper-scoped-config",
-                "reference": "1e82efeaf15feecb82db55f2642fbdc16aafccc1"
+                "reference": "c26ed8ca5542960d5e4e60d6275bdbbb5867e606"
             },
             "require": {
                 "ext-pdo": "*",
@@ -1976,7 +1976,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-seo",
-                "reference": "cecd6abf0849f62964fcf837664f6d1314f01755"
+                "reference": "a5ac882f2078ac7d0331206f26c00a5c0ef0fc9a"
             },
             "require": {
                 "php": "^8.5",
@@ -2009,7 +2009,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-session",
-                "reference": "f067025f139eefba4ebd0dd302848ec6fa6a702d"
+                "reference": "9819a1220c64462b0789199b10d76256e6de997f"
             },
             "require": {
                 "marko/session-file": "0.8.5",
@@ -2043,7 +2043,7 @@
             "dist": {
                 "type": "path",
                 "url": "app/zoosper-settings",
-                "reference": "dd9b44a253d7540946d77520b02b79883a25bb3b"
+                "reference": "a1a87458ef7d5572edab1ab37aaddbbe59e2d448"
             },
             "require": {
                 "php": "^8.5",
@@ -2078,7 +2078,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-site",
-                "reference": "cbd23deeb9cd41bc5fc69e5c9d75f8d8d07aba3c"
+                "reference": "ece56c15b1bc6ad6d3898ecc7369a0816034aff7"
             },
             "require": {
                 "php": "^8.5",
@@ -2114,7 +2114,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-store-orders",
-                "reference": "e01b5c30501441627b20fe9fb1654efe75e2554c"
+                "reference": "434ad09ba55cc07c4b73cb5b84e411068376c35b"
             },
             "require": {
                 "php": "^8.5",
@@ -2156,7 +2156,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-theme",
-                "reference": "b262ea4085ab4e85dc855db624f21ea8e4fafe48"
+                "reference": "bb4d883a1888d418c8915db708328c7eacafcd2e"
             },
             "require": {
                 "php": "^8.5",
@@ -2187,7 +2187,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-two-factor",
-                "reference": "b8cd2a3701abc13716640556ef1b4bc9a6801b98"
+                "reference": "3f8a8b130f5d504e89bd41099645fd92bb7f61d1"
             },
             "require": {
                 "php": "^8.5",
@@ -2215,7 +2215,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-url-rewrite",
-                "reference": "690466432492259bed01b35c2f85aea9f768b0e5"
+                "reference": "4c728eb5762ffba21b80f8836013974760de74e2"
             },
             "require": {
                 "php": "^8.5",

@@ -2,15 +2,8 @@
 
 declare(strict_types=1);
 
-use Zoosper\Audit\AuditLogRepository;
-use Zoosper\Audit\LoginHistoryRepository;
-use Zoosper\Audit\Admin\Grid\OperationalGridPageBuilder;
-use Zoosper\Audit\Admin\Grid\LoginHistoryGridDefinition;
-use Zoosper\Audit\Admin\Grid\AuditLogGridDefinition;
-use Zoosper\Admin\Controller\AuditLogController;
 use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
-use Zoosper\Admin\Controller\LoginHistoryController;
 use Zoosper\Admin\Dashboard\DashboardPersonalisationService;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
@@ -30,7 +23,7 @@ return [
         $services->get(AuthService::class),
         $services->get(SessionGuard::class),
         $services->get(CsrfTokenManager::class),
-        $services->get(LoginHistoryRepository::class),
+        $services->get(\Zoosper\Audit\LoginHistoryRepository::class),
         $services->has(AdminTwoFactorLoginRedirectService::class) ? $services->get(AdminTwoFactorLoginRedirectService::class) : null,
         $services->has(AdminTwoFactorEnrollmentService::class) ? $services->get(AdminTwoFactorEnrollmentService::class) : null,
         $services->has(TwoFactorChallengeService::class) ? $services->get(TwoFactorChallengeService::class) : null,
@@ -47,17 +40,6 @@ return [
         $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null,
         $services->has(\Zoosper\Audit\Contract\AuditLoggerInterface::class) ? $services->get(\Zoosper\Audit\Contract\AuditLoggerInterface::class) : null,
-    ),
-
-    AuditLogController::class => static fn (ServiceContainer $services): AuditLogController => new AuditLogController(
-        $services->get(SessionGuard::class), $services->get(AuditLogRepository::class), new AuditLogGridDefinition(),
-        $services->get(OperationalGridPageBuilder::class), $services->get(AdminLayout::class),
-        $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null, $services->get(AdminUrlGenerator::class),
-    ),
-    LoginHistoryController::class => static fn (ServiceContainer $services): LoginHistoryController => new LoginHistoryController(
-        $services->get(SessionGuard::class), $services->get(LoginHistoryRepository::class), new LoginHistoryGridDefinition(),
-        $services->get(OperationalGridPageBuilder::class), $services->get(AdminLayout::class),
-        $services->has(AdminViewRenderer::class) ? $services->get(AdminViewRenderer::class) : null, $services->get(AdminUrlGenerator::class),
     ),
 ];
 

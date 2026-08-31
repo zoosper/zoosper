@@ -28,16 +28,16 @@ function coreSourceDir(): string
 function forbiddenFeatureNamespaces(): array
 {
     return [
-        'Zoosper\Page\',
-        'Zoosper\Site\',
-        'Zoosper\Auth\',
-        'Zoosper\Theme\',
-        'Zoosper\Media\',
-        'Zoosper\Admin\',
-        'Zoosper\Api\',
-        'Zoosper\Mail\',
-        'Zoosper\TwoFactor\',
-        'Zoosper\UrlRewrite\',
+        'Zoosper\Page\\',
+        'Zoosper\Site\\',
+        'Zoosper\Auth\\',
+        'Zoosper\Theme\\',
+        'Zoosper\Media\\',
+        'Zoosper\Admin\\',
+        'Zoosper\Api\\',
+        'Zoosper\Mail\\',
+        'Zoosper\TwoFactor\\',
+        'Zoosper\UrlRewrite\\',
     ];
 }
 
@@ -97,7 +97,7 @@ it('does not import feature controllers or repositories by class-use in core', f
     $violations = [];
 
     // A stricter check: any `use Zoosper\<Feature>\...;` import statement in core.
-    $pattern = '/^\s*use\s+Zoosper\(Page|Site|Auth|Theme|Media|Admin|Api|Mail|TwoFactor|UrlRewrite)\/m';
+    $pattern = '/^\s*use\s+Zoosper\\\\(Page|Site|Auth|Theme|Media|Admin|Api|Mail|TwoFactor|UrlRewrite)/m';
 
     foreach (coreSourceFiles() as $file) {
         $source = (string) file_get_contents($file);
