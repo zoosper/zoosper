@@ -1,6 +1,6 @@
 # Zoosper CMS — Master Roadmap
 
-**Last updated:** 2026-08-28 (Sydney)
+**Last updated:** 2026-08-31 (Sydney)
 
 ## Current continuity status
 
