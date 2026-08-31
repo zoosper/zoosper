@@ -49,13 +49,6 @@ return array (
       'path' => '/assets/admin/css/zoosper-admin-messages.css?v=1.37l',
       'sort_order' => 20,
     ),
-    'zoosper-admin-editor-style' => 
-    array (
-      'screens' => array ('pages'),
-      'type' => 'style',
-      'path' => '/assets/admin/css/zoosper-content-editor.css?v=1.37l',
-      'sort_order' => 30,
-    ),
     'zoosper-admin-grid-style' => 
     array (
       'type' => 'style',
@@ -75,33 +68,11 @@ return array (
       'sort_order' => 10,
       'defer' => true,
     ),
-    'zoosper-admin-messages-script' =>
+    'zoosper-admin-messages-script' => 
     array (
       'type' => 'script',
       'path' => '/assets/admin/js/zoosper-admin-messages.js?v=1.37l',
       'sort_order' => 20,
-      'attributes' => 
-      array (
-        'defer' => true,
-      ),
-    ),
-    'zoosper-admin-editorjs-bundle' => 
-    array (
-      'screens' => array ('pages'),
-      'type' => 'script',
-      'path' => '/assets/admin/js/editorjs.bundle.js?v=1.37l',
-      'sort_order' => 25,
-      'attributes' => 
-      array (
-        'defer' => true,
-      ),
-    ),
-    'zoosper-admin-editor-script' => 
-    array (
-      'screens' => array ('pages'),
-      'type' => 'script',
-      'path' => '/assets/admin/js/zoosper-content-editor.js?v=1.37l',
-      'sort_order' => 30,
       'attributes' => 
       array (
         'defer' => true,

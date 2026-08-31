@@ -1,0 +1,17 @@
+{
+    "name": "zoosper/editor",
+    "description": "Zoosper_Editor content editor adapters and runtime configuration for Zoosper CMS.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "zoosper/core": "dev-dev",
+        "zoosper/auth": "dev-dev",
+        "zoosper/scoped-config": "dev-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\Editor\\": "src/"
+        }
+    }
+}

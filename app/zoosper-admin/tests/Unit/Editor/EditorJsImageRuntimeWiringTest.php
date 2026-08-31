@@ -9,7 +9,7 @@ use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 
 test('EditorJsContentEditor renders image tool config data attribute', function () {
     $root = dirname(__DIR__, 5);
-    $source = (string) file_get_contents($root . '/app/zoosper-admin/src/Editor/EditorJsContentEditor.php');
+    $source = (string) file_get_contents($root . '/app/zoosper-editor/src/EditorJsContentEditor.php');
 
     expect($source)->toContain(EditorJsImageToolConfig::class);
     expect($source)->toContain(CsrfTokenManager::class);
@@ -19,7 +19,7 @@ test('EditorJsContentEditor renders image tool config data attribute', function 
 
 test('admin service factory injects image tool config and csrf into EditorJsContentEditor', function () {
     $root = dirname(__DIR__, 5);
-    $source = (string) file_get_contents($root . '/app/zoosper-admin/config/services.php');
+    $source = (string) file_get_contents($root . '/app/zoosper-editor/config/services.php');
 
     expect($source)->toContain(EditorJsImageToolConfig::class);
     expect($source)->toContain('$services->has(EditorJsImageToolConfig::class)');

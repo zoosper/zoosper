@@ -97,7 +97,7 @@ it('passes the active screen through both Admin layout asset rendering paths', f
     $root = dirname(__DIR__, 5);
     $layout = (string) file_get_contents($root . '/app/zoosper-admin/src/Layout/AdminLayout.php');
     $controller = (string) file_get_contents($root . '/app/zoosper-page/src/Admin/Controller/PageAdminController.php');
-    $manifest = require $root . '/app/zoosper-admin/config/admin_assets.php';
+    $manifest = require $root . '/app/zoosper-editor/config/admin_assets.php';
 
     expect($layout)->toContain('$this->assetViewData?->data($active)')
         ->toContain('$this->assetRenderer?->stylesHtml($active)')

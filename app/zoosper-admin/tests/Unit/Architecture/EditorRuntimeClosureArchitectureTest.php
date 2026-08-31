@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 it('derives Default editor configuration through the explicit-scope factory', function (): void {
     $root = dirname(__DIR__, 5);
-    $services = file_get_contents($root . '/app/zoosper-admin/config/services.php');
-    $factory = file_get_contents($root . '/app/zoosper-admin/src/Editor/Config/ContentEditorRuntimeConfigFactory.php');
+    $services = file_get_contents($root . '/app/zoosper-editor/config/services.php');
+    $factory = file_get_contents($root . '/app/zoosper-editor/src/Config/ContentEditorRuntimeConfigFactory.php');
 
     expect($services)->toContain('ContentEditorRuntimeConfigFactory::class')
         ->toContain('->get(ContentEditorRuntimeConfigFactory::class)')
@@ -31,8 +31,8 @@ it('keeps Page coupled to the editor contract rather than concrete Admin editors
 
 it('keeps Media optional at the editor adapter boundary', function (): void {
     $root = dirname(__DIR__, 5);
-    $services = file_get_contents($root . '/app/zoosper-admin/config/services.php');
-    $editor = file_get_contents($root . '/app/zoosper-admin/src/Editor/EditorJsContentEditor.php');
+    $services = file_get_contents($root . '/app/zoosper-editor/config/services.php');
+    $editor = file_get_contents($root . '/app/zoosper-editor/src/EditorJsContentEditor.php');
 
     expect($services)->toContain('$services->has(EditorJsImageToolConfig::class)')
         ->and($editor)->toContain('private ?EditorJsImageToolConfig $imageToolConfig = null')

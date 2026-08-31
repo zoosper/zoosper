@@ -87,29 +87,6 @@ return [
     AssetPathResolver::class => static fn(ServiceContainer $services): AssetPathResolver => new AssetPathResolver($services->get(ConfigRepository::class)),
     FlashMessageStoreInterface::class => static fn(ServiceContainer $services): FlashMessageStoreInterface => new SessionFlashMessageStore(),
     FlashMessageRenderer::class => static fn(ServiceContainer $services): FlashMessageRenderer => new FlashMessageRenderer(),
-    ContentEditorRuntimeConfigFactory::class => static fn (ServiceContainer $services): ContentEditorRuntimeConfigFactory => new ContentEditorRuntimeConfigFactory(
-        $services->get(ConfigRepository::class),
-        $services->get(ScopeConfigRepository::class),
-    ),
-    ContentEditorRuntimeConfig::class => static fn (ServiceContainer $services): ContentEditorRuntimeConfig => $services
-        ->get(ContentEditorRuntimeConfigFactory::class)
-        ->forDefaultScope(),
-    TextareaContentEditor::class => static fn(ServiceContainer $services): TextareaContentEditor => new TextareaContentEditor(),
-    EditorJsContentEditor::class => static fn(ServiceContainer $services): EditorJsContentEditor => new EditorJsContentEditor(
-        $services->get(TextareaContentEditor::class),
-        $services->has(EditorJsImageToolConfig::class) ? $services->get(EditorJsImageToolConfig::class) : null,
-        $services->get(CsrfTokenManager::class),
-    ),
-    ContentEditorRegistry::class => static fn(ServiceContainer $services): ContentEditorRegistry => new ContentEditorRegistry(
-        $services->get(EditorJsContentEditor::class),
-        $services->get(TextareaContentEditor::class),
-    ),
-    ContentEditorInterface::class => static fn (ServiceContainer $services): ContentEditorInterface => $services
-        ->get(ContentEditorRegistry::class)
-        ->preferred(
-            $services->get(ContentEditorRuntimeConfig::class)->preferred(),
-            $services->get(ContentEditorRuntimeConfig::class)->fallback(),
-        ),
     AdminSectionMetadataLoader::class => static fn(ServiceContainer $services): AdminSectionMetadataLoader => new AdminSectionMetadataLoader($services->get(ModuleRegistry::class)),
     AdminSectionBuilder::class => static fn(ServiceContainer $services): AdminSectionBuilder => new AdminSectionBuilder($services->get(AdminSectionMetadataLoader::class)),
     AdminMenu::class => static fn(ServiceContainer $services): AdminMenu => new AdminMenu(

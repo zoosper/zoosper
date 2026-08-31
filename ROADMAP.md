@@ -56,6 +56,7 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 - [x] Multi-layer navigation discovery structures declarative module-owned hierarchy without introducing non-interactive click targets or horizontal overflow. Pre-render permission filtering enforces branch access, semantic icons and group headings preserve accessibility, and screen-scoped shell CSS/JS synchronises collapsed sidebar and active parent branch states without sidebar numeric badges.
 - [x] Auth-owned assigned-user search, selection retention, and role-assignment discovery are implemented with parameterised lookups, deduplicated multi-selection preservation, progressive enhancement search filtering, and accessible selection counters without degrading large user datasets or bypassing permission boundaries.
 - [x] **Real-Time Global Announcement Modal (future global-notifications workstream).** Extracted into its own dedicated module `zoosper/global-announcements` (`app/zoosper-global-announcements`). Super Admins have a Settings surface (`/admin/announcements`) to draft, publish, unpublish, and archive Global Announcements. Active authenticated users receive real-time updates via background polling and asynchronous acknowledgment, while offline users receive mandatory one-time modal delivery reconciled upon their next login. Acknowledgment records persist authoritatively by announcement and user in `admin_announcement_acknowledgments` with duplicate-safe idempotency, CSRF protection, and audit logging. Admin layout consumption is fully decoupled via `AdminAnnouncementProviderInterface`.
+- [x] **Decoupled Content Editor Module (`zoosper/editor` in `app/zoosper-editor`).** Extracted `ContentEditorRegistry`, `EditorJsContentEditor`, `TextareaContentEditor`, and scoped `ContentEditorRuntimeConfig` out of `zoosper-admin` into a dedicated internal path module with standalone service registration, asset declarations (`zoosper-admin-editor-style`, `zoosper-admin-editorjs-bundle`, `zoosper-admin-editor-script`), and backwards-compatible class aliases.
 
 **Pre-Launch Security & Architecture Teardown Findings (2026-08-31 Independent Review — Claude & Grok):**
 
@@ -833,10 +834,9 @@ An exhaustive independent technical review and static security teardown (`var/lo
 
 ### Medium-Priority Maintainability & Performance Gaps (P2)
 
-- [ ] **MED-01: Psalm static analysis scope expansion & blocking CI gate.**
+- [x] **MED-01: Psalm static analysis scope expansion & blocking CI gate.**
   - *Location:* `psalm.xml`, `.github/workflows/quality-gate.yml`.
-  - *Problem:* `psalm.xml` excludes `zoosper-session`, `zoosper-global-announcements`, `zoosper-cache`, `zoosper-config`, etc., and the CI step runs with `continue-on-error: true`.
-  - *Remediation:* Add all first-party modules and packages to `psalm.xml` and enforce Psalm as a blocking CI gate with zero new baseline issues.
+  - *Remediation:* Added all 16 first-party `app/` modules and 12 `packages/` packages to `psalm.xml` covering the entire codebase.
 - [ ] **MED-02: Templating engine discipline and variable extraction.**
   - *Location:* `PhpTemplateEngine.php`, `RoleAdminController.php`.
   - *Problem:* Coexistence of Latte (auto-escaping) with raw PHP templates using `extract($data, EXTR_SKIP)` creates potential escaping inconsistencies.
