@@ -78,8 +78,9 @@ return [
         $services->get(ConfigRepository::class),
         gridIndex: $services->get(RoleGridIndex::class),
         adminUrls: $services->get(AdminUrlGenerator::class),
-
         lifecycle: new RoleLifecycleAdminResponder($services->get(\Zoosper\Auth\Lifecycle\RoleLifecycleCoordinator::class), $services->get(\Zoosper\Auth\Service\CsrfTokenManager::class), $services->has(\Zoosper\Core\Message\FlashMessageStoreInterface::class) ? $services->get(\Zoosper\Core\Message\FlashMessageStoreInterface::class) : null, $services->has(\Zoosper\Core\Url\AdminUrlGenerator::class) ? $services->get(\Zoosper\Core\Url\AdminUrlGenerator::class) : null),
+        templates: $services->has('theme.admin_template_renderer') ? $services->get('theme.admin_template_renderer') : ($services->has(\Zoosper\Theme\Template\TemplateRenderer::class) ? $services->get(\Zoosper\Theme\Template\TemplateRenderer::class) : null),
+        views: $services->has(AdminViewRendererInterface::class) ? $services->get(AdminViewRendererInterface::class) : null,
     ),
     PersonalAccessTokenAdminController::class => static fn (ServiceContainer $services): PersonalAccessTokenAdminController => new PersonalAccessTokenAdminController($services->get(SessionGuard::class), $services->get(CsrfTokenManager::class), $services->get(PersonalAccessTokenRepository::class), $services->get(PersonalAccessTokenService::class), $services->get(AdminViewRendererInterface::class), $services->get(AdminUrlGenerator::class), $services->get(AuditLoggerInterface::class), new PersonalAccessTokenScopePresenter(), $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null, new AdminCollectionGrid($services->get(GridViewStateResolver::class)), $services->get(PDO::class)),
     RoleApiController::class => static fn (ServiceContainer $services): RoleApiController => new RoleApiController(

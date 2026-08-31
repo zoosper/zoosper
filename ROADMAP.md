@@ -397,7 +397,7 @@ replica.
 - [x] Latte + PHP template engine adapters
 - [x] Theme repository + per-site theme selection + theme admin
 - [x] Module/theme template overrides (path-safe) + layout update system
-- [~] RoleAdmin → Latte cutover (users on Latte; roles still PHP views)
+- [x] RoleAdmin → Latte cutover (users and roles both on Latte with auto-escaping)
 - [x] Adopter theme override story documented end-to-end (see `docs/themes.md`)
 - [x] **CSP reporting endpoint configuration & readiness.** Configurable `report_uri` supported in `SecurityHeaders` and policy composition; CSP ships in report-only mode by default for observational readiness.
 
@@ -432,8 +432,7 @@ replica.
   configured (enforced at point of use, not in the eagerly-loaded config
   file, to avoid breaking unrelated boot paths).
 - [x] Memoize `SessionGuard::user()` per request — memoized in-process with explicit reset/cache-clear API for worker runtimes.
-- [~] Admin god-module split — Page/User/Role admin controllers relocated;
-  `ThemeAdminController` not yet moved.
+- [x] Admin god-module split — Page/User/Role/Theme/Media/Token/Announcement admin controllers relocated to their respective feature modules.
 - [x] Batch-load permissions in `AdminUserRepository` (fix N+1) — Phase 1.109
 - [x] Pagination + retention for audit log & login history — `PruneLogsCommand` (`admin:logs:prune`) and persistent Grid workspaces.
 - [ ] Consolidate duplicated Grid Criteria/SqlBuilder/Workspace and Admin Form section/processor patterns into a single extensible, typed Grid & Form kernel.
@@ -831,10 +830,9 @@ An exhaustive independent technical review and static security teardown (`var/lo
 - [x] **MED-01: Psalm static analysis scope expansion & blocking CI gate.**
   - *Location:* `psalm.xml`, `.github/workflows/quality-gate.yml`.
   - *Remediation:* Added all 16 first-party `app/` modules and 12 `packages/` packages to `psalm.xml` covering the entire codebase.
-- [ ] **MED-02: Templating engine discipline and variable extraction.**
+- [x] **MED-02: Templating engine discipline and variable extraction.**
   - *Location:* `PhpTemplateEngine.php`, `RoleAdminController.php`.
-  - *Problem:* Coexistence of Latte (auto-escaping) with raw PHP templates using `extract($data, EXTR_SKIP)` creates potential escaping inconsistencies.
-  - *Remediation:* Standardize view rendering on Latte or enforce strict escaping contracts across all PHP template partials.
+  - *Remediation:* Standardized view rendering on Latte across all Auth views including `RoleAdminController` (`form.latte`, `index.latte`, `permission-tree.latte`, `user-assignment.latte`), enforcing Latte's auto-escaping discipline.
 - [x] **MED-03: Behavioral runtime assertions for crypto & security tests.**
   - *Location:* `SecretProtectorKeyEnforcementTest.php`.
   - *Problem:* Tests assert source code strings rather than runtime behavior under insecure environment configurations.

@@ -1,0 +1,21 @@
+{if isset($gridHtml)}
+{$gridHtml|noescape}
+{else}
+<header class="page-header admin-role-header">
+    <div><p class="page-header__eyebrow">Access control</p><h1>Roles &amp; Permissions</h1><p class="muted">Define reusable permission sets and manage assigned administrators.</p></div>
+    <a class="button" href="{$createUrl}">Create role</a>
+</header>
+<div class="admin-table-scroll admin-role-list" role="region" aria-label="Roles and permissions" tabindex="0">
+<table>
+    <thead><tr><th scope="col">ID</th><th scope="col">Label</th><th scope="col">Code</th><th scope="col">Actions</th></tr></thead>
+    <tbody>
+    {foreach $roles as $role}
+        {var $id = (int) $role['id']}
+        <tr><td>{$id}</td><td><strong>{$role['label']}</strong></td><td><code>{$role['code']}</code></td><td><a class="button button--secondary" href="{$editBaseUrl}?id={$id}">Edit</a></td></tr>
+    {else}
+        <tr><td colspan="4">No roles found.</td></tr>
+    {/foreach}
+    </tbody>
+</table>
+</div>
+{/if}

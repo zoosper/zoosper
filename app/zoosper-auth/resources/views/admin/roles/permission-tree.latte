@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="/assets/admin/css/permission-explorer.css?v=fcb99090ad65" data-zoosper-permission-explorer-assets>
+<script src="/assets/admin/js/permission-explorer.js?v=9beeafa105ce" defer data-zoosper-permission-explorer-assets></script>
+
+<div class="admin-role-permission-groups">
+{foreach $tree as $group}
+    <fieldset>
+        <legend>{$group->label}</legend>
+        {foreach $group->permissions as $permission}
+            {var $id = (int) $permission['id']}
+            <label>
+                <input type="checkbox" name="permission_ids[]" value="{$id}"{if in_array($id, $selected, true)} checked{/if}>
+                <code>{$permission['code']}</code>
+                {$permission['label']}
+            </label>
+        {/foreach}
+    </fieldset>
+{/foreach}
+</div>

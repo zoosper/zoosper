@@ -23,6 +23,9 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Url\AdminUrlGenerator;
 
+use Zoosper\Auth\UI\AdminViewRendererInterface;
+use Zoosper\Theme\Template\TemplateRenderer;
+
 /**
  * Admin CRUD controller for roles and permissions.
  */
@@ -39,6 +42,8 @@ final readonly class RoleAdminController
         private ?RoleGridIndex $gridIndex = null,
         private ?AdminUrlGenerator $adminUrls = null,
         private ?RoleLifecycleAdminResponder $lifecycle = null,
+        private ?TemplateRenderer $templates = null,
+        private ?AdminViewRendererInterface $views = null,
     ) {
     }
 
@@ -240,7 +245,15 @@ final readonly class RoleAdminController
 
     private function renderRoleView(string $template, array $data = []): string
     {
-        $path = dirname(__DIR__, 4) . '/zoosper-admin/resources/views/admin/roles/' . ltrim($template, '/');
+        $cleanTemplate = preg_replace('/\.(latte|php)$/', '', ltrim($template, '/'));
+        if ($this->templates !== null) {
+            return $this->templates->render('zoosper-auth::admin/roles/' . $cleanTemplate, $data, 'default', 'admin.content');
+        }
+
+        $lattePath = dirname(__DIR__, 3) . '/resources/views/admin/roles/' . $cleanTemplate . '.latte';
+        $phpPath = dirname(__DIR__, 4) . '/zoosper-admin/resources/views/admin/roles/' . $cleanTemplate . '.php';
+        $path = is_file($lattePath) ? $lattePath : $phpPath;
+
         if (!is_file($path)) {
             throw new RuntimeException('Role admin view not found: ' . $template);
         }
