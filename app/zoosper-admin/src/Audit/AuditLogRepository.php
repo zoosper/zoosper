@@ -12,33 +12,8 @@ use Zoosper\Pagination\PaginationResult;
 /**
  * Repository for the admin activity log.
  *
- * Phase A (Grid Core): SUPERSEDES the bespoke AuditLogCriteria/paginate(
- * AuditLogCriteria) pair introduced in Phase 1.112 with the generic
- * GridDataSourceInterface. AuditLogCriteria.php has been deleted — one
- * criteria shape (GridCriteria) now serves every admin grid, per the decision
- * to avoid running two parallel pagination mechanisms side by side and to
- * keep the codebase lean.
- *
- * `latest()` remains for any other existing caller of the "top N" query.
- *
- * CORRECTNESS FIX (confirmed 2026-07-30, external reviewer pass):
- * paginate() previously hardcoded `ORDER BY id <direction>` and never
- * referenced $criteria->sortBy at all. This was harmless in practice ONLY
- * because this grid currently declares just one sortable column
- * ('created_at', mapped to the monotonic `id` column as a proxy — row ids
- * increase with time, avoiding ambiguity from duplicate timestamps). But
- * nothing enforced that a GridDataSourceInterface implementation actually
- * honours sortBy — if a third-party module ever contributed a different
- * sortable column via GridColumnRegistry, clicking that column header
- * would show an "active sort" UI indicator that silently did nothing.
- *
- * Fixed with an explicit, small allow-list mapping known sort keys to safe
- * column expressions (self::SORTABLE_COLUMNS), defaulting to `id` for any
- * unrecognised/null sortBy — deliberately NOT interpolating $criteria->sortBy
- * directly into SQL, which would be a real injection risk. Since the only
- * currently-declared sortable key ('created_at') still maps to 'id',
- * runtime behaviour for existing callers is completely unchanged; the
- * method now genuinely consults sortBy instead of silently ignoring it.
+ * Implements GridDataSourceInterface for paginated, filterable admin grid display
+ * and supports retention pruning.
  */
 final readonly class AuditLogRepository implements GridDataSourceInterface
 {

@@ -18,42 +18,12 @@ use Zoosper\Core\Schema\SchemaSnapshotRepository;
 /**
  * Runs traditional migration files and module-owned declarative schema files.
  *
- * This migrator keeps Zoosper marketplace-module friendly by treating
- * `bin/zoosper migrate` as the single schema update entry point. Core and
- * marketplace modules can own schema in `config/db_schema.php`, while explicit
- * migration files remain supported for one-off data/schema changes.
- *
- * Phase 1.29: module-owned schema is now applied by the unified `Schema/` engine
- * (validated by SchemaValidator and audited by SchemaSnapshotRepository),
- * replacing the previous create-only DeclarativeSchemaApplier. There is now a
- * single declarative schema engine used by both `bin/zoosper migrate` and
- * `bin/zoosper-schema apply`.
- *
- * Phase 1.40c: traditional migration *files* are now discovered from two
- * places, not just the root `database/migrations/` folder:
- *
- * 1. The root `database/migrations/` folder — reserved for core bootstrap
- *    migrations that are not owned by any single feature module (e.g. the
- *    no-op continuity migration that predates the declarative schema engine).
- * 2. Each enabled module's own `database/migrations/` folder — e.g.
- *    `app/zoosper-auth/database/migrations/`. This lets a module own its
- *    schema history the same way it already owns its declarative
- *    `config/db_schema.php`, its routes, its controllers, etc. Removing a
- *    module removes its migration history with it; a marketplace module can
- *    ship migrations the exact same way a first-party module does.
- *
- * Migration identity is still tracked by filename alone (see
- * hasMigrationRun()/markMigrationRun()), NOT by folder path. This means
- * relocating an already-applied migration file from the root folder into its
- * owning module's folder is always safe: the migrations ledger recognises it
- * by the same filename and will not re-run it.
- *
- * Files from both locations are merged and sorted by filename (not full
- * path), so migrations still execute in their original chronological order
- * regardless of which module folder they now live in.
+ * Migration files are discovered from both the root `database/migrations/`
+ * folder and each enabled module's `database/migrations/` folder.
+ * Uses live module discovery to ensure all current module migrations and declarative
+ * schemas are applied without relying on stale compiled caches.
  *
  * Supported migration file formats:
- *
  * - `return ['CREATE TABLE ...', 'CREATE INDEX ...'];`
  * - `return 'CREATE TABLE ...';`
  * - `return static function (PDO $pdo): void { ... };`
@@ -61,37 +31,6 @@ use Zoosper\Core\Schema\SchemaSnapshotRepository;
  * - `return ['up' => static function (PDO $pdo): void { ... }];`
  * - object with `up(PDO $pdo): void`.
  * - object with `up(PDO $pdo, string $driver): void`.
- *
- * PCI-aware reminder: migration code must never seed OTP values, plaintext
- * recovery codes, TOTP secrets or other authentication secrets into logs or
- * schema defaults. Authentication secrets must be protected at the service
- * layer and written only as protected payloads or hashes.
- *
- * BUG FIX (confirmed 2026-07-30, external reviewer pass — real, correctly
- * identified deploy-ordering hazard): collectMigrationFiles() and
- * applyModuleSchemas() previously discovered the module list via
- * moduleRegistry()->enabledModules(), which (since the module-manifest
- * compile feature was added) prefers a compiled disk cache
- * (var/cache/modules.php) when one exists, over a live filesystem scan.
- * This meant: ship a release that adds a NEW module, and running
- * `bin/zoosper migrate` (whether standalone, or as part of `bin/zoosper
- * deploy`'s migrate step, regardless of step ordering relative to compile)
- * would silently run migrations against the OLD, stale, previously-compiled
- * module list — completely missing the new module's migrations. Remove a
- * module and the inverse could happen. This is exactly the class of bug
- * Magento's setup:upgrade-before-setup:di:compile ordering exists to
- * prevent.
- *
- * Fixed at the root, not just by reordering deploy's steps (which would
- * only protect the `deploy` command specifically, not a standalone
- * `bin/zoosper migrate` invocation): migrations must always reflect LIVE,
- * current truth, never a cached snapshot from a previous release. Both
- * collectMigrationFiles() and SchemaLoader::load() (see that class's own
- * matching fix) now call ModuleRegistry::discoverModulesLive() explicitly
- * instead of enabledModules() — bypassing any compiled cache entirely for
- * the specific purpose of running migrations, regardless of call order,
- * regardless of whether a compiled cache exists, and regardless of which
- * script or command constructed this Migrator.
  */
 final class Migrator
 {
@@ -136,7 +75,7 @@ final class Migrator
     /**
      * Execute all pending migration files in filename order, drawn from both
      * the root database/migrations/ folder and every enabled module's own
-     * database/migrations/ folder (Phase 1.40c).
+     * database/migrations/ folder.
      */
     private function applyFileMigrations(): void
     {
@@ -157,13 +96,7 @@ final class Migrator
     /**
      * Gather migration file paths from the root migrations folder and from
      * every enabled module's own database/migrations/ folder, then sort by
-     * filename (not full path) so chronological order is preserved
-     * regardless of which folder a file lives in.
-     *
-     * BUG FIX: now calls discoverModulesLive() instead of enabledModules()
-     * — see this class's own docblock above for the full explanation.
-     * Migrations must always see the current, live module list, never a
-     * potentially stale compiled cache from a previous release.
+     * filename (not full path) so chronological order is preserved.
      *
      * @return list<string>
      */

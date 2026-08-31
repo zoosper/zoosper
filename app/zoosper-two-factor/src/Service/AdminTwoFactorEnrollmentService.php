@@ -51,19 +51,7 @@ final readonly class AdminTwoFactorEnrollmentService
     }
 
     /**
-     * KEY ROTATION FIX (confirmed 2026-07-30, real production lockout
-     * incident): reveal a stored secret. If it can only be decrypted using
-     * a PREVIOUS encryption key (i.e. TWO_FACTOR_ENCRYPTION_KEY has been
-     * rotated since this admin last logged in), this now OPPORTUNISTICALLY
-     * re-encrypts the secret with the CURRENT key and re-saves it —
-     * closing the rotation window for this admin automatically, on their
-     * next successful login, with no manual intervention needed. This is
-     * silent and safe: it only ever re-saves the SAME secret, re-encrypted
-     * with a different key; it never changes what the secret actually is.
-     *
-     * If re-protection fails for any reason, the original (successfully
-     * revealed) secret is still returned — a failed opportunistic
-     * re-encryption must never turn a successful login into a failure.
+     * Reveals a stored secret, opportunistically re-protecting with the current key if previously encrypted.
      */
     public function revealSecret(int $adminUserId): ?string
     {

@@ -93,18 +93,6 @@ return [
         $services->get(\Zoosper\Page\Repository\PageRepository::class),
     ),
 
-    // Phase 1.93: register the page module as the frontend fallback handler so
-    // ApplicationFactory resolves FallbackHandlerInterface instead of falling
-    // back to NullFallbackHandler. This is what makes frontend page views work.
-    //
-    // PAGE CACHE (new, 2026-07-31): the real PageFallbackHandler is now
-    // wrapped by CachingFallbackHandler — a generic decorator owned by
-    // zoosper-core (see that class's own docblock for the full safety
-    // model and honestly-stated limitations). Disabled by default via
-    // config/page_cache.php; when disabled, CachingFallbackHandler
-    // delegates every call straight through to PageFallbackHandler with
-    // zero behavioural change, so this wrapping is safe to ship even
-    // before the feature is ever turned on.
     FallbackHandlerInterface::class => static function (ServiceContainer $services): FallbackHandlerInterface {
         $pageFallbackHandler = new PageFallbackHandler($services->get(PageController::class));
         $pageCacheConfig = $services->get(ConfigRepository::class)->array('page_cache');

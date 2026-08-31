@@ -20,25 +20,8 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorLoginRedirectService;
 /**
  * Handles admin login and logout requests.
  *
- * Phase 1.113 HOTFIX: login history was silently NEVER being recorded.
- * The previous code called a `callLoginHistory()` helper that probed
- * method_exists() for names like 'recordSuccess'/'success'/'recordFailure'/
- * 'failure' on LoginHistoryRepository, but that class only ever exposed a
- * method literally called `record()`. None of the probed names matched, so the
- * loop silently fell through every time and NOTHING was ever written - a
- * pre-existing bug, not something introduced by the 2FA work. This explains a
- * stale login history. Fixed by calling ->record() directly, with the correct
- * signature, and now also passing client IP + user agent (previously omitted
- * entirely, even though the repository always accepted them) so login history
- * can actually be used to detect suspicious activity, as intended.
- *
- * Phase 1.107 — login-time 2FA enforcement (Sonnet Phase 2 §1):
- *   - A correct password for a user with an ACTIVE 2FA enrolment no longer fully
- *     authenticates the session. Instead it enters a pending-2FA state, issues a
- *     short-lived challenge, and redirects to /admin/2fa/challenge. The session
- *     is promoted to authenticated only after a valid TOTP or recovery code.
- *   - Users WITHOUT active 2FA keep the previous behaviour (full login, then the
- *     redirect service nudges them to /admin/2fa/setup).
+ * Enforces CSRF validation, rate limiting, login event recording, and
+ * two-factor challenge transitions when enrolled.
  *
  * This controller must never print, log, email or store OTPs, TOTP secrets,
  * QR/provisioning URIs, recovery-code plaintext, reset tokens, SMTP passwords or
@@ -90,15 +73,11 @@ final readonly class LoginController
         $this->rateLimiter?->resetPasswordLogin($user->email, $request->clientIp());
         $this->csrf->rotate();
 
-        // Phase 1.107: enrolled users must pass a login-time 2FA challenge BEFORE
-        // the session is fully authenticated.
+        // Enrolled users must pass a login-time 2FA challenge BEFORE the session is fully authenticated.
         if ($this->requiresTwoFactorChallenge($user)) {
             $this->guard->beginTwoFactorChallenge($user);
             $_SESSION[self::CHALLENGE_TOKEN_KEY] = $this->twoFactorChallenge->issue($user->id);
 
-            // Password stage passed; full authentication is still pending the
-            // OTP/recovery step. Recorded distinctly so login history shows the
-            // real state rather than a premature "success".
             $this->recordLoginEvent($request, $user->id, $user->email, 'password_ok_pending_2fa');
 
             return Response::redirect($this->adminUrl('2fa/challenge'));
@@ -143,12 +122,7 @@ final readonly class LoginController
     }
 
     /**
-     * Record a login-history row directly via LoginHistoryRepository::record().
-     *
-     * Phase 1.113: this REPLACES the previous callLoginHistory() method-name
-     * probing, which never matched a real method and therefore never wrote
-     * anything. Client IP and user agent are now included, since
-     * LoginHistoryRepository always accepted them but they were never passed.
+     * Record a login-history event with client IP and user agent.
      */
     private function recordLoginEvent(Request $request, ?int $adminUserId, string $email, string $status): void
     {

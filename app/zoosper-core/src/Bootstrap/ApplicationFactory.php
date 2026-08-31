@@ -83,7 +83,6 @@ final class ApplicationFactory
             : null;
         $controllers = (new ControllerProviderLoader($modules, $services))->load();
 
-        // Phase 1.27: inject ErrorHandler so the router logs uncaught exceptions.
         $router = new Router($errorHandler);
         $routeLoader = new ModuleRouteLoader(
             $modules,
@@ -91,20 +90,10 @@ final class ApplicationFactory
             $services->get(AdminPathCollectionTransformer::class),
         );
 
-        // Phase 1.33: admin routes run through the module-contributed middleware
-        // pipeline (auth guard + CSRF). API routes stay unwrapped/stateless.
         $adminMiddleware = (new ModuleAdminMiddlewareLoader($modules, $services))->load();
         $routeLoader->registerAdminRoutes($router, $adminMiddleware);
         $routeLoader->registerApiRoutes($router);
 
-        // Phase C1/C2: register the module asset pipeline route
-        // (GET+HEAD /asset/{module}/{path}) directly on the router —
-        // deliberately NOT through registerAdminRoutes(), so it carries no
-        // auth/CSRF middleware, consistent with module CSS/JS having always
-        // been served as unauthenticated static files. AssetResolver's
-        // path-traversal and extension-allowlist checks are the real security
-        // boundary here. Cache TTL/immutability are configurable via
-        // config/asset_pipeline.php (Phase C2) rather than hard-coded.
         $assetPipelineConfig = $config->array('asset_pipeline');
         $assetModules = new AssetModuleRegistry();
         (new ModuleAssetManifestLoader($modules))->registerInto($assetModules);
@@ -130,9 +119,6 @@ final class ApplicationFactory
                 ], 404);
             }
 
-            // The previous code called ->view(), which does not exist on the
-            // contract or on NullFallbackHandler, fataling every frontend request.
-            // Phase 1.93: use the FallbackHandlerInterface contract (supports/handle).
             if ($fallbackHandler->supports($request)) {
                 $response = $fallbackHandler->handle($request);
                 if ($response instanceof Response) {

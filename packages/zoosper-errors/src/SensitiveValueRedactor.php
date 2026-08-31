@@ -6,11 +6,6 @@ namespace Zoosper\Errors;
 
 /**
  * Redacts sensitive values before they are displayed or logged in diagnostics.
- *
- * PACKAGE EXTRACTION (2026-07-30): moved from Zoosper\Core\Exception (inside
- * app/zoosper-core) to Zoosper\Errors (this standalone zoosper/errors
- * package) — see ZoosperException's own docblock for the full reasoning.
- * Logic is completely unchanged.
  */
 final readonly class SensitiveValueRedactor
 {

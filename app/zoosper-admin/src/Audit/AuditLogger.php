@@ -9,9 +9,7 @@ use Zoosper\Core\Audit\AuditLoggerInterface;
 use Zoosper\Core\Http\Request;
 
 /**
- * Phase 1.41: now implements AuditLoggerInterface via the new, additive
- * logAction() method below. The original record() method (used by existing
- * Admin-internal callers with a full AdminUser) is completely unchanged.
+ * Logs administrative actions and audit trail records.
  */
 final readonly class AuditLogger implements AuditLoggerInterface
 {
@@ -36,10 +34,7 @@ final readonly class AuditLogger implements AuditLoggerInterface
     }
 
     /**
-     * AuditLoggerInterface implementation (Phase 1.41). Accepts a plain
-     * actor id/email pair instead of a full AdminUser, so feature modules
-     * that only have an id available (e.g. AdminTwoFactorResetService) can
-     * log audit events without needing to look up or depend on AdminUser.
+     * AuditLoggerInterface implementation.
      *
      * @param array<string, mixed> $metadata
      */

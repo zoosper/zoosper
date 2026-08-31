@@ -9,12 +9,8 @@ use PDO;
 /**
  * Fixed-window database-backed rate limit store.
  *
+ * Uses atomic per-driver upserts for attempt tracking.
  * The caller is responsible for passing an opaque, non-sensitive identity hash.
- *
- * SECURITY/CORRECTNESS FIX: recordAttempt() now uses an atomic per-driver
- * upsert instead of a SELECT-then-branch INSERT/UPDATE path. This prevents a
- * concurrent identical request from hitting the unique bucket constraint and
- * surfacing as an uncaught PDOException.
  */
 final class DatabaseRateLimitStore implements RateLimitStoreInterface
 {

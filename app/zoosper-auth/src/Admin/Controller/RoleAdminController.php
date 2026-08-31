@@ -25,30 +25,6 @@ use Zoosper\Core\Url\AdminUrlGenerator;
 
 /**
  * Admin CRUD controller for roles and permissions.
- *
- * Phase 1.111 (Sonnet Phase 2 §3.3): permissionTree() previously used a raw
- * `require dirname(__DIR__, 3) . '/zoosper-auth/config/acl.php'` at runtime.
- * That bypassed the layered config system entirely, so this controller could
- * never see project-level or other-module ACL group overrides that every other
- * config access in the codebase gets via ConfigRepository (which is built by
- * ModuleConfigAggregator across ALL modules' config/*.php, not just one file).
- *
- * The fix injects an OPTIONAL, LAST ConfigRepository dependency (mirroring the
- * PasswordPolicy pattern from Phase 1.110): when present, ACL groups come from
- * $config->array('acl') (properly layered/aggregated); when absent (no DI
- * wiring change made yet), it falls back to the original single-file require so
- * behaviour is identical until the container is updated to inject it.
- *
- * Phase E1: ConfigRepository is now actually wired in
- * (app/zoosper-auth/config/controllers.php), so the ConfigRepository path is
- * the one exercised in production.
- *
- * Phase F1: relocated from Zoosper\Admin\Controller to Zoosper\Auth\Admin\
- * Controller (namespace change ONLY — no logic touched, including the
- * `dirname(__DIR__, 3)` fallback path below, which is intentionally left
- * untouched since it is a documented pre-Phase-1.111 fallback whose depth was
- * already independent of this class's own location — see the run-order note
- * in this phase's README for why this specific line needed no change).
  */
 final readonly class RoleAdminController
 {
@@ -195,11 +171,6 @@ final readonly class RoleAdminController
     /**
      * Load the ACL group definitions used to organise the permission tree.
      *
-     * Phase 1.111: prefers ConfigRepository (layered/aggregated across ALL
-     * modules' config/acl.php) when injected; falls back to the original
-     * single-file require otherwise, so this method's behaviour is unchanged
-     * until the DI wiring is updated to pass a ConfigRepository.
-     *
      * @return array<string, mixed>
      */
     private function aclGroups(): array
@@ -269,17 +240,6 @@ final readonly class RoleAdminController
 
     private function renderRoleView(string $template, array $data = []): string
     {
-        // Phase F1 NOTE: this controller was relocated from
-        // app/zoosper-admin/src/Controller to app/zoosper-auth/src/Admin/
-        // Controller, but its raw-PHP view templates were NOT moved (I do not
-        // have form.php/index.php/permission-tree.php/user-assignment.php to
-        // relocate them safely), so they still physically live at
-        // app/zoosper-admin/resources/views/admin/roles/. The path below was
-        // updated so it still resolves to that SAME physical location from
-        // the controller's new home — this is a deliberate, temporary
-        // cross-module reach-back, not an oversight. A natural follow-up is to
-        // move those 4 view files into app/zoosper-auth/resources/views/
-        // admin/roles/ and simplify this path once they are in hand.
         $path = dirname(__DIR__, 4) . '/zoosper-admin/resources/views/admin/roles/' . ltrim($template, '/');
         if (!is_file($path)) {
             throw new RuntimeException('Role admin view not found: ' . $template);

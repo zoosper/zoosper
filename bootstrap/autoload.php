@@ -13,12 +13,7 @@ $composerAutoload = dirname(__DIR__) . '/vendor/autoload.php';
 
 if (!is_file($composerAutoload)) {
     throw new RuntimeException(
-        'Composer autoloader not found at ' . $composerAutoload . '. Run `composer install` '
-        . '(or `composer update`) before starting Zoosper. A previous fallback autoloader was '
-        . 'removed here because it only mapped 6 of this project\'s 12+ module namespaces and '
-        . 'could not load required third-party dependencies (HTMLPurifier, Latte, etc.) at all — '
-        . 'it could never actually run the application, it only delayed this same failure to a '
-        . 'more confusing point further into the request.'
+        'Composer autoloader not found at ' . $composerAutoload . '. Run `composer install` (or `composer update`) before starting Zoosper.'
     );
 }
 

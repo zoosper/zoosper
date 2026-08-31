@@ -13,20 +13,8 @@ use Zoosper\Pagination\PaginationResult;
 /**
  * Repository for admin login history.
  *
- * Phase A (Grid Core): SUPERSEDES the bespoke LoginHistoryCriteria/paginate(
- * LoginHistoryCriteria) pair introduced in Phase 1.112 with the generic
- * GridDataSourceInterface. LoginHistoryCriteria.php has been deleted.
- *
- * CORRECTNESS FIX (confirmed 2026-07-30, external reviewer pass):
- * paginate() previously hardcoded `ORDER BY id <direction>` and never
- * referenced $criteria->sortBy at all — the same bug independently
- * confirmed and fixed in AuditLogRepository. Fixed identically: an
- * explicit, small allow-list mapping known sort keys to safe column
- * expressions (self::SORTABLE_COLUMNS), defaulting to `id` for any
- * unrecognised/null sortBy. This grid also currently declares only
- * 'created_at' as sortable (mapped to `id`, the monotonic proxy already
- * used here), so runtime behaviour for existing callers is completely
- * unchanged.
+ * Implements GridDataSourceInterface and LoginHistoryRecorderInterface for
+ * logging and paginated display of admin login events with retention pruning.
  */
 final readonly class LoginHistoryRepository implements GridDataSourceInterface, LoginHistoryRecorderInterface
 {

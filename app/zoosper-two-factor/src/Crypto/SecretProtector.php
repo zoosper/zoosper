@@ -11,28 +11,7 @@ use RuntimeException;
  *
  * The protector uses Sodium secretbox and stores only ciphertext. Raw secrets
  * must never be logged, emailed, stored in audit metadata, or shown after the
- * enrolment confirmation step.
- *
- * SECURITY/AVAILABILITY FIX (confirmed 2026-07-30, real production incident
- * traced via exception.log + nginx access log): reveal() previously accepted
- * only a SINGLE key. If TWO_FACTOR_ENCRYPTION_KEY was ever changed for ANY
- * reason after an admin had already enrolled in 2FA (including changing it
- * to close the earlier "insecure default key" security gap — see
- * config/two_factor.php's own history), every already-enrolled admin's
- * secret became PERMANENTLY undecryptable with the new key, throwing
- * "Unable to reveal protected 2FA secret." on every single login attempt —
- * a full, permanent lockout with no self-recovery path, confirmed live in
- * production logs (RuntimeException at SecretProtector.php:52, reached via
- * the real /admin/2fa/challenge request path).
- *
- * Fixed by supporting KEY ROTATION, the same pattern Laravel uses via
- * APP_PREVIOUS_KEYS: protect() always encrypts with the CURRENT key only;
- * reveal() tries the current key first, then falls back to trying each
- * PREVIOUS key in order, only throwing if none of them work. This means
- * changing the encryption key going forward is a safe, supported operation
- * — not a lockout risk — as long as the previous key is temporarily kept
- * available via TWO_FACTOR_PREVIOUS_ENCRYPTION_KEYS during the rotation
- * window (see config/two_factor.php).
+ * enrolment confirmation step. Supports key rotation through previous keys.
  */
 final readonly class SecretProtector
 {

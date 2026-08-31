@@ -8,14 +8,6 @@ use Throwable;
 
 /**
  * Formats Zoosper exceptions for CLI diagnostics with actionable suggestions.
- *
- * PACKAGE EXTRACTION (2026-07-30): moved from Zoosper\Core\Exception (inside
- * app/zoosper-core) to Zoosper\Errors (this standalone zoosper/errors
- * package) — see ZoosperException's own docblock for the full reasoning.
- * Logic is completely unchanged; ZoosperException and SensitiveValueRedactor
- * are referenced unqualified since they now live in this same namespace,
- * exactly as before the move (no `use` statements needed either before or
- * after this extraction).
  */
 final readonly class ConsoleExceptionFormatter
 {
