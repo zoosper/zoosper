@@ -14,7 +14,6 @@ use Zoosper\Audit\Admin\Grid\OperationalGridPageBuilderFactory;
 use Zoosper\Audit\Console\PruneLogsCommand;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Core\Container\ServiceContainer;
-use PDO;
 
 return [
     OperationalGridPageBuilderFactory::class => static fn(ServiceContainer $services): OperationalGridPageBuilderFactory => new OperationalGridPageBuilderFactory($services->get(GridViewStateResolver::class)),
