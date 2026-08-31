@@ -10,22 +10,8 @@ use Zoosper\Auth\Repository\AdminUserRepository;
 /**
  * Session-backed authentication guard.
  *
- * Two responsibilities were added in Phase 1.105:
- *
- *  1. Per-request memoization of the resolved AdminUser (Sonnet Phase 2 §3.1).
- *     `user()` previously re-queried the database (user row + permissions join)
- *     on every call — 3–5× per admin page render. It now resolves once per
- *     request and caches the result, invalidating on login()/logout().
- *
- *  2. A pending-2FA session state (foundation for login-time 2FA enforcement,
- *     Sonnet Phase 2 §1). After a correct password for a 2FA-enrolled user, the
- *     login controller calls beginTwoFactorChallenge() instead of login(). While
- *     a session is only "pending 2FA", user() still returns null, so
- *     AuthenticationMiddleware keeps the session UNAUTHORISED until a valid OTP /
- *     recovery code promotes it via completeTwoFactorChallenge().
- *
- * The class is no longer `readonly` because it must cache the resolved user for
- * the request; the injected repository dependency remains readonly.
+ * Provides per-request user caching, idle/absolute lifetime enforcement,
+ * password change invalidation, and pending-2FA challenge state handling.
  */
 final class SessionGuard
 {

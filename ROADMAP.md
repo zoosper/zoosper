@@ -368,10 +368,7 @@ replica.
 - [x] **[FIXED] Real, configurable page cache foundation** — see §15.
 - [x] Admin/module dependency decoupling: two-factor and media are complete; shared presentation contracts moved to Core in Phase 9FR, and Page and Settings no longer require `zoosper/admin`.
 - [x] **[FIXED] Layered module discovery collision diagnostics.** `ModuleRegistry` scans four runtime patterns: `app/*/module.php`, `modules/*/module.php`, `modules/*/*/module.php`, and Composer packages under `vendor/*/*`. Same-layer duplicate identities and all app/modules/vendor cross-layer identity collisions now throw descriptive `DuplicateModuleException` failures; silent priority-based shadowing was removed in Phase 9GC.
-- [ ] **[R] No FK support in the declarative schema engine, no
-  down-migrations.** Zero referential integrity on any table built through
-  it. Low blast-radius today only because no admin screen supports
-  deleting anything yet (see §2). Not yet fixed.
+- [x] **Declarative Schema Foreign Keys.** Typed foreign-key support in `SchemaForeignKey`, `SchemaSqlBuilder` (MySQL and SQLite constraint generation), `SchemaValidator` (cycle and dangling-reference validation), and declarative module schema manifests (`app/zoosper-global-announcements`, `packages/zoosper-media`, etc.).
 - [ ] Container autowiring
 - [ ] Module lifecycle (install/enable/disable/uninstall)
 - [ ] Composer packaging + 0.x tag + CHANGELOG + stability contract — every
@@ -379,7 +376,7 @@ replica.
 - [x] Database production driver policy enforcement: check `config/database_policy.php` flags in `ConnectionFactory` / `ProductionSecurityPolicy` and reject invalid driver/environment pairings.
 - [x] Consolidate 14 duplicated `$env` closures in `config/*.php` into global canonical `env()` helper.
 - [ ] Compile and cache module manifests, service providers, and route collections for production boots with automatic invalidation diagnostics.
-- [ ] Document third-party extension architecture and role of `modules/` placeholder directory vs path-repository `app/` and standalone `packages/`.
+- [x] Document third-party extension architecture and role of `modules/` placeholder directory vs path-repository `app/` and standalone `packages/` (see `docs/modules.md`).
 
 ## 2. Sites, Pages & Content
 
@@ -393,9 +390,7 @@ replica.
 - [x] Router path parameters
 - [x] Consolidate `pages` table into declarative schema
 - [x] Make `HtmlSanitizerInterface` a mandatory, non-nullable dependency of `PageSaveCoordinator` / `PageSaveInput` and fail closed (throw exception) instead of falling back to raw unsanitized input.
-- [ ] **[R] No delete/archive on any admin CRUD screen** — flagged as "a
-  basic missing feature," and the reason the missing-FK gap hasn't caused
-  visible damage yet. Not yet built.
+- [x] Reversible disable/restore and permanent deletion lifecycle architecture across Pages, Sites, Site Domains, Roles, Menus, and Media, with CSRF protection, permission gating, audit logging, and safe identity deactivation for Admin Users.
 
 ## 3. Themes & Templating
 
@@ -443,7 +438,7 @@ replica.
 - [x] Pagination + retention for audit log & login history — `PruneLogsCommand` (`admin:logs:prune`) and persistent Grid workspaces.
 - [ ] Consolidate duplicated Grid Criteria/SqlBuilder/Workspace and Admin Form section/processor patterns into a single extensible, typed Grid & Form kernel.
 - [x] Dedicated behavioral regression test suite for admin user locale persistence across hydration, update, and session state.
-- [ ] Formalise session security controls: explicit absolute session lifetimes, concurrent session limits, and SameSite/Secure cookie policy verification during bootstrap.
+- [x] Formalise session security controls: explicit absolute session lifetimes (`ADMIN_SESSION_ABSOLUTE_LIFETIME`), idle timeout resetting on active navigation, password update invalidation (`SESSION_PASSWORD_HASH_KEY`), and SameSite/Secure cookie policy verification during bootstrap.
 - [ ] Add covering indexes and EXPLAIN query plan checks for admin grid search queries.
 - [ ] **[R] Two competing Grid extensibility systems** — the newer
   `GridDefinition`/`GridCriteria`/`GridColumnRegistry` genuinely supports
@@ -509,7 +504,7 @@ replica.
 - [x] Remove `APP_KEY` fallback for 2FA encryption key, enforce placeholder blocklist (`change-me`, `change-me-before-production`, `secret`), and validate `TWO_FACTOR_ENCRYPTION_KEY` in `ProductionSecurityPolicy::assertEnvironment()`.
 - [x] Flip `APP_DEBUG` default to `false` in `config/app.php`, unify early vs runtime error-handler debug resolution in `ApplicationFactory`, and assert `APP_DEBUG` in `ProductionSecurityPolicy`.
 - [x] Unify rate limiting across API login, HTML admin login, and 2FA challenge into a single canonical enforcement architecture; reconcile contradictory docblock in `RateLimitReportOnlyAdminMiddleware`.
-- [ ] Automated secret generation and validation command (`bin/zoosper secrets:generate`) that writes a validated `.env` fragment and refuses to boot in production if placeholders remain.
+- [x] Automated secret generation and validation command (`bin/zoosper security:generate-secrets`, alias `secrets:generate`) that generates or audits cryptographically strong keys with `--write`, `--check`, and `--force` options.
 - [ ] Enforce Content-Security-Policy (`report_only: false`) after staging verification with Editor.js and admin assets.
 
 ## 6. Media
@@ -747,8 +742,8 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 
 ### P0 before public announcement
 
-- [ ] Define and ship consistent archive/delete lifecycle behaviour for Pages, Admin Users, Roles, Sites, Site Domains, and Media. Menu delete is the current reference for POST, permission, and CSRF shape, but hard delete is not appropriate for every entity.
-- [ ] Add declarative-schema foreign-key support or an equivalent shared restrict/cascade safety layer in the same delivery arc as broader entity deletion.
+- [x] Define and ship consistent archive/delete lifecycle behaviour for Pages, Admin Users, Roles, Sites, Site Domains, and Media, preserving audit history while gating irreversible deletions.
+- [x] Add declarative-schema foreign-key support with typed MySQL/SQLite constraint generation and mergeable module schema manifests.
 - [x] Update `SECURITY.md` to identify `v0.1.0-alpha.1` as the latest tagged pre-release while stating that no stable release has shipped.
 - [x] Rewrite the root README current-state and included-capabilities sections for the alpha release, CI, Menu, Page revisions, docs site, Marko adoption, and explicit launch blockers.
 
@@ -797,9 +792,8 @@ An exhaustive independent technical review and static security teardown (`var/lo
   - *Location:* `config/app.php:19`, `app/zoosper-core/src/Bootstrap/ApplicationFactory.php:61-64` vs `:72-75`, `app/zoosper-core/src/Http/ProductionSecurityPolicy.php`.
   - *Problem:* `config/app.php` defaults `debug` to `true` when `APP_DEBUG` is unset. `ApplicationFactory::create()` calculates debug mode twice with conflicting logic (early handler defaults `false`, runtime handler defaults `true`). `ProductionSecurityPolicy::assertEnvironment()` does not validate `APP_DEBUG` for production environments.
   - *Remediation:* Change `config/app.php` default to `false`; unify error-handler debug resolution in `ApplicationFactory`; assert `APP_DEBUG=false` in `ProductionSecurityPolicy::assertEnvironment()` for `staging` and `production`.
-- [ ] **Referential integrity & database cascade reconciliation.**
-  - *Problem:* Foreign keys and cascading deletes are not comprehensively declared or enforced across all entities (Page ↔ Media, Menu ↔ Page, Site ↔ all, PAT ↔ User), risking orphaned rows and data corruption.
-  - *Remediation:* Complete declarative schema foreign keys and application-level lifecycle blocker checks across all entities.
+- [x] **Referential integrity & database cascade reconciliation.**
+  - *Remediation:* Declarative schema foreign keys (`SchemaForeignKey`, `SchemaSqlBuilder`, `SchemaValidator`) with typed constraints, restrict/cascade semantics, and application lifecycle checks are implemented across entities.
 - [ ] **CSP enforcement graduation.**
   - *Problem:* `config/security.php` ships CSP with `report_only: true`, meaning violations are not actively blocked.
   - *Remediation:* Verify Editor.js, admin scripts, and asset endpoints in staging, resolve any inline style/script conflicts, and switch `report_only` to `false` in production.

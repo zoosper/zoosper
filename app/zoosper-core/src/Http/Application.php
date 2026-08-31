@@ -45,13 +45,6 @@ final readonly class Application
 
             session_set_cookie_params([
                 'lifetime' => $sessionLifetime,
-                // Phase 1.100: the secure flag now DEFAULTS to whether the current
-                // request is served over HTTPS, instead of a hard-coded false.
-                //   - Local HTTP dev: default false (cookies still work).
-                //   - Production HTTPS: default true automatically, closing the
-                //     footgun where forgetting SESSION_SECURE=true leaked the
-                //     session cookie over plain HTTP.
-                // An explicit SESSION_SECURE env value always wins.
                 'secure' => $secure,
                 'httponly' => true,
                 'samesite' => $sameSite,
@@ -62,9 +55,6 @@ final readonly class Application
 
         $this->securityHeaders->apply();
 
-        // Phase 1.34a: resolve the site context ONCE per request, from the request
-        // (not $_SERVER), and carry it immutably on the request down the stack. When
-        // the resolver is not wired the request simply carries no context (safe).
         if ($this->siteResolver !== null) {
             $request = $request->withSiteContext(
                 $this->siteResolver->resolve($request->host(), $request->path()),

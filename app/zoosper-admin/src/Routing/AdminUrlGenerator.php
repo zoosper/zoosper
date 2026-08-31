@@ -6,10 +6,6 @@ namespace Zoosper\Admin\Routing;
 
 /**
  * Generates admin URLs using the configured admin front name.
- *
- * Admin templates and controllers should use this service instead of hard-coded
- * `/admin` strings once Phase 0.24 is wired into the current controllers and
- * route loaders.
  */
 final readonly class AdminUrlGenerator
 {
