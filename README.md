@@ -75,6 +75,26 @@ A feature-owned API slice follows this pattern:
 
 Removing or disabling a feature module removes its discovered routes and factories. Required dependencies remain Composer-enforced.
 
+## System requirements and PHP 8.5+ runtime
+
+Zoosper targets PHP 8.5+ as its language and runtime floor. The architecture leverages modern language capabilities including constructor property promotion, typed properties, readonly classes, first-class callables, pattern matching expressions, enhanced type systems, and forward compatibility with Marko framework packages.
+
+### Minimum requirements
+
+- **PHP:** `^8.5` (`php8.5` CLI and web SAPIs)
+- **Required PHP extensions:**
+  - `pdo` and `pdo_sqlite` (for local development, fast testing, and single-tenant installs)
+  - `pdo_mysql` (for production MySQL / MariaDB environments)
+  - `json` (for Editor.js structured content, JSON API endpoints, and configuration manifests)
+  - `gd` (for canonical raster image re-encoding and derivative processing)
+  - `curl` (for external API grid adapters and webhook transports)
+  - `mbstring` (for UTF-8 string manipulation and internationalization)
+- **Database engines:**
+  - SQLite 3.35+ (development and local testing)
+  - MySQL 8.0+ or MariaDB 10.6+ with `utf8mb4_unicode_ci` collation (staging and production)
+- **Web server / SAPI:**
+  - Built-in PHP development server, Caddy, Nginx + PHP-FPM, or Apache with URL rewriting enabled
+
 ## Getting started
 
 ```bash

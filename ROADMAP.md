@@ -434,14 +434,13 @@ replica.
 - [x] Admin god-module split — Page/User/Role/Theme/Media/Token/Announcement admin controllers relocated to their respective feature modules.
 - [x] Batch-load permissions in `AdminUserRepository` (fix N+1) — Phase 1.109
 - [x] Pagination + retention for audit log & login history — `PruneLogsCommand` (`admin:logs:prune`) and persistent Grid workspaces.
-- [ ] Consolidate duplicated Grid Criteria/SqlBuilder/Workspace and Admin Form section/processor patterns into a single extensible, typed Grid & Form kernel.
+- [x] Consolidate duplicated Grid Criteria/SqlBuilder/Workspace and Admin Form section/processor patterns into a single extensible, typed Grid & Form kernel.
 - [x] Dedicated behavioral regression test suite for admin user locale persistence across hydration, update, and session state.
 - [x] Formalise session security controls: explicit absolute session lifetimes (`ADMIN_SESSION_ABSOLUTE_LIFETIME`), idle timeout resetting on active navigation, password update invalidation (`SESSION_PASSWORD_HASH_KEY`), and SameSite/Secure cookie policy verification during bootstrap.
 - [ ] Add covering indexes and EXPLAIN query plan checks for admin grid search queries.
-- [ ] **[R] Two competing Grid extensibility systems** — the newer
-  `GridDefinition`/`GridCriteria`/`GridColumnRegistry` genuinely supports
-  third-party column contribution for Audit Log and Login History only;
-  Pages/Sites/Domains/Roles/Media still use older, non-extensible pairs.
+- [x] **[RESOLVED] Two competing Grid systems consolidated** — unified on
+  `GridDefinition`/`GridCriteria`/`GridColumnRegistry` and
+  `GridCompactWorkspaceRenderer` across all admin screens.
 - [x] **[FIXED] Grid "sortable" columns silently ignored.**
   `AuditLogRepository`/`LoginHistoryRepository` hardcoded `ORDER BY id
   <direction>`, never consulting `$criteria->sortBy`. Fixed with an
@@ -568,7 +567,7 @@ replica.
 - [x] Expand `psalm.xml` scan scope to include all first-party modules and packages (`zoosper-session`, `zoosper-global-announcements`, `zoosper-cache`, `zoosper-config`, etc.) and make Psalm a blocking CI gate.
 - [x] Update crypto/2FA regression tests (`SecretProtectorKeyEnforcementTest`) to assert runtime behavioral enforcement rather than source-string matching.
 - [x] Clean up stale doc comments in `bootstrap/autoload.php` and reconcile contradictory Supported Versions tables in `SECURITY.md`.
-- [ ] Evaluate PHP 8.5+ language floor vs 8.3/8.4 and document explicit technical requirements in README.
+- [x] Evaluate PHP 8.5+ language floor vs 8.3/8.4 and document explicit technical requirements in README.
 
 - [x] Pest + PHPUnit harness; quality gate runner
 - [x] **`.gitattributes` (`export-ignore` for `tests/`/dev tooling) added
@@ -842,13 +841,13 @@ An exhaustive independent technical review and static security teardown (`var/lo
 - [x] **Session lifecycle controls.**
   - *Problem:* PHP session defaults lack explicit absolute session timeouts and concurrent session bounds.
   - *Remediation:* Added configurable `ADMIN_SESSION_ABSOLUTE_LIFETIME` (`session_absolute_lifetime`), idle timeout resetting on active navigation, and password-update session invalidation in `SessionGuard`.
-- [ ] **PHP 8.5+ runtime requirement evaluation.**
+- [x] **PHP 8.5+ runtime requirement evaluation.**
   - *Problem:* Hard requirement on PHP 8.5 narrows hosting compatibility without demonstrated necessity.
-  - *Remediation:* Evaluate dropping the language floor to PHP 8.3/8.4 or clearly document non-negotiable language features in README.
+  - *Remediation:* Evaluated runtime requirements and explicitly documented PHP 8.5+ language floor, required extensions, and database engine baseline in README.
 
 ### Low / Process & Documentation Hygiene (P3)
 
-- [ ] **LOW-01: Commit labeling hygiene and review attribution.**
+- [x] **LOW-01: Commit labeling hygiene and review attribution.**
   - *Remediation:* Ensure distinct, descriptive commit messages and co-author attribution across all branch merges.
 - [x] **LOW-02: Stale comments & documentation reconciliation.**
   - *Remediation:* Remove obsolete comments in `bootstrap/autoload.php` referencing non-existent EnvLoader classes; reconcile contradictory Supported Versions tables in `SECURITY.md`.
