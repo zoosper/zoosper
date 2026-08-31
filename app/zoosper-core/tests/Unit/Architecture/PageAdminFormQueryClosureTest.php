@@ -21,8 +21,7 @@ it('moves Page form presentation out of the controller and removes Page runtime 
     $csvController = (string) file_get_contents(
         $root . '/app/zoosper-page/src/Admin/Controller/PageCsvExportController.php'
     );
-    expect($controller)->toContain('LegacyPageFormRenderer')
-        ->toContain('AdminFormRenderer')
+    expect($controller)->toContain('AdminFormRenderer')
         ->not->toContain('$request->queryParams()')
         ->and($gridResponder)->toContain('$request->queryParams()')
         ->and($csvController)->toContain('$request->queryParams()')
@@ -34,6 +33,6 @@ it('moves Page form presentation out of the controller and removes Page runtime 
         ->not->toContain('use Zoosper\\Admin\\Form\\AdminFormConfigAggregator;')
         ->not->toContain('new AdminFormConfigAggregator(')
         ->and($pageSource)->not->toContain('$_GET')
-        ->and($factory)->toContain('legacyFormRenderer: new PageAdminFormRenderer(')
-        ->toContain('formRenderer: $services->has(AdminFormRenderer::class)');
+        ->and($factory)->not->toContain('legacyFormRenderer: new PageAdminFormRenderer(')
+        ->toContain('formRenderer: $services->has(AdminFormRenderer::class) ? $services->get(AdminFormRenderer::class) : null');
 });

@@ -102,7 +102,7 @@ it('passes the active screen through both Admin layout asset rendering paths', f
     expect($layout)->toContain('$this->assetViewData?->data($active)')
         ->toContain('$this->assetRenderer?->stylesHtml($active)')
         ->toContain('$this->assetRenderer?->scriptsHtml($active)')
-        ->and($controller)->toContain("->render(\$title, \$content, \$this->guard->user(), 'pages')")
+        ->and($controller)->toContain(", \$this->guard->user(), 'pages')")
         ->and($manifest['assets']['zoosper-admin-editor-style']['screens'])->toBe(['pages'])
         ->and($manifest['assets']['zoosper-admin-editorjs-bundle']['screens'])->toBe(['pages'])
         ->and($manifest['assets']['zoosper-admin-editor-script']['screens'])->toBe(['pages']);

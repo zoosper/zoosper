@@ -17,13 +17,9 @@ it('derives Default editor configuration through the explicit-scope factory', fu
 it('keeps Page coupled to the editor contract rather than concrete Admin editors', function (): void {
     $root = dirname(__DIR__, 5);
     $controller = file_get_contents($root . '/app/zoosper-page/src/Admin/Controller/PageAdminController.php');
-    $renderer = file_get_contents($root . '/app/zoosper-page/src/Admin/Form/PageAdminFormRenderer.php');
     $factory = file_get_contents($root . '/app/zoosper-page/config/controllers.php');
 
     expect($controller)
-        ->not->toContain('EditorJsContentEditor')
-        ->not->toContain('TextareaContentEditor')
-        ->and($renderer)->toContain('?ContentEditorInterface')
         ->not->toContain('EditorJsContentEditor')
         ->not->toContain('TextareaContentEditor')
         ->and($factory)->toContain('ContentEditorInterface::class');

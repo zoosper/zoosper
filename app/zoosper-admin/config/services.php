@@ -28,9 +28,9 @@ use Zoosper\Admin\Editor\Config\ContentEditorRuntimeConfig;
 use Zoosper\Admin\Editor\Config\ContentEditorRuntimeConfigFactory;
 use Zoosper\Admin\Editor\EditorJsContentEditor;
 use Zoosper\Admin\Editor\TextareaContentEditor;
-use Zoosper\Core\Form\AdminFormRegistry;
-use Zoosper\Core\Form\AdminFormRenderer;
-use Zoosper\Core\Form\AdminFormUiConfigLoader;
+use Zoosper\AdminForm\AdminFormRegistry;
+use Zoosper\AdminForm\AdminFormRenderer;
+use Zoosper\AdminForm\AdminFormUiConfigLoader;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Admin\Message\FlashMessageRenderer;
@@ -142,3 +142,4 @@ return [
     AdminLayoutRendererInterface::class => static fn(ServiceContainer $services): AdminLayoutRendererInterface => $services->get(AdminLayout::class),
     AdminViewRendererInterface::class => static fn(ServiceContainer $services): AdminViewRendererInterface => $services->get(AdminViewRenderer::class),
 ];
+

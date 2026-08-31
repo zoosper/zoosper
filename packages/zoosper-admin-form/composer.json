@@ -1,0 +1,21 @@
+{
+    "name": "zoosper/admin-form",
+    "description": "Unified Admin Form kernel for Zoosper CMS",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Zoosper Contributors",
+            "email": "hello@zoosper.io"
+        }
+    ],
+    "require": {
+        "php": ">=8.5",
+        "marko/core": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\AdminForm\\": "src/"
+        }
+    }
+}

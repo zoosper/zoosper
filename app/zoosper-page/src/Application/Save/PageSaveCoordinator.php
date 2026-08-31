@@ -11,7 +11,7 @@ use Zoosper\Core\Entity\Save\EntityDataObject;
 use Zoosper\Core\Entity\Save\EntitySaveContext;
 use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Entity\Save\FieldDefinitionRegistry;
-use Zoosper\Core\Form\AdminFormProcessorRegistry;
+use Zoosper\AdminForm\AdminFormProcessorRegistry;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Error\ErrorHandler;
 use Zoosper\Page\Model\Page;
@@ -137,3 +137,4 @@ final readonly class PageSaveCoordinator
         return 'Please review the form.';
     }
 }
+

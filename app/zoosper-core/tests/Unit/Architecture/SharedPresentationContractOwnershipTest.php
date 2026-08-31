@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Editor\ContentEditorInterface;
-use Zoosper\Core\Form\AdminFormConfigAggregator;
-use Zoosper\Core\Form\AdminConfigLayeredFileLoader;
+use Zoosper\AdminForm\AdminFormConfigAggregator;
+use Zoosper\AdminForm\AdminConfigLayeredFileLoader;
 use Zoosper\Core\Message\FlashMessage;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 
@@ -28,3 +28,4 @@ it('retires the obsolete Admin-owned contract files', function (): void {
         expect(file_exists($root . '/' . $relative), $relative)->toBeFalse();
     }
 });
+

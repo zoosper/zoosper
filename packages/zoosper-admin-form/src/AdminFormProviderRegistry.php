@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Form;
+namespace Zoosper\AdminForm;
 
 use RuntimeException;
 
 /**
  * Runtime registry for admin form section providers.
  *
- * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
+ * Phase 1.41 (page decoupling, part A): relocated to Zoosper\AdminForm —
  * see AdminFormSection.php for the full reasoning. Logic is completely
  * unchanged.
  */
@@ -54,3 +54,4 @@ final class AdminFormProviderRegistry
         return array_values($sections);
     }
 }
+

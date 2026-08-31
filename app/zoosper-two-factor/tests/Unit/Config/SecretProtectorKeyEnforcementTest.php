@@ -83,6 +83,12 @@ it('confirms config/two_factor.php no longer throws under any circumstance (safe
 
     // Load it with NO relevant environment variables set at all — this
     // must NOT throw, unlike the earlier, reverted design.
+    if (!function_exists('env')) {
+        function env(string $key, mixed $default = null): mixed {
+            return $_ENV[$key] ?? (getenv($key) !== false ? getenv($key) : $default);
+        }
+    }
+
     $originalEnv = [
         'TWO_FACTOR_ENCRYPTION_KEY' => $_ENV['TWO_FACTOR_ENCRYPTION_KEY'] ?? (getenv('TWO_FACTOR_ENCRYPTION_KEY') !== false ? getenv('TWO_FACTOR_ENCRYPTION_KEY') : 'test-only-not-a-real-secret-do-not-use-in-any-real-environment'),
         'APP_KEY' => $_ENV['APP_KEY'] ?? (getenv('APP_KEY') !== false ? getenv('APP_KEY') : null),

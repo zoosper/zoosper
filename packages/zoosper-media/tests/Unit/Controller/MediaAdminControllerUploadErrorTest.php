@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use Zoosper\AdminForm\AdminFormDefinition;
+use Zoosper\AdminForm\AdminFormField;
+use Zoosper\AdminForm\AdminFormRegistry;
+use Zoosper\AdminForm\AdminFormRenderer;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
@@ -115,6 +119,12 @@ it('shows the real validation error message instead of silently redirecting on a
         }
     };
 
+    $formRegistry = new AdminFormRegistry();
+    $formRegistry->register(new AdminFormDefinition(
+        'admin.media.upload.form',
+        [new AdminFormField('media_file', 'file', 'Image file', 10)]
+    ));
+
     $controller = new MediaAdminController(
         guard: $guard,
         csrf: new CsrfTokenManager(),
@@ -126,6 +136,8 @@ it('shows the real validation error message instead of silently redirecting on a
             storage: new MediaStorage(sys_get_temp_dir() . '/zoosper-media-upload-test-' . bin2hex(random_bytes(4))),
             basePath: sys_get_temp_dir(),
         ),
+        formRegistry: $formRegistry,
+        formRenderer: new AdminFormRenderer(),
     );
 
     // Genuinely invalid: a real temp file with a disallowed .txt extension.
@@ -148,9 +160,10 @@ it('shows the real validation error message instead of silently redirecting on a
     // The critical assertions: this is no longer a silent redirect.
     expect(http_response_code())->toBe(422);
     expect($captured)->toHaveCount(1);
-    expect($captured[0]['template'])->toBe('zoosper-media::admin/media/upload');
-    expect($captured[0]['data']['errors'])->not->toBe([]);
-    expect($captured[0]['data']['errors'][0])->toContain('extension');
+    expect($captured[0]['template'])->toBe('zoosper-admin::admin/generic/form');
+    expect($captured[0]['data']['formHtml'])->toContain('media_file');
+    expect($captured[0]['data']['formHtml'])->toContain('admin-alert--danger');
+    expect($captured[0]['data']['formHtml'])->toContain('Unsupported media file extension');
 
     unlink($tmpFile);
     mediaUploadErrorTestEndSession();
@@ -180,6 +193,12 @@ it('still redirects to the media library on a successful upload', function (): v
     };
 
     $storageDir = sys_get_temp_dir() . '/zoosper-media-upload-test-' . bin2hex(random_bytes(4));
+    $formRegistry = new AdminFormRegistry();
+    $formRegistry->register(new AdminFormDefinition(
+        'admin.media.upload.form',
+        [new AdminFormField('media_file', 'file', 'Image file', 10)]
+    ));
+
     $controller = new MediaAdminController(
         guard: $guard,
         csrf: new CsrfTokenManager(),
@@ -191,6 +210,8 @@ it('still redirects to the media library on a successful upload', function (): v
             storage: new MediaStorage($storageDir),
             basePath: $storageDir,
         ),
+        formRegistry: $formRegistry,
+        formRenderer: new AdminFormRenderer(),
     );
 
     // A genuine JPEG submitted under the upload form's media_file field.

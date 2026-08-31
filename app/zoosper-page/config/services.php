@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Marko\View\ViewInterface;
 use Zoosper\Page\Repository\PageRevisionRepository;
 use Zoosper\Page\Application\Save\PageSaveCoordinator;
-use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
+use Zoosper\AdminForm\AdminFormProcessorConfigFactory;
 use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
 use Zoosper\Core\Error\ErrorHandler;
@@ -167,3 +167,4 @@ return [
         $services->has(\Zoosper\Core\Event\EventDispatcherInterface::class) ? $services->get(\Zoosper\Core\Event\EventDispatcherInterface::class) : null,
     ),
 ];
+

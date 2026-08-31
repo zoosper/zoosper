@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Zoosper\AdminForm\AdminFormRegistry;
+use Zoosper\AdminForm\AdminFormRenderer;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Core\Audit\AuditLoggerInterface;
@@ -37,6 +39,8 @@ return [
         views: $services->get(AdminViewRendererInterface::class),
         assets: $services->get(MediaAssetRepository::class),
         uploads: $services->get(MediaUploadService::class),
+        formRegistry: $services->get(AdminFormRegistry::class),
+        formRenderer: $services->get(AdminFormRenderer::class),
         adminUrls: $services->get(AdminUrlGenerator::class),
         lifecycle: $services->get(MediaLifecycleCoordinator::class),
         visualGrid: $services->get(MediaVisualGridWorkspace::class),

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Form;
+namespace Zoosper\AdminForm;
 
 use InvalidArgumentException;
 
@@ -14,7 +14,7 @@ use InvalidArgumentException;
  * modules can later contribute additional provider classes through merged
  * config or service-provider registration without touching controller code.
  *
- * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
+ * Phase 1.41 (page decoupling, part A): relocated to Zoosper\AdminForm —
  * see AdminFormSection.php for the full reasoning. Logic is completely
  * unchanged.
  */
@@ -90,3 +90,4 @@ final readonly class AdminFormConfigProviderFactory
         return $provider;
     }
 }
+

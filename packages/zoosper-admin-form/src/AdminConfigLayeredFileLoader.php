@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Form;
+namespace Zoosper\AdminForm;
 
 use ReflectionClass;
 use RuntimeException;

@@ -21,7 +21,6 @@ use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Page\Admin\PageGridSiteFilter;
 use Zoosper\Page\Admin\PageGridWorkspace;
 use Zoosper\Page\Application\Save\PageSaveCoordinator;
-use Zoosper\Page\Admin\Form\PageAdminFormRenderer;
 use Zoosper\Page\Admin\PageAdminGridResponder;
 use Zoosper\Page\Admin\PageAdminPreviewResponder;
 use Zoosper\Page\Service\PageRevisionService;
@@ -29,7 +28,7 @@ use Zoosper\Page\Admin\PageRevisionAdminResponder;
 use Zoosper\Page\Application\Publication\PagePublicationCoordinator;
 use Zoosper\Page\Admin\Lifecycle\PageLifecycleAdminResponder;
 use Zoosper\Page\Lifecycle\PageLifecycleCoordinator;
-use Zoosper\Core\Form\AdminFormProcessorConfigFactory;
+use Zoosper\AdminForm\AdminFormProcessorConfigFactory;
 use Zoosper\Page\Admin\PageSiteFilterOptions;
 
 use Zoosper\Core\Message\FlashMessageStoreInterface;
@@ -127,17 +126,6 @@ return [
         flashMessages: $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
         translator: $services->has(TranslatorInterface::class) ? $services->get(TranslatorInterface::class) : null,
         adminContextTranslatorResolver: $services->has(AdminContextTranslatorResolver::class) ? $services->get(AdminContextTranslatorResolver::class) : null,
-        legacyFormRenderer: new PageAdminFormRenderer(
-            $services->get(CsrfTokenManager::class),
-            $services->get(SiteRepository::class),
-            $services->has(ContentEditorInterface::class) ? $services->get(ContentEditorInterface::class) : null,
-            null,
-            null,
-            null,
-            $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
-            $services->get(AdminUrlGenerator::class),
-            dirname(__DIR__, 3),
-        ),
         pageSaver: $services->get(PageSaveCoordinator::class),
         publication: new PagePublicationCoordinator(
             $services->get(PageRepository::class),
@@ -165,3 +153,4 @@ return [
         contentEditor: $services->has(ContentEditorInterface::class) ? $services->get(ContentEditorInterface::class) : null,
     ),
 ];
+

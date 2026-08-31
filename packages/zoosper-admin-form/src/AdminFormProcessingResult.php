@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Form;
+namespace Zoosper\AdminForm;
 
 /**
  * Result returned by an admin form processor.
  *
- * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
+ * Phase 1.41 (page decoupling, part A): relocated to Zoosper\AdminForm —
  * see AdminFormSection.php for the full reasoning. Logic is completely
  * unchanged.
  */
@@ -45,3 +45,4 @@ final readonly class AdminFormProcessingResult
         );
     }
 }
+

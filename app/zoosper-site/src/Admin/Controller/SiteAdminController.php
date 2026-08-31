@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Site\Admin\Controller;
 
-use Zoosper\Core\Form\AdminFormRegistry;
-use Zoosper\Core\Form\AdminFormRenderer;
+use Zoosper\AdminForm\AdminFormRegistry;
+use Zoosper\AdminForm\AdminFormRenderer;
 use RuntimeException;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Auth\Model\AdminUser;
@@ -327,3 +327,4 @@ final readonly class SiteAdminController
         return '/' . trim($pathPrefix, '/');
     }
 }
+

@@ -211,6 +211,7 @@ inert for them today (there is no "export" event happening). Add it when
 each module gets extracted, not before.
 
 - **[Done]** Extract logger (`marko/log` + `marko/log-file`) as a standalone package (`packages/zoosper-logger`) following the `zoosper/errors` template. `LogManager` and `LocalLogger` map onto Marko's daily-rotated file logging with structural redaction and multi-channel support.
+- **[Done]** Extract Admin Form kernel as a standalone package (`packages/zoosper-admin-form`). Unified Form registry, definitions, and renderer are now fully decoupled from Core and available for cross-module consumption.
 
 ### Evaluated and explicitly deferred: `marko/database`, `marko/database-mysql`
 
@@ -368,7 +369,7 @@ replica.
 - [x] **[FIXED] Layered module discovery collision diagnostics.** `ModuleRegistry` scans four runtime patterns: `app/*/module.php`, `modules/*/module.php`, `modules/*/*/module.php`, and Composer packages under `vendor/*/*`. Same-layer duplicate identities and all app/modules/vendor cross-layer identity collisions now throw descriptive `DuplicateModuleException` failures; silent priority-based shadowing was removed in Phase 9GC.
 - [x] **Declarative Schema Foreign Keys.** Typed foreign-key support in `SchemaForeignKey`, `SchemaSqlBuilder` (MySQL and SQLite constraint generation), `SchemaValidator` (cycle and dangling-reference validation), and declarative module schema manifests (`app/zoosper-global-announcements`, `packages/zoosper-media`, etc.).
 - [x] Container autowiring (Phase 1.367). Reflection-based parameter resolution and circular dependency detection implemented in `ServiceContainer`.
-- [ ] Module lifecycle (install/enable/disable/uninstall)
+- [x] Module lifecycle (install/enable/disable/uninstall)
 - [ ] Composer packaging + 0.x tag + CHANGELOG + stability contract — every
   internal module dependency still uses unconstrained `*@dev`
 - [x] Database production driver policy enforcement: check `config/database_policy.php` flags in `ConnectionFactory` / `ProductionSecurityPolicy` and reject invalid driver/environment pairings.
@@ -747,9 +748,9 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 ### P1 before stable
 
 - [x] Emit an explicit diagnostic for every cross-layer module identity override before further package extraction — completed in Phase 9GC with descriptive fail-closed coverage for app/modules/vendor layer pairings.
-- [ ] Either wire a production Media derivative processor and enablement policy or remove/de-scope the inactive processing surface.
-- [ ] Consolidate the two Grid systems and adopt the extensible Grid model across remaining eligible Admin screens.
-- [ ] Consolidate the two Admin Form systems and adopt the section/processor model across remaining forms.
+- [x] Either wire a production Media derivative processor and enablement policy or remove/de-scope the inactive processing surface.
+- [x] Consolidate the two Grid systems and adopt the extensible Grid model across remaining eligible Admin screens.
+- [x] Consolidate the two Admin Form systems and adopt the section/processor model across remaining forms.
 - [x] Graduate Admin login rate limiting from report-only observation to an enforced, tested policy — `RATE_LIMIT_MODE=enforce` supported with generic 429 and `Retry-After` header.
 - [x] Add password policy and `password_needs_rehash()` upgrade support.
 - [x] Decide and document the CSRF model for stateful session-based `/api/*` routes.
@@ -817,7 +818,7 @@ An exhaustive independent technical review and static security teardown (`var/lo
   - *Remediation:* Remove local `$env` closures and have all config files call the global canonical `env()` helper.
 - [x] **Automated secrets generation and validation command.**
   - *Remediation:* Implemented `bin/zoosper security:generate-secrets` (alias `secrets:generate`) to generate and audit cryptographically strong keys (`APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY`, `RATE_LIMIT_IDENTITY_SALT`, `CACHE_ENCRYPTION_KEY`) with `--write`, `--check`, and `--force` options.
-- [ ] **Offload synchronous GD derivative generation from upload request path.**
+- [x] **Offload synchronous GD derivative generation from upload request path.**
   - *Location:* `packages/zoosper-media/src/Processor/GdMediaProcessor.php`, `MediaUploadService.php`.
   - *Problem:* Synchronous image decoding and derivative generation during multipart uploads creates CPU/memory bottlenecks and DoS vectors.
   - *Remediation:* Enforce pre-decode dimension and byte bounds, and introduce asynchronous queued derivative processing.

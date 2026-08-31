@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Form;
+namespace Zoosper\AdminForm;
 
 
 /**
@@ -27,7 +27,20 @@ final readonly class AdminFormRenderer
         ?string $cancelUrl = null,
         ?string $csrfToken = null
     ): string {
-        $html = '<form action="' . htmlspecialchars($action, ENT_QUOTES) . '" method="' . htmlspecialchars($method, ENT_QUOTES) . '" class="admin-form">';
+        $hasFile = false;
+        foreach ($form->fields as $field) {
+            if ($field->type === 'file') {
+                $hasFile = true;
+                break;
+            }
+        }
+
+        $enctype = $hasFile ? ' enctype="multipart/form-data"' : '';
+        $html = '<form action="' . htmlspecialchars($action, ENT_QUOTES) . '" method="' . htmlspecialchars($method, ENT_QUOTES) . '"' . $enctype . ' class="admin-form">';
+
+        if (isset($errors['_form'])) {
+            $html .= '<div class="admin-alert admin-alert--danger">' . htmlspecialchars((string) $errors['_form'], ENT_QUOTES) . '</div>';
+        }
 
         if ($csrfToken !== null) {
             $html .= '<input type="hidden" name="_csrf_token" value="' . htmlspecialchars($csrfToken, ENT_QUOTES) . '">';
@@ -110,7 +123,9 @@ final readonly class AdminFormRenderer
         } elseif ($field->type === 'html') {
             $html .= $field->config['html'] ?? (string) ($value ?? '');
         } else {
-            $html .= '<input type="' . $type . '" id="' . $name . '" name="' . $name . '" value="' . htmlspecialchars((string) ($value ?? ''), ENT_QUOTES) . '" class="form-control">';
+            $accept = isset($field->config['accept']) ? ' accept="' . htmlspecialchars((string) $field->config['accept'], ENT_QUOTES) . '"' : '';
+            $required = ($field->config['required'] ?? false) ? ' required' : '';
+            $html .= '<input type="' . $type . '" id="' . $name . '" name="' . $name . '" value="' . htmlspecialchars((string) ($value ?? ''), ENT_QUOTES) . '" class="form-control"' . $accept . $required . '>';
         }
 
         $html .= $errorHtml;

@@ -8,7 +8,7 @@ declare(strict_types=1);
  * Runtime migration marker: approved to use ConfigFileLayeredLoader
  * for module-default plus root-override config resolution.
  */
-namespace Zoosper\Core\Form;
+namespace Zoosper\AdminForm;
 
 
 use Zoosper\Core\Config\ConfigFileLayeredLoader;

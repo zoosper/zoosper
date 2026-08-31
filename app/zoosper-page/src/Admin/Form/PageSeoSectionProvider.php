@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Admin\Form;
 
-use Zoosper\Core\Form\AdminFormSection;
-use Zoosper\Core\Form\AdminFormSectionProviderInterface;
+use Zoosper\AdminForm\AdminFormSection;
+use Zoosper\AdminForm\AdminFormSectionProviderInterface;
 
 /**
  * Provides the search engine optimisation fields for the page admin form.
  *
  * Phase 1.41 (page decoupling, part A): AdminFormSection and
- * AdminFormSectionProviderInterface now imported from Zoosper\Core\Form.
+ * AdminFormSectionProviderInterface now imported from Zoosper\AdminForm.
  * No logic changed.
  */
 final readonly class PageSeoSectionProvider implements AdminFormSectionProviderInterface
@@ -38,3 +38,4 @@ HTML,
         );
     }
 }
+

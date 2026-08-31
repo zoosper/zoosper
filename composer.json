@@ -13,6 +13,7 @@
         "php": "^8.5",
         "zoosper/admin": "dev-dev",
         "zoosper/admin-dashboard": "dev-dev",
+        "zoosper/admin-form": "dev-dev",
         "zoosper/admin-grid": "dev-dev",
         "zoosper/api": "dev-dev",
         "zoosper/api-grid": "dev-dev",
@@ -108,6 +109,13 @@
         }
     },
     "repositories": [
+        {
+            "type": "path",
+            "url": "packages/zoosper-admin-form",
+            "options": {
+                "symlink": true
+            }
+        },
         {
             "type": "path",
             "url": "packages/zoosper-admin-dashboard",

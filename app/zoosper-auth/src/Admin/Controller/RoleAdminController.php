@@ -9,8 +9,8 @@ use Zoosper\Auth\Admin\Grid\AuthGridQueryState;
 
 use Zoosper\Auth\Admin\Grid\RoleGridIndex;
 
-use Zoosper\Core\Form\AdminFormRegistry;
-use Zoosper\Core\Form\AdminFormRenderer;
+use Zoosper\AdminForm\AdminFormRegistry;
+use Zoosper\AdminForm\AdminFormRenderer;
 use RuntimeException;
 use Zoosper\Admin\Audit\AuditLogger;
 use Zoosper\Admin\Layout\AdminLayout;
@@ -168,7 +168,7 @@ final readonly class RoleAdminController
             $fields = $formDef->fields;
 
             // Add dynamic components as HTML fields
-            $fields[] = new \Zoosper\Core\Form\AdminFormField(
+            $fields[] = new \Zoosper\AdminForm\AdminFormField(
                 name: 'permissions',
                 type: 'html',
                 label: 'Permissions',
@@ -178,7 +178,7 @@ final readonly class RoleAdminController
             );
 
             if ($this->users !== null) {
-                $fields[] = new \Zoosper\Core\Form\AdminFormField(
+                $fields[] = new \Zoosper\AdminForm\AdminFormField(
                     name: 'users',
                     type: 'html',
                     label: 'Users',
@@ -192,7 +192,7 @@ final readonly class RoleAdminController
             $sections['permissions'] = ['title' => 'Permissions', 'description' => 'Select the permissions assigned to this role.'];
             $sections['users'] = ['title' => 'User assignments', 'description' => 'Select users who should be assigned to this role.'];
 
-            $dynamicFormDef = new \Zoosper\Core\Form\AdminFormDefinition($formDef->handle, $fields, $sections);
+            $dynamicFormDef = new \Zoosper\AdminForm\AdminFormDefinition($formDef->handle, $fields, $sections);
 
             $values = $submitted !== [] ? $submitted : [
                 'code' => (string) ($role['code'] ?? ''),
@@ -343,3 +343,4 @@ private function e(string $value): string
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 }
+

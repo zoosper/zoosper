@@ -9,6 +9,8 @@ use Throwable;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\AdminForm\AdminFormRegistry;
+use Zoosper\AdminForm\AdminFormRenderer;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -53,6 +55,8 @@ final readonly class MediaAdminController
         private AdminViewRendererInterface $views,
         private MediaAssetRepository $assets,
         private MediaUploadService $uploads,
+        private AdminFormRegistry $formRegistry,
+        private AdminFormRenderer $formRenderer,
         private ?AdminUrlGenerator $adminUrls = null,
         private ?MediaLifecycleCoordinator $lifecycle = null,
         private ?MediaVisualGridWorkspace $visualGrid = null,
@@ -87,14 +91,22 @@ final readonly class MediaAdminController
     {
         $user = $this->currentAdminUser();
 
+        $formDef = $this->formRegistry->get('admin.media.upload.form');
+        $formHtml = $this->formRenderer->render(
+            $formDef,
+            [],
+            $this->adminUrl('media/upload'),
+            'POST',
+            [],
+            $this->adminUrl('media'),
+            $this->csrf->token()
+        );
+
         return Response::html($this->views->render(
             'Upload media',
-            'zoosper-media::admin/media/upload',
+            'zoosper-admin::admin/generic/form',
             [
-                'action' => $this->adminUrl('media/upload'),
-                'csrfToken' => $this->csrf->token(),
-                'errors' => [],
-                'backUrl' => $this->adminUrl('media'),
+                'formHtml' => $formHtml,
             ],
             $user,
             'media',
@@ -166,14 +178,22 @@ final readonly class MediaAdminController
 
     private function uploadErrorResponse(AdminUser $user, array $errors, int $status): Response
     {
+        $formDef = $this->formRegistry->get('admin.media.upload.form');
+        $formHtml = $this->formRenderer->render(
+            $formDef,
+            [],
+            $this->adminUrl('media/upload'),
+            'POST',
+            ['_form' => implode(' ', $errors)],
+            $this->adminUrl('media'),
+            $this->csrf->token()
+        );
+
         return Response::html($this->views->render(
             'Upload media',
-            'zoosper-media::admin/media/upload',
+            'zoosper-admin::admin/generic/form',
             [
-                'action' => $this->adminUrl('media/upload'),
-                'csrfToken' => $this->csrf->token(),
-                'errors' => $errors,
-                'backUrl' => $this->adminUrl('media'),
+                'formHtml' => $formHtml,
             ],
             $user,
             'media',
@@ -200,3 +220,4 @@ final readonly class MediaAdminController
         return $user;
     }
 }
+

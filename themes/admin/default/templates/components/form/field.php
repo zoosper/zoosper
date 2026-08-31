@@ -1,7 +1,7 @@
 <?php
 /**
  * @var callable $e
- * @var \Zoosper\Core\Form\AdminFormField $field
+ * @var \Zoosper\AdminForm\AdminFormField $field
  * @var mixed $value
  */
 $config = $field->config;
@@ -30,3 +30,4 @@ $label = $field->label;
         <input type="<?= $e($type) ?>" name="<?= $e($name) ?>" value="<?= $e((string) ($value ?? '')) ?>"<?= ($config['required'] ?? false) ? ' required' : '' ?>>
     </label>
 <?php endif; ?>
+

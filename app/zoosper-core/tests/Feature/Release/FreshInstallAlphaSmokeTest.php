@@ -80,6 +80,8 @@ it('proves a disposable alpha install from zero through bootstrap and idempotent
             ->and(password_verify('Alpha-Smoke-834!', $user['password_hash']))->toBeTrue();
         expect((int) $pdo->query("SELECT COUNT(*) FROM sites WHERE code='alpha'")->fetchColumn())->toBe(1)
             ->and((int) $pdo->query("SELECT COUNT(*) FROM site_domains WHERE host='alpha.example.test'")->fetchColumn())->toBe(1);
+
+        unset($pdo);
     } finally {
         if ($environmentExisted) {
             file_put_contents($environmentPath, (string) $originalEnvironment);

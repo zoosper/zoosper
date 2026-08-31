@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Zoosper\Core\Form;
+namespace Zoosper\AdminForm;
 
 /**
  * Processes submitted values for a named admin form handle.
  *
- * Phase 1.41 (page decoupling, part A): relocated to Zoosper\Core\Form —
+ * Phase 1.41 (page decoupling, part A): relocated to Zoosper\AdminForm —
  * see AdminFormSection.php for the full reasoning.
  */
 interface AdminFormProcessorInterface
@@ -20,3 +20,4 @@ interface AdminFormProcessorInterface
      */
     public function process(array $form, array $context = []): AdminFormProcessingResult;
 }
+

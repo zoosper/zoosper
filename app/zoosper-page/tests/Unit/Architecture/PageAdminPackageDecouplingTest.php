@@ -17,5 +17,6 @@ it('keeps Page free of Admin imports and Composer dependency', function (): void
     expect($source)->not->toContain('use Zoosper\\Admin\\')
         ->toContain('Zoosper\\Core\\Editor\\ContentEditorInterface')
         ->toContain('Zoosper\\Core\\Message\\FlashMessageStoreInterface')
-        ->toContain('Zoosper\\Core\\Form\\AdminFormConfigAggregator');
+        ->toContain('Zoosper\\AdminForm\\AdminFormRegistry')
+        ->toContain('Zoosper\\AdminForm\\AdminFormRenderer');
 });
