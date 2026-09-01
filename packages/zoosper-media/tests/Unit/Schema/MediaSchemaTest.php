@@ -39,8 +39,12 @@ test('media schema declares media_assets table', function () {
 
 test('media schema validates under the unified schema engine', function () {
     $registry = new SchemaRegistry();
-    foreach (loadMediaTables() as $table) {
-        $registry->addTable($table);
+    $loader = (new \ReflectionClass(SchemaLoader::class))->newInstanceWithoutConstructor();
+    $authConfig = require dirname(__DIR__, 5) . '/app/zoosper-auth/config/db_schema.php';
+    foreach ([$authConfig, mediaSchemaConfig()] as $schema) {
+        foreach ($loader->tablesFromConfig($schema) as $table) {
+            $registry->addTable($table);
+        }
     }
 
     expect((new SchemaValidator())->validate($registry)->isValid())->toBeTrue();

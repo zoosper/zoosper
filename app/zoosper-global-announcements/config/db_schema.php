@@ -18,6 +18,10 @@ return [
             'indexes' => [
                 'idx_admin_announcements_status' => ['columns' => ['status']],
                 'idx_admin_announcements_published' => ['columns' => ['published_at']],
+                'idx_admin_announcements_creator' => ['columns' => ['created_by_user_id']],
+            ],
+            'foreign_keys' => [
+                'fk_admin_announcements_creator' => ['columns' => ['created_by_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'SET NULL'],
             ],
         ],
         'admin_announcement_acknowledgments' => [

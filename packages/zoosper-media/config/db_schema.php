@@ -31,6 +31,10 @@ return [
                 'idx_media_assets_status' => ['columns' => ['status']],
                 'idx_media_assets_mime' => ['columns' => ['mime_type']],
                 'idx_media_assets_created' => ['columns' => ['created_at']],
+                'idx_media_assets_creator' => ['columns' => ['created_by']],
+            ],
+            'foreign_keys' => [
+                'fk_media_assets_creator' => ['columns' => ['created_by'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'SET NULL'],
             ],
         ],
         'media_processing_queue' => [
