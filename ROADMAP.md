@@ -4,8 +4,8 @@
 
 ## Current continuity status
 
-- Latest tag: `v0.3.0-alpha.3`.
-- Current development line: `0.3.0-alpha.4-dev`.
+- Latest tag: `v0.3.0-alpha.4`.
+- Current release line: `v0.3.0-alpha.4`.
 - **[x] Phase 10BN:** generic pagination ownership moved from Core to the
   `zoosper/pagination` library. Zoosper's page parsing, default page size `20`,
   maximum page size `100`, and maximum page `100_000` remain stable; verified

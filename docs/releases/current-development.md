@@ -1,13 +1,13 @@
-# Current development line
+# Current release line
 
 ## Version
 
-`0.3.0-alpha.4-dev`
+`0.3.0-alpha.4`
 
 ## Current source status
 
-- `0.3.0-alpha.4-dev` is the current development identity. The immutable latest tagged pre-release remains `v0.3.0-alpha.3`, preserving the published API, security, package-ownership, Media, Admin, module-discovery, and environment-precedence baseline.
-- Media list, detail, derivative, canonical upload, archive, restore, and guarded permanent-delete APIs are complete in the current development line.
+- `v0.3.0-alpha.4` is the current release identity, preserving the published API, security, and package-ownership baseline while adding module-discovery caching, CSP enforcement, unified AdminFormRenderer, asynchronous media derivative offloading, database-backed Module Lifecycle kernel, first-party package extractions, PHP 8.5 compatibility, and pre-launch security hardening.
+- Media list, detail, derivative, canonical upload, archive, restore, and guarded permanent-delete APIs are complete in the release line.
 - Module-discovery collision handling has been reconciled against current source and remains fail closed.
 - The responsive Admin refinement is complete in source at `364414a4878cde36fd89de8583326e4d1ff1f625`: permission-aware Dashboard links, fluid light/dark presentation, package-owned responsive Grid workflows, a sidebar-owned collapse control, module-owned semantic destination identifiers, and text-only non-interactive navigation groups.
 - Final accepted verification for that source was `1,550` tests with `11,157` assertions; the standard quality gate passed `3` checks with `0` errors and `0` warnings.

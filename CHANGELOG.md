@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0-alpha.4] - 2026-09-01
+
+- Completed Phase 10AU: Implemented aggregated discovery manifestation and cached discovery map in `var/cache/modules.php`, eliminating redundant filesystem calls during production boot.
+- Completed Phase 10AV: Graduated Content Security Policy (CSP) from report-only to enforcement across default configuration.
+- Completed Phases 10AW & 10AX: Unified Admin Grid and Form kernel consolidation (`AdminFormRenderer`) with Danger Zone deletion, sections, and Editor.js support across User, Role, Site, and Page controllers.
+- Completed Phase 10AY: Implemented media derivative asynchronous processing queue (`media_processing_queue`), `QueuedMediaProcessor`, and `media:process-queue` worker command with pre-decode resource limits.
+- Completed Phase 10AZ: Built database-backed Module Lifecycle kernel with `module:install`, `module:uninstall`, `module:enable`, and `module:disable` commands.
+- Extracted standalone first-party packages: Dynamic Dashboard Widgets (`zoosper/admin-dashboard`), Decoupled Content Editor (`zoosper/editor`), and Real-Time Global Announcements (`zoosper/global-announcements`).
+- Security hardening and audit remediation: Fail-closed HTML sanitization in Page save coordinator, strong `APP_KEY` and 2FA key placeholder blocklist enforcement in `ProductionSecurityPolicy`, session invalidation on password change, URL-encoded path traversal hardening in `AssetResolver`, and canonical `env()` helper unification.
+- Platform & Tooling: PHP 8.5 compatibility with `#[Override]` attribute adoption, Psalm static analysis baseline improvements across all 39 modules, and dual-engine CI verification (MySQL 8.0 alongside SQLite).
+- Verified release gate: 1,619 passing Pest tests (11,635 assertions), 4 strict quality checks (0 errors, 0 warnings), fresh compiled 39-module manifest, and clean release checks.
+
 ## [0.3.0-alpha.3] - 2026-08-28
 
 - Completed Phase 10AP-C Media lifecycle: archive/restore and archived-first permanent deletion now require complete Page-reference inspection, preserve transactional metadata and conservative original/derivative cleanup, and surface guarded blockers through Admin flash feedback and stateless `media:delete` API responses.

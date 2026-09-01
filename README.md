@@ -2,8 +2,8 @@
 
 **A modular, API-first CMS without the weight. Extend features without forking core.**
 
-- Latest pre-release: `v0.3.0-alpha.3`
-- Current development line: `0.3.0-alpha.4-dev`
+- Latest pre-release: `v0.3.0-alpha.4`
+- Current release line: `v0.3.0-alpha.4`
 - Required runtime: PHP 8.5+
 
 Zoosper is an API-first, multi-site CMS built around independently owned Composer modules. Each feature can contribute its own routes, services, schema, migrations, permissions, Admin UI, API adapters, tests, assets and documentation. Cross-cutting platform modules stay free of feature implementation dependencies.
@@ -20,7 +20,7 @@ Zoosper is an API-first, multi-site CMS built around independently owned Compose
 - **Security-focused foundations:** ACL, CSRF, 2FA, password policy, automatic password rehash, rate limiting, secure sessions, canonical Media ingest and safe audit metadata.
 - **Pluggable presentation:** Latte is the current default template engine; Marko View contracts are adopted at selected boundaries.
 
-## What shipped in v0.3.0-alpha.3
+## What shipped in v0.3.0-alpha.4
 
 ### Integration APIs
 
@@ -34,7 +34,10 @@ Zoosper is an API-first, multi-site CMS built around independently owned Compose
 
 - Multi-site Page management with structured Editor.js content, generated HTML, SEO metadata, revisions, preview and lifecycle controls.
 - Site-scoped nested Menus, frontend navigation and breadcrumbs.
-- Canonical raster Media ingest, upload-time WebP derivatives, persisted derivative metadata and lifecycle cleanup.
+- Canonical raster Media ingest, upload-time WebP derivatives, persisted derivative metadata, queue offloading, and lifecycle cleanup.
+- Unified `AdminFormRenderer` kernel powering User, Role, Site, and Page administration with Danger Zone deletion and Editor.js support.
+- Decoupled standalone packages: Dynamic Dashboard widgets (`zoosper/admin-dashboard`), Content Editor (`zoosper/editor`), and Real-Time Global Announcements (`zoosper/global-announcements`).
+- Database-backed Module Lifecycle kernel with dynamic manifest compilation.
 - Extensible SEO metadata, sitemap and robots orchestration.
 - Application-owned file sessions behind `SessionHandlerInterface`.
 - Module-owned migrations, declarative schema, ACL, Admin routes, API routes, controller factories, services, settings, assets, events and tests.
@@ -43,9 +46,12 @@ Zoosper is an API-first, multi-site CMS built around independently owned Compose
 ### HTTP and security
 
 - RFC-aware `404` and `405` handling, `Allow`, implicit `HEAD`, stateless `OPTIONS` and configurable exact-origin CORS.
+- Content Security Policy (CSP) enforcement with report-uri support.
 - Login-time 2FA with recovery codes and encryption-key rotation support.
-- Password policy and successful-login password rehash upgrades.
+- Fail-closed HTML sanitization, strong `APP_KEY` and 2FA key placeholder validation in production security policy.
+- Password policy, session invalidation on password change, and successful-login password rehash upgrades.
 - Authentication throttling, production fail-closed security checks, hardened session policy and real server-side prepared statements.
+- URL-encoded path traversal protection in asset resolution.
 - Canonical GD re-encoding so uploaded raster bytes are not copied directly into public Media storage.
 
 ## Architecture at a glance
@@ -139,13 +145,13 @@ Use `php8.5 bin/zoosper make:module` for a local module or the package-module sc
 
 ## Quality and release discipline
 
-The `v0.3.0-alpha.3` release gate completed with:
+The `v0.3.0-alpha.4` release gate completed with:
 
-- 1,557 passing tests
-- 11,175 assertions
+- 1,619 passing tests
+- 11,635 assertions
 - zero strict quality-gate errors
 - zero strict quality-gate warnings
-- a compiled, fresh module manifest
+- a compiled, fresh 39-module manifest
 - a disposable fresh-install alpha smoke test
 - browser acceptance and production-safe console boot
 
@@ -153,7 +159,7 @@ CI and the tracked pre-push hook run the repository quality contract. Psalm rema
 
 ## Latest release and current development focus
 
-`v0.3.0-alpha.3` completes the Media API lifecycle, reconciles module-discovery collision truth, delivers the responsive Admin workspace and navigation refinement, and preserves deployment-provided environment values ahead of `.env`. Development is now open as `0.3.0-alpha.4-dev`; staging and production continue to fail closed for secure sessions and enforcing rate limits across HTTP and console boot.
+`v0.3.0-alpha.4` delivers discovery caching in module manifest, CSP enforcement, unified AdminFormRenderer, asynchronous media derivative offloading, database-backed Module Lifecycle kernel, first-party package extractions, PHP 8.5 compatibility, and pre-launch security hardening. Staging and production continue to fail closed for secure sessions, database driver policy, and enforcing rate limits across HTTP and console boot.
 
 ### Explicitly not complete
 
@@ -165,7 +171,7 @@ CI and the tracked pre-push hook run the repository quality contract. Psalm rema
 
 ## Project status and support
 
-Zoosper CMS is in active public-alpha development. The latest tagged pre-release is `v0.3.0-alpha.3`, and the current development line is `0.3.0-alpha.4-dev`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
+Zoosper CMS is in active public-alpha development. The latest tagged pre-release is `v0.3.0-alpha.4`, and the current release line is `v0.3.0-alpha.4`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
 
 ## Licence
 

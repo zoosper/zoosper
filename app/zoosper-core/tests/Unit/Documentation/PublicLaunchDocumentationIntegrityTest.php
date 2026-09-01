@@ -7,9 +7,8 @@ it('publishes the current alpha release and delivered product surface at the rep
     $readme = (string) file_get_contents($root . '/README.md');
 
     expect($readme)
-        ->toContain('v0.3.0-alpha.3')
-        ->toContain('Current development line')
-        ->toContain('0.3.0-alpha.4-dev')
+        ->toContain('v0.3.0-alpha.4')
+        ->toContain('Current release line')
         ->toContain('zoosper-menu')
         ->toContain('revision listing and revision restoration')
         ->toContain('CI and the tracked pre-push hook')
@@ -24,8 +23,8 @@ it('states the tagged pre-release and stable-release status precisely', function
     $security = (string) file_get_contents($root . '/SECURITY.md');
 
     expect($security)
-        ->toContain('latest tagged pre-release is `v0.3.0-alpha.3`')
-        ->toContain('`0.3.0-alpha.4-dev` development identity')
+        ->toContain('latest tagged pre-release is `v0.3.0-alpha.4`')
+        ->toContain('`v0.3.0-alpha.4` release baseline')
         ->toContain('No stable release has shipped')
         ->toContain('`composer.json` and `composer.lock` are the source of truth')
         ->not->toContain('no tagged stable releases have shipped yet');
