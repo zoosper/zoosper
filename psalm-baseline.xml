@@ -530,9 +530,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Http/AuthenticationMiddleware.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function process(Request $request, RouteContext $context, callable $next): Response]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[AuthenticationMiddleware]]></code>
     </UnusedClass>
@@ -736,9 +733,6 @@
       <code><![CDATA[$services->get(\Zoosper\Core\Site\SiteContextResolver::class)]]></code>
       <code><![CDATA[$sessionHandler]]></code>
     </ArgumentTypeCoercion>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$_ENV['APP_DEBUG'] ?? getenv('APP_DEBUG')]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnusedClass>
       <code><![CDATA[ApplicationFactory]]></code>
     </UnusedClass>
@@ -1351,12 +1345,6 @@
       <code><![CDATA[isStatelessPublicPath]]></code>
       <code><![CDATA[services]]></code>
     </PossiblyUnusedMethod>
-    <UndefinedFunction>
-      <code><![CDATA[env('SESSION_LIFETIME_SECONDS', 28800)]]></code>
-      <code><![CDATA[env('SESSION_NAME', 'ZOOSPERSESSID')]]></code>
-      <code><![CDATA[env('SESSION_SAMESITE', 'Lax')]]></code>
-      <code><![CDATA[env('SESSION_SECURE', self::requestIsHttps())]]></code>
-    </UndefinedFunction>
   </file>
   <file src="app/zoosper-core/src/Http/Middleware/ModuleAdminMiddlewareLoader.php">
     <RiskyTruthyFalsyComparison>
@@ -2988,11 +2976,6 @@
       <code><![CDATA[public function name(): string]]></code>
       <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
     </MissingOverrideAttribute>
-    <UndefinedFunction>
-      <code><![CDATA[env('DEFAULT_SITE_CODE', 'main')]]></code>
-      <code><![CDATA[env('DEFAULT_SITE_HOST', '127.0.0.1')]]></code>
-      <code><![CDATA[env('DEFAULT_SITE_NAME', 'Main Website')]]></code>
-    </UndefinedFunction>
     <UnusedClass>
       <code><![CDATA[SiteCreateCommand]]></code>
     </UnusedClass>

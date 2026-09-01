@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Auth\Http;
 
+use Override;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Middleware\RouteContext;
 use Zoosper\Core\Http\Middleware\RouteMiddleware;
@@ -28,6 +29,7 @@ final readonly class AuthenticationMiddleware implements RouteMiddleware
     ) {
     }
 
+    #[Override]
     public function process(Request $request, RouteContext $context, callable $next): Response
     {
         if ($context->isPublic) {

@@ -43,7 +43,7 @@ final class ApplicationFactory
     {
         // Early error handler registration: catch and redact errors during module discovery and config load.
         $earlyLogManager = new LogManager(ConfigRepository::fromArray([]), $basePath);
-        $earlyDebug = filter_var(env('APP_DEBUG', false), FILTER_VALIDATE_BOOLEAN);
+        $earlyDebug = filter_var(\env('APP_DEBUG', false), FILTER_VALIDATE_BOOLEAN);
         $earlyErrorHandler = new ErrorHandler(
             $earlyLogManager->exceptions(),
             $earlyDebug,
