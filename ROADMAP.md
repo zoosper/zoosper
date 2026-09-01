@@ -5,7 +5,7 @@
 ## Current continuity status
 
 - Latest tag: `v0.3.0-alpha.4`.
-- Current release line: `v0.3.0-alpha.4`.
+- Current development line: `0.3.0-alpha.5-dev`.
 - **[x] Phase 10BN:** generic pagination ownership moved from Core to the
   `zoosper/pagination` library. Zoosper's page parsing, default page size `20`,
   maximum page size `100`, and maximum page `100_000` remain stable; verified
@@ -51,7 +51,7 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ## 0. TOP PRIORITY — next phase
 
-**`0.3.0-alpha.4-dev` is open.** The immutable annotated `v0.3.0-alpha.3` tag targets release commit `72dd1da44ea491c478ee76ab85dbe9fc286ebf99`; no GitHub release publication or deployment has occurred. Resume the planned Admin-owned improvements below from this development baseline.
+**`0.3.0-alpha.5-dev` is open.** The immutable annotated `v0.3.0-alpha.4` tag targets release commit `c70f37dc`; no GitHub release publication or deployment has occurred. Resume the launch-readiness and technical remediation priorities below from this development baseline.
 
 **Planned Admin follow-ups for the current development line:**
 
@@ -71,7 +71,7 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 - [x] **[CRIT-02] 2FA encryption key placeholder blocklist, rotation & boot assertion.** Confirmed resolved in source: Insecure `APP_KEY` fallback for `TWO_FACTOR_ENCRYPTION_KEY` in `config/two_factor.php` is eliminated, placeholder blocklist (`change-me`, `change-me-before-production`, `secret`, `changeme`, `placeholder`) is enforced at service construction and boot assertion, and multi-key rotation (`previous_encryption_keys`) is verified with behavioral data-provider tests.
 - [x] **[CRIT-03] `APP_DEBUG` default `false`, boot unification & environment assertion.** Confirmed resolved in source: Default is set to `'debug' => false` in `config/app.php`, and `APP_DEBUG=false` is enforced in `ProductionSecurityPolicy::assertEnvironment()`.
 - [x] **[HIGH-01] Database production driver policy enforcement.** Confirmed resolved in source: Enforced real driver policy for `config/database_policy.php` (`DATABASE_ENFORCE_MYSQL_PRODUCTION`, `DATABASE_PRODUCTION_DRIVER`) at both `ConnectionFactory` and `ProductionSecurityPolicy` to forbid SQLite in production and staging environments.
-- [~] **[HIGH-02] CI MySQL integration testing.** MySQL 8.0 service container and `pdo_mysql` extension added to `.github/workflows/quality-gate.yml`; step-level MySQL test suite execution (targeting `DB_CONNECTION=mysql`, `DB_HOST=127.0.0.1`, `DB_DATABASE=zoosper_test`) remains open to ensure Pest runs against MySQL in CI alongside SQLite.
+- [x] **[HIGH-02] CI MySQL integration testing.** MySQL 8.0 service container and `pdo_mysql` extension added to `.github/workflows/quality-gate.yml` along with explicit step-level Pest execution targeting MySQL in CI alongside SQLite.
 - [~] **[HIGH-03] Unified admin authentication rate limiting.** Reconciled `RateLimitReportOnlyAdminMiddleware` contract documentation to match active HTTP 429 enforcement under `RATE_LIMIT_MODE=enforce` and added runtime salt assertion; transport separation between LoginController and RateLimitMiddleware tracked as future architecture refinement.
 - [x] **[HIGH-04] Admin user locale persistence regression test net.** Implemented dedicated behavioral regression test suite `AdminUserLocaleLifecycleRegressionTest` covering admin user locale normalization, repository persistence, model hydration, and session propagation.
 - [x] **[HIGH-05] Consolidate environment reader closures across 14 config files.** Confirmed resolved in source: Consolidated local `$env` closures across all root `config/*.php` and module config files to call the global canonical `env()` helper.
@@ -80,7 +80,7 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 - [x] **[MED-03] Behavioral test assertion coverage.** Substantially resolved: added data-provider behavioral tests verifying construction failure for placeholder/empty keys in `SecretProtectorKeyEnforcementTest`.
 - [x] **[LOW-02] Stale documentation cleanup.** Confirmed resolved: obsolete `autoload.php` comments and duplicate `SECURITY.md` sections removed.
 - [x] **[LOW-03] Module registry & DB lifecycle.** Reframed: database-backed `ModuleRegistry`, `ModuleRepository`, and `module:*` CLI lifecycle management implemented across `app/*` and `packages/*`.
-- [ ] **[LOW-04] ApplicationFactory debug-flag computation unification.** Unify early error-handler `APP_DEBUG` check (line 46) and configuration-driven `$config->get('app.debug')` check (line 60) in `ApplicationFactory.php` into a single canonical helper.
+- [x] **[LOW-04] ApplicationFactory debug-flag computation unification.** Unified early error-handler `APP_DEBUG` check and configuration-driven `$config->get('app.debug')` check in `ApplicationFactory.php` to use canonical `env('APP_DEBUG', false)`.
 
 **Launch-Readiness & Technical Audit Actionable Remediation Backlog (2026-09-01 Review):**
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.0-alpha.5-dev]
+
+- Opened development line following `v0.3.0-alpha.4`.
+- Active focus: Referential integrity / foreign key reconciliation, Psalm zero-baseline CI gate, automated secret generation and mandatory boot validation, absolute session lifetime controls, and adversarial asset pipeline test coverage.
+
 ## [0.3.0-alpha.4] - 2026-09-01
 
 - Completed Phase 10AU: Implemented aggregated discovery manifestation and cached discovery map in `var/cache/modules.php`, eliminating redundant filesystem calls during production boot.
