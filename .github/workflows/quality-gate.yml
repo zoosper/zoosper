@@ -65,7 +65,17 @@ jobs:
       - name: Report Psalm baseline status
         if: always()
         run: echo "Psalm advisory outcome ${{ steps.psalm.outcome }}"
-      - name: Run full Pest suite
+      - name: Run full Pest suite (SQLite)
+        run: composer test
+      - name: Run Pest test suite (MySQL)
+        env:
+          DB_CONNECTION: mysql
+          DB_DRIVER: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: "3306"
+          DB_DATABASE: zoosper_test
+          DB_USERNAME: root
+          DB_PASSWORD: root
         run: composer test
       - name: Compile module manifest
         run: composer compile

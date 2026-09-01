@@ -24,3 +24,6 @@
 # Documentation website build output
 /docs-site/build/
 /.output.txt
+
+# local test files:
+debug_page_grid.html

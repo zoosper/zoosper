@@ -55,14 +55,21 @@ final class ProductionSecurityPolicy
             throw new RuntimeException(ucfirst($environment) . ' requires RATE_LIMIT_MODE=enforce.');
         }
 
+        $placeholders = ['change-me', 'change-me-before-production', 'secret', 'changeme', 'placeholder'];
+
         $salt = trim((string) $value('RATE_LIMIT_IDENTITY_SALT', ''));
-        if ($salt === '' || in_array(strtolower($salt), ['change-me', 'changeme', 'secret'], true)) {
+        if ($salt === '' || in_array(strtolower($salt), $placeholders, true)) {
             throw new RuntimeException(ucfirst($environment) . ' requires a strong RATE_LIMIT_IDENTITY_SALT.');
         }
 
         $twoFactorKey = trim((string) $value('TWO_FACTOR_ENCRYPTION_KEY', ''));
-        if ($twoFactorKey === '' || in_array(strtolower($twoFactorKey), ['change-me', 'change-me-before-production', 'secret', 'changeme'], true)) {
+        if ($twoFactorKey === '' || in_array(strtolower($twoFactorKey), $placeholders, true)) {
             throw new RuntimeException(ucfirst($environment) . ' requires a strong TWO_FACTOR_ENCRYPTION_KEY.');
+        }
+
+        $appKey = trim((string) $value('APP_KEY', ''));
+        if ($appKey !== '' && in_array(strtolower($appKey), $placeholders, true)) {
+            throw new RuntimeException(ucfirst($environment) . ' requires a strong APP_KEY.');
         }
 
         $driver = strtolower(trim((string) $value('DB_CONNECTION', $value('DB_DRIVER', 'mysql'))));

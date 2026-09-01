@@ -6,7 +6,7 @@ use Zoosper\Core\Http\ProductionSecurityPolicy;
 
 function setProductionPolicyEnvironment(array $values): void
 {
-    foreach (['APP_ENV', 'APP_DEBUG', 'SESSION_SECURE', 'RATE_LIMIT_ENABLED', 'RATE_LIMIT_MODE', 'RATE_LIMIT_IDENTITY_SALT', 'TWO_FACTOR_ENCRYPTION_KEY', 'DB_DRIVER', 'DB_CONNECTION', 'DATABASE_ENFORCE_MYSQL_PRODUCTION'] as $key) {
+    foreach (['APP_ENV', 'APP_DEBUG', 'SESSION_SECURE', 'RATE_LIMIT_ENABLED', 'RATE_LIMIT_MODE', 'RATE_LIMIT_IDENTITY_SALT', 'TWO_FACTOR_ENCRYPTION_KEY', 'APP_KEY', 'DB_DRIVER', 'DB_CONNECTION', 'DATABASE_ENFORCE_MYSQL_PRODUCTION'] as $key) {
         unset($_ENV[$key]);
         putenv($key);
     }
@@ -31,6 +31,7 @@ it('accepts complete fail-closed staging and production controls', function (): 
             'RATE_LIMIT_MODE' => 'enforce',
             'RATE_LIMIT_IDENTITY_SALT' => str_repeat('a', 64),
             'TWO_FACTOR_ENCRYPTION_KEY' => str_repeat('c', 64),
+            'APP_KEY' => str_repeat('e', 64),
             'DB_DRIVER' => 'mysql',
             'DATABASE_ENFORCE_MYSQL_PRODUCTION' => 'true',
         ]);
@@ -49,6 +50,7 @@ it('rejects each weakened public-environment control independently', function (s
         'RATE_LIMIT_MODE' => 'enforce',
         'RATE_LIMIT_IDENTITY_SALT' => str_repeat('b', 64),
         'TWO_FACTOR_ENCRYPTION_KEY' => str_repeat('d', 64),
+        'APP_KEY' => str_repeat('f', 64),
         'DB_DRIVER' => 'mysql',
         'DATABASE_ENFORCE_MYSQL_PRODUCTION' => 'true',
         $key => $value,
@@ -64,6 +66,7 @@ it('rejects each weakened public-environment control independently', function (s
     'placeholder identity salt' => ['RATE_LIMIT_IDENTITY_SALT', 'change-me'],
     'placeholder 2fa key' => ['TWO_FACTOR_ENCRYPTION_KEY', 'change-me'],
     'empty 2fa key' => ['TWO_FACTOR_ENCRYPTION_KEY', ''],
+    'placeholder app key' => ['APP_KEY', 'change-me'],
     'sqlite in production' => ['DB_DRIVER', 'sqlite'],
 ]);
 

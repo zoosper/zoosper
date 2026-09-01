@@ -11,6 +11,7 @@ it('fails closed for insecure production defaults', function (string $envVar, st
     putenv('RATE_LIMIT_MODE=enforce');
     putenv('RATE_LIMIT_IDENTITY_SALT=strong-random-test-salt');
     putenv('TWO_FACTOR_ENCRYPTION_KEY=strong-random-2fa-test-key');
+    putenv('APP_KEY=strong-random-test-key');
     putenv('DB_DRIVER=mysql');
 
     // Trigger failure
@@ -20,7 +21,9 @@ it('fails closed for insecure production defaults', function (string $envVar, st
         ->toThrow(RuntimeException::class, $expectedError);
 
     // Cleanup
-    putenv('APP_ENV=local');
+    putenv('APP_ENV=testing');
+    putenv('DB_CONNECTION=sqlite');
+    putenv('DB_DRIVER=sqlite');
 })->with([
     ['APP_DEBUG', 'true', 'Production requires APP_DEBUG=false.'],
     ['SESSION_SECURE', 'false', 'Production requires SESSION_SECURE=true.'],
@@ -28,6 +31,9 @@ it('fails closed for insecure production defaults', function (string $envVar, st
     ['RATE_LIMIT_MODE', 'report_only', 'Production requires RATE_LIMIT_MODE=enforce.'],
     ['RATE_LIMIT_IDENTITY_SALT', 'change-me', 'Production requires a strong RATE_LIMIT_IDENTITY_SALT.'],
     ['TWO_FACTOR_ENCRYPTION_KEY', 'secret', 'Production requires a strong TWO_FACTOR_ENCRYPTION_KEY.'],
+    ['TWO_FACTOR_ENCRYPTION_KEY', 'placeholder', 'Production requires a strong TWO_FACTOR_ENCRYPTION_KEY.'],
+    ['APP_KEY', 'change-me', 'Production requires a strong APP_KEY.'],
+    ['APP_KEY', 'placeholder', 'Production requires a strong APP_KEY.'],
     ['DB_DRIVER', 'sqlite', 'Production requires a production database driver'],
 ]);
 
@@ -39,13 +45,15 @@ it('passes for secure production environment', function (): void {
     putenv('RATE_LIMIT_MODE=enforce');
     putenv('RATE_LIMIT_IDENTITY_SALT=d8a39e87b64921f045c36190ab74e1d3e89a54f2c019d678b4a2e5c7f8901234');
     putenv('TWO_FACTOR_ENCRYPTION_KEY=d8a39e87b64921f045c36190ab74e1d3e89a54f2c019d678b4a2e5c7f8901234');
+    putenv('APP_KEY=d8a39e87b64921f045c36190ab74e1d3e89a54f2c019d678b4a2e5c7f8901234');
     putenv('DB_CONNECTION=mysql');
     putenv('DB_DRIVER=mysql');
 
     expect(fn () => ProductionSecurityPolicy::assertEnvironment())->not->toThrow(RuntimeException::class);
 
-    putenv('APP_ENV=local');
-    putenv('DB_CONNECTION');
+    putenv('APP_ENV=testing');
+    putenv('DB_CONNECTION=sqlite');
+    putenv('DB_DRIVER=sqlite');
 });
 
 

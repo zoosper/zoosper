@@ -65,15 +65,22 @@ final class AssetResolver
             throw new AssetNotFoundException("Unknown asset module: {$module}");
         }
 
-        if (str_contains($relativePath, "\0")) {
+        if (str_contains($relativePath, "\0") || str_contains(rawurldecode($relativePath), "\0")) {
             throw new AssetNotFoundException('Illegal null byte in asset path.');
+        }
+
+        // Reject URL-encoded traversal sequences
+        $decoded = rawurldecode($relativePath);
+        $normDecoded = ltrim(str_replace('\\', '/', $decoded), '/');
+        if ($normDecoded === '' || $normDecoded === '.' || $normDecoded === '..' || str_contains($normDecoded, '../') || str_contains($normDecoded, '/..')) {
+            throw new AssetNotFoundException('Illegal asset path.');
         }
 
         // Normalise separators and strip any leading slashes.
         $relative = ltrim(str_replace('\\', '/', $relativePath), '/');
 
         // Reject obvious traversal attempts up-front.
-        if ($relative === '' || str_contains($relative, '../') || str_contains($relative, '/..')) {
+        if ($relative === '' || $relative === '.' || $relative === '..' || str_contains($relative, '../') || str_contains($relative, '/..')) {
             throw new AssetNotFoundException('Illegal asset path.');
         }
 
