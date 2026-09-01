@@ -18,6 +18,9 @@ return [
             'indexes' => [
                 'idx_admin_user_two_factor_user' => ['columns' => ['admin_user_id'], 'unique' => true],
             ],
+            'foreign_keys' => [
+                'fk_admin_user_two_factor_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE'],
+            ],
         ],
 
         'admin_user_recovery_codes' => [
@@ -31,6 +34,9 @@ return [
             'indexes' => [
                 'idx_admin_recovery_codes_user' => ['columns' => ['admin_user_id']],
                 'idx_admin_recovery_codes_hash' => ['columns' => ['code_hash'], 'unique' => true],
+            ],
+            'foreign_keys' => [
+                'fk_admin_user_recovery_codes_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE'],
             ],
         ],
 
@@ -47,6 +53,9 @@ return [
                 'idx_admin_2fa_challenges_user' => ['columns' => ['admin_user_id']],
                 'idx_admin_2fa_challenges_token' => ['columns' => ['challenge_token_hash'], 'unique' => true],
                 'idx_admin_2fa_challenges_expiry' => ['columns' => ['expires_at']],
+            ],
+            'foreign_keys' => [
+                'fk_admin_two_factor_challenges_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE'],
             ],
         ],
     ],

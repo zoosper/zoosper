@@ -38,6 +38,7 @@ return [
                     'referenced_columns' => ['id'],
                     'on_delete' => 'CASCADE',
                 ],
+                'fk_announcement_ack_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE'],
             ],
         ],
     ],

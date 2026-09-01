@@ -15,6 +15,9 @@ return [
             'indexes' => [
                 'idx_admin_grid_prefs_user_grid' => ['columns' => ['admin_user_id', 'grid_key'], 'unique' => true],
             ],
+            'foreign_keys' => [
+                'fk_admin_grid_preferences_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE'],
+            ],
         ],
         'admin_grid_bookmarks' => [
             'columns' => [
@@ -30,6 +33,9 @@ return [
             'indexes' => [
                 'idx_admin_grid_bookmarks_user_grid_name' => ['columns' => ['admin_user_id', 'grid_key', 'name'], 'unique' => true],
                 'idx_admin_grid_bookmarks_default' => ['columns' => ['admin_user_id', 'grid_key', 'is_default']],
+            ],
+            'foreign_keys' => [
+                'fk_admin_grid_bookmarks_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE'],
             ],
         ],
     ],

@@ -21,6 +21,9 @@ return [
                 'idx_url_rewrites_site_request_path' => ['columns' => ['site_id', 'request_path'], 'unique' => true],
                 'idx_url_rewrites_entity' => ['columns' => ['entity_type', 'entity_id']],
             ],
+            'foreign_keys' => [
+                'fk_url_rewrites_site' => ['columns' => ['site_id'], 'referenced_table' => 'sites', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE'],
+            ],
         ],
     ],
 ];

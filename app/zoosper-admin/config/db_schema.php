@@ -13,6 +13,9 @@ return [
             'indexes' => [
                 'idx_admin_dashboard_preferences_user' => ['columns' => ['admin_user_id'], 'unique' => true],
             ],
+            'foreign_keys' => [
+                'fk_admin_dashboard_preferences_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE'],
+            ],
         ],
         'admin_login_history' => [
             'columns' => [

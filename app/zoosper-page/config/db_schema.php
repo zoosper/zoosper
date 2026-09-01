@@ -23,6 +23,10 @@ return [
                 'idx_page_site_assignments_page_site' => ['columns' => ['page_id', 'site_id'], 'unique' => true],
                 'idx_page_site_assignments_site' => ['columns' => ['site_id']],
             ],
+            'foreign_keys' => [
+                'fk_page_site_assignments_page' => ['columns' => ['page_id'], 'referenced_table' => 'pages', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE'],
+                'fk_page_site_assignments_site' => ['columns' => ['site_id'], 'referenced_table' => 'sites', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE'],
+            ],
         ],
         'page_revisions' => [
             'columns' => [
