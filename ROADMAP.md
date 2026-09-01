@@ -1,6 +1,6 @@
 # Zoosper CMS — Master Roadmap
 
-**Last updated:** 2026-08-31 (Sydney)
+**Last updated:** 2026-09-01 (Sydney)
 
 ## Current continuity status
 
@@ -23,6 +23,7 @@
 - **[x] Phase 10AX:** migrated `PageAdminController` to the unified `AdminFormRenderer`, enhancing the renderer to support `checkbox` and `html` blocks (Editor.js). Verified with `AdminPageFormAcceptanceTest`.
 - **[x] Phase 10AY:** implemented media derivative offloading. Introduced `media_processing_queue`, `QueuedMediaProcessor`, and the `media:process-queue` worker command. Added pre-decode resource limits to `GdMediaProcessor`.
 - **[x] Phase 10AZ:** built the Module Lifecycle kernel. Added database-backed module registry with `module:install`, `module:uninstall`, `module:enable`, and `module:disable` commands that dynamically filter the compiled module manifest.
+- **[x] 2026-09-01 Re-Audit & Technical Review reconciliation:** Confirmed resolution of CRIT-01, CRIT-02, CRIT-03, HIGH-01, HIGH-05, and LOW-02 against source. Reconciled open status of HIGH-02 (CI MySQL execution step) and established launch-readiness backlog: referential integrity / foreign-key reconciliation, Psalm zero-baseline gate, automated secret generation & boot validation, absolute session lifetime controls, unauthenticated asset pipeline security verification, and release checklist expansion.
 
 ---
 
@@ -64,16 +65,32 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 - [x] **Real-Time Global Announcement Modal (future global-notifications workstream).** Extracted into its own dedicated module `zoosper/global-announcements` (`app/zoosper-global-announcements`). Super Admins have a Settings surface (`/admin/announcements`) to draft, publish, unpublish, and archive Global Announcements. Active authenticated users receive real-time updates via background polling and asynchronous acknowledgment, while offline users receive mandatory one-time modal delivery reconciled upon their next login. Acknowledgment records persist authoritatively by announcement and user in `admin_announcement_acknowledgments` with duplicate-safe idempotency, CSRF protection, and audit logging. Admin layout consumption is fully decoupled via `AdminAnnouncementProviderInterface`.
 - [x] **Decoupled Content Editor Module (`zoosper/editor` in `app/zoosper-editor`).** Extracted `ContentEditorRegistry`, `EditorJsContentEditor`, `TextareaContentEditor`, and scoped `ContentEditorRuntimeConfig` out of `zoosper-admin` into a dedicated internal path module with standalone service registration, asset declarations (`zoosper-admin-editor-style`, `zoosper-admin-editorjs-bundle`, `zoosper-admin-editor-script`), and backwards-compatible class aliases.
 
-**Pre-Launch Security & Architecture Teardown Findings (2026-08-31 Independent Review — Claude & Grok):**
+**Pre-Launch Security & Architecture Teardown Findings (2026-08-31 Audit & 2026-09-01 Re-Audit):**
 
-- [x] **[CRIT-01] Fail-closed HTML sanitization in Page save coordinator & input.** `PageSaveCoordinator` and `PageSaveInput` require `HtmlSanitizerInterface` as a non-nullable dependency and throw (fail closed) if unresolvable, eliminating the silent raw-input fallback that risks stored XSS under `|noescape` template rendering.
-- [x] **[CRIT-02] 2FA encryption key placeholder blocklist & boot assertion.** Insecure `APP_KEY` fallback for `TWO_FACTOR_ENCRYPTION_KEY` in `config/two_factor.php` is eliminated, placeholder blocklist (`change-me`, `change-me-before-production`, `secret`, `changeme`) is enforced at service construction, and `TWO_FACTOR_ENCRYPTION_KEY` is asserted in `ProductionSecurityPolicy::assertEnvironment()`.
-- [x] **[CRIT-03] `APP_DEBUG` default `false`, boot unification & environment assertion.** Default is set to `'debug' => false` in `config/app.php`, early and runtime error-handler debug computations in `ApplicationFactory::create()` are unified, and `APP_DEBUG=false` is enforced in `ProductionSecurityPolicy::assertEnvironment()`.
-- [x] **[HIGH-01] Database production driver policy enforcement.** Enforced real driver policy for `config/database_policy.php` (`DATABASE_ENFORCE_MYSQL_PRODUCTION`, `DATABASE_PRODUCTION_DRIVER`) in `ConnectionFactory` and `ProductionSecurityPolicy` to forbid SQLite in production and staging environments.
-- [x] **[HIGH-02] CI MySQL integration testing.** Added MySQL 8.0 service container and `pdo_mysql` PHP extension configuration to `.github/workflows/quality-gate.yml` to run feature test suites against MySQL in CI.
-- [x] **[HIGH-03] Unified admin authentication rate limiting.** Reconciled `RateLimitReportOnlyAdminMiddleware` contract documentation to match active HTTP 429 enforcement under `RATE_LIMIT_MODE=enforce`.
+- [x] **[CRIT-01] Fail-closed HTML sanitization in Page save coordinator & input.** Confirmed resolved in source: `PageSaveCoordinator` and `PageSaveInput` require `HtmlSanitizerInterface` as a non-nullable constructor dependency and throw (fail closed) if unresolvable, eliminating the silent raw-input fallback that risks stored XSS under `|noescape` template rendering.
+- [x] **[CRIT-02] 2FA encryption key placeholder blocklist, rotation & boot assertion.** Confirmed resolved in source: Insecure `APP_KEY` fallback for `TWO_FACTOR_ENCRYPTION_KEY` in `config/two_factor.php` is eliminated, placeholder blocklist (`change-me`, `change-me-before-production`, `secret`, `changeme`, `placeholder`) is enforced at service construction and boot assertion, and multi-key rotation (`previous_encryption_keys`) is verified with behavioral data-provider tests.
+- [x] **[CRIT-03] `APP_DEBUG` default `false`, boot unification & environment assertion.** Confirmed resolved in source: Default is set to `'debug' => false` in `config/app.php`, and `APP_DEBUG=false` is enforced in `ProductionSecurityPolicy::assertEnvironment()`.
+- [x] **[HIGH-01] Database production driver policy enforcement.** Confirmed resolved in source: Enforced real driver policy for `config/database_policy.php` (`DATABASE_ENFORCE_MYSQL_PRODUCTION`, `DATABASE_PRODUCTION_DRIVER`) at both `ConnectionFactory` and `ProductionSecurityPolicy` to forbid SQLite in production and staging environments.
+- [~] **[HIGH-02] CI MySQL integration testing.** MySQL 8.0 service container and `pdo_mysql` extension added to `.github/workflows/quality-gate.yml`; step-level MySQL test suite execution (targeting `DB_CONNECTION=mysql`, `DB_HOST=127.0.0.1`, `DB_DATABASE=zoosper_test`) remains open to ensure Pest runs against MySQL in CI alongside SQLite.
+- [~] **[HIGH-03] Unified admin authentication rate limiting.** Reconciled `RateLimitReportOnlyAdminMiddleware` contract documentation to match active HTTP 429 enforcement under `RATE_LIMIT_MODE=enforce` and added runtime salt assertion; transport separation between LoginController and RateLimitMiddleware tracked as future architecture refinement.
 - [x] **[HIGH-04] Admin user locale persistence regression test net.** Implemented dedicated behavioral regression test suite `AdminUserLocaleLifecycleRegressionTest` covering admin user locale normalization, repository persistence, model hydration, and session propagation.
-- [x] **[HIGH-05] Consolidate environment reader closures across 14 config files.** Consolidated local `$env` closures across all root `config/*.php` and module config files to call the global canonical `env()` helper.
+- [x] **[HIGH-05] Consolidate environment reader closures across 14 config files.** Confirmed resolved in source: Consolidated local `$env` closures across all root `config/*.php` and module config files to call the global canonical `env()` helper.
+- [~] **[MED-01] Static analysis coverage & CI gate.** Scope expanded to 15 first-party packages with baseline in `psalm-baseline.xml`; non-blocking `continue-on-error` in CI and `zoosper-session` inclusion tracked for zero-baseline transition.
+- [~] **[MED-02] Dual templating / Latte role views.** Latte templates adopted for role management views; conditional raw-PHP fallback with `extract()` in `RoleAdminController` noted for future cleanup.
+- [x] **[MED-03] Behavioral test assertion coverage.** Substantially resolved: added data-provider behavioral tests verifying construction failure for placeholder/empty keys in `SecretProtectorKeyEnforcementTest`.
+- [x] **[LOW-02] Stale documentation cleanup.** Confirmed resolved: obsolete `autoload.php` comments and duplicate `SECURITY.md` sections removed.
+- [x] **[LOW-03] Module registry & DB lifecycle.** Reframed: database-backed `ModuleRegistry`, `ModuleRepository`, and `module:*` CLI lifecycle management implemented across `app/*` and `packages/*`.
+- [ ] **[LOW-04] ApplicationFactory debug-flag computation unification.** Unify early error-handler `APP_DEBUG` check (line 46) and configuration-driven `$config->get('app.debug')` check (line 60) in `ApplicationFactory.php` into a single canonical helper.
+
+**Launch-Readiness & Technical Audit Actionable Remediation Backlog (2026-09-01 Review):**
+
+- [ ] **Complete referential integrity & foreign-key reconciliation:** Finish FK reconciliation across all cross-module references (Page ↔ Media, Menu ↔ Page, Site ↔ Entities, PAT ↔ User). Make status report and validation an explicit release-gate item.
+- [ ] **Make Psalm static analysis a hard CI gate:** Drive the baseline down to zero (or a minimal, documented residual); fail CI on static analysis findings.
+- [ ] **Automated secret generation and mandatory production boot validation:** Provide first-class `bin/zoosper security:generate-secrets` command and fail-closed boot checks for all required production keys and salts.
+- [ ] **Absolute session lifetime and concurrent session limits:** Make `ADMIN_SESSION_ABSOLUTE_LIFETIME` and concurrent session controls first-class, configurable, and tested across environments.
+- [ ] **Unauthenticated asset pipeline hardening:** Adversarial path-normalisation and extension-allow-list tests for `/asset/{module}/{path}` to protect against traversal or malicious module assets.
+- [ ] **Convert security-fix doc comments into permanent behavioral regression tests.**
+- [ ] **Expanded release checklist execution:** Ensure release gate covers FK integrity status, Psalm zero baseline, secret presence, CSP enforcement, media queue health, asset pipeline adversarial verification, disposable container production boot, and MySQL CI green.
 
 The following earlier top-priority findings are retained as completed history:
 

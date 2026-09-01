@@ -157,11 +157,11 @@ CI and the tracked pre-push hook run the repository quality contract. Psalm rema
 
 ### Explicitly not complete
 
-- Dynamic Dashboard widgets and extensible Admin colour-theme registration remain planned follow-ups.
-- Referential-integrity and foreign-key reconciliation are not yet comprehensive across every feature.
-- CSP remains report-only while reporting configuration and broader browser verification continue.
-- Grid and Admin Form extension models are not yet consolidated across every Admin screen.
-- Psalm is not yet an enforced zero-baseline gate.
+- Referential-integrity and foreign-key reconciliation are not yet comprehensive across every cross-module reference.
+- CI test suite execution against an active MySQL service container is being finalized alongside SQLite runs.
+- Static analysis (Psalm) remains advisory while the baseline is reduced toward an enforced zero-baseline gate.
+- Automated secret generation and comprehensive boot-time production validation are being finalized.
+- Absolute session lifetime controls and concurrent session limits are in progress.
 
 ## Project status and support
 

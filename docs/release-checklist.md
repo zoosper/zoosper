@@ -2,11 +2,17 @@
 
 - Clean worktree and reviewed changelog
 - Locked Composer installation, validation and audit
-- Full Pest suite
+- Full Pest suite (including MySQL and SQLite integration test legs)
 - JavaScript syntax and strict repository gate
-- Disposable fresh-install smoke
-- Module manifest compilation and freshness
-- Release checks under production-safe configuration
+- Static analysis baseline status review (Psalm zero-baseline drive or reviewed residual)
+- Disposable fresh-install smoke and containerized production boot verification
+- Foreign key referential integrity status check (`schema:foreign-keys:status`)
+- Secret presence, strength, and placeholder validation (`APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY`, `RATE_LIMIT_IDENTITY_SALT`)
+- Content Security Policy (CSP) enforcement verification (`report_only => false`)
+- Media derivative queue worker health and pre-decode limit checks
+- Module asset pipeline adversarial path-normalisation and extension-allow-list tests
+- Module manifest compilation and freshness (`module:manifest:check`)
+- Release checks under production-safe configuration (`release:check`)
 - Live frontend, API health and Admin login checks
 - Authenticated Admin smoke journey
 - Database and Media rollback points

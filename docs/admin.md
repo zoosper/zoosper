@@ -12,9 +12,9 @@ Shell behaviour is progressive: server-rendered navigation and content remain av
 
 ## Dashboard composition
 
-The Admin-owned Dashboard builds quick-access cards from the module-discovered, permission-filtered `AdminMenu` result. It does not import feature modules, hardcode their routes, or fabricate operational statistics. This keeps new module menu contributions automatically visible to authorised users while preserving the existing route and ACL boundary.
+The Admin-owned Dashboard composes dynamic widgets and quick-access navigation from module-discovered, permission-filtered contributor contracts via `zoosper/admin-dashboard`. It does not hardcode feature module routes or fabricate operational statistics.
 
-A planned follow-up will replace navigation repetition with useful dynamic widgets contributed through an Admin-owned contract. Feature modules will own widget data and presentation contributions; Admin will own permission-filtered discovery, composition, responsive layout, empty/error containment, and user layout preferences without importing concrete feature implementations. Widget reads must remain bounded, site-aware, observable, cache-safe, progressively rendered, and isolated so one failed contributor cannot break the Dashboard. Contributions must preserve route and ACL checks, tenant/site isolation, output escaping, CSP-safe registered assets, and reduced-motion/accessibility behaviour. This work remains separate from Phase 10AR production-security verification.
+Feature modules own widget data and presentation contributions (e.g. Auth contributes active user metrics); the Admin shell owns permission-filtered discovery, composition, responsive layout, empty/error containment, and user layout preferences without importing concrete feature implementations. Widget reads remain bounded, site-aware, observable, cache-safe, progressively rendered, and isolated so one failed contributor cannot break the Dashboard. Contributions preserve route and ACL checks, tenant/site isolation, output escaping, CSP-safe registered assets, and reduced-motion/accessibility behaviour. Per-user preferences support show/hide, persisted order, reset-to-default, and accessible keyboard and drag reordering.
 
 ## Shared component presentation
 
