@@ -26,9 +26,13 @@ it('validates the standalone Page declarative schema with the revision relations
     $loader = new ReflectionClass(SchemaLoader::class);
     $instance = $loader->newInstanceWithoutConstructor();
     $config = require $root . '/app/zoosper-page/config/db_schema.php';
+    $authConfig = require $root . '/app/zoosper-auth/config/db_schema.php';
+    $siteConfig = require $root . '/app/zoosper-site/config/db_schema.php';
     $registry = new SchemaRegistry();
-    foreach ($instance->tablesFromConfig($config) as $table) {
-        $registry->addTable($table);
+    foreach ([$authConfig, $siteConfig, $config] as $schema) {
+        foreach ($instance->tablesFromConfig($schema) as $table) {
+            $registry->addTable($table);
+        }
     }
 
     $validation = (new SchemaValidator())->validate($registry);

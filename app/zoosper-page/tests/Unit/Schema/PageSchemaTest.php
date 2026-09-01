@@ -71,8 +71,13 @@ test('pages declares SEO and content columns', function () {
 
 test('page schema validates under the unified engine', function () {
     $registry = new SchemaRegistry();
-    foreach (loadPageTables() as $table) {
-        $registry->addTable($table);
+    $loader = (new \ReflectionClass(SchemaLoader::class))->newInstanceWithoutConstructor();
+    $authConfig = require dirname(__DIR__, 5) . '/app/zoosper-auth/config/db_schema.php';
+    $siteConfig = require dirname(__DIR__, 5) . '/app/zoosper-site/config/db_schema.php';
+    foreach ([$authConfig, $siteConfig, pageSchemaConfig()] as $schema) {
+        foreach ($loader->tablesFromConfig($schema) as $table) {
+            $registry->addTable($table);
+        }
     }
 
     expect((new SchemaValidator())->validate($registry)->isValid())->toBeTrue();

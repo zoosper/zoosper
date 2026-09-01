@@ -30,6 +30,9 @@ return [
                 'idx_admin_login_history_status' => ['columns' => ['status']],
                 'idx_admin_login_history_created' => ['columns' => ['created_at']],
             ],
+            'foreign_keys' => [
+                'fk_admin_login_history_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'SET NULL', 'on_update' => 'NO ACTION'],
+            ],
         ],
         'admin_activity_log' => [
             'columns' => [
@@ -50,6 +53,9 @@ return [
                 'idx_admin_activity_action' => ['columns' => ['action']],
                 'idx_admin_activity_entity' => ['columns' => ['entity_type', 'entity_id']],
                 'idx_admin_activity_created' => ['columns' => ['created_at']],
+            ],
+            'foreign_keys' => [
+                'fk_admin_activity_log_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'SET NULL', 'on_update' => 'NO ACTION'],
             ],
         ],
     ],

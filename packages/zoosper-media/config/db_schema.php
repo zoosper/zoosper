@@ -33,6 +33,24 @@ return [
                 'idx_media_assets_created' => ['columns' => ['created_at']],
             ],
         ],
+        'media_processing_queue' => [
+            'columns' => [
+                'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],
+                'asset_id' => ['type' => 'integer', 'nullable' => false],
+                'plan_json' => ['type' => 'text', 'nullable' => false],
+                'status' => ['type' => 'string', 'length' => 32, 'nullable' => false, 'default' => 'pending'],
+                'attempts' => ['type' => 'integer', 'nullable' => false, 'default' => 0],
+                'error_message' => ['type' => 'text', 'nullable' => true],
+                'created_at' => ['type' => 'datetime', 'nullable' => false],
+                'updated_at' => ['type' => 'datetime', 'nullable' => false],
+            ],
+            'indexes' => [
+                'idx_media_queue_status' => ['columns' => ['status']],
+            ],
+            'foreign_keys' => [
+                'fk_media_processing_queue_asset' => ['columns' => ['asset_id'], 'referenced_table' => 'media_assets', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE', 'on_update' => 'NO ACTION'],
+            ],
+        ],
         'media_derivatives' => [
             'columns' => [
                 'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],

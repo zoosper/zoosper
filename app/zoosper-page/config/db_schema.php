@@ -28,6 +28,7 @@ return [
             'columns' => [
                 'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],
                 'page_id' => ['type' => 'integer', 'nullable' => false],
+                'created_by' => ['type' => 'integer', 'nullable' => true],
             ],
             'foreign_keys' => [
                 'fk_page_revisions_page' => [
@@ -36,6 +37,7 @@ return [
                     'referenced_columns' => ['id'],
                     'on_delete' => 'CASCADE',
                 ],
+                'fk_page_revisions_created_by' => ['columns' => ['created_by'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'SET NULL', 'on_update' => 'NO ACTION'],
             ],
         ],
         'pages' => [
@@ -47,6 +49,14 @@ return [
                 'canonical_url' => ['type' => 'string', 'length' => 500, 'nullable' => true],
                 'content_format' => ['type' => 'string', 'length' => 32, 'nullable' => false, 'default' => 'html'],
                 'content_json' => ['type' => 'json', 'nullable' => true],
+                'site_id' => ['type' => 'integer', 'nullable' => false],
+                'created_by' => ['type' => 'integer', 'nullable' => true],
+                'updated_by' => ['type' => 'integer', 'nullable' => true],
+            ],
+            'foreign_keys' => [
+                'fk_pages_site' => ['columns' => ['site_id'], 'referenced_table' => 'sites', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE', 'on_update' => 'NO ACTION'],
+                'fk_pages_created_by' => ['columns' => ['created_by'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'SET NULL', 'on_update' => 'NO ACTION'],
+                'fk_pages_updated_by' => ['columns' => ['updated_by'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'SET NULL', 'on_update' => 'NO ACTION'],
             ],
         ],
     ],

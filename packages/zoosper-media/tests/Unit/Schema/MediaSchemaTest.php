@@ -26,14 +26,15 @@ function loadMediaTables(): array
 test('media schema declares media_assets table', function () {
     $tables = loadMediaTables();
 
-    expect($tables)->toHaveCount(2);
+    expect($tables)->toHaveCount(3);
     $byName = [];
     foreach ($tables as $table) {
         $byName[$table->name] = $table;
     }
-    expect($byName)->toHaveKeys(['media_assets', 'media_derivatives']);
+    expect($byName)->toHaveKeys(['media_assets', 'media_derivatives', 'media_processing_queue']);
     expect($byName['media_assets']->columns)->toHaveKeys(['uuid', 'filename', 'mime_type', 'storage_path', 'public_path']);
     expect($byName['media_derivatives']->columns)->toHaveKeys(['media_asset_id', 'profile', 'format', 'width', 'height', 'storage_path', 'public_path']);
+    expect($byName['media_processing_queue']->columns)->toHaveKeys(['asset_id', 'plan_json', 'status', 'attempts']);
 });
 
 test('media schema validates under the unified schema engine', function () {
