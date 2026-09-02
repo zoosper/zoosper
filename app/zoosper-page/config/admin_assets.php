@@ -8,7 +8,7 @@ return array (
     'zoosper-page-grid-search-script' =>
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-page/js/page-grid-search.js?v=67a410a4c7b2',
+      'path' => '/asset/zoosper-page/js/page-grid-search.js?v=012f2cb72404',
       'sort_order' => 97,
       'attributes' =>
       array (
@@ -18,7 +18,7 @@ return array (
     'zoosper-page-grid-workspace-style' =>
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-page/css/page-grid-workspace.css?v=86fdd5d0bd63',
+      'path' => '/asset/zoosper-page/css/page-grid-workspace.css?v=7a82e530f5e8',
       'sort_order' => 96,
     ),
     'zoosper-tag-selector-style' =>

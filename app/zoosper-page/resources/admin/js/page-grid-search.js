@@ -77,6 +77,9 @@
         }
 
         table?.querySelectorAll('tbody tr').forEach((row) => {
+            if (row.dataset.pageGridRowEnhanced === 'true') return;
+            row.dataset.pageGridRowEnhanced = 'true';
+
             const titleCell = row.querySelector('td[data-grid-column="title"]');
             const slugCell = row.querySelector('td[data-grid-column="slug"]');
             const statusCell = row.querySelector('td[data-grid-column="status"]');
