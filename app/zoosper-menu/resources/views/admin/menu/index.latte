@@ -1,1 +1,13 @@
-<section class="card"><div class="admin-page-heading"><h2>Menus</h2><a class="button" href="{$createUrl}">Create menu</a></div>{$gridHtml|noescape}</section>
+<section class="menus-index" aria-labelledby="menus-index-title">
+    <header class="menus-index__header">
+        <p class="menus-index__breadcrumb">Content / Menus</p>
+        <div class="menus-index__heading-row">
+            <div>
+                <h1 id="menus-index-title" class="menus-index__title">Menus</h1>
+                <p class="menus-index__description">Manage site navigation menus and publication status.</p>
+            </div>
+            <a class="button menus-index__create" href="{$createUrl}">Create menu</a>
+        </div>
+    </header>
+    {$gridHtml|noescape}
+</section>
