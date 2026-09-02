@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Release;
 
+use Throwable;
 use Zoosper\Core\Module\ModuleManifestStatus;
 
 final readonly class ReleaseCheck
 {
-    public function __construct(private string $basePath) {}
+    /** @param (callable(): array<string, int>)|null $foreignKeyCounts */
+    public function __construct(
+        private string $basePath,
+        private mixed $foreignKeyCounts = null,
+    ) {}
 
     /** @return list<ReleaseCheckResult> */
     public function run(): array
@@ -39,12 +44,43 @@ final readonly class ReleaseCheck
         }
         $manifest = (new ModuleManifestStatus($this->basePath))->inspect();
         $results[] = new ReleaseCheckResult('module-manifest', $manifest['status'] === 'fresh', 'status=' . $manifest['status']);
+        $foreignKeys = $this->foreignKeyResult();
+        if ($foreignKeys !== null) {
+            $results[] = $foreignKeys;
+        }
         $app = require $this->basePath . '/config/app.php';
         $debug = (bool) ($app['debug'] ?? false);
         $environment = (string) ($app['env'] ?? 'production');
         $safe = $environment !== 'production' || !$debug;
         $results[] = new ReleaseCheckResult('production-debug', $safe, "env={$environment}, debug=" . ($debug ? 'true' : 'false'));
         return $results;
+    }
+
+    public function foreignKeyResult(): ?ReleaseCheckResult
+    {
+        if (!is_callable($this->foreignKeyCounts)) {
+            return null;
+        }
+
+        try {
+            $counts = ($this->foreignKeyCounts)();
+            $present = (int) ($counts['present'] ?? 0);
+            $add = (int) ($counts['add'] ?? 0);
+            $mismatch = (int) ($counts['mismatch'] ?? 0);
+            $sqliteRebuild = (int) ($counts['sqlite_rebuild_required'] ?? 0);
+
+            return new ReleaseCheckResult(
+                'foreign-keys',
+                $add === 0 && $mismatch === 0 && $sqliteRebuild === 0,
+                "present={$present}, add={$add}, mismatch={$mismatch}, sqlite_rebuild_required={$sqliteRebuild}",
+            );
+        } catch (Throwable $exception) {
+            return new ReleaseCheckResult(
+                'foreign-keys',
+                false,
+                'inspection failed: ' . $exception->getMessage(),
+            );
+        }
     }
 }
 

@@ -113,7 +113,21 @@ try {
         'security:generate-secrets' => static fn () => new GenerateSecretsCommand($basePath),
         'secrets:generate' => static fn () => new GenerateSecretsCommand($basePath),
         'version' => static fn () => new VersionCommand($basePath),
-        'release:check' => static fn () => new ReleaseCheckCommand(new ReleaseCheck($basePath)),
+        'release:check' => static function () use ($basePath, $connection, $modules): ReleaseCheckCommand {
+            return new ReleaseCheckCommand(new ReleaseCheck(
+                $basePath,
+                static function () use ($connection, $modules): array {
+                    $pdo = $connection->get();
+                    $service = new SchemaForeignKeyReconciliationService(
+                        $pdo,
+                        (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME),
+                        new SchemaLoader($modules),
+                        new SchemaSnapshotRepository($pdo),
+                    );
+                    return $service->counts($service->plan());
+                },
+            ));
+        },
         'schema:foreign-keys:status' => static function () use ($connection, $config, $modules): SchemaForeignKeyStatusCommand {
             $pdo = $connection->get();
             $service = new SchemaForeignKeyReconciliationService($pdo, (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME), new SchemaLoader($modules), new SchemaSnapshotRepository($pdo));
