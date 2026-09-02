@@ -14,7 +14,9 @@ return static function (\PDO $pdo, string $driver): void {
             . 'UNIQUE INDEX idx_admin_grid_bookmarks_user_grid_name '
             . '(admin_user_id, grid_key, name), '
             . 'INDEX idx_admin_grid_bookmarks_default '
-            . '(admin_user_id, grid_key, is_default)'
+            . '(admin_user_id, grid_key, is_default), '
+            . 'CONSTRAINT fk_admin_grid_bookmarks_user FOREIGN KEY (admin_user_id) '
+            . 'REFERENCES admin_users (id) ON DELETE CASCADE ON UPDATE RESTRICT'
             . ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci',
         );
         return;
@@ -26,7 +28,9 @@ return static function (\PDO $pdo, string $driver): void {
         . 'admin_user_id INTEGER NOT NULL, grid_key TEXT NOT NULL, '
         . 'name TEXT NOT NULL, state_json TEXT NOT NULL, '
         . 'is_default INTEGER NOT NULL DEFAULT 0, '
-        . 'created_at TEXT NOT NULL, updated_at TEXT NOT NULL'
+        . 'created_at TEXT NOT NULL, updated_at TEXT NOT NULL, '
+        . 'CONSTRAINT fk_admin_grid_bookmarks_user FOREIGN KEY (admin_user_id) '
+        . 'REFERENCES admin_users (id) ON DELETE CASCADE ON UPDATE RESTRICT'
         . ')',
     );
     $pdo->exec(

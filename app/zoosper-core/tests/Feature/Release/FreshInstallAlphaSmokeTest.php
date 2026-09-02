@@ -81,6 +81,16 @@ it('proves a disposable alpha install from zero through bootstrap and idempotent
         expect((int) $pdo->query("SELECT COUNT(*) FROM sites WHERE code='alpha'")->fetchColumn())->toBe(1)
             ->and((int) $pdo->query("SELECT COUNT(*) FROM site_domains WHERE host='alpha.example.test'")->fetchColumn())->toBe(1);
 
+        $foreignKeyCount = 0;
+        foreach ($tables as $table) {
+            if (!is_string($table) || str_starts_with($table, 'sqlite_')) {
+                continue;
+            }
+            $quotedTable = str_replace('"', '""', $table);
+            $foreignKeyCount += count($pdo->query('PRAGMA foreign_key_list("' . $quotedTable . '")')->fetchAll(\PDO::FETCH_ASSOC));
+        }
+        expect($foreignKeyCount)->toBe(33)
+            ->and($pdo->query('PRAGMA foreign_key_check')->fetchAll(\PDO::FETCH_ASSOC))->toBe([]);
         unset($pdo);
     } finally {
         if ($environmentExisted) {
