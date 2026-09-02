@@ -15,3 +15,15 @@ Tables may declare `foreign_keys` beside `columns` and `indexes`. Each named def
 ## Operator commands
 
 `php bin/zoosper schema:foreign-keys:status` is the read-only reconciliation report. Add `--format=json` for machine-readable output. `php bin/zoosper schema:foreign-keys:apply --dry-run=1` delegates to the same report. Applying requires `--confirm=apply`, executes only missing MySQL constraints, blocks mismatches and SQLite rebuild requirements, and records successful statements in `schema_snapshots`. Ordinary `migrate` remains unchanged and never applies existing-table foreign keys implicitly.
+
+## Phase 11A operating contract
+
+- Restrictive actions are the default when `on_delete` or `on_update` is omitted.
+- Use explicit `CASCADE`, `SET NULL`, or `NO ACTION` only when the domain or existing physical constraint requires it.
+- `SET NULL` requires nullable child columns.
+- Parent columns must be uniquely indexed, and child FK columns should have supporting indexes before live application.
+- `schema:foreign-keys:status` classifies each declaration as `present`, `add`, `mismatch`, or `sqlite_rebuild_required`.
+- `schema:foreign-keys:apply --confirm=apply` executes only reviewed MySQL additions and records successful statements in `schema_snapshots`.
+- Failed multi-statement MySQL application may be partial. Inspect current status before any retry.
+- Fresh SQLite tables receive declarative constraints during creation. Existing SQLite tables require explicit data-preserving rebuild migrations.
+- Release readiness requires zero additions, mismatches, and SQLite rebuild requirements. Inspection errors fail closed.

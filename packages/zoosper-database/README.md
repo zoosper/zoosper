@@ -39,3 +39,18 @@ The Database package includes unit tests for the `ConnectionFactory` and `Migrat
 ## Operational notes
 
 When using the `MigrateCommand`, ensure that the database user has sufficient privileges to modify the schema. Schema changes are performed within a transaction where the driver supports it, ensuring atomicity.
+
+## Foreign-key reconciliation
+
+Module-owned `config/db_schema.php` files declare named foreign keys with child columns, referenced tables and columns, and explicit actions where behaviour differs from the restrictive default.
+
+Operational workflow:
+
+1. Run `php8.5 bin/zoosper schema:foreign-keys:status --format=json` as the read-only inspection step.
+2. Resolve orphan data, type incompatibilities, missing parent uniqueness, and missing child indexes before application.
+3. Apply reviewed MySQL additions with `php8.5 bin/zoosper schema:foreign-keys:apply --confirm=apply`.
+4. Re-run status and require zero additions, mismatches, and SQLite rebuild requirements.
+
+Existing-table application is explicit, MySQL-only, confirmation-gated, and snapshot-recorded. MySQL DDL can partially succeed, so a failed apply must be inspected before retrying. SQLite existing-table constraints require explicit data-preserving rebuild migrations; they are never applied invisibly. Ordinary `migrate` does not perform existing-table FK reconciliation.
+
+The current first-party inventory contains 33 declarative relationships. Fresh SQLite installation and the active MySQL schema both reconcile all 33, and `release:check` blocks release readiness when reconciliation is incomplete or inspection fails.

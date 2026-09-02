@@ -163,7 +163,7 @@ CI and the tracked pre-push hook run the repository quality contract. Psalm rema
 
 ### Explicitly not complete
 
-- Referential-integrity and foreign-key reconciliation are not yet comprehensive across every cross-module reference.
+- Referential integrity is declaratively owned across the current first-party relationship inventory: 33 foreign keys reconcile on MySQL, fresh SQLite installs create the same 33 constraints, and release readiness fails closed on pending additions, mismatches, or required SQLite rebuilds.
 - CI test suite execution against an active MySQL service container is being finalized alongside SQLite runs.
 - Static analysis (Psalm) remains advisory while the baseline is reduced toward an enforced zero-baseline gate.
 - Automated secret generation and comprehensive boot-time production validation are being finalized.

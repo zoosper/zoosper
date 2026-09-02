@@ -27,10 +27,22 @@ Milestones delivered in `v0.3.0-alpha.4`:
 - **Pre-launch audit remediation pass (2026-09-01):** Fail-closed HTML sanitization (CRIT-01), 2FA encryption key placeholder rejection and rotation (CRIT-02), `APP_DEBUG=false` production enforcement (CRIT-03), database driver production policy (HIGH-01), CI MySQL execution (HIGH-02), asset path traversal rejection, and canonical `env()` helper consolidation (HIGH-05/LOW-04).
 
 Current engineering priorities from the 2026-09-01 re-audit and technical code review for `0.3.0-alpha.5-dev`:
-- Complete referential integrity and foreign-key reconciliation across all cross-module relationships (`schema:foreign-keys:status` / `apply`).
+- Continue the next integrity review as new modules and relationships are introduced; the current first-party inventory is closed with 33 declarative constraints, zero pending additions, zero mismatches, fresh SQLite parity, and release-check enforcement.
 - Static analysis (Psalm) baseline burn-down toward an enforced zero-baseline gate.
 - Automated secret generation command and mandatory boot validation under staging and production environments.
 - Absolute session lifetime (`ADMIN_SESSION_ABSOLUTE_LIFETIME`) and concurrent session management.
 - Unauthenticated module asset pipeline adversarial security tests.
 
 Keep documentation, package READMEs, upgrade notes, and architecture decisions current in every phase.
+
+## Phase 11A referential-integrity closure
+
+Phase 11A is complete on the `0.3.0-alpha.5-dev` line:
+
+- Existing migration-owned relationships were reconciled into module manifests without duplicate DDL.
+- Ten audited missing relationships and two indexed creator relationships were applied to MySQL.
+- The active database reports `present=33`, `add=0`, `mismatch=0`, and `sqlite_rebuild_required=0`.
+- Fresh SQLite installation creates all 33 declarative foreign keys and passes `PRAGMA foreign_key_check` with no violations.
+- Behavioural tests cover orphan rejection, `CASCADE`, `SET NULL`, and restrictive parent-key updates.
+- `release:check` now fails closed when additions, mismatches, SQLite rebuild requirements, or inspection failures remain.
+- The separate current release blocker is `module-manifest: status=missing`; compile the manifest before a release-readiness run.

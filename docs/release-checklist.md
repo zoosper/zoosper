@@ -34,3 +34,11 @@ NEXT_VERSION=0.3.0-alpha.5-dev
 - Run the full test suite, quality gate, fresh-install smoke, compile, manifest check, release check, and documentation build.
 - Record manual browser evidence for login/logout, application-owned sessions, Home/About rendering, Page revision restore, Menu rendering, and Media lifecycle.
 - Commit and push the release identity, require a clean working tree, then create annotated tag defined by `RELEASE_TAG`.
+
+### Foreign-key release gate
+
+- Run `php8.5 bin/zoosper schema:foreign-keys:status --format=json` and require `add=0`, `mismatch=0`, and `sqlite_rebuild_required=0`.
+- Confirm `php8.5 bin/zoosper release:check` reports a passing `foreign-keys` result with the same counts.
+- Do not retry a failed MySQL apply blindly; inspect status because earlier DDL statements may already have succeeded.
+- For SQLite, use explicit data-preserving rebuild migrations for existing-table foreign-key changes.
+- Before release, compile the module manifest so the independent `module-manifest` readiness check is fresh.
