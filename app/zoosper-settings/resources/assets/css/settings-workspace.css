@@ -143,3 +143,6 @@
 .settings-more-actions-panel { border-radius: var(--admin-radius-lg,.875rem); }
 @media (max-width:850px) { .settings-workspace { gap: .8rem; } .settings-nav { box-shadow: none; } .settings-actions { bottom: 0; } }
 @media (prefers-reduced-motion:reduce) { .settings-nav button,.settings-section,.settings-group summary { scroll-behavior:auto; transition:none!important; } }
+
+/* Phase 12L: controlled Settings hierarchy refinement. */
+.settings-heading-copy{min-width:0}.settings-eyebrow{margin:0 0 .35rem;color:var(--admin-accent,#047857);font-size:.75rem;font-weight:700;letter-spacing:.055em;text-transform:uppercase}.settings-description{margin:.4rem 0 0;color:var(--admin-text-muted,#64748b);font-size:.9rem;line-height:1.5}.settings-head{align-items:end;margin-bottom:.85rem}.settings-title-row h1{font-size:clamp(1.65rem,2vw,2rem);font-weight:600;letter-spacing:-.025em;line-height:1.15}.settings-search{min-height:2.65rem}.settings-layout{gap:1rem}.settings-navigation,.settings-section{border-radius:.75rem}.settings-section summary{min-height:3rem}.settings-field-name{font-weight:600}.settings-actions{border-radius:0 0 .75rem .75rem}@media(max-width:52rem){.settings-head{grid-template-columns:1fr}.settings-search{width:100%}}@media(prefers-contrast:more){.settings-navigation,.settings-section,.settings-search{border-width:2px}}

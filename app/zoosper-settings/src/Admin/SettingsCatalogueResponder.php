@@ -46,7 +46,7 @@ final readonly class SettingsCatalogueResponder
         );
 
         return Response::html($this->views->render(
-            title: 'Settings',
+            title: '',
             template: 'zoosper-settings::admin/settings/index',
             data: [
                 ...$presentation,
