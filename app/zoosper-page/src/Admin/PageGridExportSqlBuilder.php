@@ -27,8 +27,10 @@ final readonly class PageGridExportSqlBuilder
         $parameters = [];
 
         if ($criteria->search !== '') {
-            $where[] = '(p.title LIKE :export_search OR p.slug LIKE :export_search)';
-            $parameters['export_search'] = '%' . $criteria->search . '%';
+            $search = '%' . $criteria->search . '%';
+            $where[] = '(p.title LIKE :export_search_title OR p.slug LIKE :export_search_slug)';
+            $parameters['export_search_title'] = $search;
+            $parameters['export_search_slug'] = $search;
         }
         if ($criteria->status !== '') {
             $where[] = 'p.status = :export_status';

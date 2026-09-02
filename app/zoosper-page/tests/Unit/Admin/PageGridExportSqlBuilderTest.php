@@ -17,12 +17,15 @@ test('export SQL uses bound search status and multiple Site parameters', functio
     ));
 
     expect($plan->whereSql)
-        ->toContain('p.title LIKE :export_search')
+        ->toContain('p.title LIKE :export_search_title')
+        ->toContain('p.slug LIKE :export_search_slug')
+        ->not->toContain('LIKE :export_search OR')
         ->toContain('p.status = :export_status')
         ->toContain('p.site_id IN (:export_site_id_0, :export_site_id_1)');
     expect($plan->orderSql)->toBe('ORDER BY p.title ASC');
     expect($plan->parameters)->toBe([
-        'export_search' => '%landing%',
+        'export_search_title' => '%landing%',
+        'export_search_slug' => '%landing%',
         'export_status' => 'published',
         'export_site_id_0' => 9,
         'export_site_id_1' => 4,

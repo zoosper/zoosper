@@ -37,7 +37,12 @@ final readonly class PageGridRepository
     private function whereClause(PageGridCriteria $criteria): array
     {
         $conditions=[];$params=[];
-        if($criteria->query!==''){$conditions[]='(p.title LIKE :query OR p.slug LIKE :query)';$params['query']='%'.$criteria->query.'%';}
+        if ($criteria->query !== '') {
+            $search = '%' . $criteria->query . '%';
+            $conditions[] = '(p.title LIKE :query_title OR p.slug LIKE :query_slug)';
+            $params['query_title'] = $search;
+            $params['query_slug'] = $search;
+        }
         if($criteria->title!==''){$conditions[]='p.title LIKE :title';$params['title']='%'.$criteria->title.'%';}
         if($criteria->slug!==''){$conditions[]='p.slug LIKE :slug';$params['slug']='%'.$criteria->slug.'%';}
         if($criteria->status!==''){$conditions[]='p.status = :status';$params['status']=$criteria->status;}

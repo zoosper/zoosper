@@ -1,0 +1,563 @@
+/* Phase 12B-C1: Page-owned collection header over the shared Admin Grid shell. */
+.page-grid-index {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+}
+.page-grid-index__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin: 0;
+}
+.page-grid-index__copy {
+    min-width: 0;
+}
+.page-grid-index__breadcrumb {
+    margin: 0 0 .35rem;
+    color: var(--admin-text-muted, #667085);
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .025em;
+}
+.page-grid-index__title {
+    margin: 0;
+    color: var(--admin-text, #172033);
+    font-size: clamp(1.65rem, 2vw, 2rem);
+    font-weight: 600;
+    letter-spacing: -.025em;
+    line-height: 1.15;
+}
+.page-grid-index__description {
+    max-width: 48rem;
+    margin: .45rem 0 0;
+    color: var(--admin-text-muted, #667085);
+    font-size: .925rem;
+    line-height: 1.5;
+}
+.page-grid-index__actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: .6rem;
+}
+.page-grid-index__actions .button {
+    min-height: 2.5rem;
+    margin: 0;
+    border-radius: .55rem;
+    font-weight: 650;
+}
+.page-grid-index__actions .button--secondary {
+    border: 1px solid var(--admin-border, #d8dee9);
+    background: var(--admin-surface, #fff);
+    color: var(--admin-text, #172033);
+}
+.page-grid-index > [data-grid-workspace] .grid-compact-actions > [data-grid-export] {
+    display: none;
+}
+@media (max-width: 48rem) {
+    .page-grid-index__header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .page-grid-index__actions {
+        width: 100%;
+    }
+    .page-grid-index__actions .button {
+        flex: 1 1 auto;
+        justify-content: center;
+        text-align: center;
+    }
+}
+@media (max-width: 30rem) {
+    .page-grid-index__actions {
+        align-items: stretch;
+        flex-direction: column-reverse;
+    }
+}
+
+/* Phase 12B-C2: Page search reuses the canonical q input and GET form. */
+.page-grid-index .grid-compact-actions {
+    align-items: center;
+}
+.page-grid-search {
+    display: flex;
+    flex: 1 1 24rem;
+    min-width: min(22rem, 45vw);
+    margin: 0;
+}
+.page-grid-search input[type="search"] {
+    width: 100%;
+    min-height: 2.5rem;
+    margin: 0;
+    padding-inline: 2.35rem .8rem;
+    border: 1px solid var(--admin-border, #d8dee9);
+    border-radius: .55rem;
+    background: var(--admin-surface, #fff);
+    color: var(--admin-text, #172033);
+    font: inherit;
+    box-shadow: inset 0 1px 2px rgb(15 23 42 / 3%);
+}
+.page-grid-search::before {
+    content: "";
+    position: absolute;
+    align-self: center;
+    width: .95rem;
+    height: .95rem;
+    margin-left: .8rem;
+    border: 2px solid var(--admin-text-muted, #667085);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: .75;
+}
+.page-grid-search::after {
+    content: "";
+    position: absolute;
+    align-self: center;
+    width: .4rem;
+    height: 2px;
+    margin-top: .78rem;
+    margin-left: 1.57rem;
+    transform: rotate(45deg);
+    background: var(--admin-text-muted, #667085);
+    pointer-events: none;
+    opacity: .75;
+}
+.page-grid-search input[type="search"]:focus-visible {
+    outline: 2px solid var(--admin-focus, #0f766e);
+    outline-offset: 2px;
+}
+@media (max-width: 64rem) {
+    .page-grid-search {
+        flex-basis: 100%;
+        min-width: 100%;
+    }
+}
+@media (max-width: 48rem) {
+    .page-grid-search {
+        order: -1;
+    }
+}
+
+/* Phase 12B-C3: one cohesive Page result surface without changing Grid markup ownership. */
+.page-grid-index--enhanced {
+    gap: 0;
+}
+.page-grid-index--enhanced .page-grid-index__header {
+    margin-bottom: 1rem;
+}
+.page-grid-index__workspace {
+    z-index: 2;
+    margin: 0;
+    border-radius: .75rem .75rem 0 0;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
+}
+.page-grid-index__summary {
+    margin: 0;
+    padding: .72rem .9rem;
+    border-inline: 1px solid var(--admin-border, #d8dee9);
+    background: var(--admin-surface, #fff);
+    color: var(--admin-text-muted, #667085);
+    font-size: .82rem;
+    font-weight: 600;
+}
+.page-grid-index__table {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+.page-grid-index__table th {
+    font-weight: 650;
+}
+.page-grid-index__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .7rem;
+    width: 100%;
+    min-height: 3.65rem;
+    margin: 0;
+    padding: .65rem .8rem;
+    border: 1px solid var(--admin-border, #d8dee9);
+    border-top: 0;
+    border-radius: 0 0 .75rem .75rem;
+    background: var(--admin-surface, #fff);
+    box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
+}
+.page-grid-index__pagination [data-grid-export] {
+    display: none;
+}
+.page-grid-index__pagination .grid-pagination-controls {
+    flex: 1 1 auto;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.page-grid-index__pagination a {
+    min-height: 2.25rem;
+    margin: 0;
+}
+.page-grid-index__pagination a[aria-disabled="true"],
+.page-grid-index__pagination a:not([href]) {
+    opacity: .45;
+}
+@media (max-width: 48rem) {
+    .page-grid-index--enhanced {
+        gap: 0;
+    }
+    .page-grid-index__workspace {
+        border-radius: .75rem .75rem 0 0;
+    }
+    .page-grid-index__pagination {
+        align-items: stretch;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .page-grid-index__pagination .grid-pagination-controls {
+        flex-basis: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Phase 12B-C3.1: compact the existing Page pagination nodes into one footer row. */
+.page-grid-index__pagination {
+    display: grid !important;
+    grid-template-columns: minmax(6rem, 1fr) auto minmax(6rem, 1fr);
+    align-items: center;
+    min-height: 3.75rem;
+    padding: .55rem .8rem;
+}
+.page-grid-index__pagination > * {
+    margin-block: 0 !important;
+}
+.page-grid-index__pagination > :first-child {
+    justify-self: start;
+}
+.page-grid-index__pagination > :last-child {
+    justify-self: end;
+}
+.page-grid-index__pagination > .grid-pagination-controls {
+    grid-column: 2;
+    justify-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+    min-height: 0;
+}
+.page-grid-index__pagination .grid-page-jump {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    margin: 0;
+}
+.page-grid-index__pagination :is(a, button, select, input) {
+    min-height: 2.25rem;
+}
+.page-grid-index__pagination > :is(a, span):first-child,
+.page-grid-index__pagination > :is(a, span):last-child {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    padding: .4rem .65rem;
+    border: 1px solid var(--admin-border, #d8dee9);
+    border-radius: .5rem;
+    background: var(--admin-surface, #fff);
+    text-decoration: none;
+}
+.page-grid-index__pagination > :is(span, a[aria-disabled="true"]):first-child,
+.page-grid-index__pagination > :is(span, a[aria-disabled="true"]):last-child {
+    border-color: transparent;
+    background: transparent;
+    color: var(--admin-text-muted, #667085);
+    opacity: .45;
+}
+@media (max-width: 48rem) {
+    .page-grid-index__pagination {
+        grid-template-columns: 1fr 1fr;
+        gap: .55rem;
+    }
+    .page-grid-index__pagination > .grid-pagination-controls {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        width: 100%;
+    }
+    .page-grid-index__pagination > :first-child {
+        grid-column: 1;
+        grid-row: 2;
+    }
+    .page-grid-index__pagination > :last-child {
+        grid-column: 2;
+        grid-row: 2;
+    }
+}
+@media (max-width: 30rem) {
+    .page-grid-index__pagination > .grid-pagination-controls {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .page-grid-index__pagination .grid-page-jump {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Phase 12B-C3.2: definitive Page-owned pagination footer composition. */
+.page-grid-index [data-page-grid-pagination] {
+    display: grid !important;
+    grid-template-columns: minmax(7rem, 1fr) auto minmax(7rem, 1fr);
+    align-items: center;
+    gap: .75rem;
+    width: 100%;
+    min-height: 3.75rem;
+    margin: 0;
+    padding: .55rem .8rem;
+    border: 1px solid var(--admin-border, #d8dee9);
+    border-top: 0;
+    border-radius: 0 0 .75rem .75rem;
+    background: var(--admin-surface, #fff);
+    box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
+}
+
+.page-grid-index [data-page-grid-pagination] > .page-grid-index__previous {
+    grid-column: 1;
+    justify-self: start;
+}
+
+.page-grid-index [data-page-grid-pagination] > .grid-pagination-controls {
+    grid-column: 2;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+    width: auto !important;
+    min-height: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.page-grid-index [data-page-grid-pagination] > .page-grid-index__next {
+    grid-column: 3;
+    justify-self: end;
+}
+
+.page-grid-index [data-page-grid-pagination] > :is(a, span) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    padding: .4rem .65rem;
+    border: 1px solid var(--admin-border, #d8dee9);
+    border-radius: .5rem;
+    background: var(--admin-surface, #fff);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.page-grid-index [data-page-grid-pagination] > .is-disabled {
+    border-color: transparent;
+    background: transparent;
+    color: var(--admin-text-muted, #667085);
+    opacity: .45;
+}
+
+.page-grid-index [data-page-grid-pagination] .grid-page-jump {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    margin: 0;
+}
+
+.page-grid-index [data-page-grid-pagination] :is(input, select, button) {
+    min-height: 2.25rem;
+    margin-block: 0;
+}
+
+@media (max-width: 48rem) {
+    .page-grid-index [data-page-grid-pagination] {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .page-grid-index [data-page-grid-pagination] > .grid-pagination-controls {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        justify-self: center;
+        width: 100% !important;
+    }
+
+    .page-grid-index [data-page-grid-pagination] > .page-grid-index__previous {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .page-grid-index [data-page-grid-pagination] > .page-grid-index__next {
+        grid-column: 2;
+        grid-row: 2;
+    }
+}
+
+@media (max-width: 30rem) {
+    .page-grid-index [data-page-grid-pagination] > .grid-pagination-controls {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}
+
+/* Phase 12B-C3.5: definitive Page heading and action alignment. */
+.page-grid-index__header {
+    display: block;
+    margin: 0 0 1rem;
+}
+
+.page-grid-index__breadcrumb {
+    margin: 0 0 .55rem;
+}
+
+.page-grid-index__heading-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: 100%;
+    min-width: 0;
+}
+
+.page-grid-index__heading {
+    min-width: 0;
+}
+
+.page-grid-index__title {
+    margin: 0;
+    font-weight: 600;
+    line-height: 1.15;
+}
+
+.page-grid-index__description {
+    margin: .55rem 0 0;
+}
+
+.page-grid-index__actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    align-self: flex-start;
+    gap: .6rem;
+    margin: 0;
+    padding: 0;
+    transform: none !important;
+}
+
+.page-grid-index__actions .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 2.5rem;
+    min-height: 2.5rem;
+    margin: 0;
+    padding: 0 1rem;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+@media (max-width: 48rem) {
+    .page-grid-index__heading-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .page-grid-index__actions {
+        align-self: stretch;
+        width: 100%;
+    }
+
+    .page-grid-index__actions .button {
+        flex: 1 1 auto;
+    }
+}
+
+@media (max-width: 30rem) {
+    .page-grid-index__actions {
+        flex-direction: column-reverse;
+    }
+
+    .page-grid-index__actions .button {
+        width: 100%;
+    }
+}
+
+/* Phase 12B-C3.6: final structural Page action alignment. */
+.page-grid-index__heading-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 1.5rem;
+}
+
+.page-grid-index__heading {
+    grid-column: 1;
+    min-width: 0;
+}
+
+.page-grid-index__actions {
+    grid-column: 2;
+    display: flex;
+    align-items: flex-start;
+    align-self: start;
+    justify-self: end;
+    gap: .6rem;
+    margin: 0;
+    padding: 0;
+    transform: none !important;
+}
+
+.page-grid-index__actions .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 2.5rem;
+    margin: 0;
+    padding: 0 1rem;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+@media (max-width: 48rem) {
+    .page-grid-index__heading-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1rem;
+    }
+
+    .page-grid-index__heading,
+    .page-grid-index__actions {
+        grid-column: 1;
+    }
+
+    .page-grid-index__actions {
+        justify-self: stretch;
+        width: 100%;
+    }
+
+    .page-grid-index__actions .button {
+        flex: 1 1 auto;
+    }
+}
+
+@media (max-width: 30rem) {
+    .page-grid-index__actions {
+        flex-direction: column-reverse;
+    }
+
+    .page-grid-index__actions .button {
+        width: 100%;
+    }
+}
