@@ -15,10 +15,10 @@ final readonly class GridCompactToolbarRenderer
         bool $dirty,
         int $pageSize,
         int $activeFilters,
-        ?string $exportUrl = '/admin/pages/export',
+        ?string $exportUrl = null,
         array $bookmarks = [],
         ?int $activeBookmarkId = null,
-        string $viewAction = '/admin/pages',
+        string $viewAction = '/',
         array $pageSizeOptions = [20, 50, 100, 200],
     ): string {
         $status = $dirty ? 'Unsaved' : 'Saved';

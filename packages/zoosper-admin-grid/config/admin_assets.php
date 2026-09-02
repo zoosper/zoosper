@@ -74,7 +74,7 @@ return array (
     'zoosper-admin-grid-compact-workspace-script' =>
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-admin-grid/js/grid-compact-workspace.js?v=b27199c8cc5c',
+      'path' => '/asset/zoosper-admin-grid/js/grid-compact-workspace.js?v=22ce1d42bdc5',
       'sort_order' => 80,
       'attributes' =>
       array (

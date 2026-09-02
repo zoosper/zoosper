@@ -30,13 +30,13 @@ final readonly class GridCompactWorkspaceRenderer
         $active=0; foreach($filters as $value){if(is_array($value)?$value!==[]:trim((string)$value)!==''){$active++;}}
         $label='Default view';
         foreach($state->bookmarks as $bookmark){if((int)$bookmark['id']===$state->activeBookmarkId){$label=(string)$bookmark['name'];break;}}
-        $html='<section data-grid-workspace>';
+        $html='<section data-grid-workspace data-grid-current-page-filename="'.$this->e($this->currentPageFilename($formAction)).'">';
         $html .= $this->toolbar->render(
             $label,
             false,
             $state->criteria->pager->pageSize,
             $active,
-            $exportEnabled ? ($exportUrl ?? '/admin/pages/export') : null,
+            $exportEnabled ? ($exportUrl ?? rtrim($formAction, '/') . '/export') : null,
             $state->bookmarks,
             $state->activeBookmarkId,
             $formAction,
@@ -120,6 +120,16 @@ final readonly class GridCompactWorkspaceRenderer
             }
         });
         return array_values(array_unique($result));
+    }
+
+    private function currentPageFilename(string $formAction): string
+    {
+        $path = trim((string) parse_url($formAction, PHP_URL_PATH), '/');
+        $segment = basename($path);
+        $segment = preg_replace('/[^a-z0-9_-]+/i', '-', $segment) ?? '';
+        $segment = strtolower(trim($segment, '-_'));
+
+        return ($segment !== '' ? $segment : 'grid') . '-current-page.csv';
     }
 
     private function e(string $value):string{return htmlspecialchars($value,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');}
