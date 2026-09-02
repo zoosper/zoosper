@@ -129,8 +129,11 @@ final readonly class AuditLogRepository implements GridDataSourceInterface
 
         $query = $criteria->filters['q'] ?? '';
         if ($query !== '') {
-            $conditions[] = '(summary LIKE :query OR action LIKE :query OR actor_email LIKE :query)';
-            $params['query'] = '%' . $query . '%';
+            $search = '%' . $query . '%';
+            $conditions[] = '(summary LIKE :query_summary OR action LIKE :query_action OR actor_email LIKE :query_actor)';
+            $params['query_summary'] = $search;
+            $params['query_action'] = $search;
+            $params['query_actor'] = $search;
         }
 
         $entityType = $criteria->filters['entity_type'] ?? '';
