@@ -43,7 +43,7 @@ final readonly class AnnouncementAdminController
 
         if ($this->views !== null) {
             return Response::html($this->views->render(
-                title: 'Global Announcements',
+                title: '',
                 template: 'zoosper-global-announcements::announcements/index',
                 data: [
                     'csrfToken' => $this->csrf->token(),

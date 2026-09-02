@@ -4,12 +4,20 @@ declare(strict_types=1);
 
 $cssFile = __DIR__ . '/../resources/assets/css/announcement-modal.css';
 $jsFile = __DIR__ . '/../resources/assets/js/announcement-modal.js';
+$workspaceCssFile = __DIR__ . '/../resources/assets/css/announcement-workspace.css';
 
 $cssVersion = is_file($cssFile) ? substr((string) hash_file('sha256', $cssFile), 0, 12) : '1';
 $jsVersion = is_file($jsFile) ? substr((string) hash_file('sha256', $jsFile), 0, 12) : '1';
+$workspaceCssVersion = is_file($workspaceCssFile) ? substr((string) hash_file('sha256', $workspaceCssFile), 0, 12) : '1';
 
 return [
     'assets' => [
+        'zoosper-global-announcements-workspace-style' => [
+            'type' => 'style',
+            'path' => '/asset/zoosper-global-announcements/css/announcement-workspace.css?v=' . $workspaceCssVersion,
+            'sort_order' => 19,
+            'screens' => ['announcements'],
+        ],
         'zoosper-global-announcements-modal-style' => [
             'type' => 'style',
             'path' => '/asset/zoosper-global-announcements/css/announcement-modal.css?v=' . $cssVersion,
