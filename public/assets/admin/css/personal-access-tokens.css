@@ -614,3 +614,110 @@
 .pat-token-list__heading { padding-inline: .15rem; }
 .pat-grid-scroll { border-radius: var(--admin-radius-lg); box-shadow: var(--admin-shadow-xs); }
 @media (max-width:760px) { .pat-scopes { margin-inline:-1rem; padding-inline:1rem; } .pat-form__footer { bottom:0; } }
+
+/* Phase 12H: controlled Access Tokens collection integration. */
+.pat-token-list__heading { margin-bottom: .75rem; }
+.pat-grid-search { position: relative; display: flex; flex: 1 1 26rem; min-width: min(22rem, 44vw); margin: 0; }
+.pat-grid-search input[type="search"] { width: 100%; min-height: 2.5rem; margin: 0; padding-inline: 2.35rem .8rem; border: 1px solid var(--admin-border); border-radius: .55rem; background: var(--admin-surface); color: var(--admin-text); font: inherit; }
+.pat-grid-search::before { content: ""; position: absolute; top: 50%; left: .82rem; width: .85rem; height: .85rem; transform: translateY(-58%); border: 2px solid var(--admin-text-muted); border-radius: 50%; pointer-events: none; opacity: .75; }
+.pat-grid-search::after { content: ""; position: absolute; top: 50%; left: 1.57rem; width: .38rem; height: 2px; transform: translateY(.28rem) rotate(45deg); background: var(--admin-text-muted); pointer-events: none; opacity: .75; }
+.pat-grid-search input:focus-visible { outline: 2px solid var(--admin-focus); outline-offset: 2px; }
+.pat-grid-scroll { overflow: visible; border-radius: .75rem; box-shadow: 0 1px 2px rgb(15 23 42 / 4%); }
+.pat-token-list__workspace { z-index: 2; margin: 0; border-radius: .75rem .75rem 0 0; box-shadow: none; }
+.pat-token-list__summary { margin: 0; padding: .72rem .9rem; border-inline: 1px solid var(--admin-border); background: var(--admin-surface); color: var(--admin-text-muted); font-size: .82rem; font-weight: 600; }
+.pat-token-list__table { width: 100%; margin: 0; border-radius: 0; box-shadow: none; }
+.pat-token-list__pagination { display: grid; grid-template-columns: minmax(7rem, 1fr) auto minmax(7rem, 1fr); align-items: center; gap: .75rem; min-height: 3.75rem; margin: 0; padding: .55rem .8rem; border: 1px solid var(--admin-border); border-top: 0; border-radius: 0 0 .75rem .75rem; background: var(--admin-surface); }
+.pat-token-list__previous { grid-column: 1; justify-self: start; }
+.pat-token-list__pagination > .grid-pagination-controls { grid-column: 2; display: flex; align-items: center; justify-content: center; gap: .55rem; width: auto; min-height: 0; margin: 0; padding: 0; border: 0; background: transparent; box-shadow: none; }
+.pat-token-list__next { grid-column: 3; justify-self: end; }
+.pat-token-list__pagination > :is(a, span) { display: inline-flex; align-items: center; min-height: 2.25rem; padding: .4rem .65rem; border: 1px solid var(--admin-border); border-radius: .5rem; background: var(--admin-surface); color: var(--admin-text); text-decoration: none; white-space: nowrap; }
+.pat-token-list__pagination > .is-disabled { border-color: transparent; background: transparent; color: var(--admin-text-muted); opacity: .45; }
+@media (max-width: 70rem) { .pat-grid-search { flex-basis: 100%; min-width: 100%; } .pat-grid-scroll { overflow-x: auto; } }
+@media (max-width: 48rem) { .pat-token-list__pagination { grid-template-columns: 1fr 1fr; } .pat-token-list__pagination > .grid-pagination-controls { grid-column: 1 / -1; grid-row: 1; width: 100%; } .pat-token-list__previous { grid-column: 1; grid-row: 2; } .pat-token-list__next { grid-column: 2; grid-row: 2; } }
+@media (prefers-contrast: more) { .pat-token-status, .pat-token-list__pagination { border-width: 2px; } }
+
+
+/* Phase 12H-B: PAT-only capability and compact desktop pagination correction. */
+.pat-token-list [data-grid-export] {
+    display: none !important;
+}
+.pat-token-list__pagination {
+    display: flex !important;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem;
+    min-height: 3.75rem;
+    height: auto;
+}
+.pat-token-list__pagination > .pat-token-list__previous {
+    order: 1;
+    margin-right: auto;
+}
+.pat-token-list__pagination > .grid-pagination-controls {
+    order: 2;
+    flex: 0 1 auto;
+    display: flex !important;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.pat-token-list__pagination > .pat-token-list__next {
+    order: 3;
+    margin-left: auto;
+}
+.pat-token-list__pagination > :is(.pat-token-list__previous, .pat-token-list__next) {
+    position: static;
+    float: none;
+}
+@media (max-width: 48rem) {
+    .pat-token-list__pagination {
+        flex-flow: row wrap;
+        justify-content: space-between;
+    }
+    .pat-token-list__pagination > .grid-pagination-controls {
+        order: 1;
+        flex: 1 0 100%;
+        width: 100% !important;
+    }
+    .pat-token-list__pagination > .pat-token-list__previous {
+        order: 2;
+        margin-right: 0;
+    }
+    .pat-token-list__pagination > .pat-token-list__next {
+        order: 3;
+        margin-left: 0;
+    }
+}
+
+
+/* Phase 12H-C: use the native Grid pagination DOM and regular Grid text weight. */
+.pat-token-list .pat-token-name {
+    font-weight: 400;
+}
+.pat-token-list .grid-pagination.pat-token-list__pagination {
+    display: grid !important;
+    grid-template-columns: minmax(7rem, 1fr) auto minmax(7rem, 1fr);
+    align-items: center;
+    gap: .75rem;
+    min-height: 3.75rem;
+    margin: 0;
+    padding: .55rem .8rem;
+    border: 1px solid var(--admin-border);
+    border-top: 0;
+    border-radius: 0 0 .75rem .75rem;
+    background: var(--admin-surface);
+}
+.pat-token-list .grid-pagination.pat-token-list__pagination > .grid-pagination__prev { grid-column: 1; justify-self: start; }
+.pat-token-list .grid-pagination.pat-token-list__pagination > .grid-pagination__status { grid-column: 2; justify-self: center; }
+.pat-token-list .grid-pagination.pat-token-list__pagination > .grid-pagination__next { grid-column: 3; justify-self: end; }
+@media (max-width: 48rem) {
+    .pat-token-list .grid-pagination.pat-token-list__pagination { grid-template-columns: 1fr 1fr; }
+    .pat-token-list .grid-pagination.pat-token-list__pagination > .grid-pagination__status { grid-column: 1 / -1; grid-row: 1; }
+    .pat-token-list .grid-pagination.pat-token-list__pagination > .grid-pagination__prev { grid-column: 1; grid-row: 2; }
+    .pat-token-list .grid-pagination.pat-token-list__pagination > .grid-pagination__next { grid-column: 2; grid-row: 2; }
+}

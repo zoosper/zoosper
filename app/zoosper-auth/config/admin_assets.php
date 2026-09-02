@@ -18,13 +18,13 @@ return [
     ],
     'zoosper-personal-access-tokens-style' => [
         'type' => 'style',
-        'path' => '/assets/admin/css/personal-access-tokens.css?v=38e0484b26ba',
+        'path' => '/assets/admin/css/personal-access-tokens.css?v=621422fcf72a',
         'screens' => ['access-tokens'],
         'sort_order' => 88,
     ],
     'zoosper-personal-access-tokens-runtime' => [
         'type' => 'script',
-        'path' => '/assets/admin/js/personal-access-tokens.js',
+        'path' => '/assets/admin/js/personal-access-tokens.js?v=59e0770ca113',
         'screens' => ['access-tokens'],
         'sort_order' => 88,
         'attributes' => [

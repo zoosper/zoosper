@@ -91,3 +91,77 @@
         refresh();
     });
 })();
+
+/* Phase 12H: connect the existing owner-scoped token Grid to the accepted collection surface. */
+(() => {
+    'use strict';
+
+    const initialise = (screen) => {
+        if (screen.dataset.patGridEnhanced === 'true') return;
+
+        const list = screen.querySelector('.pat-token-list');
+        const scroll = list?.querySelector('.pat-grid-scroll');
+        const workspace = scroll?.querySelector('[data-grid-workspace]');
+        const toolbar = workspace?.querySelector('.grid-compact-actions');
+        const form = workspace?.querySelector('[data-grid-filter-form]');
+        const query = form?.querySelector('[name="q"]');
+        const sourceLabel = query?.closest('label');
+        const table = scroll?.querySelector('.grid-table');
+        const pagination = scroll?.querySelector('.grid-pagination');
+
+        if (!list || !scroll || !workspace || !toolbar || !form || !query || !sourceLabel || !table) return;
+        screen.dataset.patGridEnhanced = 'true';
+        if (!form.id) form.id = 'pat-grid-filter-form';
+
+        const search = document.createElement('label');
+        search.className = 'pat-grid-search';
+        const accessible = document.createElement('span');
+        accessible.className = 'sr-only';
+        accessible.textContent = 'Search tokens';
+        query.type = 'search';
+        query.placeholder = 'Search tokens';
+        query.setAttribute('aria-label', 'Search tokens');
+        query.setAttribute('autocomplete', 'off');
+        query.setAttribute('form', form.id);
+        search.append(accessible, query);
+        toolbar.prepend(search);
+        sourceLabel.hidden = true;
+
+        workspace.querySelectorAll('[data-grid-export]').forEach((control) => {
+            control.hidden = true;
+            control.setAttribute('aria-hidden', 'true');
+            control.setAttribute('tabindex', '-1');
+        });
+
+        const summary = Array.from(scroll.children).find((element) => {
+            return element !== workspace && element !== table
+                && /^Showing\s/i.test(element.textContent?.trim() ?? '');
+        });
+        const legacy = scroll.querySelector('.grid-workspace__navigation');
+        const previous = scroll.querySelector('[rel="prev"]');
+        const next = scroll.querySelector('[rel="next"]');
+
+        workspace.classList.add('pat-token-list__workspace');
+        table.classList.add('pat-token-list__table');
+        summary?.classList.add('pat-token-list__summary');
+
+        if (pagination) {
+            pagination.classList.add('pat-token-list__pagination');
+            pagination.dataset.patPagination = '';
+            pagination.setAttribute('aria-label', 'Access Tokens pagination');
+            pagination.querySelector('.grid-pagination__prev')?.classList.add('pat-token-list__previous');
+            pagination.querySelector('.grid-pagination__status')?.classList.add('pat-token-list__status');
+            pagination.querySelector('.grid-pagination__next')?.classList.add('pat-token-list__next');
+        }
+
+        search.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            const page = form.querySelector('[name="page"]');
+            if (page) page.value = '1';
+            form.requestSubmit();
+        });
+    };
+
+    document.querySelectorAll('[data-pat-screen]').forEach(initialise);
+})();
