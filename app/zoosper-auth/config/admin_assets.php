@@ -50,6 +50,19 @@ return [
         'sort_order' => 87,
         'screens' => ['admin-users'],
     ],
+    'zoosper-roles-workspace-style' => [
+        'type' => 'style',
+        'path' => '/assets/admin/css/roles-workspace.css?v=7a68d0499572',
+        'sort_order' => 87,
+        'screens' => ['admin-roles'],
+    ],
+    'zoosper-roles-workspace-runtime' => [
+        'type' => 'script',
+        'path' => '/assets/admin/js/roles-workspace.js?v=84666a3651ba',
+        'sort_order' => 87,
+        'screens' => ['admin-roles'],
+        'attributes' => ['defer' => true],
+    ],
     'zoosper-admin-role-user-assignment-style' => [
         'type' => 'style',
         'path' => '/assets/admin/css/user-assignment.css',

@@ -1,5 +1,19 @@
 {if isset($gridHtml)}
-{$gridHtml|noescape}
+<section class="roles-index" aria-labelledby="roles-index-title" data-roles-index>
+    <header class="roles-index__header">
+        <p class="roles-index__breadcrumb">Users / Roles &amp; Permissions</p>
+        <div class="roles-index__heading-row">
+            <div>
+                <h1 id="roles-index-title" class="roles-index__title">Roles &amp; Permissions</h1>
+                <p class="roles-index__description">Define reusable permission sets and manage assigned administrators.</p>
+            </div>
+            <div class="roles-index__actions" data-roles-actions></div>
+        </div>
+    </header>
+    <div class="roles-index__collection" data-roles-collection>
+        {$gridHtml|noescape}
+    </div>
+</section>
 {else}
 <header class="page-header admin-role-header">
     <div><p class="page-header__eyebrow">Access control</p><h1>Roles &amp; Permissions</h1><p class="muted">Define reusable permission sets and manage assigned administrators.</p></div>

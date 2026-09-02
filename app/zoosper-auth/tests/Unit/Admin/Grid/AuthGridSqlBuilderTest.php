@@ -48,9 +48,12 @@ it('builds bound Role search and allow-listed sorting', function (): void {
         sortDir: 'asc',
     ));
 
-    expect($plan->whereSql)->toBe('WHERE (r.label LIKE :grid_query OR r.code LIKE :grid_query)')
+    expect($plan->whereSql)->toBe('WHERE (r.label LIKE :grid_query_label OR r.code LIKE :grid_query_code)')
         ->and($plan->orderSql)->toBe('r.label ASC, r.id DESC')
-        ->and($plan->parameters)->toBe(['grid_query' => '%content%']);
+        ->and($plan->parameters)->toBe([
+            'grid_query_label' => '%content%',
+            'grid_query_code' => '%content%',
+        ]);
 });
 
 it('never interpolates submitted values into SQL fragments', function (): void {
@@ -63,7 +66,8 @@ it('never interpolates submitted values into SQL fragments', function (): void {
     ));
 
     expect($plan->whereSql)->not->toContain($hostile)
-        ->and($plan->parameters['grid_query'])->toBe('%' . $hostile . '%');
+        ->and($plan->parameters['grid_query_label'])->toBe('%' . $hostile . '%')
+        ->and($plan->parameters['grid_query_code'])->toBe('%' . $hostile . '%');
 });
 
 

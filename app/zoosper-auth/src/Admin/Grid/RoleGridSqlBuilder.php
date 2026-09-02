@@ -20,8 +20,10 @@ final readonly class RoleGridSqlBuilder
         $parameters = [];
 
         if ($criteria->query !== '') {
-            $conditions[] = '(r.label LIKE :grid_query OR r.code LIKE :grid_query)';
-            $parameters['grid_query'] = '%' . $criteria->query . '%';
+            $query = '%' . $criteria->query . '%';
+            $conditions[] = '(r.label LIKE :grid_query_label OR r.code LIKE :grid_query_code)';
+            $parameters['grid_query_label'] = $query;
+            $parameters['grid_query_code'] = $query;
         }
 
         $column = self::SORT_COLUMNS[$criteria->sortBy ?? ''] ?? 'r.id';

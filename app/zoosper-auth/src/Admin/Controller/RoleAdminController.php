@@ -55,13 +55,15 @@ final readonly class RoleAdminController
     {
         $user = $this->currentAdminUser();
         if ($this->gridIndex !== null) {
+            $gridHtml = $this->gridIndex->render(
+                $user->id,
+                AuthGridQueryState::fromQuery($_GET),
+                AuthGridQueryState::bookmarkId($_GET),
+            );
+
             return $this->html(
                 'Roles & Permissions',
-                $this->gridIndex->render(
-                    $user->id,
-                    AuthGridQueryState::fromQuery($_GET),
-                    AuthGridQueryState::bookmarkId($_GET),
-                ),
+                $this->renderRoleView('index.php', ['gridHtml' => $gridHtml]),
             );
         }
 
