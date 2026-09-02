@@ -38,7 +38,8 @@ final readonly class SiteDomainAdminController
         $user=$this->currentAdminUser();
         if($this->grid===null||$this->collectionGrid===null)throw new RuntimeException('Admin Grid services are required for Site Domains.');
         $definition=$this->grid->definition();
-        $html='<section class="card"><div class="admin-page-heading"><h2>Site Domains</h2><a class="button" href="'.$this->adminUrl('site-domains/create').'">Create</a></div>'.$this->collectionGrid->render($user->id,'admin.site-domains',$this->adminUrl('site-domains'),$definition,$this->grid,AdminCollectionGridQuery::values($request,$definition),AdminCollectionGridQuery::bookmark($request))['html'].'</section>';
+        $gridHtml=$this->collectionGrid->render($user->id,'admin.site-domains',$this->adminUrl('site-domains'),$definition,$this->grid,AdminCollectionGridQuery::values($request,$definition),AdminCollectionGridQuery::bookmark($request))['html'];
+        $html='<section class="site-domains-index" aria-labelledby="site-domains-index-title"><header class="site-domains-index__header"><p class="site-domains-index__breadcrumb">System / Site Domains</p><div class="site-domains-index__heading-row"><div><h1 id="site-domains-index-title" class="site-domains-index__title">Site Domains</h1><p class="site-domains-index__description">Manage hostnames and their assigned sites.</p></div><a class="button site-domains-index__create" href="'.$this->adminUrl('site-domains/create').'">Create domain</a></div></header>'.$gridHtml.'</section>';
         return $this->html('Site Domains',$html,$user);
     }
 
