@@ -24,7 +24,7 @@ return [
     ],
     'zoosper-personal-access-tokens-runtime' => [
         'type' => 'script',
-        'path' => '/assets/admin/js/personal-access-tokens.js?v=59e0770ca113',
+        'path' => '/assets/admin/js/personal-access-tokens.js?v=2570d94da7cf',
         'screens' => ['access-tokens'],
         'sort_order' => 88,
         'attributes' => [

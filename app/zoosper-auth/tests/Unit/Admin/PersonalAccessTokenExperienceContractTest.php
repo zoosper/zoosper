@@ -34,7 +34,7 @@ it('ships a CSP-safe responsive Auth-owned PAT experience', function (): void {
 
     expect($assets)->toHaveKeys(['zoosper-personal-access-tokens-style', 'zoosper-personal-access-tokens-runtime'])
         ->and($assets['zoosper-personal-access-tokens-style']['path'])->toBe('/assets/admin/css/personal-access-tokens.css?v=621422fcf72a')
-        ->and($assets['zoosper-personal-access-tokens-runtime']['path'])->toBe('/assets/admin/js/personal-access-tokens.js?v=59e0770ca113')
+        ->and($assets['zoosper-personal-access-tokens-runtime']['path'])->toBe('/assets/admin/js/personal-access-tokens.js?v=2570d94da7cf')
         ->and($assets['zoosper-personal-access-tokens-style']['sort_order'])->toBe(88)
         ->and($assets['zoosper-personal-access-tokens-runtime']['sort_order'])->toBe(88)
         ->and($sourceCss)->toBe($publicCss)
