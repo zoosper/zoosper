@@ -1,7 +1,21 @@
 {if isset($gridHtml)}
-{$gridHtml|noescape}
+<section class="admin-users-index" aria-labelledby="admin-users-index-title" data-admin-users-index>
+    <header class="admin-users-index__header">
+        <p class="admin-users-index__breadcrumb">Users / Admin Users</p>
+        <div class="admin-users-index__heading-row">
+            <div>
+                <h1 id="admin-users-index-title" class="admin-users-index__title">Admin Users</h1>
+                <p class="admin-users-index__description">Manage administrator identities, access status and account settings.</p>
+            </div>
+            <div class="admin-users-index__actions" data-admin-users-actions></div>
+        </div>
+    </header>
+    <div class="admin-users-index__collection" data-admin-users-collection>
+        {$gridHtml|noescape}
+    </div>
+</section>
 {else}
-{* Admin users listing (Phase 1.26a). Latte auto-escapes all output. *}
+{* Legacy fallback remains server-rendered and escaped. *}
 <div class="toolbar"><a class="button" href="{$createUrl}">Create admin user</a></div>
 <table>
     <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
@@ -13,5 +27,4 @@
     {/foreach}
     </tbody>
 </table>
-
 {/if}

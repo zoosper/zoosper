@@ -21,3 +21,44 @@
 @media (max-width:56rem) { .admin-user-form { grid-template-columns:1fr; } .admin-user-card:first-of-type { grid-row:auto; } .admin-user-danger { grid-column:auto; } .admin-user-actions { grid-column:auto; } }
 @media (max-width:42rem) { .admin-user-header,.admin-user-danger__body { align-items:stretch; flex-direction:column; } .admin-user-header .button,.admin-user-danger__body .button { width:100%; } .admin-user-fields { grid-template-columns:1fr; } .admin-user-actions { bottom:0; margin-inline:-.75rem; border-radius:var(--admin-radius-lg,.875rem) var(--admin-radius-lg,.875rem) 0 0; } }
 @media (prefers-reduced-motion:reduce) { .admin-user-role { transition:none!important; } }
+
+/* Phase 12I: Auth-owned Admin Users controlled Grid rollout. */
+.admin-users-index { display: grid; gap: 0; width: 100%; min-width: 0; }
+.admin-users-index__header { margin: 0 0 1rem; }
+.admin-users-index__breadcrumb { margin: 0 0 .4rem; color: var(--admin-text-muted); font-size: .78rem; font-weight: 600; letter-spacing: .025em; }
+.admin-users-index__heading-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+.admin-users-index__title { margin: 0; color: var(--admin-text); font-size: clamp(1.65rem, 2vw, 2rem); font-weight: 600; letter-spacing: -.025em; line-height: 1.15; }
+.admin-users-index__description { max-width: 48rem; margin: .45rem 0 0; color: var(--admin-text-muted); font-size: .925rem; line-height: 1.5; }
+.admin-users-index__actions:empty { display: none; }
+.admin-users-index__create { white-space: nowrap; }
+.admin-users-search { position: relative; display: flex; flex: 1 1 28rem; min-width: min(24rem, 48vw); margin: 0; }
+.admin-users-search input[type="search"] { width: 100%; min-height: 2.5rem; margin: 0; padding-inline: 2.35rem .8rem; border: 1px solid var(--admin-border); border-radius: .55rem; background: var(--admin-surface); color: var(--admin-text); font: inherit; }
+.admin-users-search::before { content: ""; position: absolute; top: 50%; left: .82rem; width: .85rem; height: .85rem; transform: translateY(-58%); border: 2px solid var(--admin-text-muted); border-radius: 50%; pointer-events: none; opacity: .75; }
+.admin-users-search::after { content: ""; position: absolute; top: 50%; left: 1.57rem; width: .38rem; height: 2px; transform: translateY(.28rem) rotate(45deg); background: var(--admin-text-muted); pointer-events: none; opacity: .75; }
+.admin-users-search input:focus-visible { outline: 2px solid var(--admin-focus); outline-offset: 2px; }
+.admin-users-index__workspace { margin: 0; border-radius: .75rem .75rem 0 0; }
+.admin-users-index__summary { margin: 0; padding: .72rem .9rem; border-inline: 1px solid var(--admin-border); background: var(--admin-surface); color: var(--admin-text-muted); font-size: .82rem; font-weight: 600; }
+.admin-users-index__table { width: 100%; margin: 0; table-layout: fixed; border-radius: 0; box-shadow: none; }
+.admin-users-index__table :is(th, td)[data-grid-column="id"] { width: 5rem; }
+.admin-users-index__table :is(th, td)[data-grid-column="name"] { width: 26%; }
+.admin-users-index__table :is(th, td)[data-grid-column="email"] { width: auto; }
+.admin-users-index__table :is(th, td)[data-grid-column="status"] { width: 9rem; text-align: center; }
+.admin-users-index__table :is(th, td)[data-grid-column="actions"] { width: 7rem; text-align: right; }
+.admin-users-index__name, .admin-users-index__email { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 400; }
+.admin-users-index__status { display: inline-flex; align-items: center; justify-content: center; min-width: 4.6rem; min-height: 1.65rem; padding: .18rem .55rem; border: 1px solid var(--admin-border); border-radius: 999px; background: var(--admin-surface-muted); color: var(--admin-text-muted); font-size: .75rem; font-weight: 650; line-height: 1; }
+.admin-users-index__status--active { border-color: color-mix(in srgb, #15803d 28%, transparent); background: color-mix(in srgb, #22c55e 11%, var(--admin-surface)); color: #166534; }
+.admin-users-index__status--inactive { border-color: color-mix(in srgb, #b45309 25%, transparent); background: color-mix(in srgb, #f59e0b 10%, var(--admin-surface)); color: #92400e; }
+.admin-users-index__pagination { display: grid !important; grid-template-columns: minmax(7rem, 1fr) auto minmax(7rem, 1fr); align-items: center; gap: .75rem; min-height: 3.75rem; margin: 0; padding: .55rem .8rem; border: 1px solid var(--admin-border); border-top: 0; border-radius: 0 0 .75rem .75rem; background: var(--admin-surface); }
+.admin-users-index__pagination > .grid-pagination__prev { grid-column: 1; justify-self: start; }
+.admin-users-index__pagination > .grid-pagination__status { grid-column: 2; justify-self: center; }
+.admin-users-index__pagination > .grid-pagination__next { grid-column: 3; justify-self: end; }
+:root[data-admin-theme="dark"] .admin-users-index__status--active, :root[data-admin-theme="ocean"] .admin-users-index__status--active { border-color: color-mix(in srgb, #4ade80 40%, transparent); background: color-mix(in srgb, #22c55e 18%, var(--admin-surface)); color: #bbf7d0; }
+:root[data-admin-theme="dark"] .admin-users-index__status--inactive, :root[data-admin-theme="ocean"] .admin-users-index__status--inactive { border-color: color-mix(in srgb, #fbbf24 38%, transparent); background: color-mix(in srgb, #f59e0b 17%, var(--admin-surface)); color: #fde68a; }
+@media (max-width: 64rem) { .admin-users-search { flex-basis: 100%; min-width: 100%; } .admin-users-index__collection { overflow-x: auto; } .admin-users-index__table { min-width: 50rem; } }
+@media (max-width: 48rem) { .admin-users-index__heading-row { align-items: stretch; flex-direction: column; } .admin-users-index__actions { align-self: flex-start; } .admin-users-index__pagination { grid-template-columns: 1fr 1fr; } .admin-users-index__pagination > .grid-pagination__status { grid-column: 1 / -1; grid-row: 1; } .admin-users-index__pagination > .grid-pagination__prev { grid-column: 1; grid-row: 2; } .admin-users-index__pagination > .grid-pagination__next { grid-column: 2; grid-row: 2; } }
+@media (prefers-contrast: more) { .admin-users-index__status, .admin-users-index__pagination { border-width: 2px; } }
+
+/* Phase 12I-B: suppress the index-only duplicate shell title before first paint. */
+body:has([data-admin-users-index]) .admin-topbar__title {
+    display: none;
+}

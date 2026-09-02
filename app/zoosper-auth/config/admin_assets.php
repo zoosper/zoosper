@@ -33,9 +33,16 @@ return [
     ],
     'zoosper-admin-user-workspace-style' => [
         'type' => 'style',
-        'path' => '/assets/admin/css/admin-user-workspace.css?v=125ba7de52db',
+        'path' => '/assets/admin/css/admin-user-workspace.css?v=ef44599fd0c3',
         'sort_order' => 87,
         'screens' => ['admin-users'],
+    ],
+    'zoosper-admin-users-workspace-runtime' => [
+        'type' => 'script',
+        'path' => '/assets/admin/js/admin-users-workspace.js?v=55caef1d8d48',
+        'sort_order' => 87,
+        'screens' => ['admin-users'],
+        'attributes' => ['defer' => true],
     ],
     'zoosper-admin-user-two-factor-reset-runtime' => [
         'type' => 'script',
