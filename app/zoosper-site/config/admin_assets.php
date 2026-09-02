@@ -2,6 +2,19 @@
 declare(strict_types=1);
 return [
     'assets' => [
+        'zoosper-sites-workspace-style' => [
+            'screens' => ['sites'],
+            'type' => 'style',
+            'path' => '/asset/zoosper-site/css/sites-workspace.css?v=7cbbcc3414f3',
+            'sort_order' => 98,
+        ],
+        'zoosper-sites-workspace-script' => [
+            'screens' => ['sites'],
+            'type' => 'script',
+            'path' => '/asset/zoosper-site/js/sites-workspace.js?v=6a0e3a850587',
+            'sort_order' => 99,
+            'attributes' => ['defer' => true],
+        ],
         'zoosper-site-domains-workspace-style' => [
             'screens' => ['site-domains'],
             'type' => 'style',

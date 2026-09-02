@@ -48,7 +48,8 @@ final readonly class SiteAdminController
         $user=$this->currentAdminUser();
         if($this->grid===null||$this->collectionGrid===null)throw new RuntimeException('Admin Grid services are required for Sites.');
         $definition=$this->grid->definition();
-        $html='<section class="card"><div class="admin-page-heading"><h2>Sites</h2><a class="button" href="'.$this->adminUrl('sites/create').'">Create</a></div>'.$this->collectionGrid->render($user->id,'admin.sites',$this->adminUrl('sites'),$definition,$this->grid,AdminCollectionGridQuery::values($request,$definition),AdminCollectionGridQuery::bookmark($request))['html'].'</section>';
+        $gridHtml=$this->collectionGrid->render($user->id,'admin.sites',$this->adminUrl('sites'),$definition,$this->grid,AdminCollectionGridQuery::values($request,$definition),AdminCollectionGridQuery::bookmark($request))['html'];
+        $html='<section class="sites-index" aria-labelledby="sites-index-title"><header class="sites-index__header"><p class="sites-index__breadcrumb">System / Sites</p><div class="sites-index__heading-row"><div><h1 id="sites-index-title" class="sites-index__title">Sites</h1><p class="sites-index__description">Manage site identities, locales, themes and publication status.</p></div><a class="button sites-index__create" href="'.$this->adminUrl('sites/create').'">Create site</a></div></header>'.$gridHtml.'</section>';
         return $this->html('Sites',$html,$user);
     }
 
