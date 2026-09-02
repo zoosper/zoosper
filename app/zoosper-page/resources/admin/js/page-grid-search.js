@@ -60,6 +60,68 @@
         table?.classList.add('page-grid-index__table');
         summary?.classList.add('page-grid-index__summary');
 
+        const titleHeader = table?.querySelector('th[data-grid-column="title"]');
+        const slugHeader = table?.querySelector('th[data-grid-column="slug"]');
+
+        if (titleHeader && slugHeader) {
+            const titleSort = titleHeader.querySelector('a');
+            if (titleSort) {
+                const sortMarker = titleSort.textContent?.includes('▼') ? ' ▼'
+                    : titleSort.textContent?.includes('▲') ? ' ▲' : '';
+                titleSort.textContent = `Title & slug${sortMarker}`;
+            } else {
+                titleHeader.textContent = 'Title & slug';
+            }
+            slugHeader.classList.add('page-grid-index__slug-column');
+            slugHeader.setAttribute('aria-hidden', 'true');
+        }
+
+        table?.querySelectorAll('tbody tr').forEach((row) => {
+            const titleCell = row.querySelector('td[data-grid-column="title"]');
+            const slugCell = row.querySelector('td[data-grid-column="slug"]');
+            const statusCell = row.querySelector('td[data-grid-column="status"]');
+            const siteCell = row.querySelector('td[data-grid-column="site_name"]');
+            const actionsCell = row.querySelector('td[data-grid-column="actions"]');
+
+            if (titleCell && slugCell) {
+                titleCell.classList.add('page-grid-index__identity');
+                const slug = document.createElement('span');
+                slug.className = 'page-grid-index__slug';
+                slug.textContent = `/${slugCell.textContent?.trim() ?? ''}`;
+                titleCell.append(slug);
+                slugCell.classList.add('page-grid-index__slug-column');
+                slugCell.setAttribute('aria-hidden', 'true');
+            }
+
+            if (statusCell) {
+                const status = statusCell.textContent?.trim().toLowerCase() ?? '';
+                statusCell.textContent = '';
+                const pill = document.createElement('span');
+                pill.className = `page-grid-index__status page-grid-index__status--${status}`;
+                pill.textContent = status || 'unknown';
+                statusCell.append(pill);
+            }
+
+            if (siteCell) {
+                siteCell.classList.add('page-grid-index__site');
+                const dot = document.createElement('span');
+                dot.className = 'page-grid-index__site-dot';
+                dot.setAttribute('aria-hidden', 'true');
+                siteCell.prepend(dot);
+            }
+
+            if (actionsCell) {
+                actionsCell.classList.add('page-grid-index__row-actions');
+                actionsCell.childNodes.forEach((node) => {
+                    if (node.nodeType === Node.TEXT_NODE) node.textContent = ' ';
+                });
+                actionsCell.querySelectorAll('a').forEach((action, index) => {
+                    action.classList.add('page-grid-index__row-action');
+                    if (index > 0) action.classList.add('page-grid-index__row-action--secondary');
+                });
+            }
+        });
+
         if (table && paginationControls) {
             let footer = page.querySelector('[data-page-grid-pagination]');
 
