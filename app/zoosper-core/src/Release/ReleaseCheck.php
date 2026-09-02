@@ -64,10 +64,10 @@ final readonly class ReleaseCheck
 
         try {
             $counts = ($this->foreignKeyCounts)();
-            $present = (int) ($counts['present'] ?? 0);
-            $add = (int) ($counts['add'] ?? 0);
-            $mismatch = (int) ($counts['mismatch'] ?? 0);
-            $sqliteRebuild = (int) ($counts['sqlite_rebuild_required'] ?? 0);
+            $present = $counts['present'] ?? 0;
+            $add = $counts['add'] ?? 0;
+            $mismatch = $counts['mismatch'] ?? 0;
+            $sqliteRebuild = $counts['sqlite_rebuild_required'] ?? 0;
 
             return new ReleaseCheckResult(
                 'foreign-keys',
