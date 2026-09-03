@@ -38,7 +38,7 @@ final readonly class ThemeAdminController
 
         if ($this->views !== null) {
             return Response::html($this->views->render(
-                title: 'Themes',
+                title: '',
                 template: 'zoosper-theme::admin/themes/index',
                 data: [
                     'themes' => $this->themes->all(),

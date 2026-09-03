@@ -7,22 +7,23 @@
  * @var string $assignUrl
  */
 ?>
-<header class="page-header">
+<div class="theme-workspace">
+<header class="page-header theme-workspace__header">
     <div class="page-header__copy">
-        <p class="page-header__eyebrow">Appearance</p>
-        <h2>Theme workspace</h2>
+        <p class="page-header__eyebrow">Design / Themes</p>
+        <h1>Frontend Themes</h1>
         <p class="muted">Review installed packages and choose the active frontend theme for each site.</p>
     </div>
 </header>
 
-<section aria-labelledby="installed-themes-title">
+<section class="card theme-catalogue" aria-labelledby="installed-themes-title">
     <div class="card__header">
         <div>
             <h2 id="installed-themes-title" class="card__title">Installed themes</h2>
             <p class="muted"><?= count($themes ?? []) ?> available</p>
         </div>
     </div>
-    <div class="admin-table-scroll">
+    <div class="admin-table-scroll theme-catalogue__table" role="region" aria-label="Installed frontend themes" tabindex="0">
         <table>
             <thead>
                 <tr><th scope="col">Theme</th><th scope="col">Code</th><th scope="col">Version</th><th scope="col">Source</th></tr>
@@ -33,10 +34,10 @@
             <?php else: ?>
                 <?php foreach ($themes as $theme): ?>
                     <tr>
-                        <td><strong><?= $e($theme['name'] ?? '') ?></strong></td>
-                        <td><code><?= $e($theme['code'] ?? '') ?></code></td>
+                        <td class="theme-catalogue__name"><?= $e($theme['name'] ?? '') ?></td>
+                        <td><code title="<?= $e($theme['code'] ?? '') ?>"><?= $e($theme['code'] ?? '') ?></code></td>
                         <td><?= $e($theme['version'] ?? '') ?></td>
-                        <td><span class="muted"><?= $e($theme['path'] ?? '') ?></span></td>
+                        <td><span class="muted theme-catalogue__source" title="<?= $e($theme['path'] ?? '') ?>"><?= $e($theme['path'] ?? '') ?></span></td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -45,7 +46,7 @@
     </div>
 </section>
 
-<section aria-labelledby="site-theme-title">
+<section class="theme-assignments" aria-labelledby="site-theme-title">
     <div class="page-header">
         <div class="page-header__copy">
             <h2 id="site-theme-title">Site assignments</h2>
@@ -63,10 +64,10 @@
             <p>Install a valid theme package before changing site assignments.</p>
         </div>
     <?php else: ?>
-        <div class="admin-card-grid">
+        <div class="admin-card-grid theme-assignment-grid">
             <?php foreach ($sites as $site): ?>
                 <?php $themeSelectId = 'site-theme-' . $site->id; ?>
-                <form method="post" action="<?= $e($assignUrl) ?>" class="card">
+                <form method="post" action="<?= $e($assignUrl) ?>" class="card theme-assignment-card">
                     <input type="hidden" name="_csrf_token" value="<?= $e($csrfToken) ?>">
                     <input type="hidden" name="site_id" value="<?= $e($site->id) ?>">
                     <div class="card__header">
@@ -84,7 +85,7 @@
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <div class="actions">
+                        <div class="actions theme-assignment-card__actions">
                             <button type="submit">Save theme</button>
                         </div>
                     </div>
@@ -93,13 +94,4 @@
         </div>
     <?php endif; ?>
 </section>
-
-
-
-
-
-
-
-
-
-
+</div>

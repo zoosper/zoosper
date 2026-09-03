@@ -11,9 +11,9 @@ it('keeps both Theme Admin views semantic secure and contract-compatible', funct
 
     foreach ($paths as $path) {
         $view = (string) file_get_contents($path);
-        expect($view)->toContain('class="page-header"')
-            ->toContain('class="admin-table-scroll"')
-            ->toContain('class="admin-card-grid"')
+        expect($view)->toContain('class="page-header theme-workspace__header"')
+            ->toContain('class="admin-table-scroll theme-catalogue__table"')
+            ->toContain('class="admin-card-grid theme-assignment-grid"')
             ->toContain('class="admin-empty-state" role="status"')
             ->toContain('scope="col"')
             ->toContain('method="post" action="<?= $e($assignUrl) ?>"')
