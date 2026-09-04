@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.1-alpha.1-dev]
+- Opened the next minor public-alpha development line following `v0.3.0-alpha.5`.
+- Active focus: continue product-facing CMS capability, extension ergonomics, API parity, documentation, and release hardening from the verified alpha.5 baseline.
+
 ## [0.3.0-alpha.5] - 2026-09-04
 - Closed the first-party referential-integrity inventory with 33 declarative foreign keys, fresh SQLite parity, and fail-closed release diagnostics for additions, mismatches, and rebuild requirements.
 - Made Psalm a blocking full-scope CI gate, added cryptographically strong secret generation and validation, formalised absolute Admin session lifetime controls, and expanded adversarial module-asset coverage.

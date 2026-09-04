@@ -9,7 +9,7 @@ it('uses the authoritative release version in the API health response', function
         $root . '/app/zoosper-api/src/Controller/HealthController.php',
     );
 
-    expect($version['version'])->toBe('0.3.0-alpha.5')
+    expect($version['version'])->toBe('0.3.1-alpha.1-dev')
         ->and($controller)
         ->toContain("require dirname(__DIR__, 4) . '/config/version.php'")
         ->not->toContain('0.3.0-dev');

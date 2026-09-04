@@ -1,37 +1,23 @@
-# Current release source
+# Current development line
 
 ## Version
 
-`0.3.0-alpha.5`
+`0.3.1-alpha.1-dev`
 
-## Release status
+## Release baseline
 
-- The `v0.3.0-alpha.5` release source is prepared on `dev`.
-- The release commit, immutable annotated tag, push, and `0.3.0-alpha.6-dev` opening remain separate Phase 12R operations.
-- Zoosper remains public alpha software. No stable release has shipped, and no deployment or GitHub release publication is claimed by this source update.
+- Latest immutable release: `v0.3.0-alpha.5`.
+- Release commit: `2ffd78032895c79bb148bd1df11c4c5f53e0d704`.
+- Active branch: `dev`.
+- Zoosper remains public alpha software. No stable release has shipped.
 
-## Delivered in alpha.5
+## Development direction
 
-- Closed the current first-party relationship inventory with 33 declarative foreign keys, MySQL reconciliation, fresh SQLite parity, and fail-closed release checks.
-- Made Psalm a blocking full-scope CI gate and expanded dual-engine and architecture verification.
-- Added automated cryptographically strong secret generation and mandatory production-safety validation.
-- Formalised absolute Admin session lifetime controls and password-change invalidation.
-- Expanded adversarial module-asset path and extension coverage.
-- Completed the Fable-informed Admin collection/workspace rollout without weakening routes, ACL, CSRF, persistence, audit, or feature ownership.
-- Replaced feature-side duplicate shell-title JavaScript and CSS workarounds with a backwards-compatible server-owned policy.
-- Removed production inline Menu and Grid presentation and retired the unused phase-era `HomeController`; the active Page and Theme fallback chain remains authoritative.
+The 0.3.1 line is a deliberate minor public-alpha progression after the substantial 0.3.0 alpha series. Continue product-facing CMS capability, extension ergonomics, API parity, documentation, and release hardening while preserving the verified alpha.5 security, ownership, data-integrity, and presentation boundaries.
 
-## Verification evidence
+## Release discipline
 
-- Full Pest suite: 1,683 passed, 2 skipped, 12,400 assertions.
-- Strict quality gate: 0 errors and 0 warnings.
-- Composer root manifest: valid.
-- Composer dependency audit: no security vulnerability advisories.
-- JavaScript syntax: 45 shipped assets validated during the broad gate.
-- Module manifest: compiled, fresh, 39 modules.
-- Foreign-key status: 33 present, 0 additions, 0 mismatches, 0 SQLite rebuild requirements.
-- Alpha release check: passed.
-
-## Next development line
-
-After the immutable `v0.3.0-alpha.5` release commit and tag are pushed and verified, open `0.3.0-alpha.6-dev` in a separate development commit. Keep architecture documentation, package READMEs, upgrade notes, and operational evidence current in every phase.
+- Keep runtime identity, API health output, Admin presentation, changelog, roadmap, and public documentation aligned.
+- Keep architecture documentation and each package README current with every phase.
+- Preserve clean worktrees, bounded diffs, full tests, strict quality checks, Composer validation, dependency audit, manifest freshness, foreign-key reconciliation, and runtime smoke evidence before each release.
+- Do not modify or retarget the immutable `v0.3.0-alpha.5` tag.
