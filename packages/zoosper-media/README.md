@@ -125,3 +125,7 @@ A successful upload returns HTTP `201` with the public asset representation and 
 Archive, restore, and permanent deletion share `MediaLifecycleCoordinator` across Admin and the stateless PAT API. Admin routes are POST-only, require `media.manage`, and remain protected by central CSRF middleware. API archive, restore, and deletion require `media:delete` plus the token owner’s current `media.manage` permission; permanent deletion uses `DELETE /api/v1/media/{id}`.
 
 Permanent deletion is archived-first and fails closed unless current Pages and restorable Page revisions can be inspected for the complete canonical public path. If Page storage is absent because Page is not installed, it contributes no blockers; partial or incompatible Page reference storage blocks deletion with an inspection error. Media reference inspection and derivative lookup are mandatory runtime dependencies. Metadata deletion is transactional, derivative rows cascade, and private/public original and derivative files are cleaned only after metadata commit through the conservative Media-owned cleanup service. Admin operators receive lifecycle success, blocker, and failure flash messages; the API returns HTTP `409` with structured blocker counts.
+
+## Editor image-tool contribution
+
+Media implements the Core-owned `EditorImageToolConfigInterface` and binds it to the existing Editor.js upload configuration. This preserves the authenticated, CSRF-protected upload flow while keeping the Editor package independent of concrete Media classes.

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Core\Editor\EditorImageToolConfigInterface;
 use Zoosper\AdminGrid\{GridCompactWorkspaceRenderer,GridViewStateResolver};
 use Zoosper\Grid\GridColumnOrderer;
 use Zoosper\Media\Admin\Grid\{MediaGridSource,MediaVisualGridRenderer,MediaVisualGridWorkspace};
@@ -56,6 +57,7 @@ return [
     EditorJsImageToolConfig::class => static fn (ServiceContainer $services): EditorJsImageToolConfig => new EditorJsImageToolConfig(
         $services->get(AdminUrlGenerator::class)->url('media/editorjs/upload'),
     ),
+    EditorImageToolConfigInterface::class => static fn (ServiceContainer $services): EditorImageToolConfigInterface => $services->get(EditorJsImageToolConfig::class),
     EditorJsImageBlockSanitizer::class => static fn (ServiceContainer $services): EditorJsImageBlockSanitizer => new EditorJsImageBlockSanitizer(),
     MediaProcessingPolicy::class => static fn (ServiceContainer $services): MediaProcessingPolicy => new MediaProcessingPolicy(),
     GdMediaProcessor::class => static fn (ServiceContainer $services): GdMediaProcessor => new GdMediaProcessor(

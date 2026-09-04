@@ -39,3 +39,7 @@ Zoosper_Editor module for Zoosper CMS.
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+
+## Optional image-tool integration
+
+The Editor.js adapter consumes `Zoosper\Core\Editor\EditorImageToolConfigInterface` when an installed feature provides it. Editor contains no concrete Media dependency and continues to render without image integration when the contract is unavailable.

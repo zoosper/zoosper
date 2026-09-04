@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Media\EditorJs;
 
+use Zoosper\Core\Editor\EditorImageToolConfigInterface;
+
 /**
  * Builds the client-side configuration payload for the Editor.js Image Tool.
  *
@@ -11,7 +13,7 @@ namespace Zoosper\Media\EditorJs;
  * it from PHP-rendered templates or future JSON endpoints without duplicating the
  * endpoint, field-name or CSRF-header conventions.
  */
-final readonly class EditorJsImageToolConfig
+final readonly class EditorJsImageToolConfig implements EditorImageToolConfigInterface
 {
     public function __construct(
         private string $uploadEndpoint = '/admin/media/editorjs/upload',

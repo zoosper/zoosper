@@ -6,12 +6,12 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Editor\ContentEditorInterface;
+use Zoosper\Core\Editor\EditorImageToolConfigInterface;
 use Zoosper\Editor\Config\ContentEditorRuntimeConfig;
 use Zoosper\Editor\Config\ContentEditorRuntimeConfigFactory;
 use Zoosper\Editor\ContentEditorRegistry;
 use Zoosper\Editor\EditorJsContentEditor;
 use Zoosper\Editor\TextareaContentEditor;
-use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 use Zoosper\ScopedConfig\ScopeConfigRepository;
 
 return [
@@ -25,7 +25,7 @@ return [
     TextareaContentEditor::class => static fn(ServiceContainer $services): TextareaContentEditor => new TextareaContentEditor(),
     EditorJsContentEditor::class => static fn(ServiceContainer $services): EditorJsContentEditor => new EditorJsContentEditor(
         $services->get(TextareaContentEditor::class),
-        $services->has(EditorJsImageToolConfig::class) ? $services->get(EditorJsImageToolConfig::class) : null,
+        $services->has(EditorImageToolConfigInterface::class) ? $services->get(EditorImageToolConfigInterface::class) : null,
         $services->get(CsrfTokenManager::class),
     ),
     ContentEditorRegistry::class => static fn(ServiceContainer $services): ContentEditorRegistry => new ContentEditorRegistry(

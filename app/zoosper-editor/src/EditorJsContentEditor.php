@@ -6,7 +6,7 @@ namespace Zoosper\Editor;
 
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Editor\ContentEditorInterface;
-use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
+use Zoosper\Core\Editor\EditorImageToolConfigInterface;
 
 /**
  * Editor.js-backed content editor adapter.
@@ -21,7 +21,7 @@ final readonly class EditorJsContentEditor implements ContentEditorInterface
 {
     public function __construct(
         private TextareaContentEditor $fallback = new TextareaContentEditor(),
-        private ?EditorJsImageToolConfig $imageToolConfig = null,
+        private ?EditorImageToolConfigInterface $imageToolConfig = null,
         private ?CsrfTokenManager $csrf = null,
     ) {
     }

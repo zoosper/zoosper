@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Zoosper\Admin\Tests\Unit\Editor;
 
 use Zoosper\Auth\Service\CsrfTokenManager;
+use Zoosper\Core\Editor\EditorImageToolConfigInterface;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 
 test('EditorJsContentEditor renders image tool config data attribute', function () {
     $root = dirname(__DIR__, 5);
     $source = (string) file_get_contents($root . '/app/zoosper-editor/src/EditorJsContentEditor.php');
 
-    expect($source)->toContain(EditorJsImageToolConfig::class);
+    expect($source)->toContain(EditorImageToolConfigInterface::class)
+        ->not->toContain('Zoosper\\Media\\');
     expect($source)->toContain(CsrfTokenManager::class);
     expect($source)->toContain('data-zoosper-image-tool');
     expect($source)->toContain('$this->imageToolConfig->toArray($this->csrf->token())');
@@ -21,8 +23,9 @@ test('admin service factory injects image tool config and csrf into EditorJsCont
     $root = dirname(__DIR__, 5);
     $source = (string) file_get_contents($root . '/app/zoosper-editor/config/services.php');
 
-    expect($source)->toContain(EditorJsImageToolConfig::class);
-    expect($source)->toContain('$services->has(EditorJsImageToolConfig::class)');
+    expect($source)->toContain(EditorImageToolConfigInterface::class);
+    expect($source)->toContain('$services->has(EditorImageToolConfigInterface::class)')
+        ->not->toContain('Zoosper\\Media\\');
     expect($source)->toContain('$services->get(CsrfTokenManager::class)');
 });
 

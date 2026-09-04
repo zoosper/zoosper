@@ -30,8 +30,10 @@ it('keeps Media optional at the editor adapter boundary', function (): void {
     $services = file_get_contents($root . '/app/zoosper-editor/config/services.php');
     $editor = file_get_contents($root . '/app/zoosper-editor/src/EditorJsContentEditor.php');
 
-    expect($services)->toContain('$services->has(EditorJsImageToolConfig::class)')
-        ->and($editor)->toContain('private ?EditorJsImageToolConfig $imageToolConfig = null')
+    expect($services)->toContain('$services->has(EditorImageToolConfigInterface::class)')
+        ->not->toContain('Zoosper\\Media\\')
+        ->and($editor)->toContain('private ?EditorImageToolConfigInterface $imageToolConfig = null')
+        ->not->toContain('Zoosper\\Media\\')
         ->toContain('private ?CsrfTokenManager $csrf = null');
 });
 
