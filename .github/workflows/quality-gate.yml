@@ -79,7 +79,25 @@ jobs:
         run: composer test
       - name: Compile module manifest
         run: composer compile
+      - name: Migrate CI release database
+        env:
+          DB_CONNECTION: mysql
+          DB_DRIVER: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: "3306"
+          DB_DATABASE: zoosper_test
+          DB_USERNAME: root
+          DB_PASSWORD: root
+        run: composer migrate
       - name: Run alpha release checks
+        env:
+          DB_CONNECTION: mysql
+          DB_DRIVER: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: "3306"
+          DB_DATABASE: zoosper_test
+          DB_USERNAME: root
+          DB_PASSWORD: root
         run: composer release:check
       - name: Prove disposable fresh install and critical runtime inventory
         run: composer fresh-install:smoke
