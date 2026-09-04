@@ -46,7 +46,6 @@
             [label, code, site, updated].forEach((cell) => { const value = cell?.textContent?.trim(); if (cell && value) cell.title = value; });
             if (status) { const value = status.textContent?.trim() ?? ''; const badge = document.createElement('span'); badge.className = `menus-index__status menus-index__status--${value}`; badge.textContent = value; status.textContent = ''; status.append(badge); }
         });
-        const shellTitle = document.querySelector('.admin-topbar__title'); if (shellTitle?.textContent?.trim() === 'Menus') shellTitle.hidden = true;
         search.addEventListener('keydown', (event) => { if (event.key !== 'Enter') return; event.preventDefault(); const pageInput = form.querySelector('[name="page"]'); if (pageInput) pageInput.value = '1'; form.requestSubmit(); });
     };
     document.querySelectorAll('.menus-index').forEach(initialise);

@@ -71,6 +71,7 @@ final readonly class UserAdminController
                 ['gridHtml' => $gridHtml],
                 $user,
                 'admin-users',
+                shellTitle: '',
             ));
         }
 

@@ -11,7 +11,7 @@ return [
         'zoosper-sites-workspace-script' => [
             'screens' => ['sites'],
             'type' => 'script',
-            'path' => '/asset/zoosper-site/js/sites-workspace.js?v=6a0e3a850587',
+            'path' => '/asset/zoosper-site/js/sites-workspace.js?v=0d65cc7bd27e',
             'sort_order' => 99,
             'attributes' => ['defer' => true],
         ],
@@ -24,7 +24,7 @@ return [
         'zoosper-site-domains-workspace-script' => [
             'screens' => ['site-domains'],
             'type' => 'script',
-            'path' => '/asset/zoosper-site/js/site-domains-workspace.js?v=320b71f46f36',
+            'path' => '/asset/zoosper-site/js/site-domains-workspace.js?v=1451bd71eaa3',
             'sort_order' => 99,
             'attributes' => ['defer' => true],
         ],

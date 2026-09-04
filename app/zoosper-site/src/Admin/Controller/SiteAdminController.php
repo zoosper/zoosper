@@ -50,7 +50,7 @@ final readonly class SiteAdminController
         $definition=$this->grid->definition();
         $gridHtml=$this->collectionGrid->render($user->id,'admin.sites',$this->adminUrl('sites'),$definition,$this->grid,AdminCollectionGridQuery::values($request,$definition),AdminCollectionGridQuery::bookmark($request))['html'];
         $html='<section class="sites-index" aria-labelledby="sites-index-title"><header class="sites-index__header"><p class="sites-index__breadcrumb">System / Sites</p><div class="sites-index__heading-row"><div><h1 id="sites-index-title" class="sites-index__title">Sites</h1><p class="sites-index__description">Manage site identities, locales, themes and publication status.</p></div><a class="button sites-index__create" href="'.$this->adminUrl('sites/create').'">Create site</a></div></header>'.$gridHtml.'</section>';
-        return $this->html('Sites',$html,$user);
+        return $this->html('Sites',$html,$user,shellTitle:'');
     }
 
     public function create(Request $request): Response
@@ -206,9 +206,9 @@ final readonly class SiteAdminController
         return $id !== null && ctype_digit($id) ? $this->sites->findById((int) $id) : null;
     }
 
-    private function html(string $title, string $content, AdminUser $user, int $statusCode = 200): Response
+    private function html(string $title, string $content, AdminUser $user, int $statusCode = 200, ?string $shellTitle = null): Response
     {
-        return Response::html($this->layout->render($title, $content, $user, 'sites'), $statusCode);
+        return Response::html($this->layout->render($title, $content, $user, 'sites', $shellTitle), $statusCode);
     }
 
     private function field(string $label, string $name, string $value): string

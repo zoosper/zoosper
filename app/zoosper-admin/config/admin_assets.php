@@ -52,7 +52,7 @@ return array (
     'zoosper-admin-grid-style' => 
     array (
       'type' => 'style',
-      'path' => '/asset/zoosper-admin/css/zoosper-grid.css?v=1dd2d73b4d17',
+      'path' => '/asset/zoosper-admin/css/zoosper-grid.css?v=cc831ab1696b',
       'sort_order' => 35,
     ),
     'zoosper-admin-tag-selector-style' => 

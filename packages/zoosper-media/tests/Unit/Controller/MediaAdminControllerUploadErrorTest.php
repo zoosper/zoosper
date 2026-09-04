@@ -111,7 +111,7 @@ it('shows the real validation error message instead of silently redirecting on a
         {
         }
 
-        public function render(string $title, string $template, array $data, ?AdminUser $user, string $active = 'dashboard'): string
+        public function render(string $title, string $template, array $data, ?AdminUser $user, string $active = 'dashboard', ?string $shellTitle = null): string
         {
             $this->outer[] = ['title' => $title, 'template' => $template, 'data' => $data];
 
@@ -184,7 +184,7 @@ it('still redirects to the media library on a successful upload', function (): v
         {
         }
 
-        public function render(string $title, string $template, array $data, ?AdminUser $user, string $active = 'dashboard'): string
+        public function render(string $title, string $template, array $data, ?AdminUser $user, string $active = 'dashboard', ?string $shellTitle = null): string
         {
             $this->outer[] = ['title' => $title, 'template' => $template, 'data' => $data];
 

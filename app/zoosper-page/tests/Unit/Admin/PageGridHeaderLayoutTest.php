@@ -28,19 +28,20 @@ it('renders Page title and actions in one explicit heading row', function (): vo
         ->toContain('transform: none !important;');
 });
 
-it('removes only the duplicate Pages shell label', function (): void {
+it('uses the server-owned Pages shell-title policy without a browser DOM scan', function (): void {
     $root = dirname(__DIR__, 5);
-
+    $responder = (string) file_get_contents(
+        $root . '/app/zoosper-page/src/Admin/PageAdminGridResponder.php',
+    );
     $script = (string) file_get_contents(
         $root . '/app/zoosper-page/resources/admin/js/page-grid-search.js',
     );
 
-    expect($script)
-        ->toContain("candidate.textContent?.trim() !== 'Pages'")
-        ->toContain("candidate.closest('.page-grid-index')")
-        ->toContain("candidate.closest('aside')")
-        ->toContain("candidate.closest('nav')")
-        ->toContain('bounds.top < 80')
-        ->toContain('candidate.hidden = true')
-        ->toContain('pageGridDuplicateShellTitle');
+    expect($responder)
+        ->toContain("shellTitle: ''")
+        ->and($script)
+        ->not->toContain("candidate.textContent?.trim() !== 'Pages'")
+        ->not->toContain('candidate.hidden = true')
+        ->not->toContain('pageGridDuplicateShellTitle')
+        ->toContain("document.querySelectorAll('.page-grid-index').forEach(initialise)");
 });

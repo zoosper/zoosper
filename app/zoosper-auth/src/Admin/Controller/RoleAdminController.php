@@ -64,6 +64,7 @@ final readonly class RoleAdminController
             return $this->html(
                 'Roles & Permissions',
                 $this->renderRoleView('index.php', ['gridHtml' => $gridHtml]),
+                shellTitle: '',
             );
         }
 
@@ -73,7 +74,7 @@ final readonly class RoleAdminController
             'roles' => $this->roles->allRoles(),
             'createUrl' => $this->adminUrl('roles/create'),
             'editBaseUrl' => $this->adminUrl('roles/edit'),
-        ]));
+        ]), shellTitle: '');
     
     }
 
@@ -313,9 +314,9 @@ final readonly class RoleAdminController
         return $queryString === '' ? $url : $url . '?' . $queryString;
     }
 
-    private function html(string $title, string $content, int $statusCode = 200): Response
+    private function html(string $title, string $content, int $statusCode = 200, ?string $shellTitle = null): Response
     {
-        return Response::html($this->layout->render($title, $content, $this->guard->user(), 'admin-roles'), $statusCode);
+        return Response::html($this->layout->render($title, $content, $this->guard->user(), 'admin-roles', $shellTitle), $statusCode);
     }
 
     private function renderRoleView(string $template, array $data = []): string

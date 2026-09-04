@@ -1,8 +1,8 @@
-<section class="card marko-error marko-error--loud" role="alert" style="border:3px solid #b42318;background:#fff1f0;padding:24px">
-    <p style="font-weight:800;color:#b42318;text-transform:uppercase;letter-spacing:.08em">Marko runtime error</p>
+<section class="card marko-error marko-error--loud menu-runtime-error" role="alert">
+    <p class="menu-runtime-error__label">Marko runtime error</p>
     <h2>{$heading}</h2>
     <p><strong>Operation:</strong> {$operation}</p>
-    <p style="font-size:1.1rem"><strong>{$message}</strong></p>
+    <p class="menu-runtime-error__message"><strong>{$message}</strong></p>
     <details open><summary>Technical details</summary><p><code>{$exceptionClass}</code></p></details>
     <p><a class="button" href="{$returnUrl}">Return to menu form</a></p>
 </section>

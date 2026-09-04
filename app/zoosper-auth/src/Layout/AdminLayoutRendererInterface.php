@@ -31,7 +31,7 @@ use Zoosper\Auth\Model\AdminUser;
  */
 interface AdminLayoutRendererInterface
 {
-    public function render(string $title, string $content, ?AdminUser $user, string $active = 'dashboard'): string;
+    public function render(string $title, string $content, ?AdminUser $user, string $active = 'dashboard', ?string $shellTitle = null): string;
 }
 
 

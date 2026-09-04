@@ -7,7 +7,7 @@ it('renders a loud Marko error instead of raw exception text',function(){
  $view=(string)file_get_contents($root.'/resources/views/admin/menu/error.latte');
  expect($controller)->toContain('$this->views->error')->not->toContain('Response::html($e->getMessage()')
   ->and($responder)->toContain('zoosper-menu::admin/menu/error.latte')
-  ->and($view)->toContain('Marko runtime error')->toContain('role="alert"')->toContain('Technical details');
+  ->and($view)->toContain('Marko runtime error')->toContain('role="alert"')->toContain('Technical details')->toContain('menu-runtime-error')->not->toContain(' style=');
 });
 
 

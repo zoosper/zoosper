@@ -11,7 +11,7 @@ return [
         ],
         'zoosper-login-history-workspace-script' => [
             'type' => 'script',
-            'path' => '/asset/zoosper-audit/js/login-history-workspace.js?v=9f7aff161f71',
+            'path' => '/asset/zoosper-audit/js/login-history-workspace.js?v=b47dc9698139',
             'sort_order' => 99,
             'attributes' => [
                 'defer' => true,
@@ -24,7 +24,7 @@ return [
         ],
         'zoosper-audit-log-workspace-script' => [
             'type' => 'script',
-            'path' => '/asset/zoosper-audit/js/audit-log-workspace.js?v=18c8c1bf57b9',
+            'path' => '/asset/zoosper-audit/js/audit-log-workspace.js?v=fa0dd26ad4d2',
             'sort_order' => 97,
             'attributes' => [
                 'defer' => true,

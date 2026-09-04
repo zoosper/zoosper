@@ -120,8 +120,6 @@
             }
         });
 
-        const shellTitle = document.querySelector('.admin-topbar__title');
-        if (shellTitle?.textContent?.trim() === 'Site Domains') shellTitle.hidden = true;
 
         search.addEventListener('keydown', (event) => {
             if (event.key !== 'Enter') return;

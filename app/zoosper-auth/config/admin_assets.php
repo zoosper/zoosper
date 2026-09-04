@@ -24,7 +24,7 @@ return [
     ],
     'zoosper-personal-access-tokens-runtime' => [
         'type' => 'script',
-        'path' => '/assets/admin/js/personal-access-tokens.js?v=2570d94da7cf',
+        'path' => '/assets/admin/js/personal-access-tokens.js?v=79ede8c2c657',
         'screens' => ['access-tokens'],
         'sort_order' => 88,
         'attributes' => [
@@ -33,13 +33,13 @@ return [
     ],
     'zoosper-admin-user-workspace-style' => [
         'type' => 'style',
-        'path' => '/assets/admin/css/admin-user-workspace.css?v=ef44599fd0c3',
+        'path' => '/assets/admin/css/admin-user-workspace.css?v=c0f079e3a3ef',
         'sort_order' => 87,
         'screens' => ['admin-users'],
     ],
     'zoosper-admin-users-workspace-runtime' => [
         'type' => 'script',
-        'path' => '/assets/admin/js/admin-users-workspace.js?v=55caef1d8d48',
+        'path' => '/assets/admin/js/admin-users-workspace.js?v=4daa665ebe69',
         'sort_order' => 87,
         'screens' => ['admin-users'],
         'attributes' => ['defer' => true],
@@ -52,7 +52,7 @@ return [
     ],
     'zoosper-roles-workspace-style' => [
         'type' => 'style',
-        'path' => '/assets/admin/css/roles-workspace.css?v=7a68d0499572',
+        'path' => '/assets/admin/css/roles-workspace.css?v=db715d0965e4',
         'sort_order' => 87,
         'screens' => ['admin-roles'],
     ],

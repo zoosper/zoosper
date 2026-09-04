@@ -1,11 +1,11 @@
 # Zoosper CMS — Master Roadmap
 
-**Last updated:** 2026-09-01 (Sydney)
+**Last updated:** 2026-09-04 (Sydney)
 
 ## Current continuity status
 
-- Latest tag: `v0.3.0-alpha.4`.
-- Current development line: `0.3.0-alpha.5-dev`.
+- Release source: `v0.3.0-alpha.5`.
+- Next development line after the immutable release tag: `0.3.0-alpha.6-dev`.
 - **[x] Phase 10BN:** generic pagination ownership moved from Core to the
   `zoosper/pagination` library. Zoosper's page parsing, default page size `20`,
   maximum page size `100`, and maximum page `100_000` remain stable; verified
@@ -51,7 +51,7 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ## 0. TOP PRIORITY — next phase
 
-**`0.3.0-alpha.5-dev` is open.** The immutable annotated `v0.3.0-alpha.4` tag targets release commit `c70f37dc`; no GitHub release publication or deployment has occurred. Resume the launch-readiness and technical remediation priorities below from this development baseline.
+**`0.3.0-alpha.5` release source is prepared.** Phase 12N-12P production-presentation and server-owned shell-title closure is broadly verified with 1,683 passing tests, 12,400 assertions, 2 skipped tests, a zero-finding strict quality gate, valid Composer metadata, a clean dependency audit, a fresh 39-module manifest, and passing alpha release checks. The release commit, immutable annotated tag, push, and subsequent `0.3.0-alpha.6-dev` opening remain explicit Phase 12R operations.
 
 **Planned Admin follow-ups for the current development line:**
 

@@ -152,3 +152,7 @@
     display: none !important;
 }
 /* END GRID COLUMN FILTER VISIBILITY */
+
+/* Phase 12N: semantic alignment emitted by zoosper/grid. */
+.grid-cell--align-center{text-align:center}
+.grid-cell--align-right{text-align:right}

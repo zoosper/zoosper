@@ -2,8 +2,8 @@
 
 **A modular, API-first CMS without the weight. Extend features without forking core.**
 
-- Latest pre-release: `v0.3.0-alpha.4`
-- Current development line: `0.3.0-alpha.5-dev`
+- Latest pre-release: `v0.3.0-alpha.5`
+- Release identity: `0.3.0-alpha.5`
 - Required runtime: PHP 8.5+
 
 Zoosper is an API-first, multi-site CMS built around independently owned Composer modules. Each feature can contribute its own routes, services, schema, migrations, permissions, Admin UI, API adapters, tests, assets and documentation. Cross-cutting platform modules stay free of feature implementation dependencies.
@@ -20,7 +20,7 @@ Zoosper is an API-first, multi-site CMS built around independently owned Compose
 - **Security-focused foundations:** ACL, CSRF, 2FA, password policy, automatic password rehash, rate limiting, secure sessions, canonical Media ingest and safe audit metadata.
 - **Pluggable presentation:** Latte is the current default template engine; Marko View contracts are adopted at selected boundaries.
 
-## What shipped in v0.3.0-alpha.4
+## What shipped in v0.3.0-alpha.5
 
 ### Integration APIs
 
@@ -144,22 +144,20 @@ A Zoosper module can own or contribute:
 Use `php8.5 bin/zoosper make:module` for a local module or the package-module scaffolder for a distributable package.
 
 ## Quality and release discipline
-
-The `v0.3.0-alpha.4` release gate completed with:
-
-- 1,619 passing tests
-- 11,635 assertions
+The `v0.3.0-alpha.5` release source completed with:
+- 1,683 passing tests
+- 12,400 assertions
+- 2 intentionally skipped tests
 - zero strict quality-gate errors
 - zero strict quality-gate warnings
+- valid Composer metadata and no dependency security advisories
 - a compiled, fresh 39-module manifest
-- a disposable fresh-install alpha smoke test
-- browser acceptance and production-safe console boot
+- passing foreign-key and alpha release checks
 
-CI and the tracked pre-push hook run the repository quality contract. Psalm remains visible and advisory while its existing baseline is reduced.
+CI and the tracked pre-push hook run the repository quality contract. Psalm is a blocking full-scope CI gate.
 
 ## Latest release and current development focus
-
-`v0.3.0-alpha.4` delivers discovery caching in module manifest, CSP enforcement, unified AdminFormRenderer, asynchronous media derivative offloading, database-backed Module Lifecycle kernel, first-party package extractions, PHP 8.5 compatibility, and pre-launch security hardening. Development is now open as `0.3.0-alpha.5-dev`; staging and production continue to fail closed for secure sessions, database driver policy, and enforcing rate limits across HTTP and console boot.
+`v0.3.0-alpha.5` closes the 33-foreign-key first-party integrity inventory, blocking full-scope Psalm gate, secret-generation and production validation work, absolute Admin-session lifetime controls, adversarial asset coverage, and the Fable-informed Admin workspace rollout. It also replaces duplicate shell-title browser workarounds with a server-owned presentation policy, removes production inline Menu/Grid presentation, and retires the unused phase-era frontend fallback.
 
 ### Explicitly not complete
 
@@ -171,7 +169,7 @@ CI and the tracked pre-push hook run the repository quality contract. Psalm rema
 
 ## Project status and support
 
-Zoosper CMS is in active public-alpha development. The latest tagged pre-release is `v0.3.0-alpha.4`, and the current development line is `0.3.0-alpha.5-dev`. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
+Zoosper CMS is in active public-alpha development. The latest pre-release is `v0.3.0-alpha.5`. No stable release has shipped. Review [SECURITY.md](SECURITY.md) before reporting a vulnerability and [ROADMAP.md](ROADMAP.md) for current continuity and planned work.
 
 ## Licence
 

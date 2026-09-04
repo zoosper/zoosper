@@ -131,14 +131,26 @@ it('shows an accurate "showing X-Y of Z" summary', function (): void {
     expect($html)->toContain('Showing 21&ndash;40 of 45');
 });
 
-
-
-
-
-
-
-
-
-
-
-
+it('uses allow-listed classes for cell alignment without inline styles', function (): void {
+    $definition = new GridDefinition(
+        title: 'Alignment',
+        columns: [
+            new GridColumn('left', 'Left'),
+            new GridColumn('centre', 'Centre', align: 'center'),
+            new GridColumn('right', 'Right', align: 'right'),
+            new GridColumn('invalid', 'Invalid', align: '" onmouseover="alert(1)'),
+        ],
+        filters: [],
+    );
+    $criteria = GridCriteria::fromValues([], $definition);
+    $result = new PaginationResult(items: [[
+        'left' => 'L', 'centre' => 'C', 'right' => 'R', 'invalid' => 'I',
+    ]], total: 1, page: 1, pageSize: 20);
+    $html = (new GridHtmlRenderer())->renderBody($definition, $result, $criteria, '/admin/sample');
+    expect($html)
+        ->toContain('class="grid-cell"')
+        ->toContain('class="grid-cell grid-cell--align-center"')
+        ->toContain('class="grid-cell grid-cell--align-right"')
+        ->not->toContain('style="text-align:')
+        ->not->toContain('onmouseover');
+});

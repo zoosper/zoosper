@@ -8,7 +8,7 @@ return array (
     'zoosper-page-grid-search-script' =>
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-page/js/page-grid-search.js?v=012f2cb72404',
+      'path' => '/asset/zoosper-page/js/page-grid-search.js?v=68d881d5d02b',
       'sort_order' => 97,
       'attributes' =>
       array (

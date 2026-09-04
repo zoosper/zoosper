@@ -14,8 +14,6 @@
         page.dataset.adminUsersEnhanced = 'true';
         if (!form.id) form.id = 'admin-users-grid-filter-form';
 
-        const shellTitle = document.querySelector('.admin-topbar__title');
-        if (shellTitle?.textContent?.trim() === 'Admin Users') shellTitle.hidden = true;
 
         const actions = page.querySelector('[data-admin-users-actions]');
         const create = Array.from(collection.querySelectorAll('a')).find((link) => link.textContent?.trim() === 'Create admin user');

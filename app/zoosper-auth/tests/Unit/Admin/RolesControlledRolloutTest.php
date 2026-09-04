@@ -14,7 +14,7 @@ it('ships the Auth-owned Roles collection without expanding ACL data', function 
 
     expect($view)->toContain('Users / Roles &amp; Permissions')->toContain('Define reusable permission sets and manage assigned administrators.')->toContain('{$gridHtml|noescape}')->toContain('{else}')
         ->and($script)->toContain("query.placeholder = 'Search roles'")->toContain("link.textContent?.trim() === 'Create role'")->toContain("collection.querySelector('.grid-pagination')")->toContain('form.requestSubmit()')->not->toContain('innerHTML')->not->toContain('fetch(')->not->toContain('localStorage')
-        ->and($css)->toContain('Phase 12J-B: Auth-owned Roles and Permissions controlled Grid rollout.')->toContain('body:has([data-roles-index]) .admin-topbar__title')->toContain('font-weight: 400;')->toContain('@media (prefers-contrast:more)')
+        ->and($css)->toContain('Phase 12J-B: Auth-owned Roles and Permissions controlled Grid rollout.')->not->toContain('body:has([data-roles-index]) .admin-topbar__title')->toContain('font-weight: 400;')->toContain('@media (prefers-contrast:more)')
         ->and($grid)->toContain("KEY = 'admin.roles'")->toContain("GridFilter('q', 'Search')")
         ->and($read)->toContain('SELECT r.id, r.label, r.code')->not->toContain('admin_role_permissions')->not->toContain('admin_user_roles')
         ->and($assets['zoosper-roles-workspace-style']['screens'] ?? [])->toBe(['admin-roles'])

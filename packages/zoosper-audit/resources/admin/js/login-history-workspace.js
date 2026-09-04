@@ -125,11 +125,6 @@
             }
         });
 
-        const shellTitle = document.querySelector('.admin-topbar__title');
-        if (shellTitle?.textContent?.trim() === 'Login History') {
-            shellTitle.hidden = true;
-            shellTitle.dataset.loginHistoryDuplicateShellTitle = '';
-        }
 
         search.addEventListener('keydown', (event) => {
             if (event.key !== 'Enter') return;

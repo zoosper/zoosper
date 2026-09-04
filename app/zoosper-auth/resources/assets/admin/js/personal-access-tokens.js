@@ -97,11 +97,6 @@
     'use strict';
 
     const initialise = (screen) => {
-        const shellTitle = document.querySelector('.admin-topbar__title');
-        if (shellTitle?.textContent?.trim() === 'Personal Access Tokens') {
-            shellTitle.hidden = true;
-            shellTitle.dataset.patDuplicateShellTitle = '';
-        }
 
         if (screen.dataset.patGridEnhanced === 'true') return;
 

@@ -1,10 +1,12 @@
 # Changelog
 
-## [0.3.0-alpha.5-dev]
-
-- Opened development line following `v0.3.0-alpha.4`.
-- Active focus: Referential integrity / foreign key reconciliation, Psalm zero-baseline CI gate, automated secret generation and mandatory boot validation, absolute session lifetime controls, and adversarial asset pipeline test coverage.
-
+## [0.3.0-alpha.5] - 2026-09-04
+- Closed the first-party referential-integrity inventory with 33 declarative foreign keys, fresh SQLite parity, and fail-closed release diagnostics for additions, mismatches, and rebuild requirements.
+- Made Psalm a blocking full-scope CI gate, added cryptographically strong secret generation and validation, formalised absolute Admin session lifetime controls, and expanded adversarial module-asset coverage.
+- Completed the Fable-informed Admin collection rollout across operational workspaces while preserving feature-owned routes, ACL, CSRF, persistence, and package boundaries.
+- Replaced duplicate shell-title browser workarounds with a backwards-compatible server-owned title policy that keeps document titles independent from visible shell titles.
+- Removed production inline Menu/Grid presentation, retired the unused phase-era HomeController fallback, and retained the active Page and Theme fallback chain.
+- Verified 1,683 passing Pest tests with 12,400 assertions and 2 skipped tests, a strict quality gate with zero errors and zero warnings, valid Composer metadata, no dependency security advisories, a fresh 39-module manifest, and passing alpha release checks.
 ## [0.3.0-alpha.4] - 2026-09-01
 
 - Completed Phase 10AU: Implemented aggregated discovery manifestation and cached discovery map in `var/cache/modules.php`, eliminating redundant filesystem calls during production boot.

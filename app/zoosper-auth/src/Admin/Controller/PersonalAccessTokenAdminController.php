@@ -168,6 +168,7 @@ final readonly class PersonalAccessTokenAdminController
                 ],
                 $user,
                 'access-tokens',
+                shellTitle: '',
             ),
             $status,
         );

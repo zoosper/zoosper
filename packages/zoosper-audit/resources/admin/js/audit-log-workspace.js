@@ -117,11 +117,6 @@
             });
         });
 
-        const shellTitle = document.querySelector('.admin-topbar__title');
-        if (shellTitle?.textContent?.trim() === 'Audit Log') {
-            shellTitle.hidden = true;
-            shellTitle.dataset.auditLogDuplicateShellTitle = '';
-        }
 
         search.addEventListener('keydown', (event) => {
             if (event.key !== 'Enter') {

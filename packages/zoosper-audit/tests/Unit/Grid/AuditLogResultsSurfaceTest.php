@@ -17,7 +17,7 @@ it('composes existing Audit result nodes into one responsive surface', function 
         ->toContain("table.insertAdjacentElement('afterend', footer)")
         ->toContain('legacyNavigation?.remove()')
         ->toContain('Node.DOCUMENT_POSITION_FOLLOWING')
-        ->toContain("document.querySelector('.admin-topbar__title')")
+        ->not->toContain('.admin-topbar__title')
         ->not->toContain('innerHTML')
         ->not->toContain('cloneNode')
         ->and($css)

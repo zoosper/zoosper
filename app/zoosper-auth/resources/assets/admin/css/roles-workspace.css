@@ -7,7 +7,6 @@
 .roles-index__description { max-width: 48rem; margin: .45rem 0 0; color: var(--admin-text-muted); font-size: .925rem; line-height: 1.5; }
 .roles-index__actions:empty { display: none; }
 .roles-index__create { white-space: nowrap; }
-body:has([data-roles-index]) .admin-topbar__title { display: none; }
 .roles-search { position: relative; display: flex; flex: 1 1 28rem; min-width: min(24rem,48vw); margin: 0; }
 .roles-search input[type="search"] { width: 100%; min-height: 2.5rem; margin: 0; padding-inline: 2.35rem .8rem; border: 1px solid var(--admin-border); border-radius: .55rem; background: var(--admin-surface); color: var(--admin-text); font: inherit; }
 .roles-search::before { content: ""; position: absolute; top: 50%; left: .82rem; width: .85rem; height: .85rem; transform: translateY(-58%); border: 2px solid var(--admin-text-muted); border-radius: 50%; pointer-events: none; opacity: .75; }

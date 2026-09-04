@@ -4,6 +4,7 @@
  * @var callable $partial
  * @var callable $slot
  * @var string $title
+ * @var string $shellTitle
  * @var string $navigation
  * @var string $content
  * @var string $userName
@@ -58,7 +59,9 @@
                     <span aria-hidden="true">☰</span>
                     <span class="admin-control-label">Open navigation</span>
                 </button>
-                <strong class="admin-topbar__title"><?= $e($title) ?></strong>
+                <?php if (($shellTitle ?? $title) !== ''): ?>
+                    <strong class="admin-topbar__title"><?= $e($shellTitle ?? $title) ?></strong>
+                <?php endif; ?>
             </div>
             <div class="admin-topbar__actions">
                 <details class="admin-account-menu">

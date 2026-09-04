@@ -67,7 +67,7 @@ final class GridHtmlRenderer
     {
         $head=''; foreach($definition->columns as $column){$head.=$this->renderHeaderCell($column,$criteria,$baseUrl);} $body='';
         if($result->items===[]){$body='<tr><td colspan="'.count($definition->columns).'" class="grid-empty">'.$this->e($definition->emptyMessage).'</td></tr>';}
-        else foreach($result->items as $row){$body.='<tr>';foreach($definition->columns as $column){$value=$row[$column->key]??null;$align=$column->align!=='left'?' style="text-align:'.$this->e($column->align).'"':'';$body.='<td data-grid-column="'.$this->e($column->key).'"'.$align.'>'.$column->renderValue($value,$row).'</td>';}$body.='</tr>';}
+        else foreach($result->items as $row){$body.='<tr>';foreach($definition->columns as $column){$value=$row[$column->key]??null;$alignmentClass=match($column->align){'center'=>' grid-cell--align-center','right'=>' grid-cell--align-right',default=>''};$body.='<td data-grid-column="'.$this->e($column->key).'" class="grid-cell'.$alignmentClass.'">'.$column->renderValue($value,$row).'</td>';}$body.='</tr>';}
         return '<table class="grid-table"><thead><tr>'.$head.'</tr></thead><tbody>'.$body.'</tbody></table>';
     }
 

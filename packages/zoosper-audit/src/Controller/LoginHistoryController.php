@@ -21,8 +21,8 @@ final readonly class LoginHistoryController
   $definition=$this->definition->build(); $action=$this->adminUrls?->url('login-history')??'/admin/login-history';
   $page=$this->pages->build('Login History',$user->id,LoginHistoryGridDefinition::KEY,$action,$definition,$this->source,OperationalGridQueryState::fromRequest($request,$definition),OperationalGridQueryState::bookmarkId($request));
   $html=$page->workspaceHtml.$page->gridHtml;
-  if($this->views!==null)return Response::html($this->views->render(title:'Login History',template:'zoosper-audit::login-history/index',data:['workspaceHtml'=>$page->workspaceHtml,'gridHtml'=>$page->gridHtml],user:$user,active:'login-history'));
-  return Response::html($this->layout->render('Login History',$html,$user,'login-history'));
+  if($this->views!==null)return Response::html($this->views->render(title:'Login History',template:'zoosper-audit::login-history/index',data:['workspaceHtml'=>$page->workspaceHtml,'gridHtml'=>$page->gridHtml],user:$user,active:'login-history',shellTitle:''));
+  return Response::html($this->layout->render('Login History',$html,$user,'login-history',shellTitle:''));
  }
  private function currentAdminUser()
  {

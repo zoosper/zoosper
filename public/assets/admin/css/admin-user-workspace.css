@@ -57,8 +57,3 @@
 @media (max-width: 64rem) { .admin-users-search { flex-basis: 100%; min-width: 100%; } .admin-users-index__collection { overflow-x: auto; } .admin-users-index__table { min-width: 50rem; } }
 @media (max-width: 48rem) { .admin-users-index__heading-row { align-items: stretch; flex-direction: column; } .admin-users-index__actions { align-self: flex-start; } .admin-users-index__pagination { grid-template-columns: 1fr 1fr; } .admin-users-index__pagination > .grid-pagination__status { grid-column: 1 / -1; grid-row: 1; } .admin-users-index__pagination > .grid-pagination__prev { grid-column: 1; grid-row: 2; } .admin-users-index__pagination > .grid-pagination__next { grid-column: 2; grid-row: 2; } }
 @media (prefers-contrast: more) { .admin-users-index__status, .admin-users-index__pagination { border-width: 2px; } }
-
-/* Phase 12I-B: suppress the index-only duplicate shell title before first paint. */
-body:has([data-admin-users-index]) .admin-topbar__title {
-    display: none;
-}

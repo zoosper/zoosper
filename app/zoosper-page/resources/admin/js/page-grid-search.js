@@ -195,26 +195,5 @@
         }
     };
 
-    document.querySelectorAll('.page-grid-index').forEach((page) => {
-        initialise(page);
-
-        Array.from(document.querySelectorAll('body *')).forEach((candidate) => {
-            if (
-                candidate.closest('.page-grid-index')
-                || candidate.closest('aside')
-                || candidate.closest('nav')
-                || candidate.children.length > 0
-                || candidate.textContent?.trim() !== 'Pages'
-            ) {
-                return;
-            }
-
-            const bounds = candidate.getBoundingClientRect();
-
-            if (bounds.top < 80 && bounds.left >= 240) {
-                candidate.hidden = true;
-                candidate.dataset.pageGridDuplicateShellTitle = '';
-            }
-        });
-    });
+    document.querySelectorAll('.page-grid-index').forEach(initialise);
 })();

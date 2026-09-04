@@ -89,6 +89,7 @@ final readonly class PageAdminGridResponder
             ],
             $user,
             'pages',
+            shellTitle: '',
         ));
     }
 

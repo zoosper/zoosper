@@ -12,7 +12,7 @@ it('composes existing Login History result nodes into one responsive surface', f
         ->toContain("table.insertAdjacentElement('afterend', footer)")
         ->toContain('legacyNavigation?.remove()')
         ->toContain('Node.DOCUMENT_POSITION_FOLLOWING')
-        ->toContain("document.querySelector('.admin-topbar__title')")
+        ->not->toContain('.admin-topbar__title')
         ->not->toContain('innerHTML')
         ->not->toContain('cloneNode')
         ->and($css)

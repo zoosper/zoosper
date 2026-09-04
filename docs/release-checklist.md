@@ -26,8 +26,8 @@
 ## Reusable final tag gate
 
 ```bash
-RELEASE_TAG=v0.3.0-alpha.4
-NEXT_VERSION=0.3.0-alpha.5-dev
+RELEASE_TAG=v0.3.0-alpha.5
+NEXT_VERSION=0.3.0-alpha.6-dev
 ```
 - Confirm `php8.5 bin/zoosper version` reports the release version represented by `RELEASE_TAG`.
 - Confirm Admin and API health expose the same authoritative version.

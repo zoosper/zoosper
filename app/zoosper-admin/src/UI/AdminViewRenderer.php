@@ -16,11 +16,11 @@ final readonly class AdminViewRenderer implements AdminViewRendererInterface
     }
 
     /** @param array<string, mixed> $data */
-    public function render(string $title, string $template, array $data, ?AdminUser $user, string $active = 'dashboard'): string
+    public function render(string $title, string $template, array $data, ?AdminUser $user, string $active = 'dashboard', ?string $shellTitle = null): string
     {
         $content = $this->templates->render($template, $data, 'default', 'admin.content');
 
-        return $this->layout->render($title, $content, $user, $active);
+        return $this->layout->render($title, $content, $user, $active, $shellTitle);
     }
 }
 

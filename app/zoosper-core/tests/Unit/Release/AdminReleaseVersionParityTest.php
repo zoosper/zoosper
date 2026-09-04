@@ -9,7 +9,7 @@ it('uses the authoritative release version for application and Admin presentatio
     $layout = (string) file_get_contents($root . '/app/zoosper-admin/src/Layout/AdminLayout.php');
     $environmentExample = (string) file_get_contents($root . '/.env.example');
 
-    expect($version['version'])->toBe('0.3.0-alpha.5-dev')
+    expect($version['version'])->toBe('0.3.0-alpha.5')
         ->and($application)
         ->toContain("require __DIR__ . '/version.php'")
         ->toContain("'version' => env('CMS_VERSION', \$release['version'])")
