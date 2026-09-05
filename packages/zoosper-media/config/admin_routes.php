@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Media\Controller\MediaAdminController;
+use Zoosper\Media\Controller\MediaEditorJsLibraryController;
 use Zoosper\Media\Controller\MediaEditorJsUploadController;
 
 return [
@@ -19,6 +20,7 @@ return [
      * access. The route therefore allows either media.manage OR page.manage,
      * while still remaining authenticated and CSRF protected by admin middleware.
      */
+    ['method' => 'GET', 'path' => '/admin/media/editorjs/library', 'controller' => MediaEditorJsLibraryController::class, 'action' => 'index', 'permission' => ['media.manage', 'page.manage']],
     ['method' => 'POST', 'path' => '/admin/media/editorjs/upload', 'controller' => MediaEditorJsUploadController::class, 'action' => 'upload', 'permission' => ['media.manage', 'page.manage']],
 ];
 

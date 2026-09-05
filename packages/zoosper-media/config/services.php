@@ -12,6 +12,8 @@ use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
+use Zoosper\Media\EditorJs\MediaPickerReadRepository;
+use Zoosper\Media\EditorJs\MediaPickerResponder;
 use Zoosper\Media\Processing\MediaProcessingPolicy;
 use Zoosper\Media\Processing\MediaProcessorInterface;
 use Zoosper\Media\Processing\GdMediaProcessor;
@@ -40,6 +42,8 @@ return [
     MediaAssetRepository::class => static fn (ServiceContainer $services): MediaAssetRepository => new MediaAssetRepository($services->get(PDO::class)),
     MediaDerivativeRepository::class => static fn (ServiceContainer $services): MediaDerivativeRepository => new MediaDerivativeRepository($services->get(PDO::class), dirname(__DIR__, 3)),
     MediaDerivativeLookup::class => static fn (ServiceContainer $services): MediaDerivativeLookup => new MediaDerivativeLookup($services->get(MediaDerivativeRepository::class)),
+    MediaPickerReadRepository::class => static fn (ServiceContainer $services): MediaPickerReadRepository => new MediaPickerReadRepository($services->get(PDO::class)),
+    MediaPickerResponder::class => static fn (ServiceContainer $services): MediaPickerResponder => new MediaPickerResponder($services->get(MediaDerivativeLookup::class)),
     MediaUploadValidator::class => static fn (ServiceContainer $services): MediaUploadValidator => new MediaUploadValidator(),
     MediaCanonicalizerInterface::class => static fn (ServiceContainer $services): MediaCanonicalizerInterface => new GdMediaCanonicalizer(),
     MediaStorage::class => static fn (ServiceContainer $services): MediaStorage => new MediaStorage(dirname(__DIR__, 3), $services->get(MediaCanonicalizerInterface::class)),

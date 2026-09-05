@@ -17,8 +17,11 @@ use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\Controller\MediaAdminController;
 use Zoosper\Media\Admin\Grid\MediaVisualGridWorkspace;
+use Zoosper\Media\Controller\MediaEditorJsLibraryController;
 use Zoosper\Media\Controller\MediaEditorJsUploadController;
 use Zoosper\Media\EditorJs\EditorJsImageUploadResponseFactory;
+use Zoosper\Media\EditorJs\MediaPickerReadRepository;
+use Zoosper\Media\EditorJs\MediaPickerResponder;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Service\MediaUploadService;
 use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
@@ -45,6 +48,10 @@ return [
         lifecycle: $services->get(MediaLifecycleCoordinator::class),
         visualGrid: $services->get(MediaVisualGridWorkspace::class),
         flash: $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null,
+    ),
+    MediaEditorJsLibraryController::class => static fn (ServiceContainer $services): MediaEditorJsLibraryController => new MediaEditorJsLibraryController(
+        media: $services->get(MediaPickerReadRepository::class),
+        responses: $services->get(MediaPickerResponder::class),
     ),
     MediaEditorJsUploadController::class => static fn (ServiceContainer $services): MediaEditorJsUploadController => new MediaEditorJsUploadController(
         guard: $services->get(SessionGuard::class),

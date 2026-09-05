@@ -129,3 +129,7 @@ Permanent deletion is archived-first and fails closed unless current Pages and r
 ## Editor image-tool contribution
 
 Media implements the Core-owned `EditorImageToolConfigInterface` and binds it to the existing Editor.js upload configuration. This preserves the authenticated, CSRF-protected upload flow while keeping the Editor package independent of concrete Media classes.
+
+## Editor.js Media picker read endpoint
+
+`GET /admin/media/editorjs/library` is an authenticated Admin JSON endpoint available to either `media.manage` or `page.manage`. It returns only active image assets with canonical public paths, bounded filename search and pagination, and a `thumb` derivative URL with safe original-path fallback. Picker responses exclude private storage paths, creator identity, UUIDs, archived assets, non-image files, and unpublished assets. Browser picker presentation and Editor.js launch controls remain separate follow-up work.
