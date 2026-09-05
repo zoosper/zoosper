@@ -205,6 +205,7 @@ final readonly class GenerateSecretsCommand implements ConsoleCommandInterface
         }
 
         file_put_contents($envFile, implode("\n", $lines));
+        @chmod($envFile, 0600);
 
         return $statusReport;
     }

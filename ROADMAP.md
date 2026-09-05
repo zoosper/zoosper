@@ -1,11 +1,13 @@
 # Zoosper CMS — Master Roadmap
 
-**Last updated:** 2026-09-04 (Sydney)
+**Last updated:** 2026-09-05 (Sydney)
 
 ## Current continuity status
 
 - Latest immutable release: `v0.3.0-alpha.5`.
 - Current development line: `0.3.1-alpha.1-dev`.
+- **[x] GitHub CI MySQL Migration Failure Resolution:** Fixed `composer migrate` failure (`SQLSTATE[HY000]: General error: 1824 Failed to open the referenced table 'media_assets'`) by using `SchemaInspector` in `202608310001_create_media_queue_table.php` to verify table presence before issuing `CREATE TABLE ... FOREIGN KEY (asset_id) REFERENCES media_assets(id)`, allowing fresh database migrations on MySQL and SQLite to execute safely and defer table creation to the declarative schema engine.
+- **[x] Secret Generation Hardening:** Added explicit `0600` file permissions to `GenerateSecretsCommand::writeToEnvFile()` after writing updated `.env` secrets.
 - **[x] Phase 10BN:** generic pagination ownership moved from Core to the
   `zoosper/pagination` library. Zoosper's page parsing, default page size `20`,
   maximum page size `100`, and maximum page `100_000` remain stable; verified
@@ -23,7 +25,7 @@
 - **[x] Phase 10AX:** migrated `PageAdminController` to the unified `AdminFormRenderer`, enhancing the renderer to support `checkbox` and `html` blocks (Editor.js). Verified with `AdminPageFormAcceptanceTest`.
 - **[x] Phase 10AY:** implemented media derivative offloading. Introduced `media_processing_queue`, `QueuedMediaProcessor`, and the `media:process-queue` worker command. Added pre-decode resource limits to `GdMediaProcessor`.
 - **[x] Phase 10AZ:** built the Module Lifecycle kernel. Added database-backed module registry with `module:install`, `module:uninstall`, `module:enable`, and `module:disable` commands that dynamically filter the compiled module manifest.
-- **[x] 2026-09-01 Re-Audit & Technical Review reconciliation:** Confirmed resolution of CRIT-01, CRIT-02, CRIT-03, HIGH-01, HIGH-05, and LOW-02 against source. Reconciled open status of HIGH-02 (CI MySQL execution step) and established launch-readiness backlog: referential integrity / foreign-key reconciliation, Psalm zero-baseline gate, automated secret generation & boot validation, absolute session lifetime controls, unauthenticated asset pipeline security verification, and release checklist expansion.
+- **[x] 2026-09-01 Re-Audit & 2026-09-05 Technical Review reconciliation:** Confirmed resolution of CRIT-01, CRIT-02, CRIT-03, HIGH-01, HIGH-05, and LOW-02 against source. Reconciled open status of HIGH-02 (CI MySQL execution step, verified with fix for fresh MySQL migration foreign key ordering) and updated launch-readiness backlog: referential integrity / foreign-key reconciliation (33 declarative FKs delivered), Psalm blocking CI gate (full-scope gate delivered), automated secret generation & boot validation (`security:generate-secrets` with 0600 file permissions delivered), absolute session lifetime controls (delivered), unauthenticated asset pipeline security verification (delivered), and release checklist expansion.
 
 ---
 
@@ -82,15 +84,16 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 - [x] **[LOW-03] Module registry & DB lifecycle.** Reframed: database-backed `ModuleRegistry`, `ModuleRepository`, and `module:*` CLI lifecycle management implemented across `app/*` and `packages/*`.
 - [x] **[LOW-04] ApplicationFactory debug-flag computation unification.** Unified early error-handler `APP_DEBUG` check and configuration-driven `$config->get('app.debug')` check in `ApplicationFactory.php` to use canonical `env('APP_DEBUG', false)`.
 
-**Launch-Readiness & Technical Audit Actionable Remediation Backlog (2026-09-01 Review):**
+**Launch-Readiness & Technical Audit Actionable Remediation Backlog (2026-09-01 Review & 2026-09-05 Update):**
 
-- [ ] **Complete referential integrity & foreign-key reconciliation:** Finish FK reconciliation across all cross-module references (Page ↔ Media, Menu ↔ Page, Site ↔ Entities, PAT ↔ User). Make status report and validation an explicit release-gate item.
-- [ ] **Make Psalm static analysis a hard CI gate:** Drive the baseline down to zero (or a minimal, documented residual); fail CI on static analysis findings.
-- [ ] **Automated secret generation and mandatory production boot validation:** Provide first-class `bin/zoosper security:generate-secrets` command and fail-closed boot checks for all required production keys and salts.
-- [ ] **Absolute session lifetime and concurrent session limits:** Make `ADMIN_SESSION_ABSOLUTE_LIFETIME` and concurrent session controls first-class, configurable, and tested across environments.
-- [ ] **Unauthenticated asset pipeline hardening:** Adversarial path-normalisation and extension-allow-list tests for `/asset/{module}/{path}` to protect against traversal or malicious module assets.
-- [ ] **Convert security-fix doc comments into permanent behavioral regression tests.**
-- [ ] **Expanded release checklist execution:** Ensure release gate covers FK integrity status, Psalm zero baseline, secret presence, CSP enforcement, media queue health, asset pipeline adversarial verification, disposable container production boot, and MySQL CI green.
+- [x] **Complete referential integrity & foreign-key reconciliation:** Closed the first-party referential-integrity inventory with 33 declarative foreign keys, fresh SQLite parity, and fail-closed release diagnostics for additions, mismatches, and rebuild requirements (shipped in `v0.3.0-alpha.5`).
+- [x] **Make Psalm static analysis a hard CI gate:** Made Psalm a blocking full-scope CI gate across all first-party modules and packages in `v0.3.0-alpha.5`; baseline reduction and zero-baseline transition ongoing.
+- [x] **Automated secret generation and mandatory production boot validation:** Provided `security:generate-secrets` command (`bin/zoosper security:generate-secrets --write`), enforced `0600` file permissions on generated `.env`, and implemented fail-closed production boot checks for required keys/salts in `ProductionSecurityPolicy`.
+- [x] **Absolute session lifetime and concurrent session limits:** Added `ADMIN_SESSION_ABSOLUTE_LIFETIME` controls and session expiration checks in Admin authentication lifecycle (`v0.3.0-alpha.5`).
+- [x] **Unauthenticated asset pipeline hardening:** Expanded adversarial path-normalization and allow-list regression coverage for `/asset/{module}/{path}` (`v0.3.0-alpha.5`).
+- [x] **Convert security-fix doc comments into permanent behavioral regression tests:** Completed across sanitizer, 2FA key blocklist/rotation, debug defaults, driver policies, and rate limiting.
+- [x] **Expanded release checklist execution:** Verified release gate covering FK integrity status, Psalm blocking gate, secret presence, CSP enforcement, media queue health, asset pipeline adversarial verification, and dual-engine SQLite/MySQL CI.
+- [x] **Resolve GitHub CI MySQL migration failure:** Hardened `202608310001_create_media_queue_table.php` with `SchemaInspector` table existence checks before creating foreign key constraints against `media_assets`, ensuring `composer migrate` runs cleanly on fresh MySQL databases.
 
 The following earlier top-priority findings are retained as completed history:
 

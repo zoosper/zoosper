@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Database\MigrationInterface;
+use Zoosper\Database\Schema\SchemaInspector;
 
 return new class implements MigrationInterface {
     public function name(): string
@@ -12,6 +13,11 @@ return new class implements MigrationInterface {
 
     public function up(PDO $pdo, string $driver): void
     {
+        $inspector = new SchemaInspector($pdo, $driver);
+        if ($inspector->tableExists('media_processing_queue') || !$inspector->tableExists('media_assets')) {
+            return;
+        }
+
         if ($driver === 'mysql') {
             $engine = ' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4';
             $pdo->exec("CREATE TABLE IF NOT EXISTS media_processing_queue (
