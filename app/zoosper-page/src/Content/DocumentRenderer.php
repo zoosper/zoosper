@@ -18,16 +18,15 @@ final readonly class DocumentRenderer
         if (!$page->hasBlockJson()) {
             return $page->content;
         }
-        $document = $this->normalizer->tolerant($page->contentJson);
+        $document = $this->normalizer->tolerant($page->contentJson, $page->content);
         if ($document === null) {
             return $page->content;
         }
-        $html = $this->blocks->render($document);
+        $html = $this->blocks->render($document->structured ?? []);
         return trim($html) === '' ? $page->content : $this->sanitizer->sanitise($html)->toString();
     }
-    /** @param array<string,mixed> $document */
-    public function renderDocument(array $document): string
+    public function renderDocument(PageContentDocument $document): string
     {
-        return $this->sanitizer->sanitise($this->blocks->render($this->normalizer->fromArray($document)))->toString();
+        return $this->sanitizer->sanitise($this->blocks->render($document->structured ?? []))->toString();
     }
 }

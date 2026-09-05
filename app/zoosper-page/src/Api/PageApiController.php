@@ -165,7 +165,7 @@ final readonly class PageApiController
             'slug' => $revision->slug,
             'status' => $revision->status,
             'content_format' => $revision->contentFormat,
-            'content_json' => $this->documents->tolerant($revision->contentJson),
+            'content_json' => $this->documents->tolerant($revision->contentJson, $revision->content)?->toApiValue(),
             'content_html' => $revision->content,
             'seo' => [
                 'meta_title' => $revision->metaTitle,
@@ -182,7 +182,6 @@ final readonly class PageApiController
     private function sitePage(Request $request): ?Page { $page=$this->pages->findById((int)$request->routeParam('id','0'));return $page!==null&&$page->siteId===$request->siteContext()?->siteId?$page:null; }
 
     /** @param array<string,mixed> $body @return array<string,mixed>|Response */
-    /** @param array<string,mixed> $body @return array<string,mixed>|Response */
     private function mutationForm(array $body, int $siteId, ?Page $page): array|Response
     {
         $seo = is_array($body['seo'] ?? null) ? $body['seo'] : [];
@@ -191,7 +190,7 @@ final readonly class PageApiController
             return $this->json->error('page_validation_failed', 'Unsupported content_format.', 422);
         }
 
-        $document = $body['content_json'] ?? $this->documents->tolerant($page?->contentJson);
+        $document = $body['content_json'] ?? $this->documents->tolerant($page?->contentJson, $page?->content ?? '')?->toApiValue();
         if ($format === 'block_json' && !is_array($document)) {
             return $this->json->error('invalid_content_document', 'content_json must be an object containing blocks.', 422);
         }
@@ -202,7 +201,7 @@ final readonly class PageApiController
             'slug' => $body['slug'] ?? $page?->slug ?? '',
             'content' => (string) ($body['content_html'] ?? $page?->content ?? ''),
             'content_format' => $format,
-            'content_json' => $document === null ? '' : $this->documents->encode($document),
+            'content_json' => $document === null ? '' : $this->documents->encode($this->documents->fromArray($document, (string) ($body['content_html'] ?? $page?->content ?? ''))),
             'meta_title' => $seo['meta_title'] ?? $page?->metaTitle,
             'meta_description' => $seo['meta_description'] ?? $page?->metaDescription,
             'meta_keywords' => $seo['meta_keywords'] ?? $page?->metaKeywords,
@@ -221,7 +220,7 @@ final readonly class PageApiController
             'slug' => $page->slug,
             'status' => $page->status,
             'content_format' => $page->contentFormat,
-            'content_json' => $this->documents->tolerant($page->contentJson),
+            'content_json' => $this->documents->tolerant($page->contentJson, $page->content)?->toApiValue(),
             'content_html' => $page->content,
             'seo' => [
                 'meta_title' => $page->metaTitle,

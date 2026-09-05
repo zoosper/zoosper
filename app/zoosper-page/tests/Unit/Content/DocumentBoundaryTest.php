@@ -21,7 +21,8 @@ it('adds and canonically encodes the supported Page document schema version', fu
         ],
     ]);
 
-    expect($document['schema_version'])->toBe(1)
+    expect($document->structured['schema_version'])->toBe(1)
+        ->and($document->isStructured())->toBeTrue()
         ->and($normalizer->encode($document))->toContain('"schema_version":1');
 });
 

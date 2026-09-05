@@ -19,6 +19,18 @@ it('keeps the document boundary Page-owned and out of Page HTTP controllers', fu
             ->not->toContain('BlockJsonToHtmlRenderer');
     }
 
+
+
+    $normalizer = (string) file_get_contents($root . '/src/Content/DocumentNormalizer.php');
+    $renderer = (string) file_get_contents($root . '/src/Content/DocumentRenderer.php');
+    $pageRenderer = (string) file_get_contents($root . '/src/Service/PageRenderer.php');
+
+    expect($normalizer)
+        ->toContain('PageContentDocument')
+        ->toContain(': ?PageContentDocument')
+        ->and($renderer)->toContain('renderDocument(PageContentDocument $document)')
+        ->and($pageRenderer)->not->toContain('BlockJsonToHtmlRenderer');
+
     expect($root . '/src/Content/DocumentValidator.php')->toBeFile()
         ->and($root . '/src/Content/DocumentNormalizer.php')->toBeFile()
         ->and($root . '/src/Content/DocumentRenderer.php')->toBeFile();

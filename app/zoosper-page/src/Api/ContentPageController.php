@@ -40,7 +40,7 @@ final readonly class ContentPageController
             return $this->json->error('page_not_found', 'No published page exists for this slug.', 404);
         }
 
-        $document = $this->documents->tolerant($page->contentJson);
+        $document = $this->documents->tolerant($page->contentJson, $page->content)?->toApiValue();
 
         return $this->json->success([
             'site' => [

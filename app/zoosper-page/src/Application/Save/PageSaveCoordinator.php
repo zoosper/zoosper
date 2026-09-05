@@ -134,7 +134,7 @@ final readonly class PageSaveCoordinator
         if ($this->documents === null || $this->documentRenderer === null) {
             throw new RuntimeException('Page document services are unavailable.');
         }
-        $document = $this->documents->fromJson((string) ($form['content_json'] ?? ''));
+        $document = $this->documents->fromJson((string) ($form['content_json'] ?? ''), (string) ($form['content'] ?? ''));
         if ($document === null) {
             throw new RuntimeException('content_json must be an object containing blocks.');
         }

@@ -11,7 +11,6 @@ use Zoosper\Core\App\CmsVersion;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Site\SiteContext;
-use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
 use Zoosper\Page\Content\DocumentRenderer;
 use Zoosper\Page\Contract\FrontendNavigationContributorInterface;
 use Zoosper\Page\Model\Page;
@@ -26,7 +25,6 @@ final readonly class PageRenderer
         private ?TemplateRenderer $templates = null,
         private ?CmsVersion $version = null,
         private ?ModuleRegistry $modules = null,
-        private ?BlockJsonToHtmlRenderer $blockJsonRenderer = null,
         private ?FrontendNavigationContributorInterface $navigation = null,
         private ?ViewInterface $views = null,
         private ?SeoMetadataManager $seoMetadata = null,

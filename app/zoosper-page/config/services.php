@@ -140,7 +140,6 @@ return [
         $services->get('theme.frontend_template_renderer'),
         $services->get(CmsVersion::class),
         $services->get(ModuleRegistry::class),
-        $services->get(BlockJsonToHtmlRenderer::class),
         $services->has(FrontendNavigationContributorInterface::class)
             ? $services->get(FrontendNavigationContributorInterface::class)
             : null,

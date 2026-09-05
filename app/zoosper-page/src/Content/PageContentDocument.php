@@ -5,19 +5,41 @@ declare(strict_types=1);
 namespace Zoosper\Page\Content;
 
 /**
- * Lightweight value object representing dual page content storage.
+ * Immutable Page content value crossing application, API and rendering boundaries.
  *
- * Phase 0.77 does not change repository persistence yet. This value object gives
- * future repository and renderer code a safe common shape for HTML and
- * structured JSON content.
+ * HTML remains the compatibility and recovery representation. Structured content
+ * is present only for a validated block_json document.
  */
 final readonly class PageContentDocument
 {
+    /** @param array<string, mixed>|null $structured */
     public function __construct(
         public ContentFormat $format,
         public string $html,
-        public ?string $json = null,
+        public ?array $structured = null,
     ) {
+    }
+
+    /** @param array<string, mixed> $document */
+    public static function structured(array $document, string $html = ''): self
+    {
+        return new self(ContentFormat::BlockJson, $html, $document);
+    }
+
+    public static function html(string $html): self
+    {
+        return new self(ContentFormat::Html, $html);
+    }
+
+    public function isStructured(): bool
+    {
+        return $this->format === ContentFormat::BlockJson && $this->structured !== null;
+    }
+
+    /** @return array<string, mixed>|null */
+    public function toApiValue(): ?array
+    {
+        return $this->structured;
     }
 
     /** @param array<string, mixed> $row */
@@ -26,27 +48,16 @@ final readonly class PageContentDocument
         return new self(
             format: ContentFormat::fromNullable(isset($row['content_format']) ? (string) $row['content_format'] : null),
             html: (string) ($row['content'] ?? ''),
-            json: isset($row['content_json']) && $row['content_json'] !== null ? (string) $row['content_json'] : null,
         );
     }
 
     /** @return array<string, mixed> */
-    public function toRowValues(): array
+    public function toRowValues(?string $json = null): array
     {
         return [
             'content_format' => $this->format->value,
             'content' => $this->html,
-            'content_json' => $this->json,
+            'content_json' => $json,
         ];
     }
 }
-
-
-
-
-
-
-
-
-
-
