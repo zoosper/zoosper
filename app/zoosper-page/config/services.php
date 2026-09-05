@@ -28,6 +28,9 @@ use Zoosper\Core\Routing\CachingFallbackHandler;
 use Zoosper\Core\Routing\FallbackHandlerInterface;
 use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
+use Zoosper\Page\Content\DocumentNormalizer;
+use Zoosper\Page\Content\DocumentRenderer;
+use Zoosper\Page\Content\DocumentValidator;
 use Zoosper\Page\Contract\FrontendNavigationContributorInterface;
 use Zoosper\Page\Controller\PageController;
 use Zoosper\Page\Repository\PageRepository;
@@ -102,6 +105,8 @@ return [
         $services->has(EntitySaveLifecycleRunner::class) ? $services->get(EntitySaveLifecycleRunner::class) : null,
         $services->has(ErrorHandler::class) ? $services->get(ErrorHandler::class) : null,
         $services->get(PageRevisionService::class),
+        documents: $services->get(DocumentNormalizer::class),
+        documentRenderer: $services->get(DocumentRenderer::class),
     ),
     PageSeoContributor::class => static fn (ServiceContainer $services): PageSeoContributor => new PageSeoContributor(),
     PageSitemapContributor::class => static fn (ServiceContainer $services): PageSitemapContributor => new PageSitemapContributor($services->get(\Zoosper\Page\Repository\PageRepository::class)),
@@ -120,6 +125,17 @@ return [
     BlockJsonToHtmlRenderer::class => static fn (ServiceContainer $services): BlockJsonToHtmlRenderer => new BlockJsonToHtmlRenderer(
         $services->has(EditorJsImageBlockSanitizer::class) ? $services->get(EditorJsImageBlockSanitizer::class) : null,
     ),
+    DocumentValidator::class => static fn (ServiceContainer $services): DocumentValidator => new DocumentValidator(
+        $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
+    ),
+    DocumentNormalizer::class => static fn (ServiceContainer $services): DocumentNormalizer => new DocumentNormalizer(
+        $services->get(DocumentValidator::class),
+    ),
+    DocumentRenderer::class => static fn (ServiceContainer $services): DocumentRenderer => new DocumentRenderer(
+        $services->get(DocumentNormalizer::class),
+        $services->get(BlockJsonToHtmlRenderer::class),
+        $services->get(HtmlSanitizerInterface::class),
+    ),
     PageRenderer::class => static fn (ServiceContainer $services): PageRenderer => new PageRenderer(
         $services->get('theme.frontend_template_renderer'),
         $services->get(CmsVersion::class),
@@ -134,6 +150,7 @@ return [
         $services->has(SeoMetadataManager::class)
             ? $services->get(SeoMetadataManager::class)
             : null,
+        documentRenderer: $services->get(DocumentRenderer::class),
     ),
     PageController::class => static fn (ServiceContainer $services): PageController => new PageController(
         $services->get(SiteRepository::class),

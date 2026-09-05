@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Api;
 
-use JsonException;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Page\Content\DocumentNormalizer;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Site\Repository\SiteRepository;
 
@@ -17,6 +17,7 @@ final readonly class ContentPageController
         private JsonResponder $json,
         private SiteRepository $sites,
         private PageRepository $pages,
+        private DocumentNormalizer $documents,
     ) {
     }
 
@@ -39,15 +40,7 @@ final readonly class ContentPageController
             return $this->json->error('page_not_found', 'No published page exists for this slug.', 404);
         }
 
-        $document = null;
-        if ($page->contentJson !== null && trim($page->contentJson) !== '') {
-            try {
-                $decoded = json_decode($page->contentJson, true, 512, JSON_THROW_ON_ERROR);
-                $document = is_array($decoded) ? $decoded : null;
-            } catch (JsonException) {
-                $document = null;
-            }
-        }
+        $document = $this->documents->tolerant($page->contentJson);
 
         return $this->json->success([
             'site' => [

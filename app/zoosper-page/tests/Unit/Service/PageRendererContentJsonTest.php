@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Zoosper\Page\Tests\Unit\Service;
 
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
+use Zoosper\Page\Content\DocumentNormalizer;
+use Zoosper\Page\Content\DocumentRenderer;
+use Zoosper\Page\Content\DocumentValidator;
+use Zoosper\Core\Html\BasicHtmlSanitizer;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Service\PageRenderer;
 
@@ -25,7 +29,7 @@ function phase136Page(string $format, ?string $json, string $html = '<p>HTML fal
 test('PageRenderer uses saved HTML for normal html pages', function () {
     $page = phase136Page('html', null, '<p>Existing sanitised HTML</p>');
 
-    expect((new PageRenderer(blockJsonRenderer: new BlockJsonToHtmlRenderer()))->renderContent($page))
+    expect((new PageRenderer(documentRenderer: new DocumentRenderer(new DocumentNormalizer(new DocumentValidator()), new BlockJsonToHtmlRenderer(), new BasicHtmlSanitizer())))->renderContent($page))
         ->toBe('<p>Existing sanitised HTML</p>');
 });
 
@@ -37,7 +41,7 @@ test('PageRenderer renders block_json pages from content_json', function () {
         ],
     ], JSON_THROW_ON_ERROR));
 
-    $html = (new PageRenderer(blockJsonRenderer: new BlockJsonToHtmlRenderer()))->renderContent($page);
+    $html = (new PageRenderer(documentRenderer: new DocumentRenderer(new DocumentNormalizer(new DocumentValidator()), new BlockJsonToHtmlRenderer(), new BasicHtmlSanitizer())))->renderContent($page);
 
     expect($html)->toContain('<h2>Block heading</h2>');
     expect($html)->toContain('<p>Block paragraph</p>');
@@ -46,7 +50,7 @@ test('PageRenderer renders block_json pages from content_json', function () {
 test('PageRenderer falls back to HTML when block_json cannot be decoded', function () {
     $page = phase136Page('block_json', '{not valid json}', '<p>Safe fallback</p>');
 
-    expect((new PageRenderer(blockJsonRenderer: new BlockJsonToHtmlRenderer()))->renderContent($page))
+    expect((new PageRenderer(documentRenderer: new DocumentRenderer(new DocumentNormalizer(new DocumentValidator()), new BlockJsonToHtmlRenderer(), new BasicHtmlSanitizer())))->renderContent($page))
         ->toBe('<p>Safe fallback</p>');
 });
 

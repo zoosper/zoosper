@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Zoosper\Page\Application\Save;
 
 use RuntimeException;
+
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Html\HtmlSanitizerInterface;
-use Zoosper\Page\Content\BlockJsonValidator;
+use Zoosper\Page\Content\DocumentNormalizer;
+use Zoosper\Page\Content\DocumentValidator;
 
 /** Immutable, normalised input shared by Page create and update operations. */
 final readonly class PageSaveInput
@@ -32,6 +34,7 @@ final readonly class PageSaveInput
         array $form,
         HtmlSanitizerInterface $sanitizer,
         ?ConfigRepository $config = null,
+        ?DocumentNormalizer $documents = null,
     ): self {
         $slug = strtolower(trim((string) ($form['slug'] ?? '')));
         $slug = preg_replace('/[^a-z0-9]+/i', '-', $slug) ?: '';
@@ -46,7 +49,7 @@ final readonly class PageSaveInput
             content: $sanitized->toString(),
             contentFormat: in_array((string) ($form['content_format'] ?? 'html'), ['html', 'block_json'], true) ? (string) ($form['content_format'] ?? 'html') : 'html',
             publish: isset($form['publish']),
-            contentJson: self::normaliseContentJson($form['content_json'] ?? null, $config),
+            contentJson: self::normaliseContentJson($form['content_json'] ?? null, $documents, $config),
             metaTitle: self::optional($form['meta_title'] ?? null),
             metaDescription: self::optional($form['meta_description'] ?? null),
             metaKeywords: self::optional($form['meta_keywords'] ?? null),
@@ -54,25 +57,22 @@ final readonly class PageSaveInput
         );
     }
 
-    private static function normaliseContentJson(mixed $value, ?ConfigRepository $config): ?string
+    private static function normaliseContentJson(
+        mixed $value,
+        ?DocumentNormalizer $documents,
+        ?ConfigRepository $config,
+    ): ?string
     {
         $json = trim((string) ($value ?? ''));
         if ($json === '') {
             return null;
         }
-        $decoded = json_decode($json, true);
-        if (!is_array($decoded)) {
-            throw new RuntimeException('Invalid Editor.js JSON payload.');
-        }
-        $contentModel = $config?->array('content_model') ?? [];
-        $result = (new BlockJsonValidator($contentModel['block_json'] ?? []))->validate($decoded);
-        if (!$result->valid) {
-            throw new RuntimeException('Invalid Editor.js JSON payload: ' . implode(' ', $result->errors));
+        if ($documents === null) {
+            $documents = new DocumentNormalizer(new DocumentValidator($config));
         }
 
-        return json_encode($decoded, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: null;
+        return $documents->encode($documents->fromJson($json));
     }
-
     private static function optional(mixed $value): ?string
     {
         $normalised = trim((string) ($value ?? ''));

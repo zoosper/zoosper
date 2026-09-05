@@ -17,9 +17,12 @@ it('locks completed Media decoupling and Page structured rendering foundations',
         ->and($pageControllers)->toContain('AdminLayoutRendererInterface')
         ->toContain('AdminViewRendererInterface')
         ->and($renderer)->toContain('renderContent(')
-        ->toContain('$page->hasBlockJson()')
-        ->toContain('json_decode((string) $page->contentJson, true)')
-        ->toContain("return trim(\$html) !== '' ? \$html : \$page->content;");
+        ->toContain('DocumentRenderer')
+        ->toContain('$this->documentRenderer->renderPage($page)')
+        ->not->toContain('json_decode(')
+        ->and($root . '/app/zoosper-page/src/Content/DocumentNormalizer.php')->toBeFile()
+        ->and($root . '/app/zoosper-page/src/Content/DocumentRenderer.php')->toBeFile()
+        ->and($root . '/app/zoosper-page/src/Content/DocumentValidator.php')->toBeFile();
 });
 
 it('keeps Media source free of concrete Admin imports', function (): void {

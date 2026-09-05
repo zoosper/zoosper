@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Page\Application\Save;
 
 use RuntimeException;
+
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Entity\Save\EntityDataObject;
@@ -17,6 +18,8 @@ use Zoosper\Core\Error\ErrorHandler;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Service\PageRevisionService;
+use Zoosper\Page\Content\DocumentNormalizer;
+use Zoosper\Page\Content\DocumentRenderer;
 
 /** Owns Page form processing, input normalisation, lifecycle execution and persistence. */
 final readonly class PageSaveCoordinator
@@ -29,6 +32,8 @@ final readonly class PageSaveCoordinator
         private ?EntitySaveLifecycleRunner $lifecycle = null,
         private ?ErrorHandler $errors = null,
         private ?PageRevisionService $revisions = null,
+        private ?DocumentNormalizer $documents = null,
+        private ?DocumentRenderer $documentRenderer = null,
     ) {
     }
 
@@ -57,7 +62,7 @@ final readonly class PageSaveCoordinator
         }
 
         try {
-            $input = PageSaveInput::fromForm($form, $this->sanitizer, $this->config);
+            $input = PageSaveInput::fromForm($this->prepareDocument($form), $this->sanitizer, $this->config, $this->documents);
             $pageId = $page?->id;
             $context = new EntitySaveContext(
                 'page',
@@ -120,6 +125,23 @@ final readonly class PageSaveCoordinator
         }
     }
 
+    /** @param array<string,mixed> $form @return array<string,mixed> */
+    private function prepareDocument(array $form): array
+    {
+        if (($form['content_format'] ?? 'html') !== 'block_json') {
+            return $form;
+        }
+        if ($this->documents === null || $this->documentRenderer === null) {
+            throw new RuntimeException('Page document services are unavailable.');
+        }
+        $document = $this->documents->fromJson((string) ($form['content_json'] ?? ''));
+        if ($document === null) {
+            throw new RuntimeException('content_json must be an object containing blocks.');
+        }
+        $form['content'] = $this->documentRenderer->renderDocument($document);
+        $form['content_json'] = $this->documents->encode($document);
+        return $form;
+    }
     /** @param callable(EntitySaveContext): void $persist */
     private function runDirect(EntitySaveContext $context, callable $persist): EntitySaveContext
     {

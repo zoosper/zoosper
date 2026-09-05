@@ -9,6 +9,8 @@ use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Site\SiteContext;
 use Zoosper\Page\Api\ContentPageController;
+use Zoosper\Page\Content\DocumentNormalizer;
+use Zoosper\Page\Content\DocumentValidator;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Site\Repository\SiteRepository;
 
@@ -87,7 +89,7 @@ it('returns structured Editor.js JSON and content format for published pages', f
         contentJson: $editorJson,
     );
 
-    $controller = new ContentPageController(new JsonResponder(), $siteRepo, $pageRepo);
+    $controller = new ContentPageController(new JsonResponder(), $siteRepo, $pageRepo, new DocumentNormalizer(new DocumentValidator()));
 
     $request = (new Request('GET', '/api/v1/content/page', query: ['slug' => 'home']))
         ->withSiteContext(new SiteContext(

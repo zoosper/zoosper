@@ -7,10 +7,12 @@ namespace Zoosper\Page\Service;
 use Marko\View\ViewInterface;
 
 use Zoosper\Core\App\CmsVersion;
+
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Site\SiteContext;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
+use Zoosper\Page\Content\DocumentRenderer;
 use Zoosper\Page\Contract\FrontendNavigationContributorInterface;
 use Zoosper\Page\Model\Page;
 use Zoosper\Seo\Metadata\SeoMetadataManager;
@@ -28,6 +30,7 @@ final readonly class PageRenderer
         private ?FrontendNavigationContributorInterface $navigation = null,
         private ?ViewInterface $views = null,
         private ?SeoMetadataManager $seoMetadata = null,
+        private ?DocumentRenderer $documentRenderer = null,
     ) {
     }
 
@@ -82,20 +85,12 @@ final readonly class PageRenderer
      */
     public function renderContent(Page $page): string
     {
-        if (!$page->hasBlockJson()) {
+        if ($this->documentRenderer === null) {
             return $page->content;
         }
 
-        $document = json_decode((string) $page->contentJson, true);
-        if (!is_array($document)) {
-            return $page->content;
-        }
-
-        $html = ($this->blockJsonRenderer ?? new BlockJsonToHtmlRenderer())->render($document);
-
-        return trim($html) !== '' ? $html : $page->content;
+        return $this->documentRenderer->renderPage($page);
     }
-
     private function siteContextFromSite(Site $site): SiteContext
     {
         return new SiteContext(
