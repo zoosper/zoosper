@@ -89,6 +89,16 @@ jobs:
           DB_USERNAME: root
           DB_PASSWORD: root
         run: composer migrate
+      - name: Apply declared foreign keys
+        env:
+          DB_CONNECTION: mysql
+          DB_DRIVER: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: "3306"
+          DB_DATABASE: zoosper_test
+          DB_USERNAME: root
+          DB_PASSWORD: root
+        run: php8.5 bin/zoosper schema:foreign-keys:apply --confirm=apply
       - name: Run alpha release checks
         env:
           DB_CONNECTION: mysql
