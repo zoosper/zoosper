@@ -5,10 +5,15 @@ namespace Zoosper\Page\Content;
 
 use RuntimeException;
 use Zoosper\Core\Config\ConfigRepository;
+use Zoosper\Core\Editor\EditorImageBlockValidatorInterface;
 /** Canonical Page-owned validation boundary for stored structured documents. */
 final readonly class DocumentValidator
 {
-    public function __construct(private ?ConfigRepository $config = null) {}
+    public function __construct(
+        private ?ConfigRepository $config = null,
+        private ?EditorImageBlockValidatorInterface $imageValidator = null,
+    ) {
+    }
     /** @param array<string,mixed> $document */
     public function validate(array $document): void
     {
@@ -19,7 +24,7 @@ final readonly class DocumentValidator
         if ($actual !== $expected) {
             throw new RuntimeException(sprintf('Unsupported content document schema version %d; expected %d.', $actual, $expected));
         }
-        $result = (new BlockJsonValidator($block))->validate($document);
+        $result = (new BlockJsonValidator($block, $this->imageValidator))->validate($document);
         if (!$result->valid) {
             throw new RuntimeException('Invalid Editor.js JSON payload: ' . implode(' ', $result->errors));
         }

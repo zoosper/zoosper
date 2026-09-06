@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Editor\EditorImageToolConfigInterface;
 use Zoosper\Core\Editor\EditorImageBlockSanitizerInterface;
+use Zoosper\Core\Editor\EditorImageBlockValidatorInterface;
 use Zoosper\AdminGrid\{GridCompactWorkspaceRenderer,GridViewStateResolver};
 use Zoosper\Grid\GridColumnOrderer;
 use Zoosper\Media\Admin\Grid\{MediaGridSource,MediaVisualGridRenderer,MediaVisualGridWorkspace};
@@ -65,6 +66,7 @@ return [
     EditorImageToolConfigInterface::class => static fn (ServiceContainer $services): EditorImageToolConfigInterface => $services->get(EditorJsImageToolConfig::class),
     EditorJsImageBlockSanitizer::class => static fn (ServiceContainer $services): EditorJsImageBlockSanitizer => new EditorJsImageBlockSanitizer(),
     EditorImageBlockSanitizerInterface::class => static fn (ServiceContainer $services): EditorImageBlockSanitizerInterface => $services->get(EditorJsImageBlockSanitizer::class),
+    EditorImageBlockValidatorInterface::class => static fn (ServiceContainer $services): EditorImageBlockValidatorInterface => $services->get(EditorJsImageBlockSanitizer::class),
     MediaProcessingPolicy::class => static fn (ServiceContainer $services): MediaProcessingPolicy => new MediaProcessingPolicy(),
     GdMediaProcessor::class => static fn (ServiceContainer $services): GdMediaProcessor => new GdMediaProcessor(
         dirname(__DIR__, 3),

@@ -11,5 +11,6 @@ it('keeps Page independent from the optional Media image implementation', functi
     expect($composer['require'])->not->toHaveKey('zoosper/media')
         ->and($renderer)->toContain('EditorImageBlockSanitizerInterface')->not->toContain('Zoosper\\Media\\')
         ->and($services)->toContain('$services->has(EditorImageBlockSanitizerInterface::class)')
+        ->toContain('$services->has(EditorImageBlockValidatorInterface::class)')
         ->not->toContain('Zoosper\\Media\\');
 });

@@ -27,6 +27,7 @@ use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Routing\CachingFallbackHandler;
 use Zoosper\Core\Routing\FallbackHandlerInterface;
 use Zoosper\Core\Editor\EditorImageBlockSanitizerInterface;
+use Zoosper\Core\Editor\EditorImageBlockValidatorInterface;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
 use Zoosper\Page\Content\DocumentNormalizer;
 use Zoosper\Page\Content\DocumentRenderer;
@@ -127,6 +128,7 @@ return [
     ),
     DocumentValidator::class => static fn (ServiceContainer $services): DocumentValidator => new DocumentValidator(
         $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,
+        $services->has(EditorImageBlockValidatorInterface::class) ? $services->get(EditorImageBlockValidatorInterface::class) : null,
     ),
     DocumentNormalizer::class => static fn (ServiceContainer $services): DocumentNormalizer => new DocumentNormalizer(
         $services->get(DocumentValidator::class),

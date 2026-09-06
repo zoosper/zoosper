@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Content;
 
+use Zoosper\Core\Editor\EditorImageBlockValidatorInterface;
+
 /**
  * Validates the supported Editor.js block_json document shape before saving.
  *
@@ -18,17 +20,17 @@ final readonly class BlockJsonValidator
     private int $maxListDepth;
 
     /** @param array<string, mixed> $config */
-    public function __construct(array $config = [])
+    public function __construct(
+        array $config = [],
+        private ?EditorImageBlockValidatorInterface $imageValidator = null,
+    )
     {
         $configuredTypes = $config['allowed_types'] ?? ['paragraph', 'header', 'list', 'image'];
         $types = is_array($configuredTypes)
             ? array_values(array_filter(array_map('strval', $configuredTypes)))
             : ['paragraph', 'header', 'list', 'image'];
 
-        // Phase 1.37m.4/1.37m.5: image blocks are now part of the supported
-        // content_json pipeline: upload endpoint, admin runtime and frontend
-        // renderer are wired.
-        if (!in_array('image', $types, true)) {
+        if ($this->imageValidator !== null && !in_array('image', $types, true)) {
             $types[] = 'image';
         }
 
@@ -141,35 +143,13 @@ final readonly class BlockJsonValidator
     /** @param array<string, mixed> $data @param list<string> $errors */
     private function validateImage(array $data, int $index, array &$errors): void
     {
-        $file = $data['file'] ?? null;
-        if (!is_array($file)) {
-            $errors[] = 'Block ' . ($index + 1) . ' image file must be an object.';
+        if ($this->imageValidator === null) {
+            $errors[] = 'Block ' . ($index + 1) . ' has unsupported type: image.';
             return;
         }
 
-        $url = trim((string) ($file['url'] ?? ''));
-        if ($url === '' || !str_starts_with($url, '/media/')) {
-            $errors[] = 'Block ' . ($index + 1) . ' image URL must use managed /media/ storage.';
-        }
-
-        if (isset($data['caption']) && !is_string($data['caption'])) {
-            $errors[] = 'Block ' . ($index + 1) . ' image caption must be a string.';
-        }
-
-        foreach (['withBorder', 'withBackground', 'stretched'] as $flag) {
-            if (isset($data[$flag]) && !is_bool($data[$flag])) {
-                $errors[] = 'Block ' . ($index + 1) . ' image flag ' . $flag . ' must be boolean.';
-            }
+        foreach ($this->imageValidator->validate($data) as $error) {
+            $errors[] = 'Block ' . ($index + 1) . ' ' . $error;
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
