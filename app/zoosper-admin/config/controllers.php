@@ -30,6 +30,7 @@ return [
         $services->get(CsrfTokenManager::class),
         $services->get(AdminUrlGenerator::class),
         $services->has(\Zoosper\Audit\Contract\AuditLoggerInterface::class) ? $services->get(\Zoosper\Audit\Contract\AuditLoggerInterface::class) : null,
+        $services->has(AdminAuthenticationRateLimiterInterface::class) ? $services->get(AdminAuthenticationRateLimiterInterface::class) : null,
     ),
     LoginController::class => static fn (ServiceContainer $services): LoginController => new LoginController(
         $services->get(AuthService::class),

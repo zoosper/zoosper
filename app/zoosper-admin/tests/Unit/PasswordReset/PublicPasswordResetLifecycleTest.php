@@ -19,6 +19,9 @@ it('keeps public responses neutral CSRF protected secret safe and unauthenticate
     $controller = (string) file_get_contents($root . '/app/zoosper-admin/src/Controller/PasswordResetController.php');
     $login = (string) file_get_contents($root . '/app/zoosper-admin/src/Controller/LoginController.php');
     expect($controller)->toContain('self::NEUTRAL_MESSAGE')
+        ->toContain('$this->rateLimiter?->checkPasswordResetRequest($email, $request->clientIp())')
+        ->toContain('if ($decision !== null && !$decision->allowed)')
+        ->toContain('return $this->neutralResponse()')
         ->toContain('$this->resets->issueForEmail($email)')
         ->toContain('$this->urls->build($issue->token)')
         ->not->toContain('$this->resets->issue($email)')
@@ -32,8 +35,8 @@ it('keeps public responses neutral CSRF protected secret safe and unauthenticate
         ->toContain("'admin.password_reset_completed'")
         ->not->toContain('SessionGuard')
         ->not->toContain('->login(')
-        ->not->toContain('clientIp')
-        ->not->toContain('userAgent')
+        ->not->toContain('ipAddress:')
+        ->not->toContain('userAgent:')
         ->and($login)->toContain('Forgot password?')
         ->toContain('$this->adminUrl(\'forgot-password\')');
 });

@@ -9,6 +9,7 @@ use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Auth\PasswordReset\AdminPasswordResetDeliveryInterface;
 use Zoosper\Auth\PasswordReset\AdminPasswordResetService;
 use Zoosper\Auth\PasswordReset\AdminPasswordResetUrlBuilder;
+use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -26,6 +27,7 @@ final readonly class PasswordResetController
         private CsrfTokenManager $csrf,
         private AdminUrlGenerator $adminUrls,
         private ?AuditLoggerInterface $audit = null,
+        private ?AdminAuthenticationRateLimiterInterface $rateLimiter = null,
     ) {
     }
 
@@ -38,6 +40,10 @@ final readonly class PasswordResetController
     {
         $email = trim((string) ($request->form()['email'] ?? ''));
         try {
+            $decision = $this->rateLimiter?->checkPasswordResetRequest($email, $request->clientIp());
+            if ($decision !== null && !$decision->allowed) {
+                return $this->neutralResponse();
+            }
             $issue = $this->resets->issueForEmail($email);
             if ($issue !== null) {
                 $this->delivery->deliver($issue, $this->urls->build($issue->token));
@@ -45,6 +51,11 @@ final readonly class PasswordResetController
         } catch (Throwable) {
             // Preserve the same public response for unknown, inactive, and delivery-failure cases.
         }
+        return $this->neutralResponse();
+    }
+
+    private function neutralResponse(): Response
+    {
         return Response::html($this->page('Check your email', '<p class="notice notice-success" role="status">' . self::NEUTRAL_MESSAGE . '</p><p><a href="' . $this->e($this->adminUrls->url('login')) . '">Return to sign in</a></p>'));
     }
 

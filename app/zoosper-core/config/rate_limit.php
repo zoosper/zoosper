@@ -32,6 +32,8 @@ $loginMaxAttempts = max(1, min(100, (int) env('RATE_LIMIT_ADMIN_LOGIN_MAX_ATTEMP
 $loginWindowSeconds = max(1, min(86400, (int) env('RATE_LIMIT_ADMIN_LOGIN_WINDOW_SECONDS', 300)));
 $twoFactorMaxAttempts = max(1, min(100, (int) env('RATE_LIMIT_ADMIN_TWO_FACTOR_MAX_ATTEMPTS', 5)));
 $twoFactorWindowSeconds = max(1, min(86400, (int) env('RATE_LIMIT_ADMIN_TWO_FACTOR_WINDOW_SECONDS', 300)));
+$passwordResetMaxAttempts = max(1, min(100, (int) env('RATE_LIMIT_ADMIN_PASSWORD_RESET_MAX_ATTEMPTS', 5)));
+$passwordResetWindowSeconds = max(1, min(86400, (int) env('RATE_LIMIT_ADMIN_PASSWORD_RESET_WINDOW_SECONDS', 900)));
 
 return [
     'enabled' => $enabled,
@@ -51,6 +53,11 @@ return [
             'scope' => 'admin',
             'max_attempts' => $loginMaxAttempts,
             'window_seconds' => $loginWindowSeconds,
+        ],
+        'admin.password_reset_request' => [
+            'scope' => 'admin',
+            'max_attempts' => $passwordResetMaxAttempts,
+            'window_seconds' => $passwordResetWindowSeconds,
         ],
         'admin.two_factor' => [
             'scope' => 'admin',

@@ -10,6 +10,7 @@ interface AdminAuthenticationRateLimiterInterface
 {
     public function checkPasswordLogin(string $email, ?string $clientIp): RateLimitDecision;
     public function resetPasswordLogin(string $email, ?string $clientIp): void;
+    public function checkPasswordResetRequest(string $email, ?string $clientIp): RateLimitDecision;
 
     public function checkTwoFactor(int $adminUserId, ?string $clientIp): RateLimitDecision;
 

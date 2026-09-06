@@ -20,20 +20,12 @@ final readonly class AdminAuthenticationRateLimiter implements AdminAuthenticati
 
     public function checkPasswordLogin(string $email, ?string $clientIp): RateLimitDecision
     {
-        $config = $this->config();
-        $rule = $config->policies['admin.login'] ?? null;
-        if (!$config->enabled || $rule === null) {
-            return RateLimitDecision::allow(0, $rule?->maxAttempts ?? 1);
-        }
-        $this->assertSalt($config);
-        $context = (new AdminRateLimitContextFactory(new RateLimitIdentityHasher(), $config))
-            ->create('admin.login', [strtolower(trim($email)), $clientIp ?? '']);
-        $store = new DatabaseRateLimitStore($this->pdo);
-        $store->ensureSchema();
-        $decision = $store->recordAttempt($rule, $context->identityHash, $context->now);
-        return $config->isReportOnly()
-            ? RateLimitDecision::allow($decision->attempts, $decision->maxAttempts)
-            : $decision;
+        return $this->check('admin.login', [strtolower(trim($email)), $clientIp ?? '']);
+    }
+
+    public function checkPasswordResetRequest(string $email, ?string $clientIp): RateLimitDecision
+    {
+        return $this->check('admin.password_reset_request', [strtolower(trim($email)), $clientIp ?? '']);
     }
 
     public function resetPasswordLogin(string $email, ?string $clientIp): void
@@ -63,6 +55,24 @@ final readonly class AdminAuthenticationRateLimiter implements AdminAuthenticati
     public function resetTwoFactor(int $adminUserId, ?string $clientIp): void
     {
         $this->reset('admin.two_factor', [(string) $adminUserId, $clientIp ?? '']);
+    }
+
+    /** @param list<string> $parts */
+    private function check(string $key, array $parts): RateLimitDecision
+    {
+        $config = $this->config();
+        $rule = $config->policies[$key] ?? null;
+        if (!$config->enabled || $rule === null) {
+            return RateLimitDecision::allow(0, $rule?->maxAttempts ?? 1);
+        }
+        $this->assertSalt($config);
+        $context = (new AdminRateLimitContextFactory(new RateLimitIdentityHasher(), $config))->create($key, $parts);
+        $store = new DatabaseRateLimitStore($this->pdo);
+        $store->ensureSchema();
+        $decision = $store->recordAttempt($rule, $context->identityHash, $context->now);
+        return $config->isReportOnly()
+            ? RateLimitDecision::allow($decision->attempts, $decision->maxAttempts)
+            : $decision;
     }
 
     /** @param list<string> $parts */
