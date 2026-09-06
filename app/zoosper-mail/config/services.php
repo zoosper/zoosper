@@ -13,6 +13,8 @@ use Zoosper\Mail\Log\EmailLogRepository;
 use Zoosper\Mail\Transport\LoggedMailer;
 use Zoosper\Mail\Transport\MailerInterface;
 use Zoosper\Mail\Transport\SmtpMailer;
+use Zoosper\Auth\PasswordReset\AdminPasswordResetDeliveryInterface;
+use Zoosper\Mail\PasswordReset\SmtpAdminPasswordResetDelivery;
 
 return [
     SmtpConfigFactory::class => static fn (ServiceContainer $services): SmtpConfigFactory => new SmtpConfigFactory(
@@ -26,6 +28,11 @@ return [
         $services->get(SmtpConfigFactory::class),
     ),
     SmtpMailer::class => static fn (ServiceContainer $services): SmtpMailer => new SmtpMailer($services->get(SmtpConfig::class)),
+    SmtpAdminPasswordResetDelivery::class => static fn (ServiceContainer $services): SmtpAdminPasswordResetDelivery => new SmtpAdminPasswordResetDelivery(
+        $services->get(SmtpMailer::class),
+        $services->get(SmtpConfig::class),
+    ),
+    AdminPasswordResetDeliveryInterface::class => static fn (ServiceContainer $services): AdminPasswordResetDeliveryInterface => $services->get(SmtpAdminPasswordResetDelivery::class),
     EmailLogRepository::class => static fn (ServiceContainer $services): EmailLogRepository => new EmailLogRepository($services->get(PDO::class)),
     LoggedMailer::class => static fn (ServiceContainer $services): LoggedMailer => new LoggedMailer(
         $services->get(SmtpMailer::class),

@@ -20,6 +20,7 @@ use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Auth\PasswordReset\AdminPasswordResetService;
+use Zoosper\Auth\PasswordReset\AdminPasswordResetUrlBuilder;
 use Zoosper\Auth\PasswordReset\AdminPasswordResetTokenRepository;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiter;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
@@ -83,6 +84,10 @@ return [
     AdminUserLifecycleCoordinator::class => static fn($services): AdminUserLifecycleCoordinator => new AdminUserLifecycleCoordinator($services->get(\PDO::class), $services->get(\Zoosper\Auth\Repository\AdminUserRepository::class), $services->has(\Zoosper\Audit\Contract\AuditLoggerInterface::class) ? $services->get(\Zoosper\Audit\Contract\AuditLoggerInterface::class) : null),
     RoleLifecycleCoordinator::class => static fn($services): RoleLifecycleCoordinator => new RoleLifecycleCoordinator($services->get(\PDO::class), $services->has(\Zoosper\Audit\Contract\AuditLoggerInterface::class) ? $services->get(\Zoosper\Audit\Contract\AuditLoggerInterface::class) : null),
     AdminPasswordResetTokenRepository::class => static fn (ServiceContainer $services): AdminPasswordResetTokenRepository => new AdminPasswordResetTokenRepository($services->get(PDO::class)),
+    AdminPasswordResetUrlBuilder::class => static fn (ServiceContainer $services): AdminPasswordResetUrlBuilder => new AdminPasswordResetUrlBuilder(
+        (string) $services->get(ConfigRepository::class)->get('sites.store_views.default.base_url', ''),
+        $services->get(AdminUrlGenerator::class),
+    ),
     AdminPasswordResetService::class => static fn (ServiceContainer $services): AdminPasswordResetService => new AdminPasswordResetService(
         $services->get(PDO::class),
         $services->get(AdminUserRepository::class),
