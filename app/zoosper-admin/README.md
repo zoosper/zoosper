@@ -136,3 +136,15 @@ The compact shell, native account disclosure, Dashboard hierarchy and responsive
 ### Role workspace presentation
 
 Admin-owned role templates use shared cards, responsive permission and assignment grids, semantic table regions, and a sticky action surface. Auth remains the behaviour and authorization owner; role writes remain POST-only and CSRF protected.
+
+## Public Admin password-reset HTTP lifecycle
+The Admin module owns the thin public HTTP adapter and declares four stateful routes:
+
+- `GET /admin/forgot-password` renders the CSRF-bearing request form.
+- `POST /admin/forgot-password` applies CSRF middleware, the dedicated reset-request limiter, neutral account-discovery output, Auth issuance, and delivery through the Auth-owned abstraction.
+- `GET /admin/reset-password` renders the escaped credential in a hidden form value.
+- `POST /admin/reset-password` applies CSRF middleware and returns HTTP `422` for rejected reset attempts or HTTP `303` to `/admin/login?reset=complete` after success.
+
+Both public pages publish `noindex,nofollow`. Missing or expired CSRF state is rejected with HTTP `419`. Unknown, inactive, rate-limited, and delivery-failure request cases share the same public response. Successful reset rotates the CSRF token and records only the secret-free `admin.password_reset_completed` audit action. The reset controller does not authenticate the user automatically.
+
+`PasswordResetHttpAcceptanceTest` boots the real application service graph and exercises the Router, authentication middleware, CSRF middleware, migrations, rate limiter, reset service, password authentication, credential replay prevention, and session fingerprint invalidation.

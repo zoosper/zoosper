@@ -20,3 +20,14 @@ For a disposable verification installation, run `composer fresh-install:smoke`. 
 
 ## Starter content
 After migrations and Site setup, run `php bin/zoosper starter:install`. The command creates only a missing Site and missing published Home/About Pages. Existing records are retained, so rerunning it is safe.
+
+## Admin password-reset configuration
+Before using Admin password reset outside local development:
+
+1. Set `APP_URL` to the trusted absolute HTTP or HTTPS application origin. The value must not contain credentials, a query, or a fragment. Reset links combine this origin with the configured Admin base path.
+2. Configure working SMTP delivery with `MAIL_FROM_ADDRESS`, `MAIL_FROM_NAME`, `SMTP_HOST`, `SMTP_PORT`, and any required SMTP authentication or encryption values.
+3. Configure a strong stable `RATE_LIMIT_IDENTITY_SALT` and enable authentication rate limiting. Staging and production already require `RATE_LIMIT_ENABLED=true` and `RATE_LIMIT_MODE=enforce` at boot.
+4. Tune `RATE_LIMIT_ADMIN_PASSWORD_RESET_MAX_ATTEMPTS` and `RATE_LIMIT_ADMIN_PASSWORD_RESET_WINDOW_SECONDS`. Defaults are 5 attempts in 900 seconds, bounded by the shared rate-limit configuration.
+5. Run `php8.5 bin/zoosper migrate` so `admin_password_reset_tokens` exists, then run the normal compile and release checks.
+
+The public flow is available from the **Forgot password?** link on the Admin sign-in page. Reset messages intentionally bypass Email Logs because the URL contains the single-use credential.

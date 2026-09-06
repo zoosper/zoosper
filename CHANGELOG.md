@@ -2,6 +2,7 @@
 
 ## [0.3.1-alpha.1-dev]
 - Opened the next minor public-alpha development line following `v0.3.0-alpha.5`.
+- Completed the Admin password-reset security arc: hash-only expiring single-use credentials, trusted-origin SMTP delivery outside Email Logs, neutral CSRF-protected public forms, dedicated request throttling, session invalidation, real HTTP-pipeline acceptance coverage, and canonical operational documentation.
 - Active focus: continue product-facing CMS capability, extension ergonomics, API parity, documentation, and release hardening from the verified alpha.5 baseline.
 
 ## [0.3.0-alpha.5] - 2026-09-04

@@ -63,3 +63,8 @@ Zoosper_Mail module for Zoosper CMS.
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+
+## Admin password-reset delivery
+Mail implements `AdminPasswordResetDeliveryInterface` with `SmtpAdminPasswordResetDelivery`. Reset messages are sent directly through `SmtpMailer`, deliberately outside `LoggedMailer`, because the absolute reset URL contains a bearer credential. The reset subject, body, and credential must therefore never be persisted in Email Logs, audit metadata, flash messages, application logs, or exception context.
+
+The message states the UTC expiry and single-use rule. Delivery uses the configured SMTP sender identity and the active Admin account email supplied by Auth. Delivery failure is handled by the public Admin adapter with the same neutral response used for unknown and inactive accounts.

@@ -1,6 +1,6 @@
 # Zoosper CMS — Master Roadmap
 
-**Last updated:** 2026-09-05 (Sydney)
+**Last updated:** 2026-09-06 (Sydney)
 
 ## Current continuity status
 
@@ -67,6 +67,8 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 - [x] **Real-Time Global Announcement Modal (future global-notifications workstream).** Extracted into its own dedicated module `zoosper/global-announcements` (`app/zoosper-global-announcements`). Super Admins have a Settings surface (`/admin/announcements`) to draft, publish, unpublish, and archive Global Announcements. Active authenticated users receive real-time updates via background polling and asynchronous acknowledgment, while offline users receive mandatory one-time modal delivery reconciled upon their next login. Acknowledgment records persist authoritatively by announcement and user in `admin_announcement_acknowledgments` with duplicate-safe idempotency, CSRF protection, and audit logging. Admin layout consumption is fully decoupled via `AdminAnnouncementProviderInterface`.
 - [x] **Decoupled Content Editor Module (`zoosper/editor` in `app/zoosper-editor`).** Extracted `ContentEditorRegistry`, `EditorJsContentEditor`, `TextareaContentEditor`, and scoped `ContentEditorRuntimeConfig` out of `zoosper-admin` into a dedicated internal path module with standalone service registration, asset declarations (`zoosper-admin-editor-style`, `zoosper-admin-editorjs-bundle`, `zoosper-admin-editor-script`), and backwards-compatible class aliases.
 
+- [x] **Admin password-reset security closure (Phase 13A-C1B-1 through C1B-2D):** Auth owns indexed hash-only, expiring, single-use reset credentials; new issuance supersedes outstanding credentials; reset completion uses the canonical password policy and invalidates existing password-fingerprint sessions. Admin exposes four public stateful GET/POST routes with CSRF enforcement, neutral account-discovery responses, `noindex,nofollow`, dedicated request throttling, HTTP `419`/`422`/`303` handling, and real Router/middleware acceptance coverage. Mail delivers reset links directly through SMTP outside `LoggedMailer`, so reset credentials are not persisted in Email Logs. Operational configuration and troubleshooting are documented in the canonical docs and package READMEs.
+- [ ] **Optional invisible CAPTCHA / bot-protection boundary:** Later add configurable, provider-agnostic protection for public authentication forms, initially Admin login and forgot-password. Keep it privacy-conscious, accessible, compatible with CSRF and rate limiting, and fail closed when explicitly enforced. This remains deferred and is not part of the deployed password-reset implementation.
 **Pre-Launch Security & Architecture Teardown Findings (2026-08-31 Audit & 2026-09-01 Re-Audit):**
 
 - [x] **[CRIT-01] Fail-closed HTML sanitization in Page save coordinator & input.** Confirmed resolved in source: `PageSaveCoordinator` and `PageSaveInput` require `HtmlSanitizerInterface` as a non-nullable constructor dependency and throw (fail closed) if unresolvable, eliminating the silent raw-input fallback that risks stored XSS under `|noescape` template rendering.

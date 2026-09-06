@@ -147,3 +147,10 @@ Auth-owned selectors deliberately outrank shared Admin button defaults so Permis
 ### Fable security workspaces
 
 Auth owns the responsive Admin-user identity workspace, PAT creation/review surface, and Permission Explorer assets. Source and public copies remain byte-identical. Assets are screen-scoped and content-versioned; the interfaces remain progressively enhanced, CSP-safe, theme-aware, and usable at narrow widths. User and PAT mutations remain POST-only and CSRF-protected, role assignment remains separately permission-gated, PAT rows remain owner-scoped, plaintext tokens remain one-time-only, and the Permission Explorer runtime performs no network or form submission.
+
+### Admin password reset
+Auth owns reset credential persistence and lifecycle. Only a SHA-256 hash of the `zp_reset_` credential is stored; plaintext exists only for immediate delivery. Credentials are issued only for active accounts, expire after the configured service lifetime, are single-use, and a newly issued credential supersedes every outstanding credential for that Admin user.
+
+Reset completion validates the canonical Admin password policy, updates the canonical password hash atomically with credential consumption, invalidates remaining outstanding credentials, and causes existing password-fingerprint sessions to fail on their next guard check. Invalid, expired, consumed, malformed, inactive-account, weak-password, and confirmation-mismatch cases do not change the password.
+
+Public request throttling uses the independent `admin.password_reset_request` policy configured by `RATE_LIMIT_ADMIN_PASSWORD_RESET_MAX_ATTEMPTS` and `RATE_LIMIT_ADMIN_PASSWORD_RESET_WINDOW_SECONDS`. The identity combines normalised email and client IP behind the configured salted rate-limit boundary. Report-only mode observes without blocking; enforce mode denies issuance while the HTTP adapter preserves its neutral public response.
