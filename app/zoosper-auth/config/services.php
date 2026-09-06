@@ -19,6 +19,8 @@ use Zoosper\Auth\Dashboard\DashboardRolePreferenceRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
+use Zoosper\Auth\PasswordReset\AdminPasswordResetService;
+use Zoosper\Auth\PasswordReset\AdminPasswordResetTokenRepository;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiter;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Service\AuthService;
@@ -80,6 +82,15 @@ return [
     ),
     AdminUserLifecycleCoordinator::class => static fn($services): AdminUserLifecycleCoordinator => new AdminUserLifecycleCoordinator($services->get(\PDO::class), $services->get(\Zoosper\Auth\Repository\AdminUserRepository::class), $services->has(\Zoosper\Audit\Contract\AuditLoggerInterface::class) ? $services->get(\Zoosper\Audit\Contract\AuditLoggerInterface::class) : null),
     RoleLifecycleCoordinator::class => static fn($services): RoleLifecycleCoordinator => new RoleLifecycleCoordinator($services->get(\PDO::class), $services->has(\Zoosper\Audit\Contract\AuditLoggerInterface::class) ? $services->get(\Zoosper\Audit\Contract\AuditLoggerInterface::class) : null),
+    AdminPasswordResetTokenRepository::class => static fn (ServiceContainer $services): AdminPasswordResetTokenRepository => new AdminPasswordResetTokenRepository($services->get(PDO::class)),
+    AdminPasswordResetService::class => static fn (ServiceContainer $services): AdminPasswordResetService => new AdminPasswordResetService(
+        $services->get(PDO::class),
+        $services->get(AdminUserRepository::class),
+        $services->get(AdminPasswordResetTokenRepository::class),
+        $services->get(PasswordHasher::class),
+        $services->get(PasswordPolicy::class),
+        max(300, (int) $services->get(ConfigRepository::class)->get('admin.password_reset_lifetime', 3600)),
+    ),
     PersonalAccessTokenRepository::class => static fn (ServiceContainer $services): PersonalAccessTokenRepository => new PersonalAccessTokenRepository($services->get(PDO::class)),
     PersonalAccessTokenService::class => static fn (ServiceContainer $services): PersonalAccessTokenService => new PersonalAccessTokenService($services->get(PersonalAccessTokenRepository::class)),
     PersonalAccessTokenAuthenticator::class => static fn (ServiceContainer $services): PersonalAccessTokenAuthenticator => new PersonalAccessTokenAuthenticator($services->get(PersonalAccessTokenRepository::class), $services->get(AdminUserRepository::class)),

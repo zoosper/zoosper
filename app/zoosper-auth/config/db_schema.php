@@ -5,6 +5,91 @@ declare(strict_types=1);
 return array (
   'tables' => 
   array (
+    'admin_password_reset_tokens' =>
+    array (
+      'columns' =>
+      array (
+        'id' =>
+        array (
+          'type' => 'integer',
+          'primary' => true,
+          'auto_increment' => true,
+        ),
+        'public_id' =>
+        array (
+          'type' => 'string',
+          'length' => 16,
+          'nullable' => false,
+        ),
+        'admin_user_id' =>
+        array (
+          'type' => 'integer',
+          'nullable' => false,
+        ),
+        'token_hash' =>
+        array (
+          'type' => 'string',
+          'length' => 64,
+          'nullable' => false,
+        ),
+        'expires_at' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => false,
+        ),
+        'consumed_at' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => true,
+        ),
+        'created_at' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => false,
+        ),
+      ),
+      'indexes' =>
+      array (
+        'uniq_admin_password_reset_tokens_public_id' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'public_id',
+          ),
+          'unique' => true,
+        ),
+        'idx_admin_password_reset_tokens_user' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'admin_user_id',
+          ),
+        ),
+        'idx_admin_password_reset_tokens_expires' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'expires_at',
+          ),
+        ),
+      ),
+      'foreign_keys' =>
+      array (
+        'fk_admin_password_reset_tokens_user' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'admin_user_id',
+          ),
+          'referenced_table' => 'admin_users',
+          'referenced_columns' =>
+          array (
+            0 => 'id',
+          ),
+          'on_delete' => 'CASCADE',
+        ),
+      ),
+    ),
     'admin_users' => 
     array (
       'columns' => 
