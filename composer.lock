@@ -1859,7 +1859,7 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-page",
-                "reference": "e6fd556eefbae8e5e62fe04b5c629920cdd5efdf"
+                "reference": "a9f55cdaefa90d9597cde4c29a80a96d5fda31a6"
             },
             "require": {
                 "php": "^8.5",
@@ -1867,7 +1867,6 @@
                 "zoosper/cache": "dev-dev",
                 "zoosper/core": "dev-dev",
                 "zoosper/grid": "dev-dev",
-                "zoosper/media": "dev-dev",
                 "zoosper/pagination": "dev-dev",
                 "zoosper/seo": "dev-dev",
                 "zoosper/site": "dev-dev",

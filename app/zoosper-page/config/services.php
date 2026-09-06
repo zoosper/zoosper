@@ -26,7 +26,7 @@ use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Routing\CachingFallbackHandler;
 use Zoosper\Core\Routing\FallbackHandlerInterface;
-use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
+use Zoosper\Core\Editor\EditorImageBlockSanitizerInterface;
 use Zoosper\Page\Content\BlockJsonToHtmlRenderer;
 use Zoosper\Page\Content\DocumentNormalizer;
 use Zoosper\Page\Content\DocumentRenderer;
@@ -123,7 +123,7 @@ return [
     PageRevisionService::class => static fn ($services): PageRevisionService => new PageRevisionService($services->get(PageRevisionRepository::class), (int) ($services->get(\Zoosper\Core\Config\ConfigRepository::class)->get('page_revisions.retention', 50))),
     PageRepository::class => static fn (ServiceContainer $services): PageRepository => new PageRepository($services->get(PDO::class)),
     BlockJsonToHtmlRenderer::class => static fn (ServiceContainer $services): BlockJsonToHtmlRenderer => new BlockJsonToHtmlRenderer(
-        $services->has(EditorJsImageBlockSanitizer::class) ? $services->get(EditorJsImageBlockSanitizer::class) : null,
+        $services->has(EditorImageBlockSanitizerInterface::class) ? $services->get(EditorImageBlockSanitizerInterface::class) : null,
     ),
     DocumentValidator::class => static fn (ServiceContainer $services): DocumentValidator => new DocumentValidator(
         $services->has(ConfigRepository::class) ? $services->get(ConfigRepository::class) : null,

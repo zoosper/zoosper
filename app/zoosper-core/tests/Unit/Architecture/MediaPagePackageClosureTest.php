@@ -11,8 +11,9 @@ it('locks completed Media decoupling and Page structured rendering foundations',
     $renderer = (string) file_get_contents($root . '/app/zoosper-page/src/Service/PageRenderer.php');
 
     expect($mediaComposer['require'])->not->toHaveKey('zoosper/admin')
-        ->and($pageComposer['require'])->toHaveKey('zoosper/media', 'dev-dev')
-        ->and($pageServices)->toContain('EditorJsImageBlockSanitizer')
+        ->and($pageComposer['require'])->not->toHaveKey('zoosper/media')
+        ->and($pageServices)->toContain('EditorImageBlockSanitizerInterface')
+        ->not->toContain('Zoosper\\Media\\')
         ->toContain('BlockJsonToHtmlRenderer')
         ->and($pageControllers)->toContain('AdminLayoutRendererInterface')
         ->toContain('AdminViewRendererInterface')

@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Zoosper\Media\EditorJs;
 
+use Zoosper\Core\Editor\EditorImageBlockSanitizerInterface;
+
 /**
  * Normalises stored Editor.js image block data before frontend rendering.
  *
  * This does not render HTML by itself. It prepares a safe, predictable structure
  * that the page renderer can consume in the follow-up wiring step.
  */
-final readonly class EditorJsImageBlockSanitizer
+final readonly class EditorJsImageBlockSanitizer implements EditorImageBlockSanitizerInterface
 {
     /**
      * @param array<string, mixed> $data

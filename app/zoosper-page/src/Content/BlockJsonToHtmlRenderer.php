@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Content;
 
-use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
+use Zoosper\Core\Editor\EditorImageBlockSanitizerInterface;
 
 /**
  * Converts supported Editor.js block JSON into conservative frontend HTML.
@@ -15,7 +15,7 @@ use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
  */
 final readonly class BlockJsonToHtmlRenderer
 {
-    public function __construct(private ?EditorJsImageBlockSanitizer $imageSanitizer = null)
+    public function __construct(private ?EditorImageBlockSanitizerInterface $imageSanitizer = null)
     {
     }
 

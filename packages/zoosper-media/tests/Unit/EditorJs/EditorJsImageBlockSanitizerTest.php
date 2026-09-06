@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Packages\zoospermedia\tests\Unit\EditorJs;
 
+use Zoosper\Core\Editor\EditorImageBlockSanitizerInterface;
 use Zoosper\Media\EditorJs\EditorJsImageBlockSanitizer;
 
 test('sanitises allowed media image block data', function () {
-    $data = (new EditorJsImageBlockSanitizer())->sanitise([
+    $sanitizer = new EditorJsImageBlockSanitizer();
+    expect($sanitizer)->toBeInstanceOf(EditorImageBlockSanitizerInterface::class);
+    $data = $sanitizer->sanitise([
         'file' => ['url' => '/media/asset.png'],
         'caption' => '  Caption  ',
         'withBorder' => true,
