@@ -89,7 +89,7 @@ it('proves a disposable alpha install from zero through bootstrap and idempotent
             $quotedTable = str_replace('"', '""', $table);
             $foreignKeyCount += count($pdo->query('PRAGMA foreign_key_list("' . $quotedTable . '")')->fetchAll(\PDO::FETCH_ASSOC));
         }
-        expect($foreignKeyCount)->toBe(34)
+        expect($foreignKeyCount)->toBe(35)
             ->and($pdo->query('PRAGMA foreign_key_check')->fetchAll(\PDO::FETCH_ASSOC))->toBe([]);
         unset($pdo);
     } finally {

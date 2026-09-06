@@ -90,6 +90,65 @@ return array (
         ),
       ),
     ),
+    'admin_account_lockouts' =>
+    array (
+      'columns' =>
+      array (
+        'admin_user_id' =>
+        array (
+          'type' => 'integer',
+          'primary' => true,
+          'nullable' => false,
+        ),
+        'failed_attempts' =>
+        array (
+          'type' => 'integer',
+          'nullable' => false,
+          'default' => 0,
+        ),
+        'locked_until' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => true,
+        ),
+        'last_failed_at' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => true,
+        ),
+        'updated_at' =>
+        array (
+          'type' => 'datetime',
+          'nullable' => false,
+        ),
+      ),
+      'indexes' =>
+      array (
+        'idx_admin_account_lockouts_until' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'locked_until',
+          ),
+        ),
+      ),
+      'foreign_keys' =>
+      array (
+        'fk_admin_account_lockouts_user' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'admin_user_id',
+          ),
+          'referenced_table' => 'admin_users',
+          'referenced_columns' =>
+          array (
+            0 => 'id',
+          ),
+          'on_delete' => 'CASCADE',
+        ),
+      ),
+    ),
     'admin_users' => 
     array (
       'columns' => 

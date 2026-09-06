@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Zoosper\Auth\AccountLockout\AdminAccountLockoutRepository;
+use Zoosper\Auth\AccountLockout\AdminAccountLockoutService;
 use Zoosper\Auth\Lifecycle\RoleLifecycleCoordinator;
 use Zoosper\Auth\Lifecycle\AdminUserLifecycleCoordinator;
 use Zoosper\Auth\Security\PasswordPolicy;
@@ -38,6 +40,8 @@ return [
     ...require __DIR__ . '/services_auth_grid.php',
 
     SecondFactorRequirementInterface::class => static fn (ServiceContainer $services): SecondFactorRequirementInterface => new RequireSecondFactorByDefault(),
+    AdminAccountLockoutRepository::class => static fn (ServiceContainer $services): AdminAccountLockoutRepository => new AdminAccountLockoutRepository($services->get(PDO::class)),
+    AdminAccountLockoutService::class => static fn (ServiceContainer $services): AdminAccountLockoutService => new AdminAccountLockoutService($services->get(AdminAccountLockoutRepository::class)),
     AdminUserRepository::class => static fn (ServiceContainer $services): AdminUserRepository => new AdminUserRepository($services->get(PDO::class)),
     AdminUserCountDashboardWidgetContributor::class => static fn (ServiceContainer $services): AdminUserCountDashboardWidgetContributor => new AdminUserCountDashboardWidgetContributor($services->get(AdminUserRepository::class)),
     DashboardRolePreferenceRepository::class => static fn (ServiceContainer $services): DashboardRolePreferenceRepository => new DashboardRolePreferenceRepository($services->get(PDO::class)),
