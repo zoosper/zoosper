@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
+use Zoosper\Admin\Controller\PasswordResetController;
 
 return [
     ['method' => 'GET', 'path' => '/admin/login', 'controller' => LoginController::class, 'action' => 'show', 'public' => true],
     ['method' => 'POST', 'path' => '/admin/login', 'controller' => LoginController::class, 'action' => 'login', 'public' => true],
+    ['method' => 'GET', 'path' => '/admin/forgot-password', 'controller' => PasswordResetController::class, 'action' => 'forgotForm', 'public' => true],
+    ['method' => 'POST', 'path' => '/admin/forgot-password', 'controller' => PasswordResetController::class, 'action' => 'requestReset', 'public' => true],
+    ['method' => 'GET', 'path' => '/admin/reset-password', 'controller' => PasswordResetController::class, 'action' => 'resetForm', 'public' => true],
+    ['method' => 'POST', 'path' => '/admin/reset-password', 'controller' => PasswordResetController::class, 'action' => 'resetPassword', 'public' => true],
     ['method' => 'POST', 'path' => '/admin/logout', 'controller' => LoginController::class, 'action' => 'logout', 'permission' => 'admin.access'],
     ['method' => 'GET', 'path' => '/admin', 'controller' => DashboardController::class, 'action' => 'index', 'permission' => 'admin.access'],
     ['method' => 'POST', 'path' => '/admin/dashboard/preferences', 'controller' => DashboardController::class, 'action' => 'savePreferences', 'permission' => 'admin.access'],

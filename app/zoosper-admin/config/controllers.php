@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 use Zoosper\Admin\Controller\DashboardController;
 use Zoosper\Admin\Controller\LoginController;
+use Zoosper\Admin\Controller\PasswordResetController;
 use Zoosper\Admin\Dashboard\DashboardPersonalisationService;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
+use Zoosper\Auth\PasswordReset\AdminPasswordResetDeliveryInterface;
+use Zoosper\Auth\PasswordReset\AdminPasswordResetService;
+use Zoosper\Auth\PasswordReset\AdminPasswordResetUrlBuilder;
 use Zoosper\Auth\Service\AuthService;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
@@ -19,6 +23,14 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorEnrollmentService;
 use Zoosper\TwoFactor\Service\AdminTwoFactorLoginRedirectService;
 
 return [
+    PasswordResetController::class => static fn (ServiceContainer $services): PasswordResetController => new PasswordResetController(
+        $services->get(AdminPasswordResetService::class),
+        $services->get(AdminPasswordResetUrlBuilder::class),
+        $services->get(AdminPasswordResetDeliveryInterface::class),
+        $services->get(CsrfTokenManager::class),
+        $services->get(AdminUrlGenerator::class),
+        $services->has(\Zoosper\Audit\Contract\AuditLoggerInterface::class) ? $services->get(\Zoosper\Audit\Contract\AuditLoggerInterface::class) : null,
+    ),
     LoginController::class => static fn (ServiceContainer $services): LoginController => new LoginController(
         $services->get(AuthService::class),
         $services->get(SessionGuard::class),

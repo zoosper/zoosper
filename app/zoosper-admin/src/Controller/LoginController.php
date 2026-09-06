@@ -150,6 +150,7 @@ final readonly class LoginController
 <label>Password <input type="password" name="password" autocomplete="current-password" required></label>
     <button type="submit">Sign in</button>
 </form>
+<p><a href="{$this->e($this->adminUrl('forgot-password'))}">Forgot password?</a></p>
 HTML;
     }
 
