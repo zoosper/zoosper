@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zoosper\Auth\PasswordReset;
 
+use Zoosper\Auth\AccountLockout\AdminAccountLockoutService;
+
 use Closure;
 use PDO;
 use RuntimeException;
@@ -25,6 +27,7 @@ final readonly class AdminPasswordResetService
         private PasswordPolicy $policy,
         private int $lifetimeSeconds = 3600,
         private ?Closure $clock = null,
+        private ?AdminAccountLockoutService $lockouts = null,
     ) {
     }
 
@@ -91,6 +94,7 @@ final readonly class AdminPasswordResetService
             }
             $this->users->updatePassword($user->id, $this->hasher->hash($password));
             $this->tokens->invalidateOutstandingForUser($user->id, $consumedAt);
+            $this->lockouts?->clear($user->id);
             $this->pdo->commit();
         } catch (Throwable $exception) {
             if ($this->pdo->inTransaction()) {

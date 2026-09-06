@@ -41,7 +41,11 @@ return [
 
     SecondFactorRequirementInterface::class => static fn (ServiceContainer $services): SecondFactorRequirementInterface => new RequireSecondFactorByDefault(),
     AdminAccountLockoutRepository::class => static fn (ServiceContainer $services): AdminAccountLockoutRepository => new AdminAccountLockoutRepository($services->get(PDO::class)),
-    AdminAccountLockoutService::class => static fn (ServiceContainer $services): AdminAccountLockoutService => new AdminAccountLockoutService($services->get(AdminAccountLockoutRepository::class)),
+    AdminAccountLockoutService::class => static fn (ServiceContainer $services): AdminAccountLockoutService => new AdminAccountLockoutService(
+        $services->get(AdminAccountLockoutRepository::class),
+        max(1, (int) env('ADMIN_ACCOUNT_LOCKOUT_MAX_ATTEMPTS', 5)),
+        max(60, (int) env('ADMIN_ACCOUNT_LOCKOUT_SECONDS', 900)),
+    ),
     AdminUserRepository::class => static fn (ServiceContainer $services): AdminUserRepository => new AdminUserRepository($services->get(PDO::class)),
     AdminUserCountDashboardWidgetContributor::class => static fn (ServiceContainer $services): AdminUserCountDashboardWidgetContributor => new AdminUserCountDashboardWidgetContributor($services->get(AdminUserRepository::class)),
     DashboardRolePreferenceRepository::class => static fn (ServiceContainer $services): DashboardRolePreferenceRepository => new DashboardRolePreferenceRepository($services->get(PDO::class)),
@@ -51,6 +55,7 @@ return [
     AuthService::class => static fn (ServiceContainer $services): AuthService => new AuthService(
         $services->get(AdminUserRepository::class),
         $services->get(PasswordHasher::class),
+        $services->get(AdminAccountLockoutService::class),
     ),
     SessionGuard::class => static fn (ServiceContainer $services): SessionGuard => new SessionGuard(
         $services->get(AdminUserRepository::class),
@@ -99,6 +104,8 @@ return [
         $services->get(PasswordHasher::class),
         $services->get(PasswordPolicy::class),
         max(300, (int) $services->get(ConfigRepository::class)->get('admin.password_reset_lifetime', 3600)),
+        null,
+        $services->get(AdminAccountLockoutService::class),
     ),
     PersonalAccessTokenRepository::class => static fn (ServiceContainer $services): PersonalAccessTokenRepository => new PersonalAccessTokenRepository($services->get(PDO::class)),
     PersonalAccessTokenService::class => static fn (ServiceContainer $services): PersonalAccessTokenService => new PersonalAccessTokenService($services->get(PersonalAccessTokenRepository::class)),

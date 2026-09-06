@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Auth\Service;
 
+use Zoosper\Auth\AccountLockout\AdminAccountLockoutService;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Repository\AdminUserRepository;
 
@@ -20,6 +21,7 @@ final class AuthService
     public function __construct(
         private readonly AdminUserRepository $users,
         private readonly PasswordHasher $hasher,
+        private readonly ?AdminAccountLockoutService $lockouts = null,
     ) {
     }
 
@@ -41,9 +43,18 @@ final class AuthService
             return null;
         }
 
+        $locked = $this->lockouts?->isLocked($user->id) ?? false;
+
         if (!$passwordValid) {
+            $this->lockouts?->recordFailure($user->id);
             return null;
         }
+
+        if ($locked) {
+            return null;
+        }
+
+        $this->lockouts?->clear($user->id);
 
         // Phase E1: transparently upgrade the stored hash if PHP's default
         // algorithm/cost has changed since it was created (e.g. after a PHP

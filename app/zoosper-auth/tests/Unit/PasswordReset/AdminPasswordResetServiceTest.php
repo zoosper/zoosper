@@ -85,3 +85,19 @@ it('rejects malformed expired mismatched and weak reset attempts', function (): 
         ->and($service->reset($issue->token, 'short', 'short'))->not->toBe([])
         ->and(phase13C1B1Service($pdo, 1_800_004_000)->reset($issue->token, 'ReplacementPassword123!', 'ReplacementPassword123!'))->toBe(['This password reset link is invalid or has expired.']);
 });
+
+
+it('clears account lockout state after a successful password reset', function (): void {
+    $pdo = phase13C1B1Pdo();
+    $pdo->exec('CREATE TABLE admin_account_lockouts (admin_user_id INTEGER PRIMARY KEY,failed_attempts INTEGER NOT NULL DEFAULT 0,locked_until TEXT NULL,last_failed_at TEXT NULL,updated_at TEXT NOT NULL)');
+    $users = new AdminUserRepository($pdo); $hasher = new PasswordHasher();
+    $id = $users->createWithRoleIds('locked@example.test','Locked',$hasher->hash('InitialPassword123!'),'active',[1]);
+    $repository = new \Zoosper\Auth\AccountLockout\AdminAccountLockoutRepository($pdo);
+    $lockouts = new \Zoosper\Auth\AccountLockout\AdminAccountLockoutService($repository,1,900,static fn():int=>1_800_000_000);
+    $lockouts->recordFailure($id);
+    $service = new AdminPasswordResetService($pdo,$users,new AdminPasswordResetTokenRepository($pdo),$hasher,new PasswordPolicy(),3600,static fn():int=>1_800_000_000,$lockouts);
+    $issue = $service->issueForEmail('locked@example.test');
+    expect($issue)->not->toBeNull()
+        ->and($service->reset($issue->token,'ReplacementPassword123!','ReplacementPassword123!'))->toBe([])
+        ->and($repository->find($id))->toBeNull();
+});
