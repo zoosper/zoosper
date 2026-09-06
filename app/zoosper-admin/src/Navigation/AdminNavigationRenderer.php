@@ -18,6 +18,7 @@ final readonly class AdminNavigationRenderer
         'content' => '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/>',
         'dashboard' => '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
         'design' => '<path d="m12 3 3 3-8.5 8.5L3 15l.5-3.5z"/><path d="m14 5 3-2 4 4-2 3m-8 7 2 4 2-4 4-2-4-2-2-4-2 4-4 2z"/>',
+        'envelope' => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
         'file-text' => '<path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5M9 13h6M9 17h6"/>',
         'home' => '<path d="m3 11 9-8 9 8"/><path d="M5 10v11h14V10M9 21v-7h6v7"/>',
         'login-history' => '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2M3 4v5h5"/>',

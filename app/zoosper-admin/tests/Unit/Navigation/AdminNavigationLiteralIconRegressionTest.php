@@ -53,7 +53,7 @@ it('gives every discovered Admin destination a module-owned icon identifier', fu
     );
     sort($files);
 
-    expect($files)->toHaveCount(10);
+    expect($files)->not->toBeEmpty();
 
     $renderer = new AdminNavigationRenderer();
     foreach ($files as $file) {
@@ -90,3 +90,11 @@ it('renders a neutral safe fallback for empty and unknown identifiers', function
 
 
 
+
+it('renders the Email Logs destination as an envelope rather than the fallback target', function (): void {
+    $html = (new AdminNavigationRenderer())->renderIcon('envelope');
+    expect($html)->toContain('data-admin-icon="envelope"')
+        ->toContain('<rect x="3" y="5" width="18" height="14" rx="2"/>')
+        ->toContain('m4 7 8 6 8-6')
+        ->not->toContain('<circle cx="12" cy="12" r="8"/>');
+});

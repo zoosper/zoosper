@@ -1743,11 +1743,14 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-mail",
-                "reference": "cb4c722bcb51e0b9b0c107723fb1f977af161388"
+                "reference": "3a05b29e2410340cefba6be17753a69785fe2579"
             },
             "require": {
                 "php": "^8.5",
+                "zoosper/admin-grid": "dev-dev",
                 "zoosper/core": "dev-dev",
+                "zoosper/grid": "dev-dev",
+                "zoosper/pagination": "dev-dev",
                 "zoosper/scoped-config": "dev-dev"
             },
             "type": "zoosper-module",

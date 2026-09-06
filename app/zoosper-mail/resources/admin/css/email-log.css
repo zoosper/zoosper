@@ -1,0 +1,64 @@
+.mail-log-detail { min-width: 0; max-width: 100%; overflow: hidden; }
+.mail-log-detail p { overflow-wrap: anywhere; }
+.mail-log-body { box-sizing: border-box; max-width: 100%; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+
+/* Email Logs is read-only and has no feature-owned export endpoint. */
+.admin-content [data-grid-workspace] [data-grid-export] { display: none; }
+
+/* Compose the native Grid nodes into one Email Logs footer. */
+.email-logs-index__pagination {
+    display: grid;
+    grid-template-columns: minmax(7rem, 1fr) auto minmax(7rem, 1fr);
+    align-items: center;
+    gap: .75rem;
+    min-height: 3.75rem;
+    margin: 0;
+    padding: .55rem .8rem;
+    border: 1px solid var(--admin-border, #d8dee9);
+    border-top: 0;
+    border-radius: 0 0 .75rem .75rem;
+    background: var(--admin-surface, #fff);
+}
+.email-logs-index__previous { grid-column: 1; justify-self: start; }
+.email-logs-index__pagination > .grid-pagination-controls {
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+    width: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.email-logs-index__next { grid-column: 3; justify-self: end; }
+.email-logs-index__pagination > :is(a, span) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    padding: .4rem .65rem;
+    border: 1px solid var(--admin-border, #d8dee9);
+    border-radius: .5rem;
+    background: var(--admin-surface, #fff);
+    text-decoration: none;
+    white-space: nowrap;
+}
+.email-logs-index__pagination > .is-disabled {
+    border-color: transparent;
+    background: transparent;
+    color: var(--admin-text-muted, #667085);
+    opacity: .45;
+}
+.email-logs-index__notice { margin: 0 0 .75rem; padding: .65rem .8rem; line-height: 1.45; }
+@media (max-width: 48rem) {
+    .email-logs-index__pagination { grid-template-columns: 1fr 1fr; }
+    .email-logs-index__pagination > .grid-pagination-controls { grid-column: 1 / -1; grid-row: 1; width: 100%; }
+    .email-logs-index__previous { grid-column: 1; grid-row: 2; }
+    .email-logs-index__next { grid-column: 2; grid-row: 2; }
+}
+
+    .admin-content .grid-pagination > * { justify-content: center; }
+}

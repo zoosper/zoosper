@@ -6,7 +6,10 @@
     "require": {
         "php": "^8.5",
         "zoosper/core": "dev-dev",
-        "zoosper/scoped-config": "dev-dev"
+        "zoosper/scoped-config": "dev-dev",
+        "zoosper/admin-grid": "dev-dev",
+        "zoosper/grid": "dev-dev",
+        "zoosper/pagination": "dev-dev"
     },
     "autoload": {
         "psr-4": {
