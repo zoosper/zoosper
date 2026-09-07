@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.2-alpha.1-dev]
+
+- Opened the next development line after immutable release `v0.3.1-alpha.1`.
+
 ## [0.3.1-alpha.1] - 2026-09-07
 - Completed the Admin account-lockout security arc: Auth-owned atomic failure tracking, configurable temporary locks, neutral public login responses, password-reset recovery, protected manual unlock, secret-free auditing, and real HTTP acceptance across the unified and fallback Admin User form paths.
 - Opened the next minor public-alpha development line following `v0.3.0-alpha.5`.
