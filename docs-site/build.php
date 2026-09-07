@@ -208,6 +208,12 @@ $faviconFile = 'favicon.' . pathinfo($faviconSource, PATHINFO_EXTENSION);
 
 cleanBuildDirectory($outputRoot);
 mkdir($outputRoot . '/assets', 0775, true);
+if (!copy($siteRoot . '/CNAME', $outputRoot . '/CNAME')) {
+    throw new RuntimeException('Unable to copy the documentation custom-domain declaration.');
+}
+if (file_put_contents($outputRoot . '/.nojekyll', '') === false) {
+    throw new RuntimeException('Unable to write the GitHub Pages .nojekyll marker.');
+}
 foreach ([
     $siteRoot . '/assets/site.css' => $outputRoot . '/assets/site.css',
     $logoSource => $outputRoot . '/assets/' . $logoFile,

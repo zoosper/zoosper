@@ -2,6 +2,8 @@
 
 ## [0.3.2-alpha.1-dev]
 
+- Added source-controlled custom-domain metadata and official GitHub Pages artifact deployment for the canonical documentation website.
+
 - Reconciled canonical and generated documentation with shipped Page revisions, Media derivatives, release identity, and documentation-site status.
 
 - Replaced first-party `dev-dev` Composer coupling with an explicit monorepo package release train and bounded prerelease compatibility.

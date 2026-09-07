@@ -890,4 +890,11 @@ An exhaustive independent technical review and static security teardown (`var/lo
 - [x] Keep current development identity separate from immutable historical release documentation.
 - [x] Build and validate the canonical documentation website from reconciled sources.
 - [x] Add permanent stale-claim guards for current public documentation.
-- [ ] Expand documentation-site source coverage and automate publishing in BR-1C.
+- [x] Expand documentation-site source coverage and automate publishing in BR-1C.
+
+### Beta readiness: documentation publishing closure
+
+- [x] Publish canonical documentation from `dev` through the official GitHub Pages artifact workflow.
+- [x] Keep `docs.zoosper.com` custom-domain metadata source-controlled and reproducible.
+- [x] Emit `.nojekyll` and preserve generated-output isolation.
+- [x] Keep any local nested build repository outside automated publication ownership.
