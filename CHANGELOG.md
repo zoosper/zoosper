@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.3.1-alpha.1-dev]
+## [0.3.1-alpha.1] - 2026-09-07
 - Completed the Admin account-lockout security arc: Auth-owned atomic failure tracking, configurable temporary locks, neutral public login responses, password-reset recovery, protected manual unlock, secret-free auditing, and real HTTP acceptance across the unified and fallback Admin User form paths.
 - Opened the next minor public-alpha development line following `v0.3.0-alpha.5`.
 - Completed the Admin password-reset security arc: hash-only expiring single-use credentials, trusted-origin SMTP delivery outside Email Logs, neutral CSRF-protected public forms, dedicated request throttling, session invalidation, real HTTP-pipeline acceptance coverage, and canonical operational documentation.
