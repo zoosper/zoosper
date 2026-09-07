@@ -894,7 +894,7 @@ An exhaustive independent technical review and static security teardown (`var/lo
 
 ### Beta readiness: documentation publishing closure
 
-- [x] Publish canonical documentation from `dev` through the official GitHub Pages artifact workflow.
+- [x] Publish canonical documentation from `dev` into the dedicated `zoosper/zoosper-cms-website` publishing repository.
 - [x] Keep `docs.zoosper.com` custom-domain metadata source-controlled and reproducible.
 - [x] Emit `.nojekyll` and preserve generated-output isolation.
-- [x] Keep any local nested build repository outside automated publication ownership.
+- [x] Keep the local nested build repository optional while automation uses a clean external-repository checkout.

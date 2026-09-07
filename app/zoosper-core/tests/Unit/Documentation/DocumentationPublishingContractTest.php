@@ -2,24 +2,29 @@
 
 declare(strict_types=1);
 
-it('publishes canonical documentation through the official GitHub Pages pipeline', function (): void {
+it('publishes canonical documentation to the dedicated website repository', function (): void {
     $root = dirname(__DIR__, 5);
     $workflow = (string) file_get_contents($root . '/.github/workflows/docs-site.yml');
     $readme = (string) file_get_contents($root . '/docs-site/README.md');
 
     expect(trim((string) file_get_contents($root . '/docs-site/CNAME')))->toBe('docs.zoosper.com')
         ->and($workflow)->toContain('branches: [dev]')
-        ->toContain('pages: write')
-        ->toContain('id-token: write')
-        ->toContain('actions/configure-pages@v5')
-        ->toContain('actions/upload-pages-artifact@v3')
-        ->toContain('actions/deploy-pages@v4')
-        ->not->toContain('actions/upload-artifact@v4')
-        ->and($readme)->toContain('Generated output remains ignored')
-        ->toContain('does not read, modify, commit, or push that repository');
+        ->toContain('contents: read')
+        ->toContain('repository: zoosper/zoosper-cms-website')
+        ->toContain('ref: master')
+        ->toContain('secrets.DOCS_WEBSITE_TOKEN')
+        ->toContain("rsync -a --delete --exclude='.git/'")
+        ->toContain('git push origin HEAD:master')
+        ->not->toContain('pages: write')
+        ->not->toContain('id-token: write')
+        ->not->toContain('actions/configure-pages')
+        ->not->toContain('actions/upload-pages-artifact')
+        ->not->toContain('actions/deploy-pages')
+        ->and($readme)->toContain('zoosper/zoosper-cms-website')
+        ->toContain('DOCS_WEBSITE_TOKEN');
 });
 
-it('builds deployable custom-domain output without repository metadata', function (): void {
+it('builds the dedicated website repository payload with custom-domain metadata', function (): void {
     $root = dirname(__DIR__, 5);
     $build = $root . '/docs-site/build';
 

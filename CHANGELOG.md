@@ -2,6 +2,8 @@
 
 ## [0.3.2-alpha.1-dev]
 
+- Corrected documentation automation to publish generated output to the dedicated `zoosper/zoosper-cms-website` repository that owns `docs.zoosper.com`.
+
 - Added source-controlled custom-domain metadata and official GitHub Pages artifact deployment for the canonical documentation website.
 
 - Reconciled canonical and generated documentation with shipped Page revisions, Media derivatives, release identity, and documentation-site status.
