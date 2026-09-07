@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use PDO;
 use Zoosper\Admin\Controller\PasswordResetController;
 use Zoosper\Auth\Http\AuthenticationMiddleware;
 use Zoosper\Auth\Http\CsrfMiddleware;

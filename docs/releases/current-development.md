@@ -13,7 +13,7 @@
 
 ## Development direction
 
-The 0.3.1 line is a deliberate minor public-alpha progression after the substantial 0.3.0 alpha series. Continue product-facing CMS capability, extension ergonomics, API parity, documentation, and release hardening while preserving the verified alpha.5 security, ownership, data-integrity, and presentation boundaries.
+The 0.3.2 line is the beta-readiness public-alpha progression after the substantial 0.3.0 alpha series. Continue product-facing CMS capability, extension ergonomics, API parity, documentation, and release hardening while preserving the verified alpha.5 security, ownership, data-integrity, and presentation boundaries.
 
 ## Release discipline
 

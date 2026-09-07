@@ -4,11 +4,11 @@ Zoosper Admin provides authenticated workspaces for content and platform operati
 
 ## Pages
 
-Create, edit, preview, publish and unpublish site-scoped pages. Pages support HTML output, Editor.js JSON and SEO metadata. Page revision history is under active 0.2 development.
+Create, edit, preview, publish and unpublish site-scoped pages. Pages support HTML output, Editor.js JSON and SEO metadata. Page revision history, preview, pagination, and restoration are available in the Admin Page workflow.
 
 ## Media
 
-The Media library supports managed uploads and Editor.js image uploads. Derivative processing remains disabled until a production processor and enablement policy are configured.
+The Media library supports managed uploads and Editor.js image uploads. WebP derivative processing is available through the Media processing policy, with persistent derivative records and lifecycle cleanup until a production processor and enablement policy are configured.
 
 ## Settings
 

@@ -883,3 +883,11 @@ An exhaustive independent technical review and static security teardown (`var/lo
 - [x] Remove development minimum-stability where it is no longer required.
 - [x] Keep Composer validation, clean locked installation, scaffolder output, package documentation, and docs-site generation aligned.
 - [ ] Complete documentation-site source expansion and automated publishing as a separate bounded phase.
+
+### Beta readiness: documentation truth reconciliation
+
+- [x] Reconcile canonical Page revision and Media derivative documentation with shipped behaviour.
+- [x] Keep current development identity separate from immutable historical release documentation.
+- [x] Build and validate the canonical documentation website from reconciled sources.
+- [x] Add permanent stale-claim guards for current public documentation.
+- [ ] Expand documentation-site source coverage and automate publishing in BR-1C.
