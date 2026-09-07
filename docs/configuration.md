@@ -13,3 +13,16 @@ Zoosper loads module defaults beneath project configuration. Environment variabl
 `config/version.php` is the central default CMS version source. `CMS_VERSION` is an optional deployment override.
 
 Never commit `.env`, credentials, encryption keys or production connection strings.
+
+## Admin account lockout
+
+```dotenv
+ADMIN_ACCOUNT_LOCKOUT_MAX_ATTEMPTS=5
+ADMIN_ACCOUNT_LOCKOUT_SECONDS=900
+```
+
+These variables configure temporary per-account lockout for known active Admin users. The first value is the failed-password threshold and the second is the lock duration in seconds. The shipped example uses five attempts and 900 seconds.
+
+Account lockout and request rate limiting are separate controls. Account lockout persists failure state for a known active Admin identity. The Admin login rate limiter protects request volume using its configured email/IP identity. Either control may reject a request independently.
+
+Temporary lockout does not change the Admin user's active/inactive status. Public login output remains neutral and does not reveal lockout state or expiry.

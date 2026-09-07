@@ -6,6 +6,7 @@
 
 - Latest immutable release: `v0.3.0-alpha.5`.
 - Current development line: `0.3.1-alpha.1-dev`.
+- **[x] Phase 13A-C2 Admin account lockout:** Auth now owns atomic per-account failed-login state, configurable temporary lockout, neutral authentication enforcement, password-reset recovery, protected Admin visibility, `user.manage`-guarded POST unlock, secret-free audit metadata, and real HTTP-lifecycle acceptance. Account lockout remains independent from active/inactive status and from the separate email/IP request rate limiter.
 - **[x] GitHub CI MySQL Migration Failure Resolution:** Fixed `composer migrate` failure (`SQLSTATE[HY000]: General error: 1824 Failed to open the referenced table 'media_assets'`) by using `SchemaInspector` in `202608310001_create_media_queue_table.php` to verify table presence before issuing `CREATE TABLE ... FOREIGN KEY (asset_id) REFERENCES media_assets(id)`, allowing fresh database migrations on MySQL and SQLite to execute safely and defer table creation to the declarative schema engine.
 - **[x] Secret Generation Hardening:** Added explicit `0600` file permissions to `GenerateSecretsCommand::writeToEnvFile()` after writing updated `.env` secrets.
 - **[x] Phase 10BN:** generic pagination ownership moved from Core to the

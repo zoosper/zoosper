@@ -154,3 +154,24 @@ Auth owns reset credential persistence and lifecycle. Only a SHA-256 hash of the
 Reset completion validates the canonical Admin password policy, updates the canonical password hash atomically with credential consumption, invalidates remaining outstanding credentials, and causes existing password-fingerprint sessions to fail on their next guard check. Invalid, expired, consumed, malformed, inactive-account, weak-password, and confirmation-mismatch cases do not change the password.
 
 Public request throttling uses the independent `admin.password_reset_request` policy configured by `RATE_LIMIT_ADMIN_PASSWORD_RESET_MAX_ATTEMPTS` and `RATE_LIMIT_ADMIN_PASSWORD_RESET_WINDOW_SECONDS`. The identity combines normalised email and client IP behind the configured salted rate-limit boundary. Report-only mode observes without blocking; enforce mode denies issuance while the HTTP adapter preserves its neutral public response.
+
+## Admin account lockout
+
+Auth owns temporary per-account protection for repeated failed Admin password authentication. Configuration is supplied through:
+
+```dotenv
+ADMIN_ACCOUNT_LOCKOUT_MAX_ATTEMPTS=5
+ADMIN_ACCOUNT_LOCKOUT_SECONDS=900
+```
+
+`ADMIN_ACCOUNT_LOCKOUT_MAX_ATTEMPTS` is the number of failed passwords for a known active Admin account that causes a lock. `ADMIN_ACCOUNT_LOCKOUT_SECONDS` is the temporary lock duration in seconds. Keep both values positive; the shipped example locks after five failures for 900 seconds.
+
+The lockout record is separate from the Admin user's active/inactive status. Unknown and inactive accounts still use the existing dummy-password verification path and do not receive account-lockout rows. Public login responses remain the neutral `Invalid email or password.` response and do not disclose whether an account exists, is locked, or when a lock expires.
+
+A correct password is still verified while a lock is active, but authentication remains rejected until the lock expires or an authorised operator clears it. A successful login below the threshold clears prior failure state. A completed Admin password reset also clears lockout state inside the reset transaction; rejected, expired, consumed, superseded, mismatched, or weak reset attempts do not clear it.
+
+Account lockout complements the separate Admin request rate limiter. Lockout is keyed to a known active Admin account and persists authentication failure state. Rate limiting protects request traffic using its configured email/IP identity and may return HTTP 429 independently.
+
+The protected Admin User edit workspace displays failed-attempt information and, for an active lock, the expiry in UTC. The POST-only `/admin/users/{id}/unlock` action requires `user.manage` and the standard Admin CSRF middleware. Unlocking clears only lockout state. It does not change status, password, roles, locale, two-factor enrolment, personal access tokens, or password-reset credentials.
+
+A successful operational unlock records `admin_user.account_unlocked` against the target `admin_user` ID with a short secret-free summary. Passwords, hashes, reset tokens, lock expiry, IP addresses, user agents, and session identifiers are excluded from this audit event.

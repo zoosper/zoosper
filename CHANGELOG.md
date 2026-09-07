@@ -1,6 +1,7 @@
 # Changelog
 
 ## [0.3.1-alpha.1-dev]
+- Completed the Admin account-lockout security arc: Auth-owned atomic failure tracking, configurable temporary locks, neutral public login responses, password-reset recovery, protected manual unlock, secret-free auditing, and real HTTP acceptance across the unified and fallback Admin User form paths.
 - Opened the next minor public-alpha development line following `v0.3.0-alpha.5`.
 - Completed the Admin password-reset security arc: hash-only expiring single-use credentials, trusted-origin SMTP delivery outside Email Logs, neutral CSRF-protected public forms, dedicated request throttling, session invalidation, real HTTP-pipeline acceptance coverage, and canonical operational documentation.
 - Active focus: continue product-facing CMS capability, extension ergonomics, API parity, documentation, and release hardening from the verified alpha.5 baseline.

@@ -148,3 +148,11 @@ The Admin module owns the thin public HTTP adapter and declares four stateful ro
 Both public pages publish `noindex,nofollow`. Missing or expired CSRF state is rejected with HTTP `419`. Unknown, inactive, rate-limited, and delivery-failure request cases share the same public response. Successful reset rotates the CSRF token and records only the secret-free `admin.password_reset_completed` audit action. The reset controller does not authenticate the user automatically.
 
 `PasswordResetHttpAcceptanceTest` boots the real application service graph and exercises the Router, authentication middleware, CSRF middleware, migrations, rate limiter, reset service, password authentication, credential replay prevention, and session fingerprint invalidation.
+
+## Admin account-lockout operations
+
+The Admin login controller deliberately presents the same `Invalid email or password.` response for an incorrect password and a temporarily locked account. Operators must not add lockout status, expiry, attempt counts, or account-existence details to the public form.
+
+Authorised operators can inspect account-lockout state on the protected Admin User edit screen. When failure state exists, the workspace shows the failed-attempt count. An active lock also shows its expiry in UTC and an **Unlock account** action; pre-threshold state offers **Clear failed attempts**.
+
+The mutation is `POST /admin/users/{id}/unlock`, requires `user.manage`, uses the standard stateful Admin CSRF middleware, and responds with HTTP 303 to the target edit screen. It changes only Auth-owned lockout state and writes the secret-free `admin_user.account_unlocked` audit action when state existed.

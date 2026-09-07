@@ -33,3 +33,14 @@ Check the dedicated `admin.password_reset_request` rate-limit policy and its env
 ### Existing sessions stop working after a reset
 
 This is expected. The Admin session guard stores a password-hash fingerprint. Successful reset changes the canonical password hash, so existing authenticated sessions fail validation on their next guard check and must sign in again.
+
+## Admin user cannot sign in after repeated password failures
+
+1. Confirm whether the Admin user is active. Inactive status and temporary account lockout are separate conditions; unlocking does not activate an inactive user.
+2. Check `ADMIN_ACCOUNT_LOCKOUT_MAX_ATTEMPTS` and `ADMIN_ACCOUNT_LOCKOUT_SECONDS` in the deployment environment. The shipped example is five failures and 900 seconds.
+3. Distinguish account lockout from the Admin request rate limiter. A rate-limited request may return HTTP 429 with `Retry-After`; account lockout keeps the public password response neutral with HTTP 422.
+4. For an authorised operational recovery, sign in as an Admin with `user.manage`, open the affected Admin User edit page, review the failed-attempt count and UTC expiry, then use **Unlock account**. The POST action requires a valid CSRF token and redirects back to the edit page with HTTP 303.
+5. If the user also needs a new password, complete the Admin forgot-password flow. Only a successful reset clears lockout state; invalid, expired, consumed, superseded, mismatched, or weak reset attempts do not.
+6. Confirm the audit log contains `admin_user.account_unlocked` for a manual clear. The event identifies the actor and target Admin user but intentionally excludes passwords, hashes, reset tokens, lock expiry, IP addresses, user agents, and session identifiers.
+
+If the lock has expired, the next authentication check removes stale lockout state automatically. A successful login below the threshold also clears accumulated failures.

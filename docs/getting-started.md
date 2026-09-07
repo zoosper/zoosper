@@ -31,3 +31,16 @@ Before using Admin password reset outside local development:
 5. Run `php8.5 bin/zoosper migrate` so `admin_password_reset_tokens` exists, then run the normal compile and release checks.
 
 The public flow is available from the **Forgot password?** link on the Admin sign-in page. Reset messages intentionally bypass Email Logs because the URL contains the single-use credential.
+
+## Configure Admin account lockout
+
+Copy the shipped lockout settings into the deployment environment and adjust them to the organisation's security policy:
+
+```dotenv
+ADMIN_ACCOUNT_LOCKOUT_MAX_ATTEMPTS=5
+ADMIN_ACCOUNT_LOCKOUT_SECONDS=900
+```
+
+Run migrations before enabling Admin authentication so the Auth-owned `admin_account_lockouts` table exists. A known active account is temporarily locked after the configured number of failed passwords. The public login page continues to show only `Invalid email or password.`
+
+An authorised operator with `user.manage` can open the affected Admin User edit page and use **Unlock account**. The action is POST-only and CSRF-protected. A successful password reset also clears the lock. Neither recovery path activates an inactive account or changes its roles, password-independent security state, or two-factor configuration.
