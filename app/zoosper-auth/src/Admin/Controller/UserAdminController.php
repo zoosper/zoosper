@@ -352,7 +352,7 @@ final readonly class UserAdminController
      */
     private function userFromRequest(Request $request): ?AdminUser
     {
-        $id = $request->query('id');
+        $id = $request->routeParam('id') ?? $request->query('id');
 
         return $id !== null && ctype_digit($id) ? $this->users->findById((int) $id) : null;
     }
@@ -490,11 +490,11 @@ final readonly class UserAdminController
                 </section>';
             }
 
-            $lifecycleHtml = $user !== null && $this->lifecycle !== null
-                ? $this->lifecycle->actionsHtml(
+            $lifecycleHtml = $user !== null
+                ? ($this->lifecycle?->actionsHtml(
                     $user,
                     $this->guard->user() ?? throw new RuntimeException('Authenticated Admin User required while rendering the Admin User form.'),
-                )
+                ) ?? '') . ($this->accountUnlock?->actionsHtml($user) ?? '')
                 : '';
 
             if ($lifecycleHtml !== '') {

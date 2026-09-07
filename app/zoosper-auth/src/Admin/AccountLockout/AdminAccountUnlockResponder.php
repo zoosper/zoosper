@@ -50,7 +50,14 @@ final readonly class AdminAccountUnlockResponder
         $this->lockouts->clear($target->id);
         if ($hadState) {
             $this->flash?->success('Admin account sign-in lockout cleared.', 'admin.user.account-unlocked');
-            $this->audit?->logAction($actor->id, $actor->email, 'admin_user.account_unlocked');
+            $this->audit?->logAction(
+                $actor->id,
+                $actor->email,
+                'admin_user.account_unlocked',
+                'admin_user',
+                (string) $target->id,
+                'Cleared Admin account sign-in lockout.',
+            );
         } else {
             $this->flash?->success('The Admin account has no active lockout.', 'admin.user.account-unlocked');
         }

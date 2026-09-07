@@ -26,6 +26,18 @@ it('renders protected lockout facts and clears only lockout state', function ():
         ->and($responder->unlock($target, $actor)->statusCode())->toBe(303);
 });
 
+it('uses the complete secret-free audit contract', function (): void {
+    $root = dirname(__DIR__, 3);
+    $source = (string) file_get_contents($root . '/src/Admin/AccountLockout/AdminAccountUnlockResponder.php');
+
+    expect($source)->toContain("'admin_user.account_unlocked'")
+        ->toContain("'admin_user'")
+        ->toContain('(string) $target->id')
+        ->toContain("'Cleared Admin account sign-in lockout.'")
+        ->not->toContain('passwordHash')
+        ->not->toContain('lockedUntil,');
+});
+
 it('keeps unlock POST-only permission-protected and absent from public login output', function (): void {
     $root = dirname(__DIR__, 5);
     $routes = (string) file_get_contents($root . '/app/zoosper-auth/config/admin_routes.php');
