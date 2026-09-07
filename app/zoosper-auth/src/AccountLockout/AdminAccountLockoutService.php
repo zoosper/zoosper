@@ -15,6 +15,11 @@ final readonly class AdminAccountLockoutService
     ) {
     }
 
+    public function state(int $adminUserId): ?AdminAccountLockoutState
+    {
+        return $this->repository->find($adminUserId);
+    }
+
     public function isLocked(int $adminUserId): bool
     {
         $state = $this->repository->find($adminUserId);

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Auth\Admin\Lifecycle\RoleLifecycleAdminResponder;
+use Zoosper\Auth\Admin\AccountLockout\AdminAccountUnlockResponder;
 use Zoosper\Auth\Admin\Lifecycle\AdminUserLifecycleAdminResponder;
 use Zoosper\Auth\Admin\Grid\RoleGridIndex;
 
@@ -67,6 +68,13 @@ return [
         passwordPolicy: $services->get(PasswordPolicy::class),
 
         lifecycle: new AdminUserLifecycleAdminResponder($services->get(\Zoosper\Auth\Lifecycle\AdminUserLifecycleCoordinator::class), $services->get(\Zoosper\Auth\Service\CsrfTokenManager::class), $services->has(\Zoosper\Core\Message\FlashMessageStoreInterface::class) ? $services->get(\Zoosper\Core\Message\FlashMessageStoreInterface::class) : null, $services->has(\Zoosper\Core\Url\AdminUrlGenerator::class) ? $services->get(\Zoosper\Core\Url\AdminUrlGenerator::class) : null),
+        accountUnlock: new AdminAccountUnlockResponder(
+            $services->get(\Zoosper\Auth\AccountLockout\AdminAccountLockoutService::class),
+            $services->get(\Zoosper\Auth\Service\CsrfTokenManager::class),
+            $services->has(\Zoosper\Core\Message\FlashMessageStoreInterface::class) ? $services->get(\Zoosper\Core\Message\FlashMessageStoreInterface::class) : null,
+            $services->has(\Zoosper\Core\Url\AdminUrlGenerator::class) ? $services->get(\Zoosper\Core\Url\AdminUrlGenerator::class) : null,
+            $services->has(\Zoosper\Audit\Contract\AuditLoggerInterface::class) ? $services->get(\Zoosper\Audit\Contract\AuditLoggerInterface::class) : null,
+        ),
     ),
     RoleAdminController::class => static fn (ServiceContainer $services): RoleAdminController => new RoleAdminController(
         $services->get(SessionGuard::class),

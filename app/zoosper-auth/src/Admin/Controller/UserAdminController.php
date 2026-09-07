@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Zoosper\Auth\Admin\Controller;
+use Zoosper\Auth\Admin\AccountLockout\AdminAccountUnlockResponder;
 use Zoosper\Auth\Admin\Lifecycle\AdminUserLifecycleAdminResponder;
 
 use Zoosper\Auth\Admin\Grid\AuthGridQueryState;
@@ -53,6 +54,7 @@ final readonly class UserAdminController
         private ?AdminUserLifecycleAdminResponder $lifecycle = null,
         private ?AdminFormRegistry $formRegistry = null,
         private ?AdminFormRenderer $formRenderer = null,
+        private ?AdminAccountUnlockResponder $accountUnlock = null,
     ) {
     }
 
@@ -220,6 +222,19 @@ final readonly class UserAdminController
     public function restore(\Zoosper\Core\Http\Request $request): \Zoosper\Core\Http\Response
     {
         return $this->lifecycleOperation($request, 'restore');
+    }
+
+    public function unlock(Request $request): Response
+    {
+        $actor = $this->currentAdminUser();
+        $user = $this->userFromRequest($request);
+
+        if ($user === null) {
+            return $this->renderMessage('Admin User Not Found', 'Admin user not found.', 404);
+        }
+
+        return $this->accountUnlock?->unlock($user, $actor)
+            ?? Response::redirect($this->adminUrl('users/edit', ['id' => $user->id]), 303);
     }
 
     public function delete(Request $request): Response
@@ -530,11 +545,11 @@ final readonly class UserAdminController
         $viewModel = [
             'action' => $action,
             'csrfToken' => $this->csrf->token(),
-            'lifecycleHtml' => $user !== null && $this->lifecycle !== null
-                ? $this->lifecycle->actionsHtml(
+            'lifecycleHtml' => $user !== null
+                ? ($this->lifecycle?->actionsHtml(
                     $user,
                     $this->guard->user() ?? throw new RuntimeException('Authenticated Admin User required while rendering the Admin User form.'),
-                )
+                ) ?? '') . ($this->accountUnlock?->actionsHtml($user) ?? '')
                 : '',
             'name' => (string) ($submitted['name'] ?? $user?->name ?? ''),
             'email' => (string) ($submitted['email'] ?? $user?->email ?? ''),
