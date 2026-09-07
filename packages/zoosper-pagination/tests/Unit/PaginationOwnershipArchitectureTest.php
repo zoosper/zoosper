@@ -29,7 +29,7 @@ it('requires the Zoosper boundary directly from Grid', function (): void {
     $grid = json_decode((string) file_get_contents($root . '/packages/zoosper-grid/composer.json'), true, flags: JSON_THROW_ON_ERROR);
     $pagination = json_decode((string) file_get_contents($root . '/packages/zoosper-pagination/composer.json'), true, flags: JSON_THROW_ON_ERROR);
 
-    expect($grid['require']['zoosper/pagination'] ?? null)->toBe('dev-dev')
+    expect($grid['require']['zoosper/pagination'] ?? null)->toBe('^0.3.1@alpha')
         ->and($grid['require'])->not->toHaveKey('zoosper/core')
         ->and($pagination['require']['marko/pagination'] ?? null)->toBe('0.8.5');
 });

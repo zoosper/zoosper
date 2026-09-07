@@ -25,7 +25,7 @@ it('composes Store Orders through the shared Admin Grid workspace', function ():
         ->and($controller)->not->toBeFalse()
         ->and($controller)->toContain('StoreOrderGridWorkspace')
         ->and($controller)->toContain('renderBody(')
-        ->and($composer['require'])->toHaveKey('zoosper/admin-grid', 'dev-dev');
+        ->and($composer['require'])->toHaveKey('zoosper/admin-grid', '^0.3.1@alpha');
 });
 
 it('keeps the remote request driven by resolved workspace scope and page size', function (): void {

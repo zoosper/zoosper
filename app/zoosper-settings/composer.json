@@ -5,10 +5,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "zoosper/auth": "dev-dev",
-        "zoosper/core": "dev-dev",
-        "zoosper/scoped-config": "dev-dev",
-        "zoosper/site": "dev-dev"
+        "zoosper/auth": "^0.3.1@alpha",
+        "zoosper/core": "^0.3.1@alpha",
+        "zoosper/scoped-config": "^0.3.1@alpha",
+        "zoosper/site": "^0.3.1@alpha"
     },
     "autoload": {
         "psr-4": {

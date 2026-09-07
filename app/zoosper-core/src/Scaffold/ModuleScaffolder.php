@@ -70,7 +70,7 @@ final readonly class ModuleScaffolder
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "zoosper/core": "dev-dev"
+        "zoosper/core": "^0.3.1@alpha"
     },
     "autoload": {
         "psr-4": {

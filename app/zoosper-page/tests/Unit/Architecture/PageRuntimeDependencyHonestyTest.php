@@ -10,7 +10,7 @@ it('declares packages referenced by Page runtime composition', function (): void
     expect($services)->toContain('EditorImageBlockSanitizerInterface')
         ->not->toContain('Zoosper\\Media\\')
         ->and($composer['require'])->not->toHaveKey('zoosper/media')
-        ->toHaveKey('zoosper/core', 'dev-dev')
-        ->toHaveKey('zoosper/site', 'dev-dev')
-        ->toHaveKey('zoosper/theme', 'dev-dev');
+        ->toHaveKey('zoosper/core', '^0.3.1@alpha')
+        ->toHaveKey('zoosper/site', '^0.3.1@alpha')
+        ->toHaveKey('zoosper/theme', '^0.3.1@alpha');
 });

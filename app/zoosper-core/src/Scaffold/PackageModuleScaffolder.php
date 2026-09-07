@@ -120,7 +120,7 @@ final readonly class PackageModuleScaffolder
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "zoosper/core": "dev-dev"
+        "zoosper/core": "^0.3.1@alpha"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",

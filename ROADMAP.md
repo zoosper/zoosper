@@ -876,3 +876,10 @@ An exhaustive independent technical review and static security teardown (`var/lo
   - *Remediation:* Remove obsolete comments in `bootstrap/autoload.php` referencing non-existent EnvLoader classes; reconcile contradictory Supported Versions tables in `SECURITY.md`.
 - [x] **LOW-03: Clarify pluggable module architecture & `modules/` placeholder.**
   - *Remediation:* Documented the distinct roles of `app/` (internal modules), `packages/` (standalone Composer packages), and `modules/` (pluggable drop-in extensions) in `docs/modules.md`.
+
+### Beta readiness: Composer release-train policy
+
+- [x] Replace first-party `dev-dev` constraints with explicit path-package versions and bounded prerelease compatibility.
+- [x] Remove development minimum-stability where it is no longer required.
+- [x] Keep Composer validation, clean locked installation, scaffolder output, package documentation, and docs-site generation aligned.
+- [ ] Complete documentation-site source expansion and automated publishing as a separate bounded phase.

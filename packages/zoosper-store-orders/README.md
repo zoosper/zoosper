@@ -33,11 +33,11 @@ Store Orders API Grid integration for Zoosper.
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/admin-grid`: `dev-dev`.
-- `zoosper/api-grid`: `dev-dev`.
-- `zoosper/auth`: `dev-dev`.
-- `zoosper/core`: `dev-dev`.
-- `zoosper/grid`: `dev-dev`.
+- `zoosper/admin-grid`: `^0.3.1@alpha`.
+- `zoosper/api-grid`: `^0.3.1@alpha`.
+- `zoosper/auth`: `^0.3.1@alpha`.
+- `zoosper/core`: `^0.3.1@alpha`.
+- `zoosper/grid`: `^0.3.1@alpha`.
 - Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
 
 ## Database
@@ -70,7 +70,7 @@ Store Orders API Grid integration for Zoosper.
 
 ## Pagination ownership
 
-This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`^0.3.1@alpha`). It must not import `Marko\Pagination` classes.
 
 ## Admin presentation
 

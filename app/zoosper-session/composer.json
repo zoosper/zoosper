@@ -6,8 +6,8 @@
     "require": {
         "marko/session-file": "0.8.5",
         "php": "^8.5",
-        "zoosper/config": "dev-dev",
-        "zoosper/core": "dev-dev"
+        "zoosper/config": "^0.3.1@alpha",
+        "zoosper/core": "^0.3.1@alpha"
     },
     "autoload": {
         "psr-4": {

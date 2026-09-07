@@ -11,38 +11,38 @@
         "marko/admin": "0.8.5",
         "marko/view": "0.8.5",
         "php": "^8.5",
-        "zoosper/admin": "dev-dev",
-        "zoosper/admin-dashboard": "dev-dev",
-        "zoosper/admin-form": "dev-dev",
-        "zoosper/admin-grid": "dev-dev",
-        "zoosper/api": "dev-dev",
-        "zoosper/api-grid": "dev-dev",
-        "zoosper/audit": "dev-dev",
-        "zoosper/auth": "dev-dev",
-        "zoosper/cache": "dev-dev",
-        "zoosper/config": "dev-dev",
-        "zoosper/core": "dev-dev",
-        "zoosper/database": "dev-dev",
-        "zoosper/editor": "dev-dev",
-        "zoosper/errors": "dev-dev",
-        "zoosper/global-announcements": "dev-dev",
-        "zoosper/grid": "dev-dev",
-        "zoosper/install": "dev-dev",
-        "zoosper/logger": "dev-dev",
-        "zoosper/mail": "dev-dev",
-        "zoosper/media": "dev-dev",
-        "zoosper/menu": "dev-dev",
-        "zoosper/page": "dev-dev",
-        "zoosper/pagination": "dev-dev",
-        "zoosper/scoped-config": "dev-dev",
-        "zoosper/seo": "dev-dev",
-        "zoosper/session": "dev-dev",
-        "zoosper/settings": "dev-dev",
-        "zoosper/site": "dev-dev",
-        "zoosper/store-orders": "dev-dev",
-        "zoosper/theme": "dev-dev",
-        "zoosper/two-factor": "dev-dev",
-        "zoosper/url-rewrite": "dev-dev"
+        "zoosper/admin": "^0.3.1@alpha",
+        "zoosper/admin-dashboard": "^0.3.1@alpha",
+        "zoosper/admin-form": "^0.3.1@alpha",
+        "zoosper/admin-grid": "^0.3.1@alpha",
+        "zoosper/api": "^0.3.1@alpha",
+        "zoosper/api-grid": "^0.3.1@alpha",
+        "zoosper/audit": "^0.3.1@alpha",
+        "zoosper/auth": "^0.3.1@alpha",
+        "zoosper/cache": "^0.3.1@alpha",
+        "zoosper/config": "^0.3.1@alpha",
+        "zoosper/core": "^0.3.1@alpha",
+        "zoosper/database": "^0.3.1@alpha",
+        "zoosper/editor": "^0.3.1@alpha",
+        "zoosper/errors": "^0.3.1@alpha",
+        "zoosper/global-announcements": "^0.3.1@alpha",
+        "zoosper/grid": "^0.3.1@alpha",
+        "zoosper/install": "^0.3.1@alpha",
+        "zoosper/logger": "^0.3.1@alpha",
+        "zoosper/mail": "^0.3.1@alpha",
+        "zoosper/media": "^0.3.1@alpha",
+        "zoosper/menu": "^0.3.1@alpha",
+        "zoosper/page": "^0.3.1@alpha",
+        "zoosper/pagination": "^0.3.1@alpha",
+        "zoosper/scoped-config": "^0.3.1@alpha",
+        "zoosper/seo": "^0.3.1@alpha",
+        "zoosper/session": "^0.3.1@alpha",
+        "zoosper/settings": "^0.3.1@alpha",
+        "zoosper/site": "^0.3.1@alpha",
+        "zoosper/store-orders": "^0.3.1@alpha",
+        "zoosper/theme": "^0.3.1@alpha",
+        "zoosper/two-factor": "^0.3.1@alpha",
+        "zoosper/url-rewrite": "^0.3.1@alpha"
     },
     "require-dev": {
         "icanhazstring/composer-unused": "^0.9.6",
@@ -117,227 +117,322 @@
             "type": "path",
             "url": "packages/zoosper-database",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/database": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "packages/zoosper-audit",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/audit": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "packages/zoosper-admin-form",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/admin-form": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "packages/zoosper-admin-dashboard",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/admin-dashboard": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "packages/zoosper-pagination",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/pagination": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "packages/zoosper-store-orders",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/store-orders": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "packages/zoosper-api-grid",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/api-grid": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "packages/zoosper-errors",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/errors": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "packages/zoosper-media",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/media": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "packages/zoosper-grid",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/grid": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "packages/zoosper-admin-grid",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/admin-grid": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-core",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/core": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-global-announcements",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/global-announcements": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-auth",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/auth": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-theme",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/theme": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-page",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/page": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-site",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/site": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-admin",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/admin": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-api",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/api": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-mail",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/mail": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-two-factor",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/two-factor": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-url-rewrite",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/url-rewrite": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-install",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/install": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "app/zoosper-settings",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/settings": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-menu",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/menu": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-session",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/session": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-seo",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/seo": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./packages/zoosper-logger",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/logger": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./packages/zoosper-cache",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/cache": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./packages/zoosper-config",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/config": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./packages/zoosper-scoped-config",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/scoped-config": "0.3.2-alpha.1"
+                }
             }
         },
         {
             "type": "path",
             "url": "./app/zoosper-editor",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "zoosper/editor": "0.3.2-alpha.1"
+                }
             }
         }
     ],
-    "minimum-stability": "dev",
     "prefer-stable": true
 }

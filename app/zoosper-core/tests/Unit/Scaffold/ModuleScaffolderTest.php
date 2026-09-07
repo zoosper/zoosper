@@ -25,7 +25,7 @@ test('scaffolds a module folder with core convention files', function () {
 
     expect($composer['name'])->toBe('acme/blog');
     expect($composer['type'])->toBe('zoosper-module');
-    expect($composer['require']['zoosper/core'])->toBe('dev-dev');
+    expect($composer['require']['zoosper/core'])->toBe('^0.3.1@alpha');
     expect($composer['extra']['marko']['module'] ?? null)->not->toBeTrue();
     expect($module)->toBe([]);
     expect(is_file($root . '/app/acme-blog/config/events.php'))->toBeTrue();

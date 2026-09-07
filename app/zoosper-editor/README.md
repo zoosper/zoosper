@@ -24,9 +24,9 @@ Zoosper_Editor module for Zoosper CMS.
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/core`: `dev-dev`.
-- `zoosper/auth`: `dev-dev`.
-- `zoosper/scoped-config`: `dev-dev`.
+- `zoosper/core`: `^0.3.1@alpha`.
+- `zoosper/auth`: `^0.3.1@alpha`.
+- `zoosper/scoped-config`: `^0.3.1@alpha`.
 
 ## Testing
 

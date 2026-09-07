@@ -15,8 +15,8 @@ it('keeps Dashboard contracts dependency-safe and concrete feature code out of A
     $contributor = (string) file_get_contents($root . '/app/zoosper-auth/src/Dashboard/AdminUserCountDashboardWidgetContributor.php');
 
     expect(array_keys($package['require']))->toBe(['php'])
-        ->and($admin['require']['zoosper/admin-dashboard'])->toBe('dev-dev')
-        ->and($auth['require']['zoosper/admin-dashboard'])->toBe('dev-dev')
+        ->and($admin['require']['zoosper/admin-dashboard'])->toBe('^0.3.1@alpha')
+        ->and($auth['require']['zoosper/admin-dashboard'])->toBe('^0.3.1@alpha')
         ->and($controller)->not->toContain('ServiceContainer')
         ->not->toContain('Zoosper\Auth\Repository')
         ->and($dashboardSources)->not->toContain('Zoosper\AdminGrid')

@@ -45,7 +45,7 @@ test('first-party dependencies never use unbounded development constraints', fun
                 expect($constraint)
                     ->not->toBe('*@dev', 'Unbounded constraint in ' . $manifest . ': ' . $package)
                     ->not->toBe('*', 'Unbounded constraint in ' . $manifest . ': ' . $package)
-                    ->toBe('dev-dev', 'Unexpected pre-release constraint in ' . $manifest . ': ' . $package);
+                    ->toBe('^0.3.1@alpha', 'Unexpected pre-release constraint in ' . $manifest . ': ' . $package);
             }
         }
     }

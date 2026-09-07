@@ -27,7 +27,7 @@ Reusable grid definitions, criteria, rendering, extension registry and CSV expor
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/pagination`: `dev-dev`.
+- `zoosper/pagination`: `^0.3.1@alpha`.
 - Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
 
 ## Pagination ownership

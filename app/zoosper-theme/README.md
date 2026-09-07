@@ -33,8 +33,8 @@ Theme and template rendering foundation for Zoosper CMS.
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/core`: `dev-dev`.
-- `zoosper/errors`: `dev-dev`.
+- `zoosper/core`: `^0.3.1@alpha`.
+- `zoosper/errors`: `^0.3.1@alpha`.
 
 ## Extension points
 

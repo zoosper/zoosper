@@ -9,7 +9,7 @@ it('keeps third-party session packages behind the Zoosper Session module', funct
     $factory = (string) file_get_contents($root . '/app/zoosper-core/src/Bootstrap/ApplicationFactory.php');
     $application = (string) file_get_contents($root . '/app/zoosper-core/src/Http/Application.php');
 
-    expect($rootComposer['require'])->toHaveKey('zoosper/session', 'dev-dev')
+    expect($rootComposer['require'])->toHaveKey('zoosper/session', '^0.3.1@alpha')
         ->not->toHaveKey('marko/session')
         ->not->toHaveKey('marko/session-file')
         ->not->toHaveKey('marko/session-database')

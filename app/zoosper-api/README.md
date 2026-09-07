@@ -30,10 +30,10 @@ Zoosper_Api module for Zoosper CMS.
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/auth`: `dev-dev`.
-- `zoosper/core`: `dev-dev`.
-- `zoosper/page`: `dev-dev`.
-- `zoosper/site`: `dev-dev`.
+- `zoosper/auth`: `^0.3.1@alpha`.
+- `zoosper/core`: `^0.3.1@alpha`.
+- `zoosper/page`: `^0.3.1@alpha`.
+- `zoosper/site`: `^0.3.1@alpha`.
 
 ## Security and compatibility
 

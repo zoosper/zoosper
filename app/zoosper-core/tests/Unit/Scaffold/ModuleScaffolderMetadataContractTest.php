@@ -26,7 +26,7 @@ test('all module scaffolders generate Composer-owned metadata', function (): voi
 
         expect($composer['type'])->toBe('zoosper-module');
         expect($composer['extra']['marko']['module'] ?? null)->not->toBeTrue();
-        expect($composer['require']['zoosper/core'])->toBe('dev-dev');
+        expect($composer['require']['zoosper/core'])->toBe('^0.3.1@alpha');
         expect($module)->toBe([]);
     }
 });

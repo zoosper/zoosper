@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=8.5",
-        "marko/core": "*"
+        "marko/core": "^0.8"
     },
     "autoload": {
         "psr-4": {

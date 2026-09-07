@@ -54,12 +54,12 @@ Zoosper_Admin module for Zoosper CMS.
 
 - `marko/admin`: `0.8.5`.
 - `php`: `^8.5`.
-- `zoosper/admin-grid`: `dev-dev`.
-- `zoosper/auth`: `dev-dev`.
-- `zoosper/core`: `dev-dev`.
-- `zoosper/errors`: `dev-dev`.
-- `zoosper/grid`: `dev-dev`.
-- `zoosper/theme`: `dev-dev`.
+- `zoosper/admin-grid`: `^0.3.1@alpha`.
+- `zoosper/auth`: `^0.3.1@alpha`.
+- `zoosper/core`: `^0.3.1@alpha`.
+- `zoosper/errors`: `^0.3.1@alpha`.
+- `zoosper/grid`: `^0.3.1@alpha`.
+- `zoosper/theme`: `^0.3.1@alpha`.
 
 ## Database
 
@@ -125,7 +125,7 @@ The default theme's reusable component templates add semantic card regions, aler
 
 ## Pagination ownership
 
-This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`^0.3.1@alpha`). It must not import `Marko\Pagination` classes.
 
 
 ### Fable bulk presentation pass

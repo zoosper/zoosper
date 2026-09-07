@@ -34,3 +34,9 @@ The root `docs/` directory is the canonical website source. Every first-party Co
 ## Documentation integrity
 
 Public project summaries must be reconciled with detailed phase notes and current source whenever a phase closes. The root README describes the current product surface, `SECURITY.md` describes the current release/security scope, and `ROADMAP.md` owns open-versus-closed delivery status. Package READMEs remain co-located technical references and must not become independent roadmaps.
+
+## First-party release train
+
+First-party `zoosper/*` packages in the monorepo share the Zoosper release train. Root path repositories assign the current package candidate explicitly through Composer `options.versions`; package manifests use `^0.3.1@alpha` for compatible first-party dependencies instead of a branch constraint. This accepts compatible 0.3 public-alpha and later prerelease packages below 0.4 while keeping package installation independent of the Git `dev` branch name.
+
+The root project keeps `prefer-stable: true` and does not use `minimum-stability: dev`. Platform requirements such as `ext-pdo: *` and `ext-curl: *` remain valid capability declarations and are not package-version wildcards. New module scaffolders must emit the same bounded first-party constraint.

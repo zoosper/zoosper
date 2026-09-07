@@ -6,17 +6,17 @@
     "require": {
         "marko/admin": "0.8.5",
         "php": "^8.5",
-        "zoosper/admin-dashboard": "dev-dev",
-        "zoosper/admin-form": "dev-dev",
-        "zoosper/admin-grid": "dev-dev",
-        "zoosper/audit": "dev-dev",
-        "zoosper/auth": "dev-dev",
-        "zoosper/core": "dev-dev",
-        "zoosper/errors": "dev-dev",
-        "zoosper/grid": "dev-dev",
-        "zoosper/pagination": "dev-dev",
-        "zoosper/scoped-config": "dev-dev",
-        "zoosper/theme": "dev-dev"
+        "zoosper/admin-dashboard": "^0.3.1@alpha",
+        "zoosper/admin-form": "^0.3.1@alpha",
+        "zoosper/admin-grid": "^0.3.1@alpha",
+        "zoosper/audit": "^0.3.1@alpha",
+        "zoosper/auth": "^0.3.1@alpha",
+        "zoosper/core": "^0.3.1@alpha",
+        "zoosper/errors": "^0.3.1@alpha",
+        "zoosper/grid": "^0.3.1@alpha",
+        "zoosper/pagination": "^0.3.1@alpha",
+        "zoosper/scoped-config": "^0.3.1@alpha",
+        "zoosper/theme": "^0.3.1@alpha"
     },
     "autoload": {
         "psr-4": {

@@ -6,7 +6,7 @@
     "require": {
         "ext-curl": "*",
         "php": "^8.5",
-        "zoosper/grid": "dev-dev"
+        "zoosper/grid": "^0.3.1@alpha"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",

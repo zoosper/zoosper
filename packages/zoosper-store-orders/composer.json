@@ -5,12 +5,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "zoosper/admin-grid": "dev-dev",
-        "zoosper/api-grid": "dev-dev",
-        "zoosper/auth": "dev-dev",
-        "zoosper/core": "dev-dev",
-        "zoosper/grid": "dev-dev",
-        "zoosper/pagination": "dev-dev"
+        "zoosper/admin-grid": "^0.3.1@alpha",
+        "zoosper/api-grid": "^0.3.1@alpha",
+        "zoosper/auth": "^0.3.1@alpha",
+        "zoosper/core": "^0.3.1@alpha",
+        "zoosper/grid": "^0.3.1@alpha",
+        "zoosper/pagination": "^0.3.1@alpha"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",

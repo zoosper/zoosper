@@ -5,13 +5,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.3 || ^8.5",
-        "zoosper/admin-grid": "dev-dev",
-        "zoosper/auth": "dev-dev",
-        "zoosper/core": "dev-dev",
-        "zoosper/grid": "dev-dev",
-        "zoosper/page": "dev-dev",
-        "zoosper/pagination": "dev-dev",
-        "zoosper/site": "dev-dev"
+        "zoosper/admin-grid": "^0.3.1@alpha",
+        "zoosper/auth": "^0.3.1@alpha",
+        "zoosper/core": "^0.3.1@alpha",
+        "zoosper/grid": "^0.3.1@alpha",
+        "zoosper/page": "^0.3.1@alpha",
+        "zoosper/pagination": "^0.3.1@alpha",
+        "zoosper/site": "^0.3.1@alpha"
     },
     "autoload": {
         "psr-4": {

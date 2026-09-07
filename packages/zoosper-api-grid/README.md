@@ -20,7 +20,7 @@ Transport and mapping adapters for external API-backed Zoosper grids.
 
 - `ext-curl`: `*`.
 - `php`: `^8.5`.
-- `zoosper/grid`: `dev-dev`.
+- `zoosper/grid`: `^0.3.1@alpha`.
 - Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
 
 ## Security and compatibility

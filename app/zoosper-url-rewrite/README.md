@@ -22,7 +22,7 @@ Zoosper_UrlRewrite module for Zoosper CMS.
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/core`: `dev-dev`.
+- `zoosper/core`: `^0.3.1@alpha`.
 
 ## Database
 

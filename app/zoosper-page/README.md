@@ -64,11 +64,11 @@ Zoosper_Page module for Zoosper CMS.
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/core`: `dev-dev`.
-- `zoosper/grid`: `dev-dev`.
-- `zoosper/media`: `dev-dev`.
-- `zoosper/site`: `dev-dev`.
-- `zoosper/theme`: `dev-dev`.
+- `zoosper/core`: `^0.3.1@alpha`.
+- `zoosper/grid`: `^0.3.1@alpha`.
+- `zoosper/media`: `^0.3.1@alpha`.
+- `zoosper/site`: `^0.3.1@alpha`.
+- `zoosper/theme`: `^0.3.1@alpha`.
 
 ## Database
 
@@ -158,4 +158,4 @@ Page owns its stateless Page and public content API routes, adapters, controller
 
 ## Pagination ownership
 
-This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`^0.3.1@alpha`). It must not import `Marko\Pagination` classes.

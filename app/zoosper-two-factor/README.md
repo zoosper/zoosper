@@ -40,8 +40,8 @@ Zoosper_TwoFactor module for Zoosper CMS.
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/auth`: `dev-dev`.
-- `zoosper/core`: `dev-dev`.
+- `zoosper/auth`: `^0.3.1@alpha`.
+- `zoosper/core`: `^0.3.1@alpha`.
 
 ## Database
 

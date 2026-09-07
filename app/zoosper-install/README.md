@@ -11,7 +11,7 @@ Zoosper CMS installer module - environment checks, first admin user, seed site.
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/core`: `dev-dev`.
+- `zoosper/core`: `^0.3.1@alpha`.
 
 ## Security and compatibility
 

@@ -5,11 +5,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "zoosper/core": "dev-dev",
-        "zoosper/scoped-config": "dev-dev",
-        "zoosper/admin-grid": "dev-dev",
-        "zoosper/grid": "dev-dev",
-        "zoosper/pagination": "dev-dev"
+        "zoosper/core": "^0.3.1@alpha",
+        "zoosper/scoped-config": "^0.3.1@alpha",
+        "zoosper/admin-grid": "^0.3.1@alpha",
+        "zoosper/grid": "^0.3.1@alpha",
+        "zoosper/pagination": "^0.3.1@alpha"
     },
     "autoload": {
         "psr-4": {

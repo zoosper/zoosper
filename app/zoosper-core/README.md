@@ -56,10 +56,10 @@ Generic pagination is owned by `zoosper/pagination`; Core no longer provides `sr
 ## Dependencies
 
 - `ext-pdo`: `*`.
-- `zoosper/config`: `dev-dev`.
-- `zoosper/cache`: `dev-dev`.
+- `zoosper/config`: `^0.3.1@alpha`.
+- `zoosper/cache`: `^0.3.1@alpha`.
 - `php`: `^8.5`.
-- `zoosper/errors`: `dev-dev`.
+- `zoosper/errors`: `^0.3.1@alpha`.
 
 ## Database
 

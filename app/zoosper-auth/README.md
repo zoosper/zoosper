@@ -60,9 +60,9 @@ Zoosper_Auth module for Zoosper CMS.
 ## Dependencies
 
 - `php`: `^8.5`.
-- `zoosper/admin-grid`: `dev-dev`.
-- `zoosper/core`: `dev-dev`.
-- `zoosper/grid`: `dev-dev`.
+- `zoosper/admin-grid`: `^0.3.1@alpha`.
+- `zoosper/core`: `^0.3.1@alpha`.
+- `zoosper/grid`: `^0.3.1@alpha`.
 
 ## Database
 
@@ -127,7 +127,7 @@ The module-owned Admin collection index uses a stable Admin Grid workspace with 
 
 ## Pagination ownership
 
-This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`^0.3.1@alpha`). It must not import `Marko\Pagination` classes.
 
 ## Admin collection primary actions
 

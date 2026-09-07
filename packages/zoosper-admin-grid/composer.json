@@ -6,9 +6,9 @@
     "require": {
         "ext-pdo": "*",
         "php": "^8.5",
-        "zoosper/core": "dev-dev",
-        "zoosper/grid": "dev-dev",
-        "zoosper/pagination": "dev-dev"
+        "zoosper/core": "^0.3.1@alpha",
+        "zoosper/grid": "^0.3.1@alpha",
+        "zoosper/pagination": "^0.3.1@alpha"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",

@@ -38,8 +38,8 @@ Zoosper Media module for Zoosper CMS.
 
 - `ext-pdo`: `*`.
 - `php`: `^8.5`.
-- `zoosper/auth`: `dev-dev`.
-- `zoosper/core`: `dev-dev`.
+- `zoosper/auth`: `^0.3.1@alpha`.
+- `zoosper/core`: `^0.3.1@alpha`.
 - Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
 
 ## Database
@@ -105,7 +105,7 @@ Media cards consume the shared Admin surface, border, text, muted-text and shado
 
 ## Pagination ownership
 
-This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`^0.3.1@alpha`). It must not import `Marko\Pagination` classes.
 
 
 ## Media reads and derivatives

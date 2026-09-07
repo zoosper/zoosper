@@ -26,7 +26,7 @@ test('scaffolds a package module under packages with composer metadata and tests
     expect($composer['extra']['marko']['module'] ?? null)->not->toBeTrue();
     expect($composer['extra'] ?? [])->not->toHaveKey('zoosper');
     expect($composer['autoload']['psr-4'])->toHaveKey('Acme\MovieLibrary\\');
-    expect($composer['require']['zoosper/core'])->toBe('dev-dev');
+    expect($composer['require']['zoosper/core'])->toBe('^0.3.1@alpha');
 
     $module = require $root . '/packages/acme-movie-library/module.php';
     expect($module)->toBe([]);

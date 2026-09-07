@@ -46,9 +46,9 @@ Site-scoped navigation, nested menu trees, breadcrumbs and menu API for Zoosper 
 ## Dependencies
 
 - `php`: `^8.3 || ^8.5`.
-- `zoosper/core`: `dev-dev`.
-- `zoosper/page`: `dev-dev`.
-- `zoosper/site`: `dev-dev`.
+- `zoosper/core`: `^0.3.1@alpha`.
+- `zoosper/page`: `^0.3.1@alpha`.
+- `zoosper/site`: `^0.3.1@alpha`.
 
 ## Database
 
@@ -104,4 +104,4 @@ The module-owned Admin collection index uses a stable Admin Grid workspace with 
 
 ## Pagination ownership
 
-This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`^0.3.1@alpha`). It must not import `Marko\Pagination` classes.

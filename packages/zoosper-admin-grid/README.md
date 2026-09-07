@@ -35,8 +35,8 @@ Per-admin grid preferences, saved views and persistence integration for Zoosper.
 
 - `ext-pdo`: `*`.
 - `php`: `^8.5`.
-- `zoosper/core`: `dev-dev`.
-- `zoosper/grid`: `dev-dev`.
+- `zoosper/core`: `^0.3.1@alpha`.
+- `zoosper/grid`: `^0.3.1@alpha`.
 - Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
 
 ## Database
@@ -85,7 +85,7 @@ Compact Grid controls derive Clear all from the feature action. Export is an exp
 
 ## Pagination ownership
 
-This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`dev-dev`). It must not import `Marko\Pagination` classes.
+This package directly consumes the stable `Zoosper\Pagination` request/result boundary through `zoosper/pagination` (`^0.3.1@alpha`). It must not import `Marko\Pagination` classes.
 
 ## Admin visual integration
 

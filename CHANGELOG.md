@@ -2,6 +2,8 @@
 
 ## [0.3.2-alpha.1-dev]
 
+- Replaced first-party `dev-dev` Composer coupling with an explicit monorepo package release train and bounded prerelease compatibility.
+
 - Opened the next development line after immutable release `v0.3.1-alpha.1`.
 
 ## [0.3.1-alpha.1] - 2026-09-07
