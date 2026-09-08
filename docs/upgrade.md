@@ -7,3 +7,9 @@ Alpha contracts may change between releases. Keep the previous code, database an
 ## Composer package compatibility
 
 Zoosper 0.3 first-party packages use one synchronised release train and bounded `^0.3.1@alpha` internal compatibility. Deploy from the root project with the committed `composer.lock`; do not replace first-party constraints with a floating development branch. Run Composer through PHP 8.5, then compile and verify the module manifest after dependency installation.
+
+## Upgrade rehearsal
+
+`migrate` is a write command and deliberately has no dry-run option. Rehearse upgrades with a disposable database and isolated Git worktree before changing a production installation. Run `schema:foreign-keys:status --format=json` separately for read-only foreign-key inspection. Require globally unique migration basenames because the current migration history stores basenames.
+
+The supported beta-readiness proof starts from the latest immutable release `v0.3.1-alpha.1`. Direct upgrade proof from `v0.3.0-alpha.5` is a separate compatibility gate. Preserve representative Admin, Site, Page, Menu, Media, permission, audit, and Grid data across the rehearsal, run migration twice for idempotency, then require zero foreign-key additions, mismatches, and SQLite rebuild requirements.

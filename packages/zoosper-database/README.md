@@ -53,4 +53,9 @@ Operational workflow:
 
 Existing-table application is explicit, MySQL-only, confirmation-gated, and snapshot-recorded. MySQL DDL can partially succeed, so a failed apply must be inspected before retrying. SQLite existing-table constraints require explicit data-preserving rebuild migrations; they are never applied invisibly. Ordinary `migrate` does not perform existing-table FK reconciliation.
 
-The current first-party inventory contains 33 declarative relationships. Fresh SQLite installation and the active MySQL schema both reconcile all 33, and `release:check` blocks release readiness when reconciliation is incomplete or inspection fails.
+The current first-party inventory contains 35 declarative relationships. Fresh SQLite installation and the active MySQL schema both reconcile all 35, and `release:check` blocks release readiness when reconciliation is incomplete or inspection fails.
+
+
+## Migration identity
+
+The current migration history stores migration basenames. Basenames must therefore be globally unique across root and module migration directories. `MigrationInventory` provides the fail-closed repository guard. Do not edit an already released migration as the only upgrade mechanism; add a new migration for later schema evolution.

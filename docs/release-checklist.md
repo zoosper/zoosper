@@ -16,6 +16,7 @@
 - Live frontend, API health and Admin login checks
 - Authenticated Admin smoke journey
 - Database and Media rollback points
+- Globally unique migration basenames and disposable release-upgrade rehearsal
 - Annotated immutable release tag
 
 ## Starter experience
@@ -26,8 +27,8 @@
 ## Reusable final tag gate
 
 ```bash
-RELEASE_TAG=v0.3.1-alpha.1
-NEXT_VERSION=0.3.1-alpha.2-dev
+RELEASE_TAG=<candidate-tag>
+NEXT_VERSION=<next-development-version>
 ```
 - Confirm `php8.5 bin/zoosper version` reports the release version represented by `RELEASE_TAG`.
 - Confirm Admin and API health expose the same authoritative version.

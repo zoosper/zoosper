@@ -2,6 +2,8 @@
 
 ## [0.3.2-alpha.1-dev]
 
+- Added the BR-2A isolated release-upgrade workspace, global migration-basename guard, and fail-closed rejection of unsupported `migrate --dry-run` usage.
+
 - Corrected documentation automation to publish generated output to the dedicated `zoosper/zoosper-cms-website` repository that owns `docs.zoosper.com`.
 
 - Added source-controlled custom-domain metadata and official GitHub Pages artifact deployment for the canonical documentation website.
