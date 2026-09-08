@@ -32,6 +32,9 @@ it('keeps current canonical documentation aligned with shipped Page and Media ca
 it('builds the public documentation site without stale current claims', function (): void {
     $root = dirname(__DIR__, 5);
     $build = $root . '/docs-site/build';
+    $command = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($root . '/docs-site/build.php');
+    exec($command . ' 2>&1', $output, $code);
+    expect($code)->toBe(0, implode("\n", $output));
 
     expect($build . '/index.html')->toBeFile()
         ->and($build . '/user-guide/index.html')->toBeFile()

@@ -27,6 +27,9 @@ it('publishes canonical documentation to the dedicated website repository', func
 it('builds the dedicated website repository payload with custom-domain metadata', function (): void {
     $root = dirname(__DIR__, 5);
     $build = $root . '/docs-site/build';
+    $command = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($root . '/docs-site/build.php');
+    exec($command . ' 2>&1', $output, $code);
+    expect($code)->toBe(0, implode("\n", $output));
 
     expect(trim((string) file_get_contents($build . '/CNAME')))->toBe('docs.zoosper.com')
         ->and($build . '/.nojekyll')->toBeFile()

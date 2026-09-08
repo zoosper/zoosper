@@ -2,6 +2,8 @@
 
 ## [0.3.2-alpha.1-dev]
 
+- Made documentation and release-worktree tests portable to clean CI checkouts by generating ignored docs output in-test and avoiding assumptions that immutable tags are fetched in shallow clones.
+
 - Added the BR-2A isolated release-upgrade workspace, global migration-basename guard, and fail-closed rejection of unsupported `migrate --dry-run` usage.
 
 - Corrected documentation automation to publish generated output to the dedicated `zoosper/zoosper-cms-website` repository that owns `docs.zoosper.com`.
