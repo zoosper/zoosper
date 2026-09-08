@@ -2,6 +2,8 @@
 
 ## [0.3.2-alpha.1-dev]
 
+- Added the BR-2B detached-worktree proof that preserves a connected `v0.3.1-alpha.1` SQLite fixture graph through current migrations and an idempotent second pass.
+
 - Made documentation and release-worktree tests portable to clean CI checkouts by generating ignored docs output in-test and avoiding assumptions that immutable tags are fetched in shallow clones.
 
 - Added the BR-2A isolated release-upgrade workspace, global migration-basename guard, and fail-closed rejection of unsupported `migrate --dry-run` usage.

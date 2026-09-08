@@ -13,3 +13,7 @@ Zoosper 0.3 first-party packages use one synchronised release train and bounded 
 `migrate` is a write command and deliberately has no dry-run option. Rehearse upgrades with a disposable database and isolated Git worktree before changing a production installation. Run `schema:foreign-keys:status --format=json` separately for read-only foreign-key inspection. Require globally unique migration basenames because the current migration history stores basenames.
 
 The supported beta-readiness proof starts from the latest immutable release `v0.3.1-alpha.1`. Direct upgrade proof from `v0.3.0-alpha.5` is a separate compatibility gate. Preserve representative Admin, Site, Page, Menu, Media, permission, audit, and Grid data across the rehearsal, run migration twice for idempotency, then require zero foreign-key additions, mismatches, and SQLite rebuild requirements.
+
+## Latest-release preservation proof
+
+Run `php8.5 tools/verify-release-upgrade.php v0.3.1-alpha.1` as `vagrant` to rehearse the immutable release against current source. The tool uses detached temporary worktrees, a private SQLite database and Media root, verifies a connected Admin/Site/Page/Menu/Media fixture graph, runs current migration twice, checks foreign-key integrity, and removes all temporary state. Composer installs are isolated to the temporary worktrees.

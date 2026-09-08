@@ -18,6 +18,9 @@ declare(strict_types=1);
  */
 
 return [
+    'tools/verify-release-upgrade.php' => [
+        'reason' => 'BR-2B isolated immutable-release upgrade, data-preservation, idempotency, and foreign-key verification tool.',
+    ],
     'tools/cleanup-expired-rate-limit-buckets.php' => [
         'reason' => 'Test-protected dry-run-first expired rate-limit bucket cleanup command.',
     ],
