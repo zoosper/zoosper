@@ -12,6 +12,7 @@ use Throwable;
 final class MySqlUpgradeDatabaseWorkspace
 {
     private ?string $database = null;
+    private ?string $lastDroppedDatabase = null;
 
     public function __construct(private readonly PDO $administrativeConnection)
     {
@@ -44,6 +45,21 @@ final class MySqlUpgradeDatabaseWorkspace
         $database = $this->database;
         $this->database = null;
         $this->administrativeConnection->exec('DROP DATABASE IF EXISTS `' . $database . '`');
+        $this->lastDroppedDatabase = $database;
+    }
+
+    public function cleanupCompleted(): bool
+    {
+        if ($this->lastDroppedDatabase === null) {
+            return false;
+        }
+
+        $statement = $this->administrativeConnection->prepare(
+            'SELECT 1 FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = :database',
+        );
+        $statement->execute(['database' => $this->lastDroppedDatabase]);
+
+        return $statement->fetchColumn() === false;
     }
 
     public function run(callable $proof): mixed

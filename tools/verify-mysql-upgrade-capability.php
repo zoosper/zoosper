@@ -38,7 +38,11 @@ $result = $workspace->run(static function (string $database) use ($pdo): array {
     if ($statement->fetchColumn() !== $database) {
         throw new RuntimeException('Disposable MySQL database was not visible after creation.');
     }
-    return ['driver' => 'mysql', 'disposable_database_created' => true, 'cleanup_required' => true];
+    return ['driver' => 'mysql', 'database_created' => true];
 });
+if (!$workspace->cleanupCompleted()) {
+    throw new RuntimeException('Disposable MySQL database still exists after cleanup.');
+}
+$result['database_dropped'] = true;
 
 echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR), PHP_EOL;

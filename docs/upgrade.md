@@ -21,3 +21,5 @@ Run `php8.5 tools/verify-release-upgrade.php v0.3.1-alpha.1` as `vagrant` to reh
 ### Disposable MySQL upgrade database
 
 BR-2D never rehearses against the configured application database. Supply dedicated administrative credentials through `BR2D_MYSQL_HOST`, `BR2D_MYSQL_PORT`, `BR2D_MYSQL_USERNAME`, and `BR2D_MYSQL_PASSWORD`, then run `php8.5 tools/verify-mysql-upgrade-capability.php`. The account must be restricted to creating and dropping the uniquely named rehearsal database. Credential values are never printed.
+
+The MySQL capability result reports `database_created: true` and `database_dropped: true`. Success is emitted only after `INFORMATION_SCHEMA.SCHEMATA` confirms that the generated rehearsal database no longer exists.
