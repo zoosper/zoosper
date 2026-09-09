@@ -19,7 +19,8 @@ final readonly class BasicHtmlSanitizer implements HtmlSanitizerInterface
         $clean = preg_replace('#<(script|style|iframe|object|embed|link|meta)\b[^>]*>.*?</\1>#is', '', $html) ?? '';
         $clean = preg_replace('#<(script|style|iframe|object|embed|link|meta)\b[^>]*\/?\s*>#is', '', $clean) ?? '';
         $clean = preg_replace('/\son[a-z]+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $clean) ?? '';
-        $clean = preg_replace('/\s(href|src)\s*=\s*("|\')\s*javascript:[^"\']*\2/i', ' $1="#"', $clean) ?? '';
+        $clean = preg_replace('/\sstyle\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $clean) ?? '';
+        $clean = preg_replace('/\s(href|src)\s*=\s*("|\')\s*(?:javascript|vbscript|data):[^"\']*\2/i', ' $1="#"', $clean) ?? '';
 
         return new SanitizedHtml($clean);
     }

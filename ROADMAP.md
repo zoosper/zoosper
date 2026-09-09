@@ -908,3 +908,4 @@ An exhaustive independent technical review and static security teardown (`var/lo
 - [x] BR-2D: production-target MySQL upgrade preservation is complete with connected fixture preservation, 19 migrations before and after, 45 live foreign keys, zero orphaned references, idempotent repeat migration, and explicit cleanup.
 - [x] BR-2D cleanup evidence: prove each random rehearsal database is absent after guarded cleanup before the full MySQL release fixture run.
 - [x] BR-2D full MySQL proof tooling and the credentialed live `v0.3.1-alpha.1` acceptance run are complete.
+- [x] BR-3A: close the editor-controlled HTML style-smuggling boundary across the production HTML Purifier policy and the explicitly enabled basic fallback.

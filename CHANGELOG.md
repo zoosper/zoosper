@@ -195,3 +195,4 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - BR-2D strengthens disposable MySQL evidence with a post-drop `INFORMATION_SCHEMA.SCHEMATA` absence check and explicit `database_dropped` success output.
 - BR-2D adds a durable isolated MySQL release-upgrade verifier for connected fixture preservation, repeat migration, live foreign keys, orphan detection, and explicit database cleanup.
 - BR-2D is complete: `v0.3.1-alpha.1` to current `dev` was proven on disposable MySQL with 19 migrations before and after, 45 live foreign keys, zero orphaned references, idempotent repeat migration, and explicit database cleanup.
+- BR-3A hardens the opt-in basic HTML sanitizer against CSS style smuggling by removing inline `style` attributes and neutralising `javascript:`, `vbscript:`, and `data:` URL schemes, with executable regressions preserving the production HTML Purifier no-style allowlist.
