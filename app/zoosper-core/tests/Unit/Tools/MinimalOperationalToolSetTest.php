@@ -14,6 +14,7 @@ it('keeps only active root operational and verification tools', function (): voi
         'site-lookup.php',
         'verify-latte-template-engine.php',
         'verify-module-dependencies.php',
+        'verify-mysql-release-upgrade.php',
         'verify-mysql-upgrade-capability.php',
         'verify-release-upgrade.php',
         'verify-service-providers.php',

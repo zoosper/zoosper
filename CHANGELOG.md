@@ -193,3 +193,5 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - BR-2C proves an isolated `v0.3.0-alpha.5` to current-development upgrade with connected fixture preservation, repeat-migration idempotency, zero SQLite foreign-key violations, and complete temporary-worktree cleanup.
 - BR-2D adds a fail-closed production-target MySQL isolation foundation with explicit administrative credentials, random disposable database names, utf8mb4 creation, and guaranteed cleanup.
 - BR-2D strengthens disposable MySQL evidence with a post-drop `INFORMATION_SCHEMA.SCHEMATA` absence check and explicit `database_dropped` success output.
+- BR-2D adds a durable isolated MySQL release-upgrade verifier for connected fixture preservation, repeat migration, live foreign keys, orphan detection, and explicit database cleanup.
+- BR-2D is complete: `v0.3.1-alpha.1` to current `dev` was proven on disposable MySQL with 19 migrations before and after, 45 live foreign keys, zero orphaned references, idempotent repeat migration, and explicit database cleanup.

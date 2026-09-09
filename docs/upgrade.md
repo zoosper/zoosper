@@ -23,3 +23,8 @@ Run `php8.5 tools/verify-release-upgrade.php v0.3.1-alpha.1` as `vagrant` to reh
 BR-2D never rehearses against the configured application database. Supply dedicated administrative credentials through `BR2D_MYSQL_HOST`, `BR2D_MYSQL_PORT`, `BR2D_MYSQL_USERNAME`, and `BR2D_MYSQL_PASSWORD`, then run `php8.5 tools/verify-mysql-upgrade-capability.php`. The account must be restricted to creating and dropping the uniquely named rehearsal database. Credential values are never printed.
 
 The MySQL capability result reports `database_created: true` and `database_dropped: true`. Success is emitted only after `INFORMATION_SCHEMA.SCHEMATA` confirms that the generated rehearsal database no longer exists.
+
+### MySQL immutable-release preservation proof
+
+Run `php8.5 tools/verify-mysql-release-upgrade.php v0.3.1-alpha.1` with the four explicit `BR2D_MYSQL_*` variables. The tool uses detached release and current worktrees, a random disposable MySQL database, a connected Admin/Site/Media/Page/Menu fixture, guarded foreign-key reconciliation, orphan checks, repeat migration, and explicit post-drop absence verification.
+The accepted BR-2D run preserved the complete eleven-part connected fixture, retained 19 migration records before and after upgrade, found 45 live MySQL foreign keys, found zero orphaned references, proved repeat-migration idempotency, and explicitly proved that the disposable database was dropped.
