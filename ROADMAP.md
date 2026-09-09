@@ -903,5 +903,5 @@ An exhaustive independent technical review and static security teardown (`var/lo
 
 - [x] BR-2A: add isolated release-worktree and migration-identity foundations.
 - [x] BR-2B: prove `v0.3.1-alpha.1` to current `dev` data preservation on disposable SQLite.
-- [ ] BR-2C: prove `v0.3.0-alpha.5` to current `dev` compatibility.
+- [x] BR-2C: prove `v0.3.0-alpha.5` to current `dev` compatibility.
 - [ ] BR-2D: prove the latest immutable release upgrade against the MySQL production target.
