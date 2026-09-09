@@ -191,3 +191,4 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 
 - Added shared Page save application ownership and stateless PAT-scoped Page create/update endpoints.
 - BR-2C proves an isolated `v0.3.0-alpha.5` to current-development upgrade with connected fixture preservation, repeat-migration idempotency, zero SQLite foreign-key violations, and complete temporary-worktree cleanup.
+- BR-2D adds a fail-closed production-target MySQL isolation foundation with explicit administrative credentials, random disposable database names, utf8mb4 creation, and guaranteed cleanup.

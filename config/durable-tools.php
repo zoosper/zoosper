@@ -18,6 +18,9 @@ declare(strict_types=1);
  */
 
 return [
+    'tools/verify-mysql-upgrade-capability.php' => [
+        'reason' => 'BR-2D fail-closed disposable MySQL database capability and cleanup verification.',
+    ],
     'tools/verify-release-upgrade.php' => [
         'reason' => 'BR-2B isolated immutable-release upgrade, data-preservation, idempotency, and foreign-key verification tool.',
     ],
