@@ -38,3 +38,7 @@ Editor-generated HTML does not accept `<style>` elements or inline `style` attri
 
 ### Security closure boundaries
 Recognised environments are local, development, testing, staging and production; empty or unknown values fail boot. Staging and production require secure sessions and enforced salted rate limiting in both HTTP and console service composition. Logger redaction covers credential-bearing keys and Zoosper PAT-shaped values. PAT issue and revocation require audit infrastructure. Successful PAT use updates last-used metadata at most once per five-minute database interval. Session `/api/v1/me` is read-only; bearer `/api/v1/token/me` remains the stateless integration identity endpoint.
+
+### Template identifier security boundary
+
+Template identifiers are validated before theme overrides, module view lookup, extension-driven engine selection, or legacy PHP template execution. Identifiers must be normalised relative forward-slash paths. Absolute paths, traversal segments, null bytes, backslashes, duplicate separators, malformed module names, and unsupported segment characters fail closed.

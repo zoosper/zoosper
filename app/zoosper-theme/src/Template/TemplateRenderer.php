@@ -100,6 +100,8 @@ final readonly class TemplateRenderer
 
     private function resolveTemplatePath(Theme $theme, string $template): string
     {
+        $this->assertSafeTemplateIdentifier($template);
+
         if (str_contains($template, '::')) {
             return $this->resolveModuleTemplatePath($theme, $template);
         }
@@ -119,6 +121,34 @@ final readonly class TemplateRenderer
         }
 
         return $this->firstExisting($candidates, 'Template does not exist: ' . $template . ' in theme ' . $theme->code);
+    }
+
+    private function assertSafeTemplateIdentifier(string $template): void
+    {
+        if ($template === '' || str_contains($template, "\0") || str_contains($template, '\\')) {
+            throw new RuntimeException('Template identifier must be a non-empty forward-slash path.');
+        }
+
+        if (str_starts_with($template, '/') || preg_match('/^[A-Za-z]:\//', $template) === 1) {
+            throw new RuntimeException('Absolute template paths are not allowed.');
+        }
+
+        $parts = explode('::', $template, 2);
+        if (count($parts) === 2 && preg_match('/^[a-z0-9][a-z0-9_-]*$/', $parts[0]) !== 1) {
+            throw new RuntimeException('Module template names may contain only lowercase letters, numbers, underscores, and hyphens.');
+        }
+
+        $path = count($parts) === 2 ? $parts[1] : $parts[0];
+        $path = ltrim($path, '/');
+        if ($path === '' || preg_match('#(^|/)\.{1,2}(/|$)#', $path) === 1 || str_contains($path, '//')) {
+            throw new RuntimeException('Template paths must be normalised relative paths without traversal segments.');
+        }
+
+        foreach (explode('/', $path) as $segment) {
+            if (preg_match('/^[A-Za-z0-9][A-Za-z0-9_.-]*$/', $segment) !== 1) {
+                throw new RuntimeException('Template path contains an unsupported segment.');
+            }
+        }
     }
 
     private function resolveModuleTemplatePath(Theme $theme, string $template): string

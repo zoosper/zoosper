@@ -909,3 +909,4 @@ An exhaustive independent technical review and static security teardown (`var/lo
 - [x] BR-2D cleanup evidence: prove each random rehearsal database is absent after guarded cleanup before the full MySQL release fixture run.
 - [x] BR-2D full MySQL proof tooling and the credentialed live `v0.3.1-alpha.1` acceptance run are complete.
 - [x] BR-3A: close the editor-controlled HTML style-smuggling boundary across the production HTML Purifier policy and the explicitly enabled basic fallback.
+- [x] BR-3B: reject unsafe template and module identifiers before theme override, module view, and executable engine resolution.
