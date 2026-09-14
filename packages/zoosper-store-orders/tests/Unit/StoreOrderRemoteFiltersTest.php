@@ -19,8 +19,6 @@ it('declares the approved remote order filters including date controls', functio
     }
 
     expect($filters)->toMatchArray([
-        'store_code' => 'text',
-        'kiosk_website_id' => 'text',
         'order_id' => 'text',
         'customer' => 'text',
         'status' => 'text',

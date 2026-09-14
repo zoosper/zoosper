@@ -17,15 +17,21 @@ final class StoreOrderDataSourceFactory
 {
     /**
      * @param array<string, mixed> $config
-     * @param array<string, mixed> $scope
      */
-    public function create(array $config, int $adminUserId, array $scope): ApiGridDataSource
+    public function create(array $config, int $adminUserId): ApiGridDataSource
     {
-        $storeCode = self::positiveInteger($scope['store_code'] ?? null, 'Store code');
-        $websiteId = self::positiveInteger($scope['kiosk_website_id'] ?? null, 'Kiosk website ID');
+        if (($config['enabled'] ?? false) !== true) {
+            throw new InvalidArgumentException('Store Orders integration is not enabled.');
+        }
+        $baseUrl = trim((string) ($config['api_base_url'] ?? ''));
+        if (!filter_var($baseUrl, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException('Store Orders API base URL must be an absolute URL.');
+        }
+        $storeCode = self::positiveInteger($config['store_code'] ?? null, 'Store code');
+        $websiteId = self::positiveInteger($config['kiosk_website_id'] ?? null, 'Kiosk website ID');
 
         return new ApiGridDataSource(
-            new CurlJsonApiTransport((string) ($config['api_base_url'] ?? '')),
+            new CurlJsonApiTransport($baseUrl),
             new StoreOrderRequestMapper(),
             new StoreOrderResponseMapper(),
             new NoAuthentication(),

@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+use Zoosper\StoreOrders\StoreOrderIntegrationGate;
+
+if (!StoreOrderIntegrationGate::enabled()) {
+    return [];
+}
+
 return [[
     'code' => 'store-orders',
     'label' => 'Store Orders',

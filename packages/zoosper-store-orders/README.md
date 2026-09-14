@@ -75,3 +75,7 @@ This package directly consumes the stable `Zoosper\Pagination` request/result bo
 ## Admin presentation
 
 The Admin shell owns the single visible Store Orders page title. Success and error content therefore do not repeat a content-level heading; error status codes and escaped messages remain unchanged. The shared compact toolbar receives this feature's declared page-size allow-list `[5, 10, 20, 50, 100]`. GET listing/export and CSRF-protected POST mutation boundaries are unchanged.
+
+## Opt-in and trusted scope
+
+Store Orders is installed in the development distribution but is runtime-disabled by default. Set `STORE_ORDERS_ENABLED=true` only together with `STORE_ORDERS_API_BASE_URL`, `STORE_ORDERS_STORE_CODE`, and `STORE_ORDERS_KIOSK_WEBSITE_ID`. Missing or invalid enabled configuration fails closed. Tenant scope is deployment-owned and is never accepted from HTTP query parameters, bookmarks, or saved Grid state. SR-1A does not claim HTTPS or remote authentication; those remain SR-1B work.

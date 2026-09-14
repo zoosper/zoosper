@@ -8,11 +8,10 @@ use InvalidArgumentException;
 use Zoosper\StoreOrders\StoreOrderDataSourceFactory;
 use Zoosper\StoreOrders\StoreOrderGrid;
 
-it('declares request scope before approved result filters and bounded remote page sizes', function (): void {
+it('declares only approved result filters and bounded remote page sizes', function (): void {
     $definition = StoreOrderGrid::definition();
+
     expect(array_map(static fn ($filter) => $filter->key, $definition->grid->filters))->toBe([
-        'store_code',
-        'kiosk_website_id',
         'order_id',
         'customer',
         'status',
@@ -21,31 +20,30 @@ it('declares request scope before approved result filters and bounded remote pag
     ])->and($definition->pageSizes)->toBe([5, 10, 20, 50, 100]);
 });
 
-it('keeps request scope out of deployment settings', function (): void {
-    $root = dirname(__DIR__, 4);
+it('keeps trusted scope in deployment settings', function (): void {
     $source = file_get_contents(
-        $root . '/packages/zoosper-store-orders/config/settings/store_orders.php',
+        dirname(__DIR__, 4) . '/packages/zoosper-store-orders/config/settings/store_orders.php',
     );
+
     expect($source)->not->toBeFalse()
-        ->and($source)->not->toContain('STORE_ORDERS_STORE_CODE')
-        ->and($source)->not->toContain('STORE_ORDERS_KIOSK_WEBSITE_ID');
+        ->and($source)->toContain(<<<'SOURCE'
+'store_code' => $integration['store_code']
+SOURCE)
+        ->and($source)->toContain(<<<'SOURCE'
+'kiosk_website_id' => $integration['kiosk_website_id']
+SOURCE);
 });
 
-it('rejects invalid request scope before transport', function (): void {
-    expect(fn () => (new StoreOrderDataSourceFactory())->create(
-        ['api_base_url' => 'http://127.0.0.1:3000'],
-        1,
-        ['store_code' => 'bad', 'kiosk_website_id' => 55],
-    ))->toThrow(InvalidArgumentException::class);
+it('rejects disabled and invalid deployment scope before transport', function (): void {
+    $factory = new StoreOrderDataSourceFactory();
+
+    expect(fn () => $factory->create(['enabled' => false], 1))
+        ->toThrow(InvalidArgumentException::class, 'not enabled');
+
+    expect(fn () => $factory->create([
+        'enabled' => true,
+        'api_base_url' => 'http://127.0.0.1:3000',
+        'store_code' => 'bad',
+        'kiosk_website_id' => 55,
+    ], 1))->toThrow(InvalidArgumentException::class);
 });
-
-
-
-
-
-
-
-
-
-
-

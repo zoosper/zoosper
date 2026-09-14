@@ -1,6 +1,7 @@
 # Changelog
 
 ## [0.3.2-alpha.1-dev]
+- SR-1A quarantines Store Orders behind explicit enablement, removes tenant-specific scope defaults, and prevents HTTP or saved Grid state from selecting deployment scope.
 
 - Added the BR-2B detached-worktree proof that preserves a connected `v0.3.1-alpha.1` SQLite fixture graph through current migrations and an idempotent second pass.
 

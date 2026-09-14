@@ -2,8 +2,13 @@
 
 declare(strict_types=1);
 
+use Zoosper\StoreOrders\StoreOrderIntegrationGate;
 use Zoosper\StoreOrders\Admin\StoreOrderAdminController;
 use Zoosper\StoreOrders\Admin\StoreOrderCsvExportController;
+
+if (!StoreOrderIntegrationGate::enabled()) {
+    return [];
+}
 
 return [
 

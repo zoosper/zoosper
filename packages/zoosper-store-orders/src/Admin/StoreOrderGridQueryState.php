@@ -8,8 +8,6 @@ namespace Zoosper\StoreOrders\Admin;
 final class StoreOrderGridQueryState
 {
     private const FILTER_KEYS = [
-        'store_code',
-        'kiosk_website_id',
         'order_id',
         'customer',
         'status',

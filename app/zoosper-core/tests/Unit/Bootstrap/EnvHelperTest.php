@@ -63,12 +63,40 @@ function envHelperTestRun(string $envFileContents, string $key, string $default 
         var_export($default, true),
     );
 
-    $command = escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg($script) . ' 2>&1';
-    exec($command, $outputLines, $exitCode);
+    $environment = [];
+    foreach ($_ENV as $name => $value) {
+        if (is_string($name) && is_scalar($value)) {
+            $environment[$name] = (string) $value;
+        }
+    }
+    unset($environment[$key]);
+
+    $process = proc_open(
+        [PHP_BINARY, '-r', $script],
+        [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
+        $pipes,
+        $tmp,
+        $environment,
+    );
+
+    $stdout = '';
+    $stderr = '';
+    $exitCode = 1;
+    if (is_resource($process)) {
+        $stdout = (string) stream_get_contents($pipes[1]);
+        $stderr = (string) stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        $exitCode = proc_close($process);
+    }
 
     exec('rm -rf ' . escapeshellarg($tmp));
 
-    return trim(implode("\n", $outputLines));
+    if ($exitCode !== 0) {
+        return trim($stdout . ($stderr !== '' ? "\n" . $stderr : ''));
+    }
+
+    return trim($stdout);
 }
 
 it('correctly parses an explicit falsy value instead of silently reverting to the default (the core precedence-bug fix)', function (): void {

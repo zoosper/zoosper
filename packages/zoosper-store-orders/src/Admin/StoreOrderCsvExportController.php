@@ -36,8 +36,6 @@ final readonly class StoreOrderCsvExportController
         }
 
         $values = $_GET;
-        $values['store_code'] ??= 3;
-        $values['kiosk_website_id'] ??= 55;
         if (isset($values['page_size']) && !in_array((int) $values['page_size'], [5, 10, 20, 50, 100], true)) {
             $values['page_size'] = 20;
         }
@@ -49,10 +47,7 @@ final readonly class StoreOrderCsvExportController
                 StoreOrderGridQueryState::bookmarkId($values),
             );
             $state = $resolved['state'];
-            $result = $this->dataSources->create($this->config, $user->id, [
-                'store_code' => $state->criteria->filters['store_code'] ?? 3,
-                'kiosk_website_id' => $state->criteria->filters['kiosk_website_id'] ?? 55,
-            ])->fetch(new GridQuery(
+            $result = $this->dataSources->create($this->config, $user->id)->fetch(new GridQuery(
                 page: $state->criteria->pager->page,
                 pageSize: $state->criteria->pager->pageSize,
                 sort: $state->criteria->sortBy,

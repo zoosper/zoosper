@@ -28,15 +28,16 @@ it('composes Store Orders through the shared Admin Grid workspace', function ():
         ->and($composer['require'])->toHaveKey('zoosper/admin-grid', '^0.3.1@alpha');
 });
 
-it('keeps the remote request driven by resolved workspace scope and page size', function (): void {
+it('keeps the remote request driven by deployment scope and resolved page size', function (): void {
     $root = dirname(__DIR__, 4);
     $source = file_get_contents(
         $root . '/packages/zoosper-store-orders/src/Admin/StoreOrderAdminController.php',
     );
 
     expect($source)->not->toBeFalse()
-        ->and($source)->toContain('$state->criteria->filters[\'store_code\']')
-        ->and($source)->toContain('$state->criteria->filters[\'kiosk_website_id\']')
+        ->and($source)->not->toContain("filters['store_code']")
+        ->and($source)->not->toContain("filters['kiosk_website_id']")
+        ->and($source)->toContain('$this->dataSources->create($this->config, $user->id)')
         ->and($source)->toContain('pageSize: $state->criteria->pager->pageSize');
 });
 

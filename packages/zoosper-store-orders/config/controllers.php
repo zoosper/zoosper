@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Zoosper\StoreOrders\StoreOrderIntegrationGate;
 use Zoosper\AdminGrid\GridWorkspaceMutationFormsRenderer;
 use Zoosper\AdminGrid\GridWorkspaceCsvExportService;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
@@ -16,6 +17,10 @@ use Zoosper\StoreOrders\Admin\StoreOrderCsvExportController;
 use Zoosper\StoreOrders\Admin\StoreOrderGridMutationCoordinator;
 use Zoosper\StoreOrders\Admin\StoreOrderGridWorkspace;
 use Zoosper\StoreOrders\StoreOrderDataSourceFactory;
+
+if (!StoreOrderIntegrationGate::enabled()) {
+    return [];
+}
 
 return [
     StoreOrderCsvExportController::class => static fn (ServiceContainer $services): StoreOrderCsvExportController => new StoreOrderCsvExportController(

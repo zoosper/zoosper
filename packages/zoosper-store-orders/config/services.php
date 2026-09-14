@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Zoosper\StoreOrders\StoreOrderIntegrationGate;
 use Zoosper\AdminGrid\GridViewMutationService;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\AdminGrid\GridWorkspaceMutationGuard;
@@ -11,6 +12,10 @@ use Zoosper\Grid\GridColumnOrderer;
 use Zoosper\StoreOrders\Admin\StoreOrderGridMutationCoordinator;
 use Zoosper\StoreOrders\Admin\StoreOrderGridMutationHandler;
 use Zoosper\StoreOrders\Admin\StoreOrderGridWorkspace;
+
+if (!StoreOrderIntegrationGate::enabled()) {
+    return [];
+}
 
 return [
     StoreOrderGridWorkspace::class => static fn (ServiceContainer $services): StoreOrderGridWorkspace => new StoreOrderGridWorkspace(

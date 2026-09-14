@@ -32,8 +32,6 @@ final class StoreOrderGrid
                     new GridColumn('actions', 'Actions', false),
                 ],
                 filters: [
-                    new GridFilter('store_code', 'Store Code'),
-                    new GridFilter('kiosk_website_id', 'Kiosk Website ID'),
                     new GridFilter('order_id', 'Order Number'),
                     new GridFilter('customer', 'Customer'),
                     new GridFilter('status', 'Status'),
