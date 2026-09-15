@@ -10,7 +10,7 @@ use Zoosper\StoreOrders\StoreOrderIntegrationGate;
 
 function replaceStoreOrderEnvironment(array $values): void
 {
-    foreach (['STORE_ORDERS_ENABLED', 'STORE_ORDERS_API_BASE_URL', 'STORE_ORDERS_STORE_CODE', 'STORE_ORDERS_KIOSK_WEBSITE_ID'] as $key) {
+    foreach (['STORE_ORDERS_ENABLED', 'STORE_ORDERS_API_BASE_URL', 'STORE_ORDERS_API_TOKEN', 'STORE_ORDERS_ALLOW_INSECURE_HTTP', 'STORE_ORDERS_STORE_CODE', 'STORE_ORDERS_KIOSK_WEBSITE_ID'] as $key) {
         unset($_ENV[$key]);
         putenv($key);
     }
@@ -42,6 +42,8 @@ it('accepts complete opt-in configuration', function (): void {
     replaceStoreOrderEnvironment([
         'STORE_ORDERS_ENABLED' => 'true',
         'STORE_ORDERS_API_BASE_URL' => 'http://127.0.0.1:3000',
+        'STORE_ORDERS_API_TOKEN' => 'test-store-orders-token',
+        'STORE_ORDERS_ALLOW_INSECURE_HTTP' => 'true',
         'STORE_ORDERS_STORE_CODE' => '3',
         'STORE_ORDERS_KIOSK_WEBSITE_ID' => '55',
     ]);
@@ -56,6 +58,7 @@ it('refuses data-source construction while disabled', function (): void {
     expect(fn () => (new StoreOrderDataSourceFactory())->create([
         'enabled' => false,
         'api_base_url' => 'http://127.0.0.1:3000',
+        'api_token' => 'test-store-orders-token',
         'store_code' => 3,
         'kiosk_website_id' => 55,
     ], 1))->toThrow(InvalidArgumentException::class, 'not enabled');

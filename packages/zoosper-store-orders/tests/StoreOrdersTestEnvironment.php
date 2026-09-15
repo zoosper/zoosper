@@ -12,6 +12,8 @@ final class StoreOrdersTestEnvironment
         $keys = [
             'STORE_ORDERS_ENABLED',
             'STORE_ORDERS_API_BASE_URL',
+            'STORE_ORDERS_API_TOKEN',
+            'STORE_ORDERS_ALLOW_INSECURE_HTTP',
             'STORE_ORDERS_STORE_CODE',
             'STORE_ORDERS_KIOSK_WEBSITE_ID',
         ];
@@ -23,6 +25,8 @@ final class StoreOrdersTestEnvironment
         try {
             self::set('STORE_ORDERS_ENABLED', 'true');
             self::set('STORE_ORDERS_API_BASE_URL', 'http://127.0.0.1:3000');
+            self::set('STORE_ORDERS_API_TOKEN', 'test-store-orders-token');
+            self::set('STORE_ORDERS_ALLOW_INSECURE_HTTP', 'true');
             self::set('STORE_ORDERS_STORE_CODE', '3');
             self::set('STORE_ORDERS_KIOSK_WEBSITE_ID', '55');
             $callback();

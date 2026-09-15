@@ -6,7 +6,7 @@ namespace Zoosper\StoreOrders;
 
 use InvalidArgumentException;
 use Zoosper\ApiGrid\ApiGridDataSource;
-use Zoosper\ApiGrid\Authentication\NoAuthentication;
+use Zoosper\ApiGrid\Authentication\BearerTokenAuthentication;
 use Zoosper\ApiGrid\Mapping\ApiGridContext;
 use Zoosper\ApiGrid\Transport\ApiReliabilityPolicy;
 use Zoosper\ApiGrid\Transport\CurlJsonApiTransport;
@@ -27,6 +27,10 @@ final class StoreOrderDataSourceFactory
         if (!filter_var($baseUrl, FILTER_VALIDATE_URL)) {
             throw new InvalidArgumentException('Store Orders API base URL must be an absolute URL.');
         }
+        $token = trim((string) ($config['api_token'] ?? ''));
+        if ($token === '') {
+            throw new InvalidArgumentException('Store Orders API token is required.');
+        }
         $storeCode = self::positiveInteger($config['store_code'] ?? null, 'Store code');
         $websiteId = self::positiveInteger($config['kiosk_website_id'] ?? null, 'Kiosk website ID');
 
@@ -34,7 +38,7 @@ final class StoreOrderDataSourceFactory
             new CurlJsonApiTransport($baseUrl),
             new StoreOrderRequestMapper(),
             new StoreOrderResponseMapper(),
-            new NoAuthentication(),
+            new BearerTokenAuthentication($token),
             new ApiGridContext($adminUserId, scope: [
                 'store_code' => $storeCode,
                 'kiosk_website_id' => $websiteId,

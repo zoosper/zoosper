@@ -13,7 +13,7 @@ it('publishes disabled Store Orders defaults and deployment-owned scope keys', f
     $aggregated = (new ModuleConfigAggregator(new ModuleRegistry($root), $root . '/config'))->aggregate();
     expect($aggregated)->toHaveKey('store_orders')
         ->and($aggregated['store_orders'])->toHaveKeys([
-            'enabled', 'api_base_url', 'store_code', 'kiosk_website_id',
+            'enabled', 'api_base_url', 'api_token', 'allow_insecure_http', 'store_code', 'kiosk_website_id',
             'connect_timeout_ms', 'request_timeout_ms', 'maximum_response_bytes',
         ])
         ->and($aggregated['store_orders']['enabled'])->toBeFalse()

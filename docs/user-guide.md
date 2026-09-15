@@ -24,4 +24,4 @@ Admin Users, Roles and Permissions control access. Audit Log and Login History p
 
 ## Store Orders
 
-Store Orders is an optional remote Admin-grid integration. It contributes no Admin menu, routes, controllers or services unless explicitly enabled with an absolute endpoint and positive deployment-owned store and kiosk website scope. Request parameters and saved Grid state cannot select tenant scope.
+Store Orders is an optional remote Admin-grid integration. It contributes no Admin menu, routes, controllers or services unless explicitly enabled with an HTTPS endpoint, bearer token, and positive deployment-owned store and kiosk website scope. Loopback HTTP requires an explicit local-development opt-in. Request parameters and saved Grid state cannot select tenant scope.

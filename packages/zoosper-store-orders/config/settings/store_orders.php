@@ -9,6 +9,8 @@ $integration = StoreOrderIntegrationGate::configuration();
 return [
     'enabled' => $integration['enabled'],
     'api_base_url' => $integration['api_base_url'],
+    'api_token' => $integration['api_token'],
+    'allow_insecure_http' => $integration['allow_insecure_http'],
     'store_code' => $integration['store_code'],
     'kiosk_website_id' => $integration['kiosk_website_id'],
     'connect_timeout_ms' => (int) env('STORE_ORDERS_CONNECT_TIMEOUT_MS', 1000),

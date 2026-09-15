@@ -14,11 +14,16 @@ use InvalidArgumentException;
  */
 final class StoreOrderIntegrationGate
 {
-    /** @return array{enabled: bool, api_base_url: string, store_code: int|null, kiosk_website_id: int|null} */
+    /** @return array{enabled: bool, api_base_url: string, api_token: string, allow_insecure_http: bool, store_code: int|null, kiosk_website_id: int|null} */
     public static function configuration(): array
     {
         $enabled = filter_var(self::value('STORE_ORDERS_ENABLED', false), FILTER_VALIDATE_BOOLEAN);
         $baseUrl = trim((string) self::value('STORE_ORDERS_API_BASE_URL', ''));
+        $token = trim((string) self::value('STORE_ORDERS_API_TOKEN', ''));
+        $allowInsecureHttp = filter_var(
+            self::value('STORE_ORDERS_ALLOW_INSECURE_HTTP', false),
+            FILTER_VALIDATE_BOOLEAN,
+        );
         $storeCode = self::optionalPositiveInteger(self::value('STORE_ORDERS_STORE_CODE'));
         $websiteId = self::optionalPositiveInteger(self::value('STORE_ORDERS_KIOSK_WEBSITE_ID'));
 
@@ -26,6 +31,17 @@ final class StoreOrderIntegrationGate
             if (!filter_var($baseUrl, FILTER_VALIDATE_URL)) {
                 throw new InvalidArgumentException(
                     'Store Orders is enabled but STORE_ORDERS_API_BASE_URL is not an absolute URL.',
+                );
+            }
+            $scheme = strtolower((string) parse_url($baseUrl, PHP_URL_SCHEME));
+            if ($scheme !== 'https' && !($scheme === 'http' && $allowInsecureHttp && self::isLoopbackHost($baseUrl))) {
+                throw new InvalidArgumentException(
+                    'Store Orders requires HTTPS; local loopback HTTP needs STORE_ORDERS_ALLOW_INSECURE_HTTP=true.',
+                );
+            }
+            if ($token === '' || preg_match('/[\x00-\x20\x7f]/', $token) === 1) {
+                throw new InvalidArgumentException(
+                    'Store Orders is enabled but STORE_ORDERS_API_TOKEN is missing or not header-safe.',
                 );
             }
             if ($storeCode === null || $websiteId === null) {
@@ -38,6 +54,8 @@ final class StoreOrderIntegrationGate
         return [
             'enabled' => $enabled,
             'api_base_url' => $baseUrl,
+            'api_token' => $token,
+            'allow_insecure_http' => $allowInsecureHttp,
             'store_code' => $storeCode,
             'kiosk_website_id' => $websiteId,
         ];
@@ -51,6 +69,13 @@ final class StoreOrderIntegrationGate
     private static function value(string $key, mixed $default = null): mixed
     {
         return function_exists('env') ? env($key, $default) : (getenv($key) !== false ? getenv($key) : $default);
+    }
+
+    private static function isLoopbackHost(string $url): bool
+    {
+        $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+
+        return in_array($host, ['localhost', '127.0.0.1', '::1'], true);
     }
 
     private static function optionalPositiveInteger(mixed $value): ?int
