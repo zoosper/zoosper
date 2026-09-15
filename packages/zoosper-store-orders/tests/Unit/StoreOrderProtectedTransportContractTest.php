@@ -11,14 +11,16 @@ use Zoosper\StoreOrders\StoreOrderIntegrationGate;
 use Zoosper\StoreOrders\Tests\StoreOrdersTestEnvironment;
 
 it('requires https for non-loopback Store Orders endpoints', function (): void {
-    replaceStoreOrderEnvironment([
+    StoreOrdersTestEnvironment::with([
         'STORE_ORDERS_ENABLED' => 'true',
         'STORE_ORDERS_API_BASE_URL' => 'http://orders.example.test',
         'STORE_ORDERS_API_TOKEN' => 'safe-token',
         'STORE_ORDERS_STORE_CODE' => '3',
         'STORE_ORDERS_KIOSK_WEBSITE_ID' => '55',
-    ]);
-    expect(fn () => StoreOrderIntegrationGate::configuration())->toThrow(InvalidArgumentException::class, 'requires HTTPS');
+    ], static function (): void {
+        expect(fn () => StoreOrderIntegrationGate::configuration())
+            ->toThrow(InvalidArgumentException::class, 'requires HTTPS');
+    });
 });
 
 it('allows explicitly opted-in loopback http for local integration tests', function (): void {
@@ -28,14 +30,16 @@ it('allows explicitly opted-in loopback http for local integration tests', funct
 });
 
 it('requires a header-safe Store Orders token', function (string $token): void {
-    replaceStoreOrderEnvironment([
+    StoreOrdersTestEnvironment::with([
         'STORE_ORDERS_ENABLED' => 'true',
         'STORE_ORDERS_API_BASE_URL' => 'https://orders.example.test',
         'STORE_ORDERS_API_TOKEN' => $token,
         'STORE_ORDERS_STORE_CODE' => '3',
         'STORE_ORDERS_KIOSK_WEBSITE_ID' => '55',
-    ]);
-    expect(fn () => StoreOrderIntegrationGate::configuration())->toThrow(InvalidArgumentException::class, 'API_TOKEN');
+    ], static function (): void {
+        expect(fn () => StoreOrderIntegrationGate::configuration())
+            ->toThrow(InvalidArgumentException::class, 'API_TOKEN');
+    });
 })->with(['', "unsafe\r\nheader"]);
 
 it('uses the generic bearer authenticator instead of unauthenticated transport', function (): void {
