@@ -25,11 +25,65 @@ final readonly class CacheDriverFactory
     }
     private function redis(array $cache, CacheConfig $cacheConfig): MarkoCacheInterface
     {
-        $r=is_array($cache['redis']??null)?$cache['redis']:[];
-        $connection=new RedisConnection(host:(string)($r['host']??'127.0.0.1'),port:(int)($r['port']??6379),password:isset($r['password'])&&$r['password']!==''&&$r['password']!==null?(string)$r['password']:null,database:(int)($r['database']??0),prefix:(string)($r['prefix']??'zoosper:cache:'));
-        $e=$this->section('encryption');
-        $encryption=new EncryptionConfig(new ObjectConfigAdapter(new ArrayConfig(['encryption'=>['key'=>(string)($e['key']??''),'cipher'=>(string)($e['cipher']??'aes-256-gcm')]])));
-        return new RedisCacheDriver($connection,$cacheConfig,new CacheValueSigner($encryption));
+        $redis = is_array($cache['redis'] ?? null) ? $cache['redis'] : [];
+        $encryption = $this->section('encryption');
+        $signingKey = trim((string) ($encryption['key'] ?? ''));
+
+        if (strlen($signingKey) < 32 || $this->isInsecureSecret($signingKey)) {
+            throw new RuntimeException(
+                'Redis cache requires a strong CACHE_ENCRYPTION_KEY for signed cache values.',
+            );
+        }
+
+        $connection = new RedisConnection(
+            host: (string) ($redis['host'] ?? '127.0.0.1'),
+            port: (int) ($redis['port'] ?? 6379),
+            password: isset($redis['password']) && trim((string) $redis['password']) !== ''
+                ? (string) $redis['password']
+                : null,
+            database: (int) ($redis['database'] ?? 0),
+            prefix: (string) ($redis['prefix'] ?? 'zoosper:cache:'),
+        );
+
+        $encryptionConfig = new EncryptionConfig(
+            new ObjectConfigAdapter(
+                new ArrayConfig([
+                    'encryption' => [
+                        'key' => $signingKey,
+                        'cipher' => (string) ($encryption['cipher'] ?? 'aes-256-gcm'),
+                    ],
+                ]),
+            ),
+        );
+
+        return new RedisCacheDriver(
+            $connection,
+            $cacheConfig,
+            new CacheValueSigner($encryptionConfig),
+        );
+    }
+
+    private function isInsecureSecret(string $value): bool
+    {
+        if ($value === '') {
+            return true;
+        }
+
+        return in_array(
+            strtolower($value),
+            [
+                'change-me',
+                'change-me-before-production',
+                'secret',
+                'changeme',
+                'placeholder',
+                'default',
+                'password',
+                'test',
+                'null',
+            ],
+            true,
+        );
     }
     private function section(string $key): array { $value=$this->config->get($key,[]); return is_array($value)?$value:[]; }
     private function resolvePath(string $path): string { if(str_starts_with($path,'/')) return rtrim($path,'/'); $path=trim($path,'/'); return rtrim($this->basePath,'/').'/'.(str_starts_with($path,'var/')?$path:'var/'.$path); }

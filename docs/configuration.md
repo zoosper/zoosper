@@ -8,7 +8,7 @@ Zoosper loads module defaults beneath project configuration. Environment variabl
 - **Secrets & Encryption**: `APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY`, `RATE_LIMIT_IDENTITY_SALT`, and `CACHE_ENCRYPTION_KEY` can be generated and audited using `php bin/zoosper security:generate-secrets`.
 - **Admin & Session Lifecycle**: `config/admin.php` controls administrative base path, password complexity, `ADMIN_SESSION_IDLE_TIMEOUT` (idle inactivity timeout in seconds), and `ADMIN_SESSION_ABSOLUTE_LIFETIME` (maximum total session duration in seconds).
 - **Database & Persistence**: `config/database.php` configures PDO connections (`sqlite`, `mysql`). In staging and production, strict database driver policies are enforced.
-- **Cache & Storage**: `config/cache.php` and `config/page_cache.php` govern cache drivers (`file`, `redis`) and full-page caching.
+- **Cache & Storage**: `config/cache.php` and `config/page_cache.php` govern cache drivers (`file`, `redis`) and full-page caching. Redis requires a strong dedicated `CACHE_ENCRYPTION_KEY`; staging and production additionally require authenticated Redis through `CACHE_REDIS_PASSWORD`. These Redis requirements do not apply when the file driver is selected.
 
 `config/version.php` is the central default CMS version source. `CMS_VERSION` is an optional deployment override.
 

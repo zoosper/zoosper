@@ -1,5 +1,6 @@
 # Changelog
 
+- SR-2 makes Redis cache deployment fail closed: staging and production require authenticated Redis when `CACHE_DRIVER=redis`, every Redis driver requires a strong dedicated `CACHE_ENCRYPTION_KEY`, non-Redis drivers remain unaffected, and local/test Redis behaviour stays explicit and practical.
 ## [0.3.2-alpha.1-dev]
 - SR-1B requires authenticated protected Store Orders transport, sends credentials only as a bearer header, and limits insecure HTTP to explicitly opted-in loopback development.
 - SR-1A quarantines Store Orders behind explicit enablement, removes tenant-specific scope defaults, and prevents HTTP or saved Grid state from selecting deployment scope.

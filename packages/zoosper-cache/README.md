@@ -20,7 +20,7 @@ Run `php8.5 vendor/bin/pest packages/zoosper-cache/tests` and the full repositor
 
 ## Operational notes
 
-The configured file-cache directory must be writable by PHP-FPM and console users. Redis deployments must provide reachable connection settings and a non-empty signing key through the existing configuration boundary. Cache failures in the frontend fallback decorator remain fail-open and must never prevent a page response. Preserve the established `cache.*`, `encryption.*`, and `page_cache.*` keys when replacing drivers or bindings.
+The configured file-cache directory must be writable by PHP-FPM and console users. Redis deployments must provide reachable connection settings and a strong dedicated signing key through the existing configuration boundary. Staging and production additionally require password authentication. Local, development and testing may explicitly use unauthenticated loopback Redis. The current Marko Redis boundary does not expose a separate ACL username. Cache failures in the frontend fallback decorator remain fail-open and must never prevent a page response. Preserve the established `cache.*`, `encryption.*`, and `page_cache.*` keys when replacing drivers or bindings.
 
 Run the full repository suite and quality gate before release:
 

@@ -50,7 +50,10 @@ it('throws a clear error for an unsupported driver name', function (): void {
 });
 
 it('constructs a RedisCacheDriver object graph correctly WITHOUT requiring a real Redis connection', function (): void {
-    $driver = cacheDriverFactoryTestInstance(['driver' => 'redis'], ['key' => 'test-signing-key-value'])->create();
+    $driver = cacheDriverFactoryTestInstance(
+        ['driver' => 'redis'],
+        ['key' => str_repeat('a', 64)],
+    )->create();
     expect($driver)->toBeInstanceOf(MarkoCacheAdapter::class)
         ->and($driver->markoDriver())->toBeInstanceOf(RedisCacheDriver::class);
 });
@@ -81,13 +84,68 @@ it('performs a REAL Redis set/get roundtrip when Redis is actually reachable (ex
     $driver->delete($key);
 });
 
+it('rejects missing and placeholder Redis signing keys before cache I/O', function (
+    string $key,
+): void {
+    expect(fn () => cacheDriverFactoryTestInstance(
+        ['driver' => 'redis'],
+        ['key' => $key],
+    )->create())->toThrow(
+        RuntimeException::class,
+        'Redis cache requires a strong CACHE_ENCRYPTION_KEY',
+    );
+})->with([
+    'empty' => [''],
+    'short non-placeholder value' => ['short-cache-key'],
+    'change-me' => ['change-me'],
+    'production placeholder' => ['change-me-before-production'],
+    'generic secret' => ['secret'],
+    'changeme' => ['changeme'],
+    'placeholder' => ['placeholder'],
+    'default' => ['default'],
+    'password' => ['password'],
+    'test' => ['test'],
+    'null' => ['null'],
+]);
 
+it('does not require Redis credentials or a signing key for the file driver', function (): void {
+    $driver = cacheDriverFactoryTestInstance(
+        [
+            'driver' => 'file',
+            'redis' => [
+                'host' => '',
+                'port' => 0,
+                'password' => '',
+                'database' => 0,
+                'prefix' => '',
+            ],
+        ],
+        ['key' => ''],
+    )->create();
 
+    expect($driver)
+        ->toBeInstanceOf(MarkoCacheAdapter::class)
+        ->and($driver->markoDriver())
+        ->toBeInstanceOf(FileCacheDriver::class);
+});
 
+it('keeps Redis construction lazy without connecting to the configured server', function (): void {
+    $driver = cacheDriverFactoryTestInstance(
+        [
+            'driver' => 'redis',
+            'redis' => [
+                'host' => '192.0.2.1',
+                'port' => 6379,
+                'password' => '',
+                'database' => 0,
+                'prefix' => 'zoosper-test:',
+            ],
+        ],
+        ['key' => str_repeat('a', 64)],
+    )->create();
 
-
-
-
-
-
-
+    expect($driver)
+        ->toBeInstanceOf(MarkoCacheAdapter::class)
+        ->and($driver->markoDriver())
+        ->toBeInstanceOf(RedisCacheDriver::class);
+});

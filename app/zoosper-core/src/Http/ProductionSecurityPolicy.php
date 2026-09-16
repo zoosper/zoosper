@@ -71,6 +71,26 @@ final class ProductionSecurityPolicy
         if ($appKey !== '' && in_array(strtolower($appKey), $placeholders, true)) {
             throw new RuntimeException(ucfirst($environment) . ' requires a strong APP_KEY.');
         }
+        $cacheDriver = strtolower(trim((string) $value('CACHE_DRIVER', 'file')));
+        if ($cacheDriver === 'redis') {
+            $redisPassword = trim((string) $value('CACHE_REDIS_PASSWORD', ''));
+            if ($redisPassword === '' || in_array(strtolower($redisPassword), $placeholders, true)) {
+                throw new RuntimeException(
+                    ucfirst($environment) . ' requires authenticated Redis when CACHE_DRIVER=redis. '
+                    . 'Set CACHE_REDIS_PASSWORD to a strong deployment secret.',
+                );
+            }
+
+            $cacheEncryptionKey = trim((string) $value('CACHE_ENCRYPTION_KEY', ''));
+            if (
+                strlen($cacheEncryptionKey) < 32
+                || in_array(strtolower($cacheEncryptionKey), $placeholders, true)
+            ) {
+                throw new RuntimeException(
+                    ucfirst($environment) . ' requires a strong CACHE_ENCRYPTION_KEY when CACHE_DRIVER=redis.',
+                );
+            }
+        }
 
         $driver = strtolower(trim((string) $value('DB_CONNECTION', $value('DB_DRIVER', 'mysql'))));
         $enforceMysql = filter_var($value('DATABASE_ENFORCE_MYSQL_PRODUCTION', true), FILTER_VALIDATE_BOOL);

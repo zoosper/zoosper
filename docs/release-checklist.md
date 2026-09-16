@@ -7,7 +7,8 @@
 - Static analysis baseline status review (Psalm zero-baseline drive or reviewed residual)
 - Disposable fresh-install smoke and containerized production boot verification
 - Foreign key referential integrity status check (`schema:foreign-keys:status`)
-- Secret presence, strength, and placeholder validation (`APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY`, `RATE_LIMIT_IDENTITY_SALT`)
+- Secret presence, strength, and placeholder validation (`APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY`, `RATE_LIMIT_IDENTITY_SALT`, and Redis-only `CACHE_ENCRYPTION_KEY`)
+- Redis production policy when selected: authenticated staging/production Redis, strong signed-value key, secret-safe diagnostics, and no Redis requirements for the file driver
 - Content Security Policy (CSP) enforcement verification (`report_only => false`)
 - Media derivative queue worker health and pre-decode limit checks
 - Module asset pipeline adversarial path-normalisation and extension-allow-list tests
