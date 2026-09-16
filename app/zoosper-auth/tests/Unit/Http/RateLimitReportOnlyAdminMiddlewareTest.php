@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Auth\Http\RateLimitReportOnlyAdminMiddleware;
+use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiter;
 use Zoosper\Core\Http\Middleware\RouteContext;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -67,7 +68,7 @@ it('does not touch the request at all when rate limiting is disabled (real defau
         'policies' => ['admin.login' => ['scope' => 'admin', 'max_attempts' => 5, 'window_seconds' => 300]],
     ]);
 
-    $middleware = new RateLimitReportOnlyAdminMiddleware(rateLimitMiddlewareTestPdo(), $basePath);
+    $middleware = new RateLimitReportOnlyAdminMiddleware(new AdminAuthenticationRateLimiter(rateLimitMiddlewareTestPdo(), $basePath));
     $request = rateLimitMiddlewareTestLoginRequest();
     $context = new RouteContext('POST', '/admin/login');
 
@@ -92,7 +93,7 @@ it('never blocks the request even after the policy limit is exceeded, and record
     ]);
 
     $pdo = rateLimitMiddlewareTestPdo();
-    $middleware = new RateLimitReportOnlyAdminMiddleware($pdo, $basePath);
+    $middleware = new RateLimitReportOnlyAdminMiddleware(new AdminAuthenticationRateLimiter($pdo, $basePath));
     $context = new RouteContext('POST', '/admin/login');
     $next = static fn (): Response => Response::html('ok');
 
@@ -128,7 +129,7 @@ it('passes through untouched for any path other than the admin login POST', func
         'policies' => ['admin.login' => ['scope' => 'admin', 'max_attempts' => 1, 'window_seconds' => 300]],
     ]);
 
-    $middleware = new RateLimitReportOnlyAdminMiddleware(rateLimitMiddlewareTestPdo(), $basePath);
+    $middleware = new RateLimitReportOnlyAdminMiddleware(new AdminAuthenticationRateLimiter(rateLimitMiddlewareTestPdo(), $basePath));
     $context = new RouteContext('GET', '/admin/pages');
     $request = new Request(method: 'GET', path: '/admin/pages', clientIp: '203.0.113.10');
 
@@ -151,7 +152,7 @@ it('leaves enforce mode to the dedicated enforcement branch', function (): void 
         'policies' => ['admin.login' => ['scope' => 'admin', 'max_attempts' => 1, 'window_seconds' => 300]],
     ]);
 
-    $middleware = new RateLimitReportOnlyAdminMiddleware(rateLimitMiddlewareTestPdo(), $basePath);
+    $middleware = new RateLimitReportOnlyAdminMiddleware(new AdminAuthenticationRateLimiter(rateLimitMiddlewareTestPdo(), $basePath));
     $request = rateLimitMiddlewareTestLoginRequest();
     $context = new RouteContext('POST', '/admin/login');
 
@@ -175,12 +176,12 @@ it('SECURITY: throws when rate limiting is enabled with an empty identity salt',
         'policies' => ['admin.login' => ['scope' => 'admin', 'max_attempts' => 5, 'window_seconds' => 300]],
     ]);
 
-    $middleware = new RateLimitReportOnlyAdminMiddleware(rateLimitMiddlewareTestPdo(), $basePath);
+    $middleware = new RateLimitReportOnlyAdminMiddleware(new AdminAuthenticationRateLimiter(rateLimitMiddlewareTestPdo(), $basePath));
     $request = rateLimitMiddlewareTestLoginRequest();
     $context = new RouteContext('POST', '/admin/login');
 
     expect(fn () => $middleware->process($request, $context, static fn (): Response => Response::html('ok')))
-        ->toThrow(RuntimeException::class, 'Rate limiting is enabled but no identity salt is configured');
+        ->toThrow(RuntimeException::class, 'RATE_LIMIT_IDENTITY_SALT');
 });
 
 it('SECURITY: does NOT throw for an empty identity salt while rate limiting remains disabled (the real default)', function (): void {
@@ -195,7 +196,7 @@ it('SECURITY: does NOT throw for an empty identity salt while rate limiting rema
         'policies' => ['admin.login' => ['scope' => 'admin', 'max_attempts' => 5, 'window_seconds' => 300]],
     ]);
 
-    $middleware = new RateLimitReportOnlyAdminMiddleware(rateLimitMiddlewareTestPdo(), $basePath);
+    $middleware = new RateLimitReportOnlyAdminMiddleware(new AdminAuthenticationRateLimiter(rateLimitMiddlewareTestPdo(), $basePath));
     $request = rateLimitMiddlewareTestLoginRequest();
     $context = new RouteContext('POST', '/admin/login');
 
@@ -217,7 +218,7 @@ it('SECURITY: works correctly and produces a genuinely salted hash when a real i
         'policies' => ['admin.login' => ['scope' => 'admin', 'max_attempts' => 5, 'window_seconds' => 300]],
     ]);
 
-    $middleware = new RateLimitReportOnlyAdminMiddleware(rateLimitMiddlewareTestPdo(), $basePath);
+    $middleware = new RateLimitReportOnlyAdminMiddleware(new AdminAuthenticationRateLimiter(rateLimitMiddlewareTestPdo(), $basePath));
     $request = rateLimitMiddlewareTestLoginRequest();
     $context = new RouteContext('POST', '/admin/login');
 

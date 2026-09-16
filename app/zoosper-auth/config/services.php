@@ -76,8 +76,7 @@ return [
         dirname(__DIR__, 3),
     ),
     RateLimitReportOnlyAdminMiddleware::class => static fn (ServiceContainer $services): RateLimitReportOnlyAdminMiddleware => new RateLimitReportOnlyAdminMiddleware(
-        $services->get(PDO::class),
-        dirname(__DIR__, 3),
+        $services->get(AdminAuthenticationRateLimiterInterface::class),
         $services->get(AdminUrlGenerator::class)->url('login'),
     ),
     AdminCreateCommand::class => static fn (ServiceContainer $services): AdminCreateCommand => new AdminCreateCommand(

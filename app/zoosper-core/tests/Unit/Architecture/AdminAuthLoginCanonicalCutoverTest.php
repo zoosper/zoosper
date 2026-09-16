@@ -12,9 +12,11 @@ it('wires authentication csrf and rate limiting to the canonical admin URLs', fu
         ->toContain('->basePath()')
         ->and($csrf)->toContain("private string \$adminHomePath = '/admin'")
         ->toContain('htmlspecialchars($this->adminHomePath')
-        ->and($rateLimit)->toContain("private readonly string \$loginPath = '/admin/login'")
+        ->and($rateLimit)->toContain("private string \$loginPath = '/admin/login'")
         ->toContain('$request->path() !== $this->loginPath')
-        ->not->toContain('private const LOGIN_PATH');
+        ->toContain('AdminAuthenticationRateLimiterInterface')
+        ->not->toContain('private const LOGIN_PATH')
+        ->not->toContain('DatabaseRateLimitStore');
 });
 
 it('routes every login controller destination through the canonical generator', function (): void {

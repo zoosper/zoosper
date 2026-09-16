@@ -175,3 +175,17 @@ Account lockout complements the separate Admin request rate limiter. Lockout is 
 The protected Admin User edit workspace displays failed-attempt information and, for an active lock, the expiry in UTC. The POST-only `/admin/users/{id}/unlock` action requires `user.manage` and the standard Admin CSRF middleware. Unlocking clears only lockout state. It does not change status, password, roles, locale, two-factor enrolment, personal access tokens, or password-reset credentials.
 
 A successful operational unlock records `admin_user.account_unlocked` against the target `admin_user` ID with a short secret-free summary. Passwords, hashes, reset tokens, lock expiry, IP addresses, user agents, and session identifiers are excluded from this audit event.
+
+## Canonical authentication rate limiting
+
+`AdminAuthenticationRateLimiter` is the only policy-execution boundary for public Admin authentication throttling. It owns runtime configuration, salted identity hashing, rate-limit bucket persistence, report-only JSONL diagnostics, enforcement decisions and successful bucket resets.
+
+The following operations retain separate policy keys and buckets:
+
+- password login through the Admin HTML and API transports
+- Admin password-reset requests
+- Admin two-factor challenges
+
+HTTP adapters retain transport responsibility. The registered Admin middleware selects HTML login POST requests and maps denied decisions to a generic HTML 429 response. The API controller retains its JSON error contract, the two-factor controller retains its challenge response, and password-reset requests retain their neutral public response.
+
+Transport adapters must not construct a database rate-limit store, policy resolver, identity hasher or report sink.

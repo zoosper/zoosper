@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Auth\Http\RateLimitReportOnlyAdminMiddleware;
+use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiter;
 use Zoosper\Core\Http\Middleware\RouteContext;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -35,7 +36,7 @@ it('returns a generic 429 with Retry-After and does not execute downstream after
         'identity_salt' => str_repeat('a', 64),
         'policies' => ['admin.login' => ['scope' => 'admin', 'max_attempts' => 1, 'window_seconds' => 300]],
     ]);
-    $middleware = new RateLimitReportOnlyAdminMiddleware(enforcingRateLimitPdo(), $base);
+    $middleware = new RateLimitReportOnlyAdminMiddleware(new AdminAuthenticationRateLimiter(enforcingRateLimitPdo(), $base));
     $context = new RouteContext('POST', '/admin/login', isPublic: true);
     $calls = 0;
     $next = static function () use (&$calls): Response { $calls++; return Response::html('login'); };
@@ -60,7 +61,7 @@ it('keeps report-only mode non-blocking after the same policy limit', function (
         'identity_salt' => str_repeat('b', 64),
         'policies' => ['admin.login' => ['scope' => 'admin', 'max_attempts' => 1, 'window_seconds' => 300]],
     ]);
-    $middleware = new RateLimitReportOnlyAdminMiddleware(enforcingRateLimitPdo(), $base);
+    $middleware = new RateLimitReportOnlyAdminMiddleware(new AdminAuthenticationRateLimiter(enforcingRateLimitPdo(), $base));
     $context = new RouteContext('POST', '/admin/login', isPublic: true);
     $calls = 0;
     $next = static function () use (&$calls): Response { $calls++; return Response::html('login'); };
@@ -72,12 +73,44 @@ it('keeps report-only mode non-blocking after the same policy limit', function (
         ->and($calls)->toBe(2);
 });
 
+it('shares the canonical password-login bucket between service and middleware calls', function (): void {
+    $base = enforcingRateLimitBase([
+        'enabled' => true,
+        'mode' => 'enforce',
+        'report_path' => 'var/reports/rate.jsonl',
+        'identity_salt' => str_repeat('e', 64),
+        'policies' => [
+            'admin.login' => [
+                'scope' => 'admin',
+                'max_attempts' => 1,
+                'window_seconds' => 300,
+            ],
+        ],
+    ]);
 
+    $pdo = enforcingRateLimitPdo();
+    $limiter = new AdminAuthenticationRateLimiter($pdo, $base);
+    $middleware = new RateLimitReportOnlyAdminMiddleware($limiter);
 
+    $first = $limiter->checkPasswordLogin(
+        'admin@example.test',
+        '203.0.113.10',
+    );
 
+    $calls = 0;
+    $denied = $middleware->process(
+        enforcingLoginRequest(),
+        new RouteContext('POST', '/admin/login', isPublic: true),
+        static function () use (&$calls): Response {
+            $calls++;
 
+            return Response::html('login');
+        },
+    );
 
-
-
-
-
+    expect($first->allowed)->toBeTrue()
+        ->and($denied->statusCode())->toBe(429)
+        ->and($denied->headers())->toHaveKey('Retry-After')
+        ->and($denied->headers()['Cache-Control'])->toBe('no-store')
+        ->and($calls)->toBe(0);
+});

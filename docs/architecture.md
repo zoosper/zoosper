@@ -42,3 +42,20 @@ Recognised environments are local, development, testing, staging and production;
 ### Template identifier security boundary
 
 Template identifiers are validated before theme overrides, module view lookup, extension-driven engine selection, or legacy PHP template execution. Identifiers must be normalised relative forward-slash paths. Absolute paths, traversal segments, null bytes, backslashes, duplicate separators, malformed module names, and unsupported segment characters fail closed.
+
+## Authentication rate-limit execution boundary
+
+Authentication rate limiting uses one Auth-owned execution service across HTML Admin login, API login, password-reset requests and two-factor challenges.
+
+`AdminAuthenticationRateLimiter` owns:
+
+- runtime policy loading
+- salted and normalised identity construction
+- database attempt recording
+- report-only JSONL diagnostic events
+- enforcing allow or deny decisions
+- successful login and two-factor bucket resets
+
+HTTP layers remain transport adapters. The Admin middleware performs route selection and generic HTML 429 mapping. API and two-factor controllers preserve their own response formats. Password-reset requests preserve their neutral public response. No HTTP adapter recreates the policy, hashing, persistence or reporting stack.
+
+Disabled mode remains lazy and does not require a salt or create storage. Report-only mode records the underlying decision but returns an allowed decision to the caller. Enforcing mode returns the stored decision unchanged.
