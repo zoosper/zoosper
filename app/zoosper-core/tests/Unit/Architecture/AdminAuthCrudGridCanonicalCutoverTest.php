@@ -22,13 +22,13 @@ it('removes migrated literal admin page URLs while retaining static asset URLs',
     $files = [
         'app/zoosper-auth/resources/views/admin/users/index.latte',
         'app/zoosper-auth/resources/views/admin/users/form.latte',
-        'app/zoosper-admin/resources/views/admin/roles/index.php',
-        'app/zoosper-admin/resources/views/admin/roles/form.php',
+        'app/zoosper-auth/resources/views/admin/roles/index.latte',
+        'app/zoosper-auth/resources/views/admin/roles/form.latte',
     ];
     foreach ($files as $file) {
         expect((string) file_get_contents($root . '/' . $file))->not->toContain('href="/admin/');
     }
-    $assets = (string) file_get_contents($root . '/app/zoosper-admin/resources/views/admin/roles/permission-tree.php');
+    $assets = (string) file_get_contents($root . '/app/zoosper-auth/resources/views/admin/roles/permission-tree.latte');
     expect($assets)->toContain('/assets/admin/');
 });
 

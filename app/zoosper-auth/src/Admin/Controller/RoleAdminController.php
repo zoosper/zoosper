@@ -319,26 +319,23 @@ final readonly class RoleAdminController
         return Response::html($this->layout->render($title, $content, $this->guard->user(), 'admin-roles', $shellTitle), $statusCode);
     }
 
+    /** @param array<string, mixed> $data */
     private function renderRoleView(string $template, array $data = []): string
     {
+        if ($this->templates === null) {
+            throw new RuntimeException(
+                'Role Admin rendering requires the configured template renderer.',
+            );
+        }
+
         $cleanTemplate = preg_replace('/\.(latte|php)$/', '', ltrim($template, '/'));
-        if ($this->templates !== null) {
-            return $this->templates->render('zoosper-auth::admin/roles/' . $cleanTemplate, $data, 'default', 'admin.content');
-        }
 
-        $lattePath = dirname(__DIR__, 3) . '/resources/views/admin/roles/' . $cleanTemplate . '.latte';
-        $phpPath = dirname(__DIR__, 4) . '/zoosper-admin/resources/views/admin/roles/' . $cleanTemplate . '.php';
-        $path = is_file($lattePath) ? $lattePath : $phpPath;
-
-        if (!is_file($path)) {
-            throw new RuntimeException('Role admin view not found: ' . $template);
-        }
-
-        $escape = static fn (string $value): string => htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-        extract($data, EXTR_SKIP);
-        ob_start();
-        require $path;
-        return (string) ob_get_clean();
+        return $this->templates->render(
+            'zoosper-auth::admin/roles/' . $cleanTemplate,
+            $data,
+            'default',
+            'admin.content',
+        );
     }
 
 private function e(string $value): string

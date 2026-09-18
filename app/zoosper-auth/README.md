@@ -189,3 +189,6 @@ The following operations retain separate policy keys and buckets:
 HTTP adapters retain transport responsibility. The registered Admin middleware selects HTML login POST requests and maps denied decisions to a generic HTML 429 response. The API controller retains its JSON error contract, the two-factor controller retains its challenge response, and password-reset requests retain their neutral public response.
 
 Transport adapters must not construct a database rate-limit store, policy resolver, identity hasher or report sink.
+
+### Role Admin template boundary
+Role list, form, permission-tree and user-assignment views are Auth-owned templates rendered through the configured engine-independent template renderer. Controller-local PHP view execution is not supported; missing renderer configuration fails closed instead of falling back to `extract()` and `require`.

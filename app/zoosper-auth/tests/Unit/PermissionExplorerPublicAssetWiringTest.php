@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 it('renders Permission Explorer through published public assets', function (): void {
     $project = dirname(__DIR__, 4);
-    $viewPath = $project . '/app/zoosper-admin/resources/views/admin/roles/permission-tree.php';
+    $viewPath = $project . '/app/zoosper-auth/resources/views/admin/roles/permission-tree.latte';
 
     expect(is_file($viewPath))->toBeTrue();
     $view = file_get_contents($viewPath);

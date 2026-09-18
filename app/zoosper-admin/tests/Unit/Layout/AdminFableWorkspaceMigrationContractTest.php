@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 it('migrates Settings and role administration without changing their security owners', function (): void {
     $root = dirname(__DIR__, 5);
-    $roles = (string) file_get_contents($root . '/app/zoosper-admin/resources/views/admin/roles/index.php');
-    $form = (string) file_get_contents($root . '/app/zoosper-admin/resources/views/admin/roles/form.php');
+    $roles = (string) file_get_contents($root . '/app/zoosper-auth/resources/views/admin/roles/index.latte');
+    $form = (string) file_get_contents($root . '/app/zoosper-auth/resources/views/admin/roles/form.latte');
     $settings = (string) file_get_contents($root . '/app/zoosper-settings/resources/assets/css/settings-workspace.css');
     $components = (string) file_get_contents($root . '/app/zoosper-admin/resources/assets/css/admin-components.css');
 
