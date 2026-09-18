@@ -154,7 +154,7 @@ The `v0.3.0-alpha.5` release source completed with:
 - a compiled, fresh 39-module manifest
 - passing foreign-key and alpha release checks
 
-CI and the tracked pre-push hook run the repository quality contract. Psalm is a blocking full-scope CI gate.
+CI runs Psalm as a blocking full-scope gate across every first-party package that owns a source directory. Configuration-only modules such as `zoosper-session` remain covered by runtime, architecture, package and quality-gate contracts. The tracked Psalm baseline prevents new source-analysis debt while existing findings are reduced.
 
 ## Latest release and current development focus
 `v0.3.0-alpha.5` closes the 33-foreign-key first-party integrity inventory, blocking full-scope Psalm gate, secret-generation and production validation work, absolute Admin-session lifetime controls, adversarial asset coverage, and the Fable-informed Admin workspace rollout. It also replaces duplicate shell-title browser workarounds with a server-owned presentation policy, removes production inline Menu/Grid presentation, and retires the unused phase-era frontend fallback.
@@ -163,7 +163,7 @@ CI and the tracked pre-push hook run the repository quality contract. Psalm is a
 
 - Referential integrity is declaratively owned across the current first-party relationship inventory: 33 foreign keys reconcile on MySQL, fresh SQLite installs create the same 33 constraints, and release readiness fails closed on pending additions, mismatches, or required SQLite rebuilds.
 - CI test suite execution against an active MySQL service container is being finalized alongside SQLite runs.
-- Static analysis (Psalm) remains advisory while the baseline is reduced toward an enforced zero-baseline gate.
+- Static analysis (Psalm) is blocking across all first-party source-bearing packages; configuration-only modules remain covered by their executable and repository contracts, and the tracked Psalm baseline is being reduced toward zero.
 - Automated secret generation and comprehensive boot-time production validation are being finalized.
 - Absolute session lifetime controls and concurrent session limits are in progress.
 

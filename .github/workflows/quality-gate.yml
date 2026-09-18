@@ -58,13 +58,8 @@ jobs:
         run: composer ci:js
       - name: Run strict repository gate
         run: composer gate:strict
-      - name: Run Psalm advisory baseline
-        id: psalm
-        continue-on-error: true
+      - name: Run blocking full-scope Psalm analysis
         run: composer analyse
-      - name: Report Psalm baseline status
-        if: always()
-        run: echo "Psalm advisory outcome ${{ steps.psalm.outcome }}"
       - name: Run full Pest suite (SQLite)
         run: composer test
       - name: Run Pest test suite (MySQL)

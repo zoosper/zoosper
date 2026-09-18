@@ -13,9 +13,10 @@ it('gates dev changes through the enforceable quality contract', function (): vo
         ->toContain('composer audit --locked')
         ->toContain('composer ci:js')
         ->toContain('composer gate:strict')
-        ->toContain('continue-on-error: true')
-        ->toContain('composer analyse')
-        ->toContain('Psalm advisory outcome')
+        ->toContain('name: Run blocking full-scope Psalm analysis')
+        ->toContain('run: composer analyse')
+        ->not->toContain('continue-on-error: true')
+        ->not->toContain('Psalm advisory outcome')
         ->toContain('composer test')
         ->toContain('composer compile');
 });

@@ -12,7 +12,7 @@ it('publishes the current alpha release and delivered product surface at the rep
         ->toContain('0.3.2-alpha.1-dev')
         ->toContain('zoosper-menu')
         ->toContain('revision listing and revision restoration')
-        ->toContain('CI and the tracked pre-push hook')
+        ->toContain('CI runs Psalm as a blocking full-scope gate')
         ->toContain('[documentation index](docs/README.md)')
         ->toContain('Explicitly not complete')
         ->not->toContain('docs/guide/')

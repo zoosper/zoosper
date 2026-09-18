@@ -12,7 +12,7 @@ composer gate:strict
 
 The fresh-install smoke test uses disposable SQLite state, applies migrations twice, creates an Admin and Site, checks password hashing and validates critical routes/assets. The quick-start environment contract also guards local HTTP session compatibility, disabled-by-default throttling, and the built-in server front-controller router.
 
-The strict gate validates durable repository contracts. Psalm remains visible and advisory while the inherited baseline is reduced; new code should not intentionally add static-analysis debt.
+The strict gate validates durable repository contracts. CI separately runs Psalm as a blocking full-scope gate with a tracked baseline; new code must not add static-analysis debt, and the inherited baseline remains under active reduction.
 
 ## Composer release-train checks
 
