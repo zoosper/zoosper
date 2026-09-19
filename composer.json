@@ -100,7 +100,8 @@
         "release:check": "@php bin/zoosper release:check",
         "fresh-install:smoke": "@php vendor/bin/pest app/zoosper-core/tests/Feature/Release/FreshInstallAlphaSmokeTest.php app/zoosper-core/tests/Unit/Release/CriticalRuntimeInventoryTest.php",
         "hooks:install": "@php tools/install-git-hooks.php",
-        "pre-push": "@bash .githooks/pre-push"
+        "pre-push": "@bash .githooks/pre-push",
+        "test:admin-grid-dom": "npm run test:admin-grid-dom"
     },
     "config": {
         "sort-packages": true,

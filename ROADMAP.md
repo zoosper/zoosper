@@ -431,8 +431,10 @@ replica.
   `zoosper-admin-grid` now owns the canonical generic column runtime; the
   application bridge is parity-guarded compatibility wiring. Content-derived
   asset versions and JavaScript syntax checks are enforced. Server-rendered header keys are now explicit and positional inference is
-  removed. Application compatibility assets are retired. Remaining: add DOM coverage
-  before rolling the workspace out to every admin grid.
+  removed. Application compatibility assets are retired. Node's built-in test runner with
+  a locked jsdom environment now exercises disclosure exclusivity, ARIA state, keyboard
+  column movement, locked ID/Actions anchors, live table reflection, persisted hidden-state
+  synchronisation, dirty-state feedback, and page-size submission in the canonical CI gate.
 
 - [x] Admin authentication + session guard
 - [x] Roles, permissions, ACL tree + admin users CRUD
