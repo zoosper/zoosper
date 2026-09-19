@@ -81,7 +81,8 @@ it('audits existing secrets and fails when placeholders are present', function (
         [$code, $output] = captureOutput(fn (ConsoleOutput $output): int => $command->run(['--check'], $output));
 
         expect($code)->toBe(1)
-            ->and($output)->toContain("[FAIL] APP_KEY: Uses insecure placeholder value ('change-me')")
+            ->and($output)->toContain('[FAIL] APP_KEY: Uses an insecure placeholder value')
+            ->and($output)->not->toContain('change-me')
             ->and($output)->toContain('[FAIL] TWO_FACTOR_ENCRYPTION_KEY: Missing or empty')
             ->and($output)->toContain('[OK]   RATE_LIMIT_IDENTITY_SALT: Present and secure')
             ->and($output)->toContain('[OK]   CACHE_ENCRYPTION_KEY: Present and secure');
@@ -118,3 +119,47 @@ it('audits existing secrets and passes when all are strong', function (): void {
 
 
 
+
+it('audits quoted and export-prefixed placeholders through the canonical parser without disclosure', function (): void {
+    $tempDir = sys_get_temp_dir() . '/zoosper-secrets-test-' . bin2hex(random_bytes(6));
+    @mkdir($tempDir, 0777, true);
+    $envFile = $tempDir . '/.env';
+    file_put_contents($envFile, "export APP_KEY=\"change-me\" # rotate\nTWO_FACTOR_ENCRYPTION_KEY='placeholder-private-value'\nRATE_LIMIT_IDENTITY_SALT=secure-salt-12345678901234567890\nCACHE_ENCRYPTION_KEY=secure-key-12345678901234567890\n");
+
+    try {
+        $command = new GenerateSecretsCommand($tempDir);
+        [$code, $output] = captureOutput(fn (ConsoleOutput $output): int => $command->run(['--check'], $output));
+
+        expect($code)->toBe(1)
+            ->and($output)->toContain('[FAIL] APP_KEY: Uses an insecure placeholder value')
+            ->and($output)->toContain('[FAIL] TWO_FACTOR_ENCRYPTION_KEY: Uses an insecure placeholder value')
+            ->and($output)->not->toContain('change-me')
+            ->and($output)->not->toContain('placeholder-private-value');
+    } finally {
+        @unlink($envFile);
+        @rmdir($tempDir);
+    }
+});
+
+it('keeps generated values out of write-mode output', function (): void {
+    $tempDir = sys_get_temp_dir() . '/zoosper-secrets-test-' . bin2hex(random_bytes(6));
+    @mkdir($tempDir, 0777, true);
+    $envFile = $tempDir . '/.env';
+    file_put_contents($envFile, "APP_KEY=change-me\n");
+
+    try {
+        $command = new GenerateSecretsCommand($tempDir);
+        [$code, $output] = captureOutput(fn (ConsoleOutput $output): int => $command->run(['--write'], $output));
+        $contents = (string) file_get_contents($envFile);
+        preg_match('/^APP_KEY=(.+)$/m', $contents, $matches);
+        $generatedAppKey = $matches[1] ?? '';
+
+        expect($code)->toBe(0)
+            ->and($generatedAppKey)->not->toBe('')
+            ->and($output)->not->toContain($generatedAppKey)
+            ->and($output)->not->toContain('APP_KEY=');
+    } finally {
+        @unlink($envFile);
+        @rmdir($tempDir);
+    }
+});

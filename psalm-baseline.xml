@@ -966,13 +966,6 @@
       <code><![CDATA[public function name(): string]]></code>
       <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
     </MissingOverrideAttribute>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$v]]></code>
-      <code><![CDATA[$val]]></code>
-    </PossiblyUndefinedArrayOffset>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[explode("\n", (string) file_get_contents($envFile))]]></code>
-    </RedundantConditionGivenDocblockType>
     <UnusedClass>
       <code><![CDATA[GenerateSecretsCommand]]></code>
     </UnusedClass>

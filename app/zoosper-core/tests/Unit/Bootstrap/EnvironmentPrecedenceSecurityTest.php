@@ -10,7 +10,10 @@ function runEnvironmentPrecedenceProbe(string $prefix): array
     mkdir($temporary . '/bootstrap', 0775, true);
     mkdir($temporary . '/vendor', 0775, true);
     copy($root . '/bootstrap/autoload.php', $temporary . '/bootstrap/autoload.php');
-    file_put_contents($temporary . '/vendor/autoload.php', "<?php\n");
+    file_put_contents(
+        $temporary . '/vendor/autoload.php',
+        "<?php\nrequire " . var_export($root . '/vendor/autoload.php', true) . ";\n",
+    );
     file_put_contents($temporary . '/.env', "APP_ENV=local\nSESSION_SECURE=false\n");
 
     $script = sprintf(

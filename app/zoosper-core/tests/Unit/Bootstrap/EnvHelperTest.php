@@ -35,11 +35,13 @@ function envHelperTestScaffold(string $envFileContents): array
     mkdir($tmp . '/bootstrap', 0775, true);
     mkdir($tmp . '/vendor', 0775, true);
 
-    // Minimal Composer autoloader stub — just enough for
-    // bootstrap/autoload.php's own `require $composerAutoload;` to
-    // succeed without pulling in the entire real dependency graph, which
-    // is irrelevant to what this test verifies (the env() parsing logic).
-    file_put_contents($tmp . '/vendor/autoload.php', "<?php\n// stub for test isolation\n");
+    // The copied bootstrap delegates parsing to a Core class, so its isolated
+    // subprocess autoloader must delegate to the repository Composer map.
+    $realAutoloadPath = dirname(__DIR__, 5) . '/vendor/autoload.php';
+    file_put_contents(
+        $tmp . '/vendor/autoload.php',
+        "<?php\nrequire " . var_export($realAutoloadPath, true) . ";\n",
+    );
 
     // Copy the REAL bootstrap/autoload.php (the actual file under test),
     // not a re-typed duplicate, so this test genuinely exercises the real

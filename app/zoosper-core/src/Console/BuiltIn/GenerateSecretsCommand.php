@@ -7,6 +7,7 @@ namespace Zoosper\Core\Console\BuiltIn;
 use Zoosper\Core\Console\ConsoleCommandInterface;
 use Zoosper\Core\Console\ConsoleOptions;
 use Zoosper\Core\Console\ConsoleOutput;
+use Zoosper\Core\Environment\SecureEnvFileEditor;
 
 /**
  * Generates cryptographically secure secrets and keys for application security,
@@ -78,6 +79,7 @@ final readonly class GenerateSecretsCommand implements ConsoleCommandInterface
             return 0;
         }
 
+        $output->writeln('[WARNING] The generated values below are secrets. Do not expose terminal, CI, or support logs.');
         $output->writeln('Generated Cryptographically Strong Secrets:');
         $output->writeln('');
         foreach ($generated as $key => $value) {
@@ -121,7 +123,7 @@ final readonly class GenerateSecretsCommand implements ConsoleCommandInterface
             }
 
             if ($this->isPlaceholder($trimmed)) {
-                $output->writeln("  [FAIL] {$key}: Uses insecure placeholder value ('{$trimmed}')");
+                $output->writeln("  [FAIL] {$key}: Uses an insecure placeholder value");
                 $hasFailure = true;
                 continue;
             }
@@ -166,67 +168,19 @@ final readonly class GenerateSecretsCommand implements ConsoleCommandInterface
      */
     private function writeToEnvFile(string $envFile, array $generated, bool $force): array
     {
-        $lines = is_file($envFile) ? (explode("\n", (string) file_get_contents($envFile)) ?: []) : [];
-        $existing = [];
-        $keyLineIndex = [];
-
-        foreach ($lines as $index => $line) {
-            $trimmed = trim($line);
-            if ($trimmed === '' || str_starts_with($trimmed, '#') || !str_contains($trimmed, '=')) {
-                continue;
-            }
-            [$key, $val] = explode('=', $trimmed, 2);
-            $key = trim($key);
-            $existing[$key] = trim($val);
-            $keyLineIndex[$key] = $index;
-        }
-
-        $statusReport = [];
-
-        foreach ($generated as $key => $newValue) {
-            $currentValue = $existing[$key] ?? null;
-            $shouldReplace = $currentValue === null
+        return (new SecureEnvFileEditor())->update(
+            $envFile,
+            $generated,
+            fn (string $currentValue): bool => $force
                 || $currentValue === ''
-                || $this->isPlaceholder($currentValue)
-                || $force;
-
-            if (!$shouldReplace) {
-                $statusReport[$key] = 'Preserved existing value';
-                continue;
-            }
-
-            if (isset($keyLineIndex[$key])) {
-                $lines[$keyLineIndex[$key]] = "{$key}={$newValue}";
-                $statusReport[$key] = 'Updated existing line';
-            } else {
-                $lines[] = "{$key}={$newValue}";
-                $statusReport[$key] = 'Appended new line';
-            }
-        }
-
-        file_put_contents($envFile, implode("\n", $lines));
-        @chmod($envFile, 0600);
-
-        return $statusReport;
+                || $this->isPlaceholder($currentValue),
+        );
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     private function parseEnvFile(string $envFile): array
     {
-        $values = [];
-        $lines = explode("\n", (string) file_get_contents($envFile));
-        foreach ($lines as $line) {
-            $trimmed = trim($line);
-            if ($trimmed === '' || str_starts_with($trimmed, '#') || !str_contains($trimmed, '=')) {
-                continue;
-            }
-            [$k, $v] = explode('=', $trimmed, 2);
-            $values[trim($k)] = trim($v);
-        }
-
-        return $values;
+        return (new SecureEnvFileEditor())->values($envFile);
     }
 }
 

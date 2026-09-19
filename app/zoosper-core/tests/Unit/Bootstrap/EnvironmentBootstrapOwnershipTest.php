@@ -42,3 +42,13 @@ test('shared tool bootstrap returns the repository root', function (): void {
 
 
 
+
+it('uses the Core-owned canonical assignment parser without a bootstrap-local assignment grammar', function (): void {
+    $root = dirname(__DIR__, 5);
+    $bootstrap = (string) file_get_contents($root . '/bootstrap/autoload.php');
+
+    expect($bootstrap)->toContain('EnvLineParser::parseAssignment($line)')
+        ->toContain('$value = $assignment->value;')
+        ->not->toContain('explode(\'=\', $line, 2)')
+        ->not->toContain('str_starts_with($line, \'export \')');
+});

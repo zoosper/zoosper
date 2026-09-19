@@ -9,7 +9,7 @@ Core operational commands include:
 - `module:manifest:status`: Display discovery vs compiled manifest status.
 - `module:manifest:check`: Validate compiled manifest against current module definitions.
 - `deploy`: Execute atomic deployment pipeline (migrate, compile, manifest verify).
-- `security:generate-secrets`: Generate or audit cryptographically strong secrets (`APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY`, `RATE_LIMIT_IDENTITY_SALT`, `CACHE_ENCRYPTION_KEY`) with optional `--write`, `--check`, or `--force` flags.
+- `security:generate-secrets`: Generate or audit cryptographically strong secrets (`APP_KEY`, `TWO_FACTOR_ENCRYPTION_KEY`, `RATE_LIMIT_IDENTITY_SALT`, `CACHE_ENCRYPTION_KEY`) with optional `--write`, `--check`, or `--force` flags. The command uses the same assignment grammar as bootstrap, accepts quoted values, inline comments and `export` prefixes, rejects duplicate targeted keys before mutation, preserves unrelated lines and line endings, and performs checked atomic `0600` writes. Output-only generation prints live secrets with an explicit exposure warning; prefer `--write` for secret-safe operational logs.
 - `release:check`: Run pre-flight release readiness verification.
 - `schema:foreign-keys:status` / `schema:foreign-keys:apply`: Inspect and apply declarative foreign key constraints.
 - `version`: Display CMS release version and channel.

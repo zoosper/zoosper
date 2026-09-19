@@ -28,22 +28,7 @@ if (!function_exists('zoosperParseEnvValue')) {
      */
     function zoosperParseEnvValue(string $rawValue): string
     {
-        if ($rawValue === '') {
-            return '';
-        }
-
-        $first = $rawValue[0];
-        $length = strlen($rawValue);
-
-        if (($first === '"' || $first === "'") && $length >= 2 && $rawValue[$length - 1] === $first) {
-            return substr($rawValue, 1, -1);
-        }
-
-        if (preg_match('/^(.*?)\s+#.*$/', $rawValue, $matches) === 1) {
-            return trim($matches[1]);
-        }
-
-        return $rawValue;
+        return \Zoosper\Core\Environment\EnvLineParser::parseValue($rawValue);
     }
 }
 
@@ -57,29 +42,12 @@ if (!function_exists('env')) {
 
             if (is_file($envFile)) {
                 foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $line) {
-                    $line = trim($line);
-
-                    if ($line === '' || str_starts_with($line, '#')) {
+                    $assignment = \Zoosper\Core\Environment\EnvLineParser::parseAssignment($line);
+                    if ($assignment === null) {
                         continue;
                     }
 
-                    // Support (and strip) a leading "export " keyword — a
-                    // common .env dialect (bash-style exports).
-                    if (str_starts_with($line, 'export ')) {
-                        $line = trim(substr($line, 7));
-                    }
-
-                    if (!str_contains($line, '=')) {
-                        continue;
-                    }
-
-                    [$name, $rawValue] = explode('=', $line, 2);
-                    $name = trim($name);
-                    $rawValue = trim($rawValue);
-
-                    if ($name === '') {
-                        continue;
-                    }
+                    $name = $assignment->key;
 
                     // Process-manager/container values are authoritative.
                     // Keep $_ENV and getenv() consistent, then use .env only
@@ -95,7 +63,7 @@ if (!function_exists('env')) {
                         continue;
                     }
 
-                    $value = zoosperParseEnvValue($rawValue);
+                    $value = $assignment->value;
 
                     $_ENV[$name] = $value;
                     putenv($name . '=' . $value);
