@@ -1,6 +1,6 @@
 # Zoosper CMS — Master Roadmap
 
-**Last updated:** 2026-09-06 (Sydney)
+**Last updated:** 2026-09-19 (Sydney)
 
 ## Current continuity status
 
@@ -9,7 +9,7 @@
 - **[x] SR-2 Redis production authentication and cache-key policy:** Redis requirements activate only for `CACHE_DRIVER=redis`; staging and production require a non-empty, non-placeholder Redis password; every Redis driver requires a strong dedicated cache signing key; file cache remains unaffected; local, development and testing retain explicit unauthenticated loopback support; and policy plus factory tests preserve lazy, secret-safe composition.
 - **[x] Phase 13A-C2 Admin account lockout:** Auth now owns atomic per-account failed-login state, configurable temporary lockout, neutral authentication enforcement, password-reset recovery, protected Admin visibility, `user.manage`-guarded POST unlock, secret-free audit metadata, and real HTTP-lifecycle acceptance. Account lockout remains independent from active/inactive status and from the separate email/IP request rate limiter.
 - **[x] GitHub CI MySQL Migration Failure Resolution:** Fixed `composer migrate` failure (`SQLSTATE[HY000]: General error: 1824 Failed to open the referenced table 'media_assets'`) by using `SchemaInspector` in `202608310001_create_media_queue_table.php` to verify table presence before issuing `CREATE TABLE ... FOREIGN KEY (asset_id) REFERENCES media_assets(id)`, allowing fresh database migrations on MySQL and SQLite to execute safely and defer table creation to the declarative schema engine.
-- **[x] Secret Generation Hardening:** Added explicit `0600` file permissions to `GenerateSecretsCommand::writeToEnvFile()` after writing updated `.env` secrets.
+- **[x] SR-6 GenerateSecrets environment-file hardening:** Bootstrap and the command share one canonical assignment parser; duplicate target keys fail before mutation; unrelated formatting and line endings are preserved; writes use checked same-directory temporary files, verified `0600` permissions and atomic replacement; and audit/write diagnostics redact secret values.
 - **[x] Phase 10BN:** generic pagination ownership moved from Core to the
   `zoosper/pagination` library. Zoosper's page parsing, default page size `20`,
   maximum page size `100`, and maximum page `100_000` remain stable; verified
@@ -19,7 +19,7 @@
 - **[x] Phase 10AP-B:** Canonical multipart upload uses the feature-owned stateless `media:upload` PAT boundary plus token-owner `media.manage`, reads files only from the immutable request boundary, delegates to the shared canonical storage/derivative/cleanup pipeline, returns HTTP `201`, and exposes no private paths or token secrets.
 - **[x] Phase 10AP-C:** Media archive/restore and archived-first permanent deletion now share mandatory reference and derivative boundaries, fail closed on incomplete Page reference storage, preserve transactional metadata removal and conservative original/derivative cleanup, and provide Admin/API blocker feedback.
 - **[x] Phase 10AQ:** module-discovery status now matches the Phase 9GC fail-closed implementation; stale silent-override claims and the obsolete false-signal override test were removed while the dedicated same-layer and cross-layer contracts remain authoritative.
-- **Phase 10AS-H completed in source, browser-accepted, and pushed:** the Admin now has a permission-aware Dashboard, fluid light/dark shell and shared components, package-owned responsive Grid workflows, screen-scoped assets, theme-coherent feature surfaces, a sidebar-owned collapse control, semantic destination icons, and non-interactive navigation groups. Final accepted source is `364414a4878cde36fd89de8583326e4d1ff1f625`, verified by `1,550` tests with `11,157` assertions and a `3`-check standard quality gate with `0` errors and `0` warnings. This phase was not deployed.
+- **[x] Phase 10AS-H:** the Admin has a permission-aware Dashboard, fluid light/dark shell and shared components, package-owned responsive Grid workflows, screen-scoped assets, theme-coherent feature surfaces, a sidebar-owned collapse control, semantic destination icons, and non-interactive navigation groups. The historical accepted source was `364414a4878cde36fd89de8583326e4d1ff1f625`; these capabilities are included in the current deployed `dev` ancestry.
 - **[x] Phase 10AR:** current-source review disproved the stale historical allegations and corrected the confirmed environment-precedence defect. Process-manager/container values now remain authoritative over `.env`; focused verification passed `26` tests / `76` assertions, the full suite passed `1,557` tests / `11,175` assertions, the strict quality gate passed with `0` findings, and browser plus production-safe console acceptance passed.
 - **[x] Phase 10AU:** implemented aggregated discovery manifestation. `ModuleRegistry` and `Module` now include a `discovery` map tracking configuration files (services, routes, etc.) across modules. `ModuleManifestCompiler` caches this map in `var/cache/modules.php`, eliminating hundreds of redundant `is_file()` and `glob()` calls during production boot. Loaders for services, routes, commands, events, and admin UI now consume this map.
 - **[x] Phase 10AV:** graduated Content Security Policy (CSP) from report-only to full enforcement. Default configured to `report_only => false` in `config/security.php` and `.env.example`.
@@ -601,13 +601,9 @@ replica.
   modules yet — they are path-repository entries, not separately-exported
   packages, so the mechanism would be inert there today; add at the
   moment each module is actually extracted into `packages/`.
-- [ ] **[R] Durable-tool manifest exists purely to stop cleanup automation
-  from deleting scripts a Pest test asserts exist** — "inverted," per
-  reviewer framing. Worth sitting with, not a quick fix.
+- [x] **[R] Durable-tool ownership is explicit and enforced:** `config/durable-tools.php` is the canonical operational-tool registry; strict quality verifies manifest/disk integrity and rejects unregistered one-off drift.
 - [x] Boot-and-serve feature test
-- [ ] **[R2] ~150+ single-purpose tooling scripts still in `tools/`**,
-  several existing solely to plan/audit deletion of other scripts in the
-  same directory. Not yet pruned further.
+- [x] **[R2] Root tooling is reduced to the bounded operational set:** permanent hygiene and dependency-closure tests guard the retained tools, and strict quality reports five registered durable tools without drift.
 - [x] **[R2] AI-session and completed one-shot cleanup scripts removed**
   in Phase 2C.
 - [x] CI workflow (validate, Psalm, Pest+coverage, gate on every PR) — `.github/workflows/quality-gate.yml` runs full validation, JavaScript syntax checks, strict quality gate, Psalm baseline, Pest suite, and fresh-install smoke tests.
@@ -638,9 +634,7 @@ replica.
 ## 12. Page Momentum (visible admin dashboard)
 
 - [x] Routed `/admin/page-momentum` with real read-only facts
-- [ ] **[R] Reviewer recommends deleting or radically shrinking this** —
-  15+ test files/dozen classes for a static readiness page, vs. missing
-  features like page delete. Explicit judgment call, not yet decided.
+- [x] **[R] Page Momentum production surface retired:** the route, menu, stylesheet, implementation cluster and obsolete readiness tests were removed; the changelog preserves the closure history.
 
 ## 13. Consolidated "true-modular" roadmap (from reviewer passes)
 
@@ -650,13 +644,13 @@ replica.
 4. **[Substantially advanced]** Real security hardening:
    `EMULATE_PREPARES` ✅, pinned collation ✅, rate-limit salt ✅, sanitizer
    driver guard ✅, privilege-escalation fix ✅, race-condition fix ✅, 2FA
-   key rotation ✅, Admin-login rate-limit enforcement ✅. Still open:
-   account lockout and password reset.
+   key rotation ✅, Admin-login rate-limit enforcement ✅, account lockout ✅,
+   and password reset ✅.
 5. **[Done]** Fixed the `role.manage`/`user.manage` privilege boundary
 6. **[Done]** Verified the obsolete parallel 2FA family is already retired
 7. **[Done]** Shared presentation contracts moved to Core; Page and Settings dropped `zoosper/admin`
 8. **[Done]** Consolidate the two Grid systems and two AdminForm systems into one
-9. Standardize module naming; real semver constraints instead of `*@dev`
+9. **[Done]** Standardize module naming and use bounded prerelease constraints instead of `*@dev`
 10. **[Done]** Add delete/archive to every admin CRUD screen (Users, Roles, Sites, Pages all verified)
 11. Enforce a public/internal API boundary between every pair of feature modules
 12. CI pipeline gated on Pest, static analysis, architecture-boundary tests
@@ -787,11 +781,11 @@ The external senior-engineer review of commit `f4e93935fb17bf86c3126c44315453cfe
 - [x] Commit a Psalm baseline and prevent new advisory errors while reducing the existing baseline.
 - [x] Make `composer.json` and `composer.lock` the source of truth for the dependency scope stated in `SECURITY.md`.
 - [ ] Record behavioural assertion/test coverage evidence for the historical test-file reduction.
-- [ ] Define semver constraints for extracted first-party packages instead of publishing `dev-dev` as the only compatibility signal.
+- [x] Define semver constraints for extracted first-party packages instead of publishing `dev-dev` as the only compatibility signal.
 
 ### Deferred while launch blockers are active
 
-- [ ] Resume Phase 9HF Marko dashboard widget adoption after the P0 lifecycle and integrity foundation is underway.
+- [x] Resume Phase 9HF Marko dashboard widget adoption after the P0 lifecycle and integrity foundation is underway. Completed through the module-discovered Dashboard contributor and personalisation boundary.
 
 ---
 

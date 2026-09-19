@@ -45,7 +45,8 @@ it('records the current review priorities and does not overclaim media derivativ
         ->toContain('Admin-owned, module-discovered contributor contract')
         ->toContain('non-persisting Grid column preferences')
         ->toContain('364414a4878cde36fd89de8583326e4d1ff1f625')
-        ->toContain('This phase was not deployed.')
+        ->toContain('these capabilities are included in the current deployed `dev` ancestry.')
+        ->not->toContain('This phase was not deployed.')
         ->not->toContain('Page admin decoupling is partial')
         ->not->toContain('Page admin-decoupling is still partial');
 });
