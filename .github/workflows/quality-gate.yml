@@ -60,6 +60,8 @@ jobs:
         run: composer test:admin-grid-dom
       - name: Run Editor insertion behaviour suite
         run: composer test:editor-insertion
+      - name: Run Media picker behaviour suite
+        run: composer test:media-picker
       - name: Run strict repository gate
         run: composer gate:strict
       - name: Run blocking full-scope Psalm analysis

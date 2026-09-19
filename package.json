@@ -5,7 +5,8 @@
   "scripts": {
     "build:admin-editor": "vite build --config vite.admin-editor.config.js",
     "test:admin-grid-dom": "node --test packages/zoosper-admin-grid/tests/Browser/admin-grid-dom.test.js",
-    "test:editor-insertion": "node --test app/zoosper-editor/tests/Browser/editor-insertion-bridge.test.js"
+    "test:editor-insertion": "node --test app/zoosper-editor/tests/Browser/editor-insertion-bridge.test.js",
+    "test:media-picker": "node --test packages/zoosper-media/tests/Browser/editor-media-picker.test.js"
   },
   "dependencies": {
     "@editorjs/editorjs": "^2.30.8",

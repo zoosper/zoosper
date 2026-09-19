@@ -102,7 +102,8 @@
         "hooks:install": "@php tools/install-git-hooks.php",
         "pre-push": "@bash .githooks/pre-push",
         "test:admin-grid-dom": "npm run test:admin-grid-dom",
-        "test:editor-insertion": "npm run test:editor-insertion"
+        "test:editor-insertion": "npm run test:editor-insertion",
+        "test:media-picker": "npm run test:media-picker"
     },
     "config": {
         "sort-packages": true,
