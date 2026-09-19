@@ -103,7 +103,8 @@
         "pre-push": "@bash .githooks/pre-push",
         "test:admin-grid-dom": "npm run test:admin-grid-dom",
         "test:editor-insertion": "npm run test:editor-insertion",
-        "test:media-picker": "npm run test:media-picker"
+        "test:media-picker": "npm run test:media-picker",
+        "artifact:build": "@php tools/build-production-artifact.php"
     },
     "config": {
         "sort-packages": true,

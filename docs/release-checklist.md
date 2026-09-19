@@ -2,6 +2,7 @@
 
 - Clean worktree and reviewed changelog
 - Locked Composer installation, validation and audit
+- Deterministic production artifact build, prohibited-path audit, isolated extraction verification, release manifest and SHA-256 validation
 - Full Pest suite (including MySQL and SQLite integration test legs)
 - JavaScript syntax and strict repository gate
 - Static analysis baseline status review (Psalm zero-baseline drive or reviewed residual)

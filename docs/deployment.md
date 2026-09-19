@@ -1,6 +1,6 @@
 # Deployment
 
-Deploy a clean tracked checkout, install locked Composer dependencies, provide production environment configuration and ensure runtime directories are writable.
+Deploy a clean tracked checkout, install locked Composer dependencies, provide production environment configuration and ensure runtime directories are writable. For immutable application delivery, run `php8.5 tools/build-production-artifact.php --output=/absolute/output/path` from a clean worktree. The builder uses an explicit runtime allow-list, installs production dependencies, materialises first-party path packages, compiles and verifies the module manifest, rejects development-only content and symlinks, emits `RELEASE-MANIFEST.json`, and writes a SHA-256 sidecar after isolated extraction checks.
 
 Run `php bin/zoosper deploy`, followed by `php bin/zoosper release:check`. The deploy command applies migrations, compiles the module manifest and verifies freshness.
 

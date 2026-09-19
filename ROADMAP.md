@@ -658,7 +658,7 @@ replica.
 
 ## Current genuinely open delivery work
 
-1. **Production artefact engineering:** decide whether a future release needs an immutable application archive in addition to the documented tracked-checkout deployment flow, then define reproducible exclusions, checksums, rollback metadata and deployment consumption.
+1. **[~] Production artefact engineering:** SR-13A now provides the deterministic application archive, explicit runtime allow-list, production dependency assembly, first-party path-package materialisation, prohibited-path and symlink rejection, release metadata, SHA-256, and isolated extraction verification. CI publication and rollback-consumption guidance remain the bounded SR-13B follow-up.
 2. **API-backed Grid hardening:** complete Phase 4ZN with a materially different second pilot before adding Phase 4ZO scaffolding and extension guidance.
 3. **Test-suite signal quality:** inventory redundant source-string assertions and migrate the highest-risk boundaries to executable behavioural coverage without deleting valuable architecture guards.
 4. **Psalm baseline reduction:** reduce the reviewed baseline package by package while retaining the blocking full-scope gate and stale-entry rejection.
