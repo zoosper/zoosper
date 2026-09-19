@@ -28,6 +28,10 @@ Zoosper_Editor module for Zoosper CMS.
 - `zoosper/auth`: `^0.3.1@alpha`.
 - `zoosper/scoped-config`: `^0.3.1@alpha`.
 
+## Browser insertion boundary
+
+Editor.js instances are registered against their own `data-zoosper-editor` wrapper through the editor-owned `ZoosperEditorBridge`. Contributors request validated block insertion through that wrapper; the bridge waits for readiness, uses the Editor.js Blocks API, synchronises `content_json` through `save()`, and fails closed when the instance, block type, structured field, or managed Media URL is invalid. The bridge is not a global current-editor singleton, so multiple editors remain isolated.
+
 ## Testing
 
 - Full repository suite: `zcomposer test`.

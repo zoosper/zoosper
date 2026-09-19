@@ -328,6 +328,11 @@
             }, 250)
         });
 
+        if (!window.ZoosperEditorBridge || typeof window.ZoosperEditorBridge.register !== 'function') {
+            throw new Error('Zoosper editor insertion bridge is unavailable.');
+        }
+        window.ZoosperEditorBridge.register(wrapper, editor);
+
         editor.isReady.then(function () {
             activateEditor(wrapper, holder, textarea, status);
             return editor.save();

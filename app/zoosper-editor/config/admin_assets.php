@@ -19,10 +19,19 @@ return [
                 'defer' => true,
             ],
         ],
+        'zoosper-admin-editor-bridge' => [
+            'screens' => ['pages'],
+            'type' => 'script',
+            'path' => '/assets/admin/js/zoosper-editor-bridge.js?v=1.38a',
+            'sort_order' => 29,
+            'attributes' => [
+                'defer' => true,
+            ],
+        ],
         'zoosper-admin-editor-script' => [
             'screens' => ['pages'],
             'type' => 'script',
-            'path' => '/assets/admin/js/zoosper-content-editor.js?v=1.37l',
+            'path' => '/assets/admin/js/zoosper-content-editor.js?v=1.38a',
             'sort_order' => 30,
             'attributes' => [
                 'defer' => true,

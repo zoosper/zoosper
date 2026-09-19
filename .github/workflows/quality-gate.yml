@@ -58,6 +58,8 @@ jobs:
         run: composer ci:js
       - name: Run Admin Grid DOM behaviour suite
         run: composer test:admin-grid-dom
+      - name: Run Editor insertion behaviour suite
+        run: composer test:editor-insertion
       - name: Run strict repository gate
         run: composer gate:strict
       - name: Run blocking full-scope Psalm analysis
