@@ -67,9 +67,9 @@ independently exportable):**
 - `zoosper-media`: standalone media module (no longer requires
   `zoosper/admin`).
 
-More extractions are planned (see ROADMAP.md §14 — logger is next in
-line). New extractions should follow the `zoosper-errors` template:
-minimal real dependencies, a `.gitattributes` marking dev-only paths as
+Current standalone package inventory is documented in `docs/modules.md`.
+New extractions should follow the established package template: minimal
+real dependencies, a `.gitattributes` marking dev-only paths as
 `export-ignore`, and co-located tests that never leak into a distributed
 package archive.
 

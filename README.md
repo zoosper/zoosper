@@ -159,13 +159,13 @@ CI runs Psalm as a blocking full-scope gate across every first-party package tha
 ## Latest release and current development focus
 `v0.3.0-alpha.5` closes the 33-foreign-key first-party integrity inventory, blocking full-scope Psalm gate, secret-generation and production validation work, absolute Admin-session lifetime controls, adversarial asset coverage, and the Fable-informed Admin workspace rollout. It also replaces duplicate shell-title browser workarounds with a server-owned presentation policy, removes production inline Menu/Grid presentation, and retires the unused phase-era frontend fallback.
 
-### Explicitly not complete
+### Current development work
 
-- Referential integrity is declaratively owned across the current first-party relationship inventory: 33 foreign keys reconcile on MySQL, fresh SQLite installs create the same 33 constraints, and release readiness fails closed on pending additions, mismatches, or required SQLite rebuilds.
-- CI test suite execution against an active MySQL service container is being finalized alongside SQLite runs.
-- Static analysis (Psalm) is blocking across all first-party source-bearing packages; configuration-only modules remain covered by their executable and repository contracts, and the tracked Psalm baseline is being reduced toward zero.
-- Automated secret generation and comprehensive boot-time production validation are being finalized.
-- Absolute session lifetime controls and concurrent session limits are in progress.
+- Referential integrity is declaratively owned across the current first-party relationship inventory; release readiness fails closed on additions, mismatches, inspection failure, or required SQLite rebuilds.
+- CI executes production-target MySQL checks alongside SQLite coverage.
+- Psalm is blocking across all first-party source-bearing packages, rejects stale baseline entries, and retains a reviewed baseline that is being reduced toward zero.
+- Secret generation, production boot validation, absolute Admin-session lifetime, and idle-timeout controls are deployed.
+- Remaining work is tracked in `ROADMAP.md`, including production artefact engineering, API-backed Grid hardening, test-signal improvement, baseline reduction, and product-facing 0.3 capabilities.
 
 ## Project status and support
 

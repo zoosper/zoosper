@@ -10,6 +10,10 @@
 - **[x] Phase 13A-C2 Admin account lockout:** Auth now owns atomic per-account failed-login state, configurable temporary lockout, neutral authentication enforcement, password-reset recovery, protected Admin visibility, `user.manage`-guarded POST unlock, secret-free audit metadata, and real HTTP-lifecycle acceptance. Account lockout remains independent from active/inactive status and from the separate email/IP request rate limiter.
 - **[x] GitHub CI MySQL Migration Failure Resolution:** Fixed `composer migrate` failure (`SQLSTATE[HY000]: General error: 1824 Failed to open the referenced table 'media_assets'`) by using `SchemaInspector` in `202608310001_create_media_queue_table.php` to verify table presence before issuing `CREATE TABLE ... FOREIGN KEY (asset_id) REFERENCES media_assets(id)`, allowing fresh database migrations on MySQL and SQLite to execute safely and defer table creation to the declarative schema engine.
 - **[x] SR-6 GenerateSecrets environment-file hardening:** Bootstrap and the command share one canonical assignment parser; duplicate target keys fail before mutation; unrelated formatting and line endings are preserved; writes use checked same-directory temporary files, verified `0600` permissions and atomic replacement; and audit/write diagnostics redact secret values.
+- **[x] SR-8 Admin Grid DOM behaviour:** the locked jsdom suite executes disclosure exclusivity, ARIA state, keyboard column movement, locked anchors, live table reflection, persisted hidden-state synchronisation, dirty-state feedback, and page-size submission through npm, Composer, and CI.
+- **[x] SR-9 Editor insertion boundary:** Editor-owned wrapper-scoped instances expose a readiness-aware insertion bridge, accept only managed `/media/` image URLs, insert through the Editor.js Blocks API, and synchronise canonical `content_json` through `save()`.
+- **[x] SR-10 Media picker browser flow:** Media owns protected search and pagination, accessible dialog interaction, and managed-image selection through the Editor insertion bridge with executable browser coverage.
+- **[x] SR-11 Media picker HTTP acceptance:** the real application container proves safe active-image JSON, rendered Page-form assets, exact-once inclusion, Editor-before-Media dependency order, and protected route ownership.
 - **[x] Phase 10BN:** generic pagination ownership moved from Core to the
   `zoosper/pagination` library. Zoosper's page parsing, default page size `20`,
   maximum page size `100`, and maximum page `100_000` remain stable; verified
@@ -154,7 +158,7 @@ fixed:**
   (compile a cache, add a module afterward, confirm its migration still
   runs).
 
-**Still open, from the second Fable review pass:**
+**Closed findings retained from the second Fable review pass:**
 
 - **[FIXED, Phase 9GE] CLI recovery commands are database-independent.** `help`, `list`, `compile`, `cache:clear` and manifest inspection execute without resolving PDO. The shared `PdoConnectionProvider` remains lazy and module command services receive PDO through a lazy container factory.
 - **[FIXED, Phase 9GE] CLI and HTTP share layered configuration.** Both boot paths use `ApplicationConfigLoader` with module defaults below root overrides; the remaining console discovery regression fixture was migrated off the obsolete root-only loader.
@@ -394,8 +398,7 @@ replica.
 - [x] **Declarative Schema Foreign Keys.** Typed foreign-key support in `SchemaForeignKey`, `SchemaSqlBuilder` (MySQL and SQLite constraint generation), `SchemaValidator` (cycle and dangling-reference validation), and declarative module schema manifests (`app/zoosper-global-announcements`, `packages/zoosper-media`, etc.).
 - [x] Container autowiring (Phase 1.367). Reflection-based parameter resolution and circular dependency detection implemented in `ServiceContainer`.
 - [x] Module lifecycle (install/enable/disable/uninstall)
-- [ ] Composer packaging + 0.x tag + CHANGELOG + stability contract — every
-  internal module dependency still uses unconstrained `*@dev`
+- [x] Composer release-train compatibility is explicit: root path repositories assign the active `0.3.2-alpha.1` package candidate, first-party dependencies use bounded `^0.3.1@alpha` constraints, `prefer-stable` remains enabled, and development minimum stability is absent.
 - [x] Database production driver policy enforcement: check `config/database_policy.php` flags in `ConnectionFactory` / `ProductionSecurityPolicy` and reject invalid driver/environment pairings.
 - [x] Consolidate 14 duplicated `$env` closures in `config/*.php` into global canonical `env()` helper.
 - [x] Phase 1.373: Extend Module Manifest Compilation. Aggregated services and routes are compiled into `var/cache/` to eliminate per-request module iteration and filesystem overhead.
@@ -425,7 +428,7 @@ replica.
 - [x] **CSP reporting endpoint configuration & readiness.** Configurable `report_uri` supported in `SecurityHeaders` and policy composition; CSP ships in report-only mode by default for observational readiness.
 
 ## 4. Admin & Auth
-- [~] **Unified admin grid workspace.** The Pages grid now supports configurable
+- [x] **Unified admin grid workspace.** The Pages grid now supports configurable
   columns, filters, page size, CSV export, bookmark persistence, draggable
   ordering with locked ID/Actions anchors, and immediate live table reflection.
   `zoosper-admin-grid` now owns the canonical generic column runtime; the
@@ -441,9 +444,7 @@ replica.
 - [x] CSRF + auth middleware pipeline (OR-permission semantics)
 - [x] Audit log + login history
 - [x] Admin navigation / dynamic menu
-- [~] Admin form section + processor registries — only actually used by
-  the Page form; every other admin form still uses the older,
-  non-extensible `AdminFormDefinition`/`AdminFormField` pair
+- [x] Admin form section and processor ownership is consolidated through the standalone `zoosper/admin-form` kernel and adopted across the remaining eligible Admin forms.
 - [x] i18n / translations / admin locale preference
 - [x] 2FA (TOTP) enrolment, reset, recovery-code generation
 - [x] 2FA enforced at login (Phase 1.107), with recovery-code redemption
@@ -536,11 +537,10 @@ replica.
 - [x] Media standalone package split — confirmed complete
 - [x] Fixed: `MediaAdminController::upload()` silently swallowed all
   upload failures
-- [x] **[FIXED] Media derivative processing (resize/transform) wired** —
-  `services.php` configures `MediaUploadDerivativeDispatcher` and injects it into `MediaUploadService`. Duplicate MediaUploadService construction is resolved. Derivative database persistence remains a separate follow-up.
+- [x] **Media derivative generation, persistence, queue offloading and lifecycle cleanup are wired.** `MediaUploadService` owns canonical ingest and dispatch; generated derivative metadata is persisted, asynchronous queue processing is available, and lifecycle cleanup shares the guarded Media boundary.
 - [x] **[FIXED] Both media upload controllers receive container-configured `MediaUploadService`**
   with derivative dispatcher, validator, storage, and cleanup wired in. Duplicate MediaUploadService construction is resolved.
-- [x] Apply strict image dimension (8192x8192) and file size pre-checks before decode in `MediaUploadValidator` and `GdMediaProcessor` to prevent upload DoS. Moving GD derivative processing to an asynchronous queue/worker remains a separate operational follow-up.
+- [x] Apply strict image dimension (8192x8192) and file-size pre-checks before decode, and offload GD derivative processing through the deployed Media queue/worker boundary.
 
 ## 7. Mail
 
@@ -554,9 +554,7 @@ replica.
 - [x] ContentPage API exposes structured Editor.js JSON (not serialized HTML)
 
 ## 9. Modular Asset Pipeline
-- [~] **Module-owned admin grid assets are live through `/asset`.** Remaining:
-  eliminate any runtime dependency on vendor edits, retain the package as the canonical source, retire the compatibility copy
-  once package asset routing is live, and extend rendered-URL integration coverage.
+- [x] **Module-owned Admin Grid assets are live through `/asset`.** The standalone package is the canonical runtime source, application compatibility assets are retired, and rendered asset ownership plus executable browser behaviour are regression guarded.
 
 - [x] Asset registry / resolver / controller (path-safe, MIME allowlist, ETag)
 - [x] Wire `/asset/{module}/{path}` route + `asset()` helper live
@@ -584,9 +582,8 @@ replica.
 
 ## 11. Quality, Tooling & Repo Hygiene
 - [x] Add JavaScript syntax validation for every shipped admin asset.
-- [ ] Add DOM behavioural coverage for column drag, live reflection, locked
-  anchors, dirty state and bookmark reload.
-- [ ] Replace duplicate source-string tests with one behavioural contract.
+- [x] Add executable DOM behavioural coverage for column movement, live reflection, locked anchors, dirty state, persisted hidden-state synchronisation, disclosure behaviour, and page-size submission.
+- [~] Continue replacing redundant source-string assertions with executable behavioural contracts. SR-8 through SR-11 establish the preferred jsdom and real-container acceptance pattern; the broader signal-to-noise inventory remains open.
 - [x] Keep one canonical admin-grid column customisation guide rather than
   phase/hotfix documentation fragments (see `docs/admin.md`).
 - [x] Add MySQL/MariaDB service container to `.github/workflows/quality-gate.yml` and run test suite against MySQL in CI.
@@ -624,14 +621,7 @@ replica.
   comments toward shorter, timeless doc-comments — full "why/when/who
   found it" story lives in commit messages and this roadmap's daily log
   instead. Documented as an explicit rule in `AGENTS.md`.
-- [ ] **Production deployment process does not exist yet.** Confirmed:
-  the project is still purely in local/dev-box development, with no build,
-  package, or deploy step defined. This is the right time to design test-
-  file exclusion from any deployable artifact (e.g. an `rsync --exclude`
-  step, or `git archive` on a tagged release once modules are real,
-  separate repos) directly into that process from day one — flagged as a
-  real, open item to design once deployment planning begins, not solved
-  yet.
+- [x] **Production source deployment is documented and executable:** a clean tracked checkout installs locked dependencies, `bin/zoosper deploy` regenerates autoloading, applies live-discovered migrations, compiles and verifies the module manifest, and `release:check` validates readiness. Standalone packages exclude tests and development tooling through `.gitattributes`. A separately built immutable application artefact remains optional future release engineering, not a missing runtime deploy command.
 
 ## 12. Page Momentum (visible admin dashboard)
 
@@ -666,21 +656,14 @@ replica.
 
 ---
 
-## Open questions for the next planning session
+## Current genuinely open delivery work
 
-1. **Production deployment process design** — genuinely still to be
-   designed (see §11's new item). Key open question once ready: how will
-   code actually reach a production server (git-based deploy, build
-   artifact/zip, something else) — the right test-exclusion mechanism
-   depends entirely on the answer.
-2. **`marko/database-readwrite`'s real dependency on `marko/database`'s
-   connection interface** — needs the actual `ConnectionInterface`/
-   `TransactionInterface` source read before any further read-replica
-   design, now that the "fully decoupled from `marko/database`" assumption
-   has been corrected (see §14).
-3. Rate-limit enforcement timeline, given the high-traffic assumption
-   sharpening urgency vs. the ADR's "collect real report-only data first"
-   precondition.
+1. **Production artefact engineering:** decide whether a future release needs an immutable application archive in addition to the documented tracked-checkout deployment flow, then define reproducible exclusions, checksums, rollback metadata and deployment consumption.
+2. **API-backed Grid hardening:** complete Phase 4ZN with a materially different second pilot before adding Phase 4ZO scaffolding and extension guidance.
+3. **Test-suite signal quality:** inventory redundant source-string assertions and migrate the highest-risk boundaries to executable behavioural coverage without deleting valuable architecture guards.
+4. **Psalm baseline reduction:** reduce the reviewed baseline package by package while retaining the blocking full-scope gate and stale-entry rejection.
+5. **Product-facing 0.3 work:** Form Builder, broader API parity, third-party extension examples and focused editor improvements remain candidate product phases.
+6. **Deferred architecture:** read-replica support and any `marko/database` adoption require a dedicated compatibility investigation; optional invisible CAPTCHA remains explicitly deferred.
 
 ---
 
@@ -879,7 +862,7 @@ An exhaustive independent technical review and static security teardown (`var/lo
 - [x] Replace first-party `dev-dev` constraints with explicit path-package versions and bounded prerelease compatibility.
 - [x] Remove development minimum-stability where it is no longer required.
 - [x] Keep Composer validation, clean locked installation, scaffolder output, package documentation, and docs-site generation aligned.
-- [ ] Complete documentation-site source expansion and automated publishing as a separate bounded phase.
+- [x] Complete documentation-site source expansion and automated publishing through the dedicated website repository, source-controlled custom-domain metadata, generated-output isolation, and deployment contracts.
 
 ### Beta readiness: documentation truth reconciliation
 

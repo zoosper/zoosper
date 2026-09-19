@@ -14,7 +14,10 @@ it('publishes the current alpha release and delivered product surface at the rep
         ->toContain('revision listing and revision restoration')
         ->toContain('CI runs Psalm as a blocking full-scope gate')
         ->toContain('[documentation index](docs/README.md)')
-        ->toContain('Explicitly not complete')
+        ->toContain('Current development work')
+        ->not->toContain('CI test suite execution against an active MySQL service container is being finalized')
+        ->not->toContain('Automated secret generation and comprehensive boot-time production validation are being finalized')
+        ->not->toContain('Absolute session lifetime controls and concurrent session limits are in progress')
         ->not->toContain('docs/guide/')
         ->not->toContain('Post-Phase 1.41 hardening and Marko adoption (2026-07-30/31)');
 });
@@ -39,7 +42,8 @@ it('records the current review priorities and does not overclaim media derivativ
         ->toMatch('/Last updated:\*\* \d{4}-\d{2}-\d{2} \(Sydney\)/')
         ->toContain('External review response and public-launch priorities (2026-08-11)')
         ->toContain('Duplicate MediaUploadService construction is resolved')
-        ->toContain('Derivative database persistence remains a separate follow-up')
+        ->toContain('Media derivative generation, persistence, queue offloading and lifecycle cleanup are wired')
+        ->not->toContain('Derivative database persistence remains a separate follow-up')
         ->toContain('Phase 10AR')
         ->toContain('environment-precedence defect')
         ->toContain('Admin-owned, module-discovered contributor contract')

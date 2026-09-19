@@ -67,4 +67,4 @@ php8.5 tools/gate.php
 
 Only absolute HTTP or HTTPS URLs are emitted. Request host headers are not used to manufacture canonical or sitemap URLs. Sitemap and robots responses use explicit content types and public cache headers. When the active Site has no validated absolute base URL, robots output omits the Sitemap declaration rather than guessing a host.
 
-After deployment, verify `/sitemap.xml`, `/robots.txt`, published Page metadata, preview `noindex,nofollow`, and a fresh compiled module manifest. Public machine-readable endpoints currently inherit application session bootstrap behaviour; stateless endpoint handling remains a separate follow-up.
+After deployment, verify `/sitemap.xml`, `/robots.txt`, published Page metadata, preview `noindex,nofollow`, and a fresh compiled module manifest. Sitemap and robots requests are stateless before session initialisation and retain explicit public cache headers.
