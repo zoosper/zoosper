@@ -4,6 +4,7 @@
 
 - SR-2 makes Redis cache deployment fail closed: staging and production require authenticated Redis when `CACHE_DRIVER=redis`, every Redis driver requires a strong dedicated `CACHE_ENCRYPTION_KEY`, non-Redis drivers remain unaffected, and local/test Redis behaviour stays explicit and practical.
 ## [0.3.2-alpha.1-dev]
+- Hardened trusted client-IP resolution against attacker-prepended `X-Forwarded-For` values by walking trusted proxy chains right to left, adding strict IPv4/IPv6 CIDR trust matching, and rejecting malformed trust configuration.
 - Added SR-13A production-artifact foundation: an explicit runtime allow-list assembles locked production dependencies, materialises local path packages, compiles and verifies the module manifest, rejects development and sensitive paths, emits deterministic release metadata plus SHA-256, and re-verifies the extracted archive in isolation.
 - Closed SR-12 roadmap truth reconciliation: recorded deployed SR-8 through SR-11 acceptance boundaries, retired stale Composer, Admin Form, Grid DOM, asset, Media queue, documentation publishing, deployment and public README claims, refreshed agent and SEO operational truth, and ranked the genuinely open delivery backlog behind a permanent documentation contract.
 - Added SR-11 integrated Media picker acceptance coverage for the real controller, safe JSON representation, rendered Page-form assets, single inclusion, and Editor-before-Media dependency order.

@@ -4,12 +4,26 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Http;
 
+use InvalidArgumentException;
+
 /** Resolves proxy-derived request metadata only when the immediate peer is trusted. */
 final readonly class TrustedProxyResolver
 {
+    /** @var list<array{network: string, prefix: int, bytes: int}> */
+    private array $trustedNetworks;
+
     /** @param list<string> $trustedProxies */
-    public function __construct(private array $trustedProxies = [])
+    public function __construct(array $trustedProxies = [])
     {
+        $networks = [];
+        foreach ($trustedProxies as $trustedProxy) {
+            $trustedProxy = trim($trustedProxy);
+            if ($trustedProxy === '') {
+                continue;
+            }
+            $networks[$trustedProxy] = self::parseTrustedNetwork($trustedProxy);
+        }
+        $this->trustedNetworks = array_values($networks);
     }
 
     public static function fromEnvironment(): self
@@ -19,12 +33,8 @@ final readonly class TrustedProxyResolver
         $raw = $environmentValue !== ''
             ? $environmentValue
             : trim($processValue === false ? '' : (string) $processValue);
-        $trusted = array_values(array_filter(
-            array_map('trim', explode(',', $raw)),
-            static fn (string $value): bool => filter_var($value, FILTER_VALIDATE_IP) !== false,
-        ));
 
-        return new self(array_values(array_unique($trusted)));
+        return new self(array_map('trim', explode(',', $raw)));
     }
 
     /** @param array<string, mixed> $server */
@@ -38,10 +48,13 @@ final readonly class TrustedProxyResolver
             return $peer;
         }
 
-        $forwarded = explode(',', (string) ($server['HTTP_X_FORWARDED_FOR'] ?? ''));
+        $forwarded = array_reverse(explode(',', (string) ($server['HTTP_X_FORWARDED_FOR'] ?? '')));
         foreach ($forwarded as $candidate) {
-            $ip = $this->validIp(trim($candidate));
-            if ($ip !== null && !$this->isTrusted($ip)) {
+            $ip = $this->validIp($candidate);
+            if ($ip === null) {
+                return $peer;
+            }
+            if (!$this->isTrusted($ip)) {
                 return $ip;
             }
         }
@@ -68,22 +81,76 @@ final readonly class TrustedProxyResolver
 
     private function isTrusted(string $ip): bool
     {
-        return in_array($ip, $this->trustedProxies, true);
+        $packed = inet_pton($ip);
+        if ($packed === false) {
+            return false;
+        }
+        foreach ($this->trustedNetworks as $network) {
+            if (strlen($packed) !== $network['bytes']) {
+                continue;
+            }
+            if (self::prefixMatches($packed, $network['network'], $network['prefix'])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function validIp(mixed $value): ?string
     {
         $value = trim((string) $value);
-        return filter_var($value, FILTER_VALIDATE_IP) !== false ? $value : null;
+        if (filter_var($value, FILTER_VALIDATE_IP) === false) {
+            return null;
+        }
+        $packed = inet_pton($value);
+        if ($packed === false) {
+            return null;
+        }
+        $normalised = inet_ntop($packed);
+        return $normalised === false ? null : $normalised;
+    }
+
+    /** @return array{network: string, prefix: int, bytes: int} */
+    private static function parseTrustedNetwork(string $entry): array
+    {
+        $parts = explode('/', $entry, 2);
+        $address = $parts[0];
+        $prefixValue = $parts[1] ?? null;
+        if (filter_var($address, FILTER_VALIDATE_IP) === false) {
+            throw new InvalidArgumentException('Invalid TRUSTED_PROXIES entry: ' . $entry);
+        }
+        $packed = inet_pton($address);
+        if ($packed === false) {
+            throw new InvalidArgumentException('Invalid TRUSTED_PROXIES entry: ' . $entry);
+        }
+        $bits = strlen($packed) * 8;
+        if ($prefixValue === null) {
+            $prefix = $bits;
+        } elseif (!preg_match('/^(?:0|[1-9][0-9]*)$/', $prefixValue)) {
+            throw new InvalidArgumentException('Invalid TRUSTED_PROXIES CIDR prefix: ' . $entry);
+        } else {
+            $prefix = (int) $prefixValue;
+        }
+        if ($prefix < 0 || $prefix > $bits) {
+            throw new InvalidArgumentException('Invalid TRUSTED_PROXIES CIDR prefix: ' . $entry);
+        }
+
+        return ['network' => self::maskedNetwork($packed, $prefix), 'prefix' => $prefix, 'bytes' => strlen($packed)];
+    }
+
+    private static function prefixMatches(string $address, string $network, int $prefix): bool
+    {
+        return hash_equals(self::maskedNetwork($address, $prefix), $network);
+    }
+
+    private static function maskedNetwork(string $packed, int $prefix): string
+    {
+        $fullBytes = intdiv($prefix, 8);
+        $remainingBits = $prefix % 8;
+        $masked = $fullBytes === 0 ? '' : substr($packed, 0, $fullBytes);
+        if ($remainingBits > 0) {
+            $masked .= chr(ord($packed[$fullBytes]) & (0xFF << (8 - $remainingBits)));
+        }
+        return str_pad($masked, strlen($packed), "\0");
     }
 }
-
-
-
-
-
-
-
-
-
-
