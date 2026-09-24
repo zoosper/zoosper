@@ -658,6 +658,8 @@ replica.
 
 ## Current genuinely open delivery work
 
+- **[x] SR-14C deactivated-session revocation:** every fresh session-user resolution now rejects inactive Admin accounts and clears their authenticated session state immediately.
+
 - **[x] SR-14A trusted client-IP boundary:** authoritative right-to-left proxy-chain resolution, strict IPv4/IPv6 CIDR trust configuration, malformed-chain fail-closed behaviour, and exploit regression coverage.
 
 1. **[~] Production artefact engineering:** SR-13A now provides the deterministic application archive, explicit runtime allow-list, production dependency assembly, first-party path-package materialisation, prohibited-path and symlink rejection, release metadata, SHA-256, and isolated extraction verification. CI publication and rollback-consumption guidance remain the bounded SR-13B follow-up.

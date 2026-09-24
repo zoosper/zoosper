@@ -101,6 +101,10 @@ final class SessionGuard
 
         $id = $_SESSION[self::SESSION_USER_KEY] ?? null;
         $resolved = is_numeric($id) ? $this->users->findById((int) $id) : null;
+        if ($resolved !== null && !$resolved->isActive()) {
+            $this->logout();
+            return null;
+        }
         if ($resolved !== null) {
             $storedFingerprint = $_SESSION[self::SESSION_PASSWORD_HASH_KEY] ?? null;
             $currentFingerprint = hash('sha256', $resolved->passwordHash);

@@ -50,6 +50,13 @@ jobs:
         run: composer validate --no-check-publish --strict
       - name: Install locked dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --no-ansi
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked Node dependencies
+        run: npm ci --include=dev --no-audit --no-fund
       - name: Audit locked dependencies
         run: composer audit --locked --no-interaction
       - name: Prepare CI runtime
