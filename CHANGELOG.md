@@ -35,6 +35,8 @@
 
 - Opened the next development line after immutable release `v0.3.1-alpha.1`.
 
+- Added multi-dimensional Admin password and two-factor throttling with independent salted subject, client-IP, and paired buckets, spray resistance, missing-IP isolation, and selective successful resets that preserve shared IP abuse history.
+
 ## [0.3.1-alpha.1] - 2026-09-07
 - Completed the Admin account-lockout security arc: Auth-owned atomic failure tracking, configurable temporary locks, neutral public login responses, password-reset recovery, protected manual unlock, secret-free auditing, and real HTTP acceptance across the unified and fallback Admin User form paths.
 - Opened the next minor public-alpha development line following `v0.3.0-alpha.5`.

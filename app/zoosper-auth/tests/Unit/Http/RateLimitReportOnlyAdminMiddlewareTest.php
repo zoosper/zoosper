@@ -40,6 +40,16 @@ function rateLimitMiddlewareTestPdo(): PDO
 
 function rateLimitMiddlewareTestBasePath(array $rateLimitConfig): string
 {
+    foreach (['admin.login', 'admin.two_factor'] as $legacyKey) {
+        $legacyRule = $rateLimitConfig['policies'][$legacyKey] ?? null;
+        if (!is_array($legacyRule)) {
+            continue;
+        }
+        unset($rateLimitConfig['policies'][$legacyKey]);
+        foreach (['subject', 'pair', 'ip'] as $dimension) {
+            $rateLimitConfig['policies'][$legacyKey . '.' . $dimension] = $legacyRule;
+        }
+    }
     $tmp = sys_get_temp_dir() . '/zoosper-rate-limit-mw-' . bin2hex(random_bytes(6));
     mkdir($tmp . '/app/zoosper-core/config', 0775, true);
 
@@ -112,9 +122,9 @@ it('never blocks the request even after the policy limit is exceeded, and record
     expect(is_file($reportFile))->toBeTrue();
 
     $lines = array_values(array_filter(explode("\n", (string) file_get_contents($reportFile))));
-    expect(count($lines))->toBe(3);
+    expect(count($lines))->toBe(9);
 
-    $lastEvent = json_decode($lines[2], true);
+    $lastEvent = json_decode($lines[array_key_last($lines)], true, 512, JSON_THROW_ON_ERROR);
     expect($lastEvent['allowed'])->toBeFalse();
     expect($lastEvent['attempts'])->toBe(3);
     expect($lastEvent['max_attempts'])->toBe(2);
@@ -231,7 +241,8 @@ it('SECURITY: works correctly and produces a genuinely salted hash when a real i
     expect($nextCalled)->toBeTrue();
 
     $reportFile = $basePath . '/var/reports/rate-limit-events.jsonl';
-    $event = json_decode((string) file_get_contents($reportFile), true);
+    $events = array_values(array_filter(explode("\n", (string) file_get_contents($reportFile))));
+    $event = json_decode($events[0], true, 512, JSON_THROW_ON_ERROR);
 
     // Confirm the recorded identity hash is NOT simply an unsalted
     // sha256('admin@example.test|203.0.113.10') — proving the configured

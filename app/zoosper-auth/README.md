@@ -180,6 +180,8 @@ A successful operational unlock records `admin_user.account_unlocked` against th
 
 `AdminAuthenticationRateLimiter` is the only policy-execution boundary for public Admin authentication throttling. It owns runtime configuration, salted identity hashing, rate-limit bucket persistence, report-only JSONL diagnostics, enforcement decisions and successful bucket resets.
 
+Password login and two-factor verification each enforce three salted dimensions: subject-only, client-IP-only, and subject-plus-IP. This limits repeated attacks against one identity, password spraying from one source across identities, and concentrated attacks against one identity/source pair. A missing client IP omits the IP-only dimension rather than sharing an empty-IP bucket. Successful authentication resets only the subject and paired buckets; it never clears the shared IP history.
+
 The following operations retain separate policy keys and buckets:
 
 - password login through the Admin HTML and API transports

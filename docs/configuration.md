@@ -23,6 +23,6 @@ ADMIN_ACCOUNT_LOCKOUT_SECONDS=900
 
 These variables configure temporary per-account lockout for known active Admin users. The first value is the failed-password threshold and the second is the lock duration in seconds. The shipped example uses five attempts and 900 seconds.
 
-Account lockout and request rate limiting are separate controls. Account lockout persists failure state for a known active Admin identity. The Admin login rate limiter protects request volume using its configured email/IP identity. Either control may reject a request independently.
+Account lockout and request rate limiting are separate controls. Account lockout persists failure state for a known active Admin identity. Password login and two-factor throttling independently track salted subject, client-IP, and subject-plus-IP dimensions; any enforcing dimension may reject a request. Successful authentication clears subject and paired state but preserves shared IP history. Either control may reject a request independently.
 
 Temporary lockout does not change the Admin user's active/inactive status. Public login output remains neutral and does not reveal lockout state or expiry.

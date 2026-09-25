@@ -18,6 +18,16 @@ function lifecycleRateLimitBase(string $mode = 'enforce'): string
             'admin.two_factor' => ['scope' => 'admin', 'max_attempts' => 1, 'window_seconds' => 300],
         ],
     ];
+    foreach (['admin.login', 'admin.two_factor'] as $legacyKey) {
+        $legacyRule = $config['policies'][$legacyKey] ?? null;
+        if (!is_array($legacyRule)) {
+            continue;
+        }
+        unset($config['policies'][$legacyKey]);
+        foreach (['subject', 'pair', 'ip'] as $dimension) {
+            $config['policies'][$legacyKey . '.' . $dimension] = $legacyRule;
+        }
+    }
     file_put_contents($base . '/app/zoosper-core/config/rate_limit.php', '<?php return ' . var_export($config, true) . ';');
     return $base;
 }
@@ -30,7 +40,8 @@ it('enforces and resets a separate two-factor bucket', function (): void {
         ->and($limiter->checkTwoFactor(7, '203.0.113.2')->allowed)->toBeFalse();
 
     $limiter->resetTwoFactor(7, '203.0.113.2');
-    expect($limiter->checkTwoFactor(7, '203.0.113.2')->allowed)->toBeTrue();
+    expect($limiter->checkTwoFactor(7, '203.0.113.22')->allowed)->toBeTrue()
+        ->and($limiter->checkTwoFactor(7, '203.0.113.2')->allowed)->toBeFalse();
 });
 
 it('keeps report-only two-factor checks non-blocking', function (): void {

@@ -635,13 +635,6 @@
     </RedundantCast>
   </file>
   <file src="app/zoosper-auth/src/RateLimit/AdminAuthenticationRateLimiter.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function checkPasswordLogin(]]></code>
-      <code><![CDATA[public function checkPasswordResetRequest(]]></code>
-      <code><![CDATA[public function checkTwoFactor(]]></code>
-      <code><![CDATA[public function resetPasswordLogin(]]></code>
-      <code><![CDATA[public function resetTwoFactor(]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[AdminAuthenticationRateLimiter]]></code>
     </UnusedClass>

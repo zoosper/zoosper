@@ -14,8 +14,12 @@ it('keeps password and two-factor rate-limit lifecycle interface-owned and polic
         ->and($challenge)->toContain('checkTwoFactor($userId, $request->clientIp())')
         ->toContain('resetTwoFactor($user->id, $request->clientIp())')
         ->not->toContain('DatabaseRateLimitStore')
-        ->and($config)->toContain("'admin.login'")
-        ->toContain("'admin.two_factor'")
+        ->and($config)->toContain("'admin.login.subject'")
+        ->toContain("'admin.login.pair'")
+        ->toContain("'admin.login.ip'")
+        ->toContain("'admin.two_factor.subject'")
+        ->toContain("'admin.two_factor.pair'")
+        ->toContain("'admin.two_factor.ip'")
         ->toContain('RATE_LIMIT_ADMIN_TWO_FACTOR_MAX_ATTEMPTS')
         ->toContain('RATE_LIMIT_ADMIN_TWO_FACTOR_WINDOW_SECONDS');
 });

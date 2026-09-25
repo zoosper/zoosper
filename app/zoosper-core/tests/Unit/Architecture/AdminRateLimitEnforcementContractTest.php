@@ -26,8 +26,12 @@ it('keeps authentication policy execution canonical and HTTP transport separate'
         ->toContain('new DatabaseRateLimitStore(')
         ->toContain('new FileRateLimitReportSink(')
         ->toContain('RateLimitReportEvent::fromDecision(')
-        ->toContain("return \$this->check('admin.login'")
-        ->toContain("return \$this->check('admin.two_factor'")
+        ->toContain("'admin.login.subject'")
+        ->toContain("'admin.login.pair'")
+        ->toContain("'admin.login.ip'")
+        ->toContain("'admin.two_factor.subject'")
+        ->toContain("'admin.two_factor.pair'")
+        ->toContain("'admin.two_factor.ip'")
         ->toContain(
             "return \$this->check("
             . "'admin.password_reset_request'"

@@ -49,21 +49,17 @@ return [
      */
     'identity_salt' => (string) env('RATE_LIMIT_IDENTITY_SALT', ''),
     'policies' => [
-        'admin.login' => [
-            'scope' => 'admin',
-            'max_attempts' => $loginMaxAttempts,
-            'window_seconds' => $loginWindowSeconds,
-        ],
+        'admin.login.subject' => ['scope' => 'admin', 'max_attempts' => $loginMaxAttempts, 'window_seconds' => $loginWindowSeconds],
+        'admin.login.pair' => ['scope' => 'admin', 'max_attempts' => $loginMaxAttempts, 'window_seconds' => $loginWindowSeconds],
+        'admin.login.ip' => ['scope' => 'admin', 'max_attempts' => $loginMaxAttempts, 'window_seconds' => $loginWindowSeconds],
         'admin.password_reset_request' => [
             'scope' => 'admin',
             'max_attempts' => $passwordResetMaxAttempts,
             'window_seconds' => $passwordResetWindowSeconds,
         ],
-        'admin.two_factor' => [
-            'scope' => 'admin',
-            'max_attempts' => $twoFactorMaxAttempts,
-            'window_seconds' => $twoFactorWindowSeconds,
-        ],
+        'admin.two_factor.subject' => ['scope' => 'admin', 'max_attempts' => $twoFactorMaxAttempts, 'window_seconds' => $twoFactorWindowSeconds],
+        'admin.two_factor.pair' => ['scope' => 'admin', 'max_attempts' => $twoFactorMaxAttempts, 'window_seconds' => $twoFactorWindowSeconds],
+        'admin.two_factor.ip' => ['scope' => 'admin', 'max_attempts' => $twoFactorMaxAttempts, 'window_seconds' => $twoFactorWindowSeconds],
     ],
 ];
 

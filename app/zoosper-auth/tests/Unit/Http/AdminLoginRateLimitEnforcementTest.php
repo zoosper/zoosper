@@ -17,6 +17,16 @@ function enforcingRateLimitPdo(): PDO
 
 function enforcingRateLimitBase(array $config): string
 {
+    foreach (['admin.login', 'admin.two_factor'] as $legacyKey) {
+        $legacyRule = $config['policies'][$legacyKey] ?? null;
+        if (!is_array($legacyRule)) {
+            continue;
+        }
+        unset($config['policies'][$legacyKey]);
+        foreach (['subject', 'pair', 'ip'] as $dimension) {
+            $config['policies'][$legacyKey . '.' . $dimension] = $legacyRule;
+        }
+    }
     $base = sys_get_temp_dir() . '/zoosper-rate-enforce-' . bin2hex(random_bytes(4));
     mkdir($base . '/app/zoosper-core/config', 0777, true);
     file_put_contents($base . '/app/zoosper-core/config/rate_limit.php', '<?php return ' . var_export($config, true) . ';');
