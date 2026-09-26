@@ -37,6 +37,8 @@
 
 - Added multi-dimensional Admin password and two-factor throttling with independent salted subject, client-IP, and paired buckets, spray resistance, missing-IP isolation, and selective successful resets that preserve shared IP abuse history.
 
+- Prevented anonymous frontend GET and HEAD fallback requests from starting PHP sessions, preserving explicit stateful Admin and authentication routes while allowing published Pages, URL rewrites, and frontend 404 responses to remain cookie-free.
+
 ## [0.3.1-alpha.1] - 2026-09-07
 - Completed the Admin account-lockout security arc: Auth-owned atomic failure tracking, configurable temporary locks, neutral public login responses, password-reset recovery, protected manual unlock, secret-free auditing, and real HTTP acceptance across the unified and fallback Admin User form paths.
 - Opened the next minor public-alpha development line following `v0.3.0-alpha.5`.

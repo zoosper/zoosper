@@ -98,7 +98,14 @@ final class Router
         if ($method === 'HEAD' && in_array('GET', $this->allowedMethods($path), true)) $method = 'GET';
         if (array_key_exists($method . ' ' . $path, $this->statelessRoutes)) return $this->statelessRoutes[$method . ' ' . $path];
         foreach ($this->parameterRoutes[$method] ?? [] as $route) if (preg_match($route['regex'], $path) === 1) return $this->statelessRoutes[$method . ' ' . $route['path']] ?? false;
-        return false;
+
+        // Unmatched GET/HEAD requests are handled only by the public fallback
+        // chain (URL rewrites, published Pages, then 404). Classify them before
+        // Application session bootstrap so anonymous frontend reads create no
+        // session cookie or server-side session record. Explicit routes retain
+        // their declared stateful/stateless policy above.
+        return in_array($method, ['GET', 'HEAD'], true)
+            && $this->allowedMethods($path) === [];
     }
     /** @return list<string> */
     public function allowedMethods(string $path): array

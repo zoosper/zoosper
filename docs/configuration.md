@@ -26,3 +26,7 @@ These variables configure temporary per-account lockout for known active Admin u
 Account lockout and request rate limiting are separate controls. Account lockout persists failure state for a known active Admin identity. Password login and two-factor throttling independently track salted subject, client-IP, and subject-plus-IP dimensions; any enforcing dimension may reject a request. Successful authentication clears subject and paired state but preserves shared IP history. Either control may reject a request independently.
 
 Temporary lockout does not change the Admin user's active/inactive status. Public login output remains neutral and does not reveal lockout state or expiry.
+
+### Anonymous frontend session policy
+
+Anonymous frontend `GET` and `HEAD` requests that fall through to URL rewrites, published Pages, or frontend 404 handling are classified as stateless before PHP session bootstrap. They do not require a session cookie or server-side session record. Explicit Admin, authentication, password-reset, CSRF, and pending two-factor routes retain their declared stateful behavior.
