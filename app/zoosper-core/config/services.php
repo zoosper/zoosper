@@ -8,6 +8,9 @@ use Zoosper\Core\Asset\AssetUrlGenerator;
 use Zoosper\Cache\Factory\CacheDriverFactory;
 use Zoosper\Core\Cache\CacheKeyBuilder;
 use Zoosper\Core\Config\ConfigRepository;
+use Zoosper\Core\Console\PruneRateLimitBucketsCommand;
+use Zoosper\Core\Security\RateLimit\DatabaseRateLimitStore;
+use Zoosper\Core\Security\RateLimit\RateLimitStoreMaintenanceInterface;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\ScopedConfig\ScopeConfigRepository;
 use Zoosper\Core\Entity\Extension\EntityExtensionDataPersister;
@@ -30,6 +33,10 @@ use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Core\View\TemplateViewContextProvider;
 
 return [
+    RateLimitStoreMaintenanceInterface::class => static fn (ServiceContainer $services): RateLimitStoreMaintenanceInterface => new DatabaseRateLimitStore($services->get(PDO::class)),
+    PruneRateLimitBucketsCommand::class => static fn (ServiceContainer $services): PruneRateLimitBucketsCommand => new PruneRateLimitBucketsCommand(
+        $services->get(RateLimitStoreMaintenanceInterface::class),
+    ),
     ScopeConfigRepository::class => static fn (ServiceContainer $services): ScopeConfigRepository => new ScopeConfigRepository($services->get(PDO::class)),
     AdminUrlGenerator::class => static fn (ServiceContainer $services): AdminUrlGenerator => new AdminUrlGenerator(
         $services->get(ConfigRepository::class),

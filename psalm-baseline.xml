@@ -1715,9 +1715,6 @@
     <PossiblyInvalidCast>
       <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
     </PossiblyInvalidCast>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[deleteExpired]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/FileRateLimitReportSink.php">
     <MissingOverrideAttribute>

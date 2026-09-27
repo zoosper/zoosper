@@ -12,7 +12,7 @@ use PDO;
  * Uses atomic per-driver upserts for attempt tracking.
  * The caller is responsible for passing an opaque, non-sensitive identity hash.
  */
-final class DatabaseRateLimitStore implements RateLimitStoreInterface
+final class DatabaseRateLimitStore implements RateLimitStoreInterface, RateLimitStoreMaintenanceInterface
 {
     public function __construct(private PDO $pdo)
     {
@@ -136,6 +136,7 @@ SQL);
         ]);
     }
 
+    #[\Override]
     public function deleteExpired(int $now): int
     {
         $statement = $this->pdo->prepare('DELETE FROM rate_limit_buckets WHERE window_ends_at <= :now');

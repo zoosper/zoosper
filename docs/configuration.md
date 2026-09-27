@@ -30,3 +30,7 @@ Temporary lockout does not change the Admin user's active/inactive status. Publi
 ### Anonymous frontend session policy
 
 Anonymous frontend `GET` and `HEAD` requests that fall through to URL rewrites, published Pages, or frontend 404 handling are classified as stateless before PHP session bootstrap. They do not require a session cookie or server-side session record. Explicit Admin, authentication, password-reset, CSRF, and pending two-factor routes retain their declared stateful behavior.
+
+### Rate-limit bucket maintenance
+
+Schedule `php8.5 bin/zoosper rate-limit:prune` to delete fixed-window rate-limit buckets whose `window_ends_at` value has expired. The command is module-discovered, resolves its maintenance store through the service container, and does not create MySQL schema at runtime. Apply migrations before enabling production enforcement.

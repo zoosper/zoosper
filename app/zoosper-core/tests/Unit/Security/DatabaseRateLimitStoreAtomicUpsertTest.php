@@ -112,3 +112,18 @@ it('resets a bucket correctly', function (): void {
 
 
 
+
+
+it('deletes expired buckets while preserving active windows', function (): void {
+    $pdo = new PDO('sqlite::memory:');
+    $store = new DatabaseRateLimitStore($pdo);
+    $store->ensureSchema();
+    $rule = new RateLimitRule('admin.login.ip', 5, 60, 'admin');
+
+    $store->recordAttempt($rule, 'expired-identity', 60);
+    $store->recordAttempt($rule, 'active-identity', 180);
+
+    expect($store->deleteExpired(150))->toBe(1)
+        ->and((int) $pdo->query('SELECT COUNT(*) FROM rate_limit_buckets')->fetchColumn())->toBe(1)
+        ->and((string) $pdo->query('SELECT identity_hash FROM rate_limit_buckets')->fetchColumn())->toBe('active-identity');
+});

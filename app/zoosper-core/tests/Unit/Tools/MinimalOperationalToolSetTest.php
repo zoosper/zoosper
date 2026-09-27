@@ -9,7 +9,6 @@ it('keeps only active root operational and verification tools', function (): voi
         'audit-module-package-readiness.php',
         'bootstrap.php',
         'build-production-artifact.php',
-        'cleanup-expired-rate-limit-buckets.php',
         'gate.php',
         'install-git-hooks.php',
         'site-lookup.php',
