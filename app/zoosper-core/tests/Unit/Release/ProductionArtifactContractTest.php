@@ -35,3 +35,21 @@ it('excludes development and sensitive repository families from the artifact pol
         expect($tool)->toContain("'{$prohibited}'");
     }
 });
+it('requires compiled caches to be project-relative and reproducible', function (): void {
+    $root = dirname(__DIR__, 5);
+    $compiler = (string) file_get_contents($root . '/app/zoosper-core/src/Module/ModuleManifestCompiler.php');
+    $registry = (string) file_get_contents($root . '/app/zoosper-core/src/Module/ModuleRegistry.php');
+
+    expect($compiler)->toContain('relativePath($module->path)')
+        ->toContain('$projectRoot = dirname(__DIR__, 2);')
+        ->not->toContain("gmdate('c')")
+        ->and($registry)->toContain('compiledModulePath');
+});
+it('deletes volatile PAX timestamps from production archives', function (): void {
+    $root = dirname(__DIR__, 5);
+    $tool = (string) file_get_contents($root . '/tools/build-production-artifact.php');
+
+    expect($tool)->toContain("'--format=posix'")
+        ->toContain("'--pax-option=delete=atime,delete=ctime'")
+        ->toContain("'gzip', '-n', '-9'");
+});

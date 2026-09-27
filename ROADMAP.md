@@ -901,3 +901,7 @@ An exhaustive independent technical review and static security teardown (`var/lo
 - [x] SR-1B: require protected transport and remote-service authentication for Store Orders.
 
 - [x] **SR-15B scheduled-maintenance contract closure.** Rate-limit pruning remains deployment-scheduled rather than application-scheduled, with production cron/systemd examples, overlap guidance, exact output coverage, and repeat-pruning idempotency evidence.
+
+- [x] **SR-13B reproducible compiled-cache closure.** Production artifacts now compile relocatable root-relative module/config paths, omit wall-clock cache metadata, and require byte-identical archives for the same source commit.
+
+- [x] **SR-13B deterministic archive metadata.** Production tarballs now delete volatile PAX `atime` and `ctime` fields in addition to normalized order, commit time, ownership, and gzip headers.

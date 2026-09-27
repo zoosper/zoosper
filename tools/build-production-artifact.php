@@ -126,7 +126,7 @@ try {
     $base = 'zoosper-' . $version . '-' . substr($commit, 0, 12);
     $tar = $outputDirectory . '/' . $base . '.tar';
     $archive = $tar . '.gz';
-    run(['tar', '--sort=name', '--mtime=@' . $commitTime, '--owner=0', '--group=0', '--numeric-owner', '--format=posix', '-cf', $tar, '-C', $release, '.']);
+    run(['tar', '--sort=name', '--mtime=@' . $commitTime, '--owner=0', '--group=0', '--numeric-owner', '--format=posix', '--pax-option=delete=atime,delete=ctime', '-cf', $tar, '-C', $release, '.']);
     run(['gzip', '-n', '-9', $tar]);
     $checksum = hash_file('sha256', $archive);
     if ($checksum === false) {

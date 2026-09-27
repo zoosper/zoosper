@@ -222,3 +222,7 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - BR-3B adds a fail-closed template identifier boundary before theme overrides, module lookup, extension dispatch, or PHP template execution, rejecting absolute paths, traversal segments, null bytes, backslashes, malformed module names, duplicate separators, and unsupported path characters.
 
 - Documented the scheduler-agnostic production contract for `rate-limit:prune`, including explicit PHP 8.5 cron and systemd examples, overlap protection, exit monitoring, and repeat-safe behavior.
+
+- Hardened SR-13B production artifacts so compiled module, service, and route caches are root-relative and deterministic instead of embedding temporary build paths or wall-clock timestamps.
+
+- Removed volatile POSIX/PAX access-time and change-time headers from SR-13B production archives so identical release trees produce identical compressed artifact bytes.

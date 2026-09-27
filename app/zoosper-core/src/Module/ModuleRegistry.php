@@ -187,7 +187,7 @@ final class ModuleRegistry
 
             $modules[] = new Module(
                 name: (string) ($entry['name'] ?? ''),
-                path: (string) ($entry['path'] ?? ''),
+                path: $this->compiledModulePath((string) ($entry['path'] ?? '')),
                 enabled: (bool) ($entry['enabled'] ?? true),
                 version: (string) ($entry['version'] ?? '0.1.0'),
                 sortOrder: (int) ($entry['sortOrder'] ?? 100),
@@ -197,6 +197,19 @@ final class ModuleRegistry
         }
 
         return $modules;
+    }
+
+    /** Resolve root-relative compiled paths while retaining legacy absolute-cache compatibility. */
+    private function compiledModulePath(string $path): string
+    {
+        if ($path === '') {
+            return '';
+        }
+        if (str_starts_with($path, '/') || str_starts_with($path, '\\') || (strlen($path) > 1 && $path[1] === ':')) {
+            return $path;
+        }
+
+        return rtrim($this->basePath, '/\\') . '/' . ltrim($path, '/\\');
     }
 
     private function compiledManifestIsFresh(): bool

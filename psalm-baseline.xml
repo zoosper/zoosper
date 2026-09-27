@@ -1568,9 +1568,6 @@
       <code><![CDATA[$module->discovery['service_decorators'] ?? false]]></code>
       <code><![CDATA[$module->discovery['services'] ?? false]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedVariable>
-      <code><![CDATA[$generatedAt]]></code>
-    </UnusedVariable>
   </file>
   <file src="app/zoosper-core/src/Module/ModuleManifestFreshness.php">
     <RiskyTruthyFalsyComparison>
