@@ -899,3 +899,5 @@ An exhaustive independent technical review and static security teardown (`var/lo
 - [x] BR-3B: reject unsafe template and module identifiers before theme override, module view, and executable engine resolution.
 - [x] SR-1A: quarantine Store Orders behind explicit enablement and deployment-owned tenant scope.
 - [x] SR-1B: require protected transport and remote-service authentication for Store Orders.
+
+- [x] **SR-15B scheduled-maintenance contract closure.** Rate-limit pruning remains deployment-scheduled rather than application-scheduled, with production cron/systemd examples, overlap guidance, exact output coverage, and repeat-pruning idempotency evidence.

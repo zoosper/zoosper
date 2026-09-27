@@ -108,3 +108,5 @@ Zoosper Core depends only on native `SessionHandlerInterface`. The `zoosper/sess
 ### Rate-limit operations
 
 Use `php8.5 bin/zoosper rate-limit:prune` from scheduled operations to remove expired database buckets. Request-time rate-limit contracts remain separate from the maintenance contract.
+
+See `docs/operations/rate-limit-pruning.md` for scheduler-agnostic cron and systemd deployment examples, overlap protection, monitoring, and idempotency guidance.

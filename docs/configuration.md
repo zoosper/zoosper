@@ -34,3 +34,5 @@ Anonymous frontend `GET` and `HEAD` requests that fall through to URL rewrites, 
 ### Rate-limit bucket maintenance
 
 Schedule `php8.5 bin/zoosper rate-limit:prune` to delete fixed-window rate-limit buckets whose `window_ends_at` value has expired. The command is module-discovered, resolves its maintenance store through the service container, and does not create MySQL schema at runtime. Apply migrations before enabling production enforcement.
+
+See `docs/operations/rate-limit-pruning.md` for scheduler-agnostic cron and systemd deployment examples, overlap protection, monitoring, and idempotency guidance.

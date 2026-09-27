@@ -33,3 +33,17 @@ it('rejects unexpected arguments before pruning', function (): void {
     expect((new PruneRateLimitBucketsCommand($maintenance))->run(['unexpected'], new ConsoleOutput($stdout, $stderr)))->toBe(1)
         ->and($maintenance->calls)->toBe(0);
 });
+it('reports the exact deleted bucket count to standard output', function (): void {
+    $maintenance = new class implements RateLimitStoreMaintenanceInterface {
+        public function deleteExpired(int $now): int { return 3; }
+    };
+    $stdout = fopen('php://memory', 'w+');
+    $stderr = fopen('php://memory', 'w+');
+
+    expect((new PruneRateLimitBucketsCommand($maintenance))->run([], new ConsoleOutput($stdout, $stderr)))->toBe(0);
+
+    rewind($stdout);
+    rewind($stderr);
+    expect(stream_get_contents($stdout))->toBe("Pruned 3 expired rate-limit bucket(s).\n")
+        ->and(stream_get_contents($stderr))->toBe('');
+});

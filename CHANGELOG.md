@@ -220,3 +220,5 @@ Media assets now use POST-only, media.manage, CSRF-protected archive, restore an
 - BR-2D is complete: `v0.3.1-alpha.1` to current `dev` was proven on disposable MySQL with 19 migrations before and after, 45 live foreign keys, zero orphaned references, idempotent repeat migration, and explicit database cleanup.
 - BR-3A hardens the opt-in basic HTML sanitizer against CSS style smuggling by removing inline `style` attributes and neutralising `javascript:`, `vbscript:`, and `data:` URL schemes, with executable regressions preserving the production HTML Purifier no-style allowlist.
 - BR-3B adds a fail-closed template identifier boundary before theme overrides, module lookup, extension dispatch, or PHP template execution, rejecting absolute paths, traversal segments, null bytes, backslashes, malformed module names, duplicate separators, and unsupported path characters.
+
+- Documented the scheduler-agnostic production contract for `rate-limit:prune`, including explicit PHP 8.5 cron and systemd examples, overlap protection, exit monitoring, and repeat-safe behavior.
