@@ -27,13 +27,16 @@ it('keeps the bounded transport free of redirects writes and deprecated handle c
         ->and($source)->not->toContain('curl_close(');
 });
 
-
-
-
-
-
-
-
-
-
-
+it('captures only pagination and retry response metadata without exposing arbitrary headers', function (): void {
+    $root = dirname(__DIR__, 4);
+    $source = file_get_contents(
+        $root . '/packages/zoosper-api-grid/src/Transport/CurlJsonApiTransport.php',
+    );
+    expect($source)->not->toBeFalse()
+        ->and($source)->toContain('CURLOPT_HEADERFUNCTION')
+        ->and($source)->toContain("['link', 'retry-after']")
+        ->and($source)->toContain('INVALID_RESPONSE_METADATA')
+        ->and($source)->toContain('new ApiResponse($status, $decoded, strlen($body), $responseHeaders)')
+        ->and($source)->not->toContain('$responseHeaders["authorization"]')
+        ->and($source)->not->toContain('$responseHeaders["set-cookie"]');
+});

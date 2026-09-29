@@ -3891,10 +3891,7 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-api-grid/src/Transport/CurlJsonApiTransport.php">
-    <MissingClosureParamType>
-      <code><![CDATA[$handle]]></code>
-    </MissingClosureParamType>
-    <MissingOverrideAttribute>
+<MissingOverrideAttribute>
       <code><![CDATA[public function send(ApiRequest $request, ApiReliabilityPolicy $policy): ApiResponse]]></code>
     </MissingOverrideAttribute>
     <TypeDoesNotContainType>

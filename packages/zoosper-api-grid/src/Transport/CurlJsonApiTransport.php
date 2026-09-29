@@ -37,6 +37,8 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
         }
 
         $body = '';
+        /** @var array<string, string> $responseHeaders */
+        $responseHeaders = [];
         $responseTooLarge = false;
         curl_setopt_array($handle, [
             CURLOPT_RETURNTRANSFER => false,
@@ -47,7 +49,37 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
             CURLOPT_CUSTOMREQUEST => $request->method,
             CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_REDIR_PROTOCOLS => 0,
-            CURLOPT_WRITEFUNCTION => static function ($handle, string $chunk) use (&$body, &$responseTooLarge, $policy): int {
+            CURLOPT_HEADERFUNCTION => static function (\CurlHandle $handle, string $line) use (&$responseHeaders): int {
+                $length = strlen($line);
+                $trimmed = trim($line);
+                if ($trimmed === '' || str_starts_with($trimmed, 'HTTP/')) {
+                    return $length;
+                }
+                $separator = strpos($trimmed, ':');
+                if ($separator === false) {
+                    throw new ApiTransportException(
+                        'External Grid response metadata was invalid.',
+                        category: ApiTransportException::INVALID_RESPONSE_METADATA,
+                    );
+                }
+                $name = strtolower(trim(substr($trimmed, 0, $separator)));
+                $value = trim(substr($trimmed, $separator + 1));
+                if (preg_match('/^[a-z0-9!#$%&\'*+.^_`|~-]+$/', $name) !== 1
+                    || str_contains($value, "\r")
+                    || str_contains($value, "\n")) {
+                    throw new ApiTransportException(
+                        'External Grid response metadata was invalid.',
+                        category: ApiTransportException::INVALID_RESPONSE_METADATA,
+                    );
+                }
+                if (in_array($name, ['link', 'retry-after'], true)) {
+                    $responseHeaders[$name] = isset($responseHeaders[$name])
+                        ? $responseHeaders[$name] . ', ' . $value
+                        : $value;
+                }
+                return $length;
+            },
+            CURLOPT_WRITEFUNCTION => static function (\CurlHandle $handle, string $chunk) use (&$body, &$responseTooLarge, $policy): int {
                 if (strlen($body) + strlen($chunk) > $policy->maximumResponseBytes) {
                     $responseTooLarge = true;
                     return 0;
@@ -102,7 +134,7 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
             );
         }
 
-        return new ApiResponse($status, $decoded, strlen($body));
+        return new ApiResponse($status, $decoded, strlen($body), $responseHeaders);
     }
 }
 

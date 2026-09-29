@@ -1,4 +1,5 @@
 # Changelog
+- Opened Phase 4ZN-B by preserving bounded Link and Retry-After response metadata for materially different external pagination without retaining credentials, cookies or arbitrary headers.
 
 - Hardened Phase 4ZN-A API Grid response integrity with replaceable-transport byte evidence, pre-mapping response-limit enforcement, and payload-free schema-drift classification for Store Orders.
 
