@@ -13,6 +13,7 @@ final class ApiTransportException extends RuntimeException
     public const NETWORK = 'network';
     public const TIMEOUT = 'timeout';
     public const RESPONSE_TOO_LARGE = 'response_too_large';
+    public const INVALID_RESPONSE_METADATA = 'invalid_response_metadata';
     public const INVALID_JSON = 'invalid_json';
     public const INVALID_JSON_ROOT = 'invalid_json_root';
     public const NON_SUCCESS = 'non_success';

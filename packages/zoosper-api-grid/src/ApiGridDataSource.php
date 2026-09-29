@@ -39,8 +39,14 @@ final readonly class ApiGridDataSource implements GridDataSourceInterface
         $request = $this->authentication->apply($this->requestMapper->map($query, $this->context));
         $response = $this->transport->send($request, $this->policy);
 
-        // Keep this defensive boundary for custom/fake transports that return
+        // Keep these defensive boundaries for replaceable transports that return
         // ApiResponse directly instead of using CurlJsonApiTransport.
+        if ($response->receivedBodyBytes > $this->policy->maximumResponseBytes) {
+            throw new ApiTransportException(
+                'External Grid response exceeded the configured size limit.',
+                category: ApiTransportException::RESPONSE_TOO_LARGE,
+            );
+        }
         if (!$response->isSuccessful()) {
             throw new ApiTransportException(
                 'External Grid source returned a non-success response.',

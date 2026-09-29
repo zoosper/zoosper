@@ -39,3 +39,7 @@ Transport and mapping adapters for external API-backed Zoosper grids.
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+
+## Response integrity
+
+The cURL transport stops acquisition before a response exceeds the configured byte ceiling. Every successful `ApiResponse` also carries the received-body byte count so the data-source boundary can enforce the same policy for replaceable transports before mapping. Transport failures and schema mismatches use stable, payload-free categories; exception messages must not include URLs, headers, credentials, raw response bodies, or personal and transactional values.

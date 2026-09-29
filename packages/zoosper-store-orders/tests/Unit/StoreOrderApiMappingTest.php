@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\StoreOrders\Tests\Unit;
 
-use UnexpectedValueException;
+use Zoosper\ApiGrid\Mapping\ApiGridResponseMappingException;
 use Zoosper\ApiGrid\Mapping\ApiGridContext;
 use Zoosper\ApiGrid\Transport\ApiResponse;
 use Zoosper\Grid\DataSource\GridQuery;
@@ -45,7 +45,7 @@ it('normalises the Orders response without exposing nested personal payloads', f
             'TotalRows' => 126,
         ]],
         'total' => 126,
-    ]);
+    ], receivedBodyBytes: 512);
 
     $result = (new StoreOrderResponseMapper())->map($response, new GridQuery(pageSize: 5));
     expect($result->total)->toBe(126)
@@ -66,9 +66,9 @@ it('normalises the Orders response without exposing nested personal payloads', f
 
 it('rejects an invalid response envelope', function (): void {
     expect(fn () => (new StoreOrderResponseMapper())->map(
-        new ApiResponse(200, ['records' => []]),
+        new ApiResponse(200, ['records' => []], 14),
         new GridQuery(),
-    ))->toThrow(UnexpectedValueException::class);
+    ))->toThrow(ApiGridResponseMappingException::class);
 });
 
 
@@ -81,3 +81,20 @@ it('rejects an invalid response envelope', function (): void {
 
 
 
+
+
+it('classifies invalid remote record fields as schema drift without retaining payload data', function (): void {
+    try {
+        (new StoreOrderResponseMapper())->map(
+            new ApiResponse(200, [
+                'records' => [['order_id' => 'ORDER-1', 'orderDate' => 'not-a-date']],
+                'total' => 1,
+            ], 87),
+            new GridQuery(),
+        );
+        test()->fail('Expected invalid remote record schema to be rejected.');
+    } catch (ApiGridResponseMappingException $exception) {
+        expect($exception->category)->toBe(ApiGridResponseMappingException::SCHEMA_MISMATCH)
+            ->and($exception->getMessage())->not->toContain('not-a-date');
+    }
+});

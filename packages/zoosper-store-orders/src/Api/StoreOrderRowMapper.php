@@ -6,6 +6,7 @@ namespace Zoosper\StoreOrders\Api;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
+use Zoosper\ApiGrid\Mapping\ApiGridResponseMappingException;
 use Zoosper\ApiGrid\Mapping\ApiGridRowMapperInterface;
 
 final class StoreOrderRowMapper implements ApiGridRowMapperInterface
@@ -16,13 +17,13 @@ final class StoreOrderRowMapper implements ApiGridRowMapperInterface
         $orderId = trim((string) ($record['order_id'] ?? ''));
         $orderDate = trim((string) ($record['orderDate'] ?? ''));
         if ($orderId === '' || $orderDate === '') {
-            throw new InvalidArgumentException('Store Order record requires order_id and orderDate.');
+            throw new ApiGridResponseMappingException('Store Order record requires order_id and orderDate.');
         }
 
         try {
             $placedAt = new DateTimeImmutable($orderDate);
         } catch (\Throwable $exception) {
-            throw new InvalidArgumentException('Store Order orderDate is invalid.', previous: $exception);
+            throw new ApiGridResponseMappingException('Store Order orderDate is invalid.', previous: $exception);
         }
 
         $customer = trim((string) ($record['customer_name'] ?? ''));
@@ -56,7 +57,7 @@ final class StoreOrderRowMapper implements ApiGridRowMapperInterface
         try {
             return (new DateTimeImmutable($value))->format(DATE_ATOM);
         } catch (\Throwable $exception) {
-            throw new InvalidArgumentException('Store Order optional date is invalid.', previous: $exception);
+            throw new ApiGridResponseMappingException('Store Order optional date is invalid.', previous: $exception);
         }
     }
 

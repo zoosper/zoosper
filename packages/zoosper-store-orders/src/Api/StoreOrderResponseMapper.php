@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\StoreOrders\Api;
 
-use UnexpectedValueException;
+use Zoosper\ApiGrid\Mapping\ApiGridResponseMappingException;
 use Zoosper\ApiGrid\Mapping\ApiGridResponseMapperInterface;
 use Zoosper\ApiGrid\Transport\ApiResponse;
 use Zoosper\Grid\DataSource\GridQuery;
@@ -21,13 +21,13 @@ final readonly class StoreOrderResponseMapper implements ApiGridResponseMapperIn
         $records = $response->decodedBody['records'] ?? null;
         $total = $response->decodedBody['total'] ?? null;
         if (!is_array($records) || !is_int($total) || $total < 0) {
-            throw new UnexpectedValueException('Store Orders response requires records[] and a non-negative integer total.');
+            throw new ApiGridResponseMappingException('Store Orders response requires records[] and a non-negative integer total.');
         }
 
         $items = [];
         foreach ($records as $record) {
             if (!is_array($record)) {
-                throw new UnexpectedValueException('Each Store Orders record must be an object.');
+                throw new ApiGridResponseMappingException('Each Store Orders record must be an object.');
             }
             $items[] = $this->rows->map($record);
         }

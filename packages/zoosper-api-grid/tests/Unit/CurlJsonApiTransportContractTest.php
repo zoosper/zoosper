@@ -21,6 +21,7 @@ it('keeps the bounded transport free of redirects writes and deprecated handle c
     expect($source)->not->toBeFalse()
         ->and($source)->toContain('CURLOPT_FOLLOWLOCATION => false')
         ->and($source)->toContain('maximumResponseBytes')
+        ->and($source)->toContain('strlen($body)')
         ->and($source)->toContain('JSON_THROW_ON_ERROR')
         ->and($source)->toContain('CURLPROTO_HTTP | CURLPROTO_HTTPS')
         ->and($source)->not->toContain('curl_close(');

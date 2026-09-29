@@ -25,7 +25,7 @@ it('adapts a fake external transport into the neutral Grid result', function ():
         public function send(ApiRequest $request, ApiReliabilityPolicy $policy): ApiResponse
         {
             $this->request = $request;
-            return new ApiResponse(200, ['records' => [['id' => 7]], 'total' => 1]);
+            return new ApiResponse(200, ['records' => [['id' => 7]], 'total' => 1], 35);
         }
     };
     $requestMapper = new class implements ApiGridRequestMapperInterface {
@@ -69,7 +69,7 @@ it('does not convert a non-success response into an empty Grid', function (): vo
     $transport = new class implements ApiTransportInterface {
         public function send(ApiRequest $request, ApiReliabilityPolicy $policy): ApiResponse
         {
-            return new ApiResponse(503, []);
+            return new ApiResponse(503, [], 0);
         }
     };
     $requestMapper = new class implements ApiGridRequestMapperInterface {
@@ -108,3 +108,44 @@ it('does not convert a non-success response into an empty Grid', function (): vo
 
 
 
+
+
+it('rejects an oversized response from a replaceable transport before mapping', function (): void {
+    $transport = new class implements ApiTransportInterface {
+        public function send(ApiRequest $request, ApiReliabilityPolicy $policy): ApiResponse
+        {
+            return new ApiResponse(200, ['records' => [], 'total' => 0], 11);
+        }
+    };
+    $requestMapper = new class implements ApiGridRequestMapperInterface {
+        public function map(GridQuery $query, ApiGridContext $context): ApiRequest
+        {
+            return new ApiRequest('GET', '/records');
+        }
+    };
+    $mapperCalled = false;
+    $responseMapper = new class($mapperCalled) implements ApiGridResponseMapperInterface {
+        public function __construct(private bool &$called) {}
+        public function map(ApiResponse $response, GridQuery $query): GridResult
+        {
+            $this->called = true;
+            return new GridResult([], 0, 1, 20);
+        }
+    };
+    $source = new ApiGridDataSource(
+        $transport,
+        $requestMapper,
+        $responseMapper,
+        new NoAuthentication(),
+        new ApiGridContext(1),
+        new GridDataSourceCapabilities(),
+        new ApiReliabilityPolicy(maximumResponseBytes: 10),
+    );
+    try {
+        $source->fetch(new GridQuery());
+        test()->fail('Expected the replaceable transport response to be rejected.');
+    } catch (\Zoosper\ApiGrid\Transport\ApiTransportException $exception) {
+        expect($exception->category)->toBe(\Zoosper\ApiGrid\Transport\ApiTransportException::RESPONSE_TOO_LARGE)
+            ->and($mapperCalled)->toBeFalse();
+    }
+});

@@ -665,7 +665,7 @@ replica.
 
 - **[x] SR-14A trusted client-IP boundary:** authoritative right-to-left proxy-chain resolution, strict IPv4/IPv6 CIDR trust configuration, malformed-chain fail-closed behaviour, and exploit regression coverage.
 
-1. **[~] Production artefact engineering:** SR-13A now provides the deterministic application archive, explicit runtime allow-list, production dependency assembly, first-party path-package materialisation, prohibited-path and symlink rejection, release metadata, SHA-256, and isolated extraction verification. CI publication and rollback-consumption guidance remain the bounded SR-13B follow-up.
+1. **[x] Production artefact engineering:** SR-13A and SR-13B provide the deterministic application archive, explicit runtime allow-list, production dependency assembly, first-party path-package materialisation, prohibited-path and symlink rejection, relocatable compiled caches, normalized archive metadata, release metadata, SHA-256, isolated extraction verification, and byte-identical repeated builds.
 2. **API-backed Grid hardening:** complete Phase 4ZN with a materially different second pilot before adding Phase 4ZO scaffolding and extension guidance.
 3. **Test-suite signal quality:** inventory redundant source-string assertions and migrate the highest-risk boundaries to executable behavioural coverage without deleting valuable architecture guards.
 4. **Psalm baseline reduction:** reduce the reviewed baseline package by package while retaining the blocking full-scope gate and stale-entry rejection.
@@ -708,7 +708,7 @@ replica.
   anchors, live ordering and controlled error presentation. Do not implement
   misleading current-page-only search, filtering or sorting.
 
-- [ ] **Phase 4ZN — Hardening and second pilot.** Prove the abstraction with a
+- [~] **Phase 4ZN — Hardening and second pilot.** Prove the abstraction with a
   materially different API envelope or pagination model. Cover invalid JSON,
   timeouts, non-success responses, schema drift, response-size limits, secret
   and personal-data redaction, bounded exports, diagnostics and cursor

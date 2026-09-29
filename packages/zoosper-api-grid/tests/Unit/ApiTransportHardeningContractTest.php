@@ -9,6 +9,7 @@ use Zoosper\ApiGrid\Transport\ApiTransportException;
 it('defines stable redaction-safe transport failure categories', function (): void {
     expect(ApiTransportException::TIMEOUT)->toBe('timeout')
         ->and(ApiTransportException::RESPONSE_TOO_LARGE)->toBe('response_too_large')
+        ->and(ApiTransportException::INVALID_RESPONSE_METADATA)->toBe('invalid_response_metadata')
         ->and(ApiTransportException::INVALID_JSON)->toBe('invalid_json')
         ->and(ApiTransportException::NON_SUCCESS)->toBe('non_success');
 });
@@ -55,3 +56,13 @@ it('retains a non-success boundary for replaceable transports', function (): voi
 
 
 
+
+
+it('defines payload-free schema mismatch classification', function (): void {
+    $exception = new \Zoosper\ApiGrid\Mapping\ApiGridResponseMappingException(
+        'External Grid response does not match the required schema.',
+    );
+    expect($exception->category)
+        ->toBe(\Zoosper\ApiGrid\Mapping\ApiGridResponseMappingException::SCHEMA_MISMATCH)
+        ->and($exception->getMessage())->not->toContain('payload');
+});
