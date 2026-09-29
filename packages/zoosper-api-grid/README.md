@@ -4,6 +4,8 @@ Transport and mapping adapters for external API-backed Zoosper grids.
 
 The transport preserves only bounded integration metadata required by generic reliability and pagination handling: `link` and `retry-after`. Arbitrary response headers, cookies and credentials are not retained in `ApiResponse`. Feature response mappers remain responsible for validating endpoint-specific pagination metadata without following remote URLs directly.
 
+Endpoint-specific mappers may use `ApiLinkRelations` to validate bounded HTTPS `Link` metadata and extract only opaque `next` and `prev` cursor tokens. The parser never follows or returns remote URLs, rejects credentials, fragments, duplicate relations, line injection and oversized metadata, and treats an absent header as a terminal page.
+
 ## Responsibilities
 
 - Composer type: `zoosper-module`.
