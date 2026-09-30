@@ -28,3 +28,7 @@ The MySQL capability result reports `database_created: true` and `database_dropp
 
 Run `php8.5 tools/verify-mysql-release-upgrade.php v0.3.1-alpha.1` with the four explicit `BR2D_MYSQL_*` variables. The tool uses detached release and current worktrees, a random disposable MySQL database, a connected Admin/Site/Media/Page/Menu fixture, guarded foreign-key reconciliation, orphan checks, repeat migration, and explicit post-drop absence verification.
 The accepted BR-2D run preserved the complete eleven-part connected fixture, retained 19 migration records before and after upgrade, found 45 live MySQL foreign keys, found zero orphaned references, proved repeat-migration idempotency, and explicitly proved that the disposable database was dropped.
+
+## API Grid integrations
+
+Treat request and response mapper interfaces, transport failure categories, capability declarations, pagination modes and cursor token meaning as upgrade-sensitive contracts. Before upgrading, keep deployment-owned endpoint and credential configuration outside Grid query state, confirm the target release's migration notes, update the root lock file, and run the integration's fixture tests plus complete repository verification. New optional helpers are additive; changed required configuration, signatures, failure categories, pagination semantics or security defaults require an explicit migration note on a new minor release line.

@@ -11,6 +11,7 @@ it('scaffolds a disabled readable API Grid package with fixtures and bounded dep
         ->and($composer['type'])->toBe('zoosper-module')->and($composer['require']['zoosper/api-grid'])->toBe('^0.3.1@alpha')
         ->and(require $package.'/config/admin_routes.php')->toBe([])
         ->and($package.'/tests/Fixtures/ApiResponseFixtures.php')->toBeFile()
+        ->and((string)file_get_contents($package.'/tests/Fixtures/ApiResponseFixtures.php'))->toContain('ApiResponseFixture::success')
         ->and((string)file_get_contents($package.'/README.md'))->toContain('## Operational notes')->toContain('zcomposer test');
 });
 it('rejects unsafe identity key and route before creating a directory', function (string $name,string $key,string $route): void {

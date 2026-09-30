@@ -69,6 +69,7 @@
             "Zoosper\\Database\\Tests\\": "packages/zoosper-database/tests/",
             "Zoosper\\Editor\\Tests\\": "app/zoosper-editor/tests/",
             "Zoosper\\Errors\\Tests\\": "packages/zoosper-errors/tests/",
+            "Zoosper\\Examples\\ApiGrid\\": "examples/api-grid-integration/src/",
             "Zoosper\\GlobalAnnouncements\\Tests\\": "app/zoosper-global-announcements/tests/",
             "Zoosper\\Grid\\Tests\\": "packages/zoosper-grid/tests/",
             "Zoosper\\Media\\Tests\\": "packages/zoosper-media/tests/",

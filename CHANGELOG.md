@@ -1,4 +1,5 @@
 # Changelog
+- Closed Phase 4ZO developer experience with reusable API Grid transport fixtures, a maintained source-only example integration, complete integration guidance, and an explicit compatibility and upgrade policy.
 - Opened Phase 4ZO developer experience with a fail-closed `make:api-grid` package generator, reusable response fixtures, bounded prerelease dependencies and explicit opt-in registration guidance.
 - Added the Phase 4ZN-B3 GitHub Issues second pilot with a list-shaped envelope, Issue/Pull Request discrimination, bounded safe row mapping and opaque Link cursor consumption.
 - Added strict bounded `Link` relation parsing for opaque next/previous cursor metadata without following or exposing remote URLs.

@@ -47,3 +47,7 @@ Endpoint-specific mappers may use `ApiLinkRelations` to validate bounded HTTPS `
 ## Response integrity
 
 The cURL transport stops acquisition before a response exceeds the configured byte ceiling. Every successful `ApiResponse` also carries the received-body byte count so the data-source boundary can enforce the same policy for replaceable transports before mapping. Transport failures and schema mismatches use stable, payload-free categories; exception messages must not include URLs, headers, credentials, raw response bodies, or personal and transactional values.
+
+## Testing fixtures
+
+`FakeApiTransport` queues deterministic `ApiResponse` objects and records mapped requests without networking. `ApiResponseFixture` creates bounded success and payload-free failure responses. The maintained source-only example is under `examples/api-grid-integration/`.

@@ -716,7 +716,7 @@ replica.
 
 - [ ] **Phase 4ZO — Developer experience.** After two integrations validate the
   contracts, add `bin/zoosper make:api-grid`, readable scaffolding, reusable
-  fixtures, an example module, integration documentation and an upgrade policy.
+  fixtures, an example module, integration documentation and an upgrade policy. Completed in Phase 4ZO-A/B with `make:api-grid`, shared deterministic transport fixtures, a maintained source-only example, integration guidance and an explicit compatibility policy.
 
 ### API Grid architectural boundaries
 
