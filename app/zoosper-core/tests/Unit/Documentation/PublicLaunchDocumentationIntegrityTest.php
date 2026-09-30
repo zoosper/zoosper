@@ -7,9 +7,9 @@ it('publishes the current alpha release and delivered product surface at the rep
     $readme = (string) file_get_contents($root . '/README.md');
 
     expect($readme)
-        ->toContain('v0.3.1-alpha.1')
+        ->toContain('v0.3.2-alpha.1')
         ->toContain('Current development line')
-        ->toContain('0.3.2-alpha.1-dev')
+        ->toContain('0.3.2-alpha.1')
         ->toContain('zoosper-menu')
         ->toContain('revision listing and revision restoration')
         ->toContain('CI runs Psalm as a blocking full-scope gate')
@@ -27,7 +27,7 @@ it('states the tagged pre-release and stable-release status precisely', function
     $security = (string) file_get_contents($root . '/SECURITY.md');
 
     expect($security)
-        ->toContain('latest pre-release is `v0.3.1-alpha.1`')
+        ->toContain('prepared release candidate is `v0.3.2-alpha.1`')
         ->toContain('supported development branch is `dev`')
         ->toContain('No stable release has shipped')
         ->toContain('`composer.json` and `composer.lock` are the source of truth')

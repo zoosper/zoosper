@@ -1,11 +1,11 @@
 # Zoosper CMS — Master Roadmap
 
-**Last updated:** 2026-09-19 (Sydney)
+**Last updated:** 2026-09-30 (Sydney)
 
 ## Current continuity status
 
-- Latest immutable release: `v0.3.1-alpha.1`.
-- Current development line: `0.3.2-alpha.1-dev`.
+- Latest immutable release candidate: `v0.3.2-alpha.1`.
+- Release identity: `0.3.2-alpha.1`.
 - **[x] SR-2 Redis production authentication and cache-key policy:** Redis requirements activate only for `CACHE_DRIVER=redis`; staging and production require a non-empty, non-placeholder Redis password; every Redis driver requires a strong dedicated cache signing key; file cache remains unaffected; local, development and testing retain explicit unauthenticated loopback support; and policy plus factory tests preserve lazy, secret-safe composition.
 - **[x] Phase 13A-C2 Admin account lockout:** Auth now owns atomic per-account failed-login state, configurable temporary lockout, neutral authentication enforcement, password-reset recovery, protected Admin visibility, `user.manage`-guarded POST unlock, secret-free audit metadata, and real HTTP-lifecycle acceptance. Account lockout remains independent from active/inactive status and from the separate email/IP request rate limiter.
 - **[x] GitHub CI MySQL Migration Failure Resolution:** Fixed `composer migrate` failure (`SQLSTATE[HY000]: General error: 1824 Failed to open the referenced table 'media_assets'`) by using `SchemaInspector` in `202608310001_create_media_queue_table.php` to verify table presence before issuing `CREATE TABLE ... FOREIGN KEY (asset_id) REFERENCES media_assets(id)`, allowing fresh database migrations on MySQL and SQLite to execute safely and defer table creation to the declarative schema engine.
@@ -59,7 +59,7 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ## 0. TOP PRIORITY — next phase
 
-**`0.3.2-alpha.1-dev` is open.** The immutable annotated `v0.3.1-alpha.1` tag targets release commit `bfde15051396cd1dd19bdfaaa7b560e9c29e8287`. Continue from this new development baseline without changing the released source or retargeting its tag.
+**`0.3.2-alpha.1` release identity is prepared.** The previous immutable annotated `v0.3.1-alpha.1` tag remains at `bfde15051396cd1dd19bdfaaa7b560e9c29e8287`; do not modify or retarget it. Create `v0.3.2-alpha.1` only from the verified release commit.
 
 **Planned Admin follow-ups for the current development line:**
 
@@ -714,7 +714,7 @@ replica.
   and personal-data redaction, bounded exports, diagnostics and cursor
   pagination where available.
 
-- [ ] **Phase 4ZO — Developer experience.** After two integrations validate the
+- [x] **Phase 4ZO — Developer experience.** After two integrations validate the
   contracts, add `bin/zoosper make:api-grid`, readable scaffolding, reusable
   fixtures, an example module, integration documentation and an upgrade policy. Completed in Phase 4ZO-A/B with `make:api-grid`, shared deterministic transport fixtures, a maintained source-only example, integration guidance and an explicit compatibility policy.
 

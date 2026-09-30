@@ -8,7 +8,7 @@ it('keeps completed review remediation aligned with deployed source history', fu
     $changelog = (string) file_get_contents($root . '/CHANGELOG.md');
 
     expect($roadmap)
-        ->toContain('**Last updated:** 2026-09-19 (Sydney)')
+        ->toContain('**Last updated:** 2026-09-30 (Sydney)')
         ->toContain('SR-6 GenerateSecrets environment-file hardening')
         ->toContain('account lockout ✅')
         ->toContain('password reset ✅')

@@ -2,11 +2,11 @@
 
 ## Version
 
-`0.3.2-alpha.1-dev`
+`0.3.2-alpha.1`
 
 ## Release baseline
 
-- Latest immutable release: `v0.3.1-alpha.1`.
+- Prepared immutable release candidate: `v0.3.2-alpha.1`.
 - Release commit: `bfde15051396cd1dd19bdfaaa7b560e9c29e8287`.
 - Active branch: `dev`.
 - Zoosper remains public alpha software. No stable release has shipped.
@@ -24,4 +24,4 @@ The 0.3.2 line is the beta-readiness public-alpha progression after the substant
 
 ## Beta-readiness Composer policy
 
-The 0.3.2 alpha development line removes first-party `dev-dev` dependency coupling. All 32 first-party path packages receive the explicit `0.3.2-alpha.1` Composer package candidate from the root repository map and consume compatible first-party packages through `^0.3.1@alpha`. This keeps runtime identity at `0.3.2-alpha.1-dev` while making package compatibility independent of the Git development branch.
+The 0.3.2 alpha development line removes first-party `dev-dev` dependency coupling. All 32 first-party path packages receive the explicit `0.3.2-alpha.1` Composer package candidate from the root repository map and consume compatible first-party packages through `^0.3.1@alpha`. This aligns runtime identity at `0.3.2-alpha.1` while making package compatibility independent of the Git development branch.

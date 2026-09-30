@@ -10,7 +10,7 @@
 - SR-3 closes the remaining HIGH-03 authentication rate-limit transport-separation finding. `AdminAuthenticationRateLimiter` now owns configuration loading, opaque identity construction, persistence, report-only diagnostics, enforcement decisions and successful resets across HTML Admin login, API login, password-reset requests and 2FA challenges. The registered Admin middleware retains only request selection and generic HTML 429 response mapping.
 
 - SR-2 makes Redis cache deployment fail closed: staging and production require authenticated Redis when `CACHE_DRIVER=redis`, every Redis driver requires a strong dedicated `CACHE_ENCRYPTION_KEY`, non-Redis drivers remain unaffected, and local/test Redis behaviour stays explicit and practical.
-## [0.3.2-alpha.1-dev]
+## [0.3.2-alpha.1] - 2026-09-30
 - Revoked existing cookie sessions immediately when the underlying Admin account becomes inactive, matching active-account enforcement on token authentication.
 - Hardened trusted client-IP resolution against attacker-prepended `X-Forwarded-For` values by walking trusted proxy chains right to left, adding strict IPv4/IPv6 CIDR trust matching, and rejecting malformed trust configuration.
 - Added SR-13A production-artifact foundation: an explicit runtime allow-list assembles locked production dependencies, materialises local path packages, compiles and verifies the module manifest, rejects development and sensitive paths, emits deterministic release metadata plus SHA-256, and re-verifies the extracted archive in isolation.
