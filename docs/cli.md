@@ -14,6 +14,7 @@ Core operational commands include:
 - `schema:foreign-keys:status` / `schema:foreign-keys:apply`: Inspect and apply declarative foreign key constraints.
 - `version`: Display CMS release version and channel.
 
+- `make:api-grid Vendor/Module --key=vendor.records --route=/admin/vendor-records`: Create a disabled standalone API Grid integration skeleton for review and explicit registration.
 Module-owned commands also contribute feature-specific workflows, such as `admin:create` (user creation), `site:create`, and `page:create`.
 
 Recovery commands including `help`, `list`, `compile`, `cache:clear`, and `security:generate-secrets` remain operational without an active database connection. Database-backed commands resolve PDO only when executed.

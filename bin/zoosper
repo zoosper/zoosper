@@ -30,6 +30,7 @@ use Zoosper\Database\Schema\SchemaSnapshotRepository;
 use Zoosper\Core\Release\ReleaseCheck;
 use Zoosper\Core\Console\BuiltIn\DeployCommand;
 use Zoosper\Core\Console\BuiltIn\MakeConsoleCommand;
+use Zoosper\Core\Console\BuiltIn\MakeApiGridCommand;
 use Zoosper\Core\Console\BuiltIn\MakeModuleCommand;
 use Zoosper\Core\Console\BuiltIn\MakePackageModuleCommand;
 use Zoosper\Core\Console\ModuleConsoleCommandLoader;
@@ -46,6 +47,7 @@ use Zoosper\Core\Module\ModuleManifestStatus;
 use Zoosper\Core\Module\ModuleRegistry;
 use Zoosper\Core\Module\ModuleRepository;
 use Zoosper\Core\Scaffold\ConsoleCommandScaffolder;
+use Zoosper\Core\Scaffold\ApiGridScaffolder;
 use Zoosper\Core\Scaffold\ModuleScaffolder;
 use Zoosper\Core\Scaffold\PackageModuleScaffolder;
 
@@ -110,6 +112,7 @@ try {
         'make:module' => static fn () => new MakeModuleCommand(new ModuleScaffolder($basePath)),
         'make:package-module' => static fn () => new MakePackageModuleCommand(new PackageModuleScaffolder($basePath)),
         'make:command' => static fn () => new MakeConsoleCommand(new ConsoleCommandScaffolder($basePath)),
+        'make:api-grid' => static fn () => new MakeApiGridCommand(new ApiGridScaffolder($basePath)),
         'security:generate-secrets' => static fn () => new GenerateSecretsCommand($basePath),
         'secrets:generate' => static fn () => new GenerateSecretsCommand($basePath),
         'version' => static fn () => new VersionCommand($basePath),
@@ -183,6 +186,7 @@ function builtInCommands(): array
         'make:module Vendor_Module',
         'make:package-module Vendor/Module',
         'make:command Vendor_Module CommandClass --name=vendor:task:run --description="Describe the command"',
+        'make:api-grid Vendor/Module --key=vendor.records --route=/admin/vendor-records',
     ];
 }
 

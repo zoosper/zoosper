@@ -1,4 +1,5 @@
 # Changelog
+- Opened Phase 4ZO developer experience with a fail-closed `make:api-grid` package generator, reusable response fixtures, bounded prerelease dependencies and explicit opt-in registration guidance.
 - Added the Phase 4ZN-B3 GitHub Issues second pilot with a list-shaped envelope, Issue/Pull Request discrimination, bounded safe row mapping and opaque Link cursor consumption.
 - Added strict bounded `Link` relation parsing for opaque next/previous cursor metadata without following or exposing remote URLs.
 - Opened Phase 4ZN-B by preserving bounded Link and Retry-After response metadata for materially different external pagination without retaining credentials, cookies or arbitrary headers.
