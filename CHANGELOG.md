@@ -1,4 +1,5 @@
 # Changelog
+- Added the Phase 4ZN-B3 GitHub Issues second pilot with a list-shaped envelope, Issue/Pull Request discrimination, bounded safe row mapping and opaque Link cursor consumption.
 - Added strict bounded `Link` relation parsing for opaque next/previous cursor metadata without following or exposing remote URLs.
 - Opened Phase 4ZN-B by preserving bounded Link and Retry-After response metadata for materially different external pagination without retaining credentials, cookies or arbitrary headers.
 

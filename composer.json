@@ -25,6 +25,7 @@
         "zoosper/database": "^0.3.1@alpha",
         "zoosper/editor": "^0.3.1@alpha",
         "zoosper/errors": "^0.3.1@alpha",
+        "zoosper/github-issues": "^0.3.1@alpha",
         "zoosper/global-announcements": "^0.3.1@alpha",
         "zoosper/grid": "^0.3.1@alpha",
         "zoosper/install": "^0.3.1@alpha",
@@ -434,6 +435,16 @@
                 "symlink": true,
                 "versions": {
                     "zoosper/editor": "0.3.2-alpha.1"
+                }
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/zoosper-github-issues",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "zoosper/github-issues": "0.3.2-alpha.1"
                 }
             }
         }

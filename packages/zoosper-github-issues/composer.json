@@ -1,0 +1,30 @@
+{
+    "name": "zoosper/github-issues",
+    "description": "Read-only GitHub Issues API Grid pilot for Zoosper.",
+    "type": "zoosper-module",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "zoosper/api-grid": "^0.3.1@alpha",
+        "zoosper/auth": "^0.3.1@alpha",
+        "zoosper/core": "^0.3.1@alpha",
+        "zoosper/database": "^0.3.1@alpha",
+        "zoosper/grid": "^0.3.1@alpha"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zoosper\\GithubIssues\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zoosper\\GithubIssues\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.5"
+        }
+    }
+}

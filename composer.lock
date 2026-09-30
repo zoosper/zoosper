@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9e568ac39f2678f0306d7bd84a2f459",
+    "content-hash": "ee3de444ef8882879d33cc3d3aebf3e6",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1588,6 +1588,42 @@
                 "MIT"
             ],
             "description": "Zoosper's loud-errors exception, sensitive-value redaction, and CLI/web error display package, built on Marko's exception base class and error formatters.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "zoosper/github-issues",
+            "version": "0.3.2-alpha.1",
+            "dist": {
+                "type": "path",
+                "url": "packages/zoosper-github-issues",
+                "reference": "8ca9fa5e29403f87fc377322eefe2c86c488697e"
+            },
+            "require": {
+                "php": "^8.5",
+                "zoosper/api-grid": "^0.3.1@alpha",
+                "zoosper/auth": "^0.3.1@alpha",
+                "zoosper/core": "^0.3.1@alpha",
+                "zoosper/database": "^0.3.1@alpha",
+                "zoosper/grid": "^0.3.1@alpha"
+            },
+            "type": "zoosper-module",
+            "autoload": {
+                "psr-4": {
+                    "Zoosper\\GithubIssues\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Zoosper\\GithubIssues\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Read-only GitHub Issues API Grid pilot for Zoosper.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -9264,6 +9300,7 @@
         "zoosper/database": 15,
         "zoosper/editor": 15,
         "zoosper/errors": 15,
+        "zoosper/github-issues": 15,
         "zoosper/global-announcements": 15,
         "zoosper/grid": 15,
         "zoosper/install": 15,

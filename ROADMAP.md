@@ -708,7 +708,7 @@ replica.
   anchors, live ordering and controlled error presentation. Do not implement
   misleading current-page-only search, filtering or sorting.
 
-- [~] **Phase 4ZN — Hardening and second pilot.** Prove the abstraction with a
+- [x] **Phase 4ZN — Hardening and second pilot.** Prove the abstraction with a
   materially different API envelope or pagination model. Cover invalid JSON,
   timeouts, non-success responses, schema drift, response-size limits, secret
   and personal-data redaction, bounded exports, diagnostics and cursor
