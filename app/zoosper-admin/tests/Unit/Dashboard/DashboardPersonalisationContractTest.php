@@ -30,7 +30,6 @@ it('keeps Dashboard personalisation escaped accessible CSP-safe and progressivel
     $root = dirname(__DIR__, 5);
     $moduleView = (string) file_get_contents($root . '/app/zoosper-admin/resources/views/dashboard/index.php');
     $themeView = (string) file_get_contents($root . '/themes/admin/default/templates/modules/zoosper-admin/dashboard/index.php');
-    $script = (string) file_get_contents($root . '/app/zoosper-admin/resources/assets/js/dashboard-personalisation.js');
     $css = (string) file_get_contents($root . '/app/zoosper-admin/resources/assets/css/admin-components.css');
     $assets = require $root . '/app/zoosper-admin/config/admin_assets.php';
 
@@ -42,10 +41,6 @@ it('keeps Dashboard personalisation escaped accessible CSP-safe and progressivel
         ->toContain('aria-live="polite"')
         ->not->toMatch('/\son[a-z]+\s*=/i')
         ->not->toContain('<script')
-        ->and($script)->toContain("'use strict'")
-        ->toContain('addEventListener')
-        ->toContain('CSS.escape')
-        ->not->toContain('innerHTML')
         ->and($css)->toContain('.dashboard-personalisation')
         ->toContain('@media (prefers-reduced-motion: reduce)')
         ->and($assets['assets']['zoosper-dashboard-personalisation-script']['screens'])->toBe(['dashboard', 'dashboard-role-defaults'])

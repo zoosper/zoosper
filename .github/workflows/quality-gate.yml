@@ -63,6 +63,8 @@ jobs:
         run: mkdir -p var && touch var/ci.sqlite
       - name: Validate shipped JavaScript syntax
         run: composer ci:js
+      - name: Run Dashboard personalisation DOM behaviour suite
+        run: composer test:dashboard-dom
       - name: Run Personal Access Token DOM behaviour suite
         run: composer test:pat-dom
       - name: Run Admin shell DOM behaviour suite
