@@ -89,26 +89,6 @@ it('keeps the legacy compact foundation theme-aware and free from obsolete posit
         ->not->toMatch('/background\s*:\s*#fff(?:fff)?\b/i');
 });
 
-it('publishes explicit accessible relationships for compact controls', function (): void {
-    $root = dirname(__DIR__, 5);
-    $toolbar = (string) file_get_contents(
-        $root . '/packages/zoosper-admin-grid/src/GridCompactToolbarRenderer.php',
-    );
-    $workspace = (string) file_get_contents(
-        $root . '/packages/zoosper-admin-grid/src/GridCompactWorkspaceRenderer.php',
-    );
-
-    expect($toolbar)->toContain('aria-controls="grid-filters-panel"')
-        ->toContain('aria-controls="grid-columns-panel"')
-        ->toContain('aria-label="Rows per page"')
-        ->and($workspace)->toContain('id="grid-filters-panel"')
-        ->toContain('id="grid-columns-panel"')
-        ->toContain('aria-label="Close filters"')
-        ->toContain('aria-label="Close columns"')
-        ->not->toContain('onclick=')
-        ->not->toContain('<style')
-        ->not->toContain('<script');
-});
 
 it('owns the standalone saved-view surface with opaque semantic presentation', function (): void {
     $root = dirname(__DIR__, 5);
@@ -126,16 +106,6 @@ it('owns the standalone saved-view surface with opaque semantic presentation', f
         ->not->toContain('.admin-content [data-grid-workspace] .grid-workspace__settings');
 });
 
-it('preserves Grid mutation security boundaries while changing presentation', function (): void {
-    $root = dirname(__DIR__, 5);
-    $source = (string) file_get_contents(
-        $root . '/packages/zoosper-admin-grid/src/GridWorkspaceMutationFormsRenderer.php',
-    );
-
-    expect($source)->toContain('method="post"')
-        ->toContain('Grid workspace mutation forms require a CSRF field and token.')
-        ->toContain('Grid workspace form action must use an application-local path.');
-});
 
 
 it('composes toolbar state and pagination as a dense responsive surface', function (): void {

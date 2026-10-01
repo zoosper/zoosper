@@ -33,7 +33,11 @@ it('groups display view export and state controls for responsive presentation', 
         ->toContain('class="grid-compact-view-tools"')
         ->toContain('class="grid-compact-state"')
         ->toContain('aria-controls="grid-filters-panel"')
-        ->toContain('aria-controls="grid-columns-panel"');
+        ->toContain('aria-controls="grid-columns-panel"')
+        ->toContain('aria-label="Rows per page"')
+        ->not->toContain('onclick=')
+        ->not->toContain('<style')
+        ->not->toContain('<script');
 });
 
 
