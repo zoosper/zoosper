@@ -586,7 +586,7 @@ replica.
 ## 11. Quality, Tooling & Repo Hygiene
 - [x] Add JavaScript syntax validation for every shipped admin asset.
 - [x] Add executable DOM behavioural coverage for column movement, live reflection, locked anchors, dirty state, persisted hidden-state synchronisation, disclosure behaviour, and page-size submission.
-- [~] Continue replacing redundant source-string assertions with executable behavioural contracts. SR-8 through SR-11 establish the preferred jsdom and real-container acceptance pattern; TS-1A removes duplicate Admin Grid renderer source inspection in favour of executable renderer and mutation-form contracts; TS-1B moves Admin shell theme, sidebar and mobile-navigation behaviour into a CI-gated jsdom suite, while the broader signal-to-noise inventory remains open.
+- [~] Continue replacing redundant source-string assertions with executable behavioural contracts. SR-8 through SR-11 establish the preferred jsdom and real-container acceptance pattern; TS-1A removes duplicate Admin Grid renderer source inspection in favour of executable renderer and mutation-form contracts; TS-1B moves Admin shell theme, sidebar and mobile-navigation behaviour into a CI-gated jsdom suite; TS-1C moves PAT scope selection, one-time-secret copy feedback and Grid enhancement into executable browser contracts, while the broader signal-to-noise inventory remains open.
 - [x] Keep one canonical admin-grid column customisation guide rather than
   phase/hotfix documentation fragments (see `docs/admin.md`).
 - [x] Add MySQL/MariaDB service container to `.github/workflows/quality-gate.yml` and run test suite against MySQL in CI.
