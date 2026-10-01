@@ -103,6 +103,7 @@
         "fresh-install:smoke": "@php vendor/bin/pest app/zoosper-core/tests/Feature/Release/FreshInstallAlphaSmokeTest.php app/zoosper-core/tests/Unit/Release/CriticalRuntimeInventoryTest.php",
         "hooks:install": "@php tools/install-git-hooks.php",
         "pre-push": "@bash .githooks/pre-push",
+        "test:settings-scope-dom": "npm run test:settings-scope-dom",
         "test:permission-explorer-dom": "npm run test:permission-explorer-dom",
         "test:dashboard-dom": "npm run test:dashboard-dom",
         "test:pat-dom": "npm run test:pat-dom",
