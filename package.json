@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build:admin-editor": "vite build --config vite.admin-editor.config.js",
+    "test:settings-workspace-dom": "node --test app/zoosper-settings/tests/Browser/settings-workspace-dom.test.js",
     "test:settings-scope-dom": "node --test app/zoosper-settings/tests/Browser/settings-scope-selector-dom.test.js",
     "test:permission-explorer-dom": "node --test app/zoosper-auth/tests/Browser/permission-explorer-dom.test.js",
     "test:dashboard-dom": "node --test app/zoosper-admin/tests/Browser/dashboard-personalisation-dom.test.js",
