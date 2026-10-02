@@ -12,6 +12,7 @@ final class InMemoryRateLimitReportSink implements RateLimitReportSinkInterface
     /** @var list<RateLimitReportEvent> */
     private array $events = [];
 
+    #[\Override]
     public function record(RateLimitReportEvent $event): void
     {
         $this->events[] = $event;

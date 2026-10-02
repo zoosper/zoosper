@@ -16,6 +16,7 @@ final readonly class AdminViewRenderer implements AdminViewRendererInterface
     }
 
     /** @param array<string, mixed> $data */
+    #[\Override]
     public function render(string $title, string $template, array $data, ?AdminUser $user, string $active = 'dashboard', ?string $shellTitle = null): string
     {
         $content = $this->templates->render($template, $data, 'default', 'admin.content');

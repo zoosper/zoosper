@@ -9,6 +9,7 @@ namespace Zoosper\Core\Site;
  */
 final class NullSiteContextProvider implements SiteContextProviderInterface
 {
+    #[\Override]
     public function resolve(object $request): ?SiteContext
     {
         return null;

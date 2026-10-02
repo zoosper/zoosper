@@ -85,9 +85,6 @@
       <code><![CDATA[$action]]></code>
       <code><![CDATA[$context]]></code>
     </InvalidArgument>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function logAction(string $action, array $context = []): void]]></code>
-    </MissingOverrideAttribute>
     <TooFewArguments>
       <code><![CDATA[logAction]]></code>
       <code><![CDATA[logAction]]></code>
@@ -105,9 +102,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-admin/src/Layout/AdminLayout.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function render(string $title, string $content, ?AdminUser $user, string $active = 'dashboard', ?string $shellTitle = null): string]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -160,13 +154,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-admin/src/Navigation/AdminSectionRegistry.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function all(): array]]></code>
-      <code><![CDATA[public function get(string $id): AdminSectionInterface]]></code>
-      <code><![CDATA[public function register(AdminSectionInterface $section): void]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="app/zoosper-admin/src/Routing/AdminPathResolver.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -192,9 +179,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-admin/src/UI/AdminViewRenderer.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function render(string $title, string $template, array $data, ?AdminUser $user, string $active = 'dashboard', ?string $shellTitle = null): string]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -240,9 +224,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Access/InMemoryRoleProvider.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function get(string $code): ?Role]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[createDefault]]></code>
     </PossiblyUnusedMethod>
@@ -379,9 +360,6 @@
     <InvalidReturnType>
       <code><![CDATA[PaginationResult]]></code>
     </InvalidReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(GridCriteria $criteria): PaginationResult]]></code>
-    </MissingOverrideAttribute>
     <PossiblyInvalidCast>
       <code><![CDATA[$criteria->filters['q'] ?? '']]></code>
       <code><![CDATA[$criteria->filters['status'] ?? '']]></code>
@@ -398,11 +376,6 @@
       <code><![CDATA[$criteria->filters['q'] ?? '']]></code>
       <code><![CDATA[$criteria->filters['status'] ?? '']]></code>
     </PossiblyInvalidCast>
-  </file>
-  <file src="app/zoosper-auth/src/Admin/Grid/AdminUserGridDataSource.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(GridCriteria $criteria): PaginationResult]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AdminUserGridIndex.php">
     <PossiblyUnusedMethod>
@@ -438,9 +411,6 @@
     <InvalidReturnType>
       <code><![CDATA[PaginationResult]]></code>
     </InvalidReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(AdminUserGridCriteria $criteria): PaginationResult]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/PdoRoleGridReadRepository.php">
     <InvalidReturnStatement>
@@ -454,19 +424,11 @@
     <InvalidReturnType>
       <code><![CDATA[PaginationResult]]></code>
     </InvalidReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(RoleGridCriteria $criteria): PaginationResult]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/RoleGridCriteria.php">
     <PossiblyInvalidCast>
       <code><![CDATA[$criteria->filters['q'] ?? '']]></code>
     </PossiblyInvalidCast>
-  </file>
-  <file src="app/zoosper-auth/src/Admin/Grid/RoleGridDataSource.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(GridCriteria $criteria): PaginationResult]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/RoleGridIndex.php">
     <PossiblyUnusedMethod>
@@ -494,9 +456,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Dashboard/AdminUserCountDashboardWidgetContributor.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function widgets(): iterable]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[AdminUserCountDashboardWidgetContributor]]></code>
     </UnusedClass>
@@ -517,11 +476,6 @@
       <code><![CDATA[DashboardRolePreferenceRepository]]></code>
     </UnusedClass>
   </file>
-  <file src="app/zoosper-auth/src/Entity/Save/AdminUserFieldDefinitionProvider.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function definitions(): iterable]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="app/zoosper-auth/src/Entity/Save/AdminUserSavePipeline.php">
     <UnusedClass>
       <code><![CDATA[AdminUserSavePipeline]]></code>
@@ -533,17 +487,11 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Http/CsrfMiddleware.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function process(Request $request, RouteContext $context, callable $next): Response]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[CsrfMiddleware]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Http/RateLimitReportOnlyAdminMiddleware.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function process(]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[RateLimitReportOnlyAdminMiddleware]]></code>
     </UnusedClass>
@@ -675,9 +623,6 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-auth/src/Service/RequireSecondFactorByDefault.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function requiresSecondFactor(int $adminUserId): bool { return true; }]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[RequireSecondFactorByDefault]]></code>
     </UnusedClass>
@@ -1133,9 +1078,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Entity/Save/EntitySaveEventDispatcher.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function dispatch(string $eventName, EntitySaveContext $context): EntitySaveContext]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[listen]]></code>
       <code><![CDATA[listeners]]></code>
@@ -1191,11 +1133,6 @@
     </RedundantCast>
   </file>
   <file src="app/zoosper-core/src/Event/EventDispatcher.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function dispatch(string $eventName, object $event): object]]></code>
-      <code><![CDATA[public function listen(string $eventName, callable|EventListenerInterface $listener): self]]></code>
-      <code><![CDATA[public function listeners(string $eventName): array]]></code>
-    </MissingOverrideAttribute>
     <PossiblyInvalidCast>
       <code><![CDATA[$listener[0] ?? 'unknown']]></code>
     </PossiblyInvalidCast>
@@ -1251,16 +1188,6 @@
     <UnusedClass>
       <code><![CDATA[FragmentResponseMetadata]]></code>
     </UnusedClass>
-  </file>
-  <file src="app/zoosper-core/src/Html/BasicHtmlSanitizer.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function sanitise(string $html): SanitizedHtml]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="app/zoosper-core/src/Html/HtmlPurifierSanitizer.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function sanitise(string $html): SanitizedHtml]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="app/zoosper-core/src/Html/HtmlSanitizerFactory.php">
     <UnusedClass>
@@ -1336,20 +1263,10 @@
       <code><![CDATA[resolveLocale]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-core/src/I18n/ArrayTranslator.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function translate(string $message, array $parameters = []): string]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="app/zoosper-core/src/I18n/I18nServiceProvider.php">
     <UnusedClass>
       <code><![CDATA[I18nServiceProvider]]></code>
     </UnusedClass>
-  </file>
-  <file src="app/zoosper-core/src/I18n/IdentityTranslator.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function translate(string $message, array $parameters = []): string]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="app/zoosper-core/src/I18n/LocaleResolution.php">
     <PossiblyUnusedProperty>
@@ -1566,17 +1483,11 @@
     </PossiblyInvalidCast>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/FileRateLimitReportSink.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function record(RateLimitReportEvent $event): void]]></code>
-    </MissingOverrideAttribute>
     <PossiblyFalseOperand>
       <code><![CDATA[json_encode($payload, JSON_UNESCAPED_SLASHES)]]></code>
     </PossiblyFalseOperand>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/InMemoryRateLimitReportSink.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function record(RateLimitReportEvent $event): void]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[InMemoryRateLimitReportSink]]></code>
     </UnusedClass>
@@ -1606,15 +1517,7 @@
       <code><![CDATA[handle]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-core/src/Security/RateLimit/StaticRateLimitPolicyResolver.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function resolve(string $key): RateLimitPolicy]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="app/zoosper-core/src/Site/NullSiteContextProvider.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function resolve(object $request): ?SiteContext]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[NullSiteContextProvider]]></code>
     </UnusedClass>
@@ -1635,12 +1538,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Site/SiteContextResolver.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function findActiveByHost(string $host): ?ResolvedSite]]></code>
-      <code><![CDATA[public function findByCode(string $code): ?ResolvedSite]]></code>
-      <code><![CDATA[public function findByHost(string $host): ?ResolvedSite]]></code>
-      <code><![CDATA[public function findDefault(): ?ResolvedSite]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[default]]></code>
     </PossiblyUnusedMethod>
@@ -1664,9 +1561,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Testing/TestCase.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function setUp(): void]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[TestCase]]></code>
     </UnusedClass>
@@ -1770,9 +1664,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-global-announcements/src/Announcement/AdminAnnouncementRepository.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function findUnacknowledgedForUser(int $userId): ?AdminAnnouncement]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[findLatestPublished]]></code>
@@ -1806,9 +1697,6 @@
     <InvalidReturnType>
       <code><![CDATA[PaginationResult]]></code>
     </InvalidReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(GridCriteria $criteria): PaginationResult]]></code>
-    </MissingOverrideAttribute>
     <PossiblyInvalidCast>
       <code><![CDATA[$criteria->filters['email'] ?? '']]></code>
       <code><![CDATA[$criteria->filters['status'] ?? '']]></code>
@@ -1874,17 +1762,11 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-mail/src/PasswordReset/SmtpAdminPasswordResetDelivery.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function deliver(AdminPasswordResetIssue $issue, string $absoluteResetUrl): void]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[SmtpAdminPasswordResetDelivery]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-mail/src/Transport/LoggedMailer.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function send(EmailMessage $message): void]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[LoggedMailer]]></code>
     </UnusedClass>
@@ -1893,9 +1775,6 @@
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->socket]]></code>
     </InvalidPropertyAssignmentValue>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function send(EmailMessage $message): void]]></code>
-    </MissingOverrideAttribute>
     <PossiblyFalsePropertyAssignmentValue>
       <code><![CDATA[@stream_socket_client($target, $errno, $errstr, $this->config->timeoutSeconds())]]></code>
     </PossiblyFalsePropertyAssignmentValue>
@@ -1928,9 +1807,6 @@
     <InvalidReturnType>
       <code><![CDATA[PaginationResult]]></code>
     </InvalidReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(GridCriteria $c): PaginationResult]]></code>
-    </MissingOverrideAttribute>
     <ParamNameMismatch>
       <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
@@ -1998,9 +1874,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Frontend/MenuFrontendNavigationContributor.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function contribute(SiteContext $siteContext, Request $request): array]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[MenuFrontendNavigationContributor]]></code>
     </UnusedClass>
@@ -2033,15 +1906,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Repository/PdoMenuAdminRepository.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function all(): array{return array_map(fn(array $r)=>$this->menu($r),$this->pdo->query('SELECT * FROM menus ORDER BY site_id,label,id')->fetchAll(PDO::FETCH_ASSOC));}]]></code>
-      <code><![CDATA[public function deleteItem(int $id): void{$s=$this->pdo->prepare('DELETE FROM menu_items WHERE id=:id');$s->execute(['id'=>$id]);}]]></code>
-      <code><![CDATA[public function deleteMenu(int $id): void{$s=$this->pdo->prepare('DELETE FROM menus WHERE id=:id');$s->execute(['id'=>$id]);}]]></code>
-      <code><![CDATA[public function find(int $id): ?Menu{$s=$this->pdo->prepare('SELECT * FROM menus WHERE id=:id');$s->execute(['id'=>$id]);$r=$s->fetch(PDO::FETCH_ASSOC);return is_array($r)?$this->menu($r):null;}]]></code>
-      <code><![CDATA[public function items(int $menuId): array{$s=$this->pdo->prepare('SELECT * FROM menu_items WHERE menu_id=:menu ORDER BY position,id');$s->execute(['menu'=>$menuId]);return array_map(fn(array $r)=>$this->item($r),$s->fetchAll(PDO::FETCH_ASSOC));}]]></code>
-      <code><![CDATA[public function saveItem(?int $id,int $menuId,?int $parentId,?int $pageId,string $label,?string $url,string $target,int $position,string $status): int{if($id!==null&&$this->treeRules->wouldCreateCycle($menuId,$id,$parentId))throw new RuntimeException('Selected parent would create a menu cycle.');$now=date('Y-m-d H:i:s');$mutable=['menu'=>$menuId,'parent'=>$parentId,'page'=>$pageId,'label'=>$label,'url'=>$url,'target'=>$target,'position'=>$position,'status'=>$status,'updated_at'=>$now];if($id===null){$s=$this->pdo->prepare('INSERT INTO menu_items(menu_id,parent_id,page_id,label,url,target,position,status,created_at,updated_at) VALUES(:menu,:parent,:page,:label,:url,:target,:position,:status,:created_at,:updated_at)');$s->execute($mutable+['created_at'=>$now]);return (int)$this->pdo->lastInsertId();}$s=$this->pdo->prepare('UPDATE menu_items SET parent_id=:parent,page_id=:page,label=:label,url=:url,target=:target,position=:position,status=:status,updated_at=:updated_at WHERE id=:id AND menu_id=:menu');$s->execute($mutable+['id'=>$id]);if($s->rowCount()>1)throw new RuntimeException('Menu item update affected an unexpected number of rows.');return $id;}]]></code>
-      <code><![CDATA[public function saveMenu(?int $id,int $siteId,string $code,string $label,string $status): int{$now=date('Y-m-d H:i:s');if($id===null){$s=$this->pdo->prepare('INSERT INTO menus(site_id,code,label,status,created_at,updated_at) VALUES(:site,:code,:label,:status,:created_at,:updated_at)');$s->execute(['site'=>$siteId,'code'=>$code,'label'=>$label,'status'=>$status,'created_at'=>$now,'updated_at'=>$now]);return (int)$this->pdo->lastInsertId();}$s=$this->pdo->prepare('UPDATE menus SET site_id=:site,code=:code,label=:label,status=:status,updated_at=:updated_at WHERE id=:id');$s->execute(['site'=>$siteId,'code'=>$code,'label'=>$label,'status'=>$status,'updated_at'=>$now,'id'=>$id]);return $id;}]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PdoMenuAdminRepository]]></code>
     </UnusedClass>
@@ -2052,9 +1916,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Repository/PdoMenuRepository.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function findActiveBySiteAndCode(int $siteId,string $code): ?Menu{$s=$this->pdo->prepare("SELECT * FROM menus WHERE site_id=:site AND code=:code AND status='active' LIMIT 1");$s->execute(['site'=>$siteId,'code'=>$code]);$r=$s->fetch(PDO::FETCH_ASSOC);return is_array($r)?new Menu((int)$r['id'],(int)$r['site_id'],(string)$r['code'],(string)$r['label'],(string)$r['status'],(string)$r['created_at'],(string)$r['updated_at']):null;}]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PdoMenuRepository]]></code>
     </UnusedClass>
@@ -2063,9 +1924,6 @@
     <LessSpecificReturnStatement>
       <code><![CDATA[$find($this->menus->tree($siteId,$menuCode,$currentPath))]]></code>
     </LessSpecificReturnStatement>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function breadcrumbs(int $siteId,string $menuCode,string $currentPath): array{$find=function(array $nodes,array $trail=[])use(&$find):array{foreach($nodes as $node){$next=[...$trail,['label'=>$node->item->label,'href'=>$node->href]];if($node->active)return $next;$found=$find($node->children,$next);if($found!==[])return $found;}return [];};return $find($this->menus->tree($siteId,$menuCode,$currentPath));}]]></code>
-    </MissingOverrideAttribute>
     <MoreSpecificReturnType>
       <code><![CDATA[array]]></code>
     </MoreSpecificReturnType>
@@ -2077,9 +1935,6 @@
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->trees->build($items,$urls,$currentPath)]]></code>
     </LessSpecificReturnStatement>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function tree(int $siteId,string $code,string $currentPath='/'): array{$menu=$this->menus->findActiveBySiteAndCode($siteId,$code);if($menu===null)return [];$items=$this->items->activeForMenu($menu->id);$ids=array_values(array_unique(array_filter(array_map(static fn($i)=>$i->pageId,$items))));$urls=[];if($ids!==[]){$marks=implode(',',array_fill(0,count($ids),'?'));$s=$this->pdo->prepare("SELECT id,slug FROM pages WHERE id IN ($marks) AND site_id=? AND status='published'");$s->execute([...$ids,$siteId]);foreach($s->fetchAll(PDO::FETCH_ASSOC) as $r)$urls[(int)$r['id']]='/'.trim((string)$r['slug'],'/');}return $this->trees->build($items,$urls,$currentPath);}]]></code>
-    </MissingOverrideAttribute>
     <MoreSpecificReturnType>
       <code><![CDATA[array]]></code>
     </MoreSpecificReturnType>
@@ -2096,19 +1951,9 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-page/src/Admin/BulkAction/PagePublishSelectedExecutor.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function actionId(): string]]></code>
-      <code><![CDATA[public function execute(]]></code>
-      <code><![CDATA[public function gridKey(): string]]></code>
-    </MissingOverrideAttribute>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(string) $identity]]></code>
     </RedundantCastGivenDocblockType>
-  </file>
-  <file src="app/zoosper-page/src/Admin/BulkAction/PagePublishSideEffects.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function afterPublished(]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="app/zoosper-page/src/Admin/Controller/PageAdminController.php">
     <InvalidOperand>
@@ -2204,9 +2049,6 @@
     </UnusedConstructor>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridDataSource.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(GridCriteria $criteria): PaginationResult]]></code>
-    </MissingOverrideAttribute>
     <PossiblyInvalidCast>
       <code><![CDATA[$criteria->filters['q'] ?? '']]></code>
       <code><![CDATA[$criteria->filters['slug'] ?? '']]></code>
@@ -2243,9 +2085,6 @@
     </RedundantCast>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridExportDataSource.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function exportRows(GridCriteria $criteria): iterable]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PageGridExportDataSource]]></code>
     </UnusedClass>
@@ -2364,9 +2203,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/PdoPageGridExportRepository.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function stream(PageGridExportCriteria $criteria): iterable]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PdoPageGridExportRepository]]></code>
     </UnusedClass>
@@ -2604,25 +2440,16 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Save/PageSaveValidationListener.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function handle(EntitySaveContext $context): void]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PageSaveValidationListener]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Seo/PageSeoContributor.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function contribute(object $resource,Site $site,?Request $request=null):?SeoMetadata{if(!$resource instanceof Page)return null;$title=trim((string)$resource->metaTitle)?:$resource->title;$d=trim((string)$resource->metaDescription)?:null;$c=$this->canonical($resource,$site,$request);$robots=$resource->isPublished()&&$request!==null?'index,follow':'noindex,nofollow';return new SeoMetadata($title,$d,$c,$robots,$title,$d,$c);}]]></code>
-    </MissingOverrideAttribute>
     <RedundantCast>
       <code><![CDATA[(string)($x['scheme']??'')]]></code>
     </RedundantCast>
   </file>
   <file src="app/zoosper-page/src/Seo/PageSitemapContributor.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function entries(Site $s):iterable{foreach($this->pages->allPublishedForSite($s->id) as $p){$u=trim((string)$p->canonicalUrl);if($u===''){ $b=rtrim(trim($s->baseUrl),'/');if($b==='')continue;$u=$b.($p->slug===($s->homepageSlug??'home')?'/':'/'.ltrim($p->slug,'/'));}yield new SitemapEntry($u);}}]]></code>
-    </MissingOverrideAttribute>
     <ParamNameMismatch>
       <code><![CDATA[$s]]></code>
     </ParamNameMismatch>
@@ -2754,11 +2581,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-settings/src/Persistence/ScopeConfigSettingStore.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function clear(string $path, ScopeType $scopeType, ?string $scopeKey): void]]></code>
-      <code><![CDATA[public function resolve(string $path, ScopeContext $context): array]]></code>
-      <code><![CDATA[public function writeMany(array $values, ScopeType $scopeType, ?string $scopeKey): void]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[ScopeConfigSettingStore]]></code>
     </UnusedClass>
@@ -2830,9 +2652,6 @@
     <MissingClosureParamType>
       <code><![CDATA[$v]]></code>
     </MissingClosureParamType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(GridCriteria $c): PaginationResult]]></code>
-    </MissingOverrideAttribute>
     <ParamNameMismatch>
       <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
@@ -2845,9 +2664,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Admin/Grid/SiteGrid.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(GridCriteria $c): PaginationResult]]></code>
-    </MissingOverrideAttribute>
     <ParamNameMismatch>
       <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
@@ -2937,9 +2753,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Site/SiteContextProviderAdapter.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function resolve(object $request): ?SiteContext]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[SiteContextProviderAdapter]]></code>
     </UnusedClass>
@@ -3093,9 +2906,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Service/AdminSecondFactorRequirement.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function requiresSecondFactor(int $adminUserId): bool { return !$this->enrollment->requiresEnrollment($adminUserId); }]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[AdminSecondFactorRequirement]]></code>
     </UnusedClass>
@@ -3343,20 +3153,7 @@
       <code><![CDATA[__construct]]></code>
     </UnusedConstructor>
   </file>
-  <file src="packages/zoosper-admin-grid/src/BulkAction/GridBulkAuditGuard.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function assertAvailable(]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="packages/zoosper-admin-grid/src/BulkAction/GridBulkCsrfVerifier.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function assertValid(string $token): void]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="packages/zoosper-admin-grid/src/BulkAction/GridBulkPermissionChecker.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function isAllowed(string $permission): bool]]></code>
-    </MissingOverrideAttribute>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(bool) ($this->checker)($permission)]]></code>
     </RedundantCastGivenDocblockType>
@@ -3491,11 +3288,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-admin-grid/src/GridWorkspaceExportAuditLoggerAdapter.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function record(GridWorkspaceExportAudit $audit): void]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceExportAuditorFactory.php">
     <UnusedClass>
       <code><![CDATA[GridWorkspaceExportAuditorFactory]]></code>
@@ -3580,20 +3372,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-admin-grid/src/NullGridWorkspaceExportAuditor.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function record(GridWorkspaceExportAudit $audit): void]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="packages/zoosper-api-grid/src/Authentication/BearerTokenAuthentication.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function apply(ApiRequest $request): ApiRequest]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="packages/zoosper-api-grid/src/Authentication/NoAuthentication.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function apply(ApiRequest $request): ApiRequest]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[NoAuthentication]]></code>
     </UnusedClass>
@@ -3656,9 +3435,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-api-grid/src/Transport/CurlJsonApiTransport.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function send(ApiRequest $request, ApiReliabilityPolicy $policy): ApiResponse]]></code>
-    </MissingOverrideAttribute>
     <TypeDoesNotContainType>
       <code><![CDATA[$responseTooLarge]]></code>
       <code><![CDATA[$responseTooLarge]]></code>
@@ -3704,9 +3480,6 @@
     <LessSpecificReturnStatement>
       <code><![CDATA[$statement->fetchAll()]]></code>
     </LessSpecificReturnStatement>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(GridCriteria $criteria): PaginationResult]]></code>
-    </MissingOverrideAttribute>
     <MoreSpecificReturnType>
       <code><![CDATA[list<array<string, mixed>>]]></code>
     </MoreSpecificReturnType>
@@ -3719,9 +3492,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-audit/src/AuditLogger.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function logAction(]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -3938,11 +3708,6 @@
       <code><![CDATA[$context]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="packages/zoosper-grid/src/BulkAction/GridBulkActionManifest.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function jsonSerialize(): array]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="packages/zoosper-grid/src/BulkAction/GridBulkActionRegistry.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[allForGrid]]></code>
@@ -4022,9 +3787,6 @@
     <InvalidReturnType>
       <code><![CDATA[PaginationResult]]></code>
     </InvalidReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(GridCriteria $c):PaginationResult{$w=['1=1'];$p=[];$q=trim((string)($c->filters['q']??''));if($q!==''){$w[]='(filename LIKE :filename_q OR original_filename LIKE :original_filename_q)';$p['filename_q']='%'.$q.'%';$p['original_filename_q']='%'.$q.'%';}$status=(string)($c->filters['status']??'');if(in_array($status,['active','archived'],true)){$w[]='status=:status';$p['status']=$status;}$mime=trim((string)($c->filters['mime_type']??''));if($mime!==''){$w[]='mime_type=:mime';$p['mime']=$mime;}$ext=trim((string)($c->filters['extension']??''));if($ext!==''){$w[]='extension=:extension';$p['extension']=$ext;}$base=' FROM media_assets WHERE '.implode(' AND ',$w);$count=$this->pdo->prepare('SELECT COUNT(*)'.$base);$count->execute($p);$sort=['id'=>'id','original_filename'=>'original_filename','mime_type'=>'mime_type','extension'=>'extension','size_bytes'=>'size_bytes','status'=>'status','created_at'=>'created_at'][$c->sortBy??'created_at']??'created_at';$dir=$c->sortDir==='asc'?'ASC':'DESC';$st=$this->pdo->prepare('SELECT id,uuid,filename,original_filename,mime_type,extension,size_bytes,public_path,status,created_at,updated_at'.$base." ORDER BY $sort $dir,id $dir LIMIT :limit OFFSET :offset");foreach($p as $k=>$v)$st->bindValue(':'.$k,$v);$st->bindValue(':limit',$c->pager->pageSize,PDO::PARAM_INT);$st->bindValue(':offset',($c->pager->page-1)*$c->pager->pageSize,PDO::PARAM_INT);$st->execute();return new PaginationResult($st->fetchAll(PDO::FETCH_ASSOC)?:[],(int)$count->fetchColumn(),$c->pager->page,$c->pager->pageSize);}]]></code>
-    </MissingOverrideAttribute>
     <ParamNameMismatch>
       <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
@@ -4086,9 +3848,6 @@
     </UnusedClass>
   </file>
   <file src="packages/zoosper-media/src/EditorJs/EditorJsImageToolConfig.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function toArray(string $csrfToken): array]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[EditorJsImageToolConfig]]></code>
     </UnusedClass>
@@ -4141,9 +3900,6 @@
       <code><![CDATA[$sourceWidth * $scale]]></code>
       <code><![CDATA[$sourceWidth / $targetRatio]]></code>
     </InvalidOperand>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function process(MediaAsset $asset, MediaDerivativePlan $plan): MediaProcessingResult]]></code>
-    </MissingOverrideAttribute>
     <PossiblyFalseArgument>
       <code><![CDATA[$transparent]]></code>
       <code><![CDATA[$white]]></code>
@@ -4167,9 +3923,6 @@
     <AssignmentToVoid>
       <code><![CDATA[$written]]></code>
     </AssignmentToVoid>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function process(MediaAsset $asset, MediaDerivativePlan $plan): MediaProcessingResult]]></code>
-    </MissingOverrideAttribute>
     <RedundantCondition>
       <code><![CDATA[is_string($asset->storagePath)]]></code>
       <code><![CDATA[isset($asset->storagePath)]]></code>
@@ -4212,9 +3965,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Processing/QueuedMediaProcessor.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function process(MediaAsset $asset, MediaDerivativePlan $plan): MediaProcessingResult]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[QueuedMediaProcessor]]></code>
     </UnusedClass>
@@ -4237,11 +3987,6 @@
       <code><![CDATA[(int)$info[0]]]></code>
       <code><![CDATA[(int)$info[1]]]></code>
     </RedundantCast>
-  </file>
-  <file src="packages/zoosper-media/src/Service/GdMediaCanonicalizer.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function canonicalize(string $sourcePath,string $destinationPath,string $extension):void]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="packages/zoosper-media/src/Service/MediaDerivativeLookup.php">
     <PossiblyUnusedMethod>
@@ -4361,23 +4106,10 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-store-orders/src/Api/StoreOrderRequestMapper.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function map(GridQuery $query, ApiGridContext $context): ApiRequest]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="packages/zoosper-store-orders/src/Api/StoreOrderResponseMapper.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function map(ApiResponse $response, GridQuery $query): GridResult]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="packages/zoosper-store-orders/src/Api/StoreOrderRowMapper.php">
     <LessSpecificImplementedReturnType>
       <code><![CDATA[array]]></code>
     </LessSpecificImplementedReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function map(array $record): array]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="packages/zoosper-store-orders/src/StoreOrderIntegrationGate.php">
     <UnusedClass>

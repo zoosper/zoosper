@@ -20,6 +20,7 @@ final readonly class QueuedMediaProcessor implements MediaProcessorInterface
     {
     }
 
+    #[\Override]
     public function process(MediaAsset $asset, MediaDerivativePlan $plan): MediaProcessingResult
     {
         $statement = $this->pdo->prepare(

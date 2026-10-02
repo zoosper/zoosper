@@ -14,6 +14,7 @@ final readonly class AdminGridAuditLoggerBridge implements GridWorkspaceAuditLog
     {
     }
 
+    #[\Override]
     public function logAction(string $action, array $context = []): void
     {
         $this->audit->logAction($action, $context);

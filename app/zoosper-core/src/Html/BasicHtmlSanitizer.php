@@ -14,6 +14,7 @@ namespace Zoosper\Core\Html;
  */
 final readonly class BasicHtmlSanitizer implements HtmlSanitizerInterface
 {
+    #[\Override]
     public function sanitise(string $html): SanitizedHtml
     {
         $clean = preg_replace('#<(script|style|iframe|object|embed|link|meta)\b[^>]*>.*?</\1>#is', '', $html) ?? '';

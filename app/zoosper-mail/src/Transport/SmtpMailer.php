@@ -24,6 +24,7 @@ final class SmtpMailer implements MailerInterface
     {
     }
 
+    #[\Override]
     public function send(EmailMessage $message): void
     {
         $this->connect();

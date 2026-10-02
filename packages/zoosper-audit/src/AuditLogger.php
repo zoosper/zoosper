@@ -38,6 +38,7 @@ final readonly class AuditLogger implements AuditLoggerInterface
      *
      * @param array<string, mixed> $metadata
      */
+    #[\Override]
     public function logAction(
         ?int $actorAdminUserId,
         ?string $actorEmail,

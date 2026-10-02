@@ -26,6 +26,7 @@ final readonly class EditorJsImageToolConfig implements EditorImageToolConfigInt
     /**
      * @return array<string, mixed>
      */
+    #[\Override]
     public function toArray(string $csrfToken): array
     {
         return [

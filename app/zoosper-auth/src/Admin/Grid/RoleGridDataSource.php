@@ -15,6 +15,7 @@ final readonly class RoleGridDataSource implements GridDataSourceInterface
     }
 
     /** @return PaginationResult<array<string, mixed>> */
+    #[\Override]
     public function paginate(GridCriteria $criteria): PaginationResult
     {
         return $this->roles->paginate(RoleGridCriteria::fromGridCriteria($criteria));

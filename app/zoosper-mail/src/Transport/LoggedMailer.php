@@ -22,6 +22,7 @@ final readonly class LoggedMailer implements MailerInterface
     {
     }
 
+    #[\Override]
     public function send(EmailMessage $message): void
     {
         $messageUuid = bin2hex(random_bytes(16));

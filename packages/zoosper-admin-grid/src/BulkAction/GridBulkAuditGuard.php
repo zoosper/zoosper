@@ -19,6 +19,7 @@ final readonly class GridBulkAuditGuard implements GridBulkAuditGuardInterface
         }
     }
 
+    #[\Override]
     public function assertAvailable(
         GridBulkActionDefinition $definition,
         GridBulkSelection $selection,

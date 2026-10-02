@@ -32,6 +32,7 @@ final readonly class InMemoryRoleProvider implements RoleProviderInterface
         ]);
     }
 
+    #[\Override]
     public function get(string $code): ?Role
     {
         return $this->roles[$code] ?? null;

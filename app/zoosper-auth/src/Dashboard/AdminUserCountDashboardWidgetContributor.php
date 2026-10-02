@@ -14,6 +14,7 @@ final readonly class AdminUserCountDashboardWidgetContributor implements Dashboa
     {
     }
 
+    #[\Override]
     public function widgets(): iterable
     {
         yield new DashboardWidget(

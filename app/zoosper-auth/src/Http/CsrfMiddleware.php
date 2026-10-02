@@ -28,6 +28,7 @@ final readonly class CsrfMiddleware implements RouteMiddleware
     ) {
     }
 
+    #[\Override]
     public function process(Request $request, RouteContext $context, callable $next): Response
     {
         if (!in_array($request->method(), self::STATEFUL_METHODS, true)) {

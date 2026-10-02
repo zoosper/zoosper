@@ -42,6 +42,7 @@ final readonly class MenuGrid implements GridDataSourceInterface
         );
     }
 
+    #[\Override]
     public function paginate(GridCriteria $c): PaginationResult
     {
         $w = ['1=1'];

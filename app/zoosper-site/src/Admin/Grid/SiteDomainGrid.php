@@ -46,6 +46,7 @@ final readonly class SiteDomainGrid implements GridDataSourceInterface
         );
     }
 
+    #[\Override]
     public function paginate(GridCriteria $c): PaginationResult
     {
         $w = ['1=1'];

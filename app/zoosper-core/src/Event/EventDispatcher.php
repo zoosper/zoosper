@@ -23,6 +23,7 @@ final class EventDispatcher implements EventDispatcherInterface
     {
     }
 
+    #[\Override]
     public function listen(string $eventName, callable|EventListenerInterface $listener): self
     {
         $this->listeners[$eventName] ??= [];
@@ -31,6 +32,7 @@ final class EventDispatcher implements EventDispatcherInterface
         return $this;
     }
 
+    #[\Override]
     public function dispatch(string $eventName, object $event): object
     {
         foreach ($this->listeners[$eventName] ?? [] as $listener) {
@@ -53,6 +55,7 @@ final class EventDispatcher implements EventDispatcherInterface
     }
 
     /** @return list<callable|EventListenerInterface> */
+    #[\Override]
     public function listeners(string $eventName): array
     {
         return $this->listeners[$eventName] ?? [];

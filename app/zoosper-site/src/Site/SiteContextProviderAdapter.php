@@ -15,6 +15,7 @@ use Zoosper\Core\Site\SiteContextProviderInterface;
  */
 final class SiteContextProviderAdapter implements SiteContextProviderInterface
 {
+    #[\Override]
     public function resolve(object $request): ?SiteContext
     {
         return null;

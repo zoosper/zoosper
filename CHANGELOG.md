@@ -1,4 +1,5 @@
 # Changelog
+- Completed the `MissingOverrideAttribute` baseline closure by adding the final 88 explicit `#[Override]` contracts across 71 interface and inheritance implementations, with no runtime behaviour changes.
 - Continued Psalm baseline reduction across 21 two-method adapters and repositories, adding 42 explicit `#[Override]` contracts without changing runtime behaviour.
 - Continued Psalm baseline reduction across the complete 24-command console cohort, adding 72 explicit `#[Override]` contracts for command name, description and execution methods without changing command behaviour.
 - Continued Psalm baseline reduction with 31 explicit `#[Override]` contracts across Admin navigation and messages, Auth Dashboard preferences, and Core/Site lookup adapters; no runtime behaviour changed.

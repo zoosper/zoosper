@@ -41,6 +41,7 @@ final readonly class AdminAnnouncementRepository implements AdminAnnouncementPro
         return is_array($row) ? $this->hydrate($row) : null;
     }
 
+    #[\Override]
     public function findUnacknowledgedForUser(int $userId): ?AdminAnnouncement
     {
         $statement = $this->pdo->prepare(

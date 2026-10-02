@@ -12,6 +12,7 @@ use Zoosper\Grid\DataSource\GridQuery;
 
 final class StoreOrderRequestMapper implements ApiGridRequestMapperInterface
 {
+    #[\Override]
     public function map(GridQuery $query, ApiGridContext $context): ApiRequest
     {
         $parameters = [

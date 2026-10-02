@@ -17,6 +17,7 @@ final readonly class GridBulkPermissionChecker implements GridBulkPermissionChec
         }
     }
 
+    #[\Override]
     public function isAllowed(string $permission): bool
     {
         return $permission !== '' && (bool) ($this->checker)($permission);

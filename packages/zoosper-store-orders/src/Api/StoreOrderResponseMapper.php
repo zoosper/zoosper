@@ -16,6 +16,7 @@ final readonly class StoreOrderResponseMapper implements ApiGridResponseMapperIn
     {
     }
 
+    #[\Override]
     public function map(ApiResponse $response, GridQuery $query): GridResult
     {
         $records = $response->decodedBody['records'] ?? null;

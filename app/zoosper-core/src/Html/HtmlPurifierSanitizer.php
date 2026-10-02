@@ -57,6 +57,7 @@ final readonly class HtmlPurifierSanitizer implements HtmlSanitizerInterface
         $this->purifier = new HTMLPurifier($config);
     }
 
+    #[\Override]
     public function sanitise(string $html): SanitizedHtml
     {
         return new SanitizedHtml($this->purifier->purify($html));

@@ -17,6 +17,7 @@ final readonly class GridBulkCsrfVerifier implements GridBulkCsrfVerifierInterfa
         }
     }
 
+    #[\Override]
     public function assertValid(string $token): void
     {
         if ($token === '' || !($this->validator)($token)) {

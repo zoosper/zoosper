@@ -20,6 +20,7 @@ final readonly class MenuFrontendNavigationContributor implements FrontendNaviga
     ) {
     }
 
+    #[\Override]
     public function contribute(SiteContext $siteContext, Request $request): array
     {
         if ($siteContext->siteId === null) {

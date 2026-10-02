@@ -12,6 +12,7 @@ use Zoosper\ApiGrid\Mapping\ApiGridRowMapperInterface;
 final class StoreOrderRowMapper implements ApiGridRowMapperInterface
 {
     /** @param array<string, mixed> $record */
+    #[\Override]
     public function map(array $record): array
     {
         $orderId = trim((string) ($record['order_id'] ?? ''));

@@ -21,6 +21,7 @@ final readonly class GdMediaProcessor implements MediaProcessorInterface
     ) {
     }
 
+    #[\Override]
     public function process(MediaAsset $asset, MediaDerivativePlan $plan): MediaProcessingResult
     {
         return $this->processStoragePath($asset->storagePath, $plan);

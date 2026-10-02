@@ -16,6 +16,7 @@ final readonly class PageGridDataSource implements GridDataSourceInterface
     }
 
     /** @return PaginationResult<array<string, mixed>> */
+    #[\Override]
     public function paginate(GridCriteria $criteria): PaginationResult
     {
         $siteIds = [];

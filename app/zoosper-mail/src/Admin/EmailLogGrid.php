@@ -48,6 +48,7 @@ final readonly class EmailLogGrid implements GridDataSourceInterface
         );
     }
 
+    #[\Override]
     public function paginate(GridCriteria $criteria): PaginationResult
     {
         [$where, $parameters] = $this->where($criteria);

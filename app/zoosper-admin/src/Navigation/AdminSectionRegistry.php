@@ -13,12 +13,14 @@ final class AdminSectionRegistry implements AdminSectionRegistryInterface
     /** @var array<string, AdminSectionInterface> */
     private array $sections = [];
 
+    #[\Override]
     public function register(AdminSectionInterface $section): void
     {
         $this->sections[$section->getId()] = $section;
     }
 
     /** @return list<AdminSectionInterface> */
+    #[\Override]
     public function all(): array
     {
         $sections = array_values($this->sections);
@@ -29,6 +31,7 @@ final class AdminSectionRegistry implements AdminSectionRegistryInterface
         return $sections;
     }
 
+    #[\Override]
     public function get(string $id): AdminSectionInterface
     {
         return $this->sections[$id] ?? throw new AdminException(

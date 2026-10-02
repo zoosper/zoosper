@@ -51,6 +51,7 @@ final readonly class AccessTokenGrid implements GridDataSourceInterface
         );
     }
 
+    #[\Override]
     public function paginate(GridCriteria $criteria): PaginationResult
     {
         $where = ['admin_user_id=:owner'];

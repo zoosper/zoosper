@@ -25,6 +25,7 @@ final readonly class RateLimitReportOnlyAdminMiddleware implements RouteMiddlewa
     ) {
     }
 
+    #[\Override]
     public function process(
         Request $request,
         RouteContext $context,

@@ -39,6 +39,7 @@ abstract class TestCase extends BaseTestCase
      * We deliberately avoid a full application/HTTP bootstrap. Tests register
      * only the specific services they need via {@see self::fakeService()}.
      */
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

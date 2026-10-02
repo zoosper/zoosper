@@ -20,6 +20,7 @@ final readonly class PagePublishSideEffects implements PagePublishSideEffectsInt
     ) {
     }
 
+    #[\Override]
     public function afterPublished(
         Page $page,
         GridBulkExecutionContext $context,

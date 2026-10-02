@@ -74,6 +74,7 @@ final readonly class AuditLogRepository implements GridDataSourceInterface
      *
      * @return PaginationResult<array<string, mixed>>
      */
+    #[\Override]
     public function paginate(GridCriteria $criteria): PaginationResult
     {
         [$where, $params] = $this->whereClause($criteria);

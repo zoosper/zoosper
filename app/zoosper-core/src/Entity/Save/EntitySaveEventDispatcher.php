@@ -23,6 +23,7 @@ final class EntitySaveEventDispatcher implements EntitySaveEventDispatcherInterf
         return $this;
     }
 
+    #[\Override]
     public function dispatch(string $eventName, EntitySaveContext $context): EntitySaveContext
     {
         foreach ($this->listeners[$eventName] ?? [] as $listener) {

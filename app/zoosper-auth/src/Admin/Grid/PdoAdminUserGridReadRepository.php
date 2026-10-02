@@ -16,6 +16,7 @@ final readonly class PdoAdminUserGridReadRepository implements AdminUserGridRead
     ) {
     }
 
+    #[\Override]
     public function paginate(AdminUserGridCriteria $criteria): PaginationResult
     {
         $plan = $this->sql->build($criteria);

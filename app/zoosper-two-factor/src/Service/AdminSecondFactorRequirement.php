@@ -6,6 +6,7 @@ use Zoosper\Auth\Contract\SecondFactorRequirementInterface;
 final readonly class AdminSecondFactorRequirement implements SecondFactorRequirementInterface
 {
     public function __construct(private AdminTwoFactorEnrollmentService $enrollment) {}
+    #[\Override]
     public function requiresSecondFactor(int $adminUserId): bool { return !$this->enrollment->requiresEnrollment($adminUserId); }
 }
 

@@ -17,6 +17,7 @@ final readonly class BearerTokenAuthentication implements ApiAuthenticationInter
         }
     }
 
+    #[\Override]
     public function apply(ApiRequest $request): ApiRequest
     {
         return $request->withHeaders(['Authorization' => 'Bearer ' . $this->token]);

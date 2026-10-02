@@ -23,6 +23,7 @@ final class PageSaveValidationListener implements EntitySaveEventListenerInterfa
 {
     private const MIN_TITLE_LENGTH = 3;
 
+    #[\Override]
     public function handle(EntitySaveContext $context): void
     {
         if ($context->entityType() !== 'page') {

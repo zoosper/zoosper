@@ -18,6 +18,7 @@ final readonly class ArrayTranslator implements TranslatorInterface
     {
     }
 
+    #[\Override]
     public function translate(string $message, array $parameters = []): string
     {
         $translated = $this->catalogue->get($message);

@@ -15,6 +15,7 @@ final readonly class AdminUserGridDataSource implements GridDataSourceInterface
     }
 
     /** @return PaginationResult<array<string, mixed>> */
+    #[\Override]
     public function paginate(GridCriteria $criteria): PaginationResult
     {
         return $this->users->paginate(AdminUserGridCriteria::fromGridCriteria($criteria));

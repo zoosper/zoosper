@@ -39,6 +39,7 @@ final readonly class LocalCopyMediaProcessor implements MediaProcessorInterface
     /**
      * Process a persisted media asset through the engine-free local copy adapter.
      */
+    #[\Override]
     public function process(MediaAsset $asset, MediaDerivativePlan $plan): MediaProcessingResult
     {
         return $this->processStoragePath($this->storagePathFromAsset($asset), $plan);

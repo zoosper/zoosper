@@ -16,6 +16,7 @@ final class FileRateLimitReportSink implements RateLimitReportSinkInterface
     ) {
     }
 
+    #[\Override]
     public function record(RateLimitReportEvent $event): void
     {
         $directory = dirname($this->path);

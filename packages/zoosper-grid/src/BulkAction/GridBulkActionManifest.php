@@ -17,6 +17,7 @@ final readonly class GridBulkActionManifest implements JsonSerializable
     }
 
     /** @return array{gridKey: string, actions: list<array<string, bool|int|string|null>>} */
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

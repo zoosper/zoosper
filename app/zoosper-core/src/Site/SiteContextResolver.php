@@ -216,21 +216,25 @@ final readonly class SiteContextResolver
             ) {
             }
 
+            #[\Override]
             public function findByHost(string $host): ?ResolvedSite
             {
                 return $this->callRepository(['findByHost', 'findByDomain', 'findActiveByHost'], $host);
             }
 
+            #[\Override]
             public function findActiveByHost(string $host): ?ResolvedSite
             {
                 return $this->callRepository(['findActiveByHost', 'findByHost', 'findByDomain'], $host);
             }
 
+            #[\Override]
             public function findByCode(string $code): ?ResolvedSite
             {
                 return $this->callRepository(['findByCode', 'findOneByCode'], $code);
             }
 
+            #[\Override]
             public function findDefault(): ?ResolvedSite
             {
                 foreach (['findDefault', 'getDefault', 'default'] as $method) {

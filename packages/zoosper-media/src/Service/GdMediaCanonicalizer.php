@@ -7,6 +7,7 @@ use GdImage;use RuntimeException;
 final readonly class GdMediaCanonicalizer implements MediaCanonicalizerInterface
 {
     private const MAX_PIXELS = 40_000_000;
+    #[\Override]
     public function canonicalize(string $sourcePath,string $destinationPath,string $extension):void
     {
         if(!extension_loaded('gd'))throw new RuntimeException('GD is required for secure media canonicalisation.');

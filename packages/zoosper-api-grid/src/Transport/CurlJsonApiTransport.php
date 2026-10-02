@@ -16,6 +16,7 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
         }
     }
 
+    #[\Override]
     public function send(ApiRequest $request, ApiReliabilityPolicy $policy): ApiResponse
     {
         $url = rtrim($this->baseUrl, '/') . $request->endpoint;

@@ -13,6 +13,7 @@ namespace Zoosper\Core\I18n;
  */
 final readonly class IdentityTranslator implements TranslatorInterface
 {
+    #[\Override]
     public function translate(string $message, array $parameters = []): string
     {
         if ($parameters === []) {

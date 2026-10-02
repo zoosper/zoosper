@@ -14,6 +14,7 @@ final class StaticRateLimitPolicyResolver implements RateLimitPolicyResolverInte
     {
     }
 
+    #[\Override]
     public function resolve(string $key): RateLimitPolicy
     {
         if ($key === '' || ! isset($this->rules[$key])) {

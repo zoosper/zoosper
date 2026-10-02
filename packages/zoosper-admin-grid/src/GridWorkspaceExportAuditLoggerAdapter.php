@@ -13,6 +13,7 @@ final readonly class GridWorkspaceExportAuditLoggerAdapter implements GridWorksp
     {
     }
 
+    #[\Override]
     public function record(GridWorkspaceExportAudit $audit): void
     {
         $this->logger->logAction(self::ACTION, [

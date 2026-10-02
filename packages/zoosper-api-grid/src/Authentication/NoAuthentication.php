@@ -8,6 +8,7 @@ use Zoosper\ApiGrid\Transport\ApiRequest;
 
 final class NoAuthentication implements ApiAuthenticationInterface
 {
+    #[\Override]
     public function apply(ApiRequest $request): ApiRequest
     {
         return $request;

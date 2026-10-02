@@ -16,6 +16,7 @@ final readonly class PdoRoleGridReadRepository implements RoleGridReadRepository
     ) {
     }
 
+    #[\Override]
     public function paginate(RoleGridCriteria $criteria): PaginationResult
     {
         $plan = $this->sql->build($criteria);

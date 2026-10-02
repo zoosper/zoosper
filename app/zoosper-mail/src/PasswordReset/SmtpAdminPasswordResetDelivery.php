@@ -18,6 +18,7 @@ final readonly class SmtpAdminPasswordResetDelivery implements AdminPasswordRese
     {
     }
 
+    #[\Override]
     public function deliver(AdminPasswordResetIssue $issue, string $absoluteResetUrl): void
     {
         $this->smtp->send(new EmailMessage(

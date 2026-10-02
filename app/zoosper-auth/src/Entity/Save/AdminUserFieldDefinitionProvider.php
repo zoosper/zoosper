@@ -18,6 +18,7 @@ use Zoosper\Core\Entity\Save\FieldStorageType;
  */
 final readonly class AdminUserFieldDefinitionProvider implements FieldDefinitionProviderInterface
 {
+    #[\Override]
     public function definitions(): iterable
     {
         return [

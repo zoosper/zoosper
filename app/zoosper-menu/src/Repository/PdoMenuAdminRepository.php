@@ -4,12 +4,19 @@ namespace Zoosper\Menu\Repository;
 use PDO; use RuntimeException; use Zoosper\Menu\Contract\{MenuAdminRepositoryInterface,MenuItemRepositoryInterface}; use Zoosper\Menu\Model\{Menu,MenuItem};
 final readonly class PdoMenuAdminRepository implements MenuAdminRepositoryInterface {
  public function __construct(private PDO $pdo,private MenuItemRepositoryInterface $treeRules){}
+ #[\Override]
  public function all(): array{return array_map(fn(array $r)=>$this->menu($r),$this->pdo->query('SELECT * FROM menus ORDER BY site_id,label,id')->fetchAll(PDO::FETCH_ASSOC));}
+ #[\Override]
  public function find(int $id): ?Menu{$s=$this->pdo->prepare('SELECT * FROM menus WHERE id=:id');$s->execute(['id'=>$id]);$r=$s->fetch(PDO::FETCH_ASSOC);return is_array($r)?$this->menu($r):null;}
+ #[\Override]
  public function items(int $menuId): array{$s=$this->pdo->prepare('SELECT * FROM menu_items WHERE menu_id=:menu ORDER BY position,id');$s->execute(['menu'=>$menuId]);return array_map(fn(array $r)=>$this->item($r),$s->fetchAll(PDO::FETCH_ASSOC));}
+ #[\Override]
  public function saveMenu(?int $id,int $siteId,string $code,string $label,string $status): int{$now=date('Y-m-d H:i:s');if($id===null){$s=$this->pdo->prepare('INSERT INTO menus(site_id,code,label,status,created_at,updated_at) VALUES(:site,:code,:label,:status,:created_at,:updated_at)');$s->execute(['site'=>$siteId,'code'=>$code,'label'=>$label,'status'=>$status,'created_at'=>$now,'updated_at'=>$now]);return (int)$this->pdo->lastInsertId();}$s=$this->pdo->prepare('UPDATE menus SET site_id=:site,code=:code,label=:label,status=:status,updated_at=:updated_at WHERE id=:id');$s->execute(['site'=>$siteId,'code'=>$code,'label'=>$label,'status'=>$status,'updated_at'=>$now,'id'=>$id]);return $id;}
+ #[\Override]
  public function saveItem(?int $id,int $menuId,?int $parentId,?int $pageId,string $label,?string $url,string $target,int $position,string $status): int{if($id!==null&&$this->treeRules->wouldCreateCycle($menuId,$id,$parentId))throw new RuntimeException('Selected parent would create a menu cycle.');$now=date('Y-m-d H:i:s');$mutable=['menu'=>$menuId,'parent'=>$parentId,'page'=>$pageId,'label'=>$label,'url'=>$url,'target'=>$target,'position'=>$position,'status'=>$status,'updated_at'=>$now];if($id===null){$s=$this->pdo->prepare('INSERT INTO menu_items(menu_id,parent_id,page_id,label,url,target,position,status,created_at,updated_at) VALUES(:menu,:parent,:page,:label,:url,:target,:position,:status,:created_at,:updated_at)');$s->execute($mutable+['created_at'=>$now]);return (int)$this->pdo->lastInsertId();}$s=$this->pdo->prepare('UPDATE menu_items SET parent_id=:parent,page_id=:page,label=:label,url=:url,target=:target,position=:position,status=:status,updated_at=:updated_at WHERE id=:id AND menu_id=:menu');$s->execute($mutable+['id'=>$id]);if($s->rowCount()>1)throw new RuntimeException('Menu item update affected an unexpected number of rows.');return $id;}
+ #[\Override]
  public function deleteMenu(int $id): void{$s=$this->pdo->prepare('DELETE FROM menus WHERE id=:id');$s->execute(['id'=>$id]);}
+ #[\Override]
  public function deleteItem(int $id): void{$s=$this->pdo->prepare('DELETE FROM menu_items WHERE id=:id');$s->execute(['id'=>$id]);}
  private function menu(array $r): Menu{return new Menu((int)$r['id'],(int)$r['site_id'],(string)$r['code'],(string)$r['label'],(string)$r['status'],(string)$r['created_at'],(string)$r['updated_at']);}
  private function item(array $r): MenuItem{return new MenuItem((int)$r['id'],(int)$r['menu_id'],$r['parent_id']===null?null:(int)$r['parent_id'],$r['page_id']===null?null:(int)$r['page_id'],(string)$r['label'],$r['url']===null?null:(string)$r['url'],(string)$r['target'],(int)$r['position'],(string)$r['status']);}

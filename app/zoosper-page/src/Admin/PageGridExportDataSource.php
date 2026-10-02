@@ -13,6 +13,7 @@ final readonly class PageGridExportDataSource implements PageGridExportDataSourc
     {
     }
 
+    #[\Override]
     public function exportRows(GridCriteria $criteria): iterable
     {
         return $this->repository->stream(

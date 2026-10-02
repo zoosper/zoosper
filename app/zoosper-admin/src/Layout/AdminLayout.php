@@ -46,6 +46,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
      * admin UI notices only and must never include secrets, OTPs, reset tokens,
      * payment data, raw exception traces, session IDs or SMTP passwords.
      */
+    #[\Override]
     public function render(string $title, string $content, ?AdminUser $user, string $active = 'dashboard', ?string $shellTitle = null): string
     {
         $userName = $user !== null ? $user->name : 'Guest';

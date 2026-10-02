@@ -16,11 +16,13 @@ final readonly class ScopeConfigSettingStore implements ScopedSettingStoreInterf
     {
     }
 
+    #[\Override]
     public function resolve(string $path, ScopeContext $context): array
     {
         return $this->repository->getWithSource($path, $context);
     }
 
+    #[\Override]
     public function writeMany(array $values, ScopeType $scopeType, ?string $scopeKey): void
     {
         $this->pdo->beginTransaction();
@@ -37,6 +39,7 @@ final readonly class ScopeConfigSettingStore implements ScopedSettingStoreInterf
         }
     }
 
+    #[\Override]
     public function clear(string $path, ScopeType $scopeType, ?string $scopeKey): void
     {
         $this->repository->clear($path, $scopeType, $scopeKey);

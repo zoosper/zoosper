@@ -37,6 +37,7 @@ SQL;
     ) {
     }
 
+    #[\Override]
     public function stream(PageGridExportCriteria $criteria): iterable
     {
         $plan = $this->sql->build($criteria);

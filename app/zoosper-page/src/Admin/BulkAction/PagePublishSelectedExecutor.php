@@ -25,16 +25,19 @@ final readonly class PagePublishSelectedExecutor implements GridBulkActionExecut
     ) {
     }
 
+    #[\Override]
     public function gridKey(): string
     {
         return PageGridWorkspace::GRID_KEY;
     }
 
+    #[\Override]
     public function actionId(): string
     {
         return self::ACTION_ID;
     }
 
+    #[\Override]
     public function execute(
         GridBulkActionDefinition $definition,
         GridBulkSelection $selection,
