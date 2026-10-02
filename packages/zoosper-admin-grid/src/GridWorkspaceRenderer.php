@@ -44,8 +44,8 @@ final readonly class GridWorkspaceRenderer
         $html = '<label>View <select name="bookmark_id" data-grid-view-selector>';
         $html .= '<option value="">Default view</option>';
         foreach ($state->bookmarks as $bookmark) {
-            $html .= '<option value="' . (int) $bookmark['id'] . '"';
-            if ($state->activeBookmarkId === (int) $bookmark['id']) {
+            $html .= '<option value="' . $bookmark['id'] . '"';
+            if ($state->activeBookmarkId === $bookmark['id']) {
                 $html .= ' selected';
             }
             $html .= '>' . $this->escape($bookmark['name']);

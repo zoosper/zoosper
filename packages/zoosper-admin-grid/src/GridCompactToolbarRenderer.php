@@ -34,17 +34,17 @@ final readonly class GridCompactToolbarRenderer
             . ($activeBookmarkId === null ? ' selected' : '') . '>Default view</option>';
         foreach ($bookmarks as $bookmark) {
             $url = $viewAction . '?' . http_build_query(
-                ['bookmark_id' => (int) $bookmark['id']],
+                ['bookmark_id' => $bookmark['id']],
                 '',
                 '&',
                 PHP_QUERY_RFC3986,
             );
-            $name = (string) $bookmark['name'];
-            if ((bool) $bookmark['is_default']) {
+            $name = $bookmark['name'];
+            if ($bookmark['is_default']) {
                 $name .= ' (default)';
             }
             $viewOptions .= '<option value="' . $this->escape($url) . '"'
-                . ((int) $bookmark['id'] === $activeBookmarkId ? ' selected' : '') . '>'
+                . ($bookmark['id'] === $activeBookmarkId ? ' selected' : '') . '>'
                 . $this->escape($name) . '</option>';
         }
 

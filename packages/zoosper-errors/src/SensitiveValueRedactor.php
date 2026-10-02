@@ -39,7 +39,7 @@ final readonly class SensitiveValueRedactor
     {
         $redacted = [];
         foreach ($data as $key => $value) {
-            $keyString = (string) $key;
+            $keyString = $key;
             if ($this->isSensitiveKey($keyString)) {
                 $redacted[$keyString] = '[redacted]';
                 continue;

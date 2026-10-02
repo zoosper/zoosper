@@ -35,7 +35,7 @@ final class GridHtmlRenderer
             $hidden.='<input type="hidden" name="sort" value="'.$this->e($criteria->sortBy).'">';
             $hidden.='<input type="hidden" name="dir" value="'.$this->e($criteria->sortDir).'">';
         }
-        $hidden.='<input type="hidden" name="page_size" value="'.(int)$criteria->pager->pageSize.'">';
+        $hidden.='<input type="hidden" name="page_size" value="'.$criteria->pager->pageSize.'">';
         return '<form method="get" action="'.$this->e($baseUrl).'" class="grid-filters">'.$fields.$hidden
             .'<button type="submit" class="grid-filters__apply">Filter</button>'
             .'<a href="'.$this->e($baseUrl).'" class="grid-filters__reset">Reset</a></form>';

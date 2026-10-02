@@ -61,10 +61,10 @@ final readonly class PackageModuleScaffolder
             throw new RuntimeException('Package module name must include vendor and module parts.');
         }
 
-        $vendor = $this->studly((string) $parts[0]);
+        $vendor = $this->studly($parts[0]);
         $moduleParts = array_values(array_map('strval', array_slice($parts, 1)));
         $module = implode('', array_map(fn (string $part): string => $this->studly($part), $moduleParts));
-        $vendorPackage = $this->kebab((string) $parts[0]);
+        $vendorPackage = $this->kebab($parts[0]);
         $modulePackage = implode('-', array_map(fn (string $part): string => $this->kebab($part), $moduleParts));
 
         return [

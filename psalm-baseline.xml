@@ -273,13 +273,6 @@
       <code><![CDATA[$sortOrder]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="app/zoosper-auth/src/Acl/AclTreeBuilder.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $group['sort_order']]]></code>
-      <code><![CDATA[(string) $group['code']]]></code>
-      <code><![CDATA[(string) $group['label']]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="app/zoosper-auth/src/Admin/AccountLockout/AdminAccountUnlockResponder.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -327,9 +320,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$deleteUrl]]></code>
     </PossiblyNullArgument>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $message]]></code>
-    </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$error]]></code>
     </RiskyTruthyFalsyComparison>
@@ -618,9 +608,6 @@
     <PossiblyUnusedReturnValue>
       <code><![CDATA[string]]></code>
     </PossiblyUnusedReturnValue>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $_SESSION['_csrf_token']]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-auth/src/Service/RequireSecondFactorByDefault.php">
     <UnusedClass>
@@ -664,32 +651,16 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-core/src/Asset/AssetController.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $key]]></code>
-      <code><![CDATA[(string) $value]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="app/zoosper-core/src/Asset/AssetModuleRegistry.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[all]]></code>
       <code><![CDATA[has]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $dir]]></code>
-      <code><![CDATA[(string) $name]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-core/src/Asset/AssetResolver.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[supportedTypes]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-core/src/Asset/AssetRouteRegistrar.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $result['status']]]></code>
-      <code><![CDATA[(string) $result['body']]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-core/src/Asset/ModuleAssetManifestLoader.php">
     <PossiblyUnusedReturnValue>
@@ -727,9 +698,6 @@
       <code><![CDATA[privateFragment]]></code>
       <code><![CDATA[publicFragment]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $key]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-core/src/Cache/HttpCachePolicy.php">
     <PossiblyUnusedMethod>
@@ -994,9 +962,6 @@
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Entity/Extension/EntityExtensionDataPersister.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $module]]></code>
-    </RedundantCastGivenDocblockType>
     <UnusedClass>
       <code><![CDATA[EntityExtensionDataPersister]]></code>
     </UnusedClass>
@@ -1237,7 +1202,6 @@
       <code><![CDATA[withForm]]></code>
     </PossiblyUnusedMethod>
     <RedundantCast>
-      <code><![CDATA[(string) $queryString]]></code>
       <code><![CDATA[(string) ($_SERVER['HTTP_HOST'] ?? 'localhost')]]></code>
       <code><![CDATA[(string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')]]></code>
     </RedundantCast>
@@ -1254,9 +1218,6 @@
     <RedundantCast>
       <code><![CDATA[(string) ($_ENV['TRUSTED_PROXIES'] ?? '')]]></code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $processValue]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-core/src/I18n/AdminTranslatorResolver.php">
     <PossiblyUnusedMethod>
@@ -1282,11 +1243,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[isSupportedAdminLocale]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(string) $code]]></code>
-      <code><![CDATA[(string) $code]]></code>
-      <code><![CDATA[(string) $code]]></code>
-    </RedundantCast>
   </file>
   <file src="app/zoosper-core/src/I18n/TranslationCatalogue.php">
     <PossiblyUnusedMethod>
@@ -1390,11 +1346,6 @@
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Routing/CachingFallbackHandler.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(array) $cached['headers']]]></code>
-      <code><![CDATA[(int) $cached['statusCode']]]></code>
-      <code><![CDATA[(string) $cached['body']]]></code>
-    </RedundantCastGivenDocblockType>
     <UnusedClass>
       <code><![CDATA[CachingFallbackHandler]]></code>
     </UnusedClass>
@@ -1465,10 +1416,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $parts[0]]]></code>
-      <code><![CDATA[(string) $parts[0]]]></code>
-    </RedundantCastGivenDocblockType>
     <RedundantFunctionCall>
       <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
@@ -1645,11 +1592,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[json_encode($this->imageToolConfig->toArray($this->csrf->token()), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="app/zoosper-editor/src/TextareaContentEditor.php">
-    <RedundantCast>
-      <code><![CDATA[(string) $id]]></code>
-    </RedundantCast>
   </file>
   <file src="app/zoosper-global-announcements/src/Announcement/AdminAnnouncement.php">
     <PossiblyUnusedMethod>
@@ -1950,11 +1892,6 @@
       <code><![CDATA[empty($parts['host'])]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="app/zoosper-page/src/Admin/BulkAction/PagePublishSelectedExecutor.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $identity]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="app/zoosper-page/src/Admin/Controller/PageAdminController.php">
     <InvalidOperand>
       <code><![CDATA[$result->pageId]]></code>
@@ -2234,15 +2171,13 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Application/Save/PageSaveCoordinator.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$pageId]]></code>
+      <code><![CDATA[$pageId]]></code>
+    </PossiblyNullArgument>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(int) $pageId]]></code>
-    </RedundantCast>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $message]]></code>
-    </RedundantCastGivenDocblockType>
     <RedundantCondition>
       <code><![CDATA[$pageId !== null]]></code>
       <code><![CDATA[$this->revisions !== null && $pageId !== null]]></code>
@@ -2343,11 +2278,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Form/PageStoreViewOptionsProvider.php">
-    <RedundantCast>
-      <code><![CDATA[(int) $site->id]]></code>
-      <code><![CDATA[(string) $site->code]]></code>
-      <code><![CDATA[(string) $site->name]]></code>
-    </RedundantCast>
     <UnusedClass>
       <code><![CDATA[PageStoreViewOptionsProvider]]></code>
     </UnusedClass>
@@ -2402,9 +2332,6 @@
       <code><![CDATA[int]]></code>
       <code><![CDATA[int]]></code>
     </PossiblyUnusedReturnValue>
-    <RedundantCast>
-      <code><![CDATA[(int)$pageId]]></code>
-    </RedundantCast>
   </file>
   <file src="app/zoosper-page/src/Repository/PageSiteAssignmentRepository.php">
     <PossiblyUnusedMethod>
@@ -3047,10 +2974,6 @@
      *     processors: array<string, list<class-string<AdminFormProcessorInterface>>>
      * }]]></code>
     </MoreSpecificReturnType>
-    <RedundantCast>
-      <code><![CDATA[(string) $file]]></code>
-      <code><![CDATA[(string) $file]]></code>
-    </RedundantCast>
     <RedundantCondition>
       <code><![CDATA[is_array($config)]]></code>
     </RedundantCondition>
@@ -3108,9 +3031,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $errors['_form']]]></code>
-    </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$error]]></code>
@@ -3164,20 +3084,12 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridCompactToolbarRenderer.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(bool) $bookmark['is_default']]]></code>
-      <code><![CDATA[(int) $bookmark['id']]]></code>
-      <code><![CDATA[(int) $bookmark['id']]]></code>
-      <code><![CDATA[(string) $bookmark['name']]]></code>
-    </RedundantCastGivenDocblockType>
     <UnusedParam>
       <code><![CDATA[$viewLabel]]></code>
     </UnusedParam>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridCompactWorkspaceRenderer.php">
     <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int)$bookmark['id']]]></code>
-      <code><![CDATA[(string)$bookmark['name']]]></code>
       <code><![CDATA[(string)$value]]></code>
     </RedundantCastGivenDocblockType>
   </file>
@@ -3234,9 +3146,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $bookmark['id']]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceActiveBookmark.php">
     <RedundantCastGivenDocblockType>
@@ -3307,9 +3216,6 @@
     <RedundantCast>
       <code><![CDATA[(string) ($state->criteria->sortBy ?? '')]]></code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $item]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceMutationMessages.php">
     <UnusedConstructor>
@@ -3340,12 +3246,6 @@
     <UnusedClass>
       <code><![CDATA[GridWorkspacePagination]]></code>
     </UnusedClass>
-  </file>
-  <file src="packages/zoosper-admin-grid/src/GridWorkspaceRenderer.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $bookmark['id']]]></code>
-      <code><![CDATA[(int) $bookmark['id']]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceStatusDecorator.php">
     <PossiblyUnusedMethod>
@@ -3410,9 +3310,6 @@
     </UnusedClass>
   </file>
   <file src="packages/zoosper-api-grid/src/Page/ApiGridQueryFactory.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $requestedSize]]></code>
-    </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[filter_var($values['page'] ?? 1, FILTER_VALIDATE_INT)]]></code>
     </RiskyTruthyFalsyComparison>
@@ -3649,12 +3546,6 @@
     <PossiblyUnusedReturnValue>
       <code><![CDATA[list<string>]]></code>
     </PossiblyUnusedReturnValue>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $column]]></code>
-      <code><![CDATA[(string) $column]]></code>
-      <code><![CDATA[(string) $indexName]]></code>
-      <code><![CDATA[(string) $indexName]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaSnapshotRepository.php">
     <LessSpecificReturnStatement>
@@ -3666,11 +3557,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[latest]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="packages/zoosper-database/src/Schema/SchemaSqlBuilder.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $name]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaValidator.php">
     <DocblockTypeContradiction>
@@ -3689,11 +3575,6 @@
     <UnusedClass>
       <code><![CDATA[ConsoleExceptionFormatter]]></code>
     </UnusedClass>
-  </file>
-  <file src="packages/zoosper-errors/src/SensitiveValueRedactor.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $key]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="packages/zoosper-grid/src/BulkAction/GridBulkActionAuthoriser.php">
     <UnusedClass>
@@ -3751,19 +3632,10 @@
       <code><![CDATA[toggleableColumnKeys]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-grid/src/GridFilter.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $option['label']]]></code>
-      <code><![CDATA[(string) $option['value']]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="packages/zoosper-grid/src/GridHtmlRenderer.php">
     <DocblockTypeContradiction>
       <code><![CDATA[$value === null]]></code>
     </DocblockTypeContradiction>
-    <RedundantCast>
-      <code><![CDATA[(int)$criteria->pager->pageSize]]></code>
-    </RedundantCast>
   </file>
   <file src="packages/zoosper-grid/src/GridMultiselectRenderer.php">
     <UnusedClass>
@@ -3983,10 +3855,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(int)$info[0]]]></code>
-      <code><![CDATA[(int)$info[1]]]></code>
-    </RedundantCast>
   </file>
   <file src="packages/zoosper-media/src/Service/MediaDerivativeLookup.php">
     <PossiblyUnusedMethod>
@@ -4015,12 +3883,6 @@
     </UnusedProperty>
   </file>
   <file src="packages/zoosper-media/src/Service/MediaUploadValidator.php">
-    <RedundantCast>
-      <code><![CDATA[(int) $info[0]]]></code>
-      <code><![CDATA[(int) $info[0]]]></code>
-      <code><![CDATA[(int) $info[1]]]></code>
-      <code><![CDATA[(int) $info[1]]]></code>
-    </RedundantCast>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$file['size'] ?? filesize($tmpName)]]></code>
     </RiskyTruthyFalsyComparison>
@@ -4035,10 +3897,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[fromSiteArray]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) $site['storeCode']]]></code>
-      <code><![CDATA[(string) $site['websiteCode']]]></code>
-    </RedundantCastGivenDocblockType>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[$site['id'] !== null]]></code>
       <code><![CDATA[isset($site['id']) && $site['id'] !== null]]></code>

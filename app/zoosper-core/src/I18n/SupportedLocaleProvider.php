@@ -38,13 +38,13 @@ final readonly class SupportedLocaleProvider
                 $label = $code;
             }
 
-            if (!$this->isValidLocaleCode((string) $code)) {
+            if (!$this->isValidLocaleCode($code)) {
                 continue;
             }
 
-            $locales[(string) $code] = is_string($label) && trim($label) !== ''
+            $locales[$code] = is_string($label) && trim($label) !== ''
                 ? trim($label)
-                : (string) $code;
+                : $code;
         }
 
         return $locales !== [] ? $locales : ['en_AU' => 'English (Australia)'];

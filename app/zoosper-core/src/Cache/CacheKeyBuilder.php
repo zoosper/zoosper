@@ -85,7 +85,7 @@ final readonly class CacheKeyBuilder
             if ($value === null) {
                 continue;
             }
-            $normalised[(string) $key] = (string) $value;
+            $normalised[$key] = (string) $value;
         }
 
         return $normalised;

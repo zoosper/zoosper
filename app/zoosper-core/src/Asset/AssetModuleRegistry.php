@@ -23,7 +23,7 @@ final class AssetModuleRegistry
     public function __construct(array $modules = [])
     {
         foreach ($modules as $name => $dir) {
-            $this->register((string) $name, (string) $dir);
+            $this->register($name, $dir);
         }
     }
 

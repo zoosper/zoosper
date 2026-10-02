@@ -22,7 +22,7 @@ final readonly class TextareaContentEditor implements ContentEditorInterface
     public function render(string $fieldName, string $value, array $context = []): string
     {
         $id = 'zoosper-editor-' . preg_replace('/[^a-zA-Z0-9_-]/', '-', $fieldName);
-        $safeId = htmlspecialchars((string) $id, ENT_QUOTES, 'UTF-8');
+        $safeId = htmlspecialchars($id, ENT_QUOTES, 'UTF-8');
         $safeName = htmlspecialchars($fieldName, ENT_QUOTES, 'UTF-8');
         $label = htmlspecialchars((string) ($context['label'] ?? 'Content'), ENT_QUOTES, 'UTF-8');
         $rows = (int) ($context['rows'] ?? 16);

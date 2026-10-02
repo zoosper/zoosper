@@ -102,7 +102,7 @@ final readonly class GridWorkspaceMutationFormsRenderer
         $html .= '<label>View name <input name="view_name" maxlength="120" required autocomplete="off"></label>';
         foreach ($state->criteria->filters as $key => $value) {
             foreach (is_array($value) ? $value : [$value] as $item) {
-                $html .= $this->hidden('filters[' . $key . '][]', (string) $item);
+                $html .= $this->hidden('filters[' . $key . '][]', $item);
             }
         }
         $html .= $this->hidden('sort_by', (string) ($state->criteria->sortBy ?? ''));

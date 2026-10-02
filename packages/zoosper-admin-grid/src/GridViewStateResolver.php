@@ -50,7 +50,7 @@ final readonly class GridViewStateResolver
             visibleColumns: $normalised['visible_columns'],
             columnOrder: $normalised['column_order'],
             bookmarks: $bookmarks,
-            activeBookmarkId: isset($bookmark['id']) ? (int) $bookmark['id'] : null,
+            activeBookmarkId: isset($bookmark['id']) ? $bookmark['id'] : null,
         );
     }
 

@@ -17,7 +17,7 @@ final readonly class SchemaSqlBuilder
     {
         $columns = [];
         foreach ($table->columns as $name => $definition) {
-            $columns[] = $this->columnSql((string) $name, $definition, true);
+            $columns[] = $this->columnSql($name, $definition, true);
         }
         foreach ($table->foreignKeys as $foreignKey) {
             $columns[] = $this->foreignKeySql($foreignKey);

@@ -327,7 +327,7 @@ final readonly class UserAdminController
         $messages = [];
         foreach ($context->errors() as $fieldErrors) {
             foreach ($fieldErrors as $message) {
-                $messages[] = (string) $message;
+                $messages[] = $message;
             }
         }
 

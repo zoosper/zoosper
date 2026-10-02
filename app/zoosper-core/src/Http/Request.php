@@ -52,7 +52,7 @@ final readonly class Request
             clientIp: TrustedProxyResolver::fromEnvironment()->clientIp($_SERVER),
             form: $_POST,
             files: $_FILES,
-            queryString: (string) $queryString,
+            queryString: $queryString,
         );
     }
 

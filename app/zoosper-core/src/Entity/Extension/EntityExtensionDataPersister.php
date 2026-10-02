@@ -30,7 +30,7 @@ final readonly class EntityExtensionDataPersister
                 $this->repository->upsert(new EntityExtensionValue(
                     entityType: $entityType,
                     entityId: $entityId,
-                    module: (string) $module,
+                    module: $module,
                     fieldName: (string) $fieldName,
                     value: $value,
                 ));

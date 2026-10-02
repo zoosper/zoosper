@@ -48,9 +48,9 @@ final readonly class AclTreeBuilder
         return array_map(static function (array $group): AclGroup {
             usort($group['permissions'], static fn (array $a, array $b): int => strcasecmp((string) ($a['label'] ?? $a['code']), (string) ($b['label'] ?? $b['code'])));
             return new AclGroup(
-                code: (string) $group['code'],
-                label: (string) $group['label'],
-                sortOrder: (int) $group['sort_order'],
+                code: $group['code'],
+                label: $group['label'],
+                sortOrder: $group['sort_order'],
                 permissions: $group['permissions'],
             );
         }, $groups);

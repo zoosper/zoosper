@@ -64,9 +64,9 @@ final class AssetRouteRegistrar
 
             // RFC 9110 §9.3.2: a HEAD response carries the SAME headers/status
             // as GET would, but MUST NOT include a body.
-            $body = strtoupper($request->method()) === 'HEAD' ? '' : (string) $result['body'];
+            $body = strtoupper($request->method()) === 'HEAD' ? '' : $result['body'];
 
-            return Response::raw($body, (int) $result['status'], $result['headers']);
+            return Response::raw($body, $result['status'], $result['headers']);
         };
 
         $router->map('GET', self::ROUTE_PATTERN, $handler);

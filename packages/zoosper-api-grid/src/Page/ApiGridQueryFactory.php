@@ -20,7 +20,7 @@ final class ApiGridQueryFactory
         $page = max(1, filter_var($values['page'] ?? 1, FILTER_VALIDATE_INT) ?: 1);
         $requestedSize = filter_var($values['page_size'] ?? $definition->pageSizes[0], FILTER_VALIDATE_INT);
         $pageSize = in_array($requestedSize, $definition->pageSizes, true)
-            ? (int) $requestedSize
+            ? $requestedSize
             : $definition->pageSizes[0];
 
         $sort = is_string($values['sort'] ?? null) ? trim($values['sort']) : null;

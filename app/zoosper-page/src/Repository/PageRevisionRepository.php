@@ -60,7 +60,7 @@ final readonly class PageRevisionRepository
     }
     public function prune(int $pageId, int $retain): int
     {
-        $retain=max(1,$retain); $ids=$this->pdo->query('SELECT id FROM page_revisions WHERE page_id='.(int)$pageId.' ORDER BY id DESC')->fetchAll(PDO::FETCH_COLUMN);
+        $retain=max(1,$retain); $ids=$this->pdo->query('SELECT id FROM page_revisions WHERE page_id='.$pageId.' ORDER BY id DESC')->fetchAll(PDO::FETCH_COLUMN);
         $delete=array_slice($ids,$retain); if($delete===[]){return 0;}
         $statement=$this->pdo->prepare('DELETE FROM page_revisions WHERE id IN ('.implode(',',array_fill(0,count($delete),'?')).')'); $statement->execute($delete); return $statement->rowCount();
     }

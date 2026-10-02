@@ -32,7 +32,7 @@ final readonly class TrustedProxyResolver
         $processValue = getenv('TRUSTED_PROXIES');
         $raw = $environmentValue !== ''
             ? $environmentValue
-            : trim($processValue === false ? '' : (string) $processValue);
+            : trim($processValue === false ? '' : $processValue);
 
         return new self(array_map('trim', explode(',', $raw)));
     }

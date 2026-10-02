@@ -87,7 +87,7 @@ final readonly class PageSaveCoordinator
                         canonicalUrl: $input->canonicalUrl,
                     );
                     if ($this->revisions !== null && $pageId !== null) {
-                        $created = $this->pages->findById((int) $pageId);
+                        $created = $this->pages->findById($pageId);
                         if ($created !== null) { $this->revisions->capturePage($created, $user->id); }
                     }
                     return;
@@ -96,7 +96,7 @@ final readonly class PageSaveCoordinator
                     $this->revisions->capturePage($page, $user->id);
                 }
                 $this->pages->update(
-                    id: (int) $pageId,
+                    id: $pageId,
                     siteId: $input->siteId,
                     title: $input->title,
                     slug: $input->slug,
@@ -110,7 +110,7 @@ final readonly class PageSaveCoordinator
                     canonicalUrl: $input->canonicalUrl,
                 );
                 if ($input->publish) {
-                    $this->pages->publish((int) $pageId, $user->id);
+                    $this->pages->publish($pageId, $user->id);
                 }
             };
             $context = $this->lifecycle?->run($context, $persist) ?? $this->runDirect($context, $persist);
@@ -118,7 +118,7 @@ final readonly class PageSaveCoordinator
                 return PageSaveResult::failure($this->firstError($context));
             }
 
-            return PageSaveResult::success((int) $pageId);
+            return PageSaveResult::success($pageId);
         } catch (RuntimeException $exception) {
             $this->errors?->logException($exception, ['service' => self::class, 'action' => $action]);
             return PageSaveResult::failure($exception->getMessage());
@@ -153,7 +153,7 @@ final readonly class PageSaveCoordinator
     {
         foreach ($context->errors() as $errors) {
             foreach ($errors as $message) {
-                return (string) $message;
+                return $message;
             }
         }
         return 'Please review the form.';

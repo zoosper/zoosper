@@ -1,4 +1,5 @@
 # Changelog
+- Reduced the Psalm cast baseline by 60 entries across 35 typed implementations while preserving four runtime-required casts identified by acceptance and architecture regressions; 42 complex or behaviour-sensitive casts remain deferred for focused review.
 - Completed the `MissingOverrideAttribute` baseline closure by adding the final 88 explicit `#[Override]` contracts across 71 interface and inheritance implementations, with no runtime behaviour changes.
 - Continued Psalm baseline reduction across 21 two-method adapters and repositories, adding 42 explicit `#[Override]` contracts without changing runtime behaviour.
 - Continued Psalm baseline reduction across the complete 24-command console cohort, adding 72 explicit `#[Override]` contracts for command name, description and execution methods without changing command behaviour.

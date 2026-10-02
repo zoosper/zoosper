@@ -90,11 +90,11 @@ final readonly class MediaUploadValidator
     private function extractDimensions(string $path): ?array
     {
         $info = @getimagesize($path);
-        if (!is_array($info) || !isset($info[0], $info[1]) || (int) $info[0] <= 0 || (int) $info[1] <= 0) {
+        if (!is_array($info) || !isset($info[0], $info[1]) || $info[0] <= 0 || $info[1] <= 0) {
             return null;
         }
 
-        return [(int) $info[0], (int) $info[1]];
+        return [$info[0], $info[1]];
     }
 }
 

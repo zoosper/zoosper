@@ -84,7 +84,7 @@ final readonly class AdminFormConfigAggregator
     /** @return array<string, mixed> */
     private function readConfigFile(string $file): array
     {
-        $config = $this->loadLayeredAdminFormConfigFile('admin-form-config:' . basename((string) $file), (string) $file);
+        $config = $this->loadLayeredAdminFormConfigFile('admin-form-config:' . basename($file), $file);
 
         return is_array($config) ? $config : [];
     }

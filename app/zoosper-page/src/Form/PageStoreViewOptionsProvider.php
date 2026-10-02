@@ -30,9 +30,9 @@ final readonly class PageStoreViewOptionsProvider
 
         foreach ($this->sites->allActive() as $site) {
             $options[] = [
-                'id' => (int) $site->id,
-                'label' => (string) $site->name,
-                'description' => (string) $site->code,
+                'id' => $site->id,
+                'label' => $site->name,
+                'description' => $site->code,
             ];
         }
 

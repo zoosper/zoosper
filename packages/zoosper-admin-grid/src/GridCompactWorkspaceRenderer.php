@@ -29,7 +29,7 @@ final readonly class GridCompactWorkspaceRenderer
         $filters=$state->criteria->filters;
         $active=0; foreach($filters as $value){if(is_array($value)?$value!==[]:trim((string)$value)!==''){$active++;}}
         $label='Default view';
-        foreach($state->bookmarks as $bookmark){if((int)$bookmark['id']===$state->activeBookmarkId){$label=(string)$bookmark['name'];break;}}
+        foreach($state->bookmarks as $bookmark){if($bookmark['id']===$state->activeBookmarkId){$label=$bookmark['name'];break;}}
         $html='<section data-grid-workspace data-grid-current-page-filename="'.$this->e($this->currentPageFilename($formAction)).'">';
         $html .= $this->toolbar->render(
             $label,
@@ -79,7 +79,7 @@ final readonly class GridCompactWorkspaceRenderer
     {
         $key=$this->e($filter->key);
         if(in_array($filter->type,['text','date'],true))return '<input type="'.$filter->type.'" name="'.$key.'" value="'.$this->e((string)$value).'">';
-        $multi=$filter->type==='multiselect';$selected=$multi?array_fill_keys(GridFilterValue::many($value),true):[(string)$value=>true];
+        $multi=$filter->type==='multiselect';$selected=$multi?array_fill_keys(GridFilterValue::many($value),true):[$value=>true];
         $html='<select name="'.$key.($multi?'[]" multiple':'"').'>';
         if(!$multi)$html.='<option value="">All</option>';
         foreach($filter->normalisedOptions() as $option){$html.='<option value="'.$this->e($option->value).'"'.(isset($selected[$option->value])?' selected':'').'>'.$this->e($option->label).'</option>';}

@@ -97,8 +97,8 @@ final class AssetController
     private function header(array $headers, string $name): ?string
     {
         foreach ($headers as $key => $value) {
-            if (strcasecmp((string) $key, $name) === 0) {
-                return (string) $value;
+            if (strcasecmp($key, $name) === 0) {
+                return $value;
             }
         }
 

@@ -39,7 +39,7 @@ final readonly class AdminFormRenderer
         $html = '<form action="' . htmlspecialchars($action, ENT_QUOTES) . '" method="' . htmlspecialchars($method, ENT_QUOTES) . '"' . $enctype . ' class="admin-form">';
 
         if (isset($errors['_form'])) {
-            $html .= '<div class="admin-alert admin-alert--danger">' . htmlspecialchars((string) $errors['_form'], ENT_QUOTES) . '</div>';
+            $html .= '<div class="admin-alert admin-alert--danger">' . htmlspecialchars($errors['_form'], ENT_QUOTES) . '</div>';
         }
 
         if ($csrfToken !== null) {

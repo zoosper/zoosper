@@ -82,7 +82,7 @@ final readonly class PagePublishSelectedExecutor implements GridBulkActionExecut
     {
         $pages = [];
         foreach ($selection->identities as $identity) {
-            $value = (string) $identity;
+            $value = $identity;
             if (!ctype_digit($value) || (int) $value < 1) {
                 throw new InvalidArgumentException('Page bulk publication requires positive integer identities.');
             }

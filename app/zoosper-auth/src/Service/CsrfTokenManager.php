@@ -12,14 +12,14 @@ final readonly class CsrfTokenManager
             $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
         }
 
-        return (string) $_SESSION['_csrf_token'];
+        return $_SESSION['_csrf_token'];
     }
 
     public function rotate(): string
     {
         $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
 
-        return (string) $_SESSION['_csrf_token'];
+        return $_SESSION['_csrf_token'];
     }
 
     public function clear(): void

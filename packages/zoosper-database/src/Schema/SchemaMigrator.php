@@ -35,14 +35,14 @@ final readonly class SchemaMigrator
             }
 
             foreach ($table->columns as $column => $definition) {
-                if (!$inspector->columnExists($table->name, (string) $column)) {
-                    $sql[] = $builder->addColumnSql($table->name, (string) $column, $definition);
+                if (!$inspector->columnExists($table->name, $column)) {
+                    $sql[] = $builder->addColumnSql($table->name, $column, $definition);
                 }
             }
 
             foreach ($table->indexes as $indexName => $definition) {
-                if (!$inspector->indexExists($table->name, (string) $indexName)) {
-                    $sql[] = $builder->createIndexSql($table->name, (string) $indexName, $definition);
+                if (!$inspector->indexExists($table->name, $indexName)) {
+                    $sql[] = $builder->createIndexSql($table->name, $indexName, $definition);
                 }
             }
         }

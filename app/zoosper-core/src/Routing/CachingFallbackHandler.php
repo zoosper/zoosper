@@ -99,7 +99,7 @@ final readonly class CachingFallbackHandler implements FallbackHandlerInterface
 
         $cached = $this->tryRead($cacheKey);
         if (is_array($cached) && isset($cached['body'], $cached['statusCode'], $cached['headers'])) {
-            return Response::raw((string) $cached['body'], (int) $cached['statusCode'], (array) $cached['headers']);
+            return Response::raw($cached['body'], $cached['statusCode'], $cached['headers']);
         }
 
         $response = $this->inner->handle($request);

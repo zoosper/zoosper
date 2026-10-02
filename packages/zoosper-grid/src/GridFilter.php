@@ -30,7 +30,7 @@ final readonly class GridFilter
         return array_map(
             static fn (array|GridFilterOption $option): GridFilterOption => $option instanceof GridFilterOption
                 ? $option
-                : new GridFilterOption((string) $option['value'], (string) $option['label']),
+                : new GridFilterOption($option['value'], $option['label']),
             $this->options,
         );
     }
