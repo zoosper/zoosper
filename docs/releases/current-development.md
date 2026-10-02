@@ -2,13 +2,13 @@
 
 ## Version
 
-`0.3.2-alpha.2`
+`0.3.2-alpha.3-dev`
 
 ## Release baseline
 
-- Prepared immutable release candidate: `v0.3.2-alpha.2`.
+- Latest immutable release: `v0.3.2-alpha.2`.
+- Release commit: `dcdbeedc2f7d394481afc2ae889a7f23205c7730`.
 - Previous immutable release: `v0.3.2-alpha.1` at `f75f5cb3591be11555e5ca7504585c7d98225b62`.
-- Release commit: to be created only after all release gates pass.
 - Active branch: `dev`.
 - Zoosper remains public alpha software. No stable release has shipped.
 
@@ -21,8 +21,8 @@ The 0.3.2 line is the beta-readiness public-alpha progression after the substant
 - Keep runtime identity, API health output, Admin presentation, changelog, roadmap, and public documentation aligned.
 - Keep architecture documentation and each package README current with every phase.
 - Preserve clean worktrees, bounded diffs, full tests, strict quality checks, Composer validation, dependency audit, manifest freshness, foreign-key reconciliation, and runtime smoke evidence before each release.
-- Do not modify or retarget the immutable `v0.3.2-alpha.1` tag; create `v0.3.2-alpha.2` only from the verified release commit.
+- Do not modify or retarget the immutable `v0.3.2-alpha.2` tag.
 
 ## Beta-readiness Composer policy
 
-The 0.3.2 alpha development line removes first-party `dev-dev` dependency coupling. All 33 first-party path packages receive the explicit `0.3.2-alpha.2` Composer package candidate from the root repository map and consume compatible first-party packages through `^0.3.1@alpha`. This aligns the synchronized package candidate and runtime release identity at `0.3.2-alpha.2`, keeping package compatibility independent of the Git development branch.
+The 0.3.2 alpha development line removes first-party `dev-dev` dependency coupling. All 33 first-party path packages retain the explicit installable `0.3.2-alpha.2` Composer package candidate from the root repository map and consume compatible first-party packages through `^0.3.1@alpha`. This keeps the installable synchronized package candidate at `0.3.2-alpha.2` while runtime identity advances to `0.3.2-alpha.3-dev`, keeping package compatibility independent of the Git development branch.

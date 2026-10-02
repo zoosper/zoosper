@@ -4,8 +4,8 @@
 
 ## Current continuity status
 
-- Latest immutable release candidate: `v0.3.2-alpha.2`.
-- Release identity: `0.3.2-alpha.2`.
+- Latest immutable release: `v0.3.2-alpha.2` at `dcdbeedc2f7d394481afc2ae889a7f23205c7730`.
+- Current development line: `0.3.2-alpha.3-dev`.
 - Previous immutable release: `v0.3.2-alpha.1` at `f75f5cb3591be11555e5ca7504585c7d98225b62`.
 - **[x] SR-2 Redis production authentication and cache-key policy:** Redis requirements activate only for `CACHE_DRIVER=redis`; staging and production require a non-empty, non-placeholder Redis password; every Redis driver requires a strong dedicated cache signing key; file cache remains unaffected; local, development and testing retain explicit unauthenticated loopback support; and policy plus factory tests preserve lazy, secret-safe composition.
 - **[x] Phase 13A-C2 Admin account lockout:** Auth now owns atomic per-account failed-login state, configurable temporary lockout, neutral authentication enforcement, password-reset recovery, protected Admin visibility, `user.manage`-guarded POST unlock, secret-free audit metadata, and real HTTP-lifecycle acceptance. Account lockout remains independent from active/inactive status and from the separate email/IP request rate limiter.
@@ -60,7 +60,7 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ## 0. TOP PRIORITY — next phase
 
-**`0.3.2-alpha.2` release identity is prepared.** The previous immutable annotated `v0.3.2-alpha.1` tag remains at `f75f5cb3591be11555e5ca7504585c7d98225b62`; do not modify or retarget it. Create `v0.3.2-alpha.2` only from the verified release commit.
+**`0.3.2-alpha.3-dev` is open.** The immutable annotated `v0.3.2-alpha.2` tag targets release commit `dcdbeedc2f7d394481afc2ae889a7f23205c7730`. Continue from this development baseline without changing the released source or retargeting its tag.
 
 **Planned Admin follow-ups for the current development line:**
 
@@ -402,7 +402,7 @@ replica.
 - [x] **Declarative Schema Foreign Keys.** Typed foreign-key support in `SchemaForeignKey`, `SchemaSqlBuilder` (MySQL and SQLite constraint generation), `SchemaValidator` (cycle and dangling-reference validation), and declarative module schema manifests (`app/zoosper-global-announcements`, `packages/zoosper-media`, etc.).
 - [x] Container autowiring (Phase 1.367). Reflection-based parameter resolution and circular dependency detection implemented in `ServiceContainer`.
 - [x] Module lifecycle (install/enable/disable/uninstall)
-- [x] Composer release-train compatibility is explicit: root path repositories assign the active `0.3.2-alpha.2` package candidate, first-party dependencies use bounded `^0.3.1@alpha` constraints, `prefer-stable` remains enabled, and development minimum stability is absent.
+- [x] Composer release-train compatibility is explicit: root path repositories retain the installable `0.3.2-alpha.2` package candidate while runtime development continues on `0.3.2-alpha.3-dev`, first-party dependencies use bounded `^0.3.1@alpha` constraints, `prefer-stable` remains enabled, and development minimum stability is absent.
 - [x] Database production driver policy enforcement: check `config/database_policy.php` flags in `ConnectionFactory` / `ProductionSecurityPolicy` and reject invalid driver/environment pairings.
 - [x] Consolidate 14 duplicated `$env` closures in `config/*.php` into global canonical `env()` helper.
 - [x] Phase 1.373: Extend Module Manifest Compilation. Aggregated services and routes are compiled into `var/cache/` to eliminate per-request module iteration and filesystem overhead.
