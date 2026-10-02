@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
+<files psalm-version="6.19.1@e2ca44251c1f1aa2e35452d426895746b47de64e">
   <file src="app/zoosper-admin/src/Asset/AdminAssetRegistry.php">
     <DocblockTypeContradiction>
       <code><![CDATA[!is_string($handle)]]></code>
@@ -339,17 +339,6 @@
     </UnusedParam>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AccessToken/AccessTokenGrid.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[new PaginationResult(
-            $rows,
-            (int) $count->fetchColumn(),
-            $criteria->pager->page,
-            $criteria->pager->pageSize,
-        )]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[PaginationResult]]></code>
-    </InvalidReturnType>
     <PossiblyInvalidCast>
       <code><![CDATA[$criteria->filters['q'] ?? '']]></code>
       <code><![CDATA[$criteria->filters['status'] ?? '']]></code>
@@ -388,32 +377,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-auth/src/Admin/Grid/PdoAdminUserGridReadRepository.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[new PaginationResult(
-            items: $statement->fetchAll(PDO::FETCH_ASSOC),
-            total: (int) $count->fetchColumn(),
-            page: $criteria->pager->page,
-            pageSize: $criteria->pager->pageSize,
-        )]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[PaginationResult]]></code>
-    </InvalidReturnType>
-  </file>
-  <file src="app/zoosper-auth/src/Admin/Grid/PdoRoleGridReadRepository.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[new PaginationResult(
-            items: $statement->fetchAll(PDO::FETCH_ASSOC),
-            total: (int) $count->fetchColumn(),
-            page: $criteria->pager->page,
-            pageSize: $criteria->pager->pageSize,
-        )]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[PaginationResult]]></code>
-    </InvalidReturnType>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/RoleGridCriteria.php">
     <PossiblyInvalidCast>
@@ -1628,17 +1591,6 @@
     </UnusedParam>
   </file>
   <file src="app/zoosper-mail/src/Admin/EmailLogGrid.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[new PaginationResult(
-            items: $statement->fetchAll(PDO::FETCH_ASSOC) ?: [],
-            total: (int) $count->fetchColumn(),
-            page: $criteria->pager->page,
-            pageSize: $criteria->pager->pageSize,
-        )]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[PaginationResult]]></code>
-    </InvalidReturnType>
     <PossiblyInvalidCast>
       <code><![CDATA[$criteria->filters['email'] ?? '']]></code>
       <code><![CDATA[$criteria->filters['status'] ?? '']]></code>
@@ -1743,12 +1695,6 @@
     </UnusedParam>
   </file>
   <file src="app/zoosper-menu/src/Admin/Grid/MenuGrid.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[new PaginationResult($st->fetchAll(PDO::FETCH_ASSOC) ?: [], (int)$n->fetchColumn(), $c->pager->page, $c->pager->pageSize)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[PaginationResult]]></code>
-    </InvalidReturnType>
     <ParamNameMismatch>
       <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
@@ -2570,12 +2516,6 @@
     </UnusedParam>
   </file>
   <file src="app/zoosper-site/src/Admin/Grid/SiteDomainGrid.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[new PaginationResult($st->fetchAll(PDO::FETCH_ASSOC) ?: [], (int)$n->fetchColumn(), $c->pager->page, $c->pager->pageSize)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[PaginationResult]]></code>
-    </InvalidReturnType>
     <MissingClosureParamType>
       <code><![CDATA[$v]]></code>
     </MissingClosureParamType>
@@ -3653,12 +3593,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Admin/Grid/MediaGridSource.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[new PaginationResult($st->fetchAll(PDO::FETCH_ASSOC)?:[],(int)$count->fetchColumn(),$c->pager->page,$c->pager->pageSize)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[PaginationResult]]></code>
-    </InvalidReturnType>
     <ParamNameMismatch>
       <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
