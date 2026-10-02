@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'version' => '0.3.2-alpha.2-dev',
+    'version' => '0.3.2-alpha.2',
     'channel' => 'alpha',
 ];
 

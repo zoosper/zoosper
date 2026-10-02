@@ -132,7 +132,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/database": "0.3.2-alpha.1"
+                    "zoosper/database": "0.3.2-alpha.2"
                 }
             }
         },
@@ -142,7 +142,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/audit": "0.3.2-alpha.1"
+                    "zoosper/audit": "0.3.2-alpha.2"
                 }
             }
         },
@@ -152,7 +152,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/admin-form": "0.3.2-alpha.1"
+                    "zoosper/admin-form": "0.3.2-alpha.2"
                 }
             }
         },
@@ -162,7 +162,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/admin-dashboard": "0.3.2-alpha.1"
+                    "zoosper/admin-dashboard": "0.3.2-alpha.2"
                 }
             }
         },
@@ -172,7 +172,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/pagination": "0.3.2-alpha.1"
+                    "zoosper/pagination": "0.3.2-alpha.2"
                 }
             }
         },
@@ -182,7 +182,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/store-orders": "0.3.2-alpha.1"
+                    "zoosper/store-orders": "0.3.2-alpha.2"
                 }
             }
         },
@@ -192,7 +192,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/api-grid": "0.3.2-alpha.1"
+                    "zoosper/api-grid": "0.3.2-alpha.2"
                 }
             }
         },
@@ -202,7 +202,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/errors": "0.3.2-alpha.1"
+                    "zoosper/errors": "0.3.2-alpha.2"
                 }
             }
         },
@@ -212,7 +212,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/media": "0.3.2-alpha.1"
+                    "zoosper/media": "0.3.2-alpha.2"
                 }
             }
         },
@@ -222,7 +222,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/grid": "0.3.2-alpha.1"
+                    "zoosper/grid": "0.3.2-alpha.2"
                 }
             }
         },
@@ -232,7 +232,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/admin-grid": "0.3.2-alpha.1"
+                    "zoosper/admin-grid": "0.3.2-alpha.2"
                 }
             }
         },
@@ -242,7 +242,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/core": "0.3.2-alpha.1"
+                    "zoosper/core": "0.3.2-alpha.2"
                 }
             }
         },
@@ -252,7 +252,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/global-announcements": "0.3.2-alpha.1"
+                    "zoosper/global-announcements": "0.3.2-alpha.2"
                 }
             }
         },
@@ -262,7 +262,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/auth": "0.3.2-alpha.1"
+                    "zoosper/auth": "0.3.2-alpha.2"
                 }
             }
         },
@@ -272,7 +272,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/theme": "0.3.2-alpha.1"
+                    "zoosper/theme": "0.3.2-alpha.2"
                 }
             }
         },
@@ -282,7 +282,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/page": "0.3.2-alpha.1"
+                    "zoosper/page": "0.3.2-alpha.2"
                 }
             }
         },
@@ -292,7 +292,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/site": "0.3.2-alpha.1"
+                    "zoosper/site": "0.3.2-alpha.2"
                 }
             }
         },
@@ -302,7 +302,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/admin": "0.3.2-alpha.1"
+                    "zoosper/admin": "0.3.2-alpha.2"
                 }
             }
         },
@@ -312,7 +312,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/api": "0.3.2-alpha.1"
+                    "zoosper/api": "0.3.2-alpha.2"
                 }
             }
         },
@@ -322,7 +322,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/mail": "0.3.2-alpha.1"
+                    "zoosper/mail": "0.3.2-alpha.2"
                 }
             }
         },
@@ -332,7 +332,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/two-factor": "0.3.2-alpha.1"
+                    "zoosper/two-factor": "0.3.2-alpha.2"
                 }
             }
         },
@@ -342,7 +342,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/url-rewrite": "0.3.2-alpha.1"
+                    "zoosper/url-rewrite": "0.3.2-alpha.2"
                 }
             }
         },
@@ -352,7 +352,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/install": "0.3.2-alpha.1"
+                    "zoosper/install": "0.3.2-alpha.2"
                 }
             }
         },
@@ -362,7 +362,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/settings": "0.3.2-alpha.1"
+                    "zoosper/settings": "0.3.2-alpha.2"
                 }
             }
         },
@@ -372,7 +372,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/menu": "0.3.2-alpha.1"
+                    "zoosper/menu": "0.3.2-alpha.2"
                 }
             }
         },
@@ -382,7 +382,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/session": "0.3.2-alpha.1"
+                    "zoosper/session": "0.3.2-alpha.2"
                 }
             }
         },
@@ -392,7 +392,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/seo": "0.3.2-alpha.1"
+                    "zoosper/seo": "0.3.2-alpha.2"
                 }
             }
         },
@@ -402,7 +402,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/logger": "0.3.2-alpha.1"
+                    "zoosper/logger": "0.3.2-alpha.2"
                 }
             }
         },
@@ -412,7 +412,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/cache": "0.3.2-alpha.1"
+                    "zoosper/cache": "0.3.2-alpha.2"
                 }
             }
         },
@@ -422,7 +422,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/config": "0.3.2-alpha.1"
+                    "zoosper/config": "0.3.2-alpha.2"
                 }
             }
         },
@@ -432,7 +432,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/scoped-config": "0.3.2-alpha.1"
+                    "zoosper/scoped-config": "0.3.2-alpha.2"
                 }
             }
         },
@@ -442,7 +442,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/editor": "0.3.2-alpha.1"
+                    "zoosper/editor": "0.3.2-alpha.2"
                 }
             }
         },
@@ -452,7 +452,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "zoosper/github-issues": "0.3.2-alpha.1"
+                    "zoosper/github-issues": "0.3.2-alpha.2"
                 }
             }
         }
