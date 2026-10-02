@@ -19,6 +19,7 @@ final readonly class EditorJsImageBlockSanitizer implements EditorImageBlockSani
      * @param array<string, mixed> $data
      * @return array{url: string, caption: string, withBorder: bool, withBackground: bool, stretched: bool}|null
      */
+    #[\Override]
     public function sanitise(array $data): ?array
     {
         $file = $data['file'] ?? null;
@@ -45,6 +46,7 @@ final readonly class EditorJsImageBlockSanitizer implements EditorImageBlockSani
         return str_starts_with($url, '/media/');
     }
     /** @return list<string> */
+    #[\Override]
     public function validate(array $data): array
     {
         $errors = [];

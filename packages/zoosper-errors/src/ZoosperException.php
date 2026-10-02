@@ -52,6 +52,7 @@ class ZoosperException extends MarkoException
      * is guaranteed correct regardless of MarkoException's internal
      * implementation details.
      */
+    #[\Override]
     public function getContext(): string
     {
         return $this->context;
@@ -61,6 +62,7 @@ class ZoosperException extends MarkoException
      * Override MarkoException's own getSuggestion() — see getContext()
      * above for the full reasoning.
      */
+    #[\Override]
     public function getSuggestion(): string
     {
         return $this->suggestion;

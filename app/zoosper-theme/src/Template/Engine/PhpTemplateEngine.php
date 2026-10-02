@@ -14,12 +14,14 @@ namespace Zoosper\Theme\Template\Engine;
 final readonly class PhpTemplateEngine implements TemplateEngineInterface
 {
     /** @return list<string> */
+    #[\Override]
     public function extensions(): array
     {
         return ['php'];
     }
 
     /** @param array<string, mixed> $data */
+    #[\Override]
     public function renderFile(string $path, array $data): string
     {
         extract($data, EXTR_SKIP);

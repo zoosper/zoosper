@@ -18,6 +18,7 @@ final readonly class ConfiguredLocaleResolver implements LocaleResolverInterface
     {
     }
 
+    #[\Override]
     public function resolveAdminLocale(array $context = []): LocaleResolution
     {
         $defaultLocale = $this->normaliseLocale($this->config['default_locale'] ?? null, 'en_AU');
@@ -27,6 +28,7 @@ final readonly class ConfiguredLocaleResolver implements LocaleResolverInterface
         return new LocaleResolution('admin', $activeLocale, $fallbackLocale, $defaultLocale);
     }
 
+    #[\Override]
     public function resolveSiteLocale(array $context = []): LocaleResolution
     {
         $defaultLocale = $this->normaliseLocale($this->config['default_locale'] ?? null, 'en_AU');

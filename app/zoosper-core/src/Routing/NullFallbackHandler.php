@@ -9,11 +9,13 @@ namespace Zoosper\Core\Routing;
  */
 final class NullFallbackHandler implements FallbackHandlerInterface
 {
+    #[\Override]
     public function supports(object $request): bool
     {
         return false;
     }
 
+    #[\Override]
     public function handle(object $request): mixed
     {
         return null;

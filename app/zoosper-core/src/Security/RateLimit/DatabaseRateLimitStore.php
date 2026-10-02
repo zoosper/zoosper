@@ -52,6 +52,7 @@ SQL);
         );
     }
 
+    #[\Override]
     public function recordAttempt(RateLimitRule $rule, string $identityHash, int $now): RateLimitDecision
     {
         if ($identityHash === '') {
@@ -120,6 +121,7 @@ SQL);
         return (int) $statement->fetchColumn();
     }
 
+    #[\Override]
     public function reset(RateLimitRule $rule, string $identityHash): void
     {
         if ($identityHash === '') {

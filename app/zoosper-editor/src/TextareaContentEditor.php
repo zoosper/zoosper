@@ -11,12 +11,14 @@ use Zoosper\Core\Editor\ContentEditorInterface;
  */
 final readonly class TextareaContentEditor implements ContentEditorInterface
 {
+    #[\Override]
     public function code(): string
     {
         return 'textarea';
     }
 
     /** @param array<string, mixed> $context */
+    #[\Override]
     public function render(string $fieldName, string $value, array $context = []): string
     {
         $id = 'zoosper-editor-' . preg_replace('/[^a-zA-Z0-9_-]/', '-', $fieldName);

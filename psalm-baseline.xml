@@ -1341,12 +1341,6 @@
       <code><![CDATA[public function translate(string $message, array $parameters = []): string]]></code>
     </MissingOverrideAttribute>
   </file>
-  <file src="app/zoosper-core/src/I18n/ConfiguredLocaleResolver.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function resolveAdminLocale(array $context = []): LocaleResolution]]></code>
-      <code><![CDATA[public function resolveSiteLocale(array $context = []): LocaleResolution]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="app/zoosper-core/src/I18n/I18nServiceProvider.php">
     <UnusedClass>
       <code><![CDATA[I18nServiceProvider]]></code>
@@ -1479,10 +1473,6 @@
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Routing/CachingFallbackHandler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function handle(object $request): mixed]]></code>
-      <code><![CDATA[public function supports(object $request): bool]]></code>
-    </MissingOverrideAttribute>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(array) $cached['headers']]]></code>
       <code><![CDATA[(int) $cached['statusCode']]]></code>
@@ -1515,12 +1505,6 @@
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
-  </file>
-  <file src="app/zoosper-core/src/Routing/NullFallbackHandler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function handle(object $request): mixed]]></code>
-      <code><![CDATA[public function supports(object $request): bool]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="app/zoosper-core/src/Routing/Router.php">
     <ArgumentTypeCoercion>
@@ -1577,10 +1561,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/DatabaseRateLimitStore.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function recordAttempt(RateLimitRule $rule, string $identityHash, int $now): RateLimitDecision]]></code>
-      <code><![CDATA[public function reset(RateLimitRule $rule, string $identityHash): void]]></code>
-    </MissingOverrideAttribute>
     <PossiblyInvalidCast>
       <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
     </PossiblyInvalidCast>
@@ -1765,10 +1745,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-editor/src/EditorJsContentEditor.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function code(): string]]></code>
-      <code><![CDATA[public function render(string $fieldName, string $value, array $context = []): string]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -1777,10 +1753,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-editor/src/TextareaContentEditor.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function code(): string]]></code>
-      <code><![CDATA[public function render(string $fieldName, string $value, array $context = []): string]]></code>
-    </MissingOverrideAttribute>
     <RedundantCast>
       <code><![CDATA[(string) $id]]></code>
     </RedundantCast>
@@ -2075,10 +2047,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Repository/PdoMenuItemRepository.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function activeForMenu(int $menuId): array{$s=$this->pdo->prepare("SELECT * FROM menu_items WHERE menu_id=:menu AND status='active' ORDER BY position,id");$s->execute(['menu'=>$menuId]);return array_map(fn(array $r)=>$this->hydrate($r),$s->fetchAll(PDO::FETCH_ASSOC));}]]></code>
-      <code><![CDATA[public function wouldCreateCycle(int $menuId,int $itemId,?int $parentId): bool{if($parentId===null)return false;if($parentId===$itemId)return true;$seen=[];$current=$parentId;$s=$this->pdo->prepare('SELECT parent_id FROM menu_items WHERE id=:id AND menu_id=:menu');while($current!==null){if(isset($seen[$current])||$current===$itemId)return true;$seen[$current]=true;$s->execute(['id'=>$current,'menu'=>$menuId]);$v=$s->fetchColumn();$current=$v===false||$v===null?null:(int)$v;}return false;}]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PdoMenuItemRepository]]></code>
     </UnusedClass>
@@ -2181,37 +2149,21 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Form/PageContentSectionProvider.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function formHandle(): string]]></code>
-      <code><![CDATA[public function sections(array $context): iterable]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PageContentSectionProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Form/PageDetailsSectionProvider.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function formHandle(): string]]></code>
-      <code><![CDATA[public function sections(array $context): iterable]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PageDetailsSectionProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Form/PagePublishingSectionProvider.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function formHandle(): string]]></code>
-      <code><![CDATA[public function sections(array $context): iterable]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PagePublishingSectionProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Form/PageSeoSectionProvider.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function formHandle(): string]]></code>
-      <code><![CDATA[public function sections(array $context): iterable]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PageSeoSectionProvider]]></code>
     </UnusedClass>
@@ -2628,19 +2580,11 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-page/src/Routing/PageFallbackHandler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function handle(object $request): mixed]]></code>
-      <code><![CDATA[public function supports(object $request): bool]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PageFallbackHandler]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Routing/PageFallbackHandlerAdapter.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function handle(object $request): mixed]]></code>
-      <code><![CDATA[public function supports(object $request): bool]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PageFallbackHandlerAdapter]]></code>
     </UnusedClass>
@@ -3038,28 +2982,16 @@
     <DeprecatedMethod>
       <code><![CDATA[setTempDirectory]]></code>
     </DeprecatedMethod>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function extensions(): array]]></code>
-      <code><![CDATA[public function renderFile(string $path, array $data): string]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[LatteTemplateEngine]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-theme/src/Template/Engine/PhpTemplateEngine.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function extensions(): array]]></code>
-      <code><![CDATA[public function renderFile(string $path, array $data): string]]></code>
-    </MissingOverrideAttribute>
     <UnresolvableInclude>
       <code><![CDATA[require $path]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-theme/src/Template/MarkoViewAdapter.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function render(string $template, array $data = []): Response]]></code>
-      <code><![CDATA[public function renderToString(string $template, array $data = []): string]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[MarkoViewAdapter]]></code>
     </UnusedClass>
@@ -3245,10 +3177,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-url-rewrite/src/Routing/UrlRewriteFallbackHandler.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function handle(object $request):mixed{if(!$request instanceof Request||!$this->supports($request))return $this->next->handle($request);$rewrite=$this->resolver->resolve((int)$request->siteContext()->siteId,$request->path());return $rewrite===null?$this->next->handle($request):Response::redirect($rewrite->targetPath,$rewrite->redirectType);}]]></code>
-      <code><![CDATA[public function supports(object $request):bool{return $request instanceof Request&&$request->method()==='GET'&&$request->siteContext()?->siteId!==null&&!$this->reserved($request->path());}]]></code>
-    </MissingOverrideAttribute>
     <PossiblyNullPropertyFetch>
       <code><![CDATA[$request->siteContext()->siteId]]></code>
     </PossiblyNullPropertyFetch>
@@ -3657,12 +3585,6 @@
       <code><![CDATA[public function record(GridWorkspaceExportAudit $audit): void]]></code>
     </MissingOverrideAttribute>
   </file>
-  <file src="packages/zoosper-api-grid/src/ApiGridDataSource.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function capabilities(): GridDataSourceCapabilities]]></code>
-      <code><![CDATA[public function fetch(GridQuery $query): GridResult]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="packages/zoosper-api-grid/src/Authentication/BearerTokenAuthentication.php">
     <MissingOverrideAttribute>
       <code><![CDATA[public function apply(ApiRequest $request): ApiRequest]]></code>
@@ -3838,10 +3760,6 @@
     <LessSpecificReturnStatement>
       <code><![CDATA[$statement->fetchAll()]]></code>
     </LessSpecificReturnStatement>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function paginate(GridCriteria $criteria): PaginationResult]]></code>
-      <code><![CDATA[public function record(?int $adminUserId, string $email, string $status, ?string $ipAddress, ?string $userAgent): void]]></code>
-    </MissingOverrideAttribute>
     <MoreSpecificReturnType>
       <code><![CDATA[list<array<string, mixed>>]]></code>
     </MoreSpecificReturnType>
@@ -4007,12 +3925,6 @@
       <code><![CDATA[(string) $key]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="packages/zoosper-errors/src/ZoosperException.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getContext(): string]]></code>
-      <code><![CDATA[public function getSuggestion(): string]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="packages/zoosper-grid/src/BulkAction/GridBulkActionAuthoriser.php">
     <UnusedClass>
       <code><![CDATA[GridBulkActionAuthoriser]]></code>
@@ -4169,10 +4081,6 @@
     </UnusedClass>
   </file>
   <file src="packages/zoosper-media/src/EditorJs/EditorJsImageBlockSanitizer.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function sanitise(array $data): ?array]]></code>
-      <code><![CDATA[public function validate(array $data): array]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[EditorJsImageBlockSanitizer]]></code>
     </UnusedClass>

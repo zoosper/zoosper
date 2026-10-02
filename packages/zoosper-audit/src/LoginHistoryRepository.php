@@ -29,6 +29,7 @@ final readonly class LoginHistoryRepository implements GridDataSourceInterface, 
     {
     }
 
+    #[\Override]
     public function record(?int $adminUserId, string $email, string $status, ?string $ipAddress, ?string $userAgent): void
     {
         $statement = $this->pdo->prepare(
@@ -66,6 +67,7 @@ final readonly class LoginHistoryRepository implements GridDataSourceInterface, 
      *
      * @return PaginationResult<array<string, mixed>>
      */
+    #[\Override]
     public function paginate(GridCriteria $criteria): PaginationResult
     {
         [$where, $params] = $this->whereClause($criteria);

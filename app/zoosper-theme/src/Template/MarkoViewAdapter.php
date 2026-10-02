@@ -25,12 +25,14 @@ final readonly class MarkoViewAdapter implements ViewInterface
     }
 
     /** @param array<string, mixed> $data */
+    #[\Override]
     public function render(string $template, array $data = []): Response
     {
         return new Response($this->renderToString($template, $data));
     }
 
     /** @param array<string, mixed> $data */
+    #[\Override]
     public function renderToString(string $template, array $data = []): string
     {
         return $this->templates->render(

@@ -16,6 +16,7 @@ final class PageFallbackHandler implements FallbackHandlerInterface
     ) {
     }
 
+    #[\Override]
     public function supports(object $request): bool
     {
         if (method_exists($this->pageController, 'supports')) {
@@ -27,6 +28,7 @@ final class PageFallbackHandler implements FallbackHandlerInterface
             || method_exists($this->pageController, '__invoke');
     }
 
+    #[\Override]
     public function handle(object $request): mixed
     {
         if (!$this->supports($request)) {

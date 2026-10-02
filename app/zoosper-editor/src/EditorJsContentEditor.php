@@ -26,12 +26,14 @@ final readonly class EditorJsContentEditor implements ContentEditorInterface
     ) {
     }
 
+    #[\Override]
     public function code(): string
     {
         return 'editorjs';
     }
 
     /** @param array<string, mixed> $context Additional rendering options. */
+    #[\Override]
     public function render(string $fieldName, string $value, array $context = []): string
     {
         $id = 'zoosper-editorjs-' . bin2hex(random_bytes(6));

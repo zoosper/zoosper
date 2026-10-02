@@ -46,12 +46,14 @@ final class LatteTemplateEngine implements TemplateEngineInterface
     }
 
     /** @return list<string> */
+    #[\Override]
     public function extensions(): array
     {
         return ['latte'];
     }
 
     /** @param array<string, mixed> $data */
+    #[\Override]
     public function renderFile(string $path, array $data): string
     {
         try {

@@ -77,11 +77,13 @@ final readonly class CachingFallbackHandler implements FallbackHandlerInterface
     ) {
     }
 
+    #[\Override]
     public function supports(object $request): bool
     {
         return $this->inner->supports($request);
     }
 
+    #[\Override]
     public function handle(object $request): mixed
     {
         if (!$this->enabled || !$request instanceof Request || $request->method() !== 'GET') {

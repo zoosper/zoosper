@@ -16,11 +16,13 @@ use Zoosper\AdminForm\AdminFormSectionProviderInterface;
  */
 final readonly class PagePublishingSectionProvider implements AdminFormSectionProviderInterface
 {
+    #[\Override]
     public function formHandle(): string
     {
         return 'page.form';
     }
 
+    #[\Override]
     public function sections(array $context): iterable
     {
         yield new AdminFormSection(

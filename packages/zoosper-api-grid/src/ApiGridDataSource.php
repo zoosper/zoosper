@@ -29,11 +29,13 @@ final readonly class ApiGridDataSource implements GridDataSourceInterface
     ) {
     }
 
+    #[\Override]
     public function capabilities(): GridDataSourceCapabilities
     {
         return $this->capabilities;
     }
 
+    #[\Override]
     public function fetch(GridQuery $query): GridResult
     {
         $request = $this->authentication->apply($this->requestMapper->map($query, $this->context));
