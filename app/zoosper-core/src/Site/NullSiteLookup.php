@@ -9,20 +9,27 @@ namespace Zoosper\Core\Site;
  */
 final class NullSiteLookup implements SiteLookupInterface
 {
+    #[\Override]
     public function findByHost(string $host): ?ResolvedSite
     {
         return null;
     }
+
+    #[\Override]
 
     public function findActiveByHost(string $host): ?ResolvedSite
     {
         return null;
     }
 
+    #[\Override]
+
     public function findByCode(string $code): ?ResolvedSite
     {
         return null;
     }
+
+    #[\Override]
 
     public function findDefault(): ?ResolvedSite
     {

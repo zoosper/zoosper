@@ -17,6 +17,8 @@ final readonly class DashboardRolePreferenceRepository implements DashboardRoleP
     {
     }
 
+    #[\Override]
+
     public function roles(): array
     {
         $rows = $this->pdo->query('SELECT id, code, label FROM admin_roles ORDER BY code ASC')->fetchAll();
@@ -26,6 +28,8 @@ final readonly class DashboardRolePreferenceRepository implements DashboardRoleP
             $rows,
         );
     }
+
+    #[\Override]
 
     public function findForRole(int $roleId): ?DashboardRolePreference
     {
@@ -46,6 +50,8 @@ final readonly class DashboardRolePreferenceRepository implements DashboardRoleP
         return $this->hydrate($row);
     }
 
+    #[\Override]
+
     public function findForUser(int $adminUserId): array
     {
         if ($adminUserId <= 0) {
@@ -62,6 +68,8 @@ final readonly class DashboardRolePreferenceRepository implements DashboardRoleP
 
         return array_map(fn (array $row): DashboardRolePreference => $this->hydrate($row), $statement->fetchAll());
     }
+
+    #[\Override]
 
     public function saveForRole(int $roleId, array $hiddenWidgetCodes, array $widgetOrder): void
     {
@@ -88,6 +96,8 @@ final readonly class DashboardRolePreferenceRepository implements DashboardRoleP
         }
         $statement->execute($payload);
     }
+
+    #[\Override]
 
     public function clearForRole(int $roleId): void
     {

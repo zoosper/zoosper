@@ -18,6 +18,8 @@ final class SessionFlashMessageStore implements FlashMessageStoreInterface
 {
     private const SESSION_KEY = '_zoosper_admin_flash_messages';
 
+    #[\Override]
+
     public function add(FlashMessage $message): void
     {
         $this->ensureSessionStarted();
@@ -25,25 +27,35 @@ final class SessionFlashMessageStore implements FlashMessageStoreInterface
         $_SESSION[self::SESSION_KEY][$message->key] = $message->toArray();
     }
 
+    #[\Override]
+
     public function success(string $text, string $key = 'success'): void
     {
         $this->add(new FlashMessage(FlashMessage::SUCCESS, $text, $key));
     }
+
+    #[\Override]
 
     public function error(string $text, string $key = 'error'): void
     {
         $this->add(new FlashMessage(FlashMessage::ERROR, $text, $key, dismissible: true));
     }
 
+    #[\Override]
+
     public function warning(string $text, string $key = 'warning'): void
     {
         $this->add(new FlashMessage(FlashMessage::WARNING, $text, $key));
     }
 
+    #[\Override]
+
     public function info(string $text, string $key = 'info'): void
     {
         $this->add(new FlashMessage(FlashMessage::INFO, $text, $key));
     }
+
+    #[\Override]
 
     public function pull(): array
     {
@@ -52,6 +64,8 @@ final class SessionFlashMessageStore implements FlashMessageStoreInterface
 
         return $messages;
     }
+
+    #[\Override]
 
     public function peek(): array
     {

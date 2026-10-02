@@ -119,15 +119,6 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-admin/src/Message/SessionFlashMessageStore.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function add(FlashMessage $message): void]]></code>
-      <code><![CDATA[public function error(string $text, string $key = 'error'): void]]></code>
-      <code><![CDATA[public function info(string $text, string $key = 'info'): void]]></code>
-      <code><![CDATA[public function peek(): array]]></code>
-      <code><![CDATA[public function pull(): array]]></code>
-      <code><![CDATA[public function success(string $text, string $key = 'success'): void]]></code>
-      <code><![CDATA[public function warning(string $text, string $key = 'warning'): void]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[SessionFlashMessageStore]]></code>
     </UnusedClass>
@@ -144,14 +135,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-admin/src/Navigation/AdminMenuItem.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getIcon(): string]]></code>
-      <code><![CDATA[public function getId(): string]]></code>
-      <code><![CDATA[public function getLabel(): string]]></code>
-      <code><![CDATA[public function getPermission(): string]]></code>
-      <code><![CDATA[public function getSortOrder(): int]]></code>
-      <code><![CDATA[public function getUrl(): string]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[getGroup]]></code>
       <code><![CDATA[getParent]]></code>
@@ -171,15 +154,6 @@
     <RedundantFunctionCall>
       <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
-  </file>
-  <file src="app/zoosper-admin/src/Navigation/AdminSection.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getIcon(): string { return $this->icon; }]]></code>
-      <code><![CDATA[public function getId(): string { return $this->id; }]]></code>
-      <code><![CDATA[public function getLabel(): string { return $this->label; }]]></code>
-      <code><![CDATA[public function getMenuItems(): array { return $this->items; }]]></code>
-      <code><![CDATA[public function getSortOrder(): int { return $this->sortOrder; }]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="app/zoosper-admin/src/Navigation/AdminSectionMetadataLoader.php">
     <PossiblyUnusedMethod>
@@ -540,13 +514,6 @@
         )]]></code>
       <code><![CDATA[array_map(fn (array $row): DashboardRolePreference => $this->hydrate($row), $statement->fetchAll())]]></code>
     </LessSpecificReturnStatement>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function clearForRole(int $roleId): void]]></code>
-      <code><![CDATA[public function findForRole(int $roleId): ?DashboardRolePreference]]></code>
-      <code><![CDATA[public function findForUser(int $adminUserId): array]]></code>
-      <code><![CDATA[public function roles(): array]]></code>
-      <code><![CDATA[public function saveForRole(int $roleId, array $hiddenWidgetCodes, array $widgetOrder): void]]></code>
-    </MissingOverrideAttribute>
     <MoreSpecificReturnType>
       <code><![CDATA[array]]></code>
       <code><![CDATA[array]]></code>
@@ -1766,14 +1733,6 @@
     <UnusedClass>
       <code><![CDATA[NullSiteContextProvider]]></code>
     </UnusedClass>
-  </file>
-  <file src="app/zoosper-core/src/Site/NullSiteLookup.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function findActiveByHost(string $host): ?ResolvedSite]]></code>
-      <code><![CDATA[public function findByCode(string $code): ?ResolvedSite]]></code>
-      <code><![CDATA[public function findByHost(string $host): ?ResolvedSite]]></code>
-      <code><![CDATA[public function findDefault(): ?ResolvedSite]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="app/zoosper-core/src/Site/ResolvedSite.php">
     <PossiblyUnusedProperty>
@@ -3090,12 +3049,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-site/src/Infrastructure/DatabaseSiteLookup.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function findActiveByHost(string $host): ?ResolvedSite]]></code>
-      <code><![CDATA[public function findByCode(string $code): ?ResolvedSite]]></code>
-      <code><![CDATA[public function findByHost(string $host): ?ResolvedSite]]></code>
-      <code><![CDATA[public function findDefault(): ?ResolvedSite]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[DatabaseSiteLookup]]></code>
     </UnusedClass>

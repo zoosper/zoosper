@@ -28,30 +28,42 @@ final readonly class AdminMenuItem implements MenuItemInterface
     ) {
     }
 
+    #[\Override]
+
     public function getId(): string
     {
         return $this->code;
     }
+
+    #[\Override]
 
     public function getLabel(): string
     {
         return $this->label;
     }
 
+    #[\Override]
+
     public function getUrl(): string
     {
         return $this->url;
     }
+
+    #[\Override]
 
     public function getIcon(): string
     {
         return $this->icon;
     }
 
+    #[\Override]
+
     public function getSortOrder(): int
     {
         return $this->sortOrder;
     }
+
+    #[\Override]
 
     public function getPermission(): string
     {

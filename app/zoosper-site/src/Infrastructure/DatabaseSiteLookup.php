@@ -21,6 +21,8 @@ final class DatabaseSiteLookup implements SiteLookupInterface
     ) {
     }
 
+    #[\Override]
+
     public function findByHost(string $host): ?ResolvedSite
     {
         foreach (['findByHost', 'findByDomain', 'findActiveByHost'] as $method) {
@@ -31,6 +33,8 @@ final class DatabaseSiteLookup implements SiteLookupInterface
 
         return null;
     }
+
+    #[\Override]
 
     public function findActiveByHost(string $host): ?ResolvedSite
     {
@@ -43,6 +47,8 @@ final class DatabaseSiteLookup implements SiteLookupInterface
         return null;
     }
 
+    #[\Override]
+
     public function findByCode(string $code): ?ResolvedSite
     {
         foreach (['findByCode', 'findOneByCode'] as $method) {
@@ -53,6 +59,8 @@ final class DatabaseSiteLookup implements SiteLookupInterface
 
         return null;
     }
+
+    #[\Override]
 
     public function findDefault(): ?ResolvedSite
     {

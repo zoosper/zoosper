@@ -19,11 +19,17 @@ final readonly class AdminSection implements AdminSectionInterface
     ) {
     }
 
+    #[\Override]
+
     public function getId(): string { return $this->id; }
+    #[\Override]
     public function getLabel(): string { return $this->label; }
+    #[\Override]
     public function getIcon(): string { return $this->icon; }
+    #[\Override]
     public function getSortOrder(): int { return $this->sortOrder; }
     /** @return list<MenuItemInterface> */
+    #[\Override]
     public function getMenuItems(): array { return $this->items; }
 }
 
