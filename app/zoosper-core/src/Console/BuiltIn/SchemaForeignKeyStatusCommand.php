@@ -18,10 +18,13 @@ final readonly class SchemaForeignKeyStatusCommand implements ConsoleCommandInte
     {
     }
 
+    #[\Override]
     public function name(): string { return 'schema:foreign-keys:status'; }
+    #[\Override]
     public function description(): string { return 'Inspect declared and live foreign-key reconciliation status.'; }
 
     /** @throws JsonException */
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $format = ConsoleOptions::parse($args)['format'] ?? 'text';

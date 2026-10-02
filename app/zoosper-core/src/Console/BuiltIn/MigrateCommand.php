@@ -7,8 +7,11 @@ use Zoosper\Database\Migrator;
 final readonly class MigrateCommand implements ConsoleCommandInterface
 {
     public function __construct(private Migrator $migrator) {}
+    #[\Override]
     public function name(): string { return 'migrate'; }
+    #[\Override]
     public function description(): string { return 'Apply module-owned database migrations.'; }
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         if ($args !== []) {

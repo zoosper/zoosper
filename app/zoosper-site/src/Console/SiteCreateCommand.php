@@ -25,16 +25,19 @@ final readonly class SiteCreateCommand implements ConsoleCommandInterface
     {
     }
 
+    #[\Override]
     public function name(): string
     {
         return 'site:create';
     }
 
+    #[\Override]
     public function description(): string
     {
         return "--code=main --name='Main Website' --host=127.0.0.1";
     }
 
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $options = ConsoleOptions::parse($args);

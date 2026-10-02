@@ -7,8 +7,11 @@ use Zoosper\Core\Module\ModuleManifestCompiler;
 final readonly class CacheClearCommand implements ConsoleCommandInterface
 {
     public function __construct(private ModuleManifestCompiler $compiler) {}
+    #[\Override]
     public function name(): string { return 'cache:clear'; }
+    #[\Override]
     public function description(): string { return 'Clear the compiled module manifest.'; }
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $compiled = $this->compiler->isCompiled(); $this->compiler->clear();

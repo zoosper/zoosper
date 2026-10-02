@@ -9,8 +9,11 @@ use Zoosper\Core\Module\ModuleManifestStatus;
 final readonly class DeployCommand implements ConsoleCommandInterface
 {
     public function __construct(private Migrator $migrator, private ModuleManifestCompiler $compiler, private ModuleManifestStatus $status) {}
+    #[\Override]
     public function name(): string { return 'deploy'; }
+    #[\Override]
     public function description(): string { return 'Regenerate autoloading, migrate and compile the module manifest.'; }
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $output->writeln('== Zoosper deploy =='); $output->writeln();

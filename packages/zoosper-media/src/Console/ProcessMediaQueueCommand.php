@@ -30,16 +30,19 @@ final readonly class ProcessMediaQueueCommand implements ConsoleCommandInterface
     ) {
     }
 
+    #[\Override]
     public function name(): string
     {
         return 'media:process-queue';
     }
 
+    #[\Override]
     public function description(): string
     {
         return 'Process pending media derivative tasks.';
     }
 
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $statement = $this->pdo->query("SELECT * FROM media_processing_queue WHERE status = 'pending' ORDER BY id ASC LIMIT 50");

@@ -1,4 +1,5 @@
 # Changelog
+- Continued Psalm baseline reduction across the complete 24-command console cohort, adding 72 explicit `#[Override]` contracts for command name, description and execution methods without changing command behaviour.
 - Continued Psalm baseline reduction with 31 explicit `#[Override]` contracts across Admin navigation and messages, Auth Dashboard preferences, and Core/Site lookup adapters; no runtime behaviour changed.
 - Reduced the reviewed Psalm baseline through a four-adapter pass across Cache, Config and Logger: added 36 explicit PHP 8.5 `#[Override]` contracts without changing runtime behaviour, then refreshed the stale-entry-rejecting baseline.
 - Closed Admin Grid query-performance hardening for indexable operational filters with module-owned composite indexes and executable SQLite query-plan regression coverage; leading-wildcard free-text searches are explicitly not misrepresented as B-tree optimized.

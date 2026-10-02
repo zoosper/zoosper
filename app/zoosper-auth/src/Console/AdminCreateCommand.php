@@ -30,16 +30,19 @@ final readonly class AdminCreateCommand implements ConsoleCommandInterface
     ) {
     }
 
+    #[\Override]
     public function name(): string
     {
         return 'admin:create';
     }
 
+    #[\Override]
     public function description(): string
     {
         return "--email=admin@example.com --password='ChangeMe123!' --name='Admin User'";
     }
 
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $options = ConsoleOptions::parse($args);

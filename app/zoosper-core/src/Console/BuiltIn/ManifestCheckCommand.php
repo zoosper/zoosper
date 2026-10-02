@@ -9,9 +9,12 @@ use Zoosper\Core\Module\ModuleManifestStatus;
 final readonly class ManifestCheckCommand implements ConsoleCommandInterface
 {
     public function __construct(private ModuleManifestStatus $status) {}
+    #[\Override]
     public function name(): string { return 'module:manifest:check'; }
+    #[\Override]
     public function description(): string { return 'Fail unless the compiled module manifest is fresh.'; }
     /** @throws JsonException */
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $options = ConsoleOptions::parse($args); $format = $options['format'] ?? 'text';

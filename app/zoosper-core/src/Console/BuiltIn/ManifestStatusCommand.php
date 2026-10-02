@@ -9,9 +9,12 @@ use Zoosper\Core\Module\ModuleManifestStatus;
 final readonly class ManifestStatusCommand implements ConsoleCommandInterface
 {
     public function __construct(private ModuleManifestStatus $status) {}
+    #[\Override]
     public function name(): string { return 'module:manifest:status'; }
+    #[\Override]
     public function description(): string { return 'Inspect compiled module-manifest health.'; }
     /** @throws JsonException */
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $options = ConsoleOptions::parse($args); $format = $options['format'] ?? 'text';

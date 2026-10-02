@@ -20,16 +20,19 @@ final readonly class ModuleUninstallCommand implements ConsoleCommandInterface
     ) {
     }
 
+    #[\Override]
     public function name(): string
     {
         return 'module:uninstall';
     }
 
+    #[\Override]
     public function description(): string
     {
         return 'Uninstall a Zoosper module (disables and marks as uninstalled).';
     }
 
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $name = $args[0] ?? null;

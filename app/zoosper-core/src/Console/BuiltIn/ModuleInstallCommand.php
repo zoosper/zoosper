@@ -24,16 +24,19 @@ final readonly class ModuleInstallCommand implements ConsoleCommandInterface
     ) {
     }
 
+    #[\Override]
     public function name(): string
     {
         return 'module:install';
     }
 
+    #[\Override]
     public function description(): string
     {
         return 'Install a Zoosper module and run its migrations.';
     }
 
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $name = $args[0] ?? null;

@@ -21,16 +21,19 @@ final readonly class PruneLogsCommand implements ConsoleCommandInterface
     ) {
     }
 
+    #[\Override]
     public function name(): string
     {
         return 'admin:logs:prune';
     }
 
+    #[\Override]
     public function description(): string
     {
         return '--days=90';
     }
 
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $options = ConsoleOptions::parse($args);

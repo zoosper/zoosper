@@ -27,16 +27,19 @@ final readonly class PageCreateCommand implements ConsoleCommandInterface
     ) {
     }
 
+    #[\Override]
     public function name(): string
     {
         return 'page:create';
     }
 
+    #[\Override]
     public function description(): string
     {
         return "--site=main --title='Home' --slug=home --content='Welcome to Zoosper.'";
     }
 
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $options = ConsoleOptions::parse($args);

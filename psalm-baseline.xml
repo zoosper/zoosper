@@ -489,11 +489,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Console/AdminCreateCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string]]></code>
-      <code><![CDATA[public function name(): string]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[AdminCreateCommand]]></code>
     </UnusedClass>
@@ -891,181 +886,91 @@
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/CacheClearCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string { return 'Clear the compiled module manifest.'; }]]></code>
-      <code><![CDATA[public function name(): string { return 'cache:clear'; }]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[CacheClearCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/CompileCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string { return 'Compile the enabled-module manifest cache.'; }]]></code>
-      <code><![CDATA[public function name(): string { return 'compile'; }]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[CompileCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/DeployCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string { return 'Regenerate autoloading, migrate and compile the module manifest.'; }]]></code>
-      <code><![CDATA[public function name(): string { return 'deploy'; }]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[DeployCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/GenerateSecretsCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string]]></code>
-      <code><![CDATA[public function name(): string]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[GenerateSecretsCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/MakeConsoleCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string{return 'Scaffold a module-owned console command.';}]]></code>
-      <code><![CDATA[public function name(): string{return 'make:command';}]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int { $o=ConsoleOptions::parse($args); $r=$this->scaffolder->scaffold($args[0]??'', $args[1]??'', ConsoleOptions::required($o,'name'), $o['description']??''); $output->writeln("Created console command {$r->commandName}"); $output->writeln("Module: {$r->moduleName}"); $output->writeln("Class: {$r->commandClass}"); $output->writeln('Files:'); foreach($r->createdFiles as $f){$output->writeln("  - {$f}");} $output->writeln("Run it with: php bin/zoosper {$r->commandName}"); return 0; }]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[MakeConsoleCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/MakeModuleCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string{return 'Scaffold an app module.';}]]></code>
-      <code><![CDATA[public function name(): string{return 'make:module';}]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int { $r=$this->scaffolder->scaffold($args[0]??''); $output->writeln("Created module {$r->moduleName}"); $output->writeln("Namespace: {$r->namespace}"); $output->writeln("Path: {$r->modulePath}"); $output->writeln('Files:'); foreach($r->createdFiles as $f){$output->writeln("  - {$f}");} $output->writeln("Next: add the PSR-4 autoload snippet from {$r->modulePath}/README.md if you add PHP classes."); return 0; }]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[MakeModuleCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/MakePackageModuleCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string{return 'Scaffold a Composer package module.';}]]></code>
-      <code><![CDATA[public function name(): string{return 'make:package-module';}]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int { $r=$this->scaffolder->scaffold($args[0]??''); $output->writeln("Created package module {$r->moduleName}"); $output->writeln("Package: {$r->packageName}"); $output->writeln("Namespace: {$r->namespace}"); $output->writeln("Path: {$r->packagePath}"); $output->writeln('Files:'); foreach($r->createdFiles as $f){$output->writeln("  - {$f}");} $output->writeln("Next: run PHP=php8.5 composer dump-autoload and vendor/bin/pest {$r->packagePath}/tests/Unit."); return 0; }]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[MakePackageModuleCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ManifestCheckCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string { return 'Fail unless the compiled module manifest is fresh.'; }]]></code>
-      <code><![CDATA[public function name(): string { return 'module:manifest:check'; }]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[ManifestCheckCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ManifestStatusCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string { return 'Inspect compiled module-manifest health.'; }]]></code>
-      <code><![CDATA[public function name(): string { return 'module:manifest:status'; }]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[ManifestStatusCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/MigrateCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string { return 'Apply module-owned database migrations.'; }]]></code>
-      <code><![CDATA[public function name(): string { return 'migrate'; }]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[MigrateCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ModuleDisableCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string]]></code>
-      <code><![CDATA[public function name(): string]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[ModuleDisableCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ModuleEnableCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string]]></code>
-      <code><![CDATA[public function name(): string]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[ModuleEnableCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ModuleInstallCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string]]></code>
-      <code><![CDATA[public function name(): string]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[ModuleInstallCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ModuleUninstallCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string]]></code>
-      <code><![CDATA[public function name(): string]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[ModuleUninstallCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ReleaseCheckCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string{return 'Run alpha release-readiness checks.';}]]></code>
-      <code><![CDATA[public function name(): string{return 'release:check';}]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int { $failed=0; foreach($this->check->run() as $r){$output->writeln(($r->passed?'[PASS]':'[FAIL]')." {$r->name}: {$r->message}"); if(!$r->passed){$failed++;}} $output->writeln($failed===0?'Alpha release checks passed.':"Alpha release checks failed: {$failed} blocker(s)."); return $failed===0?0:1; }]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[ReleaseCheckCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/SchemaForeignKeyApplyCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string { return 'Apply only safe missing MySQL foreign keys; use --dry-run=1 to inspect.'; }]]></code>
-      <code><![CDATA[public function name(): string { return 'schema:foreign-keys:apply'; }]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[SchemaForeignKeyApplyCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/SchemaForeignKeyStatusCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string { return 'Inspect declared and live foreign-key reconciliation status.'; }]]></code>
-      <code><![CDATA[public function name(): string { return 'schema:foreign-keys:status'; }]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/VersionCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string{return 'Display the Zoosper release version.';}]]></code>
-      <code><![CDATA[public function name(): string{return 'version';}]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int { $v=require $this->basePath.'/config/version.php'; $output->writeln('Zoosper '.$v['version'].' ('.$v['channel'].')'); return 0; }]]></code>
-    </MissingOverrideAttribute>
     <UnresolvableInclude>
       <code><![CDATA[require $this->basePath.'/config/version.php']]></code>
     </UnresolvableInclude>
@@ -2564,21 +2469,11 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-page/src/Console/PageCreateCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string]]></code>
-      <code><![CDATA[public function name(): string]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PageCreateCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Console/StarterSiteInstallCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string]]></code>
-      <code><![CDATA[public function name(): string]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[StarterSiteInstallCommand]]></code>
     </UnusedClass>
@@ -3039,11 +2934,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Console/SiteCreateCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string]]></code>
-      <code><![CDATA[public function name(): string]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[SiteCreateCommand]]></code>
     </UnusedClass>
@@ -3915,11 +3805,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-audit/src/Console/PruneLogsCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string]]></code>
-      <code><![CDATA[public function name(): string]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[PruneLogsCommand]]></code>
     </UnusedClass>
@@ -4261,11 +4146,6 @@
     </UnusedClass>
   </file>
   <file src="packages/zoosper-media/src/Console/ProcessMediaQueueCommand.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function description(): string]]></code>
-      <code><![CDATA[public function name(): string]]></code>
-      <code><![CDATA[public function run(array $args, ConsoleOutput $output): int]]></code>
-    </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[ProcessMediaQueueCommand]]></code>
     </UnusedClass>

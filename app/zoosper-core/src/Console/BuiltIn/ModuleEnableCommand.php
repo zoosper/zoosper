@@ -20,16 +20,19 @@ final readonly class ModuleEnableCommand implements ConsoleCommandInterface
     ) {
     }
 
+    #[\Override]
     public function name(): string
     {
         return 'module:enable';
     }
 
+    #[\Override]
     public function description(): string
     {
         return 'Enable a Zoosper module.';
     }
 
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $name = $args[0] ?? null;

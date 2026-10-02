@@ -32,16 +32,19 @@ final readonly class GenerateSecretsCommand implements ConsoleCommandInterface
     {
     }
 
+    #[\Override]
     public function name(): string
     {
         return 'security:generate-secrets';
     }
 
+    #[\Override]
     public function description(): string
     {
         return 'Generate or audit cryptographically strong application secrets and encryption keys.';
     }
 
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $options = ConsoleOptions::parse($args);

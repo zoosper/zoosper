@@ -23,16 +23,19 @@ final readonly class StarterSiteInstallCommand implements ConsoleCommandInterfac
     ) {
     }
 
+    #[\Override]
     public function name(): string
     {
         return 'starter:install';
     }
 
+    #[\Override]
     public function description(): string
     {
         return '--site=main --name="Main Website" --host=127.0.0.1';
     }
 
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $options = ConsoleOptions::parse($args);

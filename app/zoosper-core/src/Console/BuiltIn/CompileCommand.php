@@ -7,8 +7,11 @@ use Zoosper\Core\Module\ModuleManifestCompiler;
 final readonly class CompileCommand implements ConsoleCommandInterface
 {
     public function __construct(private ModuleManifestCompiler $compiler) {}
+    #[\Override]
     public function name(): string { return 'compile'; }
+    #[\Override]
     public function description(): string { return 'Compile the enabled-module manifest cache.'; }
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $modules = $this->compiler->compile();

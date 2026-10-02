@@ -19,9 +19,12 @@ final readonly class SchemaForeignKeyApplyCommand implements ConsoleCommandInter
     ) {
     }
 
+    #[\Override]
     public function name(): string { return 'schema:foreign-keys:apply'; }
+    #[\Override]
     public function description(): string { return 'Apply only safe missing MySQL foreign keys; use --dry-run=1 to inspect.'; }
 
+    #[\Override]
     public function run(array $args, ConsoleOutput $output): int
     {
         $options = ConsoleOptions::parse($args);
