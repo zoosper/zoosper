@@ -33,14 +33,23 @@ final class LocalLogger implements LoggerInterface
             $rotation,
         );
     }
+    #[\Override]
     public function emergency(string $message, array $context = []): void { $this->write('emergency', $message, $context); }
+    #[\Override]
     public function alert(string $message, array $context = []): void { $this->write('alert', $message, $context); }
+    #[\Override]
     public function critical(string $message, array $context = []): void { $this->write('critical', $message, $context); }
+    #[\Override]
     public function error(string $message, array $context = []): void { $this->write('error', $message, $context); }
+    #[\Override]
     public function warning(string $message, array $context = []): void { $this->write('warning', $message, $context); }
+    #[\Override]
     public function notice(string $message, array $context = []): void { $this->write('notice', $message, $context); }
+    #[\Override]
     public function info(string $message, array $context = []): void { $this->write('info', $message, $context); }
+    #[\Override]
     public function debug(string $message, array $context = []): void { $this->write('debug', $message, $context); }
+    #[\Override]
     public function exception(Throwable $exception, array $context = []): void
     {
         $context['exception'] = ['class' => $exception::class, 'message' => $exception->getMessage(), 'file' => $exception->getFile(), 'line' => $exception->getLine(), 'trace' => $exception->getTraceAsString()];

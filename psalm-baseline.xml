@@ -3891,7 +3891,7 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-api-grid/src/Transport/CurlJsonApiTransport.php">
-<MissingOverrideAttribute>
+    <MissingOverrideAttribute>
       <code><![CDATA[public function send(ApiRequest $request, ApiReliabilityPolicy $policy): ApiResponse]]></code>
     </MissingOverrideAttribute>
     <TypeDoesNotContainType>
@@ -4016,17 +4016,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-cache/src/Config/ObjectConfigAdapter.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function all(?string $scope = null): array { throw new ConfigException('ObjectConfigAdapter does not support all().'); }]]></code>
-      <code><![CDATA[public function get(string $key, mixed $default = null, ?string $scope = null): mixed { $value=$this->config->get($key,$default); if ($value===null && func_num_args()<2) throw new ConfigNotFoundException($key); return $value; }]]></code>
-      <code><![CDATA[public function getArray(string $key, ?string $scope = null): array { $v=$this->get($key,null,$scope); if(!is_array($v)) throw new ConfigException('Configuration value is not an array.'); return $v; }]]></code>
-      <code><![CDATA[public function getBool(string $key, ?string $scope = null): bool { $v=$this->get($key,null,$scope); if(!is_bool($v)) throw new ConfigException('Configuration value is not a boolean.'); return $v; }]]></code>
-      <code><![CDATA[public function getFloat(string $key, ?string $scope = null): float { $v=$this->get($key,null,$scope); if(!is_float($v)&&!is_int($v)) throw new ConfigException('Configuration value is not a float.'); return (float)$v; }]]></code>
-      <code><![CDATA[public function getInt(string $key, ?string $scope = null): int { $v=$this->get($key,null,$scope); if(!is_int($v)) throw new ConfigException('Configuration value is not an integer.'); return $v; }]]></code>
-      <code><![CDATA[public function getString(string $key, ?string $scope = null): string { $v=$this->get($key,null,$scope); if(!is_string($v)) throw new ConfigException('Configuration value is not a string.'); return $v; }]]></code>
-      <code><![CDATA[public function has(string $key, ?string $scope = null): bool { return $this->config->get($key,null)!==null; }]]></code>
-      <code><![CDATA[public function withScope(string $scope): ConfigRepositoryInterface { throw new ConfigException('ObjectConfigAdapter does not support withScope().'); }]]></code>
-    </MissingOverrideAttribute>
     <ParamNameMismatch>
       <code><![CDATA[$default]]></code>
     </ParamNameMismatch>
@@ -4046,17 +4035,6 @@
     </PossiblyUnusedReturnValue>
   </file>
   <file src="packages/zoosper-cache/src/Driver/MarkoCacheAdapter.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function clear(): bool { return $this->driver->clear(); }]]></code>
-      <code><![CDATA[public function delete(string $key): bool { return $this->driver->delete($key); }]]></code>
-      <code><![CDATA[public function deleteMultiple(array $keys): bool { return $this->driver->deleteMultiple($keys); }]]></code>
-      <code><![CDATA[public function get(string $key, mixed $default = null): mixed { return $this->driver->get($key, $default); }]]></code>
-      <code><![CDATA[public function getMultiple(array $keys, mixed $default = null): iterable { return $this->driver->getMultiple($keys, $default); }]]></code>
-      <code><![CDATA[public function has(string $key): bool { return $this->driver->has($key); }]]></code>
-      <code><![CDATA[public function increment(string $key, int $ttl): int { return $this->driver->increment($key, $ttl); }]]></code>
-      <code><![CDATA[public function set(string $key, mixed $value, ?int $ttl = null): bool { return $this->driver->set($key, $value, $ttl); }]]></code>
-      <code><![CDATA[public function setMultiple(array $values, ?int $ttl = null): bool { return $this->driver->setMultiple($values, $ttl); }]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[markoDriver]]></code>
     </PossiblyUnusedMethod>
@@ -4068,19 +4046,6 @@
     <UnusedClass>
       <code><![CDATA[CacheDriverFactory]]></code>
     </UnusedClass>
-  </file>
-  <file src="packages/zoosper-config/src/Bridge/MarkoConfigRepositoryAdapter.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function all(?string $scope = null): array { throw new ConfigException('MarkoConfigRepositoryAdapter does not support all().', "Zoosper's application repository does not expose its full merged array.", 'Access specific keys instead.'); }]]></code>
-      <code><![CDATA[public function get(string $key, ?string $scope = null): mixed]]></code>
-      <code><![CDATA[public function getArray(string $key, ?string $scope = null): array { $v=$this->get($key,$scope); if(!is_array($v)) throw $this->typeError($key,'array',$v); return $v; }]]></code>
-      <code><![CDATA[public function getBool(string $key, ?string $scope = null): bool { $v=$this->get($key,$scope); if(!is_scalar($v)) throw $this->typeError($key,'boolean',$v); return (bool)$v; }]]></code>
-      <code><![CDATA[public function getFloat(string $key, ?string $scope = null): float { $v=$this->get($key,$scope); if(!is_numeric($v)) throw $this->typeError($key,'float',$v); return (float)$v; }]]></code>
-      <code><![CDATA[public function getInt(string $key, ?string $scope = null): int { $v=$this->get($key,$scope); if(!is_numeric($v)) throw $this->typeError($key,'integer',$v); return (int)$v; }]]></code>
-      <code><![CDATA[public function getString(string $key, ?string $scope = null): string { $v=$this->get($key,$scope); if(!is_scalar($v)) throw $this->typeError($key,'string',$v); return (string)$v; }]]></code>
-      <code><![CDATA[public function has(string $key, ?string $scope = null): bool { return $this->config->get($key, $this->missing) !== $this->missing; }]]></code>
-      <code><![CDATA[public function withScope(string $scope): ConfigRepositoryInterface { throw new ConfigException('MarkoConfigRepositoryAdapter does not support withScope().', 'Application and persisted scoped configuration remain separate boundaries.', 'Use the scoped configuration repository explicitly.'); }]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="packages/zoosper-database/src/MigrationInterface.php">
     <UnusedClass>
@@ -4299,19 +4264,6 @@
       <code><![CDATA[notice]]></code>
       <code><![CDATA[warning]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="packages/zoosper-logger/src/Driver/LocalLogger.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function alert(string $message, array $context = []): void { $this->write('alert', $message, $context); }]]></code>
-      <code><![CDATA[public function critical(string $message, array $context = []): void { $this->write('critical', $message, $context); }]]></code>
-      <code><![CDATA[public function debug(string $message, array $context = []): void { $this->write('debug', $message, $context); }]]></code>
-      <code><![CDATA[public function emergency(string $message, array $context = []): void { $this->write('emergency', $message, $context); }]]></code>
-      <code><![CDATA[public function error(string $message, array $context = []): void { $this->write('error', $message, $context); }]]></code>
-      <code><![CDATA[public function exception(Throwable $exception, array $context = []): void]]></code>
-      <code><![CDATA[public function info(string $message, array $context = []): void { $this->write('info', $message, $context); }]]></code>
-      <code><![CDATA[public function notice(string $message, array $context = []): void { $this->write('notice', $message, $context); }]]></code>
-      <code><![CDATA[public function warning(string $message, array $context = []): void { $this->write('warning', $message, $context); }]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="packages/zoosper-media/src/Admin/Grid/MediaGridSource.php">
     <InvalidReturnStatement>

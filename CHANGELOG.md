@@ -1,4 +1,5 @@
 # Changelog
+- Reduced the reviewed Psalm baseline through a four-adapter pass across Cache, Config and Logger: added 36 explicit PHP 8.5 `#[Override]` contracts without changing runtime behaviour, then refreshed the stale-entry-rejecting baseline.
 - Closed Admin Grid query-performance hardening for indexable operational filters with module-owned composite indexes and executable SQLite query-plan regression coverage; leading-wildcard free-text searches are explicitly not misrepresented as B-tree optimized.
 - Closed Phase 4ZO developer experience with reusable API Grid transport fixtures, a maintained source-only example integration, complete integration guidance, and an explicit compatibility and upgrade policy.
 - Opened Phase 4ZO developer experience with a fail-closed `make:api-grid` package generator, reusable response fixtures, bounded prerelease dependencies and explicit opt-in registration guidance.
