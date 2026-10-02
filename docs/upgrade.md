@@ -12,11 +12,11 @@ Zoosper 0.3 first-party packages use one synchronised release train and bounded 
 
 `migrate` is a write command and deliberately has no dry-run option. Rehearse upgrades with a disposable database and isolated Git worktree before changing a production installation. Run `schema:foreign-keys:status --format=json` separately for read-only foreign-key inspection. Require globally unique migration basenames because the current migration history stores basenames.
 
-The current latest-release proof starts from the latest immutable source release `v0.3.2-alpha.1`. Historical BR-2 evidence for `v0.3.1-alpha.1` remains recorded separately. Direct upgrade proof from `v0.3.0-alpha.5` is a separate compatibility gate. Preserve representative Admin, Site, Page, Menu, Media, permission, audit, and Grid data across the rehearsal, run migration twice for idempotency, then require zero foreign-key additions, mismatches, and SQLite rebuild requirements.
+The current latest-release proof starts from the latest immutable source release `v0.3.2-alpha.2`. Historical BR-2 evidence for `v0.3.1-alpha.1` remains recorded separately. Direct upgrade proof from `v0.3.0-alpha.5` is a separate compatibility gate. Preserve representative Admin, Site, Page, Menu, Media, permission, audit, and Grid data across the rehearsal, run migration twice for idempotency, then require zero foreign-key additions, mismatches, and SQLite rebuild requirements.
 
 ## Latest-release preservation proof
 
-Run `php8.5 tools/verify-release-upgrade.php v0.3.2-alpha.1` as `vagrant` to rehearse the immutable release against current source. The tool uses detached temporary worktrees, a private SQLite database and Media root, verifies a connected Admin/Site/Page/Menu/Media fixture graph, runs current migration twice, checks foreign-key integrity, and removes all temporary state. Composer installs are isolated to the temporary worktrees.
+Run `php8.5 tools/verify-release-upgrade.php v0.3.2-alpha.2` as `vagrant` to rehearse the immutable release against current source. The tool uses detached temporary worktrees, a private SQLite database and Media root, verifies a connected Admin/Site/Page/Menu/Media fixture graph, runs current migration twice, checks foreign-key integrity, and removes all temporary state. Composer installs are isolated to the temporary worktrees.
 
 ### Disposable MySQL upgrade database
 
@@ -26,8 +26,8 @@ The MySQL capability result reports `database_created: true` and `database_dropp
 
 ### MySQL immutable-release preservation proof
 
-Run `php8.5 tools/verify-mysql-release-upgrade.php v0.3.2-alpha.1` with the four explicit `BR2D_MYSQL_*` variables. The tool uses detached release and current worktrees, a random disposable MySQL database, a connected Admin/Site/Media/Page/Menu fixture, guarded foreign-key reconciliation, orphan checks, repeat migration, and explicit post-drop absence verification.
-The accepted latest-release run retained 20 migration records before and after upgrade, found 45 live MySQL foreign keys, found zero orphaned references, proved repeat-migration idempotency, and explicitly proved that the disposable database was dropped. Historical BR-2D evidence from `v0.3.1-alpha.1` retained 19 migrations before and after.
+Run `php8.5 tools/verify-mysql-release-upgrade.php v0.3.2-alpha.2` with the four explicit `BR2D_MYSQL_*` variables. The tool uses detached release and current worktrees, a random disposable MySQL database, a connected Admin/Site/Media/Page/Menu fixture, guarded foreign-key reconciliation, orphan checks, repeat migration, and explicit post-drop absence verification.
+The accepted latest-release run advanced from 20 migration records before upgrade to 24 after upgrade, found 45 live MySQL foreign keys, found zero orphaned references, proved repeat-migration idempotency, and explicitly proved that the disposable database was dropped. Historical BR-2D evidence from `v0.3.1-alpha.1` retained 19 migrations before and after.
 
 ## API Grid integrations
 

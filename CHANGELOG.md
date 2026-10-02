@@ -18,7 +18,7 @@
 - SR-3 closes the remaining HIGH-03 authentication rate-limit transport-separation finding. `AdminAuthenticationRateLimiter` now owns configuration loading, opaque identity construction, persistence, report-only diagnostics, enforcement decisions and successful resets across HTML Admin login, API login, password-reset requests and 2FA challenges. The registered Admin middleware retains only request selection and generic HTML 429 response mapping.
 
 - SR-2 makes Redis cache deployment fail closed: staging and production require authenticated Redis when `CACHE_DRIVER=redis`, every Redis driver requires a strong dedicated `CACHE_ENCRYPTION_KEY`, non-Redis drivers remain unaffected, and local/test Redis behaviour stays explicit and practical.
-## [0.3.2-alpha.3-dev]
+## [0.3.2-alpha.3] - 2026-10-02
 
 ### Changed
 
