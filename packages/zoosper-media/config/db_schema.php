@@ -32,6 +32,9 @@ return [
                 'idx_media_assets_mime' => ['columns' => ['mime_type']],
                 'idx_media_assets_created' => ['columns' => ['created_at']],
                 'idx_media_assets_creator' => ['columns' => ['created_by']],
+                'idx_media_assets_status_created_id' => ['columns' => ['status', 'created_at', 'id']],
+                'idx_media_assets_mime_created_id' => ['columns' => ['mime_type', 'created_at', 'id']],
+                'idx_media_assets_extension_created_id' => ['columns' => ['extension', 'created_at', 'id']],
             ],
             'foreign_keys' => [
                 'fk_media_assets_creator' => ['columns' => ['created_by'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'SET NULL'],

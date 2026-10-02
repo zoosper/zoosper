@@ -69,6 +69,15 @@ return array (
             1 => 'status',
           ),
         ),
+        'idx_menus_status_label_id' =>
+        array (
+          'columns' =>
+          array (
+            0 => 'status',
+            1 => 'label',
+            2 => 'id',
+          ),
+        ),
       ),
       'foreign_keys' => 
       array (

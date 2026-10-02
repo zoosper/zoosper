@@ -32,6 +32,7 @@ return [
                 'idx_admin_login_history_email' => ['columns' => ['email']],
                 'idx_admin_login_history_status' => ['columns' => ['status']],
                 'idx_admin_login_history_created' => ['columns' => ['created_at']],
+                'idx_admin_login_history_status_id' => ['columns' => ['status', 'id']],
             ],
             'foreign_keys' => [
                 'fk_admin_login_history_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'SET NULL', 'on_update' => 'NO ACTION'],
@@ -56,6 +57,7 @@ return [
                 'idx_admin_activity_action' => ['columns' => ['action']],
                 'idx_admin_activity_entity' => ['columns' => ['entity_type', 'entity_id']],
                 'idx_admin_activity_created' => ['columns' => ['created_at']],
+                'idx_admin_activity_entity_type_id' => ['columns' => ['entity_type', 'id']],
             ],
             'foreign_keys' => [
                 'fk_admin_activity_log_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'SET NULL', 'on_update' => 'NO ACTION'],

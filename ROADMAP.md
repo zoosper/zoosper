@@ -468,7 +468,7 @@ replica.
 - [x] Consolidate duplicated Grid Criteria/SqlBuilder/Workspace and Admin Form section/processor patterns into a single extensible, typed Grid & Form kernel.
 - [x] Dedicated behavioral regression test suite for admin user locale persistence across hydration, update, and session state.
 - [x] Formalise session security controls: explicit absolute session lifetimes (`ADMIN_SESSION_ABSOLUTE_LIFETIME`), idle timeout resetting on active navigation, password update invalidation (`SESSION_PASSWORD_HASH_KEY`), and SameSite/Secure cookie policy verification during bootstrap.
-- [ ] Add covering indexes and EXPLAIN query plan checks for admin grid search queries.
+- [x] Add covering indexes and executable SQLite `EXPLAIN QUERY PLAN` checks for indexable Admin Grid filter-and-order paths. Leading-wildcard `LIKE '%query%'` searches remain explicitly outside ordinary B-tree index claims.
 - [x] **[RESOLVED] Two competing Grid systems consolidated** — unified on
   `GridDefinition`/`GridCriteria`/`GridColumnRegistry` and
   `GridCompactWorkspaceRenderer` across all admin screens.

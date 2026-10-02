@@ -39,6 +39,7 @@ return [
                 'idx_smtp_email_log_status' => ['columns' => ['status']],
                 'idx_smtp_email_log_created' => ['columns' => ['created_at']],
                 'idx_smtp_email_log_from' => ['columns' => ['from_email']],
+                'idx_smtp_email_log_status_created_id' => ['columns' => ['status', 'created_at', 'id']],
             ],
         ],
     ],
