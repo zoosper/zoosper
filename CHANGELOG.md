@@ -1,4 +1,5 @@
 # Changelog
+- Closed the PHP 8.5 Admin Grid null-offset deprecations for empty single-select filters, retained the verified Psalm baseline at 1,161 with 42 behaviour-sensitive cast findings explicitly deferred, and prepared the 0.3.2-alpha.3 development line for final release-readiness review.
 - Reduced the Psalm cast baseline by 60 entries across 35 typed implementations while preserving four runtime-required casts identified by acceptance and architecture regressions; 42 complex or behaviour-sensitive casts remain deferred for focused review.
 - Completed the `MissingOverrideAttribute` baseline closure by adding the final 88 explicit `#[Override]` contracts across 71 interface and inheritance implementations, with no runtime behaviour changes.
 - Continued Psalm baseline reduction across 21 two-method adapters and repositories, adding 42 explicit `#[Override]` contracts without changing runtime behaviour.

@@ -4,6 +4,7 @@
 
 ## Current continuity status
 
+- **[x] Wrap-up closure bulk:** removed the two PHP 8.5 Admin Grid null-offset deprecations, retained the verified Psalm baseline at `1,161`, documented the remaining `42` behaviour-sensitive cast findings as deferred technical debt, and moved the `0.3.2-alpha.3-dev` line to final release-readiness review.
 - Latest immutable release: `v0.3.2-alpha.2` at `dcdbeedc2f7d394481afc2ae889a7f23205c7730`.
 - Current development line: `0.3.2-alpha.3-dev`.
 - Previous immutable release: `v0.3.2-alpha.1` at `f75f5cb3591be11555e5ca7504585c7d98225b62`.
