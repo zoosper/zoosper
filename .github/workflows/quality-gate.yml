@@ -63,6 +63,8 @@ jobs:
         run: mkdir -p var && touch var/ci.sqlite
       - name: Validate shipped JavaScript syntax
         run: composer ci:js
+      - name: Run final test-signal closure DOM suite
+        run: composer test:test-signal-closure-dom
       - name: Run Settings workspace DOM behaviour suite
         run: composer test:settings-workspace-dom
       - name: Run Settings scope selector DOM behaviour suite

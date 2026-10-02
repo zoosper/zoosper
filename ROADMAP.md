@@ -586,7 +586,7 @@ replica.
 ## 11. Quality, Tooling & Repo Hygiene
 - [x] Add JavaScript syntax validation for every shipped admin asset.
 - [x] Add executable DOM behavioural coverage for column movement, live reflection, locked anchors, dirty state, persisted hidden-state synchronisation, disclosure behaviour, and page-size submission.
-- [~] Continue replacing redundant source-string assertions with executable behavioural contracts. SR-8 through SR-11 establish the preferred jsdom and real-container acceptance pattern; TS-1A removes duplicate Admin Grid renderer source inspection in favour of executable renderer and mutation-form contracts; TS-1B moves Admin shell theme, sidebar and mobile-navigation behaviour into a CI-gated jsdom suite; TS-1C moves PAT scope selection, one-time-secret copy feedback and Grid enhancement into executable browser contracts; TS-1D moves Dashboard ordering, visibility, drag-and-drop and role-default enhancement into executable browser contracts; TS-1E moves Permission Explorer discovery, search, group controls, visible selection and count updates into executable browser contracts; TS-1F covers Settings scope selection; TS-1G-M completes the bulk Settings browser migration for search navigation, popovers, dirty forms, saved views, URL state and print lifecycle, while the repository-wide signal-to-noise inventory remains open.
+- [x] Close the test-suite signal-to-noise remediation with risk-ranked executable and static contracts. SR-8 through SR-11 establish the preferred jsdom and real-container acceptance pattern; TS-1A removes duplicate Admin Grid renderer source inspection in favour of executable renderer and mutation-form contracts; TS-1B moves Admin shell theme, sidebar and mobile-navigation behaviour into a CI-gated jsdom suite; TS-1C moves PAT scope selection, one-time-secret copy feedback and Grid enhancement into executable browser contracts; TS-1D moves Dashboard ordering, visibility, drag-and-drop and role-default enhancement into executable browser contracts; TS-1E moves Permission Explorer discovery, search, group controls, visible selection and count updates into executable browser contracts; TS-1F covers Settings scope selection; TS-1G-M completes the bulk Settings browser migration for search navigation, popovers, dirty forms, saved views, URL state and print lifecycle, TS-1N-P closes the repository-wide inventory with final Page and Audit executable DOM coverage and a documented policy retaining valuable architecture, security, release, documentation, CSS, schema and wiring guards.
 - [x] Keep one canonical admin-grid column customisation guide rather than
   phase/hotfix documentation fragments (see `docs/admin.md`).
 - [x] Add MySQL/MariaDB service container to `.github/workflows/quality-gate.yml` and run test suite against MySQL in CI.
@@ -612,7 +612,7 @@ replica.
 - [x] Fix composer `gate` script to `@php` (not hardcoded `php8.5`)
 - [x] **[R2] Redundant `bin/pest.sh` removed; `composer test` remains the
   canonical test entry point.**
-- [ ] **[R] Test-suite signal-to-noise ratio** — a `LegacyVerify*Test`
+- [x] **[R] Test-suite signal-to-noise ratio** — a `LegacyVerify*Test`
   family and a 15+ file Page Momentum test cluster are largely
   file-content-assertion "tests," not behavioral ones. Real, good tests do
   exist alongside them — this is about ratio, not total absence.
