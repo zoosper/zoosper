@@ -1,12 +1,12 @@
 # Zoosper CMS — Master Roadmap
 
-**Last updated:** 2026-10-02 (Sydney)
+**Last updated:** 2026-10-03 (Sydney)
 
 ## Current continuity status
 
 - **[x] Wrap-up closure bulk:** removed the two PHP 8.5 Admin Grid null-offset deprecations, retained the verified Psalm baseline at `1,161`, documented the remaining `42` behaviour-sensitive cast findings as deferred technical debt, and completed final release-readiness review for `v0.3.2-alpha.3`.
-- Latest immutable release candidate: `v0.3.2-alpha.3`.
-- Release identity: `0.3.2-alpha.3`.
+- Latest immutable release: `v0.3.2-alpha.3` at `4676b012bc579d6f66f20aa317c4da862d5f045a`.
+- Current development line: `0.3.2-alpha.4-dev`.
 - Previous immutable release: `v0.3.2-alpha.2` at `dcdbeedc2f7d394481afc2ae889a7f23205c7730`.
 
 - Previous immutable release: `v0.3.2-alpha.1` at `f75f5cb3591be11555e5ca7504585c7d98225b62`.
@@ -61,10 +61,31 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ---
 
-## 0. TOP PRIORITY — next phase
+## 0. TOP PRIORITY — external-review remediation and alpha.4 direction
 
-**`0.3.2-alpha.3` release identity is prepared.** The previous immutable annotated `v0.3.2-alpha.2` tag remains at `dcdbeedc2f7d394481afc2ae889a7f23205c7730`; do not modify or retarget it. Create `v0.3.2-alpha.3` only from the verified release commit.
+**`0.3.2-alpha.4-dev` is open.** The immutable annotated `v0.3.2-alpha.3` tag targets release commit `4676b012bc579d6f66f20aa317c4da862d5f045a`. Do not modify the released source or retarget its tag.
 
+### P0 — security and release blockers for the next alpha
+
+- [ ] **Prevent TOTP replay across separate login challenges.** Persist the last successfully used TOTP time-step per Admin user and reject any code at or before that counter, while retaining atomic single-use challenge consumption and recovery-code behaviour. Add regression coverage for replay against a newly issued challenge within the same validity window.
+- [ ] **Stop active Admin lockouts from extending themselves.** Update both MySQL and SQLite failure upserts so `locked_until` is assigned only on transition into the locked state. Add deterministic clock coverage proving a later failed attempt does not move the original expiry.
+- [ ] **Complete a focused API Grid security review before a second integration.** Review bearer authentication, request and response mappers, cursor parsing, redirect policy, metadata retention, credential redaction, response limits, timeout behaviour and failure classification. Convert accepted boundaries into executable package tests.
+- [ ] **Resolve the commit-provenance and employer-IP process question.** Obtain a human legal or contractual sign-off and record only the outcome and required repository action, without rewriting history merely to hide already-published metadata.
+
+### P1 — production and supply-chain readiness
+
+- [ ] SHA-pin every third-party GitHub Actions dependency and enable the agreed dependency, code-scanning and secret-scanning controls.
+- [ ] Restore Composer platform enforcement and declare required runtime extensions, including the reviewed GD, mbstring, cURL and MySQL PDO requirements, with locked-install and production-artifact verification.
+- [ ] Publish one production operator runbook covering trusted proxies, Redis when selected, SMTP, APP_URL, secret generation, public webroot isolation, CSP validation, target-MySQL migration and foreign-key checks, and security disclosure monitoring.
+- [ ] Validate the complete Admin experience under enforcing CSP and document only narrowly justified remaining style exceptions.
+
+### P2 — stable-line engineering trajectory
+
+- [ ] Define a measurable Psalm zero-baseline plan, including the remaining behaviour-sensitive cast cohort and acceptance evidence required for each removal.
+- [ ] Decide the stable Composer distribution model: published packages or a documented monorepo consumer contract with a supported third-party module workflow.
+- [ ] Define stable support, backward-compatibility and upgrade guarantees before a non-alpha release.
+- [ ] Add Media queue observability for depth, failures and processing latency before high-volume production use.
+- [ ] Keep a concise current-state executive section here and move completed historical detail to canonical release documentation when it no longer guides active delivery.
 **Planned Admin follow-ups for the current development line:**
 
 - [x] The Admin-owned, module-discovered contributor contract now replaces Dashboard navigation repetition with dynamic widgets through the focused `zoosper/admin-dashboard` contracts package. Auth contributes an active-user metric from its own repository; Admin permission-filters before service resolution, isolates contributor failures, renders escaped responsive cards, and retains no concrete feature-module dependency. Admin-owned per-user preferences now add permission-safe show/hide, persisted order, reset-to-default, accessible keyboard movement, and CSP-safe drag enhancement. Auth-owned assigned-role defaults add `role.manage`-protected administration, audited changes, deterministic multi-role visible-union merging, and cascade cleanup without weakening permission-before-resolution.
@@ -405,7 +426,7 @@ replica.
 - [x] **Declarative Schema Foreign Keys.** Typed foreign-key support in `SchemaForeignKey`, `SchemaSqlBuilder` (MySQL and SQLite constraint generation), `SchemaValidator` (cycle and dangling-reference validation), and declarative module schema manifests (`app/zoosper-global-announcements`, `packages/zoosper-media`, etc.).
 - [x] Container autowiring (Phase 1.367). Reflection-based parameter resolution and circular dependency detection implemented in `ServiceContainer`.
 - [x] Module lifecycle (install/enable/disable/uninstall)
-- [x] Composer release-train compatibility is explicit: root path repositories assign the active `0.3.2-alpha.3` package candidate while runtime release identity is `0.3.2-alpha.3`, first-party dependencies use bounded `^0.3.1@alpha` constraints, `prefer-stable` remains enabled, and development minimum stability is absent.
+- [x] Composer release-train compatibility is explicit: root path repositories retain the installable `0.3.2-alpha.3` package candidate while runtime development continues on `0.3.2-alpha.4-dev`, first-party dependencies use bounded `^0.3.1@alpha` constraints, `prefer-stable` remains enabled, and development minimum stability is absent.
 - [x] Database production driver policy enforcement: check `config/database_policy.php` flags in `ConnectionFactory` / `ProductionSecurityPolicy` and reject invalid driver/environment pairings.
 - [x] Consolidate 14 duplicated `$env` closures in `config/*.php` into global canonical `env()` helper.
 - [x] Phase 1.373: Extend Module Manifest Compilation. Aggregated services and routes are compiled into `var/cache/` to eliminate per-request module iteration and filesystem overhead.

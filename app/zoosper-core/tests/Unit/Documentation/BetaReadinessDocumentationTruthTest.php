@@ -25,7 +25,7 @@ it('keeps current canonical documentation aligned with shipped Page and Media ca
         ->not->toContain('The 0.3.1 line is a deliberate minor public-alpha progression')
         ->toContain('Page revision history, preview, pagination, and restoration are available')
         ->toContain('WebP derivative processing is available')
-        ->toContain('0.3.2-alpha.3')
+        ->toContain('0.3.2-alpha.4-dev')
         ->toContain('v0.3.2-alpha.3');
 });
 
@@ -47,5 +47,5 @@ it('builds the public documentation site without stale current claims', function
         ->not->toContain('Page revision history is under active 0.2 development.')
         ->not->toContain('Derivative processing remains disabled')
         ->not->toContain('The 0.3.1 line is a deliberate minor public-alpha progression')
-        ->toContain('0.3.2-alpha.3');
+        ->toContain('0.3.2-alpha.4-dev');
 });
