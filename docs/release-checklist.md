@@ -1,5 +1,6 @@
 # Release checklist
 
+- Complete the canonical [production operator runbook](operations/production-operator-runbook.md) and retain secret-free deployment evidence
 - Clean worktree and reviewed changelog
 - Locked Composer installation, validation and audit
 - Deterministic production artifact build, prohibited-path audit, isolated extraction verification, release manifest and SHA-256 validation

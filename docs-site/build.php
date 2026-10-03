@@ -9,7 +9,7 @@ $outputRoot = $siteRoot . '/build';
 
 $navigation = [
     'Overview' => ['README'],
-    'Getting started' => ['getting-started', 'deployment', 'upgrade', 'troubleshooting'],
+    'Getting started' => ['getting-started', 'deployment', 'operations/production-operator-runbook', 'upgrade', 'troubleshooting'],
     'User guide' => ['user-guide'],
     'Developer guide' => ['developer-guide', 'architecture', 'modules', 'configuration', 'cli', 'api', 'admin', 'themes', 'testing'],
     'Project' => ['releases/current-development', 'release-checklist'],

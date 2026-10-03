@@ -2,6 +2,7 @@
 
 ## [0.3.2-alpha.4-dev]
 
+- Added a canonical production operator runbook covering trusted proxies, optional authenticated Redis, SMTP and APP_URL, secret generation, public-webroot isolation, enforcing CSP verification, target-MySQL migration and foreign-key reconciliation, and security disclosure monitoring.
 ### Changed
 
 - Opened the next development line after the immutable `v0.3.2-alpha.3` release.

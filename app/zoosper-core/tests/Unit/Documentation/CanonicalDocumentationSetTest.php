@@ -30,7 +30,8 @@ it('documents current truth instead of permanent implementation phases', functio
     expect($policy)
         ->toContain('canonical source')
         ->toContain('Git history and release tags')
-        ->toContain('docs.zoosper.com');
+        ->toContain('docs.zoosper.com')
+        ->toContain('operations/production-operator-runbook.md');
 });
 
 

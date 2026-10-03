@@ -19,6 +19,7 @@ Temporary planning, audit, migration and phase documentation must be merged into
 - [Admin extension points](admin.md)
 - [Themes](themes.md)
 - [Deployment](deployment.md)
+- [Production operator runbook](operations/production-operator-runbook.md)
 - [Upgrade](upgrade.md)
 - [Troubleshooting](troubleshooting.md)
 - [Testing](testing.md)
