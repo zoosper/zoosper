@@ -74,8 +74,8 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ### P1 — production and supply-chain readiness
 
-- [ ] SHA-pin every third-party GitHub Actions dependency and enable the agreed dependency, code-scanning and secret-scanning controls.
-- [ ] Restore Composer platform enforcement and declare required runtime extensions, including the reviewed GD, mbstring, cURL and MySQL PDO requirements, with locked-install and production-artifact verification.
+- [x] SHA-pin every third-party GitHub Actions dependency to a captured full commit SHA. Repository-level dependency, code-scanning and secret-scanning controls remain a separate owner-admin configuration task.
+- [x] Restore Composer platform enforcement and declare the reviewed GD, mbstring, cURL and MySQL PDO runtime requirements, with locked-install, CI and production-artifact verification.
 - [ ] Publish one production operator runbook covering trusted proxies, Redis when selected, SMTP, APP_URL, secret generation, public webroot isolation, CSP validation, target-MySQL migration and foreign-key checks, and security disclosure monitoring.
 - [ ] Validate the complete Admin experience under enforcing CSP and document only narrowly justified remaining style exceptions.
 

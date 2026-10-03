@@ -5,7 +5,11 @@
     "license": "MIT",
     "require": {
         "bacon/bacon-qr-code": "^3.0",
+        "ext-curl": "*",
+        "ext-gd": "*",
+        "ext-mbstring": "*",
         "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
         "ezyang/htmlpurifier": "^4.19",
         "latte/latte": "^3.1",
         "marko/admin": "0.8.5",
@@ -117,7 +121,7 @@
     },
     "config": {
         "sort-packages": true,
-        "platform-check": false,
+        "platform-check": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true
         },

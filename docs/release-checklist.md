@@ -45,3 +45,7 @@ NEXT_VERSION=<next-development-version>
 - Do not retry a failed MySQL apply blindly; inspect status because earlier DDL statements may already have succeeded.
 - For SQLite, use explicit data-preserving rebuild migrations for existing-table foreign-key changes.
 - Before release, compile the module manifest so the independent `module-manifest` readiness check is fresh.
+
+## Production platform verification
+
+- Run `composer check-platform-reqs --no-dev` and confirm the production PHP runtime provides cURL, GD, mbstring, PDO and PDO MySQL.

@@ -4,6 +4,8 @@
     "type": "zoosper-module",
     "license": "MIT",
     "require": {
+        "ext-gd": "*",
+        "ext-mbstring": "*",
         "ext-pdo": "*",
         "php": "^8.5",
         "zoosper/admin-grid": "^0.3.1@alpha",

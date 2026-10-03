@@ -92,6 +92,7 @@ try {
         'php8.5', '/usr/local/bin/composer', 'install', '--working-dir=' . $source,
         '--no-dev', '--prefer-dist', '--classmap-authoritative', '--no-interaction', '--no-progress', '--no-ansi',
     ], $source);
+    run(['php8.5', '/usr/local/bin/composer', 'check-platform-reqs', '--working-dir=' . $source, '--no-dev'], $source);
     materialiseVendorSymlinks($source . '/vendor');
     pruneProductionTree($source . '/vendor');
     removeTree($source . '/app');
@@ -139,6 +140,7 @@ try {
     run(['tar', '-xzf', $archive, '-C', $verify]);
     assertProductionTree($verify);
     run(['sha256sum', '-c', $archive . '.sha256'], $outputDirectory);
+    run(['php8.5', '/usr/local/bin/composer', 'check-platform-reqs', '--working-dir=' . $verify, '--no-dev'], $verify);
     run(['php8.5', 'bin/zoosper', 'module:manifest:check'], $verify);
 
     echo "Artifact: {$archive}\n";

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1a21fcab32d6a80255e5574188215341",
+    "content-hash": "2f1c9fc6be5f85269148314a7d82124f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1334,9 +1334,10 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-auth",
-                "reference": "aa6bd03a4f9e449f7bcfd4a4f41833eca886c10b"
+                "reference": "5c57542abbea015b10e26f527f34a2ed17c16ab8"
             },
             "require": {
+                "ext-mbstring": "*",
                 "php": "^8.5",
                 "zoosper/admin-dashboard": "^0.3.1@alpha",
                 "zoosper/admin-grid": "^0.3.1@alpha",
@@ -1810,9 +1811,11 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-media",
-                "reference": "b3b76d8d4be0c009c51dd321e5e8337e36ea4dc1"
+                "reference": "b3ee94dd023a8c6930dfbbf9b58d0f0e9854754c"
             },
             "require": {
+                "ext-gd": "*",
+                "ext-mbstring": "*",
                 "ext-pdo": "*",
                 "php": "^8.5",
                 "zoosper/admin-grid": "^0.3.1@alpha",
@@ -2225,9 +2228,10 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-two-factor",
-                "reference": "b6715e8a101f3223ba6d8350e2ea622acb6aab9f"
+                "reference": "b564cabf2ad66388289b400925eb3f1222946df6"
             },
             "require": {
+                "ext-mbstring": "*",
                 "php": "^8.5",
                 "zoosper/auth": "^0.3.1@alpha",
                 "zoosper/core": "^0.3.1@alpha"
@@ -9329,7 +9333,11 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
+        "ext-curl": "*",
+        "ext-gd": "*",
+        "ext-mbstring": "*",
         "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
         "php": "^8.5"
     },
     "platform-dev": {},
