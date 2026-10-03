@@ -14,6 +14,15 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
         if (!filter_var($baseUrl, FILTER_VALIDATE_URL)) {
             throw new \InvalidArgumentException('API Grid base URL must be an absolute URL.');
         }
+        $parts = parse_url($baseUrl);
+        $scheme = strtolower($parts['scheme'] ?? '');
+        $host = strtolower($parts['host'] ?? '');
+        $loopback = in_array($host, ['localhost', '127.0.0.1', '::1'], true);
+        if (!is_array($parts) || !in_array($scheme, ['http', 'https'], true) || $host === ''
+            || isset($parts['user']) || isset($parts['pass']) || isset($parts['query']) || isset($parts['fragment'])
+            || ($scheme !== 'https' && !$loopback)) {
+            throw new \InvalidArgumentException('API Grid base URL must use HTTPS, except for explicit loopback development endpoints, and must not contain credentials, query data or fragments.');
+        }
     }
 
     #[\Override]

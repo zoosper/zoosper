@@ -33,6 +33,7 @@ final readonly class AdminTwoFactorResetRepository
             'admin_user_two_factor',
             'admin_user_recovery_codes',
             'admin_two_factor_challenges',
+            'admin_totp_replay_state',
         ], fn (string $table): bool => $this->tableExists($table)));
 
         if ($tables === []) {
@@ -64,6 +65,7 @@ final readonly class AdminTwoFactorResetRepository
             'admin_user_two_factor',
             'admin_user_recovery_codes',
             'admin_two_factor_challenges',
+            'admin_totp_replay_state',
         ], fn (string $table): bool => !$this->tableExists($table)));
     }
 

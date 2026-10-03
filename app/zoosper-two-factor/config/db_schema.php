@@ -40,6 +40,16 @@ return [
             ],
         ],
 
+        'admin_totp_replay_state' => [
+            'columns' => [
+                'admin_user_id' => ['type' => 'integer', 'nullable' => false, 'primary' => true],
+                'last_counter' => ['type' => 'bigint', 'nullable' => false],
+                'updated_at' => ['type' => 'datetime', 'nullable' => false],
+            ],
+            'foreign_keys' => [
+                'fk_admin_totp_replay_state_user' => ['columns' => ['admin_user_id'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE'],
+            ],
+        ],
         'admin_two_factor_challenges' => [
             'columns' => [
                 'id' => ['type' => 'integer', 'primary' => true, 'auto_increment' => true],

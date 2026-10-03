@@ -67,9 +67,9 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 
 ### P0 — security and release blockers for the next alpha
 
-- [ ] **Prevent TOTP replay across separate login challenges.** Persist the last successfully used TOTP time-step per Admin user and reject any code at or before that counter, while retaining atomic single-use challenge consumption and recovery-code behaviour. Add regression coverage for replay against a newly issued challenge within the same validity window.
-- [ ] **Stop active Admin lockouts from extending themselves.** Update both MySQL and SQLite failure upserts so `locked_until` is assigned only on transition into the locked state. Add deterministic clock coverage proving a later failed attempt does not move the original expiry.
-- [ ] **Complete a focused API Grid security review before a second integration.** Review bearer authentication, request and response mappers, cursor parsing, redirect policy, metadata retention, credential redaction, response limits, timeout behaviour and failure classification. Convert accepted boundaries into executable package tests.
+- [x] **Prevent TOTP replay across separate login challenges.** Two Factor now atomically persists each Admin user’s newest accepted TOTP time-step and rejects codes at or before that counter across newly issued challenges, while preserving challenge single-use and recovery-code behaviour.
+- [x] **Stop active Admin lockouts from extending themselves.** MySQL and SQLite failure upserts now assign `locked_until` only when an unlocked row first crosses the threshold; deterministic clock coverage proves later failures retain the original expiry.
+- [x] **Complete a focused API Grid security review before a second integration.** Executable package contracts now cover read-only requests, header-safe bearer authentication, credential-free HTTPS origins with loopback-only HTTP development, disabled redirects, bounded cursor metadata, narrow response metadata, response-size and timeout policy, redaction-safe failures, and payload-free schema classification.
 - [ ] **Resolve the commit-provenance and employer-IP process question.** Obtain a human legal or contractual sign-off and record only the outcome and required repository action, without rewriting history merely to hide already-published metadata.
 
 ### P1 — production and supply-chain readiness

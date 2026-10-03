@@ -18,21 +18,25 @@ final readonly class TotpVerifier
 
     public function verify(string $secret, string $otp, ?int $timestamp = null): bool
     {
+        return $this->matchingCounter($secret, $otp, $timestamp) !== null;
+    }
+
+    /** Return the exact accepted TOTP time-step so callers can enforce replay protection. */
+    public function matchingCounter(string $secret, string $otp, ?int $timestamp = null): ?int
+    {
         $otp = preg_replace('/\D+/', '', $otp) ?? '';
         if (strlen($otp) !== $this->digits) {
-            return false;
+            return null;
         }
-
         $time = $timestamp ?? time();
         $counter = intdiv($time, $this->period);
-
         for ($offset = -$this->window; $offset <= $this->window; $offset++) {
-            if (hash_equals($this->code($secret, $counter + $offset), $otp)) {
-                return true;
+            $candidate = $counter + $offset;
+            if ($candidate >= 0 && hash_equals($this->code($secret, $candidate), $otp)) {
+                return $candidate;
             }
         }
-
-        return false;
+        return null;
     }
 
     private function code(string $secret, int $counter): string

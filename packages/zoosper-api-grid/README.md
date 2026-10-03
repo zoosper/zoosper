@@ -28,8 +28,9 @@ Endpoint-specific mappers may use `ApiLinkRelations` to validate bounded HTTPS `
 - Development dependencies: `pestphp/pest`, `pestphp/pest-plugin`, `phpunit/phpunit`.
 
 ## Security and compatibility
-
 - Preserve public interfaces, route permissions, configuration keys, and service identifiers when extending or replacing behaviour.
+- The reviewed transport is read-only, disables redirects, requires credential-free HTTPS origins outside explicit loopback development, bounds time and response size, retains only `link` and `retry-after`, and emits payload-free failure categories.
+- Bearer credentials must be non-empty and header safe; exception messages must not include URLs, headers, credentials, response bodies, personal data or transactional values.
 
 ## Testing
 

@@ -8,6 +8,8 @@ use Zoosper\TwoFactor\Service\AdminSecondFactorRequirement;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Url\AdminUrlGenerator;
+use Zoosper\TwoFactor\Challenge\AdminTotpReplayRepository;
+use Zoosper\TwoFactor\Challenge\TotpReplayGuard;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeRepository;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeService;
 use Zoosper\TwoFactor\Crypto\SecretProtector;
@@ -37,6 +39,8 @@ return [
     AdminTwoFactorEnrollmentRepository::class => static fn (ServiceContainer $services): AdminTwoFactorEnrollmentRepository => new AdminTwoFactorEnrollmentRepository($services->get(PDO::class)),
     AdminRecoveryCodeRepository::class => static fn (ServiceContainer $services): AdminRecoveryCodeRepository => new AdminRecoveryCodeRepository($services->get(PDO::class)),
     TwoFactorChallengeRepository::class => static fn (ServiceContainer $services): TwoFactorChallengeRepository => new TwoFactorChallengeRepository($services->get(PDO::class)),
+    AdminTotpReplayRepository::class => static fn (ServiceContainer $services): AdminTotpReplayRepository => new AdminTotpReplayRepository($services->get(\PDO::class)),
+    TotpReplayGuard::class => static fn (ServiceContainer $services): TotpReplayGuard => new TotpReplayGuard($services->get(TotpVerifier::class), $services->get(AdminTotpReplayRepository::class)),
     TotpSecretGenerator::class => static fn (ServiceContainer $services): TotpSecretGenerator => new TotpSecretGenerator(),
     TotpVerifier::class => static function (ServiceContainer $services): TotpVerifier {
         $config = $services->get(ConfigRepository::class)->array('two_factor');
@@ -103,6 +107,8 @@ return [
             static fn (string $secret, string $code): bool => $verifier->verify($secret, $code),
             static fn (int $adminUserId, string $code): bool => $recovery->redeem($adminUserId, $code),
             (int) ($config['challenge_ttl'] ?? 300),
+            null,
+            static fn (int $adminUserId, string $secret, string $code): bool => $services->get(TotpReplayGuard::class)->claim($adminUserId, $secret, $code),
         );
     },
     AdminTwoFactorLoginRedirectService::class => static function (ServiceContainer $services): AdminTwoFactorLoginRedirectService {

@@ -49,3 +49,17 @@ it('atomically increments repeated failures without duplicate rows', function ()
         ->and($repository->find(11)?->failedAttempts)->toBe(8)
         ->and($repository->find(11)?->lockedUntil)->toBe('2027-01-15 08:15:00');
 });
+
+it('does not extend an active lockout after later failed attempts', function (): void {
+    $pdo = c2LockoutPdo();
+    $repository = new AdminAccountLockoutRepository($pdo);
+    $firstClock = new AdminAccountLockoutService($repository, 2, 600, static fn (): int => 1_800_000_000);
+    $firstClock->recordFailure(15);
+    $locked = $firstClock->recordFailure(15);
+    expect($locked->lockedUntil)->toBe('2027-01-15 08:10:00');
+    $laterClock = new AdminAccountLockoutService($repository, 2, 600, static fn (): int => 1_800_000_300);
+    $later = $laterClock->recordFailure(15);
+    expect($later->failedAttempts)->toBe(3)
+        ->and($later->lockedUntil)->toBe('2027-01-15 08:10:00')
+        ->and($laterClock->isLocked(15))->toBeTrue();
+});

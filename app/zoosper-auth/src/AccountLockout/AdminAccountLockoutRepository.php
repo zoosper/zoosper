@@ -35,14 +35,14 @@ final readonly class AdminAccountLockoutRepository
                 . 'VALUES (:admin_user_id,1,CASE WHEN :initial_threshold <= 1 THEN :initial_locked_until ELSE NULL END,:failed_at,:updated_at) '
                 . 'ON CONFLICT(admin_user_id) DO UPDATE SET '
                 . 'failed_attempts = failed_attempts + 1, '
-                . 'locked_until = CASE WHEN failed_attempts + 1 >= :threshold THEN :locked_until ELSE locked_until END, '
+                . 'locked_until = CASE WHEN locked_until IS NULL AND failed_attempts + 1 >= :threshold THEN :locked_until ELSE locked_until END, '
                 . 'last_failed_at = :failed_at_update, updated_at = :updated_at_update';
         } else {
             $sql = 'INSERT INTO admin_account_lockouts (admin_user_id,failed_attempts,locked_until,last_failed_at,updated_at) '
                 . 'VALUES (:admin_user_id,1,CASE WHEN :initial_threshold <= 1 THEN :initial_locked_until ELSE NULL END,:failed_at,:updated_at) '
                 . 'ON DUPLICATE KEY UPDATE '
                 . 'failed_attempts = failed_attempts + 1, '
-                . 'locked_until = IF(failed_attempts >= :threshold, :locked_until, locked_until), '
+                . 'locked_until = IF(locked_until IS NULL AND failed_attempts >= :threshold, :locked_until, locked_until), '
                 . 'last_failed_at = :failed_at_update, updated_at = :updated_at_update';
         }
         $statement = $this->pdo->prepare($sql);

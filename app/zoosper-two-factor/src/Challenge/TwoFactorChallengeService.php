@@ -31,6 +31,7 @@ final readonly class TwoFactorChallengeService
 {
     private Closure $verifyTotp;
     private Closure $redeemRecoveryCode;
+    private ?Closure $claimTotpUse;
 
     /**
      * @param callable(string $secret, string $code): bool   $verifyTotp
@@ -42,9 +43,11 @@ final readonly class TwoFactorChallengeService
         callable $redeemRecoveryCode,
         private int $ttlSeconds = 300,
         private ?\DateTimeImmutable $now = null,
+        ?callable $claimTotpUse = null,
     ) {
         $this->verifyTotp = Closure::fromCallable($verifyTotp);
         $this->redeemRecoveryCode = Closure::fromCallable($redeemRecoveryCode);
+        $this->claimTotpUse = $claimTotpUse !== null ? Closure::fromCallable($claimTotpUse) : null;
     }
 
     /**
@@ -83,6 +86,10 @@ final readonly class TwoFactorChallengeService
         }
 
         if (!($this->verifyTotp)($secret, $code)) {
+            return TwoFactorChallengeResult::wrongCode($challenge->adminUserId);
+        }
+
+        if ($this->claimTotpUse !== null && !($this->claimTotpUse)($challenge->adminUserId, $secret, $code)) {
             return TwoFactorChallengeResult::wrongCode($challenge->adminUserId);
         }
 
