@@ -8,18 +8,14 @@ it('keeps completed review remediation aligned with deployed source history', fu
     $changelog = (string) file_get_contents($root . '/CHANGELOG.md');
 
     expect($roadmap)
-        ->toContain('**Last updated:** 2026-10-03 (Sydney)')
-        ->toContain('SR-6 GenerateSecrets environment-file hardening')
-        ->toContain('account lockout ✅')
-        ->toContain('password reset ✅')
-        ->toContain('bounded prerelease constraints')
-        ->toContain('Durable-tool ownership is explicit and enforced')
-        ->toContain('Root tooling is reduced to the bounded operational set')
-        ->toContain('Page Momentum production surface retired')
+        ->toContain('**Last updated:** 2026-10-04 (Sydney)')
+        ->toContain('## Closure definition')
+        ->toContain('Completed implementation history remains in the changelog and tags, not here.')
         ->not->toContain('This phase was not deployed.')
         ->not->toContain('Still open:' . PHP_EOL . '   account lockout and password reset.')
         ->not->toContain('~150+ single-purpose tooling scripts still in `tools/`')
         ->and($changelog)
         ->toContain('Reconciled reviewer and release truth after SR-6')
-        ->not->toContain('redact secret values.\\n- Closed MED-02');
+        ->toContain('Closed SR-6 GenerateSecrets environment-file hardening')
+        ->not->toContain('redact secret values.\n- Closed MED-02');
 });

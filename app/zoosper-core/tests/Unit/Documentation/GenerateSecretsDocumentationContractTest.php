@@ -9,7 +9,7 @@ it('documents the canonical parser atomic write and redaction boundary', functio
     $roadmap = (string) file_get_contents($root . '/ROADMAP.md');
     $changelog = (string) file_get_contents($root . '/CHANGELOG.md');
 
-    foreach ([$configuration, $cli, $roadmap, $changelog] as $document) {
+    foreach ([$configuration, $cli, $changelog] as $document) {
         expect($document)->toContain('0600');
     }
 
@@ -19,6 +19,7 @@ it('documents the canonical parser atomic write and redaction boundary', functio
         ->and($cli)->toContain('duplicate targeted keys')
         ->toContain('checked atomic `0600` writes')
         ->toContain('prefer `--write`')
-        ->and($roadmap)->toContain('canonical quoted/comment/`export` parsing')
-        ->and($changelog)->toContain('Closed SR-6 GenerateSecrets environment-file hardening');
+        ->and($roadmap)->toContain('Completed implementation history remains in the changelog and tags, not here.')
+        ->and($changelog)->toContain('Closed SR-6 GenerateSecrets environment-file hardening')
+        ->toContain('quoted values, inline comments and `export` prefixes');
 });

@@ -17,7 +17,7 @@ it('enforces structured markdown status checkboxes throughout ROADMAP.md', funct
         $trimmed = trim($line);
 
         // If line starts with list item dash followed by bracket:
-        if (preg_match('/^-\s*\[([^\]]*)\]/', $trimmed, $matches) === 1) {
+        if (preg_match('/^-\s*\[([^\]]*)\]\s+/', $trimmed, $matches) === 1) {
             $status = $matches[1];
             // Valid statuses are 'x', ' ', or '~'
             if (!in_array($status, ['x', ' ', '~'], true)) {
@@ -32,30 +32,20 @@ it('enforces structured markdown status checkboxes throughout ROADMAP.md', funct
     );
 });
 
-it('maintains expected major roadmap section headings in canonical order', function (): void {
+it('maintains the closure roadmap structure in canonical order', function (): void {
     $root = dirname(__DIR__, 5);
     $content = (string) file_get_contents($root . '/ROADMAP.md');
 
     expect($content)
-        ->toContain('## 1. Core Platform & Architecture')
-        ->toContain('## 2. Sites, Pages & Content')
-        ->toContain('## 3. Themes & Templating')
-        ->toContain('## 4. Admin & Auth')
-        ->toContain('## 5. Security')
-        ->toContain('## 6. Media')
-        ->toContain('## 7. Mail')
-        ->toContain('## 8. API')
-        ->toContain('## 9. Modular Asset Pipeline')
-        ->toContain('## 10. Caching & Performance')
-        ->toContain('## 11. Quality, Tooling & Repo Hygiene');
+        ->toContain('## Current state')
+        ->toContain('## Closure definition')
+        ->toContain('## Required remaining work')
+        ->toContain('### C1. Repository and legal ownership')
+        ->toContain('### C2. Static-analysis debt closure')
+        ->toContain('### C3. Stable distribution and compatibility contract')
+        ->toContain('### C4. Operational closure')
+        ->toContain('### C5. Final release closure')
+        ->toContain('## Explicitly not required for closure')
+        ->toContain('## Established foundation')
+        ->toContain('## Working rule');
 });
-
-
-
-
-
-
-
-
-
-

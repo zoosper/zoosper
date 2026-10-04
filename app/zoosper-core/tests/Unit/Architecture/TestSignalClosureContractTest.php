@@ -15,7 +15,8 @@ it('locks the final browser suites and retained static-contract policy', functio
         ->and($composer['scripts']['test:test-signal-closure-dom'] ?? null)->toBe('npm run test:test-signal-closure-dom')
         ->and($workflow)->toContain('Run final test-signal closure DOM suite')
         ->toContain('run: composer test:test-signal-closure-dom')
-        ->and($roadmap)->toContain('TS-1N-P closes the repository-wide inventory')
-        ->toContain('architecture, security, release, documentation, CSS, schema and wiring guards')
-        ->and($changelog)->toContain('Closed the TS-1 test-signal remediation after a repository-wide risk inventory');
+        ->and($roadmap)->toContain('## Required remaining work')
+        ->toContain('Completed implementation history remains in the changelog and tags, not here.')
+        ->and($changelog)->toContain('Closed the TS-1 test-signal remediation after a repository-wide risk inventory')
+        ->toContain('architecture, security, release, documentation, CSS, schema and wiring contracts');
 });

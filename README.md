@@ -157,7 +157,7 @@ The `v0.3.0-alpha.5` release source completed with:
 CI runs Psalm as a blocking full-scope gate across every first-party package that owns a source directory. Configuration-only modules such as `zoosper-session` remain covered by runtime, architecture, package and quality-gate contracts. The tracked Psalm baseline prevents new source-analysis debt while existing findings are reduced.
 
 ## Latest release and current development focus
-`v0.3.0-alpha.5` closes the 33-foreign-key first-party integrity inventory, blocking full-scope Psalm gate, secret-generation and production validation work, absolute Admin-session lifetime controls, adversarial asset coverage, and the Fable-informed Admin workspace rollout. It also replaces duplicate shell-title browser workarounds with a server-owned presentation policy, removes production inline Menu/Grid presentation, and retires the unused phase-era frontend fallback.
+`v0.3.2-alpha.3` is the latest immutable pre-release. The `0.3.2-alpha.4-dev` line is focused on closing the remaining non-feature work tracked in `ROADMAP.md` rather than expanding product scope.
 
 ### Current development work
 
@@ -165,7 +165,7 @@ CI runs Psalm as a blocking full-scope gate across every first-party package tha
 - CI executes production-target MySQL checks alongside SQLite coverage.
 - Psalm is blocking across all first-party source-bearing packages, rejects stale baseline entries, and retains a reviewed baseline that is being reduced toward zero.
 - Secret generation, production boot validation, absolute Admin-session lifetime, and idle-timeout controls are deployed.
-- Remaining work is tracked in `ROADMAP.md`, including production artefact engineering, API-backed Grid hardening, test-signal improvement, baseline reduction, and product-facing 0.3 capabilities.
+- Remaining no-new-feature closure work is tracked in `ROADMAP.md`: repository/legal ownership, Psalm zero-baseline reduction, stable distribution and compatibility contracts, operational acceptance, and final release closure.
 
 ## Project status and support
 

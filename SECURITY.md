@@ -66,7 +66,7 @@ remain anonymous.
 
 This policy covers the Zoosper CMS core codebase and all first-party modules maintained within this repository (`app/zoosper-*`, `packages/zoosper-*`). Security review covers the root Composer dependency graph and all first-party packages discovered from `app/*/composer.json` and `packages/*/composer.json`. `composer.json` and `composer.lock` are the source of truth for the current dependency set.
 
-The CI workflow runs Composer validation and `composer audit`. Vulnerabilities in third-party dependencies — including Marko framework packages (`marko/core`, `marko/errors`, `marko/errors-simple`, `marko/cache`, `marko/cache-file`, `marko/cache-redis`, `marko/config`, `marko/encryption`; see ROADMAP.md §14 for the current verified adoption list), plus `ezyang/htmlpurifier`, `latte/latte`, and `predis/predis` — should be reported to their respective maintainers, though reports affecting Zoosper integration are welcome.
+The CI workflow runs Composer validation and `composer audit`. Vulnerabilities in third-party dependencies — including Marko framework packages (`marko/core`, `marko/errors`, `marko/errors-simple`, `marko/cache`, `marko/cache-file`, `marko/cache-redis`, `marko/config`, `marko/encryption`; see `docs/modules.md` and the owning package manifests for the current verified adoption list), plus `ezyang/htmlpurifier`, `latte/latte`, and `predis/predis` — should be reported to their respective maintainers, though reports affecting Zoosper integration are welcome.
 
 ### Our Commitment
 
