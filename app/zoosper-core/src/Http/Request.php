@@ -34,21 +34,27 @@ final readonly class Request
 
     public static function fromGlobals(): self
     {
-        $uri = $_SERVER['REQUEST_URI'] ?? '/';
-        $path = parse_url($uri, PHP_URL_PATH) ?: '/';
-        $queryString = parse_url($uri, PHP_URL_QUERY) ?: '';
+        $uriValue = $_SERVER['REQUEST_URI'] ?? null;
+        $uri = is_string($uriValue) ? $uriValue : '/';
+        $parsedPath = parse_url($uri, PHP_URL_PATH);
+        $path = is_string($parsedPath) && $parsedPath !== '' ? $parsedPath : '/';
+        $parsedQuery = parse_url($uri, PHP_URL_QUERY);
+        $queryString = is_string($parsedQuery) ? $parsedQuery : '';
         parse_str($queryString, $query);
-        $headers = function_exists('getallheaders')
-            ? array_change_key_case(getallheaders(), CASE_LOWER)
-            : [];
+
+        $rawHeaders = function_exists('getallheaders') ? getallheaders() : [];
+        $headers = is_array($rawHeaders) ? array_change_key_case($rawHeaders, CASE_LOWER) : [];
+        $body = file_get_contents('php://input');
+        $method = $_SERVER['REQUEST_METHOD'] ?? null;
+        $host = $_SERVER['HTTP_HOST'] ?? null;
 
         return new self(
-            method: strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')),
+            method: strtoupper(is_string($method) && $method !== '' ? $method : 'GET'),
             path: '/' . trim($path, '/'),
             headers: $headers,
-            body: file_get_contents('php://input') ?: '',
+            body: is_string($body) ? $body : '',
             query: self::normaliseInputMap($query),
-            host: strtolower((string) ($_SERVER['HTTP_HOST'] ?? 'localhost')),
+            host: strtolower(is_string($host) && $host !== '' ? $host : 'localhost'),
             clientIp: TrustedProxyResolver::fromEnvironment()->clientIp($_SERVER),
             form: $_POST,
             files: $_FILES,

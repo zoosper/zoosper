@@ -1151,25 +1151,13 @@
     <InvalidArgument>
       <code><![CDATA[$_POST]]></code>
     </InvalidArgument>
-    <PossiblyFalseArgument>
-      <code><![CDATA[getallheaders()]]></code>
-    </PossiblyFalseArgument>
     <PossiblyUnusedMethod>
       <code><![CDATA[routeParams]]></code>
       <code><![CDATA[withForm]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(string) ($_SERVER['HTTP_HOST'] ?? 'localhost')]]></code>
-      <code><![CDATA[(string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')]]></code>
-    </RedundantCast>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[is_string($key)]]></code>
     </RedundantConditionGivenDocblockType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[file_get_contents('php://input')]]></code>
-      <code><![CDATA[parse_url($uri, PHP_URL_PATH)]]></code>
-      <code><![CDATA[parse_url($uri, PHP_URL_QUERY)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-core/src/Http/TrustedProxyResolver.php">
     <RedundantCast>
