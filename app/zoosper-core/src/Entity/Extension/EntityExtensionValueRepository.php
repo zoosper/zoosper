@@ -64,7 +64,7 @@ final readonly class EntityExtensionValueRepository
         }
 
         $now = gmdate('Y-m-d H:i:s');
-        $driver = (string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $driver = \Zoosper\Core\Database\PdoDriverName::from($this->pdo);
 
         $params = [
             'entity_type' => $entityType,

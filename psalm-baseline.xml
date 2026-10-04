@@ -243,9 +243,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/AccountLockout/AdminAccountLockoutRepository.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -933,9 +930,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$json]]></code>
     </ArgumentTypeCoercion>
-    <PossiblyInvalidCast>
-      <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
-    </PossiblyInvalidCast>
     <PossiblyNullArgument>
       <code><![CDATA[$json]]></code>
     </PossiblyNullArgument>
@@ -1386,11 +1380,6 @@
       <code><![CDATA[preg_replace('/(?<!^)[A-Z]/', '-$0', $value)]]></code>
       <code><![CDATA[preg_replace('/[^A-Za-z0-9]+/', '-', $value)]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="app/zoosper-core/src/Security/RateLimit/DatabaseRateLimitStore.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
-    </PossiblyInvalidCast>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/FileRateLimitReportSink.php">
     <PossiblyFalseOperand>
@@ -2239,9 +2228,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Lifecycle/PageReferenceInspector.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -2260,9 +2246,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Repository/PageRepository.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -2299,9 +2282,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Sanitization/PageContentSanitizationAuditor.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
-    </PossiblyInvalidCast>
     <UnusedClass>
       <code><![CDATA[PageContentSanitizationAuditor]]></code>
     </UnusedClass>
@@ -2583,9 +2563,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-site/src/Lifecycle/SiteReferenceInspector.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -2763,10 +2740,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Repository/AdminTwoFactorResetRepository.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
-      <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[missingTables]]></code>
@@ -3427,9 +3400,6 @@
     </UnusedClass>
   </file>
   <file src="packages/zoosper-database/src/Migrator.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -3691,9 +3661,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-media/src/Lifecycle/MediaReferenceInspector.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)]]></code>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>

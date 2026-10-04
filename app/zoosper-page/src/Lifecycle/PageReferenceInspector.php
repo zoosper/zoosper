@@ -35,7 +35,7 @@ final readonly class PageReferenceInspector
 
     private function tableExists(string $table): bool
     {
-        if ((string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+        if (\Zoosper\Core\Database\PdoDriverName::from($this->pdo) === 'sqlite') {
             $statement = $this->pdo->prepare("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=:table");
             $statement->execute(['table' => $table]);
             return (int) $statement->fetchColumn() > 0;

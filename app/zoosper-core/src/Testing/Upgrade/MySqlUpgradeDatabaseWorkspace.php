@@ -16,7 +16,7 @@ final class MySqlUpgradeDatabaseWorkspace
 
     public function __construct(private readonly PDO $administrativeConnection)
     {
-        if ($administrativeConnection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'mysql') {
+        if (\Zoosper\Core\Database\PdoDriverName::from($administrativeConnection) !== 'mysql') {
             throw new RuntimeException('BR-2D requires a MySQL administrative connection.');
         }
     }

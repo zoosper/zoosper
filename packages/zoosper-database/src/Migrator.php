@@ -368,7 +368,12 @@ final class Migrator
      */
     private function driver(): string
     {
-        return (string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $driver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if (!is_string($driver) || trim($driver) === '') {
+            throw new \RuntimeException('PDO did not return a non-empty string driver name.');
+        }
+
+        return strtolower(trim($driver));
     }
 }
 

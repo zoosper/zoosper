@@ -149,7 +149,7 @@ SQL);
 
     private function isSqlite(): bool
     {
-        return strtolower((string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)) === 'sqlite';
+        return \Zoosper\Core\Database\PdoDriverName::from($this->pdo) === 'sqlite';
     }
 }
 

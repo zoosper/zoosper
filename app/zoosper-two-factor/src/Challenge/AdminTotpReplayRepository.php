@@ -14,8 +14,8 @@ final readonly class AdminTotpReplayRepository
         if ($adminUserId <= 0 || $counter < 0) {
             return false;
         }
-        $driver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
-        $sqlite = is_string($driver) && strtolower($driver) === 'sqlite';
+        $driver = \Zoosper\Core\Database\PdoDriverName::from($this->pdo);
+        $sqlite = strtolower($driver) === 'sqlite';
         $insertSql = $sqlite
             ? 'INSERT OR IGNORE INTO admin_totp_replay_state (admin_user_id,last_counter,updated_at) VALUES (:admin_user_id,:last_counter,:updated_at)'
             : 'INSERT IGNORE INTO admin_totp_replay_state (admin_user_id,last_counter,updated_at) VALUES (:admin_user_id,:last_counter,:updated_at)';

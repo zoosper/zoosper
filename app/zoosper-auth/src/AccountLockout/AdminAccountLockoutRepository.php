@@ -29,7 +29,7 @@ final readonly class AdminAccountLockoutRepository
 
     public function recordFailure(int $adminUserId, int $threshold, string $failedAt, string $lockedUntil): AdminAccountLockoutState
     {
-        $sqlite = strtolower((string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME)) === 'sqlite';
+        $sqlite = \Zoosper\Core\Database\PdoDriverName::from($this->pdo) === 'sqlite';
         if ($sqlite) {
             $sql = 'INSERT INTO admin_account_lockouts (admin_user_id,failed_attempts,locked_until,last_failed_at,updated_at) '
                 . 'VALUES (:admin_user_id,1,CASE WHEN :initial_threshold <= 1 THEN :initial_locked_until ELSE NULL END,:failed_at,:updated_at) '

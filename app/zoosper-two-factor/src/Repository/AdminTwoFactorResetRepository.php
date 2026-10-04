@@ -74,7 +74,7 @@ final readonly class AdminTwoFactorResetRepository
      */
     private function tableExists(string $table): bool
     {
-        $driver = (string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $driver = \Zoosper\Core\Database\PdoDriverName::from($this->pdo);
 
         if ($driver === 'sqlite') {
             $statement = $this->pdo->prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = :table LIMIT 1");
@@ -96,7 +96,7 @@ final readonly class AdminTwoFactorResetRepository
             throw new RuntimeException('Unsafe SQL identifier: ' . $identifier);
         }
 
-        return (string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite'
+        return \Zoosper\Core\Database\PdoDriverName::from($this->pdo) === 'sqlite'
             ? '"' . $identifier . '"'
             : '`' . $identifier . '`';
     }

@@ -30,7 +30,7 @@ final readonly class ModuleRepository
     public function setStatus(string $name, string $status): void
     {
         $now = gmdate('Y-m-d H:i:s');
-        $driver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $driver = \Zoosper\Core\Database\PdoDriverName::from($this->pdo);
 
         if ($driver === 'mysql') {
             $statement = $this->pdo->prepare(
