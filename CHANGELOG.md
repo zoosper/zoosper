@@ -2,6 +2,8 @@
 
 ## [0.3.2-alpha.4-dev]
 
+- Closed P1 Admin CSP validation with executable enforcing-header and source contracts, no `unsafe-eval` or external asset origins, and a documented narrow allowlist for Editor.js/runtime style injection, public Admin authentication styles, non-executable JSON manifests, and local data-image previews. Browser workflow validation remains a production deployment gate.
+
 - Added a canonical production operator runbook covering trusted proxies, optional authenticated Redis, SMTP and APP_URL, secret generation, public-webroot isolation, enforcing CSP verification, target-MySQL migration and foreign-key reconciliation, and security disclosure monitoring.
 ### Changed
 

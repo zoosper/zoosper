@@ -13,10 +13,10 @@ return [
     /*
      * Content-Security-Policy.
      *
-     * Ships in REPORT-ONLY mode by default: the browser reports violations but
-     * does NOT block anything, so it cannot break the admin (Editor.js, inline
-     * admin styles, etc.). Observe violations, tune the policy, then flip
-     * report_only => false to enforce.
+     * Enforced by default. Admin scripts are same-origin and unsafe-eval is not
+     * allowed. The reviewed unsafe-inline style exception remains for Editor.js
+     * runtime stylesheet/layout behavior and the public Admin authentication and CSRF error responses.
+     * See docs/security/admin-csp-validation.md.
      *
      * Set enabled => false to send no CSP header at all.
      */

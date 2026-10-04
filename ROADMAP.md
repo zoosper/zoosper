@@ -77,7 +77,7 @@ Legend: `[x]` done & deployed · `[~]` in progress / partial · `[ ]` planned
 - [x] SHA-pin every third-party GitHub Actions dependency to a captured full commit SHA. Repository-level dependency, code-scanning and secret-scanning controls remain a separate owner-admin configuration task.
 - [x] Restore Composer platform enforcement and declare the reviewed GD, mbstring, cURL and MySQL PDO runtime requirements, with locked-install, CI and production-artifact verification.
 - [x] Publish one production operator runbook covering trusted proxies, Redis when selected, SMTP, APP_URL, secret generation, public webroot isolation, CSP validation, target-MySQL migration and foreign-key checks, and security disclosure monitoring. The canonical runbook is `docs/operations/production-operator-runbook.md` and is protected by an executable documentation contract.
-- [ ] Validate the complete Admin experience under enforcing CSP and document only narrowly justified remaining style exceptions.
+- [x] Validate the complete Admin experience under enforcing CSP and document only narrowly justified remaining style exceptions. Executable policy and source contracts now forbid unsafe-eval, external origins, unapproved inline executable scripts, and inline event handlers; the remaining inline-style and data-image allowances are documented in `docs/security/admin-csp-validation.md`. Browser workflow validation remains an explicit production-operator deployment gate rather than an unproven repository claim.
 
 ### P2 — stable-line engineering trajectory
 

@@ -96,7 +96,7 @@ SECURITY_CSP_REPORT_ONLY=false
 SECURITY_CSP_REPORT_URI=
 ```
 
-If a reporting endpoint is configured, ensure it is trusted and monitored. Validate the emitted response header is `Content-Security-Policy`, not `Content-Security-Policy-Report-Only`. Exercise login, TOTP, password reset, Dashboard, Settings, Users, Roles, Pages, Menus, Media, Grid filters, saved views, exports, and destructive confirmation flows. Treat blocked scripts, styles, images, fonts, or connections as deployment failures. Do not weaken the policy globally; document and test only the narrow source needed by a real feature.
+If a reporting endpoint is configured, ensure it is trusted and monitored. Validate the emitted response header is `Content-Security-Policy`, not `Content-Security-Policy-Report-Only`. Exercise login, TOTP, password reset, Dashboard, Settings, Users, Roles, Pages, Menus, Media, Grid filters, saved views, exports, and destructive confirmation flows. Treat blocked scripts, styles, images, fonts, or connections as deployment failures. Do not weaken the policy globally; document and test only the narrow source needed by a real feature. The repository-reviewed exceptions and executable source boundaries are documented in `docs/security/admin-csp-validation.md`.
 
 ## 8. Compile and run release checks
 
