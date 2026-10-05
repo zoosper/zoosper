@@ -192,9 +192,6 @@
     </UnusedParam>
   </file>
   <file src="app/zoosper-api/src/Controller/HealthController.php">
-    <RedundantCast>
-      <code><![CDATA[(string) ((require dirname(__DIR__, 4) . '/config/version.php')['version'] ?? 'unknown')]]></code>
-    </RedundantCast>
     <UnusedClass>
       <code><![CDATA[HealthController]]></code>
     </UnusedClass>
@@ -1554,11 +1551,6 @@
       <code><![CDATA[$row]]></code>
     </UnusedParam>
   </file>
-  <file src="app/zoosper-mail/src/Config/SmtpConfig.php">
-    <RedundantCast>
-      <code><![CDATA[(string) ($resolved ?? $default)]]></code>
-    </RedundantCast>
-  </file>
   <file src="app/zoosper-mail/src/Config/SmtpConfigFactory.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -2571,9 +2563,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-theme/src/Config/TemplateRuntimeConfig.php">
-    <RedundantCast>
-      <code><![CDATA[(string) ($this->scoped->get($path, $this->scope ?? ScopeContext::default(), $projectValue) ?? $projectValue)]]></code>
-    </RedundantCast>
     <UnusedClass>
       <code><![CDATA[TemplateRuntimeConfig]]></code>
     </UnusedClass>

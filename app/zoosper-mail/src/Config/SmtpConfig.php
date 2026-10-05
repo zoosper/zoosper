@@ -79,7 +79,7 @@ final readonly class SmtpConfig
 
         $resolved = $this->scoped->get($path, $this->scope ?? ScopeContext::default(), (string) $projectValue);
 
-        return is_int($default) ? (int) ($resolved ?? $default) : (string) ($resolved ?? $default);
+        return is_int($default) ? (int) ($resolved ?? $default) : ($resolved ?? $default);
     }
 }
 
