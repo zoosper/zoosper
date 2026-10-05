@@ -836,14 +836,6 @@
       <code><![CDATA[ConsoleKernel]]></code>
     </UnusedClass>
   </file>
-  <file src="app/zoosper-core/src/Console/ConsoleOptions.php">
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$value]]></code>
-    </PossiblyUndefinedArrayOffset>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[preg_replace('/[^a-z0-9]+/i', '-', strtolower($value))]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="app/zoosper-core/src/Console/ConsoleOutput.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>

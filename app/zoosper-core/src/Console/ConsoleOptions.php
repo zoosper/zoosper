@@ -37,7 +37,9 @@ final class ConsoleOptions
             if (!str_starts_with($arg, '--') || !str_contains($arg, '=')) {
                 continue;
             }
-            [$key, $value] = explode('=', substr($arg, 2), 2);
+            $parts = explode('=', substr($arg, 2), 2);
+            $key = $parts[0];
+            $value = $parts[1] ?? '';
             $options[$key] = $value;
         }
 
@@ -60,9 +62,14 @@ final class ConsoleOptions
 
     public static function slugify(string $value): string
     {
-        $slug = preg_replace('/[^a-z0-9]+/i', '-', strtolower($value)) ?: 'page';
+        $normalised = preg_replace('/[^a-z0-9]+/i', '-', strtolower($value));
+        if ($normalised === null) {
+            return 'page';
+        }
 
-        return trim($slug, '-');
+        $slug = trim($normalised, '-');
+
+        return $slug === '' ? 'page' : $slug;
     }
 }
 
