@@ -1841,15 +1841,6 @@
       <code><![CDATA[export]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-page/src/Admin/PageGridExportCriteria.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$criteria->filters['q'] ?? '']]></code>
-      <code><![CDATA[$criteria->filters['status'] ?? '']]></code>
-    </PossiblyInvalidCast>
-    <RedundantCast>
-      <code><![CDATA[(string) ($criteria->sortBy ?? 'id')]]></code>
-    </RedundantCast>
-  </file>
   <file src="app/zoosper-page/src/Admin/PageGridExportDataSource.php">
     <UnusedClass>
       <code><![CDATA[PageGridExportDataSource]]></code>

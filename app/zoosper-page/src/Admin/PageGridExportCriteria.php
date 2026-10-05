@@ -30,12 +30,17 @@ final readonly class PageGridExportCriteria
         }
 
         return new self(
-            search: trim((string) ($criteria->filters['q'] ?? '')),
-            status: trim((string) ($criteria->filters['status'] ?? '')),
+            search: self::scalarFilter($criteria->filters['q'] ?? null),
+            status: self::scalarFilter($criteria->filters['status'] ?? null),
             siteIds: array_values(array_unique($siteIds)),
-            sortBy: (string) ($criteria->sortBy ?? 'id'),
+            sortBy: $criteria->sortBy ?? 'id',
             sortDir: strtolower($criteria->sortDir) === 'asc' ? 'asc' : 'desc',
         );
+    }
+
+    private static function scalarFilter(mixed $value): string
+    {
+        return is_scalar($value) ? trim((string) $value) : '';
     }
 }
 
