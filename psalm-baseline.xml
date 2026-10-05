@@ -2855,12 +2855,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$error]]></code>
-      <code><![CDATA[$error]]></code>
-      <code><![CDATA[$field->config['required'] ?? false]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormSection.php">
     <PossiblyUnusedProperty>

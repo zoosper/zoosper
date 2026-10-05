@@ -59,7 +59,7 @@ final readonly class AdminFormRenderer
             if ($title !== '') {
                 $html .= '<section class="card admin-form-section">';
                 $html .= '<div class="card__header"><div><h2 class="card__title">' . htmlspecialchars($title, ENT_QUOTES) . '</h2>';
-                if ($description) {
+                if ($description !== null && $description !== '') {
                     $html .= '<p class="muted">' . htmlspecialchars($description, ENT_QUOTES) . '</p>';
                 }
                 $html .= '</div></div>';
@@ -91,8 +91,9 @@ final readonly class AdminFormRenderer
         $label = htmlspecialchars($field->label, ENT_QUOTES);
         $name = htmlspecialchars($field->name, ENT_QUOTES);
         $type = htmlspecialchars($field->type, ENT_QUOTES);
-        $errorHtml = $error ? '<div class="field-error">' . htmlspecialchars($error, ENT_QUOTES) . '</div>' : '';
-        $groupClass = $error ? 'form-group has-error' : 'form-group';
+        $hasError = $error !== null && $error !== '';
+        $errorHtml = $hasError ? '<div class="field-error">' . htmlspecialchars($error, ENT_QUOTES) . '</div>' : '';
+        $groupClass = $hasError ? 'form-group has-error' : 'form-group';
 
         $html = '<div class="' . $groupClass . '">';
         if ($field->type !== 'checkbox') {
@@ -124,7 +125,7 @@ final readonly class AdminFormRenderer
             $html .= $field->config['html'] ?? (string) ($value ?? '');
         } else {
             $accept = isset($field->config['accept']) ? ' accept="' . htmlspecialchars((string) $field->config['accept'], ENT_QUOTES) . '"' : '';
-            $required = ($field->config['required'] ?? false) ? ' required' : '';
+            $required = ($field->config['required'] ?? false) === true ? ' required' : '';
             $html .= '<input type="' . $type . '" id="' . $name . '" name="' . $name . '" value="' . htmlspecialchars((string) ($value ?? ''), ENT_QUOTES) . '" class="form-control"' . $accept . $required . '>';
         }
 
