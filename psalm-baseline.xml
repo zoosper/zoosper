@@ -736,19 +736,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[fromDirectories]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCondition>
-      <code><![CDATA[array_key_exists($key, $items) && is_array($items[$key])]]></code>
-      <code><![CDATA[array_key_exists($key, $items) && is_array($items[$key])]]></code>
-      <code><![CDATA[array_key_exists($key, $items) && is_array($items[$key])]]></code>
-      <code><![CDATA[is_array($items[$key])]]></code>
-      <code><![CDATA[is_array($items[$key])]]></code>
-      <code><![CDATA[is_array($items[$key])]]></code>
-    </RedundantCondition>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[glob($rootConfig . '/*.php')]]></code>
-      <code><![CDATA[glob(rtrim($directory, '/') . '/*.php')]]></code>
-      <code><![CDATA[glob(rtrim($directory, '/') . '/*.php')]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
       <code><![CDATA[require $file]]></code>

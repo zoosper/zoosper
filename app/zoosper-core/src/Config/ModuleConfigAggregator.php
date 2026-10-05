@@ -38,7 +38,7 @@ final readonly class ModuleConfigAggregator
 
             if ($settings === null) {
                 // Fallback to live scan if discovery map is missing (e.g. not compiled)
-                $files = glob(rtrim($directory, '/') . '/*.php') ?: [];
+                $files = self::phpFiles($directory);
             } else {
                 $files = array_map(fn (string $name): string => $directory . '/' . $name . '.php', $settings);
             }
@@ -54,27 +54,23 @@ final readonly class ModuleConfigAggregator
                     continue;
                 }
 
-                if (array_key_exists($key, $items) && is_array($items[$key])) {
-                    $items[$key] = self::mergeConfig($items[$key], $value);
-                } else {
-                    $items[$key] = $value;
-                }
+                $items[$key] = isset($items[$key])
+                    ? self::mergeConfig($items[$key], $value)
+                    : $value;
             }
         }
 
         // Root config has the highest priority
         $rootConfig = rtrim($this->rootConfigPath, '/');
-        foreach (glob($rootConfig . '/*.php') ?: [] as $file) {
+        foreach (self::phpFiles($rootConfig) as $file) {
             $key = basename($file, '.php');
             $value = require $file;
             if (!is_array($value)) {
                 continue;
             }
-            if (array_key_exists($key, $items) && is_array($items[$key])) {
-                $items[$key] = self::mergeConfig($items[$key], $value);
-            } else {
-                $items[$key] = $value;
-            }
+            $items[$key] = isset($items[$key])
+                ? self::mergeConfig($items[$key], $value)
+                : $value;
         }
 
         return $items;
@@ -89,7 +85,7 @@ final readonly class ModuleConfigAggregator
         $items = [];
 
         foreach ($directoriesLowToHigh as $directory) {
-            foreach (glob(rtrim($directory, '/') . '/*.php') ?: [] as $file) {
+            foreach (self::phpFiles($directory) as $file) {
                 $key = basename($file, '.php');
                 $value = require $file;
 
@@ -97,15 +93,21 @@ final readonly class ModuleConfigAggregator
                     continue;
                 }
 
-                if (array_key_exists($key, $items) && is_array($items[$key])) {
-                    $items[$key] = self::mergeConfig($items[$key], $value);
-                } else {
-                    $items[$key] = $value;
-                }
+                $items[$key] = isset($items[$key])
+                    ? self::mergeConfig($items[$key], $value)
+                    : $value;
             }
         }
 
         return $items;
+    }
+
+    /** @return list<string> */
+    private static function phpFiles(string $directory): array
+    {
+        $files = glob(rtrim($directory, '/') . '/*.php');
+
+        return $files === false ? [] : $files;
     }
 
     /**

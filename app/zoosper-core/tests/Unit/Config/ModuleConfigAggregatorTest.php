@@ -59,12 +59,24 @@ test('non-array config files are ignored', function () {
     expect(ModuleConfigAggregator::fromDirectories([$root]))->toBe([]);
 });
 
+test('empty and missing configuration directories contribute no values', function (): void {
+    $root = sys_get_temp_dir() . '/zoosper-config-empty-' . bin2hex(random_bytes(6));
+    $empty = $root . '/empty';
+    mkdir($empty, 0775, true);
 
+    expect(ModuleConfigAggregator::fromDirectories([$root . '/missing', $empty]))->toBe([]);
+});
 
+test('later array configuration replaces an earlier scalar-shaped key safely', function (): void {
+    $root = sys_get_temp_dir() . '/zoosper-config-shape-' . bin2hex(random_bytes(6));
+    $low = $root . '/low';
+    $high = $root . '/high';
+    mkdir($low, 0775, true);
+    mkdir($high, 0775, true);
 
+    file_put_contents($low . '/feature.php', "<?php return ['mode' => 'legacy'];");
+    file_put_contents($high . '/feature.php', "<?php return ['mode' => ['name' => 'strict']];");
 
-
-
-
-
-
+    expect(ModuleConfigAggregator::fromDirectories([$low, $high]))
+        ->toBe(['feature' => ['mode' => ['name' => 'strict']]]);
+});
