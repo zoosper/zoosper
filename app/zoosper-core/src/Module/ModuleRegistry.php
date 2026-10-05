@@ -112,7 +112,8 @@ final class ModuleRegistry
                 continue;
             }
 
-            $realPath = realpath($module->path) ?: $module->path;
+            $resolvedPath = realpath($module->path);
+            $realPath = $resolvedPath === false ? $module->path : $resolvedPath;
             if (isset($seenRealPaths[$realPath])) {
                 continue;
             }
@@ -288,12 +289,20 @@ final class ModuleRegistry
         return $candidates;
     }
 
+    /** @return list<string> */
+    private static function files(string $pattern): array
+    {
+        $files = glob($pattern);
+
+        return $files === false ? [] : $files;
+    }
+
     /**
      * @return list<array{moduleFile: string, source: string}>
      */
     private function globbedModuleFiles(string $pattern, string $source): array
     {
-        $files = glob(rtrim($this->basePath, '/\\') . '/' . $pattern) ?: [];
+        $files = self::files(rtrim($this->basePath, '/\\') . '/' . $pattern);
         sort($files);
 
         return array_map(
@@ -307,7 +316,7 @@ final class ModuleRegistry
      */
     private function composerPackageModuleFiles(): array
     {
-        $files = glob(rtrim($this->basePath, '/\\') . '/vendor/*/*/composer.json') ?: [];
+        $files = self::files(rtrim($this->basePath, '/\\') . '/vendor/*/*/composer.json');
         sort($files);
         $result = [];
 
@@ -425,11 +434,11 @@ final class ModuleRegistry
             'entity_save_listeners' => is_file($config . '/entity_save_listeners.php'),
             'settings' => array_map(
                 fn (string $f): string => basename($f, '.php'),
-                glob($settings . '/*.php') ?: []
+                self::files($settings . '/*.php')
             ),
             'translations' => array_map(
                 fn (string $f): string => basename($f, '.php'),
-                glob($config . '/translations/*.php') ?: []
+                self::files($config . '/translations/*.php')
             ),
         ];
     }

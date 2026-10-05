@@ -1228,13 +1228,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[clearCache]]></code>
     </PossiblyUnusedMethod>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[glob($config . '/translations/*.php')]]></code>
-      <code><![CDATA[glob($settings . '/*.php')]]></code>
-      <code><![CDATA[glob(rtrim($this->basePath, '/\\') . '/' . $pattern)]]></code>
-      <code><![CDATA[glob(rtrim($this->basePath, '/\\') . '/vendor/*/*/composer.json')]]></code>
-      <code><![CDATA[realpath($module->path)]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $moduleFile]]></code>
     </UnresolvableInclude>
