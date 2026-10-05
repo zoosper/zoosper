@@ -23,11 +23,16 @@ final readonly class AdminUserGridCriteria
     {
         return new self(
             pager: $criteria->pager,
-            query: trim((string) ($criteria->filters['q'] ?? '')),
-            status: trim((string) ($criteria->filters['status'] ?? '')),
+            query: self::scalarFilter($criteria->filters['q'] ?? null),
+            status: self::scalarFilter($criteria->filters['status'] ?? null),
             sortBy: $criteria->sortBy,
             sortDir: $criteria->sortDir,
         );
+    }
+
+    private static function scalarFilter(mixed $value): string
+    {
+        return is_scalar($value) ? trim((string) $value) : '';
     }
 }
 

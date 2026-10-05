@@ -344,12 +344,6 @@
       <code><![CDATA[$row]]></code>
     </UnusedParam>
   </file>
-  <file src="app/zoosper-auth/src/Admin/Grid/AdminUserGridCriteria.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$criteria->filters['q'] ?? '']]></code>
-      <code><![CDATA[$criteria->filters['status'] ?? '']]></code>
-    </PossiblyInvalidCast>
-  </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AdminUserGridIndex.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
