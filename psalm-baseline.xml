@@ -489,10 +489,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(string) ($parts['host'] ?? '')]]></code>
-      <code><![CDATA[(string) ($parts['scheme'] ?? '')]]></code>
-    </RedundantCast>
   </file>
   <file src="app/zoosper-auth/src/RateLimit/AdminAuthenticationRateLimiter.php">
     <UnusedClass>
@@ -1716,12 +1712,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(string)($parts['scheme']??'')]]></code>
-    </RedundantCast>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($parts['host'])]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-menu/src/Application/MenuItemDeletionService.php">
     <PossiblyUnusedMethod>
@@ -1806,14 +1796,6 @@
     <UnusedClass>
       <code><![CDATA[MenuProvider]]></code>
     </UnusedClass>
-  </file>
-  <file src="app/zoosper-menu/src/Service/MenuTreeBuilder.php">
-    <RedundantCast>
-      <code><![CDATA[(string)($parts['scheme']??'')]]></code>
-    </RedundantCast>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($parts['host'])]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-page/src/Admin/Controller/PageAdminController.php">
     <InvalidOperand>
@@ -2829,16 +2811,6 @@
     <PossiblyUnusedReturnValue>
       <code><![CDATA[list<string>]]></code>
     </PossiblyUnusedReturnValue>
-  </file>
-  <file src="app/zoosper-url-rewrite/src/Service/RedirectPolicy.php">
-    <RedundantCast>
-      <code><![CDATA[(string)(parse_url($target,PHP_URL_PATH)?:'')]]></code>
-      <code><![CDATA[(string)(parse_url(trim($path),PHP_URL_PATH)?:'')]]></code>
-    </RedundantCast>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[parse_url($target,PHP_URL_PATH)]]></code>
-      <code><![CDATA[parse_url(trim($path),PHP_URL_PATH)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-url-rewrite/src/Service/UrlRewriteResolver.php">
     <PossiblyUnusedMethod>

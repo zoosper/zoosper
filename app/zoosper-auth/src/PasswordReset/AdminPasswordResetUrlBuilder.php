@@ -18,9 +18,13 @@ final readonly class AdminPasswordResetUrlBuilder
     {
         $origin = rtrim(trim($this->applicationUrl), '/');
         $parts = parse_url($origin);
+        $scheme = is_array($parts) ? ($parts['scheme'] ?? null) : null;
+        $host = is_array($parts) ? ($parts['host'] ?? null) : null;
         if (!is_array($parts)
-            || !in_array(strtolower((string) ($parts['scheme'] ?? '')), ['http', 'https'], true)
-            || trim((string) ($parts['host'] ?? '')) === ''
+            || !is_string($scheme)
+            || !in_array(strtolower($scheme), ['http', 'https'], true)
+            || !is_string($host)
+            || trim($host) === ''
             || isset($parts['user'])
             || isset($parts['pass'])
             || isset($parts['query'])

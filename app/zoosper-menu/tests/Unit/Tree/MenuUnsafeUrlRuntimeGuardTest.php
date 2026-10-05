@@ -29,3 +29,9 @@ it('continues to expose valid absolute and relative external links',function(){
 
 
 
+
+it('fails closed for malformed hostless and unsupported persisted URLs',function(string $url){
+ $item=new MenuItem(1,1,null,null,'Unsafe',$url,'_self',0,'active');
+ $tree=(new MenuTreeBuilder())->build([$item],[],'/');
+ expect($tree[0]->href)->toBe('#');
+})->with(['https:///path-only','mailto:test@example.test','//example.test/path']);

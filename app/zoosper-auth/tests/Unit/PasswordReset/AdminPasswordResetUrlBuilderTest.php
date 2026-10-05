@@ -19,3 +19,8 @@ it('rejects unsafe or non-absolute application origins', function (string $origi
     $builder = new AdminPasswordResetUrlBuilder($origin, new AdminUrlGenerator(ConfigRepository::fromArray([])));
     expect(fn () => $builder->build('token'))->toThrow(InvalidArgumentException::class);
 })->with(['', '/relative', 'javascript:alert(1)', 'https://user:pass@example.test', 'https://example.test/?x=1']);
+
+it('rejects origins with missing or empty host components', function (string $origin): void {
+    $builder = new AdminPasswordResetUrlBuilder($origin, new AdminUrlGenerator(ConfigRepository::fromArray([])));
+    expect(fn () => $builder->build('token'))->toThrow(InvalidArgumentException::class);
+})->with(['https:///path-only', 'https://']);

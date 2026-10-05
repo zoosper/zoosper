@@ -13,7 +13,9 @@ final class MenuTreeBuilder {
   if($url===''||str_contains($url,'<')||str_contains($url,'>')||str_contains($url,'"')||str_contains($url,chr(39))||str_contains($url,'`')||str_contains($url,',')) return '#';
   if(str_starts_with($url,'/')) return str_starts_with($url,'//')?'#':$url;
   $parts=parse_url($url);
-  if(!is_array($parts)||!in_array(strtolower((string)($parts['scheme']??'')),['http','https'],true)||empty($parts['host'])) return '#';
+  $scheme=is_array($parts)?($parts['scheme']??null):null;
+  $host=is_array($parts)?($parts['host']??null):null;
+  if(!is_string($scheme)||!in_array(strtolower($scheme),['http','https'],true)||!is_string($host)||trim($host)==='') return '#';
   return $url;
  }
 }

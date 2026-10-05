@@ -42,3 +42,8 @@ it('documents that menu API lookup is request-site scoped',function(){
 
 
 
+
+it('rejects absolute menu URLs with missing hosts or unsupported schemes',function(string $url){
+ $service=new MenuAdminService(menuUrlContractRepository());
+ expect(fn()=>$service->saveItem(1,['label'=>'Unsafe','url'=>$url]))->toThrow(InvalidArgumentException::class);
+})->with(['https:///path-only','mailto:test@example.test','//example.test/path']);

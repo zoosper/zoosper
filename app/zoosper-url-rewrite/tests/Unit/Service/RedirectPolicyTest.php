@@ -14,3 +14,11 @@ it('rejects invalid redirects',function(string $s,string $t,int $type){expect(fn
 
 
 
+
+it('fails closed for malformed or pathless redirect inputs',function(string $source,string $target){
+ expect(fn()=>(new RedirectPolicy())->validate($source,$target,301))->toThrow(InvalidArgumentException::class);
+})->with([
+ ['http://[::1','/safe'],
+ ['/safe','http://[::1'],
+ ['/safe','?query-only'],
+]);

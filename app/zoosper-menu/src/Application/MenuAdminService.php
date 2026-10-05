@@ -31,7 +31,9 @@ final readonly class MenuAdminService {
    return str_starts_with($value,'//')?throw new InvalidArgumentException('Protocol-relative URLs are not supported.'): $value;
   }
   $parts=parse_url($value);
-  if(!is_array($parts)||!in_array(strtolower((string)($parts['scheme']??'')),['http','https'],true)||empty($parts['host'])){
+  $scheme=is_array($parts)?($parts['scheme']??null):null;
+  $host=is_array($parts)?($parts['host']??null):null;
+  if(!is_string($scheme)||!in_array(strtolower($scheme),['http','https'],true)||!is_string($host)||trim($host)===''){
    throw new InvalidArgumentException('External URL must be an absolute HTTP(S) URL or a site-relative path beginning with /.');
   }
   return $value;
