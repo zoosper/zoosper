@@ -1213,11 +1213,6 @@
     <PossiblyUnusedReturnValue>
       <code><![CDATA[bool]]></code>
     </PossiblyUnusedReturnValue>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$module->discovery[$discoveryKey] ?? false]]></code>
-      <code><![CDATA[$module->discovery['service_decorators'] ?? false]]></code>
-      <code><![CDATA[$module->discovery['services'] ?? false]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-core/src/Module/ModuleRegistry.php">
     <PossiblyUnusedMethod>

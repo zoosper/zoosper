@@ -84,10 +84,10 @@ final readonly class ModuleManifestCompiler
         $decorators = [];
 
         foreach ($modules as $module) {
-            if ($module->discovery['services'] ?? false) {
+            if (($module->discovery['services'] ?? false) === true) {
                 $services[] = $module->configPath('services.php');
             }
-            if ($module->discovery['service_decorators'] ?? false) {
+            if (($module->discovery['service_decorators'] ?? false) === true) {
                 $decorators[] = $module->configPath('service_decorators.php');
             }
         }
@@ -104,7 +104,7 @@ final readonly class ModuleManifestCompiler
         $files = [];
 
         foreach ($modules as $module) {
-            if ($module->discovery[$discoveryKey] ?? false) {
+            if (($module->discovery[$discoveryKey] ?? false) === true) {
                 $files[] = $module->configPath($configFileName);
             }
         }
