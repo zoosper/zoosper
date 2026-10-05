@@ -3769,22 +3769,12 @@
     </UnusedClass>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderCsvExportController.php">
-    <InvalidArgument>
-      <code><![CDATA[$values]]></code>
-      <code><![CDATA[$values]]></code>
-    </InvalidArgument>
     <PossiblyInvalidArgument>
       <code><![CDATA[$result->items]]></code>
     </PossiblyInvalidArgument>
-    <RiskyCast>
-      <code><![CDATA[$values['page_size']]]></code>
-    </RiskyCast>
     <UnusedClass>
       <code><![CDATA[StoreOrderCsvExportController]]></code>
     </UnusedClass>
-    <UnusedParam>
-      <code><![CDATA[$request]]></code>
-    </UnusedParam>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderGridMutationCoordinator.php">
     <PossiblyUnusedMethod>

@@ -20,5 +20,13 @@ it('uses a real Store Orders server endpoint for current-page export when enable
                 'controller' => StoreOrderCsvExportController::class,
                 'action' => 'export', 'permission' => 'store_order.export',
             ]);
+
+        $controller = (string) file_get_contents(
+            $root . '/packages/zoosper-store-orders/src/Admin/StoreOrderCsvExportController.php',
+        );
+        expect($controller)
+            ->toContain('$values = $request->queryParams()')
+            ->toContain('filter_var($pageSizeValue, FILTER_VALIDATE_INT)')
+            ->not->toContain('$_GET');
     });
 });

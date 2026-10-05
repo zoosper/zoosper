@@ -35,9 +35,13 @@ final readonly class StoreOrderCsvExportController
             return Response::redirect($this->adminUrls?->url('login') ?? '/admin/login');
         }
 
-        $values = $_GET;
-        if (isset($values['page_size']) && !in_array((int) $values['page_size'], [5, 10, 20, 50, 100], true)) {
-            $values['page_size'] = 20;
+        $values = $request->queryParams();
+        $pageSizeValue = $values['page_size'] ?? null;
+        if ($pageSizeValue !== null) {
+            $pageSize = filter_var($pageSizeValue, FILTER_VALIDATE_INT);
+            if (!is_int($pageSize) || !in_array($pageSize, [5, 10, 20, 50, 100], true)) {
+                $values['page_size'] = 20;
+            }
         }
 
         try {
