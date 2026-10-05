@@ -1827,12 +1827,6 @@
     </UnusedConstructor>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridDataSource.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$criteria->filters['q'] ?? '']]></code>
-      <code><![CDATA[$criteria->filters['slug'] ?? '']]></code>
-      <code><![CDATA[$criteria->filters['status'] ?? '']]></code>
-      <code><![CDATA[$criteria->filters['title'] ?? '']]></code>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>

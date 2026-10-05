@@ -28,15 +28,20 @@ final readonly class PageGridDataSource implements GridDataSourceInterface
 
         return $this->pages->paginate(new PageGridCriteria(
             pager: $criteria->pager,
-            query: trim((string) ($criteria->filters['q'] ?? '')),
-            status: trim((string) ($criteria->filters['status'] ?? '')),
+            query: self::scalarFilter($criteria->filters['q'] ?? null),
+            status: self::scalarFilter($criteria->filters['status'] ?? null),
             siteId: $siteIds[0] ?? null,
             sortBy: $criteria->sortBy,
             sortDir: $criteria->sortDir,
             siteIds: array_values(array_unique($siteIds)),
-            title: trim((string) ($criteria->filters['title'] ?? '')),
-            slug: trim((string) ($criteria->filters['slug'] ?? '')),
+            title: self::scalarFilter($criteria->filters['title'] ?? null),
+            slug: self::scalarFilter($criteria->filters['slug'] ?? null),
         ));
+    }
+
+    private static function scalarFilter(mixed $value): string
+    {
+        return is_scalar($value) ? trim((string) $value) : '';
     }
 }
 
