@@ -22,11 +22,17 @@ final readonly class ConfigRepository
     {
         $items = [];
 
-        foreach (glob($path . '/*.php') ?: [] as $file) {
-            $items[basename($file, '.php')] = require $file;
+        $files = glob(rtrim($path, '/') . '/*.php');
+        foreach ($files === false ? [] : $files as $file) {
+            $items[basename($file, '.php')] = self::loadFile($file);
         }
 
         return new self($items);
+    }
+
+    private static function loadFile(string $file): mixed
+    {
+        return require $file;
     }
 
     /** @param array<string, mixed> $items */

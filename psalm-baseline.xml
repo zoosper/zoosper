@@ -708,9 +708,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[fromPath]]></code>
     </PossiblyUnusedMethod>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[glob($path . '/*.php')]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>

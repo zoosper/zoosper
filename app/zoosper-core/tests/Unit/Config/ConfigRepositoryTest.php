@@ -26,12 +26,13 @@ test('array returns an empty array for a missing key', function () {
     expect($config->array('missing'))->toBe([]);
 });
 
+test('fromPath loads PHP configuration files and ignores missing directories', function (): void {
+    $directory = sys_get_temp_dir() . '/zoosper-config-repository-' . bin2hex(random_bytes(6));
+    mkdir($directory, 0775, true);
+    file_put_contents($directory . '/app.php', "<?php return ['name' => 'Zoosper'];");
+    file_put_contents($directory . '/database.php', "<?php return ['default' => 'sqlite'];");
 
-
-
-
-
-
-
-
-
+    expect(ConfigRepository::fromPath($directory)->get('app.name'))->toBe('Zoosper')
+        ->and(ConfigRepository::fromPath($directory)->get('database.default'))->toBe('sqlite')
+        ->and(ConfigRepository::fromPath($directory . '/missing')->get('app.name', 'fallback'))->toBe('fallback');
+});
