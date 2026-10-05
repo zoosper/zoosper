@@ -684,11 +684,6 @@
     <PossiblyFalseOperand>
       <code><![CDATA[json_encode($this->manifest($identity, $moduleDir), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)]]></code>
     </PossiblyFalseOperand>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[glob($this->basePath . '/app/*/module.php')]]></code>
-      <code><![CDATA[glob($this->basePath . '/modules/*/*/module.php')]]></code>
-      <code><![CDATA[glob($this->basePath . '/modules/*/module.php')]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $moduleFile]]></code>
     </UnresolvableInclude>

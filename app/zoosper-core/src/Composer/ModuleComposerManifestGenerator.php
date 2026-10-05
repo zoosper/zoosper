@@ -114,12 +114,20 @@ final readonly class ModuleComposerManifestGenerator
     }
 
     /** @return list<string> */
+    private static function files(string $pattern): array
+    {
+        $files = glob($pattern);
+
+        return $files === false ? [] : $files;
+    }
+
+    /** @return list<string> */
     private function moduleFiles(): array
     {
         $files = array_merge(
-            glob($this->basePath . '/app/*/module.php') ?: [],
-            glob($this->basePath . '/modules/*/module.php') ?: [],
-            glob($this->basePath . '/modules/*/*/module.php') ?: [],
+            self::files($this->basePath . '/app/*/module.php'),
+            self::files($this->basePath . '/modules/*/module.php'),
+            self::files($this->basePath . '/modules/*/*/module.php'),
         );
         sort($files);
 

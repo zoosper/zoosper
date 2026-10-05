@@ -31,12 +31,13 @@ test('generated core manifest requires ext-pdo', function () {
     expect($manifest['require']['ext-pdo'])->toBe('*');
 });
 
+test('module file discovery tolerates absent app and modules directories', function () {
+    $root = sys_get_temp_dir() . '/zoosper-manifest-empty-' . bin2hex(random_bytes(4));
+    mkdir($root, 0775, true);
 
+    $identity = ModulePackageIdentity::fromName('zoosper-core');
+    $manifest = (new ModuleComposerManifestGenerator($root))->manifest($identity, $root . '/app/zoosper-core');
 
-
-
-
-
-
-
-
+    expect($manifest['name'])->toBe('zoosper/core')
+        ->and($manifest['require']['ext-pdo'])->toBe('*');
+});
