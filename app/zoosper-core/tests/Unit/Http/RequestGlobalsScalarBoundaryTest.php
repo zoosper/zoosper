@@ -30,6 +30,29 @@ it('normalises malformed non-string server values at the request boundary', func
     }
 });
 
+it('normalises malformed form and uploaded-file maps at the globals boundary', function (): void {
+    $server = $_SERVER;
+    $post = $_POST;
+    $files = $_FILES;
+
+    try {
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REQUEST_URI'] = '/admin/media/upload';
+        $_POST = ['title' => '0', 10 => 'discarded', 'nested' => ['one', ['two']]];
+        $_FILES = ['media_file' => ['name' => 'safe.jpg'], 20 => ['name' => 'discarded'], 'invalid' => 'discarded'];
+
+        $request = Request::fromGlobals();
+
+        expect($request->form())->toBe(['title' => '0', 'nested' => ['one', 'two']])
+            ->and($request->uploadedFile('media_file'))->toBe(['name' => 'safe.jpg'])
+            ->and($request->uploadedFile('invalid'))->toBe([]);
+    } finally {
+        $_SERVER = $server;
+        $_POST = $post;
+        $_FILES = $files;
+    }
+});
+
 it('preserves zero-like query values without truthy fallback', function (): void {
     $server = $_SERVER;
     $post = $_POST;

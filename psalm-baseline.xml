@@ -1141,12 +1141,6 @@
     </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-core/src/Http/Request.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[is_string($key)]]></code>
-    </DocblockTypeContradiction>
-    <InvalidArgument>
-      <code><![CDATA[$_POST]]></code>
-    </InvalidArgument>
     <PossiblyUnusedMethod>
       <code><![CDATA[routeParams]]></code>
       <code><![CDATA[withForm]]></code>

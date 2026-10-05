@@ -56,8 +56,8 @@ final readonly class Request
             query: self::normaliseInputMap($query),
             host: strtolower(is_string($host) && $host !== '' ? $host : 'localhost'),
             clientIp: TrustedProxyResolver::fromEnvironment()->clientIp($_SERVER),
-            form: $_POST,
-            files: $_FILES,
+            form: self::normaliseInputMap($_POST),
+            files: self::normaliseUploadedFiles($_FILES),
             queryString: $queryString,
         );
     }
@@ -155,7 +155,19 @@ final readonly class Request
         return is_array($file) ? $file : [];
     }
 
-    /** @param array<string, mixed> $values @return array<string, mixed> */
+    /** @param array<array-key, mixed> $files @return array<string, mixed> */
+    private static function normaliseUploadedFiles(array $files): array
+    {
+        $normalised = [];
+        foreach ($files as $key => $file) {
+            if (is_string($key) && is_array($file)) {
+                $normalised[$key] = $file;
+            }
+        }
+        return $normalised;
+    }
+
+    /** @param array<array-key, mixed> $values @return array<string, mixed> */
     private static function normaliseInputMap(array $values): array
     {
         $normalised = [];
