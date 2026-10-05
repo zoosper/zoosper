@@ -27,7 +27,11 @@ it('closes enabled Store Orders workspace persistence through CSRF protected POS
             ->and($source)->not->toBeFalse()
             ->and($source)->toContain("'_csrf_token'")
             ->and($source)->toContain('GridWorkspaceMutationFormsRenderer')
-            ->and($source)->toContain("new GridWorkspaceRequest('POST'");
+            ->and($source)->toContain('new GridWorkspaceRequest($request->method(), $request->queryParams(), $form)')
+            ->and($source)->toContain('$values = $request->queryParams()')
+            ->and($source)->toContain('$form = $request->form()')
+            ->and($source)->not->toContain('$_GET')
+            ->and($source)->not->toContain('$_POST');
     });
 });
 
