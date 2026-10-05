@@ -15,16 +15,30 @@ final readonly class ModuleManifestFreshness
     {
         $path = rtrim($this->basePath, '/\\') . '/composer.lock';
 
-        return is_file($path) ? (hash_file('sha256', $path) ?: '') : '';
+        if (!is_file($path)) {
+            return '';
+        }
+
+        $hash = hash_file('sha256', $path);
+
+        return $hash === false ? '' : $hash;
+    }
+
+    /** @return list<string> */
+    private static function files(string $pattern): array
+    {
+        $files = glob($pattern);
+
+        return $files === false ? [] : $files;
     }
 
     public function firstPartyModulesHash(): string
     {
         $base = rtrim($this->basePath, '/\\');
         $files = array_merge(
-            glob($base . '/app/*/module.php') ?: [],
-            glob($base . '/modules/*/module.php') ?: [],
-            glob($base . '/modules/*/*/module.php') ?: [],
+            self::files($base . '/app/*/module.php'),
+            self::files($base . '/modules/*/module.php'),
+            self::files($base . '/modules/*/*/module.php'),
         );
         sort($files, SORT_STRING);
 
@@ -33,7 +47,8 @@ final readonly class ModuleManifestFreshness
             $relative = str_starts_with($file, $base . '/')
                 ? substr($file, strlen($base) + 1)
                 : $file;
-            $entries[] = $relative . ':' . (string) (filemtime($file) ?: 0);
+            $modifiedAt = filemtime($file);
+            $entries[] = $relative . ':' . (string) ($modifiedAt === false ? 0 : $modifiedAt);
         }
 
         return hash('sha256', implode("\n", $entries));

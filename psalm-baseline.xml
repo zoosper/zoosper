@@ -1224,15 +1224,6 @@
       <code><![CDATA[$module->discovery['services'] ?? false]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="app/zoosper-core/src/Module/ModuleManifestFreshness.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[filemtime($file)]]></code>
-      <code><![CDATA[glob($base . '/app/*/module.php')]]></code>
-      <code><![CDATA[glob($base . '/modules/*/*/module.php')]]></code>
-      <code><![CDATA[glob($base . '/modules/*/module.php')]]></code>
-      <code><![CDATA[hash_file('sha256', $path)]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="app/zoosper-core/src/Module/ModuleRegistry.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[clearCache]]></code>
