@@ -1499,11 +1499,6 @@
     </UnusedParam>
   </file>
   <file src="app/zoosper-mail/src/Admin/EmailLogGrid.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$criteria->filters['email'] ?? '']]></code>
-      <code><![CDATA[$criteria->filters['status'] ?? '']]></code>
-      <code><![CDATA[$criteria->filters['subject'] ?? '']]></code>
-    </PossiblyInvalidCast>
     <UnusedParam>
       <code><![CDATA[$row]]></code>
     </UnusedParam>
@@ -3432,12 +3427,6 @@
     <ParamNameMismatch>
       <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
-    <PossiblyInvalidCast>
-      <code><![CDATA[$c->filters['extension']??'']]></code>
-      <code><![CDATA[$c->filters['mime_type']??'']]></code>
-      <code><![CDATA[$c->filters['q']??'']]></code>
-      <code><![CDATA[$c->filters['status']??'']]></code>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>

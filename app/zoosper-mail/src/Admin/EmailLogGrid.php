@@ -79,23 +79,29 @@ final readonly class EmailLogGrid implements GridDataSourceInterface
         );
     }
 
+
+    private static function scalarFilter(mixed $value): string
+    {
+        return is_scalar($value) ? trim((string) $value) : '';
+    }
+
     /** @return array{0:string,1:array<string,string>} */
     private function where(GridCriteria $criteria): array
     {
         $conditions = [];
         $parameters = [];
-        $status = trim((string) ($criteria->filters['status'] ?? ''));
+        $status = self::scalarFilter($criteria->filters['status'] ?? null);
         if (in_array($status, ['sent', 'failed'], true)) {
             $conditions[] = 'status = :status';
             $parameters['status'] = $status;
         }
-        $email = trim((string) ($criteria->filters['email'] ?? ''));
+        $email = self::scalarFilter($criteria->filters['email'] ?? null);
         if ($email !== '') {
             $conditions[] = '(from_email LIKE :email_from OR to_emails LIKE :email_to)';
             $parameters['email_from'] = '%' . $email . '%';
             $parameters['email_to'] = '%' . $email . '%';
         }
-        $subject = trim((string) ($criteria->filters['subject'] ?? ''));
+        $subject = self::scalarFilter($criteria->filters['subject'] ?? null);
         if ($subject !== '') {
             $conditions[] = 'subject LIKE :subject';
             $parameters['subject'] = '%' . $subject . '%';
