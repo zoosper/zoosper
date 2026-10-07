@@ -8,7 +8,7 @@ it('keeps completed review remediation aligned with deployed source history', fu
     $changelog = (string) file_get_contents($root . '/CHANGELOG.md');
 
     expect($roadmap)
-        ->toContain('**Last updated:** 2026-10-04 (Sydney)')
+        ->toContain('**Last updated:** 2026-10-07 (Sydney)')
         ->toContain('## Closure definition')
         ->toContain('Completed implementation history remains in the changelog and tags, not here.')
         ->not->toContain('This phase was not deployed.')

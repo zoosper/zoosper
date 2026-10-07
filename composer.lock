@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f1c9fc6be5f85269148314a7d82124f",
+    "content-hash": "d232d7067fb8e0334e305590bda2b165",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1081,11 +1081,11 @@
         },
         {
             "name": "zoosper/admin",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-admin",
-                "reference": "98dfa4cd55c11dc671302f2c96e215f66be1ff9f"
+                "reference": "89d26db2ebec8819f673bc7457098e51bf9ea9cd"
             },
             "require": {
                 "marko/admin": "0.8.5",
@@ -1119,11 +1119,11 @@
         },
         {
             "name": "zoosper/admin-dashboard",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-admin-dashboard",
-                "reference": "8aceab9984bb8b7731ea9eed1477c3a2a48bdfbb"
+                "reference": "ab52308c7977e0501420415d156f7f98217820e0"
             },
             "require": {
                 "php": "^8.5"
@@ -1145,11 +1145,11 @@
         },
         {
             "name": "zoosper/admin-form",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-admin-form",
-                "reference": "ede853c3a01dfb65b8cd52ee34da58b63691833a"
+                "reference": "a846ef4ec1c694213b2e1f13e2dc242c4137306f"
             },
             "require": {
                 "marko/core": "^0.8",
@@ -1178,11 +1178,11 @@
         },
         {
             "name": "zoosper/admin-grid",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-admin-grid",
-                "reference": "393e31f7d25748e69315f944ffa42ab330cf8e2c"
+                "reference": "af7f6dd7ad4d002a6c807040281e39341c05576e"
             },
             "require": {
                 "ext-pdo": "*",
@@ -1226,11 +1226,11 @@
         },
         {
             "name": "zoosper/api",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-api",
-                "reference": "d231c4515183d266aabc5ee2cdb1c72347cbcee2"
+                "reference": "ef487c11987d650e11076218ffc56ae4c1b9ebe5"
             },
             "require": {
                 "php": "^8.5",
@@ -1254,11 +1254,11 @@
         },
         {
             "name": "zoosper/api-grid",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-api-grid",
-                "reference": "8d133ea45e8db3f3e604d7c0414bced2043ef30a"
+                "reference": "e6e1f89937111f5ec7a50a7d97bb640b975c00b5"
             },
             "require": {
                 "ext-curl": "*",
@@ -1292,11 +1292,11 @@
         },
         {
             "name": "zoosper/audit",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-audit",
-                "reference": "16357f6a183d6c7752105d3e5ef33e9610a8cdd6"
+                "reference": "d310aa68dff72b73c7e7a2175b9d15b26773ea0d"
             },
             "require": {
                 "php": ">=8.5",
@@ -1330,11 +1330,11 @@
         },
         {
             "name": "zoosper/auth",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-auth",
-                "reference": "5c57542abbea015b10e26f527f34a2ed17c16ab8"
+                "reference": "992c01081267f8fe962280846819eea842aea22a"
             },
             "require": {
                 "ext-mbstring": "*",
@@ -1367,11 +1367,11 @@
         },
         {
             "name": "zoosper/cache",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./packages/zoosper-cache",
-                "reference": "09af9aa55963c5ee9a9a06034c87b5f2274794d8"
+                "reference": "8c6dbc71af0d3a89e9a968d6adc97b0a68b66c54"
             },
             "require": {
                 "marko/cache": "0.8.5",
@@ -1408,11 +1408,11 @@
         },
         {
             "name": "zoosper/config",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./packages/zoosper-config",
-                "reference": "a9b9334c65138dddf29c337869d7ccd29e3fdae2"
+                "reference": "5b125480f22a148e004cbdf868f1a5be5983f362"
             },
             "require": {
                 "marko/config": "0.8.5",
@@ -1445,11 +1445,11 @@
         },
         {
             "name": "zoosper/core",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-core",
-                "reference": "dc16c133c7c394d66668b98f19ed73ba2dc484bd"
+                "reference": "5ec7b097bec2c4f53a08b15a8dc2e692c0d55a73"
             },
             "require": {
                 "ext-pdo": "*",
@@ -1483,11 +1483,11 @@
         },
         {
             "name": "zoosper/database",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-database",
-                "reference": "d11c3dd12c96e0eaf4fbbd768a40da7f195c327b"
+                "reference": "54f6ea12a8b58d84d95ea2387662f82009802478"
             },
             "require": {
                 "ext-pdo": "*",
@@ -1520,11 +1520,11 @@
         },
         {
             "name": "zoosper/editor",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-editor",
-                "reference": "3af6d7f08a19d3785f1a6d9ec93cc2f5fe7aee26"
+                "reference": "c8b9d20a2a3f4707b58c563808afdadd1f5df8fd"
             },
             "require": {
                 "php": "^8.5",
@@ -1549,11 +1549,11 @@
         },
         {
             "name": "zoosper/errors",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-errors",
-                "reference": "236a9992ffceaf208c56ef366acae7a6d1326c60"
+                "reference": "833d80d30d7efb109f09d5540c584acfe65951e5"
             },
             "require": {
                 "marko/core": "^0.8",
@@ -1596,11 +1596,11 @@
         },
         {
             "name": "zoosper/github-issues",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-github-issues",
-                "reference": "e8bd5cec09c3b993e10e79d6b4837cd205407d7f"
+                "reference": "7f481a30cc2a552a4d86a71e785b826acd53688c"
             },
             "require": {
                 "php": "^8.5",
@@ -1632,11 +1632,11 @@
         },
         {
             "name": "zoosper/global-announcements",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-global-announcements",
-                "reference": "abe2b155965f13b0f378332a1dff88447468d4fb"
+                "reference": "edd47e1610bd4d2b6e1f75838bbf0a88332cb55f"
             },
             "require": {
                 "php": "^8.5",
@@ -1661,11 +1661,11 @@
         },
         {
             "name": "zoosper/grid",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-grid",
-                "reference": "8bd33b0dab5ef32832a33f47b91fcaaf4775a49c"
+                "reference": "f3608e3c4d5319032b5650c49717e15b5a4a9898"
             },
             "require": {
                 "php": "^8.5",
@@ -1706,11 +1706,11 @@
         },
         {
             "name": "zoosper/install",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-install",
-                "reference": "21e1a71c5880718e39c2855c1f7d1763cd83917a"
+                "reference": "401bb05d2130d722016977c05208f9bd1f0c5a23"
             },
             "require": {
                 "php": "^8.5",
@@ -1738,11 +1738,11 @@
         },
         {
             "name": "zoosper/logger",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./packages/zoosper-logger",
-                "reference": "dcb5e1ad77f26805fcc267de4ddcc40aa75a5d89"
+                "reference": "e032c7a8261784161fdd94c766be3d28271c3ff7"
             },
             "require": {
                 "marko/log": "0.8.5",
@@ -1776,11 +1776,11 @@
         },
         {
             "name": "zoosper/mail",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-mail",
-                "reference": "879d494fe6a76805d2bfeaf49bce9a98f8daa8d2"
+                "reference": "2c92b08aaab985fcffa3c39cfe44a259a360b37c"
             },
             "require": {
                 "php": "^8.5",
@@ -1807,11 +1807,11 @@
         },
         {
             "name": "zoosper/media",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-media",
-                "reference": "b3ee94dd023a8c6930dfbbf9b58d0f0e9854754c"
+                "reference": "2674605df747c8f3ef0dca7027788218d45b0157"
             },
             "require": {
                 "ext-gd": "*",
@@ -1859,11 +1859,11 @@
         },
         {
             "name": "zoosper/menu",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-menu",
-                "reference": "098162b4d8692f8c6b77ea6c2b823bbca95aaa5c"
+                "reference": "e3afb2aed1fe4390ca017881e1e42052b815cbc8"
             },
             "require": {
                 "php": "^8.3 || ^8.5",
@@ -1897,11 +1897,11 @@
         },
         {
             "name": "zoosper/page",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-page",
-                "reference": "a7b87d90130236dc5b6d49fe2b6f353497b7c739"
+                "reference": "014176109cb974509fbb382c0b37670912b28d32"
             },
             "require": {
                 "php": "^8.5",
@@ -1936,11 +1936,11 @@
         },
         {
             "name": "zoosper/pagination",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-pagination",
-                "reference": "dd8d2227d108b19bc3ce2cf159c384387acc314c"
+                "reference": "f6ef38dc14a74be2ec4009c15addb85ef999435d"
             },
             "require": {
                 "marko/pagination": "0.8.5",
@@ -1981,11 +1981,11 @@
         },
         {
             "name": "zoosper/scoped-config",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./packages/zoosper-scoped-config",
-                "reference": "972f56addadcdd692dbfa7be6358525e67b6a415"
+                "reference": "51ea6ed469490b273516b15163eb4ebaf38f187f"
             },
             "require": {
                 "ext-pdo": "*",
@@ -2013,11 +2013,11 @@
         },
         {
             "name": "zoosper/seo",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-seo",
-                "reference": "cf8589b6ef9757c806dbf969abf4f4166509b707"
+                "reference": "29812869fed5aebd661e7a35b6774833681896b8"
             },
             "require": {
                 "php": "^8.5",
@@ -2046,11 +2046,11 @@
         },
         {
             "name": "zoosper/session",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-session",
-                "reference": "30262143feb67ac2d439386d80d48b2ba268bc9f"
+                "reference": "e821a50db321b51c65f99aebcf208defe6dc28af"
             },
             "require": {
                 "marko/session-file": "0.8.5",
@@ -2080,11 +2080,11 @@
         },
         {
             "name": "zoosper/settings",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "app/zoosper-settings",
-                "reference": "acff170c5b9b84820c1bfc7f094350e148619cab"
+                "reference": "e879f563db6e4ae78f90aa4ac1c83a7137d9fca0"
             },
             "require": {
                 "php": "^8.5",
@@ -2115,11 +2115,11 @@
         },
         {
             "name": "zoosper/site",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-site",
-                "reference": "b000b8cb04c39214dcab8777e3fa8163b18cb9ae"
+                "reference": "30dea78cd2101a66d228d09794b4fec538f734f1"
             },
             "require": {
                 "php": "^8.5",
@@ -2151,11 +2151,11 @@
         },
         {
             "name": "zoosper/store-orders",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-store-orders",
-                "reference": "05d9a34df58a2e2e38439a377c31b60c7df339e4"
+                "reference": "eded5c932a829f9af37f7023b327640003ceec86"
             },
             "require": {
                 "php": "^8.5",
@@ -2193,11 +2193,11 @@
         },
         {
             "name": "zoosper/theme",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-theme",
-                "reference": "6d3b7ea0c9c15cb22023bea4a8d790401bf839bd"
+                "reference": "db875f4e7b2474741c0dabaebfe77b3afafe2cc6"
             },
             "require": {
                 "php": "^8.5",
@@ -2224,11 +2224,11 @@
         },
         {
             "name": "zoosper/two-factor",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-two-factor",
-                "reference": "b564cabf2ad66388289b400925eb3f1222946df6"
+                "reference": "89fc6e83424df3aae04dfe8b125a779e32dd65b6"
             },
             "require": {
                 "ext-mbstring": "*",
@@ -2253,11 +2253,11 @@
         },
         {
             "name": "zoosper/url-rewrite",
-            "version": "0.3.2-alpha.3",
+            "version": "0.3.2-alpha.4",
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-url-rewrite",
-                "reference": "ca93da627dbd08d155c38d615d80b786d5545e72"
+                "reference": "d0070a597dbef5f2d5b31b86e295cb20b03ad0cf"
             },
             "require": {
                 "php": "^8.5",

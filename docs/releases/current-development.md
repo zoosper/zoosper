@@ -2,7 +2,7 @@
 
 ## Version
 
-`0.3.2-alpha.4-dev`
+`v0.3.2-alpha.4` release candidate
 
 ## Release baseline
 
@@ -24,4 +24,4 @@ The 0.3.2 line is the beta-readiness public-alpha progression after the substant
 
 ## Beta-readiness Composer policy
 
-The 0.3.2 alpha development line removes first-party `dev-dev` dependency coupling. All 33 first-party path packages retain the explicit installable `0.3.2-alpha.3` Composer package candidate from the root repository map and consume compatible first-party packages through `^0.3.1@alpha`. Runtime development continues on `0.3.2-alpha.4-dev`, keeping package compatibility independent of the Git development branch.
+The 0.3.2 alpha development line removes first-party `dev-dev` dependency coupling. All 33 first-party path packages advance together to the explicit installable `0.3.2-alpha.4` Composer package candidate from the root repository map and continue to consume compatible first-party packages through `^0.3.1@alpha`. The release candidate keeps package compatibility independent of the Git branch name.

@@ -8,8 +8,8 @@ it('publishes the current alpha release and delivered product surface at the rep
 
     expect($readme)
         ->toContain('v0.3.2-alpha.3')
-        ->toContain('Current development line')
-        ->toContain('0.3.2-alpha.4-dev')
+        ->toContain('Release candidate under verification')
+        ->toContain('v0.3.2-alpha.4')
         ->toContain('zoosper-menu')
         ->toContain('revision listing and revision restoration')
         ->toContain('CI runs Psalm as a blocking full-scope gate')
@@ -28,7 +28,7 @@ it('states the tagged pre-release and stable-release status precisely', function
 
     expect($security)
         ->toContain('latest immutable pre-release is `v0.3.2-alpha.3`')
-        ->toContain('supported development branch is `dev`')
+        ->toContain('supported `dev` branch carries the `v0.3.2-alpha.4` release candidate')
         ->toContain('No stable release has shipped')
         ->toContain('`composer.json` and `composer.lock` are the source of truth')
         ->not->toContain('no tagged stable releases have shipped yet');
@@ -39,10 +39,10 @@ it('records the current review priorities and does not overclaim media derivativ
     $roadmap = (string) file_get_contents($root . '/ROADMAP.md');
 
     expect($roadmap)
-        ->toContain('**Last updated:** 2026-10-04 (Sydney)')
+        ->toContain('**Last updated:** 2026-10-07 (Sydney)')
         ->toContain('## Required remaining work')
         ->toContain('## Explicitly not required for closure')
-        ->toContain('Current Psalm baseline: `1,136` entries')
+        ->toContain('Current Psalm baseline: `1,039` entries')
         ->toContain('Media queue observability')
         ->not->toContain('External review response and public-launch priorities (2026-08-11)')
         ->not->toContain('Phase 10AR')

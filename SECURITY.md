@@ -2,7 +2,7 @@
 
 ### Supported Versions
 
-Zoosper CMS is under active pre-release development. The latest immutable pre-release is `v0.3.2-alpha.3`; the supported development branch is `dev` on the `0.3.2-alpha.4-dev` development identity. No stable release has shipped. Security fixes are developed on `dev` and should be verified against the latest pre-release and current `dev` branch as applicable. Once tagged stable releases begin, this table will be updated to reflect which release lines receive security patches.
+Zoosper CMS is under active pre-release development. The latest immutable pre-release is `v0.3.2-alpha.3`; the supported `dev` branch carries the `v0.3.2-alpha.4` release candidate while its release gates are completed. No stable release has shipped. Security fixes are developed on `dev` and should be verified against the latest pre-release and current `dev` branch as applicable. Once tagged stable releases begin, this table will be updated to reflect which release lines receive security patches.
 
 <table>
 <tr>

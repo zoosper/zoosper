@@ -1,17 +1,17 @@
 # Zoosper CMS closure roadmap
 
-**Last updated:** 2026-10-04 (Sydney)
+**Last updated:** 2026-10-07 (Sydney)
 
 This file tracks only work required to close the current Zoosper CMS programme without adding new product features. Shipped history belongs in [CHANGELOG.md](CHANGELOG.md), current product and operating guidance belongs in [docs/](docs/README.md), and immutable release state belongs in Git tags.
 
 ## Current state
 
 - Latest immutable pre-release: `v0.3.2-alpha.3` at `4676b012bc579d6f66f20aa317c4da862d5f045a`.
-- Supported development branch: `dev` on `0.3.2-alpha.4-dev`.
-- Current verified development commit before this roadmap rewrite: `a7782f8be1e9aa0431ce712088657abf61f18e7a`.
+- Supported development branch: `dev`, preparing the public-alpha `v0.3.2-alpha.4` release candidate.
+- Release-preparation parent commit: `ab49d52f5c60e759a00af982b879d68c82a5ee44`.
 - No stable release has shipped.
 - PHP 8.5, blocking full-scope Psalm, complete Pest, JavaScript behaviour/syntax gates, dual SQLite/MySQL release evidence, deterministic production artifacts, upgrade proofs, security hardening, canonical documentation, and production operations guidance are already established.
-- Current Psalm baseline: `1,136` entries. It is stale-entry rejecting and cannot grow unnoticed.
+- Current Psalm baseline: `1,039` entries. It is stale-entry rejecting and cannot grow unnoticed.
 
 ## Closure definition
 
@@ -28,7 +28,7 @@ Closure does not mean that every possible enhancement has been built. It means t
 
 ### C2. Static-analysis debt closure
 
-- [~] **C2.1 Psalm zero-baseline programme.** Reduce the current `1,136`-entry baseline issue-family by issue-family. Each removal requires source-boundary review, focused behavioural or architecture evidence, blocking full-scope Psalm, stale-entry rejection, the complete test suite, and strict quality.
+- [~] **C2.1 Psalm zero-baseline programme.** Reduce the current `1,039`-entry baseline issue-family by issue-family. Each removal requires source-boundary review, focused behavioural or architecture evidence, blocking full-scope Psalm, stale-entry rejection, the complete test suite, and strict quality.
 - [~] **C2.2 Behaviour-sensitive cast cohort.** PDO driver-name handling is complete. Continue with bounded request/form/configuration/URL scalar-normalisation cohorts before unrelated Media, persistence-ID, CSRF, and error-payload findings.
 - [ ] **C2.3 Zero-baseline acceptance.** Remove `psalm-baseline.xml` only when a clean blocking analysis passes without suppressing real defects or weakening runtime validation.
 
