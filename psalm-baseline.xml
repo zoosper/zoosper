@@ -2969,11 +2969,6 @@
       <code><![CDATA[GridWorkspaceMutationFormIds]]></code>
     </UnusedClass>
   </file>
-  <file src="packages/zoosper-admin-grid/src/GridWorkspaceMutationFormsRenderer.php">
-    <RedundantCast>
-      <code><![CDATA[(string) ($state->criteria->sortBy ?? '')]]></code>
-    </RedundantCast>
-  </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceMutationMessages.php">
     <UnusedConstructor>
       <code><![CDATA[__construct]]></code>
