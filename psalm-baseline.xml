@@ -2223,9 +2223,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(string)($p['scheme']??'')]]></code>
-    </RedundantCast>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[$e instanceof SitemapEntry]]></code>
     </RedundantConditionGivenDocblockType>
