@@ -120,7 +120,7 @@ final class Router
     private function match(string $method,string $path,Request $request):?array
     {
         $key=$method.' '.$path;if(isset($this->routes[$key]))return [$this->routes[$key],$request];
-        foreach($this->parameterRoutes[$method]??[] as $route){if(preg_match($route['regex'],$path,$matches)!==1)continue;$params=[];foreach($route['params'] as $name)$params[$name]=rawurldecode((string)($matches[$name]??''));return [$route['handler'],$request->withRouteParams($params)];}
+        foreach($this->parameterRoutes[$method]??[] as $route){if(preg_match($route['regex'],$path,$matches)!==1)continue;$params=[];foreach($route['params'] as $name)$params[$name]=rawurldecode(($matches[$name]??''));return [$route['handler'],$request->withRouteParams($params)];}
         return null;
     }
     /**

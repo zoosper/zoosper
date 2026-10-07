@@ -1257,9 +1257,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[post]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(string)($matches[$name]??'')]]></code>
-    </RedundantCast>
   </file>
   <file src="app/zoosper-core/src/Scaffold/ConsoleCommandScaffoldResult.php">
     <PossiblyUnusedProperty>
