@@ -2169,11 +2169,6 @@
       <code><![CDATA[PageSaveValidationListener]]></code>
     </UnusedClass>
   </file>
-  <file src="app/zoosper-page/src/Seo/PageSeoContributor.php">
-    <RedundantCast>
-      <code><![CDATA[(string)($x['scheme']??'')]]></code>
-    </RedundantCast>
-  </file>
   <file src="app/zoosper-page/src/Seo/PageSitemapContributor.php">
     <ParamNameMismatch>
       <code><![CDATA[$s]]></code>
