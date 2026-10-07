@@ -95,11 +95,11 @@ final readonly class ErrorHandler
                 return;
             }
 
-            if (!in_array((int) ($error['type'] ?? 0), [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+            if (!in_array($error['type'] ?? 0, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
                 return;
             }
 
-            $this->logger->critical((string) ($error['message'] ?? 'Fatal error'), [
+            $this->logger->critical($error['message'] ?? 'Fatal error', [
                 'type' => $error['type'] ?? null,
                 'file' => $error['file'] ?? null,
                 'line' => $error['line'] ?? null,

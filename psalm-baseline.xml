@@ -1005,8 +1005,6 @@
   </file>
   <file src="app/zoosper-core/src/Error/ErrorHandler.php">
     <RedundantCast>
-      <code><![CDATA[(int) ($error['type'] ?? 0)]]></code>
-      <code><![CDATA[(string) ($error['message'] ?? 'Fatal error')]]></code>
     </RedundantCast>
   </file>
   <file src="app/zoosper-core/src/Event/EventDispatcher.php">
