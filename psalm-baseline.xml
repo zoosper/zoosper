@@ -1110,7 +1110,6 @@
   </file>
   <file src="app/zoosper-core/src/Http/TrustedProxyResolver.php">
     <RedundantCast>
-      <code><![CDATA[(string) ($_ENV['TRUSTED_PROXIES'] ?? '')]]></code>
     </RedundantCast>
   </file>
   <file src="app/zoosper-core/src/I18n/AdminTranslatorResolver.php">

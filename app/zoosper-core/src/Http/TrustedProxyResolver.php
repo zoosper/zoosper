@@ -26,9 +26,14 @@ final readonly class TrustedProxyResolver
         $this->trustedNetworks = array_values($networks);
     }
 
+    private static function scalarString(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
+    }
+
     public static function fromEnvironment(): self
     {
-        $environmentValue = trim((string) ($_ENV['TRUSTED_PROXIES'] ?? ''));
+        $environmentValue = trim(self::scalarString($_ENV['TRUSTED_PROXIES'] ?? null));
         $processValue = getenv('TRUSTED_PROXIES');
         $raw = $environmentValue !== ''
             ? $environmentValue
