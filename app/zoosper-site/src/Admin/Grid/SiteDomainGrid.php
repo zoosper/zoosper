@@ -46,19 +46,24 @@ final readonly class SiteDomainGrid implements GridDataSourceInterface
         );
     }
 
+    private static function scalarFilter(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
+    }
+
     #[\Override]
     public function paginate(GridCriteria $c): PaginationResult
     {
         $w = ['1=1'];
         $p = [];
-        $q = trim((string)($c->filters['q'] ?? ''));
+        $q = trim(self::scalarFilter($c->filters['q'] ?? null));
 
         if ($q !== '') {
             $w[] = 'd.host LIKE :q';
             $p['q'] = '%' . $q . '%';
         }
 
-        $v = (string)($c->filters['primary'] ?? '');
+        $v = self::scalarFilter($c->filters['primary'] ?? null);
         if (in_array($v, ['yes', 'no'], true)) {
             $w[] = 'd.is_primary=:primary';
             $p['primary'] = $v === 'yes' ? 1 : 0;

@@ -42,17 +42,22 @@ final readonly class MenuGrid implements GridDataSourceInterface
         );
     }
 
+    private static function scalarFilter(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
+    }
+
     #[\Override]
     public function paginate(GridCriteria $c): PaginationResult
     {
         $w = ['1=1'];
         $p = [];
-        $q = trim((string)($c->filters['q'] ?? ''));
+        $q = trim(self::scalarFilter($c->filters['q'] ?? null));
         if ($q !== '') {
             $w[] = '(m.label LIKE :q OR m.code LIKE :q)';
             $p['q'] = '%' . $q . '%';
         }
-        $v = (string)($c->filters['status'] ?? '');
+        $v = self::scalarFilter($c->filters['status'] ?? null);
         if (in_array($v, ['active', 'inactive'], true)) {
             $w[] = 'm.status=:status';
             $p['status'] = $v;

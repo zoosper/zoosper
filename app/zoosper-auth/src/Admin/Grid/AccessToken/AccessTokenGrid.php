@@ -51,18 +51,23 @@ final readonly class AccessTokenGrid implements GridDataSourceInterface
         );
     }
 
+    private static function scalarFilter(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
+    }
+
     #[\Override]
     public function paginate(GridCriteria $criteria): PaginationResult
     {
         $where = ['admin_user_id=:owner'];
         $parameters = ['owner' => $this->ownerId];
-        $query = trim((string) ($criteria->filters['q'] ?? ''));
+        $query = trim(self::scalarFilter($criteria->filters['q'] ?? null));
         if ($query !== '') {
             $where[] = 'name LIKE :q';
             $parameters['q'] = '%' . $query . '%';
         }
 
-        $status = (string) ($criteria->filters['status'] ?? '');
+        $status = self::scalarFilter($criteria->filters['status'] ?? null);
         $now = gmdate('Y-m-d H:i:s');
         if ($status === 'revoked') {
             $where[] = 'revoked_at IS NOT NULL';

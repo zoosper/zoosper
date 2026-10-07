@@ -334,8 +334,6 @@
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AccessToken/AccessTokenGrid.php">
     <PossiblyInvalidCast>
-      <code><![CDATA[$criteria->filters['q'] ?? '']]></code>
-      <code><![CDATA[$criteria->filters['status'] ?? '']]></code>
     </PossiblyInvalidCast>
     <UnusedParam>
       <code><![CDATA[$row]]></code>
@@ -1597,8 +1595,6 @@
       <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
     <PossiblyInvalidCast>
-      <code><![CDATA[$c->filters['q'] ?? '']]></code>
-      <code><![CDATA[$c->filters['status'] ?? '']]></code>
     </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -2383,8 +2379,6 @@
       <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
     <PossiblyInvalidCast>
-      <code><![CDATA[$c->filters['primary'] ?? '']]></code>
-      <code><![CDATA[$c->filters['q'] ?? '']]></code>
     </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -2395,8 +2389,6 @@
       <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
     <PossiblyInvalidCast>
-      <code><![CDATA[$c->filters['q'] ?? '']]></code>
-      <code><![CDATA[$c->filters['status'] ?? '']]></code>
     </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
