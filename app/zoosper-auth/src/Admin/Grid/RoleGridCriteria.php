@@ -18,11 +18,16 @@ final readonly class RoleGridCriteria
     ) {
     }
 
+    private static function scalarFilter(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
+    }
+
     public static function fromGridCriteria(GridCriteria $criteria): self
     {
         return new self(
             pager: $criteria->pager,
-            query: trim((string) ($criteria->filters['q'] ?? '')),
+            query: trim(self::scalarFilter($criteria->filters['q'] ?? null)),
             sortBy: $criteria->sortBy,
             sortDir: $criteria->sortDir,
         );

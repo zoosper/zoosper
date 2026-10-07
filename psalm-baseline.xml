@@ -366,7 +366,6 @@
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/RoleGridCriteria.php">
     <PossiblyInvalidCast>
-      <code><![CDATA[$criteria->filters['q'] ?? '']]></code>
     </PossiblyInvalidCast>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/RoleGridIndex.php">
