@@ -59,3 +59,8 @@ Authentication rate limiting uses one Auth-owned execution service across HTML A
 HTTP layers remain transport adapters. The Admin middleware performs route selection and generic HTML 429 mapping. API and two-factor controllers preserve their own response formats. Password-reset requests preserve their neutral public response. No HTTP adapter recreates the policy, hashing, persistence or reporting stack.
 
 Disabled mode remains lazy and does not require a salt or create storage. Report-only mode records the underlying decision but returns an allowed decision to the caller. Enforcing mode returns the stored decision unchanged.
+
+
+## Release artifact layout parity
+
+Release readiness resolves required Settings, Page and Session files through enabled ModuleRegistry identities, preserving missing-module and missing-file failures in source, modules and vendor layouts. Application-owned assets and foreign-key checks remain unchanged. Session defaults locate the owning zoosper/zoosper Composer project rather than assuming directory depth; absolute and stream storage paths remain unchanged. Artifact acceptance must run without restoring app/ or packages/.

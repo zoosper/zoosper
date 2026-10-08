@@ -29,19 +29,16 @@ final readonly class ReleaseCheck
             $results[] = new ReleaseCheckResult('writable:' . $relative, is_dir($path) && is_writable($path), $relative . (is_writable($path) ? ' is writable' : ' is not writable'));
         }
         foreach ([
-            'settings:css' => 'app/zoosper-settings/resources/assets/css/settings-workspace.css',
-            'settings:js' => 'app/zoosper-settings/resources/assets/js/settings-workspace.js',
             'admin:css' => 'public/assets/admin/css/admin.css',
             'env-example' => '.env.example',
             'starter-theme' => 'themes/default/theme.php',
             'starter-layout' => 'themes/default/templates/layout.latte',
             'starter-page-view' => 'themes/default/templates/modules/zoosper-page/page/view.latte',
             'starter-theme-css' => 'themes/default/assets/css/app.css',
-            'starter-command' => 'app/zoosper-page/src/Console/StarterSiteInstallCommand.php',
-            'session-settings' => 'app/zoosper-session/config/settings/session.php',
         ] as $name => $relative) {
             $results[] = new ReleaseCheckResult($name, is_file($this->basePath . '/' . $relative), $relative);
         }
+        $results = array_merge($results, $this->moduleFileResults());
         $manifest = (new ModuleManifestStatus($this->basePath))->inspect();
         $results[] = new ReleaseCheckResult('module-manifest', $manifest['status'] === 'fresh', 'status=' . $manifest['status']);
         $foreignKeys = $this->foreignKeyResult();
@@ -53,6 +50,40 @@ final readonly class ReleaseCheck
         $environment = (string) ($app['env'] ?? 'production');
         $safe = $environment !== 'production' || !$debug;
         $results[] = new ReleaseCheckResult('production-debug', $safe, "env={$environment}, debug=" . ($debug ? 'true' : 'false'));
+        return $results;
+    }
+
+
+    /** Resolve required files from enabled module identities, never guessed layout paths.
+     * @return list<ReleaseCheckResult>
+     */
+    public function moduleFileResults(): array
+    {
+        $required = [
+            'settings:css' => ['zoosper-settings', 'resources/assets/css/settings-workspace.css'],
+            'settings:js' => ['zoosper-settings', 'resources/assets/js/settings-workspace.js'],
+            'starter-command' => ['zoosper-page', 'src/Console/StarterSiteInstallCommand.php'],
+            'session-settings' => ['zoosper-session', 'config/settings/session.php'],
+        ];
+        $results = [];
+        try {
+            $paths = [];
+            foreach ((new \Zoosper\Core\Module\ModuleRegistry($this->basePath))->enabledModules() as $module) {
+                $paths[$module->name] = $module->path;
+            }
+            foreach ($required as $name => [$identity, $relative]) {
+                $path = isset($paths[$identity]) ? $paths[$identity] . '/' . $relative : null;
+                $results[] = new ReleaseCheckResult(
+                    $name,
+                    $path !== null && is_file($path),
+                    $path ?? 'Required enabled module missing: ' . $identity,
+                );
+            }
+        } catch (Throwable $exception) {
+            foreach ($required as $name => $_definition) {
+                $results[] = new ReleaseCheckResult($name, false, 'Module inspection failed: ' . $exception->getMessage());
+            }
+        }
         return $results;
     }
 

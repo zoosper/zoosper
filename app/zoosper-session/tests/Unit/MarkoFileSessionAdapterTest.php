@@ -27,10 +27,12 @@ it('resolves session storage independently of the PHP-FPM working directory', fu
     $configurationSource = (string) file_get_contents($root . '/app/zoosper-session/config/settings/session.php');
 
     expect($configurationSource)
-        ->toContain('$basePath = dirname(__DIR__, 4);')
+        ->toContain("(\$project['name'] ?? null) === 'zoosper/zoosper'")
+        ->toContain("throw new RuntimeException('Session settings cannot locate the zoosper/zoosper project root.')")
         ->toContain("env('SESSION_STORAGE_PATH', 'var/sessions')")
         ->toContain('$basePath . \'/\' . ltrim($configuredPath, \'/\\\\\')')
         ->toContain("'path' => \$storagePath")
+        ->not->toContain('$basePath = dirname(__DIR__, 4);')
         ->not->toContain("'path' => trim((string) env('SESSION_STORAGE_PATH', 'var/sessions'))");
 });
 
