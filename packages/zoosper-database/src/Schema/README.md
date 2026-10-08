@@ -27,3 +27,8 @@ Tables may declare `foreign_keys` beside `columns` and `indexes`. Each named def
 - Failed multi-statement MySQL application may be partial. Inspect current status before any retry.
 - Fresh SQLite tables receive declarative constraints during creation. Existing SQLite tables require explicit data-preserving rebuild migrations.
 - Release readiness requires zero additions, mismatches, and SQLite rebuild requirements. Inspection errors fail closed.
+
+
+## Migration-owned update actions
+
+Auth role links, Site domains, Menu relationships and the Page revision-to-Page relationship explicitly declare `NO ACTION` updates to preserve historical migration behavior. Engine defaults remain `RESTRICT`; action matching remains strict. Fresh-install reconciliation and repeat-migration regression coverage complement foreign-key integrity checks. No existing-table rebuild is part of this declaration correction.

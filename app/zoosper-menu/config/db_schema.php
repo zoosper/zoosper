@@ -93,6 +93,7 @@ return array (
             0 => 'id',
           ),
           'on_delete' => 'CASCADE',
+          'on_update' => 'NO ACTION',
         ),
       ),
     ),
@@ -197,6 +198,7 @@ return array (
             0 => 'id',
           ),
           'on_delete' => 'CASCADE',
+          'on_update' => 'NO ACTION',
         ),
         'fk_menu_items_parent' => 
         array (
@@ -210,6 +212,7 @@ return array (
             0 => 'id',
           ),
           'on_delete' => 'CASCADE',
+          'on_update' => 'NO ACTION',
         ),
         'fk_menu_items_page' => 
         array (
@@ -223,6 +226,7 @@ return array (
             0 => 'id',
           ),
           'on_delete' => 'SET NULL',
+          'on_update' => 'NO ACTION',
         ),
       ),
     ),

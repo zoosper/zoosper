@@ -232,6 +232,7 @@ return array (
             0 => 'id',
           ),
           'on_delete' => 'CASCADE',
+          'on_update' => 'NO ACTION',
         ),
         'fk_admin_user_roles_role' => 
         array (
@@ -245,6 +246,7 @@ return array (
             0 => 'id',
           ),
           'on_delete' => 'CASCADE',
+          'on_update' => 'NO ACTION',
         ),
       ),
     ),
@@ -289,6 +291,7 @@ return array (
             0 => 'id',
           ),
           'on_delete' => 'CASCADE',
+          'on_update' => 'NO ACTION',
         ),
         'fk_admin_role_permissions_permission' => 
         array (
@@ -302,6 +305,7 @@ return array (
             0 => 'id',
           ),
           'on_delete' => 'CASCADE',
+          'on_update' => 'NO ACTION',
         ),
       ),
     ),

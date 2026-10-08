@@ -160,6 +160,7 @@ return array (
             0 => 'id',
           ),
           'on_delete' => 'CASCADE',
+          'on_update' => 'NO ACTION',
         ),
       ),
     ),

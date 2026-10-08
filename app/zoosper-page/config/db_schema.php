@@ -40,6 +40,7 @@ return [
                     'referenced_table' => 'pages',
                     'referenced_columns' => ['id'],
                     'on_delete' => 'CASCADE',
+                    'on_update' => 'NO ACTION',
                 ],
                 'fk_page_revisions_created_by' => ['columns' => ['created_by'], 'referenced_table' => 'admin_users', 'referenced_columns' => ['id'], 'on_delete' => 'SET NULL', 'on_update' => 'NO ACTION'],
             ],
