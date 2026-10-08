@@ -17,6 +17,7 @@ use Zoosper\Page\Model\Page;
 use Zoosper\Seo\Metadata\SeoMetadataManager;
 use Zoosper\Site\Model\Site;
 use Zoosper\Theme\Template\TemplateRenderer;
+use Zoosper\Theme\Theme\ProjectRootLocator;
 use Zoosper\Theme\Theme\ThemeResolver;
 
 final readonly class PageRenderer
@@ -42,7 +43,7 @@ final readonly class PageRenderer
     public function render(Page $page, Site $site, ?Request $request = null): string
     {
         $templates = $this->templates ?? new TemplateRenderer(
-            new ThemeResolver(dirname(__DIR__, 4) . '/themes', 'default'),
+            new ThemeResolver(ProjectRootLocator::from(__DIR__) . '/themes', 'default'),
             $this->modules,
         );
         $themeCode = $site->themeCode;

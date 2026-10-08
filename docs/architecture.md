@@ -2,6 +2,8 @@
 
 Zoosper is an API-first modular CMS built on Marko components and PHP 8.5.
 
+Project-owned theme roots are resolved from the nearest `zoosper/zoosper` Composer project rather than from a module package directory, so source and vendor-only artifact layouts share the same frontend and Admin themes.
+
 ## Runtime
 
 The application loads layered configuration, discovers modules, composes services, loads module routes and executes middleware before dispatching controllers. Site context is resolved once per request and carried through the request path.

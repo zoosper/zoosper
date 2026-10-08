@@ -18,6 +18,7 @@ use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Theme\Template\TemplateRenderer;
+use Zoosper\Theme\Theme\ProjectRootLocator;
 use Zoosper\Theme\Theme\ThemeResolver;
 use Zoosper\Auth\Layout\AdminLayoutRendererInterface;
 
@@ -60,7 +61,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
             $this->config?->get('app.version', $fallbackVersion)
             ?? $fallbackVersion
         );
-        $templates = $this->templates ?? new TemplateRenderer(new ThemeResolver(dirname(__DIR__, 4) . '/themes/admin', 'default'));
+        $templates = $this->templates ?? new TemplateRenderer(new ThemeResolver(ProjectRootLocator::from(__DIR__) . '/themes/admin', 'default'));
         $assetData = $this->assetViewData?->data($active) ?? [
             'stylesheets' => [],
             'scripts' => [],

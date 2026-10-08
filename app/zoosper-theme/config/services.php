@@ -17,20 +17,23 @@ use Zoosper\Theme\Template\Engine\PhpTemplateEngine;
 use Zoosper\Theme\Template\Engine\TemplateEngineInterface;
 use Zoosper\Theme\Template\Engine\TemplateEngineRegistry;
 use Zoosper\Theme\Template\TemplateRenderer;
+use Zoosper\Theme\Theme\ProjectRootLocator;
 use Zoosper\Theme\Theme\ThemeRepository;
 use Zoosper\Theme\Theme\ThemeResolver;
 use Zoosper\Theme\Application\ThemeAssignmentService;
 use Zoosper\Site\Repository\SiteRepository;
+
+$projectRoot = ProjectRootLocator::from(__DIR__);
 
 return [
     ThemeAssignmentService::class => static fn (ServiceContainer $s): ThemeAssignmentService => new ThemeAssignmentService($s->get(ThemeRepository::class),$s->get(SiteRepository::class)),
     ViewInterface::class => static fn (ServiceContainer $services): ViewInterface => new MarkoViewAdapter(
         $services->get('theme.frontend_template_renderer'),
     ),
-    ThemeRepository::class => static fn (ServiceContainer $services): ThemeRepository => new ThemeRepository(dirname(__DIR__, 3) . '/themes'),
+    ThemeRepository::class => static fn (ServiceContainer $services): ThemeRepository => new ThemeRepository($projectRoot . '/themes'),
     LayoutUpdateRepository::class => static fn (ServiceContainer $services): LayoutUpdateRepository => new LayoutUpdateRepository(),
     TemplateRuntimeConfig::class => static fn (ServiceContainer $services): TemplateRuntimeConfig => new TemplateRuntimeConfig(
-        dirname(__DIR__, 3),
+        $projectRoot,
         $services->get(ConfigRepository::class),
         $services->get(ScopeConfigRepository::class),
         ScopeContext::default(),
@@ -49,14 +52,14 @@ return [
         $services->get(PhpTemplateEngine::class),
     ))->prioritise([$services->get(TemplateRuntimeConfig::class)->engine(), 'latte', 'php']),
     'theme.frontend_template_renderer' => static fn (ServiceContainer $services): TemplateRenderer => new TemplateRenderer(
-        new ThemeResolver(dirname(__DIR__, 3) . '/themes', 'default'),
+        new ThemeResolver($projectRoot . '/themes', 'default'),
         $services->get(ModuleRegistry::class),
         $services->get(LayoutUpdateRepository::class),
         $services->get(TemplateViewContextProvider::class),
         $services->get(TemplateEngineRegistry::class),
     ),
     'theme.admin_template_renderer' => static fn (ServiceContainer $services): TemplateRenderer => new TemplateRenderer(
-        new ThemeResolver(dirname(__DIR__, 3) . '/themes/admin', 'default'),
+        new ThemeResolver($projectRoot . '/themes/admin', 'default'),
         $services->get(ModuleRegistry::class),
         $services->get(LayoutUpdateRepository::class),
         $services->get(TemplateViewContextProvider::class),
