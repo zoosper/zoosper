@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/docs-site.yml'
       - 'README.md'
+      - 'ROADMAP.md'
       - 'docs/**'
       - 'docs-site/**'
       - 'app/zoosper-core/tests/Unit/Documentation/**'
