@@ -57,8 +57,8 @@ final readonly class RoleAdminController
         if ($this->gridIndex !== null) {
             $gridHtml = $this->gridIndex->render(
                 $user->id,
-                AuthGridQueryState::fromQuery($_GET),
-                AuthGridQueryState::bookmarkId($_GET),
+                AuthGridQueryState::fromQuery($request->queryParams()),
+                AuthGridQueryState::bookmarkId($request->queryParams()),
             );
 
             return $this->html(

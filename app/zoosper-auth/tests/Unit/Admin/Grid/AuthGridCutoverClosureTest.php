@@ -26,8 +26,8 @@ it('keeps both live Auth list actions on their feature Grid façades', function 
             expect($source)->toContain($signal);
         }
 
-        expect($source)->toContain('AuthGridQueryState::fromQuery($_GET)')
-            ->toContain('AuthGridQueryState::bookmarkId($_GET)')
+        expect($source)->toContain('AuthGridQueryState::fromQuery($request->queryParams())')
+            ->toContain('AuthGridQueryState::bookmarkId($request->queryParams())')
             ->toContain('if ($this->gridIndex !== null)');
     }
 });

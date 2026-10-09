@@ -285,10 +285,6 @@
       <code><![CDATA[$this->idsFromForm($form, 'permission_ids')]]></code>
       <code><![CDATA[$userIds]]></code>
     </ArgumentTypeCoercion>
-    <InvalidArgument>
-      <code><![CDATA[$_GET]]></code>
-      <code><![CDATA[$_GET]]></code>
-    </InvalidArgument>
     <MissingFile>
       <code><![CDATA[require dirname(__DIR__, 3) . '/zoosper-auth/config/acl.php']]></code>
     </MissingFile>
@@ -300,14 +296,9 @@
     </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-auth/src/Admin/Controller/UserAdminController.php">
-    <InvalidArgument>
-      <code><![CDATA[$_GET]]></code>
-      <code><![CDATA[$_GET]]></code>
-    </InvalidArgument>
     <PossiblyNullArgument>
       <code><![CDATA[$deleteUrl]]></code>
     </PossiblyNullArgument>
@@ -325,7 +316,6 @@
       <code><![CDATA[$c]]></code>
     </UnusedClosureParam>
     <UnusedParam>
-      <code><![CDATA[$request]]></code>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>

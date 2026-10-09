@@ -64,8 +64,8 @@ final readonly class UserAdminController
         if ($this->gridIndex !== null) {
             $gridHtml = $this->gridIndex->render(
                 $user->id,
-                AuthGridQueryState::fromQuery($_GET),
-                AuthGridQueryState::bookmarkId($_GET),
+                AuthGridQueryState::fromQuery($request->queryParams()),
+                AuthGridQueryState::bookmarkId($request->queryParams()),
             );
             return Response::html($this->views->render(
                 'Admin Users',

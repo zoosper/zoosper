@@ -10,8 +10,8 @@ it('cuts both Auth list actions over while preserving legacy fallback paths', fu
     ] as $file => $service) {
         $source = (string) file_get_contents($root . '/app/zoosper-auth/src/Admin/Controller/' . $file);
         expect($source)->toContain($service)
-            ->toContain('AuthGridQueryState::fromQuery($_GET)')
-            ->toContain('AuthGridQueryState::bookmarkId($_GET)')
+            ->toContain('AuthGridQueryState::fromQuery($request->queryParams())')
+            ->toContain('AuthGridQueryState::bookmarkId($request->queryParams())')
             ->toContain('if ($this->gridIndex !== null)');
     }
 });
