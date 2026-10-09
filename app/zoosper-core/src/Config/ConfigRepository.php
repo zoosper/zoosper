@@ -56,7 +56,7 @@ final readonly class ConfigRepository
         return $value;
     }
 
-    /** @return array<string, string> */
+    /** @return array<array-key, mixed> */
     public function array(string $key): array
     {
         $value = $this->get($key, []);

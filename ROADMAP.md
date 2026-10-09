@@ -12,7 +12,7 @@ This file tracks only work required to close the current Zoosper CMS programme w
 - Alpha.4 publication and public artifact checksum verification are complete. Production deployment acceptance and C1-C5 programme closure remain open.
 - No stable release has shipped.
 - PHP 8.5, blocking full-scope Psalm, complete Pest, JavaScript behaviour/syntax gates, dual SQLite/MySQL release evidence, deterministic production artifacts, upgrade proofs, security hardening, canonical documentation, and production operations guidance are already established.
-- Current Psalm baseline: `1,039` entries. It is stale-entry rejecting and cannot grow unnoticed.
+- Current Psalm baseline: `1,030` entries. It is stale-entry rejecting and cannot grow unnoticed.
 
 ## Closure definition
 

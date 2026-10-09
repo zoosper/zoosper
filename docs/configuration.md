@@ -36,3 +36,10 @@ Anonymous frontend `GET` and `HEAD` requests that fall through to URL rewrites, 
 Schedule `php8.5 bin/zoosper rate-limit:prune` to delete fixed-window rate-limit buckets whose `window_ends_at` value has expired. The command is module-discovered, resolves its maintenance store through the service container, and does not create MySQL schema at runtime. Apply migrations before enabling production enforcement.
 
 See `docs/operations/rate-limit-pruning.md` for scheduler-agnostic cron and systemd deployment examples, overlap protection, monitoring, and idempotency guidance.
+
+
+## Admin base-path value types
+
+`admin.base_path` requires a string. Missing or null values retain `/admin`. Numeric and boolean scalars, arrays, objects (including Stringable objects), and resources are rejected instead of cast. Existing canonical string normalisation and reserved-prefix checks are unchanged. The optional Admin layout fallback retains legacy string joining, not canonical validation.
+
+`ConfigRepository::array()` preserves stored keys and mixed value types without coercion. Consumers validate their own boundaries. The Marko adapter is unchanged.

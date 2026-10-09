@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Corrected configuration array typing and rejected non-string Admin base paths while retaining missing/null defaults and existing string behaviour.
+
 - Reconciled current documentation and public-launch assertions with published alpha.4, preserving release runtime/package identity and all remaining C1-C5 closure gates.
 
 

@@ -108,9 +108,6 @@
     <RedundantCast>
       <code><![CDATA[(string) ($release['version'] ?? 'unknown')]]></code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) ($adminConfig['base_path'] ?? '/admin')]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-admin/src/Message/SessionFlashMessageStore.php">
     <UnusedClass>
@@ -1394,9 +1391,6 @@
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[basePath]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) ($admin['base_path'] ?? '/admin')]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-core/src/Url/CdnUrlResolver.php">
     <PossiblyUnusedMethod>
@@ -2036,23 +2030,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-page/src/Content/DocumentValidator.php">
-    <EmptyArrayAccess>
-      <code><![CDATA[$block['schema_version']]]></code>
-      <code><![CDATA[$block['schema_version']]]></code>
-    </EmptyArrayAccess>
-    <InvalidArrayOffset>
-      <code><![CDATA[$block['schema_version']]]></code>
-      <code><![CDATA[$block['schema_version']]]></code>
-    </InvalidArrayOffset>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$block]]></code>
-    </PossiblyInvalidArgument>
-    <RedundantCast>
-      <code><![CDATA[(int) ($block['schema_version'] ?? 1)]]></code>
-      <code><![CDATA[(int) ($block['schema_version'] ?? 1)]]></code>
-    </RedundantCast>
   </file>
   <file src="app/zoosper-page/src/Content/PageContentDocument.php">
     <PossiblyUnusedMethod>

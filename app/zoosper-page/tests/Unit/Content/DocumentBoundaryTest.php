@@ -36,3 +36,21 @@ it('rejects unsupported Page document schema versions', function (): void {
 it('tolerates malformed historical JSON without accepting it as a document', function (): void {
     expect(phase13B4DocumentNormalizer()->tolerant('{bad'))->toBeNull();
 });
+
+
+it('retains configured schema versions and rejects mismatches through the Page boundary', function (): void {
+    $config = \Zoosper\Core\Config\ConfigRepository::fromArray([
+        'content_model' => ['block_json' => ['schema_version' => '3', 'allowed_types' => ['paragraph']]],
+    ]);
+    $validator = new DocumentValidator($config);
+    $normalizer = new DocumentNormalizer($validator);
+    expect($validator->schemaVersion())->toBe(3)
+        ->and($normalizer->fromArray(['blocks' => []])->structured['schema_version'])->toBe(3);
+    expect(fn () => $validator->validate(['schema_version' => 2, 'blocks' => []]))
+        ->toThrow(RuntimeException::class, 'Unsupported content document schema version 2; expected 3.');
+    expect(fn () => $validator->validate(['schema_version' => 3, 'blocks' => [['type' => 'unsupported', 'data' => []]]]))
+        ->toThrow(RuntimeException::class, 'Invalid Editor.js JSON payload:');
+    foreach ([[], ['content_model' => ['block_json' => 'not-an-array']]] as $items) {
+        expect((new DocumentValidator(\Zoosper\Core\Config\ConfigRepository::fromArray($items)))->schemaVersion())->toBe(1);
+    }
+});

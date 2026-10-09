@@ -140,7 +140,11 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
         }
 
         $adminConfig = $this->config?->array('admin') ?? [];
-        $basePath = (string) ($adminConfig['base_path'] ?? '/admin');
+        $basePath = $adminConfig['base_path'] ?? '/admin';
+        // Keep legacy string joining; reject implicit non-string coercion.
+        if (!is_string($basePath)) {
+            throw new \InvalidArgumentException('Configuration admin.base_path must be a string.');
+        }
 
         return rtrim($basePath, '/') . '/' . ltrim($path, '/');
     }

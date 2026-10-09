@@ -21,7 +21,12 @@ final readonly class AdminUrlGenerator
     public function __construct(ConfigRepository $config)
     {
         $admin = $config->array('admin');
-        $this->basePath = self::normalise((string) ($admin['base_path'] ?? '/admin'));
+        $basePath = $admin['base_path'] ?? '/admin';
+        if (!is_string($basePath)) {
+            throw new InvalidArgumentException('Configuration admin.base_path must be a string.');
+        }
+
+        $this->basePath = self::normalise($basePath);
     }
 
     public function basePath(): string
