@@ -12,7 +12,7 @@ $navigation = [
     'Getting started' => ['getting-started', 'deployment', 'operations/production-operator-runbook', 'upgrade', 'troubleshooting'],
     'User guide' => ['user-guide'],
     'Developer guide' => ['developer-guide', 'architecture', 'modules', 'configuration', 'cli', 'api', 'admin', 'themes', 'testing'],
-    'Project' => ['releases/current-development', 'release-checklist'],
+    'Project' => ['releases/current-development', 'releases/release-promotion', 'release-checklist'],
 ];
 
 $labels = [
@@ -21,7 +21,8 @@ $labels = [
     'configuration' => 'Configuration', 'cli' => 'Command Line', 'api' => 'API', 'admin' => 'Admin',
     'themes' => 'Themes', 'deployment' => 'Deployment', 'upgrade' => 'Upgrade',
     'troubleshooting' => 'Troubleshooting', 'testing' => 'Testing',
-    'releases/current-development' => 'Current Development', 'release-checklist' => 'Release Checklist',
+    'releases/current-development' => 'Current Development', 'releases/release-promotion' => 'Release Promotion',
+    'release-checklist' => 'Release Checklist',
 ];
 
 function removeDirectory(string $directory): void
