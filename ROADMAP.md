@@ -12,7 +12,7 @@ This file tracks only work required to close the current Zoosper CMS programme w
 - Alpha.4 publication and public artifact checksum verification are complete. Production deployment acceptance and C1-C5 programme closure remain open.
 - No stable release has shipped.
 - PHP 8.5, blocking full-scope Psalm, complete Pest, JavaScript behaviour/syntax gates, dual SQLite/MySQL release evidence, deterministic production artifacts, upgrade proofs, security hardening, canonical documentation, and production operations guidance are already established.
-- Current Psalm baseline: `1,030` entries. It is stale-entry rejecting and cannot grow unnoticed.
+- Current Psalm baseline: `1,016` entries. It is stale-entry rejecting and cannot grow unnoticed.
 
 ## Closure definition
 
@@ -29,7 +29,7 @@ Closure does not mean that every possible enhancement has been built. It means t
 
 ### C2. Static-analysis debt closure
 
-- [~] **C2.1 Psalm zero-baseline programme.** Reduce the current `1,039`-entry baseline issue-family by issue-family. Each removal requires source-boundary review, focused behavioural or architecture evidence, blocking full-scope Psalm, stale-entry rejection, the complete test suite, and strict quality.
+- [~] **C2.1 Psalm zero-baseline programme.** Reduce the current `1,016`-entry baseline issue-family by issue-family. Each removal requires source-boundary review, focused behavioural or architecture evidence, blocking full-scope Psalm, stale-entry rejection, the complete test suite, and strict quality.
 - [~] **C2.2 Behaviour-sensitive cast cohort.** PDO driver-name handling is complete. Continue with bounded request/form/configuration/URL scalar-normalisation cohorts before unrelated Media, persistence-ID, CSRF, and error-payload findings.
 - [ ] **C2.3 Zero-baseline acceptance.** Remove `psalm-baseline.xml` only when a clean blocking analysis passes without suppressing real defects or weakening runtime validation.
 
@@ -43,7 +43,7 @@ Closure does not mean that every possible enhancement has been built. It means t
 
 - [ ] **C4.1 Media queue observability.** Provide operationally usable depth, failure, retry, and processing-latency visibility for the existing Media queue before claiming high-volume production readiness.
 - [ ] **C4.2 Production acceptance record.** Execute and record the operator-runbook checks in the target environment, including enforcing CSP browser workflows, trusted proxies, selected cache backend, SMTP and `APP_URL`, secret policy, public-webroot isolation, MySQL migration and foreign-key integrity, queue workers, scheduled maintenance, and post-deploy health.
-- [ ] **C4.3 External dependency and disclosure review.** Confirm locked dependency audit status and that the private security-reporting path remains operational for the release.
+- [~] **C4.3 External dependency and disclosure review.** The current development lock resolves `source-map-js` to patched version `1.2.2` after reviewing GHSA-68fv-2mgg-jv7q. Reconfirm clean locked Composer and npm audits and exercise the private security-reporting path for the release.
 
 ### C5. Final release closure
 
