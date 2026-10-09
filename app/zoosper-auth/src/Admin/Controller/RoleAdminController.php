@@ -252,17 +252,45 @@ final readonly class RoleAdminController
     /**
      * Load the ACL group definitions used to organise the permission tree.
      *
-     * @return array<string, mixed>
+     * @return list<array<string, mixed>>
      */
     private function aclGroups(): array
     {
-        if ($this->config !== null) {
-            return $this->config->array('acl');
+        $groups = $this->config !== null
+            ? $this->config->array('acl')
+            : require dirname(__DIR__, 3) . '/zoosper-auth/config/acl.php';
+
+        return $this->normaliseAclGroups($groups);
+    }
+
+    /**
+     * Keep only record-shaped ACL groups and establish their string-keyed list contract.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function normaliseAclGroups(mixed $groups): array
+    {
+        if (!is_array($groups)) {
+            return [];
         }
 
-        $groups = require dirname(__DIR__, 3) . '/zoosper-auth/config/acl.php';
+        $normalised = [];
+        foreach ($groups as $group) {
+            if (!is_array($group)) {
+                continue;
+            }
 
-        return is_array($groups) ? $groups : [];
+            $record = [];
+            foreach ($group as $key => $value) {
+                if (is_string($key)) {
+                    $record[$key] = $value;
+                }
+            }
+
+            $normalised[] = $record;
+        }
+
+        return $normalised;
     }
 
     /** @param list<int> $selected */
@@ -293,12 +321,33 @@ final readonly class RoleAdminController
         ]);
     }
 
-    /** @param array<string, mixed> $form @return list<int> */
+    /**
+     * @param array<string, mixed> $form
+     * @return list<int>
+     */
     private function idsFromForm(array $form, string $field): array
     {
-        $ids = $form[$field] ?? [];
-        if (!is_array($ids)) { return []; }
-        return array_values(array_map(static fn (mixed $id): int => (int) $id, $ids));
+        $submitted = $form[$field] ?? [];
+        if (!is_array($submitted)) {
+            return [];
+        }
+
+        $ids = [];
+        foreach ($submitted as $submittedId) {
+            if (is_int($submittedId)) {
+                $id = $submittedId;
+            } elseif (is_string($submittedId) && ctype_digit($submittedId)) {
+                $id = (int) $submittedId;
+            } else {
+                continue;
+            }
+
+            if ($id > 0) {
+                $ids[] = $id;
+            }
+        }
+
+        return $ids;
     }
 
     /** @param array<string, scalar|null> $query */

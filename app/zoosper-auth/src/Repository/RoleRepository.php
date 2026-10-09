@@ -69,6 +69,9 @@ final readonly class RoleRepository
     }
 
     /** @return list<int> */
+    /**
+     * @return list<int>
+     */
     public function permissionIdsForRole(int $roleId): array
     {
         $statement = $this->pdo->prepare('SELECT permission_id FROM admin_role_permissions WHERE role_id = :role_id ORDER BY permission_id');
@@ -77,6 +80,9 @@ final readonly class RoleRepository
     }
 
     /** @return list<int> */
+    /**
+     * @return list<int>
+     */
     public function userIdsForRole(int $roleId): array
     {
         $statement = $this->pdo->prepare('SELECT user_id FROM admin_user_roles WHERE role_id = :role_id ORDER BY user_id');
