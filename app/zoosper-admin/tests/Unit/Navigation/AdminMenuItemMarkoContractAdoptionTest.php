@@ -62,7 +62,7 @@ it('declares the Marko contract dependency in the owning Composer package', func
         JSON_THROW_ON_ERROR,
     );
 
-    expect($composer['require']['marko/admin'] ?? null)->toBe('0.8.5');
+    expect($composer['require']['marko/admin'] ?? null)->toBe('^0.11');
 });
 
 

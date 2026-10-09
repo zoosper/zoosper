@@ -64,3 +64,19 @@ it('returns Marko web HTML without emitting it', function (): void {
 
 
 
+
+
+it('uses an injected PSR-20 clock for Marko error reports', function (): void {
+    $clock = new class implements \Psr\Clock\ClockInterface {
+        public function now(): \DateTimeImmutable
+        {
+            return new \DateTimeImmutable('2026-10-09T00:00:00+00:00');
+        }
+    };
+
+    $html = (new ExceptionDisplayer($clock))->formatHtml(new RuntimeException('Clock boundary.'));
+
+    expect($html)
+        ->toContain('RuntimeException')
+        ->toContain('Clock boundary.');
+});

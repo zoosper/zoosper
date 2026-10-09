@@ -21,3 +21,20 @@ test('writes through the real Marko file logger with daily rotation and a legacy
 
 
 
+
+
+test('uses an injected PSR-20 clock for deterministic daily rotation', function (): void {
+    $root = sys_get_temp_dir() . '/zoosper-logger-clock-' . bin2hex(random_bytes(6));
+    $config = new class { public function get(string $key, mixed $default = null): mixed { return ['logging.path' => 'var/log', 'logging.default_file' => 'system.log'][$key] ?? $default; } };
+    $clock = new class implements \Psr\Clock\ClockInterface {
+        public function now(): \DateTimeImmutable
+        {
+            return new \DateTimeImmutable('2026-10-09T00:00:00+00:00');
+        }
+    };
+
+    (new LogManager($config, $root, $clock))->default()->info('deterministic-clock');
+
+    expect($root . '/var/log/system-2026-10-09.log')->toBeFile();
+    exec('rm -rf ' . escapeshellarg($root));
+});

@@ -13,7 +13,7 @@ Zoosper-owned adapter for swappable session infrastructure. The root project dep
 
 ## Architecture
 
-The package is a native Composer package with type `zoosper-module`. The root project requires `zoosper/session`; this module requires `marko/session-file` 0.8.5. Marko's transitive `marko/session` package provides `SessionConfig` and session contracts.
+The package is a native Composer package with type `zoosper-module`. The root project requires `zoosper/session`; this module requires `marko/session-file` `^0.11`. Marko's transitive `marko/session` package provides `SessionConfig` and session contracts.
 
 `config/settings/session.php` owns the `session.*` configuration consumed by Marko. `config/services.php` creates `FileSessionHandler` through `SessionConfig` and publishes it as native `SessionHandlerInterface`. Zoosper Core resolves only the native interface and registers the selected handler before `session_start()`.
 

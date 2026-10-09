@@ -229,7 +229,7 @@ it('fails open safely (no exception, no caching) when the request has no SiteCon
 it('produces a genuinely Marko-cache-key-valid key, proven end-to-end against the REAL FileCacheDriver (not the fake)', function (): void {
     $realConfig = ConfigRepository::fromArray([
         'cache' => ['driver' => 'file', 'path' => 'var/cache/zoosper-caching-fallback-handler-test-' . bin2hex(random_bytes(4)), 'default_ttl' => 60],
-        'encryption' => ['key' => '', 'cipher' => 'aes-256-gcm'],
+        'encryption' => ['key' => str_repeat('a', 64), 'cipher' => 'aes-256-gcm'],
     ]);
     $realCache = (new CacheDriverFactory($realConfig, dirname(__DIR__, 5)))->create();
     $inner = new FakeInnerFallbackHandlerForCachingFallbackHandlerTest(Response::html('real cache driver body', 200));

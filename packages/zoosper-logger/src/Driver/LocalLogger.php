@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Zoosper\Logger\Driver;
 use Marko\Log\Contracts\LoggerInterface as MarkoLoggerInterface;
+use Marko\Clock\SystemClock;
+use Psr\Clock\ClockInterface;
 use Throwable;
 use Zoosper\Logger\Contract\LoggerInterface;
 final class LocalLogger implements LoggerInterface
@@ -10,7 +12,7 @@ final class LocalLogger implements LoggerInterface
     private string $legacyFile;
     private string $rotatedFile;
     private bool $enabled;
-    public function __construct(MarkoLoggerInterface|string $driver, string|bool $legacyFile = '', string $rotatedFile = '', bool $enabled = true)
+    public function __construct(MarkoLoggerInterface|string $driver, string|bool $legacyFile = '', string $rotatedFile = '', bool $enabled = true, ?ClockInterface $clock = null)
     {
         if ($driver instanceof MarkoLoggerInterface) {
             $this->driver = $driver;
@@ -23,13 +25,15 @@ final class LocalLogger implements LoggerInterface
         $this->enabled = is_bool($legacyFile) ? $legacyFile : $enabled;
         $directory = dirname($driver);
         $channel = pathinfo(basename($driver), PATHINFO_FILENAME) ?: 'app';
-        $rotation = new \Marko\Log\File\Rotation\DailyRotation();
+        $clock ??= new SystemClock();
+        $rotation = new \Marko\Log\File\Rotation\DailyRotation($clock);
         $this->rotatedFile = $rotation->getCurrentPath($directory, $channel);
         $this->driver = new \Marko\Log\File\Driver\FileLogger(
             $directory,
             $channel,
             \Marko\Log\LogLevel::Debug,
             new \Marko\Log\Formatter\LineFormatter('[{datetime}] {channel}.{level}: {message} {context}', 'Y-m-d H:i:s', true),
+            $clock,
             $rotation,
         );
     }

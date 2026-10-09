@@ -23,7 +23,7 @@ it('retains Zoosper admin navigation as the active runtime during the foundation
     $root = dirname(__DIR__, 5);
     $composer = json_decode((string) file_get_contents($root . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
 
-    expect($composer['require']['marko/admin'] ?? null)->toBe('0.8.5')
+    expect($composer['require']['marko/admin'] ?? null)->toBe('^0.11')
         ->and($root . '/app/zoosper-admin/src/Navigation/AdminMenuItem.php')->toBeFile()
         ->and($root . '/app/zoosper-admin/src/Navigation/AdminMenuLoader.php')->toBeFile()
         ->and($root . '/app/zoosper-admin/src/Navigation/AdminMenu.php')->toBeFile();

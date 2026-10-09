@@ -19,7 +19,7 @@ Zoosper-owned multi-channel logging boundary backed by the real Marko file logge
 - `src/Module/ModuleLoggerProviderLoader.php` discovers module logging contributions.
 - `module.php` is the empty discovery marker required by the module system.
 
-Each resolved channel receives its own real Marko `FileLogger`. This avoids collapsing every module into the single global `log.channel` setting. Rotation strategy selection is deliberately not configurable in this phase; `DailyRotation` is explicit.
+Each resolved channel receives its own real Marko `FileLogger`. This avoids collapsing every module into the single global `log.channel` setting. Rotation strategy selection is deliberately not configurable in this phase; `DailyRotation` is explicit. Marko 0.11 receives a PSR-20 clock through the Zoosper logger boundary, allowing deterministic rotation tests without exposing Marko logging classes to consumers.
 
 ## Configuration
 

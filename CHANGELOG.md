@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Upgraded the coordinated Marko dependency family from 0.8.5 to 0.11.0, retaining Zoosper-owned adapter boundaries and adopting PSR-20 clocks for deterministic error timestamps and daily log rotation.
+
 - Corrected configuration array typing and rejected non-string Admin base paths while retaining missing/null defaults and existing string behaviour.
 
 - Reconciled current documentation and public-launch assertions with published alpha.4, preserving release runtime/package identity and all remaining C1-C5 closure gates.

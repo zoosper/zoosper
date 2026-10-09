@@ -10,6 +10,8 @@ use Marko\ErrorsSimple\CodeSnippetExtractor;
 use Marko\ErrorsSimple\Environment;
 use Marko\ErrorsSimple\Formatters\BasicHtmlFormatter;
 use Marko\ErrorsSimple\Formatters\TextFormatter;
+use Marko\Clock\SystemClock;
+use Psr\Clock\ClockInterface;
 use Throwable;
 
 /**
@@ -21,10 +23,14 @@ use Throwable;
  */
 final readonly class ExceptionDisplayer
 {
+    public function __construct(
+        private ?ClockInterface $clock = null,
+        private ?Environment $environment = null,
+    ) {}
     public function formatHtml(Throwable $exception): string
     {
-        $report = ErrorReport::fromThrowable($exception, Severity::Error);
-        $environment = new Environment();
+        $report = $this->report($exception);
+        $environment = $this->environment ?? new Environment(envVars: ['APP_ENV' => 'development']);
         $extractor = new CodeSnippetExtractor();
         $formatter = new BasicHtmlFormatter($environment, $extractor);
 
@@ -33,8 +39,8 @@ final readonly class ExceptionDisplayer
 
     public function display(Throwable $exception): void
     {
-        $report = ErrorReport::fromThrowable($exception, Severity::Error);
-        $environment = new Environment();
+        $report = $this->report($exception);
+        $environment = $this->environment ?? new Environment(envVars: ['APP_ENV' => 'development']);
         $extractor = new CodeSnippetExtractor();
 
         if (PHP_SAPI === 'cli') {
@@ -49,6 +55,13 @@ final readonly class ExceptionDisplayer
         }
 
         echo $this->formatHtml($exception);
+    }
+
+    private function report(Throwable $exception): ErrorReport
+    {
+        $clock = $this->clock ?? new SystemClock();
+
+        return ErrorReport::fromThrowable($exception, Severity::Error, $clock->now());
     }
 }
 

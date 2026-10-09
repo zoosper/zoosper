@@ -31,7 +31,7 @@ it('requires the Zoosper boundary directly from Grid', function (): void {
 
     expect($grid['require']['zoosper/pagination'] ?? null)->toBe('^0.3.1@alpha')
         ->and($grid['require'])->not->toHaveKey('zoosper/core')
-        ->and($pagination['require']['marko/pagination'] ?? null)->toBe('0.8.5');
+        ->and($pagination['require']['marko/pagination'] ?? null)->toBe('^0.11');
 });
 
 

@@ -57,6 +57,7 @@
         <env name="DB_DRIVER" value="sqlite"/>
         <env name="DB_DATABASE" value=":memory:"/>
         <env name="TWO_FACTOR_ENCRYPTION_KEY" value="test-only-not-a-real-secret-do-not-use-in-any-real-environment"/>
+        <env name="CACHE_ENCRYPTION_KEY" value="test-only-cache-signing-key-not-for-any-real-environment-0123456789"/>
     </php>
 
     <source>

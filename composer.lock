@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d232d7067fb8e0334e305590bda2b165",
+    "content-hash": "120bad9e4c0c0b7cdff0b35bf04c5604",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -265,16 +265,16 @@
         },
         {
             "name": "marko/admin",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-admin.git",
-                "reference": "c7c1e825bf6b49cb317df17d65fc2750302de34b"
+                "reference": "aed33667b1e6b8d6aee400b2cac2a7f7ef62fd64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-admin/zipball/c7c1e825bf6b49cb317df17d65fc2750302de34b",
-                "reference": "c7c1e825bf6b49cb317df17d65fc2750302de34b",
+                "url": "https://api.github.com/repos/marko-php/marko-admin/zipball/aed33667b1e6b8d6aee400b2cac2a7f7ef62fd64",
+                "reference": "aed33667b1e6b8d6aee400b2cac2a7f7ef62fd64",
                 "shasum": ""
             },
             "require": {
@@ -304,27 +304,28 @@
             ],
             "description": "Admin contracts for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-admin/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-admin/tree/0.11.0"
             },
-            "time": "2026-07-26T15:19:30+00:00"
+            "time": "2026-10-06T07:06:01+00:00"
         },
         {
             "name": "marko/cache",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-cache.git",
-                "reference": "74a14520255bad27e38e4bbe8b54a30fe6611685"
+                "reference": "00cccb2afec9ee7b812cfc4a9a3a0cc20e3e4a07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-cache/zipball/74a14520255bad27e38e4bbe8b54a30fe6611685",
-                "reference": "74a14520255bad27e38e4bbe8b54a30fe6611685",
+                "url": "https://api.github.com/repos/marko-php/marko-cache/zipball/00cccb2afec9ee7b812cfc4a9a3a0cc20e3e4a07",
+                "reference": "00cccb2afec9ee7b812cfc4a9a3a0cc20e3e4a07",
                 "shasum": ""
             },
             "require": {
                 "marko/config": "self.version",
                 "marko/core": "self.version",
+                "marko/encryption": "self.version",
                 "php": "^8.5"
             },
             "require-dev": {
@@ -348,26 +349,27 @@
             ],
             "description": "Cache interfaces and infrastructure for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-cache/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-cache/tree/0.11.0"
             },
-            "time": "2026-07-26T15:19:30+00:00"
+            "time": "2026-10-06T15:11:17+00:00"
         },
         {
             "name": "marko/cache-file",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-cache-file.git",
-                "reference": "11a07ce6984296f0d1f072877c8bab632d42a030"
+                "reference": "6e15c60c4ecd29351e15e5891de12cd05c27d845"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-cache-file/zipball/11a07ce6984296f0d1f072877c8bab632d42a030",
-                "reference": "11a07ce6984296f0d1f072877c8bab632d42a030",
+                "url": "https://api.github.com/repos/marko-php/marko-cache-file/zipball/6e15c60c4ecd29351e15e5891de12cd05c27d845",
+                "reference": "6e15c60c4ecd29351e15e5891de12cd05c27d845",
                 "shasum": ""
             },
             "require": {
                 "marko/cache": "self.version",
+                "marko/clock": "self.version",
                 "marko/config": "self.version",
                 "marko/core": "self.version",
                 "php": "^8.5"
@@ -393,26 +395,27 @@
             ],
             "description": "File-based cache driver for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-cache-file/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-cache-file/tree/0.11.0"
             },
-            "time": "2026-06-12T19:00:11+00:00"
+            "time": "2026-10-06T14:10:57+00:00"
         },
         {
             "name": "marko/cache-redis",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-cache-redis.git",
-                "reference": "0f5ac232e040582ba07e71adb0bbf1e6319d1916"
+                "reference": "0151bc1d37ca3f2b23c6856f76f170423f3708dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-cache-redis/zipball/0f5ac232e040582ba07e71adb0bbf1e6319d1916",
-                "reference": "0f5ac232e040582ba07e71adb0bbf1e6319d1916",
+                "url": "https://api.github.com/repos/marko-php/marko-cache-redis/zipball/0151bc1d37ca3f2b23c6856f76f170423f3708dd",
+                "reference": "0151bc1d37ca3f2b23c6856f76f170423f3708dd",
                 "shasum": ""
             },
             "require": {
                 "marko/cache": "self.version",
+                "marko/clock": "self.version",
                 "marko/config": "self.version",
                 "marko/core": "self.version",
                 "marko/encryption": "self.version",
@@ -440,22 +443,65 @@
             ],
             "description": "Redis cache driver for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-cache-redis/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-cache-redis/tree/0.11.0"
             },
-            "time": "2026-06-12T18:20:25+00:00"
+            "time": "2026-10-06T14:06:58+00:00"
         },
         {
-            "name": "marko/config",
-            "version": "0.8.5",
+            "name": "marko/clock",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/marko-php/marko-config.git",
-                "reference": "1cc1f93b25360405f44b78ad947646496ba4c0d3"
+                "url": "https://github.com/marko-php/marko-clock.git",
+                "reference": "bd647dd8a74d1e9d229eb48be328b746ef39ae7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-config/zipball/1cc1f93b25360405f44b78ad947646496ba4c0d3",
-                "reference": "1cc1f93b25360405f44b78ad947646496ba4c0d3",
+                "url": "https://api.github.com/repos/marko-php/marko-clock/zipball/bd647dd8a74d1e9d229eb48be328b746ef39ae7c",
+                "reference": "bd647dd8a74d1e9d229eb48be328b746ef39ae7c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.5",
+                "psr/clock": "^1.0"
+            },
+            "require-dev": {
+                "marko/core": "self.version",
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Clock\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PSR-20 system clock for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-clock/tree/0.11.0"
+            },
+            "time": "2026-10-05T23:03:23+00:00"
+        },
+        {
+            "name": "marko/config",
+            "version": "0.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-config.git",
+                "reference": "bd397dd1aaadc59937c49f014aa17dc625a48306"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-config/zipball/bd397dd1aaadc59937c49f014aa17dc625a48306",
+                "reference": "bd397dd1aaadc59937c49f014aa17dc625a48306",
                 "shasum": ""
             },
             "require": {
@@ -482,22 +528,22 @@
             ],
             "description": "Configuration loading and merging for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-config/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-config/tree/0.11.0"
             },
-            "time": "2026-05-02T01:27:31+00:00"
+            "time": "2026-10-06T07:47:49+00:00"
         },
         {
             "name": "marko/core",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-core.git",
-                "reference": "316f7189a341343b038e39da53424dc3f82bb38c"
+                "reference": "fa396bdd93dc85f92dc88a74199c7a8f202b0162"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-core/zipball/316f7189a341343b038e39da53424dc3f82bb38c",
-                "reference": "316f7189a341343b038e39da53424dc3f82bb38c",
+                "url": "https://api.github.com/repos/marko-php/marko-core/zipball/fa396bdd93dc85f92dc88a74199c7a8f202b0162",
+                "reference": "fa396bdd93dc85f92dc88a74199c7a8f202b0162",
                 "shasum": ""
             },
             "require": {
@@ -525,22 +571,22 @@
             ],
             "description": "Marko Framework Core",
             "support": {
-                "source": "https://github.com/marko-php/marko-core/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-core/tree/0.11.0"
             },
-            "time": "2026-07-26T15:19:30+00:00"
+            "time": "2026-10-06T15:11:17+00:00"
         },
         {
             "name": "marko/encryption",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-encryption.git",
-                "reference": "b3364c5e90376222151b21922d149c998a7f3141"
+                "reference": "eab28fb5cd16adfafe6e7f403bcce8c76eb98045"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-encryption/zipball/b3364c5e90376222151b21922d149c998a7f3141",
-                "reference": "b3364c5e90376222151b21922d149c998a7f3141",
+                "url": "https://api.github.com/repos/marko-php/marko-encryption/zipball/eab28fb5cd16adfafe6e7f403bcce8c76eb98045",
+                "reference": "eab28fb5cd16adfafe6e7f403bcce8c76eb98045",
                 "shasum": ""
             },
             "require": {
@@ -569,22 +615,22 @@
             ],
             "description": "Encryption contracts for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-encryption/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-encryption/tree/0.11.0"
             },
-            "time": "2026-07-26T15:19:30+00:00"
+            "time": "2026-10-06T14:07:50+00:00"
         },
         {
             "name": "marko/errors",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-errors.git",
-                "reference": "d4fdaa8df18b9f24d2262d37f168dfd7d196e2ce"
+                "reference": "4c1f7507cb4bed877f5eb59f4da9271e1d0a44f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-errors/zipball/d4fdaa8df18b9f24d2262d37f168dfd7d196e2ce",
-                "reference": "d4fdaa8df18b9f24d2262d37f168dfd7d196e2ce",
+                "url": "https://api.github.com/repos/marko-php/marko-errors/zipball/4c1f7507cb4bed877f5eb59f4da9271e1d0a44f6",
+                "reference": "4c1f7507cb4bed877f5eb59f4da9271e1d0a44f6",
                 "shasum": ""
             },
             "require": {
@@ -612,30 +658,32 @@
             ],
             "description": "Marko Framework Error Handling",
             "support": {
-                "source": "https://github.com/marko-php/marko-errors/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-errors/tree/0.11.0"
             },
-            "time": "2026-07-26T15:19:30+00:00"
+            "time": "2026-10-06T03:39:02+00:00"
         },
         {
             "name": "marko/errors-simple",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-errors-simple.git",
-                "reference": "c7d3db2d3d85ce5ce58c4f6c4e137b8114d00015"
+                "reference": "7c450e9edf8cfc201a096af21add3ed95affb15f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-errors-simple/zipball/c7d3db2d3d85ce5ce58c4f6c4e137b8114d00015",
-                "reference": "c7d3db2d3d85ce5ce58c4f6c4e137b8114d00015",
+                "url": "https://api.github.com/repos/marko-php/marko-errors-simple/zipball/7c450e9edf8cfc201a096af21add3ed95affb15f",
+                "reference": "7c450e9edf8cfc201a096af21add3ed95affb15f",
                 "shasum": ""
             },
             "require": {
+                "marko/clock": "self.version",
                 "marko/core": "self.version",
                 "marko/errors": "self.version",
                 "php": ">=8.5"
             },
             "require-dev": {
+                "marko/testing": "self.version",
                 "pestphp/pest": "^4.0"
             },
             "type": "library",
@@ -655,25 +703,26 @@
             ],
             "description": "Simple error handling and display for the Marko framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-errors-simple/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-errors-simple/tree/0.11.0"
             },
-            "time": "2026-06-12T17:56:54+00:00"
+            "time": "2026-10-06T14:07:36+00:00"
         },
         {
             "name": "marko/log",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-log.git",
-                "reference": "5c57e1d029d9e60f093173b3da6da4f22cc9f4c2"
+                "reference": "51631c6dc65bafbaee6a3654386baea6c4b64156"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-log/zipball/5c57e1d029d9e60f093173b3da6da4f22cc9f4c2",
-                "reference": "5c57e1d029d9e60f093173b3da6da4f22cc9f4c2",
+                "url": "https://api.github.com/repos/marko-php/marko-log/zipball/51631c6dc65bafbaee6a3654386baea6c4b64156",
+                "reference": "51631c6dc65bafbaee6a3654386baea6c4b64156",
                 "shasum": ""
             },
             "require": {
+                "marko/clock": "self.version",
                 "marko/config": "self.version",
                 "marko/core": "self.version",
                 "php": "^8.5"
@@ -699,31 +748,33 @@
             ],
             "description": "PSR-3 compatible logging interfaces and formatters for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-log/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-log/tree/0.11.0"
             },
-            "time": "2026-06-12T19:00:11+00:00"
+            "time": "2026-10-06T15:11:17+00:00"
         },
         {
             "name": "marko/log-file",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-log-file.git",
-                "reference": "80b5df10668f435b50416f0d36cd3d430fc69063"
+                "reference": "63cf72c60c3bfef27ef583fdc33b5a274b6a6b44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-log-file/zipball/80b5df10668f435b50416f0d36cd3d430fc69063",
-                "reference": "80b5df10668f435b50416f0d36cd3d430fc69063",
+                "url": "https://api.github.com/repos/marko-php/marko-log-file/zipball/63cf72c60c3bfef27ef583fdc33b5a274b6a6b44",
+                "reference": "63cf72c60c3bfef27ef583fdc33b5a274b6a6b44",
                 "shasum": ""
             },
             "require": {
+                "marko/clock": "self.version",
                 "marko/config": "self.version",
                 "marko/core": "self.version",
                 "marko/log": "self.version",
                 "php": "^8.5"
             },
             "require-dev": {
+                "marko/testing": "self.version",
                 "pestphp/pest": "^4.0"
             },
             "type": "marko-module",
@@ -743,13 +794,13 @@
             ],
             "description": "File-based logging driver for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-log-file/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-log-file/tree/0.11.0"
             },
-            "time": "2026-05-02T01:27:31+00:00"
+            "time": "2026-10-06T13:47:04+00:00"
         },
         {
             "name": "marko/pagination",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-pagination.git",
@@ -787,29 +838,32 @@
             ],
             "description": "Pagination interfaces and implementations for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-pagination/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-pagination/tree/0.11.0"
             },
             "time": "2026-03-25T17:53:35+00:00"
         },
         {
             "name": "marko/routing",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-routing.git",
-                "reference": "288c4b07b701772390f36ecdb9890236ba684fd8"
+                "reference": "a48e774374ae55380c99f557173acf5dc84cd69e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-routing/zipball/288c4b07b701772390f36ecdb9890236ba684fd8",
-                "reference": "288c4b07b701772390f36ecdb9890236ba684fd8",
+                "url": "https://api.github.com/repos/marko-php/marko-routing/zipball/a48e774374ae55380c99f557173acf5dc84cd69e",
+                "reference": "a48e774374ae55380c99f557173acf5dc84cd69e",
                 "shasum": ""
             },
             "require": {
+                "ext-fileinfo": "*",
+                "marko/config": "self.version",
                 "marko/core": "self.version",
                 "php": "^8.5"
             },
             "require-dev": {
+                "marko/testing": "self.version",
                 "pestphp/pest": "^4.0"
             },
             "type": "library",
@@ -829,27 +883,29 @@
             ],
             "description": "Marko Framework Routing",
             "support": {
-                "source": "https://github.com/marko-php/marko-routing/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-routing/tree/0.11.0"
             },
-            "time": "2026-06-12T19:00:11+00:00"
+            "time": "2026-10-06T15:08:29+00:00"
         },
         {
             "name": "marko/session",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-session.git",
-                "reference": "198e9e098a47a990568b20c1b2508bc2c234071c"
+                "reference": "d55576f9361a61820f23641ef57845399bf55bb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-session/zipball/198e9e098a47a990568b20c1b2508bc2c234071c",
-                "reference": "198e9e098a47a990568b20c1b2508bc2c234071c",
+                "url": "https://api.github.com/repos/marko-php/marko-session/zipball/d55576f9361a61820f23641ef57845399bf55bb9",
+                "reference": "d55576f9361a61820f23641ef57845399bf55bb9",
                 "shasum": ""
             },
             "require": {
+                "marko/clock": "self.version",
                 "marko/config": "self.version",
                 "marko/core": "self.version",
+                "marko/routing": "self.version",
                 "php": "^8.5"
             },
             "require-dev": {
@@ -873,25 +929,27 @@
             ],
             "description": "Session interfaces and infrastructure for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-session/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-session/tree/0.11.0"
             },
-            "time": "2026-07-26T15:19:30+00:00"
+            "time": "2026-10-06T15:11:17+00:00"
         },
         {
             "name": "marko/session-file",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-session-file.git",
-                "reference": "72f6644ce8d828f258079673da630ae61e21df79"
+                "reference": "350e2173e21c583ca3aa5707d64b87c5a10451f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-session-file/zipball/72f6644ce8d828f258079673da630ae61e21df79",
-                "reference": "72f6644ce8d828f258079673da630ae61e21df79",
+                "url": "https://api.github.com/repos/marko-php/marko-session-file/zipball/350e2173e21c583ca3aa5707d64b87c5a10451f9",
+                "reference": "350e2173e21c583ca3aa5707d64b87c5a10451f9",
                 "shasum": ""
             },
             "require": {
+                "marko/clock": "self.version",
+                "marko/core": "self.version",
                 "marko/session": "self.version",
                 "php": "^8.5"
             },
@@ -915,22 +973,22 @@
             ],
             "description": "File-based session driver for Marko Framework",
             "support": {
-                "source": "https://github.com/marko-php/marko-session-file/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-session-file/tree/0.11.0"
             },
-            "time": "2026-07-26T15:19:30+00:00"
+            "time": "2026-10-06T13:25:49+00:00"
         },
         {
             "name": "marko/view",
-            "version": "0.8.5",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-view.git",
-                "reference": "a8b3a63eb34561d87aff7fa9cb43aca113e7c46f"
+                "reference": "d1fea5943c69245820d264d3dc3bfc3288799235"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marko-php/marko-view/zipball/a8b3a63eb34561d87aff7fa9cb43aca113e7c46f",
-                "reference": "a8b3a63eb34561d87aff7fa9cb43aca113e7c46f",
+                "url": "https://api.github.com/repos/marko-php/marko-view/zipball/d1fea5943c69245820d264d3dc3bfc3288799235",
+                "reference": "d1fea5943c69245820d264d3dc3bfc3288799235",
                 "shasum": ""
             },
             "require": {
@@ -960,9 +1018,9 @@
             ],
             "description": "Marko Framework View - Templating interfaces and contracts",
             "support": {
-                "source": "https://github.com/marko-php/marko-view/tree/0.8.5"
+                "source": "https://github.com/marko-php/marko-view/tree/0.11.0"
             },
-            "time": "2026-07-26T15:19:30+00:00"
+            "time": "2026-10-06T13:47:14+00:00"
         },
         {
             "name": "predis/predis",
@@ -1027,6 +1085,54 @@
             "time": "2025-11-12T18:00:11+00:00"
         },
         {
+            "name": "psr/clock",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/clock.git",
+                "reference": "e41a24703d4560fd0acb709162f73b8adfc3aa0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/clock/zipball/e41a24703d4560fd0acb709162f73b8adfc3aa0d",
+                "reference": "e41a24703d4560fd0acb709162f73b8adfc3aa0d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0 || ^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Clock\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for reading the clock.",
+            "homepage": "https://github.com/php-fig/clock",
+            "keywords": [
+                "clock",
+                "now",
+                "psr",
+                "psr-20",
+                "time"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/clock/issues",
+                "source": "https://github.com/php-fig/clock/tree/1.0.0"
+            },
+            "time": "2022-11-25T14:36:26+00:00"
+        },
+        {
             "name": "psr/container",
             "version": "2.0.2",
             "source": {
@@ -1085,10 +1191,10 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-admin",
-                "reference": "89d26db2ebec8819f673bc7457098e51bf9ea9cd"
+                "reference": "cb11a14b1d9bb69a37a9abac83951d63bcc86c95"
             },
             "require": {
-                "marko/admin": "0.8.5",
+                "marko/admin": "^0.11",
                 "php": "^8.5",
                 "zoosper/admin-dashboard": "^0.3.1@alpha",
                 "zoosper/admin-form": "^0.3.1@alpha",
@@ -1149,10 +1255,10 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-admin-form",
-                "reference": "a846ef4ec1c694213b2e1f13e2dc242c4137306f"
+                "reference": "76a6d5f6c6e55b41c45ed46caf3f9fb8f0a55388"
             },
             "require": {
-                "marko/core": "^0.8",
+                "marko/core": "^0.11",
                 "php": ">=8.5"
             },
             "type": "library",
@@ -1371,14 +1477,14 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/zoosper-cache",
-                "reference": "8c6dbc71af0d3a89e9a968d6adc97b0a68b66c54"
+                "reference": "ad0f6fca775096c3ad88dd933977d74b321f0361"
             },
             "require": {
-                "marko/cache": "0.8.5",
-                "marko/cache-file": "0.8.5",
-                "marko/cache-redis": "0.8.5",
-                "marko/config": "0.8.5",
-                "marko/encryption": "0.8.5",
+                "marko/cache": "^0.11",
+                "marko/cache-file": "^0.11",
+                "marko/cache-redis": "^0.11",
+                "marko/config": "^0.11",
+                "marko/encryption": "^0.11",
                 "php": "^8.5"
             },
             "type": "zoosper-module",
@@ -1412,10 +1518,10 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/zoosper-config",
-                "reference": "5b125480f22a148e004cbdf868f1a5be5983f362"
+                "reference": "c2150acf4c536459601c95a6ee50ece9d3ba91f9"
             },
             "require": {
-                "marko/config": "0.8.5",
+                "marko/config": "^0.11",
                 "php": "^8.5"
             },
             "type": "zoosper-module",
@@ -1553,12 +1659,12 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-errors",
-                "reference": "833d80d30d7efb109f09d5540c584acfe65951e5"
+                "reference": "369117f914f1a19a1d99e87385d1d3a8189b847b"
             },
             "require": {
-                "marko/core": "^0.8",
-                "marko/errors": "^0.8",
-                "marko/errors-simple": "^0.8",
+                "marko/core": "^0.11",
+                "marko/errors": "^0.11",
+                "marko/errors-simple": "^0.11",
                 "php": "^8.5"
             },
             "require-dev": {
@@ -1742,11 +1848,11 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/zoosper-logger",
-                "reference": "e032c7a8261784161fdd94c766be3d28271c3ff7"
+                "reference": "735da0aa79b911ec2fe62389196e319a3992fc3c"
             },
             "require": {
-                "marko/log": "0.8.5",
-                "marko/log-file": "0.8.5",
+                "marko/log": "^0.11",
+                "marko/log-file": "^0.11",
                 "php": "^8.5"
             },
             "type": "zoosper-module",
@@ -1940,10 +2046,10 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-pagination",
-                "reference": "f6ef38dc14a74be2ec4009c15addb85ef999435d"
+                "reference": "b6290fd14e8b21a4437e12c34bcabcdfb3c65eb5"
             },
             "require": {
-                "marko/pagination": "0.8.5",
+                "marko/pagination": "^0.11",
                 "php": "^8.5"
             },
             "require-dev": {
@@ -2050,10 +2156,10 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-session",
-                "reference": "e821a50db321b51c65f99aebcf208defe6dc28af"
+                "reference": "fc37dc5a9ac02da885de16f2d1f4fb81f91499ac"
             },
             "require": {
-                "marko/session-file": "0.8.5",
+                "marko/session-file": "^0.11",
                 "php": "^8.5",
                 "zoosper/config": "^0.3.1@alpha",
                 "zoosper/core": "^0.3.1@alpha"

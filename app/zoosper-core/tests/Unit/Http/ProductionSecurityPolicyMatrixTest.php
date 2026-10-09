@@ -18,7 +18,13 @@ function setProductionPolicyEnvironment(array $values): void
 }
 
 afterEach(function (): void {
-    setProductionPolicyEnvironment(['APP_ENV' => 'testing']);
+    setProductionPolicyEnvironment([
+        'APP_ENV' => 'testing',
+        'DB_CONNECTION' => 'sqlite',
+        'DB_DRIVER' => 'sqlite',
+        'TWO_FACTOR_ENCRYPTION_KEY' => 'test-only-not-a-real-secret-do-not-use-in-any-real-environment',
+        'CACHE_ENCRYPTION_KEY' => 'test-only-cache-signing-key-not-for-any-real-environment-0123456789',
+    ]);
 });
 
 it('accepts complete fail-closed staging and production controls', function (): void {

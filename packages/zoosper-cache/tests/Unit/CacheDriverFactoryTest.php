@@ -18,7 +18,7 @@ function cacheDriverFactoryTestInstance(array $cacheOverrides = [], array $encry
             'default_ttl' => 3600,
             'redis' => ['host' => '127.0.0.1', 'port' => 6379, 'password' => null, 'database' => 0, 'prefix' => 'zoosper-test:'],
         ], $cacheOverrides),
-        'encryption' => array_replace(['key' => '', 'cipher' => 'aes-256-gcm'], $encryptionOverrides),
+        'encryption' => array_replace(['key' => str_repeat('a', 64), 'cipher' => 'aes-256-gcm'], $encryptionOverrides),
     ]);
     return new CacheDriverFactory($config, dirname(__DIR__, 4));
 }
@@ -38,7 +38,10 @@ it('builds a genuinely working FileCacheDriver, proven with a real set/get round
 });
 
 it('defaults to the file driver when cache.driver is not explicitly set', function (): void {
-    $config = ConfigRepository::fromArray(['cache' => ['path' => 'var/cache/zoosper-cache-factory-default-test-' . bin2hex(random_bytes(4))]]);
+    $config = ConfigRepository::fromArray([
+        'cache' => ['path' => 'var/cache/zoosper-cache-factory-default-test-' . bin2hex(random_bytes(4))],
+        'encryption' => ['key' => str_repeat('a', 64), 'cipher' => 'aes-256-gcm'],
+    ]);
     $driver=(new CacheDriverFactory($config, dirname(__DIR__, 4)))->create();
     expect($driver)->toBeInstanceOf(MarkoCacheAdapter::class)
         ->and($driver->markoDriver())->toBeInstanceOf(FileCacheDriver::class);
@@ -92,7 +95,7 @@ it('rejects missing and placeholder Redis signing keys before cache I/O', functi
         ['key' => $key],
     )->create())->toThrow(
         RuntimeException::class,
-        'Redis cache requires a strong CACHE_ENCRYPTION_KEY',
+        'Cache requires a strong CACHE_ENCRYPTION_KEY',
     );
 })->with([
     'empty' => [''],
@@ -108,25 +111,14 @@ it('rejects missing and placeholder Redis signing keys before cache I/O', functi
     'null' => ['null'],
 ]);
 
-it('does not require Redis credentials or a signing key for the file driver', function (): void {
-    $driver = cacheDriverFactoryTestInstance(
-        [
-            'driver' => 'file',
-            'redis' => [
-                'host' => '',
-                'port' => 0,
-                'password' => '',
-                'database' => 0,
-                'prefix' => '',
-            ],
-        ],
+it('requires a strong signing key for the file driver before cache I/O', function (): void {
+    expect(fn () => cacheDriverFactoryTestInstance(
+        ['driver' => 'file'],
         ['key' => ''],
-    )->create();
-
-    expect($driver)
-        ->toBeInstanceOf(MarkoCacheAdapter::class)
-        ->and($driver->markoDriver())
-        ->toBeInstanceOf(FileCacheDriver::class);
+    )->create())->toThrow(
+        RuntimeException::class,
+        'Cache requires a strong CACHE_ENCRYPTION_KEY',
+    );
 });
 
 it('keeps Redis construction lazy without connecting to the configured server', function (): void {

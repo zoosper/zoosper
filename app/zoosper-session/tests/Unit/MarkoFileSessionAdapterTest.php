@@ -12,13 +12,17 @@ it('keeps the concrete third-party session driver inside the Zoosper Session ada
     $parameters = $handler->getConstructor()?->getParameters() ?? [];
 
     expect($moduleComposer['type'])->toBe('zoosper-module')
-        ->and($moduleComposer['require'])->toHaveKey('marko/session-file', '0.8.5')
+        ->and($moduleComposer['require'])->toHaveKey('marko/session-file', '^0.11')
         ->and($services)->toContain('SessionHandlerInterface::class')
         ->toContain('new FileSessionHandler(')
         ->toContain('new SessionConfig($services->get(ConfigRepositoryInterface::class))')
+        ->toContain('$services->get(ClockInterface::class)')
+        ->toContain('$services->get(ProjectPaths::class)')
         ->and(is_a(FileSessionHandler::class, SessionHandlerInterface::class, true))->toBeTrue()
-        ->and($parameters)->toHaveCount(1)
-        ->and((string) $parameters[0]->getType())->toBe(Marko\Session\Config\SessionConfig::class);
+        ->and($parameters)->toHaveCount(3)
+        ->and((string) $parameters[0]->getType())->toBe(Marko\Session\Config\SessionConfig::class)
+        ->and((string) $parameters[1]->getType())->toBe(Psr\Clock\ClockInterface::class)
+        ->and((string) $parameters[2]->getType())->toBe(Marko\Core\Path\ProjectPaths::class);
 });
 
 

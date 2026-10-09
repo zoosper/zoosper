@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Marko\Admin\Contracts\AdminSectionInterface;
 use Marko\Admin\Contracts\AdminSectionRegistryInterface;
 use Marko\Admin\Contracts\MenuItemInterface;
+use Marko\Admin\Discovery\AdminSectionDefinition;
 use Zoosper\Admin\Navigation\{AdminMenu, AdminMenuItem, AdminSectionBuilder, AdminSectionRegistry};
 
 it('publishes interface-typed loader items with icon compatibility', function (): void {
@@ -38,18 +39,30 @@ it('implements the Marko registry with loud lookup and stable replacement', func
 
     expect($registry->get('content'))->toBe($replacement)
         ->and($registry->all())->toBe([$replacement])
-        ->and(fn () => $registry->get('missing'))->toThrow(\Marko\Admin\Exceptions\AdminException::class, 'not registered');
+        ->and(fn () => $registry->get('missing'))->toThrow(\Marko\Admin\Exceptions\AdminException::class, 'not found');
 
     $source = (string) file_get_contents((new ReflectionClass(AdminMenu::class))->getFileName());
     expect($source)->toContain('list<AdminSectionInterface>')->toContain('sectionsFor(')->toContain('$this->sections->build($this->itemsFor($user))');
 });
 
+it('supports lazy Marko section definitions without changing direct registration', function (): void {
+    $builds = 0;
+    $registry = new AdminSectionRegistry(static function (string $className) use (&$builds): object {
+        $builds++;
 
+        return new $className('lazy', 'Lazy section', [], sortOrder: 5);
+    });
+    $registry->registerDefinition(new AdminSectionDefinition(
+        \Zoosper\Admin\Navigation\AdminSection::class,
+        'lazy',
+        'Lazy section',
+        '',
+        5,
+    ));
 
-
-
-
-
-
-
-
+    expect($builds)->toBe(0)
+        ->and($registry->get('lazy'))->toBeInstanceOf(\Zoosper\Admin\Navigation\AdminSection::class)
+        ->and($builds)->toBe(1)
+        ->and($registry->get('lazy')->getId())->toBe('lazy')
+        ->and($builds)->toBe(1);
+});

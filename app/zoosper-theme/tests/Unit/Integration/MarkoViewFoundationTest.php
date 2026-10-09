@@ -18,7 +18,7 @@ it('installs the stable Marko view contract without replacing the current theme 
         JSON_THROW_ON_ERROR,
     );
 
-    expect($composer['require']['marko/view'] ?? null)->toBe('0.8.5')
+    expect($composer['require']['marko/view'] ?? null)->toBe('^0.11')
         ->and($root . '/app/zoosper-theme/src/Template/TemplateRenderer.php')->toBeFile();
 });
 

@@ -30,7 +30,7 @@ Authentication, CSRF, route permissions, two-factor authentication, security hea
 
 ## Logging boundary
 
-Logging is owned by the standalone `zoosper/logger` package. Core and feature consumers use the native Zoosper logger boundary, while the package delegates physical writes to Marko `FileLogger` with `DailyRotation`. Module `config/logging.php` contributions remain discoverable and retain their logical channel and legacy filename identities. Root Composer owns `zoosper/logger`; the package owns `marko/log` and `marko/log-file`.
+Logging is owned by the standalone `zoosper/logger` package. Core and feature consumers use the native Zoosper logger boundary, while the package delegates physical writes to Marko `FileLogger` with `DailyRotation`. Marko 0.11 rotation receives a PSR-20 clock inside the Zoosper logger boundary. Module `config/logging.php` contributions remain discoverable and retain their logical channel and legacy filename identities. Root Composer owns `zoosper/logger`; the package owns `marko/log` and `marko/log-file`.
 
 ### Feature lifecycle APIs
 Feature modules own lifecycle routes and response mapping. Page archive, restore and guarded permanent deletion use Page-owned application/domain boundaries; Auth owns only PAT identity and scope validation.
