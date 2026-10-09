@@ -12,6 +12,7 @@ use Zoosper\Auth\Contract\SecondFactorRequirementInterface;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Service\AuthService;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Http\JsonResponder;
 
@@ -26,6 +27,7 @@ return [
 
     HealthController::class => static fn (ServiceContainer $services): HealthController => new HealthController(
         $services->get(JsonResponder::class),
+        $services->get(ConfigRepository::class),
     ),
 
     HelloController::class => static fn (ServiceContainer $services): HelloController => new HelloController(
