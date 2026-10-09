@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+- Reconciled current documentation and public-launch assertions with published alpha.4, preserving release runtime/package identity and all remaining C1-C5 closure gates.
+
+
 ## [0.3.2-alpha.4] - 2026-10-07
 
 - Closed P1 Admin CSP validation with executable enforcing-header and source contracts, no `unsafe-eval` or external asset origins, and a documented narrow allowlist for Editor.js/runtime style injection, public Admin authentication styles, non-executable JSON manifests, and local data-image previews. Browser workflow validation remains a production deployment gate.

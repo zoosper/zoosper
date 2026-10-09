@@ -8,7 +8,8 @@ it('publishes the current alpha release and delivered product surface at the rep
 
     expect($readme)
         ->toContain('v0.3.2-alpha.3')
-        ->toContain('Release candidate under verification')
+        ->toContain('Latest immutable pre-release: `v0.3.2-alpha.4`')
+        ->not->toContain('Release candidate under verification')
         ->toContain('v0.3.2-alpha.4')
         ->toContain('zoosper-menu')
         ->toContain('revision listing and revision restoration')
@@ -27,8 +28,9 @@ it('states the tagged pre-release and stable-release status precisely', function
     $security = (string) file_get_contents($root . '/SECURITY.md');
 
     expect($security)
-        ->toContain('latest immutable pre-release is `v0.3.2-alpha.3`')
-        ->toContain('supported `dev` branch carries the `v0.3.2-alpha.4` release candidate')
+        ->toContain('latest immutable pre-release is `v0.3.2-alpha.4`')
+        ->toContain('supported `dev` branch continues closure work from the published alpha.4 baseline')
+        ->not->toContain('release candidate while its release gates are completed')
         ->toContain('No stable release has shipped')
         ->toContain('`composer.json` and `composer.lock` are the source of truth')
         ->not->toContain('no tagged stable releases have shipped yet');
@@ -39,7 +41,7 @@ it('records the current review priorities and does not overclaim media derivativ
     $roadmap = (string) file_get_contents($root . '/ROADMAP.md');
 
     expect($roadmap)
-        ->toContain('**Last updated:** 2026-10-07 (Sydney)')
+        ->toContain('**Last updated:** 2026-10-09 (Sydney)')
         ->toContain('## Required remaining work')
         ->toContain('## Explicitly not required for closure')
         ->toContain('Current Psalm baseline: `1,039` entries')

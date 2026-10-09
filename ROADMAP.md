@@ -1,14 +1,15 @@
 # Zoosper CMS closure roadmap
 
-**Last updated:** 2026-10-07 (Sydney)
+**Last updated:** 2026-10-09 (Sydney)
 
 This file tracks only work required to close the current Zoosper CMS programme without adding new product features. Shipped history belongs in [CHANGELOG.md](CHANGELOG.md), current product and operating guidance belongs in [docs/](docs/README.md), and immutable release state belongs in Git tags.
 
 ## Current state
 
-- Latest immutable pre-release: `v0.3.2-alpha.3` at `4676b012bc579d6f66f20aa317c4da862d5f045a`.
-- Supported development branch: `dev`, preparing the public-alpha `v0.3.2-alpha.4` release candidate.
-- Release-preparation parent commit: `ab49d52f5c60e759a00af982b879d68c82a5ee44`.
+- Latest immutable pre-release: `v0.3.2-alpha.4` at `74db4e87c43999da84e59329dab6ff83d399dbb6`.
+- Previous immutable pre-release: `v0.3.2-alpha.3` at `4676b012bc579d6f66f20aa317c4da862d5f045a`.
+- Supported development branch: `dev`, continuing required closure work after alpha.4 publication; no next release version has been selected.
+- Alpha.4 publication and public artifact checksum verification are complete. Production deployment acceptance and C1-C5 programme closure remain open.
 - No stable release has shipped.
 - PHP 8.5, blocking full-scope Psalm, complete Pest, JavaScript behaviour/syntax gates, dual SQLite/MySQL release evidence, deterministic production artifacts, upgrade proofs, security hardening, canonical documentation, and production operations guidance are already established.
 - Current Psalm baseline: `1,039` entries. It is stale-entry rejecting and cannot grow unnoticed.
