@@ -80,3 +80,7 @@ API routes remain stateless and feature-owned. The route-level `public` flag mea
 ## API object authorization
 
 Page, Menu and URL Rewrite API resources are scoped to the Site resolved from the current request. Cross-Site identifiers resolve as not found. Role, Site, Theme and Media are application-level management resources rather than request-Site resources; their APIs remain protected by narrow PAT scopes and the corresponding current-user management permission. Repository-wide parity contracts preserve both classifications.
+
+## API response data
+
+First-party API controllers construct response arrays from explicit field maps rather than serialising domain objects wholesale. Credentials, token hashes, protected two-factor material and private storage paths are excluded. External API Grid integrations likewise validate upstream schemas and map only the fields required by the local Grid.
