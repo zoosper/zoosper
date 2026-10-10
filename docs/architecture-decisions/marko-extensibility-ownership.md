@@ -4,6 +4,8 @@
 
 Zoosper retains bridge-first package ownership. Feature and platform modules consume Zoosper-owned contracts and adapters; the focused Zoosper bridge package owns the corresponding Marko package and implementation dependency.
 
+Every first-party package must directly declare each Marko package whose runtime contract it deliberately imports. References contained only in documentation do not create dependency ownership, and platform composition must obtain Marko contract identifiers through the focused Zoosper bridge when that bridge already owns the capability.
+
 Direct Marko package dependencies in a feature or platform module are permitted only where the Marko contract is deliberately part of that module's public boundary and no same-capability Zoosper bridge exists. Transitive availability is never treated as dependency ownership.
 
 The Phase 10BI-A compatibility proof established that installed Marko 0.8 Plugins can modify arguments before a call, modify results after a call and avoid wrapping services without plugins. That proof does not make `zoosper/core` the owner of Marko's container or plugin runtime. The direct `marko/core` requirement and Core-local compatibility fixture are therefore retired.

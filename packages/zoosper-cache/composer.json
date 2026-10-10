@@ -4,12 +4,13 @@
     "type": "zoosper-module",
     "license": "MIT",
     "require": {
-        "php": "^8.5",
         "marko/cache": "^0.11",
         "marko/cache-file": "^0.11",
         "marko/cache-redis": "^0.11",
+        "marko/clock": "^0.11",
         "marko/config": "^0.11",
-        "marko/encryption": "^0.11"
+        "marko/encryption": "^0.11",
+        "php": "^8.5"
     },
     "autoload": {
         "psr-4": {

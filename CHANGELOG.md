@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Declared every directly imported Marko runtime package in its owning first-party Composer manifest and added a repository-wide dependency-honesty regression, removing reliance on transitive Marko installation.
 - Hardened the Zoosper-owned Router to reject duplicate normalised method-and-path registrations for both static and parameterised routes, with focused regressions and an explicit architecture decision preserving the existing single-dispatcher boundary.
 
 - Upgraded the coordinated Marko dependency family from 0.8.5 to 0.11.0, retaining Zoosper-owned adapter boundaries and adopting PSR-20 clocks for deterministic error timestamps and daily log rotation.

@@ -4,10 +4,11 @@
     "type": "zoosper-module",
     "license": "MIT",
     "require": {
-        "php": "^8.5",
+        "marko/clock": "^0.11",
         "marko/core": "^0.11",
         "marko/errors": "^0.11",
-        "marko/errors-simple": "^0.11"
+        "marko/errors-simple": "^0.11",
+        "php": "^8.5"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",

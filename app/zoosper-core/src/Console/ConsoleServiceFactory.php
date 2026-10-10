@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Zoosper\Core\Console;
-use Marko\Config\ConfigRepositoryInterface;
 use PDO;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Config\Bridge\MarkoConfigRepositoryAdapter;
@@ -19,7 +18,7 @@ final readonly class ConsoleServiceFactory
     {
         $services = new ServiceContainer();
         $services->set(ConfigRepository::class, $this->config);
-        $services->set(ConfigRepositoryInterface::class, new MarkoConfigRepositoryAdapter($this->config));
+        $services->set(MarkoConfigRepositoryAdapter::contract(), new MarkoConfigRepositoryAdapter($this->config));
         $services->set(ModuleRegistry::class, $this->modules);
         $services->factory(PDO::class, fn (): PDO => $this->connection->get());
         $services->set(LogManager::class, $this->logs);

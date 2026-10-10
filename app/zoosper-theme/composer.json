@@ -4,6 +4,8 @@
     "type": "zoosper-module",
     "license": "MIT",
     "require": {
+        "marko/routing": "^0.11",
+        "marko/view": "^0.11",
         "php": "^8.5",
         "zoosper/auth": "^0.3.1@alpha",
         "zoosper/core": "^0.3.1@alpha",

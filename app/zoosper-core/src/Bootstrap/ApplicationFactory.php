@@ -10,7 +10,6 @@ use Zoosper\Core\Asset\AssetModuleRegistry;
 use Zoosper\Core\Asset\AssetResolver;
 use Zoosper\Core\Asset\AssetRouteRegistrar;
 use Zoosper\Core\Asset\ModuleAssetManifestLoader;
-use Marko\Config\ConfigRepositoryInterface;
 use Zoosper\Core\Config\ApplicationConfigLoader;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Config\Bridge\MarkoConfigRepositoryAdapter;
@@ -63,7 +62,7 @@ final class ApplicationFactory
 
         $services = new ServiceContainer();
         $services->set(ConfigRepository::class, $config);
-        $services->set(ConfigRepositoryInterface::class, $markoConfig);
+        $services->set(MarkoConfigRepositoryAdapter::contract(), $markoConfig);
         $services->set(ModuleRegistry::class, $modules);
         $services->factory(PDO::class, static fn (ServiceContainer $services): PDO => (new ConnectionFactory($services->get(ConfigRepository::class), $basePath))->create());
         $services->set(LogManager::class, $logManager);

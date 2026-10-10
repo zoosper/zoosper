@@ -19,6 +19,8 @@ Run focused Pest tests first, then the full suite. Before committing, run module
 
 Controllers are thin HTTP adapters. Business rules belong in services. Persistence belongs in repositories. Templates own markup. Modules expose contracts through configuration, services, routes, permissions, assets and migrations.
 
+A first-party package must declare the owning Composer package for every Marko namespace used by its runtime source. A root or sibling transitive dependency is not sufficient; direct imports and direct requirements must remain aligned.
+
 Declare each route method and path only once across enabled modules. The Router rejects duplicate normalised method-and-path registrations; use a distinct method or path rather than relying on module order or silent replacement. Authenticated-only Admin routes and controller-authorised PAT API routes remain valid current patterns until a separate route-metadata decision changes them.
 
 ## API Grid generator

@@ -8,6 +8,11 @@ use stdClass;
 final class MarkoConfigRepositoryAdapter implements ConfigRepositoryInterface
 {
     private readonly stdClass $missing;
+    public static function contract(): string
+    {
+        return ConfigRepositoryInterface::class;
+    }
+
     public function __construct(private readonly object $config)
     {
         if (!method_exists($config, 'get')) {
