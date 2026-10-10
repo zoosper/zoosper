@@ -148,7 +148,14 @@ final readonly class DashboardController
                 $form['visible_widgets'] ?? [],
                 $form['widget_order'] ?? null,
             );
-            $this->audit?->record($actor, 'dashboard.role-default.updated', 'admin_role', (string) $roleId, 'Updated Dashboard role defaults', [], $request);
+            $this->audit?->logAction(
+                $actor->id,
+                $actor->email,
+                'dashboard.role-default.updated',
+                'admin_role',
+                (string) $roleId,
+                'Updated Dashboard role defaults',
+            );
             $this->flash?->success('Dashboard role defaults saved.', 'admin.dashboard.role-defaults');
         } catch (InvalidArgumentException|RuntimeException) {
             $this->flash?->error('Dashboard role defaults could not be saved. Reload the page and try again.', 'admin.dashboard.role-defaults');
@@ -164,7 +171,14 @@ final readonly class DashboardController
 
         try {
             $this->dashboard->resetRoleDefault($roleId);
-            $this->audit?->record($actor, 'dashboard.role-default.reset', 'admin_role', (string) $roleId, 'Reset Dashboard role defaults', [], $request);
+            $this->audit?->logAction(
+                $actor->id,
+                $actor->email,
+                'dashboard.role-default.reset',
+                'admin_role',
+                (string) $roleId,
+                'Reset Dashboard role defaults',
+            );
             $this->flash?->success('Dashboard role defaults reset to module defaults.', 'admin.dashboard.role-defaults');
         } catch (RuntimeException) {
             $this->flash?->error('Dashboard role defaults could not be reset.', 'admin.dashboard.role-defaults');

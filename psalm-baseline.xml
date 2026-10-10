@@ -27,10 +27,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-admin/src/Controller/DashboardController.php">
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[record]]></code>
-      <code><![CDATA[record]]></code>
-    </UndefinedInterfaceMethod>
     <UnusedClass>
       <code><![CDATA[DashboardController]]></code>
     </UnusedClass>
@@ -81,17 +77,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-admin/src/Grid/AdminGridAuditLoggerBridge.php">
-    <InvalidArgument>
-      <code><![CDATA[$action]]></code>
-      <code><![CDATA[$context]]></code>
-    </InvalidArgument>
-    <TooFewArguments>
-      <code><![CDATA[logAction]]></code>
-      <code><![CDATA[logAction]]></code>
-      <code><![CDATA[logAction]]></code>
-      <code><![CDATA[logAction]]></code>
-      <code><![CDATA[logAction]]></code>
-    </TooFewArguments>
     <UnusedClass>
       <code><![CDATA[AdminGridAuditLoggerBridge]]></code>
     </UnusedClass>

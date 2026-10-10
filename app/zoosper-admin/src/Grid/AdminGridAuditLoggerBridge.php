@@ -17,7 +17,18 @@ final readonly class AdminGridAuditLoggerBridge implements GridWorkspaceAuditLog
     #[\Override]
     public function logAction(string $action, array $context = []): void
     {
-        $this->audit->logAction($action, $context);
+        $actorAdminUserId = $context['admin_user_id'] ?? null;
+        $gridKey = $context['grid_key'] ?? null;
+
+        $this->audit->logAction(
+            is_int($actorAdminUserId) && $actorAdminUserId > 0 ? $actorAdminUserId : null,
+            null,
+            $action,
+            'admin_grid',
+            is_string($gridKey) && $gridKey !== '' ? $gridKey : null,
+            'Exported Admin Grid workspace data.',
+            $context,
+        );
     }
 }
 
