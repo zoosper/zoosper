@@ -258,7 +258,7 @@ final readonly class RoleAdminController
     {
         $groups = $this->config !== null
             ? $this->config->array('acl')
-            : require dirname(__DIR__, 3) . '/zoosper-auth/config/acl.php';
+            : require dirname(__DIR__, 3) . '/config/acl.php';
 
         return $this->normaliseAclGroups($groups);
     }

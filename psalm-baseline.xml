@@ -1,3630 +1,3593 @@
-<?xml version='1.0' encoding='utf-8'?>
-<files psalm-version="6.19.1@e2ca44251c1f1aa2e35452d426895746b47de64e">
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.19.2@fa716e443b23e6fa35bf58907e67ca692ec3c00a">
   <file src="app/zoosper-admin/src/Asset/AdminAssetRegistry.php">
     <DocblockTypeContradiction>
-      <code>!is_string($handle)</code>
+      <code><![CDATA[!is_string($handle)]]></code>
     </DocblockTypeContradiction>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <UnresolvableInclude>
-      <code>require $manifest</code>
+      <code><![CDATA[require $manifest]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-admin/src/Asset/AdminAssetTemplateRenderer.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-admin/src/Asset/AdminAssetViewDataProvider.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-admin/src/Asset/AssetPathResolver.php">
     <UnusedClass>
-      <code>AssetPathResolver</code>
+      <code><![CDATA[AssetPathResolver]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-admin/src/Controller/DashboardController.php">
     <UndefinedInterfaceMethod>
-      <code>record</code>
-      <code>record</code>
+      <code><![CDATA[record]]></code>
+      <code><![CDATA[record]]></code>
     </UndefinedInterfaceMethod>
     <UnusedClass>
-      <code>DashboardController</code>
+      <code><![CDATA[DashboardController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-admin/src/Controller/LoginController.php">
     <PossiblyNullReference>
-      <code>issue</code>
+      <code><![CDATA[issue]]></code>
     </PossiblyNullReference>
     <UnusedClass>
-      <code>LoginController</code>
+      <code><![CDATA[LoginController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-admin/src/Controller/PasswordResetController.php">
     <UnusedClass>
-      <code>PasswordResetController</code>
+      <code><![CDATA[PasswordResetController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-admin/src/Dashboard/DashboardPersonalisationService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-admin/src/Dashboard/DashboardPreferenceRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantFunctionCall>
-      <code>array_values</code>
+      <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-admin/src/Dashboard/ModuleDashboardWidgetLoader.php">
     <DocblockTypeContradiction>
-      <code>!$widget instanceof DashboardWidget</code>
+      <code><![CDATA[!$widget instanceof DashboardWidget]]></code>
     </DocblockTypeContradiction>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-admin/src/Grid/AdminGridAuditLoggerBridge.php">
     <InvalidArgument>
-      <code>$action</code>
-      <code>$context</code>
+      <code><![CDATA[$action]]></code>
+      <code><![CDATA[$context]]></code>
     </InvalidArgument>
     <TooFewArguments>
-      <code>logAction</code>
-      <code>logAction</code>
-      <code>logAction</code>
-      <code>logAction</code>
-      <code>logAction</code>
+      <code><![CDATA[logAction]]></code>
+      <code><![CDATA[logAction]]></code>
+      <code><![CDATA[logAction]]></code>
+      <code><![CDATA[logAction]]></code>
+      <code><![CDATA[logAction]]></code>
     </TooFewArguments>
     <UnusedClass>
-      <code>AdminGridAuditLoggerBridge</code>
+      <code><![CDATA[AdminGridAuditLoggerBridge]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-admin/src/I18n/AdminUserLocalePreferenceFieldRenderer.php">
     <UnusedClass>
-      <code>AdminUserLocalePreferenceFieldRenderer</code>
+      <code><![CDATA[AdminUserLocalePreferenceFieldRenderer]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-admin/src/Layout/AdminLayout.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantCast>
-      <code>(string) ($release['version'] ?? 'unknown')</code>
+      <code><![CDATA[(string) ($release['version'] ?? 'unknown')]]></code>
     </RedundantCast>
   </file>
   <file src="app/zoosper-admin/src/Message/SessionFlashMessageStore.php">
     <UnusedClass>
-      <code>SessionFlashMessageStore</code>
+      <code><![CDATA[SessionFlashMessageStore]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-admin/src/Navigation/AdminMenu.php">
     <LessSpecificReturnStatement>
-      <code>$this-&gt;sections-&gt;build($this-&gt;itemsFor($user))</code>
+      <code><![CDATA[$this->sections->build($this->itemsFor($user))]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>list&lt;AdminSectionInterface&gt;</code>
+      <code><![CDATA[list<AdminSectionInterface>]]></code>
     </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-admin/src/Navigation/AdminMenuItem.php">
     <PossiblyUnusedMethod>
-      <code>getGroup</code>
-      <code>getParent</code>
-      <code>isAllowed</code>
+      <code><![CDATA[getGroup]]></code>
+      <code><![CDATA[getParent]]></code>
+      <code><![CDATA[isAllowed]]></code>
     </PossiblyUnusedMethod>
     <RedundantFunctionCall>
-      <code>array_values</code>
+      <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-admin/src/Navigation/AdminMenuLoader.php">
     <ArgumentTypeCoercion>
-      <code>$config</code>
+      <code><![CDATA[$config]]></code>
     </ArgumentTypeCoercion>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantFunctionCall>
-      <code>array_values</code>
+      <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-admin/src/Navigation/AdminSectionMetadataLoader.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-admin/src/Routing/AdminPathResolver.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>matches</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[matches]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-admin/src/Routing/AdminUrlGenerator.php">
     <UnusedClass>
-      <code>AdminUrlGenerator</code>
+      <code><![CDATA[AdminUrlGenerator]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-admin/src/Theme/ModuleAdminColourThemeLoader.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <UnresolvableInclude>
-      <code>require $manifest</code>
+      <code><![CDATA[require $manifest]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-admin/src/UI/AdminComponentRenderer.php">
     <UnusedClass>
-      <code>AdminComponentRenderer</code>
+      <code><![CDATA[AdminComponentRenderer]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-admin/src/UI/AdminViewRenderer.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-api/src/Controller/AuthController.php">
     <UnusedClass>
-      <code>AuthController</code>
+      <code><![CDATA[AuthController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-api/src/Controller/HealthController.php">
     <UnusedClass>
-      <code>HealthController</code>
+      <code><![CDATA[HealthController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-api/src/Controller/HelloController.php">
     <UnusedClass>
-      <code>HelloController</code>
+      <code><![CDATA[HelloController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-api/src/Controller/MeController.php">
     <UnusedClass>
-      <code>MeController</code>
+      <code><![CDATA[MeController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-api/src/Controller/TokenMeController.php">
     <UnusedClass>
-      <code>TokenMeController</code>
+      <code><![CDATA[TokenMeController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Access/InMemoryRoleProvider.php">
     <PossiblyUnusedMethod>
-      <code>createDefault</code>
+      <code><![CDATA[createDefault]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Access/Role.php">
     <PossiblyUnusedMethod>
-      <code>allows</code>
+      <code><![CDATA[allows]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$code</code>
-      <code>$label</code>
+      <code><![CDATA[$code]]></code>
+      <code><![CDATA[$label]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-auth/src/Access/RoleProviderInterface.php">
     <PossiblyUnusedMethod>
-      <code>get</code>
+      <code><![CDATA[get]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/AccountLockout/AdminAccountLockoutRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/AccountLockout/AdminAccountLockoutService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedReturnValue>
-      <code>AdminAccountLockoutState</code>
+      <code><![CDATA[AdminAccountLockoutState]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-auth/src/AccountLockout/AdminAccountLockoutState.php">
     <PossiblyUnusedProperty>
-      <code>$adminUserId</code>
-      <code>$lastFailedAt</code>
-      <code>$updatedAt</code>
+      <code><![CDATA[$adminUserId]]></code>
+      <code><![CDATA[$lastFailedAt]]></code>
+      <code><![CDATA[$updatedAt]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-auth/src/Acl/AclGroup.php">
     <PossiblyUnusedProperty>
-      <code>$code</code>
-      <code>$label</code>
-      <code>$permissions</code>
-      <code>$sortOrder</code>
+      <code><![CDATA[$code]]></code>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$permissions]]></code>
+      <code><![CDATA[$sortOrder]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-auth/src/Admin/AccountLockout/AdminAccountUnlockResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Admin/Controller/PersonalAccessTokenAdminController.php">
     <UnusedClass>
-      <code>PersonalAccessTokenAdminController</code>
+      <code><![CDATA[PersonalAccessTokenAdminController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Admin/Controller/RoleAdminController.php">
-    <MissingFile>
-      <code>require dirname(__DIR__, 3) . '/zoosper-auth/config/acl.php'</code>
-    </MissingFile>
     <RiskyTruthyFalsyComparison>
-      <code>$error</code>
+      <code><![CDATA[$error]]></code>
     </RiskyTruthyFalsyComparison>
     <UnusedClass>
-      <code>RoleAdminController</code>
+      <code><![CDATA[RoleAdminController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-auth/src/Admin/Controller/UserAdminController.php">
     <PossiblyNullArgument>
-      <code>$deleteUrl</code>
+      <code><![CDATA[$deleteUrl]]></code>
     </PossiblyNullArgument>
     <RiskyTruthyFalsyComparison>
-      <code>$error</code>
+      <code><![CDATA[$error]]></code>
     </RiskyTruthyFalsyComparison>
-    <UndefinedVariable>
-      <code>$actor</code>
-    </UndefinedVariable>
     <UnusedClass>
-      <code>UserAdminController</code>
+      <code><![CDATA[UserAdminController]]></code>
     </UnusedClass>
     <UnusedClosureParam>
-      <code>$c</code>
-      <code>$c</code>
+      <code><![CDATA[$c]]></code>
+      <code><![CDATA[$c]]></code>
     </UnusedClosureParam>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AccessToken/AccessTokenGrid.php">
-    <PossiblyInvalidCast>
-    </PossiblyInvalidCast>
     <UnusedParam>
-      <code>$row</code>
-      <code>$row</code>
-      <code>$row</code>
-      <code>$row</code>
+      <code><![CDATA[$row]]></code>
+      <code><![CDATA[$row]]></code>
+      <code><![CDATA[$row]]></code>
+      <code><![CDATA[$row]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AdminUserGridIndex.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AuthGridPage.php">
     <PossiblyUnusedProperty>
-      <code>$pagination</code>
-      <code>$state</code>
-      <code>$title</code>
+      <code><![CDATA[$pagination]]></code>
+      <code><![CDATA[$state]]></code>
+      <code><![CDATA[$title]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AuthGridPageBuilderFactory.php">
     <UnusedClass>
-      <code>AuthGridPageBuilderFactory</code>
+      <code><![CDATA[AuthGridPageBuilderFactory]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AuthGridPagePresenter.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-auth/src/Admin/Grid/RoleGridCriteria.php">
-    <PossiblyInvalidCast>
-    </PossiblyInvalidCast>
   </file>
   <file src="app/zoosper-auth/src/Admin/Grid/RoleGridIndex.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Admin/Lifecycle/AdminUserLifecycleAdminResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Admin/Lifecycle/RoleLifecycleAdminResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Api/RoleApiController.php">
     <UnusedClass>
-      <code>RoleApiController</code>
+      <code><![CDATA[RoleApiController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Console/AdminCreateCommand.php">
     <UnusedClass>
-      <code>AdminCreateCommand</code>
+      <code><![CDATA[AdminCreateCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Dashboard/AdminUserCountDashboardWidgetContributor.php">
     <UnusedClass>
-      <code>AdminUserCountDashboardWidgetContributor</code>
+      <code><![CDATA[AdminUserCountDashboardWidgetContributor]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Dashboard/DashboardRolePreferenceRepository.php">
     <LessSpecificReturnStatement>
-      <code>array_map(
-            static fn (array $row): DashboardRole =&gt; new DashboardRole((int) $row['id'], (string) $row['code'], (string) $row['label']),
+      <code><![CDATA[array_map(
+            static fn (array $row): DashboardRole => new DashboardRole((int) $row['id'], (string) $row['code'], (string) $row['label']),
             $rows,
-        )</code>
-      <code>array_map(fn (array $row): DashboardRolePreference =&gt; $this-&gt;hydrate($row), $statement-&gt;fetchAll())</code>
+        )]]></code>
+      <code><![CDATA[array_map(fn (array $row): DashboardRolePreference => $this->hydrate($row), $statement->fetchAll())]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>array</code>
-      <code>array</code>
+      <code><![CDATA[array]]></code>
+      <code><![CDATA[array]]></code>
     </MoreSpecificReturnType>
     <UnusedClass>
-      <code>DashboardRolePreferenceRepository</code>
+      <code><![CDATA[DashboardRolePreferenceRepository]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Entity/Save/AdminUserSavePipeline.php">
     <UnusedClass>
-      <code>AdminUserSavePipeline</code>
+      <code><![CDATA[AdminUserSavePipeline]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Http/AuthenticationMiddleware.php">
     <UnusedClass>
-      <code>AuthenticationMiddleware</code>
+      <code><![CDATA[AuthenticationMiddleware]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Http/CsrfMiddleware.php">
     <UnusedClass>
-      <code>CsrfMiddleware</code>
+      <code><![CDATA[CsrfMiddleware]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Http/RateLimitReportOnlyAdminMiddleware.php">
     <UnusedClass>
-      <code>RateLimitReportOnlyAdminMiddleware</code>
+      <code><![CDATA[RateLimitReportOnlyAdminMiddleware]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Lifecycle/AdminUserLifecycleCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Lifecycle/RoleLifecycleCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Lifecycle/RoleLifecycleResult.php">
     <PossiblyUnusedProperty>
-      <code>$assignmentCount</code>
+      <code><![CDATA[$assignmentCount]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-auth/src/PasswordReset/AdminPasswordResetIssue.php">
     <PossiblyUnusedProperty>
-      <code>$adminUserId</code>
+      <code><![CDATA[$adminUserId]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-auth/src/PasswordReset/AdminPasswordResetService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/PasswordReset/AdminPasswordResetToken.php">
     <PossiblyUnusedProperty>
-      <code>$createdAt</code>
-      <code>$publicId</code>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$publicId]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-auth/src/PasswordReset/AdminPasswordResetTokenRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedReturnValue>
-      <code>int</code>
+      <code><![CDATA[int]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-auth/src/PasswordReset/AdminPasswordResetUrlBuilder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/RateLimit/AdminAuthenticationRateLimiter.php">
     <UnusedClass>
-      <code>AdminAuthenticationRateLimiter</code>
+      <code><![CDATA[AdminAuthenticationRateLimiter]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Repository/AdminUserRepository.php">
     <ArgumentTypeCoercion>
-      <code>$statement-&gt;fetchAll()</code>
-      <code>$statement-&gt;fetchAll()</code>
+      <code><![CDATA[$statement->fetchAll()]]></code>
+      <code><![CDATA[$statement->fetchAll()]]></code>
     </ArgumentTypeCoercion>
     <LessSpecificReturnStatement>
-      <code>$this-&gt;hydrateManyWithPermissions($statement-&gt;fetchAll())</code>
-      <code>$this-&gt;hydrateManyWithPermissions($statement-&gt;fetchAll())</code>
-      <code>array_map(fn (array $row): AdminUser =&gt; $this-&gt;hydrateWithoutPermissions($row), $statement-&gt;fetchAll())</code>
-      <code>array_map(static fn (array $row): int =&gt; (int) $row['role_id'], $statement-&gt;fetchAll())</code>
-      <code>array_map(static fn (array $row): string =&gt; (string) $row['code'], $statement-&gt;fetchAll())</code>
+      <code><![CDATA[$this->hydrateManyWithPermissions($statement->fetchAll())]]></code>
+      <code><![CDATA[$this->hydrateManyWithPermissions($statement->fetchAll())]]></code>
+      <code><![CDATA[array_map(fn (array $row): AdminUser => $this->hydrateWithoutPermissions($row), $statement->fetchAll())]]></code>
+      <code><![CDATA[array_map(static fn (array $row): int => (int) $row['role_id'], $statement->fetchAll())]]></code>
+      <code><![CDATA[array_map(static fn (array $row): string => (string) $row['code'], $statement->fetchAll())]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>list&lt;AdminUser&gt;</code>
-      <code>list&lt;AdminUser&gt;</code>
-      <code>list&lt;AdminUser&gt;</code>
-      <code>list&lt;int&gt;</code>
-      <code>list&lt;string&gt;</code>
+      <code><![CDATA[list<AdminUser>]]></code>
+      <code><![CDATA[list<AdminUser>]]></code>
+      <code><![CDATA[list<AdminUser>]]></code>
+      <code><![CDATA[list<int>]]></code>
+      <code><![CDATA[list<string>]]></code>
     </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>search</code>
-      <code>updateLocale</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[search]]></code>
+      <code><![CDATA[updateLocale]]></code>
     </PossiblyUnusedMethod>
     <RedundantConditionGivenDocblockType>
-      <code>is_int($id)</code>
+      <code><![CDATA[is_int($id)]]></code>
     </RedundantConditionGivenDocblockType>
     <UnusedDocblockParam>
-      <code>$row</code>
+      <code><![CDATA[$row]]></code>
     </UnusedDocblockParam>
   </file>
   <file src="app/zoosper-auth/src/Repository/RoleRepository.php">
     <LessSpecificReturnStatement>
-      <code>$this-&gt;pdo-&gt;query('SELECT * FROM admin_permissions ORDER BY parent_code ASC, sort_order ASC, code ASC')-&gt;fetchAll()</code>
-      <code>$this-&gt;pdo-&gt;query('SELECT * FROM admin_roles ORDER BY label ASC')-&gt;fetchAll()</code>
-      <code>array_map(static fn (array $row): int =&gt; (int) $row['permission_id'], $statement-&gt;fetchAll())</code>
-      <code>array_map(static fn (array $row): int =&gt; (int) $row['user_id'], $statement-&gt;fetchAll())</code>
+      <code><![CDATA[$this->pdo->query('SELECT * FROM admin_permissions ORDER BY parent_code ASC, sort_order ASC, code ASC')->fetchAll()]]></code>
+      <code><![CDATA[$this->pdo->query('SELECT * FROM admin_roles ORDER BY label ASC')->fetchAll()]]></code>
+      <code><![CDATA[array_map(static fn (array $row): int => (int) $row['permission_id'], $statement->fetchAll())]]></code>
+      <code><![CDATA[array_map(static fn (array $row): int => (int) $row['user_id'], $statement->fetchAll())]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>list&lt;array&lt;string, mixed&gt;&gt;</code>
-      <code>list&lt;array&lt;string, mixed&gt;&gt;</code>
-      <code>list&lt;int&gt;</code>
-      <code>list&lt;int&gt;</code>
+      <code><![CDATA[list<array<string, mixed>>]]></code>
+      <code><![CDATA[list<array<string, mixed>>]]></code>
+      <code><![CDATA[list<int>]]></code>
+      <code><![CDATA[list<int>]]></code>
     </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>findRoleByCode</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findRoleByCode]]></code>
     </PossiblyUnusedMethod>
     <RiskyTruthyFalsyComparison>
-      <code>preg_replace('/[^a-z0-9_]+/', '_', $code)</code>
+      <code><![CDATA[preg_replace('/[^a-z0-9_]+/', '_', $code)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-auth/src/Security/PasswordPolicy.php">
     <ArgumentTypeCoercion>
-      <code>$pattern</code>
+      <code><![CDATA[$pattern]]></code>
     </ArgumentTypeCoercion>
     <PossiblyUnusedMethod>
-      <code>isValid</code>
+      <code><![CDATA[isValid]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Service/AuthService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Service/CsrfTokenManager.php">
     <PossiblyUnusedReturnValue>
-      <code>string</code>
+      <code><![CDATA[string]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-auth/src/Service/RequireSecondFactorByDefault.php">
     <UnusedClass>
-      <code>RequireSecondFactorByDefault</code>
+      <code><![CDATA[RequireSecondFactorByDefault]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Service/SessionGuard.php">
     <PossiblyFalseArgument>
-      <code>session_name()</code>
+      <code><![CDATA[session_name()]]></code>
     </PossiblyFalseArgument>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>hasPendingTwoFactorChallenge</code>
-      <code>reset</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[hasPendingTwoFactorChallenge]]></code>
+      <code><![CDATA[reset]]></code>
     </PossiblyUnusedMethod>
     <RiskyTruthyFalsyComparison>
-      <code>ini_get('session.use_cookies')</code>
+      <code><![CDATA[ini_get('session.use_cookies')]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-auth/src/Token/PersonalAccessToken.php">
     <PossiblyUnusedProperty>
-      <code>$createdAt</code>
-      <code>$lastUsedAt</code>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$lastUsedAt]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-auth/src/Token/PersonalAccessTokenAuthenticator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Token/PersonalAccessTokenRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantFunctionCall>
-      <code>array_values</code>
+      <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-auth/src/Token/PersonalAccessTokenService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Asset/AssetModuleRegistry.php">
     <PossiblyUnusedMethod>
-      <code>all</code>
-      <code>has</code>
+      <code><![CDATA[all]]></code>
+      <code><![CDATA[has]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Asset/AssetResolver.php">
     <PossiblyUnusedMethod>
-      <code>supportedTypes</code>
+      <code><![CDATA[supportedTypes]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Asset/ModuleAssetManifestLoader.php">
     <PossiblyUnusedReturnValue>
-      <code>list&lt;string&gt;</code>
+      <code><![CDATA[list<string>]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-core/src/Bootstrap/ApplicationFactory.php">
     <ArgumentTypeCoercion>
-      <code>$services-&gt;get(AdminPathCollectionTransformer::class)</code>
-      <code>$services-&gt;get(ConfigRepository::class)</code>
-      <code>$services-&gt;get(\Zoosper\Core\Site\SiteContextResolver::class)</code>
-      <code>$sessionHandler</code>
+      <code><![CDATA[$services->get(AdminPathCollectionTransformer::class)]]></code>
+      <code><![CDATA[$services->get(ConfigRepository::class)]]></code>
+      <code><![CDATA[$services->get(\Zoosper\Core\Site\SiteContextResolver::class)]]></code>
+      <code><![CDATA[$sessionHandler]]></code>
     </ArgumentTypeCoercion>
     <UnusedClass>
-      <code>ApplicationFactory</code>
+      <code><![CDATA[ApplicationFactory]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Bootstrap/ServiceProviderManifestLoader.php">
     <ArgumentTypeCoercion>
-      <code>$providerClass</code>
+      <code><![CDATA[$providerClass]]></code>
     </ArgumentTypeCoercion>
     <PossiblyUnusedReturnValue>
-      <code>int</code>
+      <code><![CDATA[int]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-core/src/Cache/CacheContext.php">
     <PossiblyUnusedMethod>
-      <code>toArray</code>
+      <code><![CDATA[toArray]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Cache/CacheKeyBuilder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>block</code>
-      <code>privateFragment</code>
-      <code>publicFragment</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[block]]></code>
+      <code><![CDATA[privateFragment]]></code>
+      <code><![CDATA[publicFragment]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Cache/HttpCachePolicy.php">
     <PossiblyUnusedMethod>
-      <code>noStore</code>
-      <code>privateFragment</code>
-      <code>publicFragment</code>
+      <code><![CDATA[noStore]]></code>
+      <code><![CDATA[privateFragment]]></code>
+      <code><![CDATA[publicFragment]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$code</code>
+      <code><![CDATA[$code]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Composer/ModuleAutoloadSynchronizer.php">
     <PossiblyFalseOperand>
-      <code>json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)</code>
+      <code><![CDATA[json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)]]></code>
     </PossiblyFalseOperand>
     <PossiblyUndefinedArrayOffset>
-      <code>$composer[$section]</code>
-      <code>$composer[$section]</code>
+      <code><![CDATA[$composer[$section]]]></code>
+      <code><![CDATA[$composer[$section]]]></code>
     </PossiblyUndefinedArrayOffset>
     <RiskyTruthyFalsyComparison>
-      <code>glob($pattern)</code>
+      <code><![CDATA[glob($pattern)]]></code>
     </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
-      <code>require $moduleFile</code>
+      <code><![CDATA[require $moduleFile]]></code>
     </UnresolvableInclude>
     <UnusedClass>
-      <code>ModuleAutoloadSynchronizer</code>
+      <code><![CDATA[ModuleAutoloadSynchronizer]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Composer/ModuleComposerManifestGenerator.php">
     <PossiblyFalseOperand>
-      <code>json_encode($this-&gt;manifest($identity, $moduleDir), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)</code>
+      <code><![CDATA[json_encode($this->manifest($identity, $moduleDir), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)]]></code>
     </PossiblyFalseOperand>
     <UnresolvableInclude>
-      <code>require $moduleFile</code>
+      <code><![CDATA[require $moduleFile]]></code>
     </UnresolvableInclude>
     <UnusedClass>
-      <code>ModuleComposerManifestGenerator</code>
+      <code><![CDATA[ModuleComposerManifestGenerator]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Composer/ModulePackageIdentity.php">
     <DocblockTypeContradiction>
-      <code>$vendor === null</code>
+      <code><![CDATA[$vendor === null]]></code>
     </DocblockTypeContradiction>
     <PossiblyUndefinedArrayOffset>
-      <code>$module</code>
+      <code><![CDATA[$module]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="app/zoosper-core/src/Config/ConfigRepository.php">
     <PossiblyUnusedMethod>
-      <code>fromPath</code>
+      <code><![CDATA[fromPath]]></code>
     </PossiblyUnusedMethod>
     <UnresolvableInclude>
-      <code>require $file</code>
+      <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Config/LayeredConfigLoader.php">
     <DocblockTypeContradiction>
-      <code>is_array($config)</code>
+      <code><![CDATA[is_array($config)]]></code>
     </DocblockTypeContradiction>
     <RedundantCastGivenDocblockType>
-      <code>(string) ($layer['source'] ?? 'unknown')</code>
+      <code><![CDATA[(string) ($layer['source'] ?? 'unknown')]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-core/src/Config/LayeredConfigResult.php">
     <PossiblyUnusedProperty>
-      <code>$config</code>
-      <code>$sources</code>
+      <code><![CDATA[$config]]></code>
+      <code><![CDATA[$sources]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Config/ModuleConfigAggregator.php">
     <PossiblyUnusedMethod>
-      <code>fromDirectories</code>
+      <code><![CDATA[fromDirectories]]></code>
     </PossiblyUnusedMethod>
     <UnresolvableInclude>
-      <code>require $file</code>
-      <code>require $file</code>
+      <code><![CDATA[require $file]]></code>
+      <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/CacheClearCommand.php">
     <UnusedClass>
-      <code>CacheClearCommand</code>
+      <code><![CDATA[CacheClearCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/CompileCommand.php">
     <UnusedClass>
-      <code>CompileCommand</code>
+      <code><![CDATA[CompileCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/DeployCommand.php">
     <UnusedClass>
-      <code>DeployCommand</code>
+      <code><![CDATA[DeployCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/GenerateSecretsCommand.php">
     <UnusedClass>
-      <code>GenerateSecretsCommand</code>
+      <code><![CDATA[GenerateSecretsCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/MakeConsoleCommand.php">
     <UnusedClass>
-      <code>MakeConsoleCommand</code>
+      <code><![CDATA[MakeConsoleCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/MakeModuleCommand.php">
     <UnusedClass>
-      <code>MakeModuleCommand</code>
+      <code><![CDATA[MakeModuleCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/MakePackageModuleCommand.php">
     <UnusedClass>
-      <code>MakePackageModuleCommand</code>
+      <code><![CDATA[MakePackageModuleCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ManifestCheckCommand.php">
     <UnusedClass>
-      <code>ManifestCheckCommand</code>
+      <code><![CDATA[ManifestCheckCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ManifestStatusCommand.php">
     <UnusedClass>
-      <code>ManifestStatusCommand</code>
+      <code><![CDATA[ManifestStatusCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/MigrateCommand.php">
     <UnusedClass>
-      <code>MigrateCommand</code>
+      <code><![CDATA[MigrateCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ModuleDisableCommand.php">
     <UnusedClass>
-      <code>ModuleDisableCommand</code>
+      <code><![CDATA[ModuleDisableCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ModuleEnableCommand.php">
     <UnusedClass>
-      <code>ModuleEnableCommand</code>
+      <code><![CDATA[ModuleEnableCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ModuleInstallCommand.php">
     <UnusedClass>
-      <code>ModuleInstallCommand</code>
+      <code><![CDATA[ModuleInstallCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ModuleUninstallCommand.php">
     <UnusedClass>
-      <code>ModuleUninstallCommand</code>
+      <code><![CDATA[ModuleUninstallCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/ReleaseCheckCommand.php">
     <UnusedClass>
-      <code>ReleaseCheckCommand</code>
+      <code><![CDATA[ReleaseCheckCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/SchemaForeignKeyApplyCommand.php">
     <UnusedClass>
-      <code>SchemaForeignKeyApplyCommand</code>
+      <code><![CDATA[SchemaForeignKeyApplyCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/SchemaForeignKeyStatusCommand.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Console/BuiltIn/VersionCommand.php">
     <UnresolvableInclude>
-      <code>require $this-&gt;basePath.'/config/version.php'</code>
+      <code><![CDATA[require $this->basePath.'/config/version.php']]></code>
     </UnresolvableInclude>
     <UnusedClass>
-      <code>VersionCommand</code>
+      <code><![CDATA[VersionCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/ConsoleApplication.php">
     <PossiblyUnusedMethod>
-      <code>run</code>
+      <code><![CDATA[run]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Console/ConsoleKernel.php">
     <ArgumentTypeCoercion>
-      <code>$container-&gt;get(\Zoosper\Core\Module\ModuleRegistry::class)</code>
+      <code><![CDATA[$container->get(\Zoosper\Core\Module\ModuleRegistry::class)]]></code>
     </ArgumentTypeCoercion>
     <UnusedClass>
-      <code>ConsoleKernel</code>
+      <code><![CDATA[ConsoleKernel]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Console/ConsoleOutput.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Console/ConsoleServiceFactory.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <UnusedProperty>
-      <code>$basePath</code>
+      <code><![CDATA[$basePath]]></code>
     </UnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Console/ModuleConsoleCommandLoader.php">
     <RiskyTruthyFalsyComparison>
-      <code>!($module-&gt;discovery['console'] ?? is_file($module-&gt;configPath('console.php')))</code>
+      <code><![CDATA[!($module->discovery['console'] ?? is_file($module->configPath('console.php')))]]></code>
     </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
-      <code>require $file</code>
+      <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Container/ServiceContainer.php">
     <ArgumentTypeCoercion>
-      <code>$class</code>
+      <code><![CDATA[$class]]></code>
     </ArgumentTypeCoercion>
     <DocblockTypeContradiction>
-      <code>is_object($service)</code>
+      <code><![CDATA[is_object($service)]]></code>
     </DocblockTypeContradiction>
     <InvalidStringClass>
-      <code>new $class()</code>
+      <code><![CDATA[new $class()]]></code>
     </InvalidStringClass>
     <PossiblyNullFunctionCall>
-      <code>$previousFactory($services)</code>
+      <code><![CDATA[$previousFactory($services)]]></code>
     </PossiblyNullFunctionCall>
     <PossiblyUnusedMethod>
-      <code>alias</code>
-      <code>all</code>
+      <code><![CDATA[alias]]></code>
+      <code><![CDATA[all]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Container/ServiceProviderLoader.php">
     <RiskyTruthyFalsyComparison>
-      <code>!($module-&gt;discovery['service_decorators'] ?? is_file($module-&gt;configPath('service_decorators.php')))</code>
-      <code>!($module-&gt;discovery['services'] ?? is_file($module-&gt;configPath('services.php')))</code>
+      <code><![CDATA[!($module->discovery['service_decorators'] ?? is_file($module->configPath('service_decorators.php')))]]></code>
+      <code><![CDATA[!($module->discovery['services'] ?? is_file($module->configPath('services.php')))]]></code>
     </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
-      <code>require $file</code>
-      <code>require $file</code>
+      <code><![CDATA[require $file]]></code>
+      <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Entity/Extension/EntityExtensionDataPersister.php">
     <UnusedClass>
-      <code>EntityExtensionDataPersister</code>
+      <code><![CDATA[EntityExtensionDataPersister]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Entity/Extension/EntityExtensionValueRepository.php">
     <ArgumentTypeCoercion>
-      <code>$json</code>
+      <code><![CDATA[$json]]></code>
     </ArgumentTypeCoercion>
     <PossiblyNullArgument>
-      <code>$json</code>
+      <code><![CDATA[$json]]></code>
     </PossiblyNullArgument>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>findForModule</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findForModule]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Entity/Lifecycle/EntityLifecycleBlocker.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$code</code>
-      <code>$referenceCount</code>
-      <code>$referenceType</code>
-      <code>$remediation</code>
+      <code><![CDATA[$code]]></code>
+      <code><![CDATA[$referenceCount]]></code>
+      <code><![CDATA[$referenceType]]></code>
+      <code><![CDATA[$remediation]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Entity/Lifecycle/EntityLifecycleDecision.php">
     <PossiblyUnusedMethod>
-      <code>allow</code>
-      <code>deny</code>
+      <code><![CDATA[allow]]></code>
+      <code><![CDATA[deny]]></code>
     </PossiblyUnusedMethod>
     <RedundantFunctionCall>
-      <code>array_values</code>
+      <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-core/src/Entity/Lifecycle/EntityLifecycleDeniedException.php">
     <PossiblyUnusedProperty>
-      <code>$decision</code>
+      <code><![CDATA[$decision]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Entity/Lifecycle/EntityLifecyclePolicyRegistry.php">
     <PossiblyUnusedMethod>
-      <code>entityTypes</code>
-      <code>has</code>
-      <code>register</code>
+      <code><![CDATA[entityTypes]]></code>
+      <code><![CDATA[has]]></code>
+      <code><![CDATA[register]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Entity/Lifecycle/EntityLifecycleService.php">
     <UnusedClass>
-      <code>EntityLifecycleService</code>
+      <code><![CDATA[EntityLifecycleService]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Entity/Lifecycle/EntityLifecycleSubject.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$context</code>
+      <code><![CDATA[$context]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Entity/Save/EntityDataObject.php">
     <PossiblyUnusedMethod>
-      <code>getExtensionData</code>
-      <code>only</code>
-      <code>setExtensionData</code>
+      <code><![CDATA[getExtensionData]]></code>
+      <code><![CDATA[only]]></code>
+      <code><![CDATA[setExtensionData]]></code>
     </PossiblyUnusedMethod>
     <RedundantConditionGivenDocblockType>
-      <code>is_string($key)</code>
+      <code><![CDATA[is_string($key)]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="app/zoosper-core/src/Entity/Save/EntitySaveContext.php">
     <PossiblyUnusedMethod>
-      <code>entityId</code>
-      <code>fieldRegistry</code>
+      <code><![CDATA[entityId]]></code>
+      <code><![CDATA[fieldRegistry]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Entity/Save/EntitySaveEventDispatcher.php">
     <PossiblyUnusedMethod>
-      <code>listen</code>
-      <code>listeners</code>
+      <code><![CDATA[listen]]></code>
+      <code><![CDATA[listeners]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Entity/Save/EntitySaveEventDispatcherInterface.php">
     <PossiblyUnusedReturnValue>
-      <code>EntitySaveContext</code>
+      <code><![CDATA[EntitySaveContext]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-core/src/Entity/Save/EntitySaveLifecycle.php">
     <UnusedConstructor>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </UnusedConstructor>
   </file>
   <file src="app/zoosper-core/src/Entity/Save/EntitySaveLifecycleRunner.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Entity/Save/FieldDefinition.php">
     <PossiblyUnusedMethod>
-      <code>extension</code>
+      <code><![CDATA[extension]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$label</code>
-      <code>$normaliserService</code>
-      <code>$required</code>
-      <code>$validatorService</code>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$normaliserService]]></code>
+      <code><![CDATA[$required]]></code>
+      <code><![CDATA[$validatorService]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Entity/Save/FieldDefinitionRegistry.php">
     <PossiblyUnusedMethod>
-      <code>all</code>
-      <code>get</code>
+      <code><![CDATA[all]]></code>
+      <code><![CDATA[get]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Entity/Save/ModuleEntitySaveListenerLoader.php">
     <DocblockTypeContradiction>
-      <code>!is_string($event)</code>
+      <code><![CDATA[!is_string($event)]]></code>
     </DocblockTypeContradiction>
     <UndefinedInterfaceMethod>
-      <code>listen</code>
+      <code><![CDATA[listen]]></code>
     </UndefinedInterfaceMethod>
     <UnusedClass>
-      <code>ModuleEntitySaveListenerLoader</code>
+      <code><![CDATA[ModuleEntitySaveListenerLoader]]></code>
     </UnusedClass>
-  </file>
-  <file src="app/zoosper-core/src/Error/ErrorHandler.php">
-    <RedundantCast>
-    </RedundantCast>
   </file>
   <file src="app/zoosper-core/src/Event/EventDispatcher.php">
     <PossiblyInvalidCast>
-      <code>$listener[0] ?? 'unknown'</code>
+      <code><![CDATA[$listener[0] ?? 'unknown']]></code>
     </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantCast>
-      <code>(string) ($listener[1] ?? 'unknown')</code>
+      <code><![CDATA[(string) ($listener[1] ?? 'unknown')]]></code>
     </RedundantCast>
   </file>
   <file src="app/zoosper-core/src/Event/EventDispatcherInterface.php">
     <PossiblyUnusedMethod>
-      <code>listeners</code>
+      <code><![CDATA[listeners]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedReturnValue>
-      <code>object</code>
-      <code>self</code>
+      <code><![CDATA[object]]></code>
+      <code><![CDATA[self]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-core/src/Event/GenericEvent.php">
     <UnusedClass>
-      <code>GenericEvent</code>
+      <code><![CDATA[GenericEvent]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Event/ModuleEventListenerLoader.php">
     <DocblockTypeContradiction>
-      <code>!is_string($eventName)</code>
+      <code><![CDATA[!is_string($eventName)]]></code>
     </DocblockTypeContradiction>
     <RiskyTruthyFalsyComparison>
-      <code>!($module-&gt;discovery['events'] ?? is_file($module-&gt;configPath('events.php')))</code>
+      <code><![CDATA[!($module->discovery['events'] ?? is_file($module->configPath('events.php')))]]></code>
     </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
-      <code>require $file</code>
+      <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
     <UnusedClass>
-      <code>ModuleEventListenerLoader</code>
+      <code><![CDATA[ModuleEventListenerLoader]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Filesystem/ProjectPathResolver.php">
     <PossiblyUnusedMethod>
-      <code>absolute</code>
-      <code>configPath</code>
-      <code>publicPath</code>
-      <code>storagePath</code>
+      <code><![CDATA[absolute]]></code>
+      <code><![CDATA[configPath]]></code>
+      <code><![CDATA[publicPath]]></code>
+      <code><![CDATA[storagePath]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Fragment/AjaxFragmentDefinition.php">
     <UnusedClass>
-      <code>AjaxFragmentDefinition</code>
+      <code><![CDATA[AjaxFragmentDefinition]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Fragment/FragmentResponseMetadata.php">
     <UnusedClass>
-      <code>FragmentResponseMetadata</code>
+      <code><![CDATA[FragmentResponseMetadata]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Html/HtmlSanitizerFactory.php">
     <UnusedClass>
-      <code>HtmlSanitizerFactory</code>
+      <code><![CDATA[HtmlSanitizerFactory]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Http/Application.php">
     <PossiblyUnusedMethod>
-      <code>handle</code>
-      <code>isStatelessPublicPath</code>
-      <code>services</code>
+      <code><![CDATA[handle]]></code>
+      <code><![CDATA[isStatelessPublicPath]]></code>
+      <code><![CDATA[services]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Http/Middleware/ModuleAdminMiddlewareLoader.php">
     <RiskyTruthyFalsyComparison>
-      <code>!($module-&gt;discovery['admin_middleware'] ?? is_file($module-&gt;configPath('admin_middleware.php')))</code>
+      <code><![CDATA[!($module->discovery['admin_middleware'] ?? is_file($module->configPath('admin_middleware.php')))]]></code>
     </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
-      <code>require $file</code>
+      <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Http/Middleware/RouteContext.php">
     <PossiblyUnusedProperty>
-      <code>$method</code>
-      <code>$path</code>
-      <code>$stateless</code>
+      <code><![CDATA[$method]]></code>
+      <code><![CDATA[$path]]></code>
+      <code><![CDATA[$stateless]]></code>
     </PossiblyUnusedProperty>
     <RedundantConditionGivenDocblockType>
-      <code>is_string($value)</code>
+      <code><![CDATA[is_string($value)]]></code>
     </RedundantConditionGivenDocblockType>
     <RedundantFunctionCall>
-      <code>array_values</code>
+      <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-core/src/Http/Request.php">
     <PossiblyUnusedMethod>
-      <code>routeParams</code>
-      <code>withForm</code>
+      <code><![CDATA[routeParams]]></code>
+      <code><![CDATA[withForm]]></code>
     </PossiblyUnusedMethod>
     <RedundantConditionGivenDocblockType>
-      <code>is_string($key)</code>
+      <code><![CDATA[is_string($key)]]></code>
     </RedundantConditionGivenDocblockType>
-  </file>
-  <file src="app/zoosper-core/src/Http/TrustedProxyResolver.php">
-    <RedundantCast>
-    </RedundantCast>
   </file>
   <file src="app/zoosper-core/src/I18n/AdminTranslatorResolver.php">
     <PossiblyUnusedMethod>
-      <code>resolveLocale</code>
+      <code><![CDATA[resolveLocale]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/I18n/I18nServiceProvider.php">
     <UnusedClass>
-      <code>I18nServiceProvider</code>
+      <code><![CDATA[I18nServiceProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/I18n/LocaleResolution.php">
     <PossiblyUnusedProperty>
-      <code>$scope</code>
+      <code><![CDATA[$scope]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/I18n/LocaleResolverInterface.php">
     <PossiblyUnusedMethod>
-      <code>resolveSiteLocale</code>
+      <code><![CDATA[resolveSiteLocale]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/I18n/SupportedLocaleProvider.php">
     <PossiblyUnusedMethod>
-      <code>isSupportedAdminLocale</code>
+      <code><![CDATA[isSupportedAdminLocale]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/I18n/TranslationCatalogue.php">
     <PossiblyUnusedMethod>
-      <code>has</code>
-      <code>messages</code>
+      <code><![CDATA[has]]></code>
+      <code><![CDATA[messages]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$locale</code>
+      <code><![CDATA[$locale]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/I18n/TranslationFileAggregator.php">
     <RiskyTruthyFalsyComparison>
-      <code>glob($pattern)</code>
+      <code><![CDATA[glob($pattern)]]></code>
     </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
-      <code>require $file</code>
+      <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Message/FlashMessageStoreInterface.php">
     <PossiblyUnusedMethod>
-      <code>info</code>
-      <code>warning</code>
+      <code><![CDATA[info]]></code>
+      <code><![CDATA[warning]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Module/ComposerModuleDiscovery.php">
     <InvalidArrayOffset>
-      <code>$installed[0]</code>
+      <code><![CDATA[$installed[0]]]></code>
     </InvalidArrayOffset>
     <RiskyTruthyFalsyComparison>
-      <code>realpath($path)</code>
+      <code><![CDATA[realpath($path)]]></code>
     </RiskyTruthyFalsyComparison>
     <UnusedClass>
-      <code>ComposerModuleDiscovery</code>
+      <code><![CDATA[ComposerModuleDiscovery]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Module/Module.php">
     <PossiblyUnusedMethod>
-      <code>moduleFile</code>
-      <code>resourcePath</code>
+      <code><![CDATA[moduleFile]]></code>
+      <code><![CDATA[resourcePath]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Module/ModuleDefinition.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>configPath</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[configPath]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Module/ModuleDependencyValidator.php">
     <UnusedClass>
-      <code>ModuleDependencyValidator</code>
+      <code><![CDATA[ModuleDependencyValidator]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Module/ModuleManifestCompiler.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedReturnValue>
-      <code>bool</code>
+      <code><![CDATA[bool]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-core/src/Module/ModuleRegistry.php">
     <PossiblyUnusedMethod>
-      <code>clearCache</code>
+      <code><![CDATA[clearCache]]></code>
     </PossiblyUnusedMethod>
     <UnresolvableInclude>
-      <code>require $moduleFile</code>
+      <code><![CDATA[require $moduleFile]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Module/ModuleRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Release/ReleaseCheck.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <UnresolvableInclude>
-      <code>require $this-&gt;basePath . '/config/app.php'</code>
+      <code><![CDATA[require $this->basePath . '/config/app.php']]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Routing/CachingFallbackHandler.php">
     <UnusedClass>
-      <code>CachingFallbackHandler</code>
+      <code><![CDATA[CachingFallbackHandler]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Routing/ControllerProviderLoader.php">
     <LessSpecificReturnStatement>
-      <code>$controllers</code>
+      <code><![CDATA[$controllers]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>array&lt;class-string, object&gt;</code>
+      <code><![CDATA[array<class-string, object>]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="app/zoosper-core/src/Routing/ModuleRouteDefinition.php">
     <RedundantFunctionCall>
-      <code>array_values</code>
+      <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-core/src/Routing/ModuleRouteLoader.php">
     <ArgumentTypeCoercion>
-      <code>$config</code>
+      <code><![CDATA[$config]]></code>
     </ArgumentTypeCoercion>
     <RiskyTruthyFalsyComparison>
-      <code>!($module-&gt;discovery[$discoveryKey] ?? is_file($module-&gt;configPath($configFile)))</code>
+      <code><![CDATA[!($module->discovery[$discoveryKey] ?? is_file($module->configPath($configFile)))]]></code>
     </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
-      <code>require $file</code>
+      <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Routing/Router.php">
     <ArgumentTypeCoercion>
-      <code>$route['regex']</code>
-      <code>$route['regex']</code>
-      <code>$route['regex']</code>
+      <code><![CDATA[$route['regex']]]></code>
+      <code><![CDATA[$route['regex']]]></code>
+      <code><![CDATA[$route['regex']]]></code>
     </ArgumentTypeCoercion>
     <PossiblyUndefinedArrayOffset>
-      <code>$registered</code>
+      <code><![CDATA[$registered]]></code>
     </PossiblyUndefinedArrayOffset>
     <PossiblyUnusedMethod>
-      <code>get</code>
-      <code>post</code>
+      <code><![CDATA[get]]></code>
+      <code><![CDATA[post]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Scaffold/ConsoleCommandScaffoldResult.php">
     <PossiblyUnusedProperty>
-      <code>$commandFile</code>
-      <code>$consoleConfigFile</code>
+      <code><![CDATA[$commandFile]]></code>
+      <code><![CDATA[$consoleConfigFile]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Scaffold/ConsoleCommandScaffolder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Scaffold/ModuleName.php">
     <PossiblyUndefinedArrayOffset>
-      <code>$module</code>
+      <code><![CDATA[$module]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="app/zoosper-core/src/Scaffold/ModuleScaffolder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Scaffold/PackageModuleScaffolder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantFunctionCall>
-      <code>array_values</code>
+      <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
     <RiskyTruthyFalsyComparison>
-      <code>preg_replace('/(?&lt;!^)[A-Z]/', '-$0', $value)</code>
-      <code>preg_replace('/[^A-Za-z0-9]+/', '-', $value)</code>
+      <code><![CDATA[preg_replace('/(?<!^)[A-Z]/', '-$0', $value)]]></code>
+      <code><![CDATA[preg_replace('/[^A-Za-z0-9]+/', '-', $value)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/FileRateLimitReportSink.php">
     <PossiblyFalseOperand>
-      <code>json_encode($payload, JSON_UNESCAPED_SLASHES)</code>
+      <code><![CDATA[json_encode($payload, JSON_UNESCAPED_SLASHES)]]></code>
     </PossiblyFalseOperand>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/InMemoryRateLimitReportSink.php">
     <UnusedClass>
-      <code>InMemoryRateLimitReportSink</code>
+      <code><![CDATA[InMemoryRateLimitReportSink]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/RateLimitEnforcer.php">
     <PossiblyNullArgument>
-      <code>$policy-&gt;rule</code>
+      <code><![CDATA[$policy->rule]]></code>
     </PossiblyNullArgument>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/RateLimitMiddlewareIntegration.php">
     <UnusedClass>
-      <code>RateLimitMiddlewareIntegration</code>
+      <code><![CDATA[RateLimitMiddlewareIntegration]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/RateLimitReportOnlyMiddlewareFactory.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/RateLimitRuntimeConfig.php">
     <PossiblyUnusedMethod>
-      <code>isEnforcing</code>
+      <code><![CDATA[isEnforcing]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/ReportOnlyRateLimitMiddleware.php">
     <PossiblyUnusedMethod>
-      <code>handle</code>
+      <code><![CDATA[handle]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Site/NullSiteContextProvider.php">
     <UnusedClass>
-      <code>NullSiteContextProvider</code>
+      <code><![CDATA[NullSiteContextProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Site/ResolvedSite.php">
     <PossiblyUnusedProperty>
-      <code>$isActive</code>
+      <code><![CDATA[$isActive]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Site/SiteContext.php">
     <PossiblyUnusedMethod>
-      <code>toArray</code>
+      <code><![CDATA[toArray]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Site/SiteContextProviderInterface.php">
     <PossiblyUnusedMethod>
-      <code>resolve</code>
+      <code><![CDATA[resolve]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Site/SiteContextResolver.php">
     <PossiblyUnusedMethod>
-      <code>default</code>
+      <code><![CDATA[default]]></code>
     </PossiblyUnusedMethod>
     <RedundantCast>
-      <code>(string) ($prefix ?? '')</code>
+      <code><![CDATA[(string) ($prefix ?? '')]]></code>
     </RedundantCast>
     <RedundantCondition>
-      <code>$this-&gt;sites !== null</code>
+      <code><![CDATA[$this->sites !== null]]></code>
     </RedundantCondition>
   </file>
   <file src="app/zoosper-core/src/Site/SiteContextResolverFactory.php">
     <UnusedClass>
-      <code>SiteContextResolverFactory</code>
+      <code><![CDATA[SiteContextResolverFactory]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Site/SiteLookupInterface.php">
     <PossiblyUnusedMethod>
-      <code>findByCode</code>
-      <code>findByHost</code>
-      <code>findDefault</code>
+      <code><![CDATA[findByCode]]></code>
+      <code><![CDATA[findByHost]]></code>
+      <code><![CDATA[findDefault]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Testing/TestCase.php">
     <UnusedClass>
-      <code>TestCase</code>
+      <code><![CDATA[TestCase]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Testing/Upgrade/MySqlUpgradeDatabaseWorkspace.php">
     <UnusedClass>
-      <code>MySqlUpgradeDatabaseWorkspace</code>
+      <code><![CDATA[MySqlUpgradeDatabaseWorkspace]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Testing/Upgrade/ReleaseUpgradeWorkspace.php">
     <UnusedClass>
-      <code>ReleaseUpgradeWorkspace</code>
+      <code><![CDATA[ReleaseUpgradeWorkspace]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Url/AdminPathCollectionTransformer.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Url/AdminUrlGenerator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>basePath</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[basePath]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Url/CdnUrlResolver.php">
     <PossiblyUnusedMethod>
-      <code>dynamicForContext</code>
-      <code>isEnabled</code>
-      <code>resolve</code>
+      <code><![CDATA[dynamicForContext]]></code>
+      <code><![CDATA[isEnabled]]></code>
+      <code><![CDATA[resolve]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Url/CdnUrlResolverFactory.php">
     <UnusedClass>
-      <code>CdnUrlResolverFactory</code>
+      <code><![CDATA[CdnUrlResolverFactory]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Url/CdnUrlType.php">
     <PossiblyUnusedMethod>
-      <code>all</code>
+      <code><![CDATA[all]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/View/TemplateViewContextProvider.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-editor/src/Config/ContentEditorRuntimeConfig.php">
     <PossiblyUnusedMethod>
-      <code>fallback</code>
-      <code>preferred</code>
+      <code><![CDATA[fallback]]></code>
+      <code><![CDATA[preferred]]></code>
     </PossiblyUnusedMethod>
     <RedundantCastGivenDocblockType>
-      <code>(string) ($this-&gt;scoped-&gt;get(
+      <code><![CDATA[(string) ($this->scoped->get(
             $path,
-            $this-&gt;scope ?? ScopeContext::default(),
+            $this->scope ?? ScopeContext::default(),
             $projectValue,
-        ) ?? $projectValue)</code>
+        ) ?? $projectValue)]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-editor/src/Config/ContentEditorRuntimeConfigFactory.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>forDefaultScope</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[forDefaultScope]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-editor/src/ContentEditorRegistry.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>all</code>
-      <code>codes</code>
-      <code>preferred</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[all]]></code>
+      <code><![CDATA[codes]]></code>
+      <code><![CDATA[preferred]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-editor/src/EditorJsContentEditor.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RiskyTruthyFalsyComparison>
-      <code>json_encode($this-&gt;imageToolConfig-&gt;toArray($this-&gt;csrf-&gt;token()), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)</code>
+      <code><![CDATA[json_encode($this->imageToolConfig->toArray($this->csrf->token()), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-global-announcements/src/Announcement/AdminAnnouncement.php">
     <PossiblyUnusedMethod>
-      <code>isArchived</code>
-      <code>isDraft</code>
-      <code>isPublished</code>
+      <code><![CDATA[isArchived]]></code>
+      <code><![CDATA[isDraft]]></code>
+      <code><![CDATA[isPublished]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$createdAt</code>
-      <code>$createdByUserId</code>
-      <code>$updatedAt</code>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$createdByUserId]]></code>
+      <code><![CDATA[$updatedAt]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-global-announcements/src/Announcement/AdminAnnouncementRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>findLatestPublished</code>
-      <code>isAcknowledged</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findLatestPublished]]></code>
+      <code><![CDATA[isAcknowledged]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-global-announcements/src/Controller/AnnouncementAdminController.php">
     <UndefinedInterfaceMethod>
-      <code>record</code>
-      <code>record</code>
-      <code>record</code>
-      <code>record</code>
-      <code>record</code>
+      <code><![CDATA[record]]></code>
+      <code><![CDATA[record]]></code>
+      <code><![CDATA[record]]></code>
+      <code><![CDATA[record]]></code>
+      <code><![CDATA[record]]></code>
     </UndefinedInterfaceMethod>
     <UnusedClass>
-      <code>AnnouncementAdminController</code>
+      <code><![CDATA[AnnouncementAdminController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-mail/src/Admin/EmailLogGrid.php">
     <UnusedParam>
-      <code>$row</code>
+      <code><![CDATA[$row]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-mail/src/Config/SmtpConfigFactory.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-mail/src/Controller/EmailLogAdminController.php">
     <UnusedClass>
-      <code>EmailLogAdminController</code>
+      <code><![CDATA[EmailLogAdminController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-mail/src/Diagnostics/MailConfigurationInspector.php">
     <PossiblyUnusedMethod>
-      <code>summary</code>
-      <code>warnings</code>
+      <code><![CDATA[summary]]></code>
+      <code><![CDATA[warnings]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-mail/src/Diagnostics/MailConfigurationInspectorFactory.php">
     <UnusedClass>
-      <code>MailConfigurationInspectorFactory</code>
+      <code><![CDATA[MailConfigurationInspectorFactory]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-mail/src/Diagnostics/MailConfigurationSummary.php">
     <PossiblyUnusedMethod>
-      <code>toArray</code>
+      <code><![CDATA[toArray]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-mail/src/Diagnostics/SmtpConnectionProbe.php">
     <UnusedClass>
-      <code>SmtpConnectionProbe</code>
+      <code><![CDATA[SmtpConnectionProbe]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-mail/src/Diagnostics/SmtpDeliveryModeInspector.php">
     <UnusedClass>
-      <code>SmtpDeliveryModeInspector</code>
+      <code><![CDATA[SmtpDeliveryModeInspector]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-mail/src/Log/EmailLogRepository.php">
     <PossiblyNullArgument>
-      <code>$this-&gt;sanitizeContent($message-&gt;subject)</code>
+      <code><![CDATA[$this->sanitizeContent($message->subject)]]></code>
     </PossiblyNullArgument>
     <PossiblyUndefinedArrayOffset>
-      <code>$filters['email']</code>
-      <code>$filters['status']</code>
-      <code>$filters['subject']</code>
+      <code><![CDATA[$filters['email']]]></code>
+      <code><![CDATA[$filters['status']]]></code>
+      <code><![CDATA[$filters['subject']]]></code>
     </PossiblyUndefinedArrayOffset>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>search</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[search]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-mail/src/PasswordReset/SmtpAdminPasswordResetDelivery.php">
     <UnusedClass>
-      <code>SmtpAdminPasswordResetDelivery</code>
+      <code><![CDATA[SmtpAdminPasswordResetDelivery]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-mail/src/Transport/LoggedMailer.php">
     <UnusedClass>
-      <code>LoggedMailer</code>
+      <code><![CDATA[LoggedMailer]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-mail/src/Transport/SmtpMailer.php">
     <InvalidPropertyAssignmentValue>
-      <code>$this-&gt;socket</code>
+      <code><![CDATA[$this->socket]]></code>
     </InvalidPropertyAssignmentValue>
     <PossiblyFalsePropertyAssignmentValue>
-      <code>@stream_socket_client($target, $errno, $errstr, $this-&gt;config-&gt;timeoutSeconds())</code>
+      <code><![CDATA[@stream_socket_client($target, $errno, $errstr, $this->config->timeoutSeconds())]]></code>
     </PossiblyFalsePropertyAssignmentValue>
     <PossiblyNullArgument>
-      <code>$this-&gt;socket</code>
+      <code><![CDATA[$this->socket]]></code>
     </PossiblyNullArgument>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RiskyTruthyFalsyComparison>
-      <code>!stream_socket_enable_crypto($this-&gt;socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)</code>
-      <code>fgets($this-&gt;socket)</code>
+      <code><![CDATA[!stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)]]></code>
+      <code><![CDATA[fgets($this->socket)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-menu/src/Admin/Controller/MenuAdminController.php">
     <DocblockTypeContradiction>
-      <code>$this-&gt;itemDeletion?-&gt;delete($menuId,$itemId)</code>
+      <code><![CDATA[$this->itemDeletion?->delete($menuId,$itemId)]]></code>
     </DocblockTypeContradiction>
     <UnusedClass>
-      <code>MenuAdminController</code>
+      <code><![CDATA[MenuAdminController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$r</code>
+      <code><![CDATA[$r]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-menu/src/Admin/Grid/MenuGrid.php">
     <ParamNameMismatch>
-      <code>$c</code>
+      <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
-    <PossiblyInvalidCast>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Admin/Lifecycle/MenuLifecycleAdminResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Admin/MenuAdminChoicesProvider.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Admin/MenuAdminResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Api/MenuApiController.php">
     <PossiblyNullArgument>
-      <code>$updated</code>
-      <code>$updated</code>
+      <code><![CDATA[$updated]]></code>
+      <code><![CDATA[$updated]]></code>
     </PossiblyNullArgument>
     <UnusedClass>
-      <code>MenuApiController</code>
+      <code><![CDATA[MenuApiController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Api/MenuController.php">
     <UnusedClass>
-      <code>MenuController</code>
+      <code><![CDATA[MenuController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Application/MenuAdminService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Application/MenuItemDeletionService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Application/MenuMutationGuard.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Contract/MenuAdminRepositoryInterface.php">
     <PossiblyUnusedMethod>
-      <code>deleteMenu</code>
+      <code><![CDATA[deleteMenu]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Frontend/MenuFrontendNavigationContributor.php">
     <UnusedClass>
-      <code>MenuFrontendNavigationContributor</code>
+      <code><![CDATA[MenuFrontendNavigationContributor]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Lifecycle/MenuLifecycleCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Lifecycle/MenuLifecycleResult.php">
     <PossiblyUnusedProperty>
-      <code>$menuId</code>
-      <code>$newStatus</code>
-      <code>$previousStatus</code>
+      <code><![CDATA[$menuId]]></code>
+      <code><![CDATA[$newStatus]]></code>
+      <code><![CDATA[$previousStatus]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-menu/src/Lifecycle/MenuReferenceInspector.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Model/Menu.php">
     <PossiblyUnusedMethod>
-      <code>isActive</code>
+      <code><![CDATA[isActive]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Model/MenuItem.php">
     <PossiblyUnusedMethod>
-      <code>isActive</code>
+      <code><![CDATA[isActive]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Repository/PdoMenuAdminRepository.php">
     <UnusedClass>
-      <code>PdoMenuAdminRepository</code>
+      <code><![CDATA[PdoMenuAdminRepository]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Repository/PdoMenuItemRepository.php">
     <UnusedClass>
-      <code>PdoMenuItemRepository</code>
+      <code><![CDATA[PdoMenuItemRepository]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Repository/PdoMenuRepository.php">
     <UnusedClass>
-      <code>PdoMenuRepository</code>
+      <code><![CDATA[PdoMenuRepository]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Service/BreadcrumbProvider.php">
     <LessSpecificReturnStatement>
-      <code>$find($this-&gt;menus-&gt;tree($siteId,$menuCode,$currentPath))</code>
+      <code><![CDATA[$find($this->menus->tree($siteId,$menuCode,$currentPath))]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>array</code>
+      <code><![CDATA[array]]></code>
     </MoreSpecificReturnType>
     <UnusedClass>
-      <code>BreadcrumbProvider</code>
+      <code><![CDATA[BreadcrumbProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Service/MenuProvider.php">
     <LessSpecificReturnStatement>
-      <code>$this-&gt;trees-&gt;build($items,$urls,$currentPath)</code>
+      <code><![CDATA[$this->trees->build($items,$urls,$currentPath)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>array</code>
+      <code><![CDATA[array]]></code>
     </MoreSpecificReturnType>
     <UnusedClass>
-      <code>MenuProvider</code>
+      <code><![CDATA[MenuProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Controller/PageAdminController.php">
     <InvalidOperand>
-      <code>$result-&gt;pageId</code>
+      <code><![CDATA[$result->pageId]]></code>
     </InvalidOperand>
     <PossiblyNullReference>
-      <code>get</code>
-      <code>render</code>
-      <code>render</code>
+      <code><![CDATA[get]]></code>
+      <code><![CDATA[render]]></code>
+      <code><![CDATA[render]]></code>
     </PossiblyNullReference>
     <RiskyTruthyFalsyComparison>
-      <code>$error</code>
-      <code>$error</code>
+      <code><![CDATA[$error]]></code>
+      <code><![CDATA[$error]]></code>
     </RiskyTruthyFalsyComparison>
     <UndefinedMethod>
-      <code>html</code>
-      <code>html</code>
-      <code>html</code>
+      <code><![CDATA[html]]></code>
+      <code><![CDATA[html]]></code>
+      <code><![CDATA[html]]></code>
     </UndefinedMethod>
     <UnusedClass>
-      <code>PageAdminController</code>
+      <code><![CDATA[PageAdminController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
     <UnusedVariable>
-      <code>$editorHtml</code>
+      <code><![CDATA[$editorHtml]]></code>
     </UnusedVariable>
   </file>
   <file src="app/zoosper-page/src/Admin/Controller/PageBulkActionController.php">
     <UnusedClass>
-      <code>PageBulkActionController</code>
+      <code><![CDATA[PageBulkActionController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Controller/PageCsvExportController.php">
     <UnusedClass>
-      <code>PageCsvExportController</code>
+      <code><![CDATA[PageCsvExportController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Form/PageContentSectionProvider.php">
     <UnusedClass>
-      <code>PageContentSectionProvider</code>
+      <code><![CDATA[PageContentSectionProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Form/PageDetailsSectionProvider.php">
     <UnusedClass>
-      <code>PageDetailsSectionProvider</code>
+      <code><![CDATA[PageDetailsSectionProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Form/PagePublishingSectionProvider.php">
     <UnusedClass>
-      <code>PagePublishingSectionProvider</code>
+      <code><![CDATA[PagePublishingSectionProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Form/PageSeoSectionProvider.php">
     <UnusedClass>
-      <code>PageSeoSectionProvider</code>
+      <code><![CDATA[PageSeoSectionProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Lifecycle/PageLifecycleAdminResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageAdminDashboardFactsGuard.php">
     <UnusedClass>
-      <code>PageAdminDashboardFactsGuard</code>
+      <code><![CDATA[PageAdminDashboardFactsGuard]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/PageAdminDashboardStatusPresenter.php">
     <UnusedClass>
-      <code>PageAdminDashboardStatusPresenter</code>
+      <code><![CDATA[PageAdminDashboardStatusPresenter]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/PageAdminGridResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageAdminPreviewResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridAuditedExportCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridBulkActions.php">
     <UnusedConstructor>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </UnusedConstructor>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridDataSource.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridDefinition.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridEndpointContract.php">
     <UnusedConstructor>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </UnusedConstructor>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridExportCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>export</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[export]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridExportDataSource.php">
     <UnusedClass>
-      <code>PageGridExportDataSource</code>
+      <code><![CDATA[PageGridExportDataSource]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridExportRequestCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridHttpCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>mutate</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[mutate]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridLinks.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridLiveMarkupContract.php">
     <UnusedClass>
-      <code>PageGridLiveMarkupContract</code>
+      <code><![CDATA[PageGridLiveMarkupContract]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridMutationCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridMutationHandler.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <TypeDoesNotContainType>
-      <code>$action === GridWorkspaceMutationContract::SET_DEFAULT_VIEW</code>
+      <code><![CDATA[$action === GridWorkspaceMutationContract::SET_DEFAULT_VIEW]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridNavigationBuilder.php">
     <UnusedClass>
-      <code>PageGridNavigationBuilder</code>
+      <code><![CDATA[PageGridNavigationBuilder]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridPageBuilder.php">
     <UnusedClass>
-      <code>PageGridPageBuilder</code>
+      <code><![CDATA[PageGridPageBuilder]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridPresentation.php">
     <UnusedClass>
-      <code>PageGridPresentation</code>
+      <code><![CDATA[PageGridPresentation]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridRepository.php">
     <ArgumentTypeCoercion>
-      <code>$statement-&gt;fetchAll()</code>
+      <code><![CDATA[$statement->fetchAll()]]></code>
     </ArgumentTypeCoercion>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridResponse.php">
     <PossiblyUnusedMethod>
-      <code>html</code>
-      <code>redirect</code>
+      <code><![CDATA[html]]></code>
+      <code><![CDATA[redirect]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$body</code>
-      <code>$headers</code>
-      <code>$status</code>
+      <code><![CDATA[$body]]></code>
+      <code><![CDATA[$headers]]></code>
+      <code><![CDATA[$status]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridSiteFilter.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridWorkspace.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageRevisionAdminResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageSiteFilterOptions.php">
     <DocblockTypeContradiction>
-      <code>is_array($site)</code>
-      <code>is_array($site)</code>
+      <code><![CDATA[is_array($site)]]></code>
+      <code><![CDATA[is_array($site)]]></code>
     </DocblockTypeContradiction>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantCast>
-      <code>(int) (is_array($site) ? ($site['id'] ?? 0) : ($site-&gt;id ?? 0))</code>
-      <code>(string) (is_array($site) ? ($site['name'] ?? '') : ($site-&gt;name ?? ''))</code>
+      <code><![CDATA[(int) (is_array($site) ? ($site['id'] ?? 0) : ($site->id ?? 0))]]></code>
+      <code><![CDATA[(string) (is_array($site) ? ($site['name'] ?? '') : ($site->name ?? ''))]]></code>
     </RedundantCast>
     <RedundantCondition>
-      <code>$site-&gt;id</code>
-      <code>$site-&gt;name</code>
+      <code><![CDATA[$site->id]]></code>
+      <code><![CDATA[$site->name]]></code>
     </RedundantCondition>
     <RedundantConditionGivenDocblockType>
-      <code>$site-&gt;id ?? 0</code>
-      <code>$site-&gt;name ?? ''</code>
+      <code><![CDATA[$site->id ?? 0]]></code>
+      <code><![CDATA[$site->name ?? '']]></code>
     </RedundantConditionGivenDocblockType>
     <TypeDoesNotContainType>
-      <code>''</code>
-      <code>0</code>
+      <code><![CDATA['']]></code>
+      <code><![CDATA[0]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="app/zoosper-page/src/Admin/PageSiteFilterSql.php">
     <UnusedClass>
-      <code>PageSiteFilterSql</code>
+      <code><![CDATA[PageSiteFilterSql]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/PdoPageGridExportRepository.php">
     <UnusedClass>
-      <code>PdoPageGridExportRepository</code>
+      <code><![CDATA[PdoPageGridExportRepository]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Api/ContentPageController.php">
     <RiskyTruthyFalsyComparison>
-      <code>$site-&gt;homepageSlug</code>
+      <code><![CDATA[$site->homepageSlug]]></code>
     </RiskyTruthyFalsyComparison>
     <UnusedClass>
-      <code>ContentPageController</code>
+      <code><![CDATA[ContentPageController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Api/PageApiController.php">
     <UnusedClass>
-      <code>PageApiController</code>
+      <code><![CDATA[PageApiController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Api/PageLifecycleApiResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <UndefinedPropertyFetch>
-      <code>$result-&gt;currentStatus</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="app/zoosper-page/src/Application/Publication/PagePublicationCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Application/Save/PageSaveCoordinator.php">
     <PossiblyNullArgument>
-      <code>$pageId</code>
-      <code>$pageId</code>
+      <code><![CDATA[$pageId]]></code>
+      <code><![CDATA[$pageId]]></code>
     </PossiblyNullArgument>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantCondition>
-      <code>$pageId !== null</code>
-      <code>$this-&gt;revisions !== null &amp;&amp; $pageId !== null</code>
+      <code><![CDATA[$pageId !== null]]></code>
+      <code><![CDATA[$this->revisions !== null && $pageId !== null]]></code>
     </RedundantCondition>
     <UnusedClosureParam>
-      <code>$context</code>
+      <code><![CDATA[$context]]></code>
     </UnusedClosureParam>
   </file>
   <file src="app/zoosper-page/src/Application/Save/PageSaveInput.php">
     <RiskyTruthyFalsyComparison>
-      <code>preg_replace('/[^a-z0-9]+/i', '-', $slug)</code>
+      <code><![CDATA[preg_replace('/[^a-z0-9]+/i', '-', $slug)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-page/src/Console/PageCreateCommand.php">
     <UnusedClass>
-      <code>PageCreateCommand</code>
+      <code><![CDATA[PageCreateCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Console/StarterSiteInstallCommand.php">
     <UnusedClass>
-      <code>StarterSiteInstallCommand</code>
+      <code><![CDATA[StarterSiteInstallCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Content/BlockJsonToHtmlRenderer.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <UnusedVariable>
-      <code>$content</code>
+      <code><![CDATA[$content]]></code>
     </UnusedVariable>
   </file>
   <file src="app/zoosper-page/src/Content/BlockJsonValidator.php">
     <ArgumentTypeCoercion>
-      <code>$errors</code>
+      <code><![CDATA[$errors]]></code>
     </ArgumentTypeCoercion>
     <InvalidOperand>
-      <code>$index</code>
-      <code>$index</code>
-      <code>$index + 1</code>
-      <code>$index + 1</code>
+      <code><![CDATA[$index]]></code>
+      <code><![CDATA[$index]]></code>
+      <code><![CDATA[$index + 1]]></code>
+      <code><![CDATA[$index + 1]]></code>
     </InvalidOperand>
   </file>
   <file src="app/zoosper-page/src/Content/DocumentNormalizer.php">
     <PossiblyNullArgument>
-      <code>is_array($document['blocks'] ?? null) ? $document['blocks'] : []</code>
+      <code><![CDATA[is_array($document['blocks'] ?? null) ? $document['blocks'] : []]]></code>
     </PossiblyNullArgument>
     <PossiblyUndefinedArrayOffset>
-      <code>$document['blocks']</code>
+      <code><![CDATA[$document['blocks']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="app/zoosper-page/src/Content/DocumentRenderer.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Content/PageContentDocument.php">
     <PossiblyUnusedMethod>
-      <code>fromRow</code>
-      <code>html</code>
-      <code>toRowValues</code>
+      <code><![CDATA[fromRow]]></code>
+      <code><![CDATA[html]]></code>
+      <code><![CDATA[toRowValues]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Controller/PageController.php">
     <RiskyTruthyFalsyComparison>
-      <code>$site-&gt;homepageSlug</code>
+      <code><![CDATA[$site->homepageSlug]]></code>
     </RiskyTruthyFalsyComparison>
     <UnusedClass>
-      <code>PageController</code>
+      <code><![CDATA[PageController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Event/PagePublishedEvent.php">
     <PossiblyUnusedProperty>
-      <code>$adminUserId</code>
-      <code>$pageId</code>
+      <code><![CDATA[$adminUserId]]></code>
+      <code><![CDATA[$pageId]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Event/PageUnpublishedEvent.php">
     <PossiblyUnusedProperty>
-      <code>$adminUserId</code>
-      <code>$pageId</code>
+      <code><![CDATA[$adminUserId]]></code>
+      <code><![CDATA[$pageId]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Form/PageStoreViewOptionsProvider.php">
     <UnusedClass>
-      <code>PageStoreViewOptionsProvider</code>
+      <code><![CDATA[PageStoreViewOptionsProvider]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Lifecycle/PageLifecycleCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-page/src/Lifecycle/PageLifecycleResult.php">
-    <PossiblyUnusedProperty>
-      <code>$newStatus</code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Lifecycle/PageReferenceInspector.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Model/Page.php">
     <PossiblyUnusedProperty>
-      <code>$createdBy</code>
-      <code>$updatedBy</code>
+      <code><![CDATA[$createdBy]]></code>
+      <code><![CDATA[$updatedBy]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Model/PageSiteAssignment.php">
     <PossiblyUnusedProperty>
-      <code>$id</code>
-      <code>$pageId</code>
-      <code>$siteId</code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$pageId]]></code>
+      <code><![CDATA[$siteId]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Repository/PageRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <UnusedMethod>
-      <code>tableExists</code>
+      <code><![CDATA[tableExists]]></code>
     </UnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Repository/PageRevisionRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedReturnValue>
-      <code>int</code>
-      <code>int</code>
+      <code><![CDATA[int]]></code>
+      <code><![CDATA[int]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-page/src/Repository/PageSiteAssignmentRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>assignmentsForPage</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[assignmentsForPage]]></code>
     </PossiblyUnusedMethod>
     <RedundantCastGivenDocblockType>
-      <code>(int) $siteId</code>
+      <code><![CDATA[(int) $siteId]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="app/zoosper-page/src/Routing/PageFallbackHandler.php">
     <UnusedClass>
-      <code>PageFallbackHandler</code>
+      <code><![CDATA[PageFallbackHandler]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Routing/PageFallbackHandlerAdapter.php">
     <UnusedClass>
-      <code>PageFallbackHandlerAdapter</code>
+      <code><![CDATA[PageFallbackHandlerAdapter]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Sanitization/PageContentSanitizationAuditor.php">
     <UnusedClass>
-      <code>PageContentSanitizationAuditor</code>
+      <code><![CDATA[PageContentSanitizationAuditor]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Sanitization/PageContentSanitizationResult.php">
     <PossiblyUnusedProperty>
-      <code>$table</code>
-      <code>$tableExists</code>
+      <code><![CDATA[$table]]></code>
+      <code><![CDATA[$tableExists]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Save/PageSaveValidationListener.php">
     <UnusedClass>
-      <code>PageSaveValidationListener</code>
+      <code><![CDATA[PageSaveValidationListener]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Seo/PageSitemapContributor.php">
     <ParamNameMismatch>
-      <code>$s</code>
+      <code><![CDATA[$s]]></code>
     </ParamNameMismatch>
     <UnusedClass>
-      <code>PageSitemapContributor</code>
+      <code><![CDATA[PageSitemapContributor]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Service/PageRenderer.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Service/PageRevisionService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>history</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[history]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedReturnValue>
-      <code>int</code>
+      <code><![CDATA[int]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-page/src/Service/PageStoreViewAssignmentService.php">
     <UnusedClass>
-      <code>PageStoreViewAssignmentService</code>
+      <code><![CDATA[PageStoreViewAssignmentService]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-seo/src/Contribution/SeoContributorRegistry.php">
     <LessSpecificReturnStatement>
-      <code>$this-&gt;collect('metadata',SeoMetadataContributorInterface::class)</code>
-      <code>$this-&gt;collect('sitemap',SitemapContributorInterface::class)</code>
+      <code><![CDATA[$this->collect('metadata',SeoMetadataContributorInterface::class)]]></code>
+      <code><![CDATA[$this->collect('sitemap',SitemapContributorInterface::class)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>list&lt;SeoMetadataContributorInterface&gt;</code>
-      <code>list&lt;SitemapContributorInterface&gt;</code>
+      <code><![CDATA[list<SeoMetadataContributorInterface>]]></code>
+      <code><![CDATA[list<SitemapContributorInterface>]]></code>
     </MoreSpecificReturnType>
     <UnusedClass>
-      <code>SeoContributorRegistry</code>
+      <code><![CDATA[SeoContributorRegistry]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-seo/src/Controller/SeoPublicController.php">
     <UnusedClass>
-      <code>SeoPublicController</code>
+      <code><![CDATA[SeoPublicController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-seo/src/Metadata/SeoMetadataManager.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-seo/src/Sitemap/SitemapAggregator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantConditionGivenDocblockType>
-      <code>$e instanceof SitemapEntry</code>
+      <code><![CDATA[$e instanceof SitemapEntry]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="app/zoosper-settings/src/Admin/SettingsAdminUrls.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-settings/src/Admin/SettingsCatalogueResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-settings/src/Admin/SettingsMutationCoordinator.php">
     <PossiblyNullArgument>
-      <code>$selection['key']</code>
-      <code>$selection['type']</code>
+      <code><![CDATA[$selection['key']]]></code>
+      <code><![CDATA[$selection['type']]]></code>
     </PossiblyNullArgument>
     <PossiblyUndefinedArrayOffset>
-      <code>$selection['key']</code>
-      <code>$selection['type']</code>
+      <code><![CDATA[$selection['key']]]></code>
+      <code><![CDATA[$selection['type']]]></code>
     </PossiblyUndefinedArrayOffset>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-settings/src/Admin/SettingsPresentationBuilder.php">
     <RedundantCastGivenDocblockType>
-      <code>(string) (array_key_first($categories) ?? 'advanced')</code>
+      <code><![CDATA[(string) (array_key_first($categories) ?? 'advanced')]]></code>
     </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
-      <code>json_encode([
-            'website' =&gt; array_combine($websites, $websites) ?: [],
-            'store' =&gt; array_combine($stores, $stores) ?: [],
-            'site' =&gt; $siteOptions,
-        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)</code>
+      <code><![CDATA[json_encode([
+            'website' => array_combine($websites, $websites) ?: [],
+            'store' => array_combine($stores, $stores) ?: [],
+            'site' => $siteOptions,
+        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-settings/src/Audit/SettingsAuditLogger.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-settings/src/Catalogue/ModuleSettingsCatalogueLoader.php">
     <ArgumentTypeCoercion>
-      <code>$this-&gt;settings((array) ($raw['settings'] ?? []), $file)</code>
-      <code>$this-&gt;settings((array) ($raw['settings'] ?? []), $file)</code>
+      <code><![CDATA[$this->settings((array) ($raw['settings'] ?? []), $file)]]></code>
+      <code><![CDATA[$this->settings((array) ($raw['settings'] ?? []), $file)]]></code>
     </ArgumentTypeCoercion>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-settings/src/Catalogue/SettingsCatalogue.php">
     <PossiblyUnusedMethod>
-      <code>search</code>
+      <code><![CDATA[search]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-settings/src/Controller/SettingsCatalogueController.php">
     <UnusedClass>
-      <code>SettingsCatalogueController</code>
+      <code><![CDATA[SettingsCatalogueController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-settings/src/Definition/SettingsGroup.php">
     <PossiblyUnusedProperty>
-      <code>$id</code>
-      <code>$openByDefault</code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$openByDefault]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-settings/src/Definition/SettingsSection.php">
     <PossiblyUnusedProperty>
-      <code>$permission</code>
+      <code><![CDATA[$permission]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-settings/src/Persistence/ScopeConfigSettingStore.php">
     <UnusedClass>
-      <code>ScopeConfigSettingStore</code>
+      <code><![CDATA[ScopeConfigSettingStore]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-settings/src/Scope/SettingsScopeSelection.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-settings/src/Value/ScopedSettingValueResolver.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <UnnecessaryVarAnnotation>
-      <code>ScopeType|null</code>
+      <code><![CDATA[ScopeType|null]]></code>
     </UnnecessaryVarAnnotation>
   </file>
   <file src="app/zoosper-settings/src/Value/SettingValue.php">
     <PossiblyUnusedProperty>
-      <code>$explanation</code>
-      <code>$path</code>
-      <code>$readOnly</code>
+      <code><![CDATA[$explanation]]></code>
+      <code><![CDATA[$path]]></code>
+      <code><![CDATA[$readOnly]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-settings/src/Value/SettingValueResolver.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-settings/src/Write/ScopedSettingClearer.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-settings/src/Write/SectionSettingsWriter.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Admin/Controller/SiteAdminController.php">
     <RiskyTruthyFalsyComparison>
-      <code>$error</code>
+      <code><![CDATA[$error]]></code>
     </RiskyTruthyFalsyComparison>
     <UnusedClass>
-      <code>SiteAdminController</code>
+      <code><![CDATA[SiteAdminController]]></code>
     </UnusedClass>
     <UnusedDocblockParam>
-      <code>$submitted</code>
+      <code><![CDATA[$submitted]]></code>
     </UnusedDocblockParam>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-site/src/Admin/Controller/SiteDomainAdminController.php">
     <UnusedClass>
-      <code>SiteDomainAdminController</code>
+      <code><![CDATA[SiteDomainAdminController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-site/src/Admin/Grid/SiteDomainGrid.php">
     <MissingClosureParamType>
-      <code>$v</code>
+      <code><![CDATA[$v]]></code>
     </MissingClosureParamType>
     <ParamNameMismatch>
-      <code>$c</code>
+      <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
-    <PossiblyInvalidCast>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Admin/Grid/SiteGrid.php">
     <ParamNameMismatch>
-      <code>$c</code>
+      <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
-    <PossiblyInvalidCast>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Admin/Lifecycle/SiteLifecycleAdminResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Api/SiteApiController.php">
     <UnusedClass>
-      <code>SiteApiController</code>
+      <code><![CDATA[SiteApiController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-site/src/Application/SiteMutationService.php">
     <PossiblyUndefinedArrayOffset>
-      <code>$d['host']</code>
+      <code><![CDATA[$d['host']]]></code>
     </PossiblyUndefinedArrayOffset>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Console/SiteCreateCommand.php">
     <UnusedClass>
-      <code>SiteCreateCommand</code>
+      <code><![CDATA[SiteCreateCommand]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-site/src/Infrastructure/DatabaseSiteLookup.php">
     <UnusedClass>
-      <code>DatabaseSiteLookup</code>
+      <code><![CDATA[DatabaseSiteLookup]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-site/src/Lifecycle/SiteLifecycleCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Lifecycle/SiteLifecycleResult.php">
     <PossiblyUnusedProperty>
-      <code>$newStatus</code>
-      <code>$previousStatus</code>
-      <code>$siteId</code>
+      <code><![CDATA[$newStatus]]></code>
+      <code><![CDATA[$previousStatus]]></code>
+      <code><![CDATA[$siteId]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-site/src/Lifecycle/SiteReferenceInspector.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Repository/SiteDomainRepository.php">
     <LessSpecificReturnStatement>
-      <code>array_map(fn (array $row): SiteDomain =&gt; $this-&gt;hydrate($row), $statement-&gt;fetchAll())</code>
+      <code><![CDATA[array_map(fn (array $row): SiteDomain => $this->hydrate($row), $statement->fetchAll())]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>list&lt;SiteDomain&gt;</code>
+      <code><![CDATA[list<SiteDomain>]]></code>
     </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>all</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[all]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedReturnValue>
-      <code>int</code>
+      <code><![CDATA[int]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-site/src/Repository/SiteRepository.php">
     <LessSpecificReturnStatement>
-      <code>array_map(fn (array $row): Site =&gt; $this-&gt;hydrate($row), $statement-&gt;fetchAll())</code>
-      <code>array_map(fn (array $row): Site =&gt; $this-&gt;hydrate($row), $statement-&gt;fetchAll())</code>
+      <code><![CDATA[array_map(fn (array $row): Site => $this->hydrate($row), $statement->fetchAll())]]></code>
+      <code><![CDATA[array_map(fn (array $row): Site => $this->hydrate($row), $statement->fetchAll())]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>list&lt;Site&gt;</code>
-      <code>list&lt;Site&gt;</code>
+      <code><![CDATA[list<Site>]]></code>
+      <code><![CDATA[list<Site>]]></code>
     </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>findActiveByHost</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findActiveByHost]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Site/SiteContextProviderAdapter.php">
     <UnusedClass>
-      <code>SiteContextProviderAdapter</code>
+      <code><![CDATA[SiteContextProviderAdapter]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-theme/src/Admin/Controller/ThemeAdminController.php">
     <UnusedClass>
-      <code>ThemeAdminController</code>
+      <code><![CDATA[ThemeAdminController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-theme/src/Api/ThemeApiController.php">
     <UnusedClass>
-      <code>ThemeApiController</code>
+      <code><![CDATA[ThemeApiController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-theme/src/Application/ThemeAssignmentService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-theme/src/Config/TemplateRuntimeConfig.php">
     <UnusedClass>
-      <code>TemplateRuntimeConfig</code>
+      <code><![CDATA[TemplateRuntimeConfig]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-theme/src/Layout/LayoutUpdate.php">
     <DocblockTypeContradiction>
-      <code>is_array($update)</code>
+      <code><![CDATA[is_array($update)]]></code>
     </DocblockTypeContradiction>
     <PossiblyUnusedMethod>
-      <code>replacementFor</code>
+      <code><![CDATA[replacementFor]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-theme/src/Template/Engine/LatteTemplateEngine.php">
     <DeprecatedMethod>
-      <code>setTempDirectory</code>
+      <code><![CDATA[setTempDirectory]]></code>
     </DeprecatedMethod>
     <UnusedClass>
-      <code>LatteTemplateEngine</code>
+      <code><![CDATA[LatteTemplateEngine]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-theme/src/Template/Engine/PhpTemplateEngine.php">
     <UnresolvableInclude>
-      <code>require $path</code>
+      <code><![CDATA[require $path]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-theme/src/Template/MarkoViewAdapter.php">
     <UnusedClass>
-      <code>MarkoViewAdapter</code>
+      <code><![CDATA[MarkoViewAdapter]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-theme/src/Template/TemplateRenderer.php">
     <PossiblyUndefinedArrayOffset>
-      <code>$templatePath</code>
+      <code><![CDATA[$templatePath]]></code>
     </PossiblyUndefinedArrayOffset>
     <TypeDoesNotContainType>
-      <code>$update?-&gt;replacementFor($template)</code>
+      <code><![CDATA[$update?->replacementFor($template)]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="app/zoosper-theme/src/Theme/Theme.php">
     <PossiblyUnusedMethod>
-      <code>templatePath</code>
+      <code><![CDATA[templatePath]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-theme/src/Theme/ThemeRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RiskyTruthyFalsyComparison>
-      <code>glob(rtrim($this-&gt;themesPath, '/') . '/*/theme.php')</code>
+      <code><![CDATA[glob(rtrim($this->themesPath, '/') . '/*/theme.php')]]></code>
     </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
-      <code>require $file</code>
+      <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-two-factor/src/Challenge/TwoFactorChallenge.php">
     <PossiblyUnusedProperty>
-      <code>$createdAt</code>
-      <code>$tokenHash</code>
+      <code><![CDATA[$createdAt]]></code>
+      <code><![CDATA[$tokenHash]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-two-factor/src/Challenge/TwoFactorChallengeRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>deleteExpired</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[deleteExpired]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedReturnValue>
-      <code>int</code>
+      <code><![CDATA[int]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-two-factor/src/Challenge/TwoFactorChallengeService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Controller/AdminTwoFactorChallengeController.php">
     <PossiblyNullArgument>
-      <code>$result-&gt;adminUserId</code>
+      <code><![CDATA[$result->adminUserId]]></code>
     </PossiblyNullArgument>
     <UnusedClass>
-      <code>AdminTwoFactorChallengeController</code>
+      <code><![CDATA[AdminTwoFactorChallengeController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-two-factor/src/Controller/AdminTwoFactorSetupController.php">
     <UnusedClass>
-      <code>AdminTwoFactorSetupController</code>
+      <code><![CDATA[AdminTwoFactorSetupController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-two-factor/src/Crypto/SecretProtector.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <TypeDoesNotContainType>
-      <code>$ciphertext === false</code>
+      <code><![CDATA[$ciphertext === false]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="app/zoosper-two-factor/src/Qr/TotpQrCodeSvgRenderer.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Repository/AdminRecoveryCodeRepository.php">
     <UnusedClass>
-      <code>AdminRecoveryCodeRepository</code>
+      <code><![CDATA[AdminRecoveryCodeRepository]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-two-factor/src/Repository/AdminTwoFactorEnrollmentRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Repository/AdminTwoFactorResetRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>missingTables</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[missingTables]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Service/AdminSecondFactorRequirement.php">
     <UnusedClass>
-      <code>AdminSecondFactorRequirement</code>
+      <code><![CDATA[AdminSecondFactorRequirement]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-two-factor/src/Service/AdminTwoFactorEnrollmentService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Service/AdminTwoFactorLoginRedirectService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>requiresSetup</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[requiresSetup]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Service/AdminTwoFactorResetService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Service/AdminTwoFactorSetupNotificationService.php">
     <UnusedClass>
-      <code>AdminTwoFactorSetupNotificationService</code>
+      <code><![CDATA[AdminTwoFactorSetupNotificationService]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-two-factor/src/Service/TotpProvisioningUriGenerator.php">
     <UnusedClass>
-      <code>TotpProvisioningUriGenerator</code>
+      <code><![CDATA[TotpProvisioningUriGenerator]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-two-factor/src/Totp/Base32.php">
     <InvalidArrayOffset>
-      <code>self::ALPHABET[bindec(str_pad($chunk, 5, '0'))]</code>
+      <code><![CDATA[self::ALPHABET[bindec(str_pad($chunk, 5, '0'))]]]></code>
     </InvalidArrayOffset>
     <PossiblyInvalidArgument>
-      <code>bindec($chunk)</code>
+      <code><![CDATA[bindec($chunk)]]></code>
     </PossiblyInvalidArgument>
   </file>
   <file src="app/zoosper-two-factor/src/Totp/TotpSecretGenerator.php">
     <ArgumentTypeCoercion>
-      <code>$bytes</code>
+      <code><![CDATA[$bytes]]></code>
     </ArgumentTypeCoercion>
   </file>
   <file src="app/zoosper-two-factor/src/Totp/TotpVerifier.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Value/TotpSetup.php">
     <UnusedClass>
-      <code>TotpSetup</code>
+      <code><![CDATA[TotpSetup]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-url-rewrite/src/Api/UrlRewriteApiController.php">
     <UnusedClass>
-      <code>UrlRewriteApiController</code>
+      <code><![CDATA[UrlRewriteApiController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-url-rewrite/src/Application/UrlRewriteMutationService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-url-rewrite/src/Lifecycle/UrlRewriteLifecycleCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-url-rewrite/src/Lifecycle/UrlRewriteLifecycleResult.php">
     <PossiblyUnusedProperty>
-      <code>$active</code>
-      <code>$operation</code>
-      <code>$urlRewriteId</code>
+      <code><![CDATA[$active]]></code>
+      <code><![CDATA[$operation]]></code>
+      <code><![CDATA[$urlRewriteId]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-url-rewrite/src/Repository/UrlRewriteRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-url-rewrite/src/Routing/UrlRewriteFallbackHandler.php">
-    <PossiblyNullPropertyFetch>
-      <code>$request-&gt;siteContext()-&gt;siteId</code>
-    </PossiblyNullPropertyFetch>
     <UnusedClass>
-      <code>UrlRewriteFallbackHandler</code>
+      <code><![CDATA[UrlRewriteFallbackHandler]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-url-rewrite/src/Service/RedirectChainInspector.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedReturnValue>
-      <code>list&lt;string&gt;</code>
+      <code><![CDATA[list<string>]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-url-rewrite/src/Service/UrlRewriteResolver.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-dashboard/src/DashboardRole.php">
     <PossiblyUnusedProperty>
-      <code>$label</code>
+      <code><![CDATA[$label]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-admin-dashboard/src/DashboardRolePreference.php">
     <DocblockTypeContradiction>
-      <code>!is_string($code)</code>
+      <code><![CDATA[!is_string($code)]]></code>
     </DocblockTypeContradiction>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminConfigLayeredFileLoader.php">
     <DocblockTypeContradiction>
-      <code>!is_string($path)</code>
+      <code><![CDATA[!is_string($path)]]></code>
     </DocblockTypeContradiction>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormConfigAggregator.php">
     <LessSpecificReturnStatement>
-      <code>$current</code>
-      <code>[
-            'forms' =&gt; $forms,
-            'processors' =&gt; $processors,
-        ]</code>
+      <code><![CDATA[$current]]></code>
+      <code><![CDATA[[
+            'forms' => $forms,
+            'processors' => $processors,
+        ]]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>array&lt;string, list&lt;class-string&gt;&gt;</code>
-      <code>array{
-     *     forms: array&lt;string, list&lt;class-string&lt;AdminFormSectionProviderInterface&gt;&gt;&gt;,
-     *     processors: array&lt;string, list&lt;class-string&lt;AdminFormProcessorInterface&gt;&gt;&gt;
-     * }</code>
+      <code><![CDATA[array<string, list<class-string>>]]></code>
+      <code><![CDATA[array{
+     *     forms: array<string, list<class-string<AdminFormSectionProviderInterface>>>,
+     *     processors: array<string, list<class-string<AdminFormProcessorInterface>>>
+     * }]]></code>
     </MoreSpecificReturnType>
     <RedundantCondition>
-      <code>is_array($config)</code>
+      <code><![CDATA[is_array($config)]]></code>
     </RedundantCondition>
     <RiskyTruthyFalsyComparison>
-      <code>glob($pattern)</code>
+      <code><![CDATA[glob($pattern)]]></code>
     </RiskyTruthyFalsyComparison>
     <TypeDoesNotContainType>
-      <code>[]</code>
+      <code><![CDATA[[]]]></code>
     </TypeDoesNotContainType>
     <UnusedClass>
-      <code>AdminFormConfigAggregator</code>
+      <code><![CDATA[AdminFormConfigAggregator]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormConfigProviderFactory.php">
     <LessSpecificReturnStatement>
-      <code>$normalised</code>
+      <code><![CDATA[$normalised]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>array&lt;string, list&lt;class-string&lt;AdminFormSectionProviderInterface&gt;&gt;&gt;</code>
+      <code><![CDATA[array<string, list<class-string<AdminFormSectionProviderInterface>>>]]></code>
     </MoreSpecificReturnType>
     <UnusedClass>
-      <code>AdminFormConfigProviderFactory</code>
+      <code><![CDATA[AdminFormConfigProviderFactory]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormProcessingResult.php">
     <PossiblyUnusedMethod>
-      <code>failure</code>
+      <code><![CDATA[failure]]></code>
     </PossiblyUnusedMethod>
     <RedundantFunctionCall>
-      <code>array_values</code>
+      <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormProcessorConfigFactory.php">
     <LessSpecificReturnStatement>
-      <code>$normalised</code>
+      <code><![CDATA[$normalised]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>array&lt;string, list&lt;class-string&lt;AdminFormProcessorInterface&gt;&gt;&gt;</code>
+      <code><![CDATA[array<string, list<class-string<AdminFormProcessorInterface>>>]]></code>
     </MoreSpecificReturnType>
     <UnusedClass>
-      <code>AdminFormProcessorConfigFactory</code>
+      <code><![CDATA[AdminFormProcessorConfigFactory]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormProviderRegistry.php">
     <PossiblyUnusedMethod>
-      <code>sectionsFor</code>
+      <code><![CDATA[sectionsFor]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormRegistry.php">
     <PossiblyUnusedMethod>
-      <code>all</code>
+      <code><![CDATA[all]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormRenderer.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormSection.php">
     <PossiblyUnusedProperty>
-      <code>$description</code>
-      <code>$html</code>
-      <code>$modifierClass</code>
-      <code>$title</code>
+      <code><![CDATA[$description]]></code>
+      <code><![CDATA[$html]]></code>
+      <code><![CDATA[$modifierClass]]></code>
+      <code><![CDATA[$title]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormUiConfigLoader.php">
     <RiskyTruthyFalsyComparison>
-      <code>!($module-&gt;discovery['admin_ui'] ?? is_file($module-&gt;configPath('admin_ui.php')))</code>
-      <code>$hasUi</code>
+      <code><![CDATA[!($module->discovery['admin_ui'] ?? is_file($module->configPath('admin_ui.php')))]]></code>
+      <code><![CDATA[$hasUi]]></code>
     </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
-      <code>require $file</code>
+      <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
     <UnusedClass>
-      <code>AdminFormUiConfigLoader</code>
+      <code><![CDATA[AdminFormUiConfigLoader]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminTagSelectorConfig.php">
     <UnusedClass>
-      <code>AdminTagSelectorConfig</code>
+      <code><![CDATA[AdminTagSelectorConfig]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-grid/src/AdminCollectionGrid.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/AdminCollectionGridQuery.php">
     <UnusedConstructor>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </UnusedConstructor>
   </file>
   <file src="packages/zoosper-admin-grid/src/BulkAction/GridBulkPermissionChecker.php">
     <RedundantCastGivenDocblockType>
-      <code>(bool) ($this-&gt;checker)($permission)</code>
+      <code><![CDATA[(bool) ($this->checker)($permission)]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridBookmarkRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridCompactToolbarRenderer.php">
     <UnusedParam>
-      <code>$viewLabel</code>
+      <code><![CDATA[$viewLabel]]></code>
     </UnusedParam>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridCompactWorkspaceRenderer.php">
     <RedundantCastGivenDocblockType>
-      <code>(string)$value</code>
+      <code><![CDATA[(string)$value]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridFeatureAcceptance.php">
     <UnusedClass>
-      <code>GridFeatureAcceptance</code>
+      <code><![CDATA[GridFeatureAcceptance]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridFeatureAcceptanceReport.php">
     <PossiblyUnusedMethod>
-      <code>isComplete</code>
+      <code><![CDATA[isComplete]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$gridKey</code>
-      <code>$passed</code>
+      <code><![CDATA[$gridKey]]></code>
+      <code><![CDATA[$passed]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridPreferenceRepository.php">
     <LessSpecificReturnStatement>
-      <code>[
-                'visible_columns' =&gt; $this-&gt;stringList($decoded),
-                'column_order' =&gt; [],
-            ]</code>
-      <code>[
-            'visible_columns' =&gt; $this-&gt;stringList($decoded['visible_columns']),
-            'column_order' =&gt; $this-&gt;stringList($decoded['column_order']),
-        ]</code>
+      <code><![CDATA[[
+                'visible_columns' => $this->stringList($decoded),
+                'column_order' => [],
+            ]]]></code>
+      <code><![CDATA[[
+            'visible_columns' => $this->stringList($decoded['visible_columns']),
+            'column_order' => $this->stringList($decoded['column_order']),
+        ]]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>array{visible_columns: list&lt;string&gt;, column_order: list&lt;string&gt;}|null</code>
+      <code><![CDATA[array{visible_columns: list<string>, column_order: list<string>}|null]]></code>
     </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>findVisibleColumns</code>
-      <code>saveVisibleColumns</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findVisibleColumns]]></code>
+      <code><![CDATA[saveVisibleColumns]]></code>
     </PossiblyUnusedMethod>
     <RedundantFunctionCall>
-      <code>array_values</code>
-      <code>array_values</code>
+      <code><![CDATA[array_values]]></code>
+      <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridStateNormaliser.php">
     <InvalidOperand>
-      <code>$normalised['filters']</code>
+      <code><![CDATA[$normalised['filters']]]></code>
     </InvalidOperand>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridViewMutationService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>saveVisibleColumns</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[saveVisibleColumns]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridViewStateResolver.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceActiveBookmark.php">
     <RedundantCastGivenDocblockType>
-      <code>(bool) ($bookmark['is_default'] ?? false)</code>
-      <code>(int) ($bookmark['id'] ?? 0)</code>
-      <code>(string) ($bookmark['name'] ?? 'Saved view')</code>
+      <code><![CDATA[(bool) ($bookmark['is_default'] ?? false)]]></code>
+      <code><![CDATA[(int) ($bookmark['id'] ?? 0)]]></code>
+      <code><![CDATA[(string) ($bookmark['name'] ?? 'Saved view')]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceAuditedCsvExportService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceCapabilities.php">
     <UnusedClass>
-      <code>GridWorkspaceCapabilities</code>
+      <code><![CDATA[GridWorkspaceCapabilities]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceCompletePage.php">
     <PossiblyUnusedMethod>
-      <code>html</code>
+      <code><![CDATA[html]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$state</code>
+      <code><![CDATA[$state]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceCompletePageRenderer.php">
     <UnusedClass>
-      <code>GridWorkspaceCompletePageRenderer</code>
+      <code><![CDATA[GridWorkspaceCompletePageRenderer]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceCsrf.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceCsvExportService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceDecoratedRenderer.php">
     <UnusedClass>
-      <code>GridWorkspaceDecoratedRenderer</code>
+      <code><![CDATA[GridWorkspaceDecoratedRenderer]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceDirtyState.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceExportAuditorFactory.php">
     <UnusedClass>
-      <code>GridWorkspaceExportAuditorFactory</code>
+      <code><![CDATA[GridWorkspaceExportAuditorFactory]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceMutationContract.php">
     <UnusedConstructor>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </UnusedConstructor>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceMutationFormIds.php">
     <UnusedClass>
-      <code>GridWorkspaceMutationFormIds</code>
+      <code><![CDATA[GridWorkspaceMutationFormIds]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceMutationMessages.php">
     <UnusedConstructor>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </UnusedConstructor>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspacePage.php">
     <PossiblyUnusedMethod>
-      <code>html</code>
+      <code><![CDATA[html]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspacePageRenderer.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspacePageSizeDecorator.php">
     <UnusedClass>
-      <code>GridWorkspacePageSizeDecorator</code>
+      <code><![CDATA[GridWorkspacePageSizeDecorator]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspacePageSizeRenderer.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspacePagination.php">
     <UnusedClass>
-      <code>GridWorkspacePagination</code>
+      <code><![CDATA[GridWorkspacePagination]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceStatusDecorator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceViewActions.php">
     <PossiblyUnusedProperty>
-      <code>$bookmarkId</code>
+      <code><![CDATA[$bookmarkId]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceViewActionsDecorator.php">
     <UnusedClass>
-      <code>GridWorkspaceViewActionsDecorator</code>
+      <code><![CDATA[GridWorkspaceViewActionsDecorator]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceViewActionsResolver.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceViewStatusResolver.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-api-grid/src/Authentication/NoAuthentication.php">
     <UnusedClass>
-      <code>NoAuthentication</code>
+      <code><![CDATA[NoAuthentication]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-api-grid/src/Definition/ApiGridDefinition.php">
     <PossiblyUnusedProperty>
-      <code>$exportPermission</code>
-      <code>$permission</code>
-      <code>$title</code>
+      <code><![CDATA[$exportPermission]]></code>
+      <code><![CDATA[$permission]]></code>
+      <code><![CDATA[$title]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-api-grid/src/Definition/ApiGridRegistry.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>all</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[all]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-api-grid/src/Mapping/ApiGridContext.php">
     <PossiblyUnusedProperty>
-      <code>$adminUserId</code>
-      <code>$siteId</code>
+      <code><![CDATA[$adminUserId]]></code>
+      <code><![CDATA[$siteId]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-api-grid/src/Page/ApiGridPage.php">
     <PossiblyUnusedProperty>
-      <code>$capabilities</code>
-      <code>$definition</code>
-      <code>$query</code>
-      <code>$result</code>
+      <code><![CDATA[$capabilities]]></code>
+      <code><![CDATA[$definition]]></code>
+      <code><![CDATA[$query]]></code>
+      <code><![CDATA[$result]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-api-grid/src/Page/ApiGridPageBuilder.php">
     <UnusedClass>
-      <code>ApiGridPageBuilder</code>
+      <code><![CDATA[ApiGridPageBuilder]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-api-grid/src/Page/ApiGridQueryFactory.php">
     <RiskyTruthyFalsyComparison>
-      <code>filter_var($values['page'] ?? 1, FILTER_VALIDATE_INT)</code>
+      <code><![CDATA[filter_var($values['page'] ?? 1, FILTER_VALIDATE_INT)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="packages/zoosper-api-grid/src/Transport/ApiReliabilityPolicy.php">
     <PossiblyUnusedProperty>
-      <code>$maximumSafeGetRetries</code>
+      <code><![CDATA[$maximumSafeGetRetries]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-api-grid/src/Transport/ApiResponse.php">
     <PossiblyUnusedProperty>
-      <code>$headers</code>
+      <code><![CDATA[$headers]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-api-grid/src/Transport/ApiTransportException.php">
     <PossiblyUnusedProperty>
-      <code>$category</code>
-      <code>$correlationId</code>
-      <code>$statusCode</code>
+      <code><![CDATA[$category]]></code>
+      <code><![CDATA[$correlationId]]></code>
+      <code><![CDATA[$statusCode]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-api-grid/src/Transport/CurlJsonApiTransport.php">
     <TypeDoesNotContainType>
-      <code>$responseTooLarge</code>
-      <code>$responseTooLarge</code>
+      <code><![CDATA[$responseTooLarge]]></code>
+      <code><![CDATA[$responseTooLarge]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="packages/zoosper-audit/src/Admin/Grid/AuditLogGridDefinition.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-audit/src/Admin/Grid/LoginHistoryGridDefinition.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-audit/src/Admin/Grid/OperationalGridPage.php">
     <PossiblyUnusedProperty>
-      <code>$pagination</code>
-      <code>$state</code>
-      <code>$title</code>
+      <code><![CDATA[$pagination]]></code>
+      <code><![CDATA[$state]]></code>
+      <code><![CDATA[$title]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-audit/src/Admin/Grid/OperationalGridPageBuilderFactory.php">
     <UnusedClass>
-      <code>OperationalGridPageBuilderFactory</code>
+      <code><![CDATA[OperationalGridPageBuilderFactory]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-audit/src/Admin/Grid/OperationalGridQueryState.php">
     <UnusedConstructor>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </UnusedConstructor>
   </file>
   <file src="packages/zoosper-audit/src/AuditLogRepository.php">
     <ArgumentTypeCoercion>
-      <code>$statement-&gt;fetchAll()</code>
+      <code><![CDATA[$statement->fetchAll()]]></code>
     </ArgumentTypeCoercion>
     <InvalidReturnStatement>
-      <code>[$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params]</code>
+      <code><![CDATA[[$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params]]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
-      <code>array{0:string,1:array&lt;string,string|int&gt;}</code>
+      <code><![CDATA[array{0:string,1:array<string,string|int>}]]></code>
     </InvalidReturnType>
     <LessSpecificReturnStatement>
-      <code>$statement-&gt;fetchAll()</code>
+      <code><![CDATA[$statement->fetchAll()]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>list&lt;array&lt;string, mixed&gt;&gt;</code>
+      <code><![CDATA[list<array<string, mixed>>]]></code>
     </MoreSpecificReturnType>
     <PossiblyInvalidOperand>
-      <code>$query</code>
+      <code><![CDATA[$query]]></code>
     </PossiblyInvalidOperand>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>latest</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[latest]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-audit/src/AuditLogger.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-audit/src/Console/PruneLogsCommand.php">
     <UnusedClass>
-      <code>PruneLogsCommand</code>
+      <code><![CDATA[PruneLogsCommand]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-audit/src/Controller/AuditLogController.php">
     <MissingReturnType>
-      <code>currentAdminUser</code>
+      <code><![CDATA[currentAdminUser]]></code>
     </MissingReturnType>
     <UnusedClass>
-      <code>AuditLogController</code>
+      <code><![CDATA[AuditLogController]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-audit/src/Controller/LoginHistoryController.php">
     <MissingReturnType>
-      <code>currentAdminUser</code>
+      <code><![CDATA[currentAdminUser]]></code>
     </MissingReturnType>
     <UnusedClass>
-      <code>LoginHistoryController</code>
+      <code><![CDATA[LoginHistoryController]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-audit/src/LoginHistoryRepository.php">
     <ArgumentTypeCoercion>
-      <code>$statement-&gt;fetchAll()</code>
+      <code><![CDATA[$statement->fetchAll()]]></code>
     </ArgumentTypeCoercion>
     <InvalidReturnStatement>
-      <code>[$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params]</code>
+      <code><![CDATA[[$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params]]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
-      <code>array{0:string,1:array&lt;string,string|int&gt;}</code>
+      <code><![CDATA[array{0:string,1:array<string,string|int>}]]></code>
     </InvalidReturnType>
     <LessSpecificReturnStatement>
-      <code>$statement-&gt;fetchAll()</code>
+      <code><![CDATA[$statement->fetchAll()]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>list&lt;array&lt;string, mixed&gt;&gt;</code>
+      <code><![CDATA[list<array<string, mixed>>]]></code>
     </MoreSpecificReturnType>
     <PossiblyInvalidOperand>
-      <code>$query</code>
+      <code><![CDATA[$query]]></code>
     </PossiblyInvalidOperand>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>latest</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[latest]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-cache/src/Config/ObjectConfigAdapter.php">
     <ParamNameMismatch>
-      <code>$default</code>
+      <code><![CDATA[$default]]></code>
     </ParamNameMismatch>
   </file>
   <file src="packages/zoosper-cache/src/Contract/CacheInterface.php">
     <PossiblyUnusedMethod>
-      <code>clear</code>
-      <code>delete</code>
-      <code>deleteMultiple</code>
-      <code>getMultiple</code>
-      <code>has</code>
-      <code>increment</code>
-      <code>setMultiple</code>
+      <code><![CDATA[clear]]></code>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[deleteMultiple]]></code>
+      <code><![CDATA[getMultiple]]></code>
+      <code><![CDATA[has]]></code>
+      <code><![CDATA[increment]]></code>
+      <code><![CDATA[setMultiple]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedReturnValue>
-      <code>bool</code>
+      <code><![CDATA[bool]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="packages/zoosper-cache/src/Driver/MarkoCacheAdapter.php">
     <PossiblyUnusedMethod>
-      <code>markoDriver</code>
+      <code><![CDATA[markoDriver]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-cache/src/Factory/CacheDriverFactory.php">
     <PossiblyUnusedMethod>
-      <code>get</code>
+      <code><![CDATA[get]]></code>
     </PossiblyUnusedMethod>
     <UnusedClass>
-      <code>CacheDriverFactory</code>
+      <code><![CDATA[CacheDriverFactory]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-database/src/MigrationInterface.php">
     <UnusedClass>
-      <code>MigrationInterface</code>
+      <code><![CDATA[MigrationInterface]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-database/src/MigrationInventory.php">
     <UnusedClass>
-      <code>MigrationInventory</code>
+      <code><![CDATA[MigrationInventory]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-database/src/Migrator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantFunctionCall>
-      <code>array_values</code>
-      <code>array_values</code>
+      <code><![CDATA[array_values]]></code>
+      <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
     <RiskyTruthyFalsyComparison>
-      <code>glob($moduleMigrationsPath . '/*.php')</code>
-      <code>glob($this-&gt;migrationsPath . '/*.php')</code>
+      <code><![CDATA[glob($moduleMigrationsPath . '/*.php')]]></code>
+      <code><![CDATA[glob($this->migrationsPath . '/*.php')]]></code>
     </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
-      <code>require $file</code>
+      <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
   <file src="packages/zoosper-database/src/PdoConnectionProvider.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaForeignKey.php">
     <TypeDoesNotContainType>
-      <code>$columns === []</code>
-      <code>$columns === []</code>
+      <code><![CDATA[$columns === []]]></code>
+      <code><![CDATA[$columns === []]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaForeignKeyInspector.php">
     <InvalidArgument>
-      <code>array_values($group['columns'])</code>
+      <code><![CDATA[array_values($group['columns'])]]></code>
     </InvalidArgument>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaForeignKeyReconciliationPlanner.php">
     <TypeDoesNotContainType>
-      <code>$named !== null</code>
+      <code><![CDATA[$named !== null]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaForeignKeyReconciliationService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaForeignKeyState.php">
     <PossiblyUnusedProperty>
-      <code>$name</code>
+      <code><![CDATA[$name]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaLoader.php">
     <InvalidArgument>
-      <code>$columns</code>
-      <code>$referencedColumns</code>
+      <code><![CDATA[$columns]]></code>
+      <code><![CDATA[$referencedColumns]]></code>
     </InvalidArgument>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaMigrator.php">
     <PossiblyUnusedReturnValue>
-      <code>list&lt;string&gt;</code>
+      <code><![CDATA[list<string>]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaSnapshotRepository.php">
     <LessSpecificReturnStatement>
-      <code>$statement-&gt;fetchAll()</code>
+      <code><![CDATA[$statement->fetchAll()]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>list&lt;array&lt;string, mixed&gt;&gt;</code>
+      <code><![CDATA[list<array<string, mixed>>]]></code>
     </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
-      <code>latest</code>
+      <code><![CDATA[latest]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaValidator.php">
     <DocblockTypeContradiction>
-      <code>is_array($definition)</code>
-      <code>is_array($definition)</code>
+      <code><![CDATA[is_array($definition)]]></code>
+      <code><![CDATA[is_array($definition)]]></code>
     </DocblockTypeContradiction>
     <RiskyTruthyFalsyComparison>
-      <code>$definition['nullable'] ?? false</code>
-      <code>$definition['primary'] ?? false</code>
+      <code><![CDATA[$definition['nullable'] ?? false]]></code>
+      <code><![CDATA[$definition['primary'] ?? false]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="packages/zoosper-errors/src/ConsoleExceptionFormatter.php">
     <RiskyTruthyFalsyComparison>
-      <code>json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)</code>
+      <code><![CDATA[json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]]></code>
     </RiskyTruthyFalsyComparison>
     <UnusedClass>
-      <code>ConsoleExceptionFormatter</code>
+      <code><![CDATA[ConsoleExceptionFormatter]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-grid/src/BulkAction/GridBulkActionAuthoriser.php">
     <UnusedClass>
-      <code>GridBulkActionAuthoriser</code>
+      <code><![CDATA[GridBulkActionAuthoriser]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-grid/src/BulkAction/GridBulkActionExecutionResult.php">
     <PossiblyUnusedMethod>
-      <code>failure</code>
+      <code><![CDATA[failure]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$context</code>
+      <code><![CDATA[$context]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-grid/src/BulkAction/GridBulkActionRegistry.php">
     <PossiblyUnusedMethod>
-      <code>allForGrid</code>
+      <code><![CDATA[allForGrid]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-grid/src/DataSource/GridDataSourceCapabilities.php">
     <PossiblyUnusedProperty>
-      <code>$exportable</code>
-      <code>$paginationMode</code>
+      <code><![CDATA[$exportable]]></code>
+      <code><![CDATA[$paginationMode]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-grid/src/DataSource/GridQuery.php">
     <PossiblyUnusedProperty>
-      <code>$cursor</code>
-      <code>$search</code>
+      <code><![CDATA[$cursor]]></code>
+      <code><![CDATA[$search]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-grid/src/DataSource/GridResult.php">
     <PossiblyUnusedMethod>
-      <code>totalPages</code>
+      <code><![CDATA[totalPages]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$nextCursor</code>
-      <code>$paginationMode</code>
-      <code>$previousCursor</code>
+      <code><![CDATA[$nextCursor]]></code>
+      <code><![CDATA[$paginationMode]]></code>
+      <code><![CDATA[$previousCursor]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-grid/src/GridColumnRegistry.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-grid/src/GridDefinition.php">
     <LessSpecificReturnStatement>
-      <code>array_map(static fn(GridFilter $f): string =&gt; $f-&gt;key, $this-&gt;filters)</code>
+      <code><![CDATA[array_map(static fn(GridFilter $f): string => $f->key, $this->filters)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code>list&lt;string&gt;</code>
+      <code><![CDATA[list<string>]]></code>
     </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
-      <code>toggleableColumnKeys</code>
+      <code><![CDATA[toggleableColumnKeys]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-grid/src/GridHtmlRenderer.php">
     <DocblockTypeContradiction>
-      <code>$value === null</code>
+      <code><![CDATA[$value === null]]></code>
     </DocblockTypeContradiction>
   </file>
   <file src="packages/zoosper-grid/src/GridMultiselectRenderer.php">
     <UnusedClass>
-      <code>GridMultiselectRenderer</code>
+      <code><![CDATA[GridMultiselectRenderer]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-logger/src/Contract/LoggerInterface.php">
     <PossiblyUnusedMethod>
-      <code>alert</code>
-      <code>debug</code>
-      <code>emergency</code>
-      <code>info</code>
-      <code>notice</code>
-      <code>warning</code>
+      <code><![CDATA[alert]]></code>
+      <code><![CDATA[debug]]></code>
+      <code><![CDATA[emergency]]></code>
+      <code><![CDATA[info]]></code>
+      <code><![CDATA[notice]]></code>
+      <code><![CDATA[warning]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Admin/Grid/MediaGridSource.php">
     <ParamNameMismatch>
-      <code>$c</code>
+      <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Admin/Grid/MediaVisualGridRenderer.php">
     <InvalidArgument>
-      <code>$params</code>
-      <code>$params</code>
+      <code><![CDATA[$params]]></code>
+      <code><![CDATA[$params]]></code>
     </InvalidArgument>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Admin/Grid/MediaVisualGridWorkspace.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Api/MediaApiController.php">
     <UnusedClass>
-      <code>MediaApiController</code>
+      <code><![CDATA[MediaApiController]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-media/src/Console/ProcessMediaQueueCommand.php">
     <UnusedClass>
-      <code>ProcessMediaQueueCommand</code>
+      <code><![CDATA[ProcessMediaQueueCommand]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-media/src/Controller/MediaAdminController.php">
     <UnusedClass>
-      <code>MediaAdminController</code>
+      <code><![CDATA[MediaAdminController]]></code>
     </UnusedClass>
     <UnusedParam>
-      <code>$request</code>
+      <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="packages/zoosper-media/src/Controller/MediaEditorJsLibraryController.php">
     <UnusedClass>
-      <code>MediaEditorJsLibraryController</code>
+      <code><![CDATA[MediaEditorJsLibraryController]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-media/src/Controller/MediaEditorJsUploadController.php">
     <UnusedClass>
-      <code>MediaEditorJsUploadController</code>
+      <code><![CDATA[MediaEditorJsUploadController]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-media/src/EditorJs/EditorJsImageBlockSanitizer.php">
     <UnusedClass>
-      <code>EditorJsImageBlockSanitizer</code>
+      <code><![CDATA[EditorJsImageBlockSanitizer]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-media/src/EditorJs/EditorJsImageToolConfig.php">
     <UnusedClass>
-      <code>EditorJsImageToolConfig</code>
+      <code><![CDATA[EditorJsImageToolConfig]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-media/src/EditorJs/EditorJsImageUploadResponseFactory.php">
     <RedundantConditionGivenDocblockType>
-      <code>is_string($key)</code>
+      <code><![CDATA[is_string($key)]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="packages/zoosper-media/src/EditorJs/MediaPickerReadRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantCondition>
-      <code>is_array($row)</code>
+      <code><![CDATA[is_array($row)]]></code>
     </RedundantCondition>
   </file>
   <file src="packages/zoosper-media/src/EditorJs/MediaPickerResponder.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Lifecycle/MediaLifecycleCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>deletePermanently</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[deletePermanently]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Lifecycle/MediaLifecycleResult.php">
     <PossiblyUnusedProperty>
-      <code>$mediaId</code>
-      <code>$newStatus</code>
-      <code>$operation</code>
-      <code>$previousStatus</code>
+      <code><![CDATA[$mediaId]]></code>
+      <code><![CDATA[$newStatus]]></code>
+      <code><![CDATA[$operation]]></code>
+      <code><![CDATA[$previousStatus]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-media/src/Lifecycle/MediaReferenceInspector.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Processing/GdMediaProcessor.php">
     <InvalidOperand>
-      <code>$sourceHeight * $scale</code>
-      <code>$sourceHeight * $targetRatio</code>
-      <code>$sourceHeight * ($targetWidth / $sourceWidth)</code>
-      <code>$sourceWidth * $scale</code>
-      <code>$sourceWidth / $targetRatio</code>
+      <code><![CDATA[$sourceHeight * $scale]]></code>
+      <code><![CDATA[$sourceHeight * $targetRatio]]></code>
+      <code><![CDATA[$sourceHeight * ($targetWidth / $sourceWidth)]]></code>
+      <code><![CDATA[$sourceWidth * $scale]]></code>
+      <code><![CDATA[$sourceWidth / $targetRatio]]></code>
     </InvalidOperand>
     <PossiblyFalseArgument>
-      <code>$transparent</code>
-      <code>$white</code>
+      <code><![CDATA[$transparent]]></code>
+      <code><![CDATA[$white]]></code>
     </PossiblyFalseArgument>
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantCast>
-      <code>(int) ($dimensions[0] ?? 0)</code>
-      <code>(int) ($dimensions[1] ?? 0)</code>
+      <code><![CDATA[(int) ($dimensions[0] ?? 0)]]></code>
+      <code><![CDATA[(int) ($dimensions[1] ?? 0)]]></code>
     </RedundantCast>
     <TypeDoesNotContainType>
-      <code>!imagecopyresampled($canvas, $source, 0, 0, $sourceX, $sourceY, $targetWidth, $targetHeight, $copyWidth, $copyHeight)</code>
+      <code><![CDATA[!imagecopyresampled($canvas, $source, 0, 0, $sourceX, $sourceY, $targetWidth, $targetHeight, $copyWidth, $copyHeight)]]></code>
     </TypeDoesNotContainType>
     <UnusedVariable>
-      <code>$height</code>
-      <code>$width</code>
+      <code><![CDATA[$height]]></code>
+      <code><![CDATA[$width]]></code>
     </UnusedVariable>
   </file>
   <file src="packages/zoosper-media/src/Processing/LocalCopyMediaProcessor.php">
     <AssignmentToVoid>
-      <code>$written</code>
+      <code><![CDATA[$written]]></code>
     </AssignmentToVoid>
     <RedundantCondition>
-      <code>is_string($asset-&gt;storagePath)</code>
-      <code>isset($asset-&gt;storagePath)</code>
-      <code>isset($asset-&gt;storagePath) &amp;&amp; is_string($asset-&gt;storagePath)</code>
+      <code><![CDATA[is_string($asset->storagePath)]]></code>
+      <code><![CDATA[isset($asset->storagePath)]]></code>
+      <code><![CDATA[isset($asset->storagePath) && is_string($asset->storagePath)]]></code>
     </RedundantCondition>
     <UnusedClass>
-      <code>LocalCopyMediaProcessor</code>
+      <code><![CDATA[LocalCopyMediaProcessor]]></code>
     </UnusedClass>
     <UnusedVariable>
-      <code>$written</code>
+      <code><![CDATA[$written]]></code>
     </UnusedVariable>
   </file>
   <file src="packages/zoosper-media/src/Processing/LocalMediaDerivativePathResolver.php">
     <RiskyTruthyFalsyComparison>
-      <code>$extension</code>
+      <code><![CDATA[$extension]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="packages/zoosper-media/src/Processing/MediaDerivativePlan.php">
     <PossiblyUnusedMethod>
-      <code>codes</code>
-      <code>isEmpty</code>
+      <code><![CDATA[codes]]></code>
+      <code><![CDATA[isEmpty]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Processing/MediaProcessingPolicy.php">
     <PossiblyUnusedMethod>
-      <code>derivativeStoragePrefix</code>
-      <code>originalsAreImmutable</code>
-      <code>publicDerivativePrefix</code>
-      <code>queueRecommended</code>
+      <code><![CDATA[derivativeStoragePrefix]]></code>
+      <code><![CDATA[originalsAreImmutable]]></code>
+      <code><![CDATA[publicDerivativePrefix]]></code>
+      <code><![CDATA[queueRecommended]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Processing/MediaProcessingResult.php">
     <PossiblyUnusedProperty>
-      <code>$derivatives</code>
+      <code><![CDATA[$derivatives]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-media/src/Processing/MediaUploadDerivativeDispatcher.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Processing/QueuedMediaProcessor.php">
     <UnusedClass>
-      <code>QueuedMediaProcessor</code>
+      <code><![CDATA[QueuedMediaProcessor]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-media/src/Repository/MediaAssetRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>latest</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[latest]]></code>
     </PossiblyUnusedMethod>
     <RedundantCondition>
-      <code>is_array($row)</code>
-      <code>is_array($row)</code>
+      <code><![CDATA[is_array($row)]]></code>
+      <code><![CDATA[is_array($row)]]></code>
     </RedundantCondition>
   </file>
   <file src="packages/zoosper-media/src/Repository/MediaDerivativeRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Service/MediaDerivativeLookup.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Service/MediaStorage.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Service/MediaUploadService.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <RedundantCast>
-      <code>(int) $assetId</code>
-      <code>(int) $assetId</code>
-      <code>(int) $assetId</code>
+      <code><![CDATA[(int) $assetId]]></code>
+      <code><![CDATA[(int) $assetId]]></code>
+      <code><![CDATA[(int) $assetId]]></code>
     </RedundantCast>
     <RiskyTruthyFalsyComparison>
-      <code>preg_replace('/[^A-Za-z0-9._-]+/', '-', $filename)</code>
+      <code><![CDATA[preg_replace('/[^A-Za-z0-9._-]+/', '-', $filename)]]></code>
     </RiskyTruthyFalsyComparison>
     <UnusedProperty>
-      <code>$basePath</code>
+      <code><![CDATA[$basePath]]></code>
     </UnusedProperty>
   </file>
   <file src="packages/zoosper-media/src/Service/MediaUploadValidator.php">
     <RiskyTruthyFalsyComparison>
-      <code>$file['size'] ?? filesize($tmpName)</code>
+      <code><![CDATA[$file['size'] ?? filesize($tmpName)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="packages/zoosper-scoped-config/src/ScopeConfigRepository.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
-      <code>allForPath</code>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[allForPath]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-scoped-config/src/ScopeContext.php">
     <PossiblyUnusedMethod>
-      <code>fromSiteArray</code>
+      <code><![CDATA[fromSiteArray]]></code>
     </PossiblyUnusedMethod>
     <RedundantConditionGivenDocblockType>
-      <code>$site['id'] !== null</code>
-      <code>isset($site['id']) &amp;&amp; $site['id'] !== null</code>
+      <code><![CDATA[$site['id'] !== null]]></code>
+      <code><![CDATA[isset($site['id']) && $site['id'] !== null]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderAdminController.php">
     <UnusedClass>
-      <code>StoreOrderAdminController</code>
+      <code><![CDATA[StoreOrderAdminController]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderCsvExportController.php">
     <PossiblyInvalidArgument>
-      <code>$result-&gt;items</code>
+      <code><![CDATA[$result->items]]></code>
     </PossiblyInvalidArgument>
     <UnusedClass>
-      <code>StoreOrderCsvExportController</code>
+      <code><![CDATA[StoreOrderCsvExportController]]></code>
     </UnusedClass>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderGridMutationCoordinator.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderGridMutationHandler.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
     <TypeDoesNotContainType>
-      <code>$action === GridWorkspaceMutationContract::SET_DEFAULT_VIEW</code>
+      <code><![CDATA[$action === GridWorkspaceMutationContract::SET_DEFAULT_VIEW]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderGridQueryState.php">
     <UnusedConstructor>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </UnusedConstructor>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderGridWorkspace.php">
     <PossiblyUnusedMethod>
-      <code>__construct</code>
+      <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-store-orders/src/Api/StoreOrderRowMapper.php">
     <LessSpecificImplementedReturnType>
-      <code>array</code>
+      <code><![CDATA[array]]></code>
     </LessSpecificImplementedReturnType>
   </file>
   <file src="packages/zoosper-store-orders/src/StoreOrderIntegrationGate.php">
     <UnusedClass>
-      <code>StoreOrderIntegrationGate</code>
+      <code><![CDATA[StoreOrderIntegrationGate]]></code>
     </UnusedClass>
   </file>
 </files>
