@@ -57,7 +57,7 @@ final readonly class LoginHistoryRepository implements GridDataSourceInterface, 
         $statement->bindValue('limit', $limit, PDO::PARAM_INT);
         $statement->execute();
 
-        return $statement->fetchAll();
+        return $statement->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
     /**
@@ -95,7 +95,7 @@ final readonly class LoginHistoryRepository implements GridDataSourceInterface, 
         $statement->execute();
 
         return new PaginationResult(
-            items: $statement->fetchAll(),
+            items: $statement->fetchAll(PDO::FETCH_ASSOC) ?: [],
             total: $total,
             page: $criteria->pager->page,
             pageSize: $criteria->pager->pageSize,
@@ -121,19 +121,27 @@ final readonly class LoginHistoryRepository implements GridDataSourceInterface, 
         $conditions = [];
         $params = [];
 
-        $query = $criteria->filters['q'] ?? '';
+        $query = self::scalarFilter($criteria->filters['q'] ?? null);
         if ($query !== '') {
             $conditions[] = 'email LIKE :query';
             $params['query'] = '%' . $query . '%';
         }
 
-        $status = $criteria->filters['status'] ?? '';
+        $status = self::scalarFilter($criteria->filters['status'] ?? null);
         if ($status !== '') {
             $conditions[] = 'status = :status';
             $params['status'] = $status;
         }
 
         return [$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params];
+    }
+    private static function scalarFilter(mixed $value): string
+    {
+        if (!is_scalar($value)) {
+            return '';
+        }
+
+        return trim((string) $value);
     }
 }
 

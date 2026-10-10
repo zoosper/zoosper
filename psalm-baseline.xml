@@ -1881,7 +1881,6 @@
   </file>
   <file src="app/zoosper-page/src/Application/Save/PageSaveCoordinator.php">
     <PossiblyNullArgument>
-
       <code><![CDATA[$pageId]]></code>
     </PossiblyNullArgument>
     <PossiblyUnusedMethod>
@@ -2981,24 +2980,6 @@
     </UnusedConstructor>
   </file>
   <file src="packages/zoosper-audit/src/AuditLogRepository.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$statement->fetchAll()]]></code>
-    </ArgumentTypeCoercion>
-    <InvalidReturnStatement>
-      <code><![CDATA[[$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params]]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[array{0:string,1:array<string,string|int>}]]></code>
-    </InvalidReturnType>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$statement->fetchAll()]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<array<string, mixed>>]]></code>
-    </MoreSpecificReturnType>
-    <PossiblyInvalidOperand>
-      <code><![CDATA[$query]]></code>
-    </PossiblyInvalidOperand>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[latest]]></code>
@@ -3031,24 +3012,6 @@
     </UnusedClass>
   </file>
   <file src="packages/zoosper-audit/src/LoginHistoryRepository.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$statement->fetchAll()]]></code>
-    </ArgumentTypeCoercion>
-    <InvalidReturnStatement>
-      <code><![CDATA[[$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params]]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[array{0:string,1:array<string,string|int>}]]></code>
-    </InvalidReturnType>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$statement->fetchAll()]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<array<string, mixed>>]]></code>
-    </MoreSpecificReturnType>
-    <PossiblyInvalidOperand>
-      <code><![CDATA[$query]]></code>
-    </PossiblyInvalidOperand>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[latest]]></code>
@@ -3155,12 +3118,6 @@
     </PossiblyUnusedReturnValue>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaSnapshotRepository.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$statement->fetchAll()]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<array<string, mixed>>]]></code>
-    </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[latest]]></code>
     </PossiblyUnusedMethod>

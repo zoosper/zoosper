@@ -64,7 +64,7 @@ final readonly class AuditLogRepository implements GridDataSourceInterface
         $statement->bindValue('limit', $limit, PDO::PARAM_INT);
         $statement->execute();
 
-        return $statement->fetchAll();
+        return $statement->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
     /**
@@ -102,7 +102,7 @@ final readonly class AuditLogRepository implements GridDataSourceInterface
         $statement->execute();
 
         return new PaginationResult(
-            items: $statement->fetchAll(),
+            items: $statement->fetchAll(PDO::FETCH_ASSOC) ?: [],
             total: $total,
             page: $criteria->pager->page,
             pageSize: $criteria->pager->pageSize,
@@ -128,7 +128,7 @@ final readonly class AuditLogRepository implements GridDataSourceInterface
         $conditions = [];
         $params = [];
 
-        $query = $criteria->filters['q'] ?? '';
+        $query = self::scalarFilter($criteria->filters['q'] ?? null);
         if ($query !== '') {
             $search = '%' . $query . '%';
             $conditions[] = '(summary LIKE :query_summary OR action LIKE :query_action OR actor_email LIKE :query_actor)';
@@ -137,13 +137,21 @@ final readonly class AuditLogRepository implements GridDataSourceInterface
             $params['query_actor'] = $search;
         }
 
-        $entityType = $criteria->filters['entity_type'] ?? '';
+        $entityType = self::scalarFilter($criteria->filters['entity_type'] ?? null);
         if ($entityType !== '') {
             $conditions[] = 'entity_type = :entity_type';
             $params['entity_type'] = $entityType;
         }
 
         return [$conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions), $params];
+    }
+    private static function scalarFilter(mixed $value): string
+    {
+        if (!is_scalar($value)) {
+            return '';
+        }
+
+        return trim((string) $value);
     }
 }
 

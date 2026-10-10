@@ -33,7 +33,7 @@ final readonly class SchemaSnapshotRepository
         $statement = $this->pdo->prepare('SELECT * FROM schema_snapshots ORDER BY id DESC LIMIT :limit');
         $statement->bindValue('limit', $limit, PDO::PARAM_INT);
         $statement->execute();
-        return $statement->fetchAll();
+        return $statement->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 }
 
