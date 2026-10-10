@@ -117,6 +117,9 @@ final readonly class PageSaveCoordinator
             if ($context->hasErrors()) {
                 return PageSaveResult::failure($this->firstError($context));
             }
+            if ($pageId === null) {
+                throw new RuntimeException('Page persistence completed without a Page ID.');
+            }
 
             return PageSaveResult::success($pageId);
         } catch (RuntimeException $exception) {

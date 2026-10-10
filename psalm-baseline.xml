@@ -1637,23 +1637,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Controller/PageAdminController.php">
-    <InvalidOperand>
-      <code><![CDATA[$result->pageId]]></code>
-    </InvalidOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[render]]></code>
-      <code><![CDATA[render]]></code>
-    </PossiblyNullReference>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$error]]></code>
-      <code><![CDATA[$error]]></code>
-    </RiskyTruthyFalsyComparison>
-    <UndefinedMethod>
-      <code><![CDATA[html]]></code>
-      <code><![CDATA[html]]></code>
-      <code><![CDATA[html]]></code>
-    </UndefinedMethod>
     <UnusedClass>
       <code><![CDATA[PageAdminController]]></code>
     </UnusedClass>
@@ -1898,7 +1881,7 @@
   </file>
   <file src="app/zoosper-page/src/Application/Save/PageSaveCoordinator.php">
     <PossiblyNullArgument>
-      <code><![CDATA[$pageId]]></code>
+
       <code><![CDATA[$pageId]]></code>
     </PossiblyNullArgument>
     <PossiblyUnusedMethod>

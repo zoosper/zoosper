@@ -105,8 +105,13 @@ final readonly class PageAdminController
         return Response::html($this->renderUnifiedForm('Create page', $this->adminUrl('/pages/create'), null, []), 200);
     }
 
+    /** @param array<string, mixed> $submitted */
     private function renderUnifiedForm(string $title, string $action, ?Page $page = null, array $submitted = [], ?string $error = null, int $revisionPage = 1): string
     {
+        if ($this->formRegistry === null || $this->formRenderer === null || $this->views === null) {
+            throw new RuntimeException('Page Admin form services are unavailable.');
+        }
+
         $formDef = $this->formRegistry->get('admin.pages.form');
 
         $siteOptions = [];
@@ -159,7 +164,7 @@ final readonly class PageAdminController
 
         $dynamicFormDef = new \Zoosper\AdminForm\AdminFormDefinition($formDef->handle, $fields, $formDef->sections);
 
-        $values = $submitted ?: [
+        $values = $submitted !== [] ? $submitted : [
             'site_id' => $page?->siteId,
             'title' => $page?->title,
             'slug' => $page?->slug,
@@ -171,7 +176,15 @@ final readonly class PageAdminController
             'publish' => $page?->isPublished(),
         ];
 
-        $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : [], $this->adminUrl('/pages'), $this->csrf->token());
+        $formHtml = $this->formRenderer->render(
+            $dynamicFormDef,
+            $values,
+            $action,
+            'POST',
+            $error !== null && $error !== '' ? ['_form' => $error] : [],
+            $this->adminUrl('/pages'),
+            $this->csrf->token(),
+        );
 
         $historyHtml = $page !== null ? ($this->revisionResponder?->historyHtml($page, $revisionPage) ?? '') : '';
         $lifecycleHtml = $page !== null ? ($this->lifecycleResponder?->actionsHtml($page) ?? '') : '';
@@ -187,7 +200,7 @@ final readonly class PageAdminController
                     <a class="button button--secondary" href="' . htmlspecialchars($this->adminUrl('/pages'), ENT_QUOTES) . '">Back to pages</a>
                 </div>
             </header>
-            ' . ($error ? '<div class="admin-alert admin-alert--danger">' . htmlspecialchars($error, ENT_QUOTES) . '</div>' : '') . '
+            ' . ($error !== null && $error !== '' ? '<div class="admin-alert admin-alert--danger">' . htmlspecialchars($error, ENT_QUOTES) . '</div>' : '') . '
             ' . $formHtml . '
             ' . ($historyHtml !== '' ? '<section class="admin-page-history">' . $historyHtml . '</section>' : '') . '
             ' . ($lifecycleHtml !== '' ? '<section class="admin-page-lifecycle">' . $lifecycleHtml . '</section>' : '') . '
@@ -213,6 +226,9 @@ final readonly class PageAdminController
             }
 
             return Response::html($this->renderUnifiedForm('Create page', $this->adminUrl('/pages/create'), null, $form, $result->error), 422);
+        }
+        if ($result->pageId === null) {
+            throw new RuntimeException('Successful Page creation did not return a Page ID.');
         }
         $this->flashMessages?->success($this->t('Page created successfully.'), 'page.created');
         return Response::redirect($this->adminUrl('/pages/' . $result->pageId . '/edit'));
@@ -393,6 +409,15 @@ final readonly class PageAdminController
             return $this->html('Revision not found', '<p>Revision not found.</p>', 404);
         }
         return $this->revisionResponder->restore($page, (int) $revisionId, $actor);
+    }
+
+    private function html(string $title, string $content, int $status = 200): Response
+    {
+        $user = $this->currentAdminUser();
+        $body = $this->views?->render($title, 'zoosper-admin::admin/raw_content', ['content' => $content], $user, 'pages')
+            ?? $this->layout->render($title, $content, $user, 'pages');
+
+        return Response::html($body, $status);
     }
 
     private function currentAdminUser(): AdminUser
