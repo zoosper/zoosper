@@ -44,3 +44,7 @@ At least one Admin middleware manifest must be discoverable in production applic
 ## API authorization parity
 
 When adding an API route, classify it explicitly as reviewed anonymous, session-authenticated, or bearer-authenticated. Feature-owned bearer controllers must retain `PersonalAccessTokenAuthenticator` and enforce the required token scope and current user permission before reading or mutating protected resources. Update the central parity allow-list only for endpoints intentionally designed for anonymous access.
+
+## API object authorization
+
+Classify each protected API resource as request-Site scoped or application-level. Request-Site resources must resolve collection and object lookups through the current `SiteContext` and return not found for cross-Site identifiers. Application-level resources must retain their narrow PAT scope and current-user management permission. Extend the central parity contract whenever a new protected resource class is introduced.

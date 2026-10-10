@@ -76,3 +76,7 @@ Production application composition refuses to register Admin routes when the mod
 ## API authorization ownership
 
 API routes remain stateless and feature-owned. The route-level `public` flag means they bypass the Admin session middleware; it does not by itself mean anonymous access. A repository-wide parity contract allow-lists the reviewed anonymous endpoints and requires every other API controller to retain either the session guard or Personal Access Token authenticator as its authorization owner.
+
+## API object authorization
+
+Page, Menu and URL Rewrite API resources are scoped to the Site resolved from the current request. Cross-Site identifiers resolve as not found. Role, Site, Theme and Media are application-level management resources rather than request-Site resources; their APIs remain protected by narrow PAT scopes and the corresponding current-user management permission. Repository-wide parity contracts preserve both classifications.
