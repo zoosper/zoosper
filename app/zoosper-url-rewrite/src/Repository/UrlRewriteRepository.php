@@ -6,6 +6,7 @@ namespace Zoosper\UrlRewrite\Repository;
 
 use PDO;
 use Zoosper\UrlRewrite\Model\UrlRewrite;
+use Zoosper\Pagination\{Pager, PaginationResult};
 
 /**
  * Repository for frontend URL rewrite records.
@@ -37,12 +38,23 @@ final readonly class UrlRewriteRepository
         return is_array($row) ? $this->hydrate($row) : null;
     }
 
-    /** @return list<UrlRewrite> */
-    public function allForSite(int $siteId): array
+    /** @return PaginationResult<UrlRewrite> */
+    public function pageForSite(int $siteId, Pager $requested): PaginationResult
     {
-        $s=$this->pdo->prepare('SELECT * FROM url_rewrites WHERE site_id=:site_id ORDER BY request_path ASC,id ASC');
-        $s->execute(['site_id'=>$siteId]);
-        return array_map(fn(array $row):UrlRewrite=>$this->hydrate($row),$s->fetchAll(PDO::FETCH_ASSOC));
+        $count = $this->pdo->prepare('SELECT COUNT(*) FROM url_rewrites WHERE site_id = :site_id');
+        $count->execute(['site_id' => $siteId]);
+        $total = (int) $count->fetchColumn();
+        $pageCount = max(1, (int) ceil($total / $requested->pageSize));
+        $pager = new Pager(min($requested->page, $pageCount), $requested->pageSize);
+        $statement = $this->pdo->prepare('SELECT * FROM url_rewrites WHERE site_id = :site_id ORDER BY request_path ASC, id ASC LIMIT :limit OFFSET :offset');
+        $statement->bindValue(':site_id', $siteId, PDO::PARAM_INT);
+        $statement->bindValue(':limit', $pager->pageSize, PDO::PARAM_INT);
+        $statement->bindValue(':offset', $pager->offset(), PDO::PARAM_INT);
+        $statement->execute();
+        /** @var list<array<string, mixed>> $rows */
+        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $items = array_map(fn (array $row): UrlRewrite => $this->hydrate($row), $rows);
+        return new PaginationResult($items, $total, $pager->page, $pager->pageSize);
     }
 
     public function save(?int $id,int $siteId,string $requestPath,string $targetPath,int $redirectType,bool $active=true):int

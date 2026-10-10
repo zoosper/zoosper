@@ -2370,12 +2370,13 @@
             "dist": {
                 "type": "path",
                 "url": "./app/zoosper-url-rewrite",
-                "reference": "d0070a597dbef5f2d5b31b86e295cb20b03ad0cf"
+                "reference": "4a1cf023a17c9a35dbc1223566083eee0ea0154e"
             },
             "require": {
                 "php": "^8.5",
                 "zoosper/auth": "^0.3.1@alpha",
-                "zoosper/core": "^0.3.1@alpha"
+                "zoosper/core": "^0.3.1@alpha",
+                "zoosper/pagination": "^0.3.1@alpha"
             },
             "type": "zoosper-module",
             "autoload": {

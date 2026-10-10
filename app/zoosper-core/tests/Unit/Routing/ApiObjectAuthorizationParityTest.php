@@ -30,7 +30,7 @@ it('keeps Site-scoped API objects inside the resolved request Site', function ()
     $rewrite = preg_replace('/\s+/', '', (string) file_get_contents($controllers['URL Rewrite']));
     expect($rewrite)
         ->toContain('findByIdForSite(')
-        ->toContain('allForSite(');
+        ->toContain('pageForSite($site,');
 });
 
 it('keeps global management APIs explicitly permission-protected', function (): void {

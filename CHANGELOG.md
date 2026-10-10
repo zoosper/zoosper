@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Bounded the Site-scoped URL Rewrite collection API with canonical pagination and exact totals.
 - Bounded the Site collection API with canonical pagination while preserving complete Site lists for internal selectors and scope tooling.
 - Bounded the Role collection API with canonical pagination and fixed-query batched permission and user assignments.
 - Bounded the Site-scoped Menu collection API with repository-level pagination instead of loading and filtering every Menu.
