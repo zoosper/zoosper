@@ -51,4 +51,7 @@ Classify each protected API resource as request-Site scoped or application-level
 
 ## API response data
 
+API collection endpoints must use server-owned pagination with a default page size of 20 and a maximum page size of 100. Preserve the resource collection key and return `pagination` with `page`, `page_size`, `page_count`, and `total`. Repository queries must apply Site scope before `COUNT`, `LIMIT`, and `OFFSET`.
+
+
 Define an explicit response map for every API resource. Do not return domain objects, repository rows or upstream payloads directly. Include only fields required by the consumer, and exclude credentials, hashes, authorization values, protected secrets, recovery material and private filesystem or storage paths. Extend the central parity contract when adding a new protected API controller or external response mapper.

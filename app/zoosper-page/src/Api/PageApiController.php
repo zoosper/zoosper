@@ -19,12 +19,36 @@ use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Lifecycle\PageLifecycleCoordinator;
 use Zoosper\Page\Api\PageLifecycleApiResponder;
+use Zoosper\Pagination\Pager;
+use Zoosper\Pagination\PaginationResult;
 
 final readonly class PageApiController
 {
     public function __construct(private JsonResponder $json, private PersonalAccessTokenAuthenticator $auth, private PageRepository $pages, private PageSaveCoordinator $saver, private DocumentNormalizer $documents, private PagePublicationCoordinator $publication, private PageRevisionService $revisions, private PageLifecycleCoordinator $lifecycle, private PageLifecycleApiResponder $lifecycleResponder, private ?AuditLoggerInterface $audit = null) {}
 
-    public function index(Request $request): Response { $p=$this->principal($request,'pages:read',true);if($p instanceof Response)return $p;$site=$request->siteContext()?->siteId;if($site===null)return $this->json->error('site_not_found','No active site exists for this host.',404);return $this->json->success(['pages'=>array_map($this->normalise(...),$this->pages->allForSite($site))]); }
+    public function index(Request $request): Response
+    {
+        $principal = $this->principal($request, 'pages:read', true);
+        if ($principal instanceof Response) {
+            return $principal;
+        }
+        $siteId = $request->siteContext()?->siteId;
+        if ($siteId === null) {
+            return $this->json->error('site_not_found', 'No active site exists for this host.', 404);
+        }
+        $result = $this->pages->pageForSite(
+            $siteId,
+            Pager::fromQuery([
+                'page' => $request->query('page', '1'),
+                'page_size' => $request->query('page_size', '20'),
+            ]),
+        );
+
+        return $this->json->success([
+            'pages' => array_map($this->normalise(...), $result->items),
+            'pagination' => $this->normalisePagination($result),
+        ]);
+    }
     public function show(Request $request): Response { $p=$this->principal($request,'pages:read',true);if($p instanceof Response)return $p;$page=$this->sitePage($request);return $page===null?$this->json->error('page_not_found','Page does not exist for this Site.',404):$this->json->success(['page'=>$this->normalise($page)]); }
 
     public function create(Request $request): Response
@@ -210,6 +234,17 @@ final readonly class PageApiController
     }
     /** @param list<string> $changed */
     private function audit(PersonalAccessTokenPrincipal $p,string $action,Page $page,array $changed): void { $this->audit?->logAction($p->user->id,$p->user->email,$action,'page',(string)$page->id,$action,['page_id'=>$page->id,'site_id'=>$page->siteId,'token_id'=>$p->token->id,'token_public_id'=>$p->token->publicId,'changed_fields'=>$changed,'status'=>$page->status]); }
+    /** @return array{page:int,page_size:int,page_count:int,total:int} */
+    private function normalisePagination(PaginationResult $result): array
+    {
+        return [
+            'page' => $result->page,
+            'page_size' => $result->pageSize,
+            'page_count' => $result->totalPages(),
+            'total' => $result->total,
+        ];
+    }
+
     /** @return array<string,mixed> */
     private function normalise(Page $page): array
     {

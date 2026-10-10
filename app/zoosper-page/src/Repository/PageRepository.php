@@ -6,6 +6,8 @@ namespace Zoosper\Page\Repository;
 
 use PDO;
 use Zoosper\Page\Model\Page;
+use Zoosper\Pagination\Pager;
+use Zoosper\Pagination\PaginationResult;
 
 /**
  * Repository for CMS pages.
@@ -177,12 +179,29 @@ final readonly class PageRepository
         return array_map(fn (array $row): Page => $this->hydrate($row), $statement->fetchAll(PDO::FETCH_ASSOC));
     }
 
-    /** @return list<Page> */
-    public function allForSite(int $siteId): array
+    /** @return PaginationResult<Page> */
+    public function pageForSite(int $siteId, Pager $requested): PaginationResult
     {
-        $statement = $this->pdo->prepare('SELECT ' . $this->selectColumns() . ' FROM pages WHERE site_id = :site_id ORDER BY id DESC');
-        $statement->execute(['site_id' => $siteId]);
-        return array_map(fn (array $row): Page => $this->hydrate($row), $statement->fetchAll(PDO::FETCH_ASSOC));
+        $count = $this->pdo->prepare('SELECT COUNT(*) FROM pages WHERE site_id = :site_id');
+        $count->execute(['site_id' => $siteId]);
+        $total = (int) $count->fetchColumn();
+        $pageCount = max(1, (int) ceil($total / $requested->pageSize));
+        $pager = new Pager(min($requested->page, $pageCount), $requested->pageSize);
+
+        $statement = $this->pdo->prepare(
+            'SELECT ' . $this->selectColumns()
+            . ' FROM pages WHERE site_id = :site_id ORDER BY id DESC LIMIT :limit OFFSET :offset'
+        );
+        $statement->bindValue(':site_id', $siteId, PDO::PARAM_INT);
+        $statement->bindValue(':limit', $pager->pageSize, PDO::PARAM_INT);
+        $statement->bindValue(':offset', $pager->offset(), PDO::PARAM_INT);
+        $statement->execute();
+        $items = array_map(
+            fn (array $row): Page => $this->hydrate($row),
+            $statement->fetchAll(PDO::FETCH_ASSOC),
+        );
+
+        return new PaginationResult($items, $total, $pager->page, $pager->pageSize);
     }
 
     public function all(): array
