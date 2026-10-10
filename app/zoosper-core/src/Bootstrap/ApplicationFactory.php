@@ -89,6 +89,14 @@ final class ApplicationFactory
         );
 
         $adminMiddleware = (new ModuleAdminMiddlewareLoader($modules, $services))->load();
+        if ($adminMiddleware === []) {
+            throw new \Zoosper\Errors\ZoosperException(
+                message: 'Admin middleware pipeline is empty.',
+                context: 'Admin routes are about to be registered without authentication, CSRF or other module-contributed middleware.',
+                suggestion: 'Enable the Auth module and ensure its config/admin_middleware.php manifest is discoverable before booting the application.',
+                docsUrl: 'docs/operations/troubleshooting-helpful-errors.md',
+            );
+        }
         $routeLoader->registerAdminRoutes($router, $adminMiddleware, $basePath);
         $routeLoader->registerApiRoutes($router, $basePath);
 

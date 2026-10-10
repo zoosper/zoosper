@@ -68,3 +68,7 @@ Disabled mode remains lazy and does not require a salt or create storage. Report
 ## Release artifact layout parity
 
 Release readiness resolves required Settings, Page and Session files through enabled ModuleRegistry identities, preserving missing-module and missing-file failures in source, modules and vendor layouts. Application-owned assets and foreign-key checks remain unchanged. Session defaults locate the owning zoosper/zoosper Composer project rather than assuming directory depth; absolute and stream storage paths remain unchanged. Artifact acceptance must run without restoring app/ or packages/.
+
+## Admin middleware composition
+
+Production application composition refuses to register Admin routes when the module-discovered middleware pipeline is empty. This prevents authentication, CSRF, and other contributed controls from being bypassed by missing composition. The reusable route loader and middleware pipeline retain explicit empty-list support for isolated tests and non-production composition.

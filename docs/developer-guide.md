@@ -36,3 +36,7 @@ Use `Zoosper\ApiGrid\Testing\FakeApiTransport` to queue deterministic responses 
 ### API Grid compatibility and upgrade policy
 
 API Grid public interfaces, failure categories, configuration keys, service identifiers, capability meanings and cursor semantics are compatibility boundaries. Compatible additions may add optional metadata, capabilities or helpers without changing existing defaults. A breaking signature, category, required configuration, pagination meaning or security default requires a new minor release line and an explicit migration note. First-party packages remain on the synchronised release train with bounded `^0.3.1@alpha` dependencies. Deploy the committed root lock file, review generated packages before registration, and rerun focused tests, Psalm, strict quality, the full suite, module compilation and release checks after any upgrade.
+
+## Admin middleware requirements
+
+At least one Admin middleware manifest must be discoverable in production application composition. Zoosper fails boot rather than registering Admin routes with an empty middleware pipeline. Public, authenticated-only, and permission-protected Admin routes remain intentional access classes evaluated by the discovered middleware.
