@@ -3179,12 +3179,6 @@
     </UnusedClass>
   </file>
   <file src="packages/zoosper-database/src/MigrationInventory.php">
-    <PossiblyInvalidArgument>
-      <code>str_replace('\\', '/', $path)</code>
-    </PossiblyInvalidArgument>
-    <RiskyTruthyFalsyComparison>
-      <code>glob($root . '/*.php')</code>
-    </RiskyTruthyFalsyComparison>
     <UnusedClass>
       <code>MigrationInventory</code>
     </UnusedClass>

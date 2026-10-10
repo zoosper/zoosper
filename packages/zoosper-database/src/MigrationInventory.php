@@ -7,6 +7,7 @@ namespace Zoosper\Database;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RuntimeException;
+use SplFileInfo;
 
 /**
  * Discovers PHP migrations and enforces the basename identity currently stored
@@ -25,21 +26,28 @@ final readonly class MigrationInventory
                 continue;
             }
             if ($relative === 'database/migrations') {
-                foreach (glob($root . '/*.php') ?: [] as $path) {
-                    $this->register($files, $path);
+                $migrationPaths = glob($root . '/*.php');
+                if ($migrationPaths === false) {
+                    throw new RuntimeException('Unable to enumerate root migrations: ' . $root);
+                }
+                foreach ($migrationPaths as $migrationPath) {
+                    $this->register($files, $migrationPath);
                 }
                 continue;
             }
             $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root));
             foreach ($iterator as $file) {
+                if (!$file instanceof SplFileInfo) {
+                    continue;
+                }
                 if (!$file->isFile() || $file->getExtension() !== 'php') {
                     continue;
                 }
-                $path = $file->getPathname();
-                if (!str_contains(str_replace('\\', '/', $path), '/database/migrations/')) {
+                $migrationPath = $file->getPathname();
+                if (!str_contains(str_replace('\\', '/', $migrationPath), '/database/migrations/')) {
                     continue;
                 }
-                $this->register($files, $path);
+                $this->register($files, $migrationPath);
             }
         }
         ksort($files);
