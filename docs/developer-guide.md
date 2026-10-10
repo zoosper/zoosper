@@ -40,3 +40,7 @@ API Grid public interfaces, failure categories, configuration keys, service iden
 ## Admin middleware requirements
 
 At least one Admin middleware manifest must be discoverable in production application composition. Zoosper fails boot rather than registering Admin routes with an empty middleware pipeline. Public, authenticated-only, and permission-protected Admin routes remain intentional access classes evaluated by the discovered middleware.
+
+## API authorization parity
+
+When adding an API route, classify it explicitly as reviewed anonymous, session-authenticated, or bearer-authenticated. Feature-owned bearer controllers must retain `PersonalAccessTokenAuthenticator` and enforce the required token scope and current user permission before reading or mutating protected resources. Update the central parity allow-list only for endpoints intentionally designed for anonymous access.

@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Added a repository-wide API authorization parity contract that allows only the reviewed anonymous endpoints and requires every other API controller to retain its session or bearer authentication owner.
 - Made production HTTP boot fail closed when Admin routes would otherwise be registered with an empty module-discovered middleware pipeline, while preserving intentional public, authenticated-only and permission-protected route classes.
 - Declared every directly imported Marko runtime package in its owning first-party Composer manifest and added a repository-wide dependency-honesty regression, removing reliance on transitive Marko installation.
 - Hardened the Zoosper-owned Router to reject duplicate normalised method-and-path registrations for both static and parameterised routes, with focused regressions and an explicit architecture decision preserving the existing single-dispatcher boundary.

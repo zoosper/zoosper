@@ -72,3 +72,7 @@ Release readiness resolves required Settings, Page and Session files through ena
 ## Admin middleware composition
 
 Production application composition refuses to register Admin routes when the module-discovered middleware pipeline is empty. This prevents authentication, CSRF, and other contributed controls from being bypassed by missing composition. The reusable route loader and middleware pipeline retain explicit empty-list support for isolated tests and non-production composition.
+
+## API authorization ownership
+
+API routes remain stateless and feature-owned. The route-level `public` flag means they bypass the Admin session middleware; it does not by itself mean anonymous access. A repository-wide parity contract allow-lists the reviewed anonymous endpoints and requires every other API controller to retain either the session guard or Personal Access Token authenticator as its authorization owner.
