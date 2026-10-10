@@ -73,8 +73,8 @@ final readonly class LocalCopyMediaProcessor implements MediaProcessorInterface
             foreach ($plan->profiles as $index => $profile) {
                 $profileName = $this->profileName($profile, $index);
                 $target = $paths->resolve($storagePath, $profileName);
-                $written = $writer->write($target, $contents);
-                $derivatives[$profileName] = $this->publicDerivativePath($target, $written);
+                $writer->write($target, $contents);
+                $derivatives[$profileName] = $target->publicPath;
             }
 
             return MediaProcessingResult::success($derivatives);
@@ -119,15 +119,6 @@ final readonly class LocalCopyMediaProcessor implements MediaProcessorInterface
         }
 
         return 'profile-' . (string) $index;
-    }
-
-    private function publicDerivativePath(LocalMediaDerivativePath $target, mixed $written): string
-    {
-        if (is_object($written) && isset($written->publicPath) && is_string($written->publicPath)) {
-            return $written->publicPath;
-        }
-
-        return $target->publicPath;
     }
 
     private function reflectPropertyValue(object $object, string $property): mixed

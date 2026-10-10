@@ -19,13 +19,15 @@ test('local copy processor passes profile names to the local derivative path res
     expect($source)->toContain('return \'profile-\' . (string) $index;');
 });
 
-test('local copy processor falls back to resolved target public path when writer returns void', function () {
+test('local copy processor uses the resolved public path after the void writer succeeds', function () {
     $root = dirname(__DIR__, 3);
     $source = (string) file_get_contents($root . '/src/Processing/LocalCopyMediaProcessor.php');
 
-    expect($source)->toContain('private function publicDerivativePath');
-    expect($source)->toContain('return $target->publicPath;');
-    expect($source)->toContain('$derivatives[$profileName] = $this->publicDerivativePath($target, $written);');
+    expect($source)
+        ->toContain('$writer->write($target, $contents);')
+        ->toContain('$derivatives[$profileName] = $target->publicPath;')
+        ->not->toContain('$written = $writer->write(')
+        ->not->toContain('private function publicDerivativePath');
 });
 
 

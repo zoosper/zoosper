@@ -3434,9 +3434,6 @@
     </UnusedVariable>
   </file>
   <file src="packages/zoosper-media/src/Processing/LocalCopyMediaProcessor.php">
-    <AssignmentToVoid>
-      <code><![CDATA[$written]]></code>
-    </AssignmentToVoid>
     <RedundantCondition>
       <code><![CDATA[is_string($asset->storagePath)]]></code>
       <code><![CDATA[isset($asset->storagePath)]]></code>
@@ -3445,9 +3442,6 @@
     <UnusedClass>
       <code><![CDATA[LocalCopyMediaProcessor]]></code>
     </UnusedClass>
-    <UnusedVariable>
-      <code><![CDATA[$written]]></code>
-    </UnusedVariable>
   </file>
   <file src="packages/zoosper-media/src/Processing/LocalMediaDerivativePathResolver.php">
     <RiskyTruthyFalsyComparison>
