@@ -820,12 +820,6 @@
     <DocblockTypeContradiction>
       <code><![CDATA[is_object($service)]]></code>
     </DocblockTypeContradiction>
-    <InvalidStringClass>
-      <code><![CDATA[new $class()]]></code>
-    </InvalidStringClass>
-    <PossiblyNullFunctionCall>
-      <code><![CDATA[$previousFactory($services)]]></code>
-    </PossiblyNullFunctionCall>
     <PossiblyUnusedMethod>
       <code><![CDATA[alias]]></code>
       <code><![CDATA[all]]></code>

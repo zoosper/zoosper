@@ -51,9 +51,16 @@ final class ServiceContainer
             throw new \RuntimeException('Cannot decorate unregistered service: '.$id);
         }
         unset($this->services[$id]);
-        $this->factories[$id] = static function (self $services) use ($decorator, $previousService, $previousFactory): object {
-            $inner = $previousService ?? $previousFactory($services);
-            return $decorator($services, $inner);
+        $this->factories[$id] = static function (self $services) use ($decorator, $previousService, $previousFactory, $id): object {
+            if ($previousService !== null) {
+                return $decorator($services, $previousService);
+            }
+
+            if ($previousFactory === null) {
+                throw new \LogicException('Decorated service lost its registered factory: ' . $id);
+            }
+
+            return $decorator($services, $previousFactory($services));
         };
     }
 
@@ -153,7 +160,7 @@ final class ServiceContainer
 
         $constructor = $reflection->getConstructor();
         if ($constructor === null) {
-            $service = new $class();
+            $service = $reflection->newInstance();
             $this->services[$class] = $service;
             return $service;
         }
