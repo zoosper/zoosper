@@ -7,6 +7,7 @@ namespace Zoosper\Site\Repository;
 use PDO;
 use RuntimeException;
 use Zoosper\Site\Model\Site;
+use Zoosper\Pagination\{Pager, PaginationResult};
 
 /**
  * Persists and hydrates sites (flattened store views).
@@ -39,6 +40,22 @@ final readonly class SiteRepository
         $statement->execute(['id' => $id]);
         $row = $statement->fetch();
         return is_array($row) ? $this->hydrate($row) : null;
+    }
+
+    /** @return PaginationResult<Site> */
+    public function pageForApi(Pager $requested): PaginationResult
+    {
+        $total = (int) $this->pdo->query('SELECT COUNT(*) FROM sites')->fetchColumn();
+        $pageCount = max(1, (int) ceil($total / $requested->pageSize));
+        $pager = new Pager(min($requested->page, $pageCount), $requested->pageSize);
+        $statement = $this->pdo->prepare('SELECT * FROM sites ORDER BY name ASC, id ASC LIMIT :limit OFFSET :offset');
+        $statement->bindValue(':limit', $pager->pageSize, PDO::PARAM_INT);
+        $statement->bindValue(':offset', $pager->offset(), PDO::PARAM_INT);
+        $statement->execute();
+        /** @var list<array<string, mixed>> $rows */
+        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $items = array_map(fn (array $row): Site => $this->hydrate($row), $rows);
+        return new PaginationResult($items, $total, $pager->page, $pager->pageSize);
     }
 
     /** @return list<Site> */
