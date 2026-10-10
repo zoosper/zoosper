@@ -1,5 +1,7 @@
 # Testing and quality gates
 
+Routing regressions include duplicate static and parameterised registration rejection, while preserving distinct-method registration, exact-static precedence, HTTP 404/405 and Allow handling, implicit HEAD, stateless classification and capture isolation.
+
 Run focused Pest tests during development and the full suite before committing.
 
 ```bash

@@ -1,5 +1,8 @@
 # Current development line
 
+
+The current line now rejects duplicate static and parameterised method-and-path route registrations at registration time. Zoosper remains the single live dispatcher; broader access-metadata and Marko-routing compatibility work remains separately scoped.
+
 ## Version
 
 `v0.3.2-alpha.4` published public-alpha baseline; no next release version selected

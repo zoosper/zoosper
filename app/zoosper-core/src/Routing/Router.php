@@ -28,6 +28,9 @@ final class Router
     private array $parameterRoutes = [];
     /** @var array<string,bool> */
     private array $statelessRoutes = [];
+
+    /** @var array<string, true> */
+    private array $registeredRoutes = [];
     private CorsPolicy $cors;
 
     /** @var callable(Request): Response|null */
@@ -52,7 +55,14 @@ final class Router
     {
         $method = strtoupper($method);
         $path = $this->normalise($path);
-        $this->statelessRoutes[$method . ' ' . $path] = $stateless;
+        $routeKey = $method . ' ' . $path;
+
+        if (isset($this->registeredRoutes[$routeKey])) {
+            throw new InvalidArgumentException('Duplicate route registration: ' . $routeKey);
+        }
+
+        $this->registeredRoutes[$routeKey] = true;
+        $this->statelessRoutes[$routeKey] = $stateless;
 
         if (!$this->hasPathParameter($path)) {
             $this->routes[$method . ' ' . $path] = $handler;

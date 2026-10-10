@@ -8,6 +8,8 @@ Project-owned theme roots are resolved from the nearest `zoosper/zoosper` Compos
 
 The application loads layered configuration, discovers modules, composes services, loads module routes and executes middleware before dispatching controllers. Site context is resolved once per request and carried through the request path.
 
+Zoosper owns the single live HTTP dispatcher. Module route manifests feed that dispatcher, and duplicate normalised method-and-path registrations fail during registration rather than replacing or shadowing an earlier handler. See `docs/architecture-decisions/route-registration-ownership.md`.
+
 ## Modules
 
 Modules own routes, controllers, services, migrations, schema declarations, permissions, Admin menus, Admin assets, templates, translations and extension contracts. Installed Composer modules opt in explicitly through package metadata.

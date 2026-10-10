@@ -19,6 +19,8 @@ Run focused Pest tests first, then the full suite. Before committing, run module
 
 Controllers are thin HTTP adapters. Business rules belong in services. Persistence belongs in repositories. Templates own markup. Modules expose contracts through configuration, services, routes, permissions, assets and migrations.
 
+Declare each route method and path only once across enabled modules. The Router rejects duplicate normalised method-and-path registrations; use a distinct method or path rather than relying on module order or silent replacement. Authenticated-only Admin routes and controller-authorised PAT API routes remain valid current patterns until a separate route-metadata decision changes them.
+
 ## API Grid generator
 
 Run `php8.5 bin/zoosper make:api-grid Acme/RemoteRecords --key=acme.remote-records --route=/admin/remote-records` to create a standalone package skeleton. The generated integration is deliberately disabled. Developers must implement endpoint-specific mapping, deployment-owned base URL and credentials, permissions, controller and feature presentation before enabling its route or menu.
