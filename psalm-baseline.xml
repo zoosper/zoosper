@@ -963,15 +963,9 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Event/EventDispatcher.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$listener[0] ?? 'unknown']]></code>
-    </PossiblyInvalidCast>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(string) ($listener[1] ?? 'unknown')]]></code>
-    </RedundantCast>
   </file>
   <file src="app/zoosper-core/src/Event/EventDispatcherInterface.php">
     <PossiblyUnusedMethod>
@@ -2278,9 +2272,6 @@
     </UnusedParam>
   </file>
   <file src="app/zoosper-site/src/Admin/Grid/SiteDomainGrid.php">
-    <MissingClosureParamType>
-      <code><![CDATA[$v]]></code>
-    </MissingClosureParamType>
     <ParamNameMismatch>
       <code><![CDATA[$c]]></code>
     </ParamNameMismatch>
@@ -2551,9 +2542,6 @@
     <InvalidArrayOffset>
       <code><![CDATA[self::ALPHABET[bindec(str_pad($chunk, 5, '0'))]]]></code>
     </InvalidArrayOffset>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[bindec($chunk)]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="app/zoosper-two-factor/src/Totp/TotpSecretGenerator.php">
     <ArgumentTypeCoercion>
@@ -3567,11 +3555,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="packages/zoosper-store-orders/src/Api/StoreOrderRowMapper.php">
-    <LessSpecificImplementedReturnType>
-      <code><![CDATA[array]]></code>
-    </LessSpecificImplementedReturnType>
   </file>
   <file src="packages/zoosper-store-orders/src/StoreOrderIntegrationGate.php">
     <UnusedClass>

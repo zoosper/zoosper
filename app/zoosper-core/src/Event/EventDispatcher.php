@@ -72,8 +72,13 @@ final class EventDispatcher implements EventDispatcherInterface
         }
 
         if (is_array($listener)) {
-            $target = is_object($listener[0] ?? null) ? $listener[0]::class : (string) ($listener[0] ?? 'unknown');
-            return $target . '::' . (string) ($listener[1] ?? 'unknown');
+            $callableTarget = $listener[0] ?? null;
+            $target = is_object($callableTarget)
+                ? $callableTarget::class
+                : (is_string($callableTarget) ? $callableTarget : 'unknown');
+            $method = $listener[1] ?? null;
+
+            return $target . '::' . (is_string($method) ? $method : 'unknown');
         }
 
         if (is_string($listener)) {

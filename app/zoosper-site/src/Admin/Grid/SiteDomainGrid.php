@@ -33,7 +33,7 @@ final readonly class SiteDomainGrid implements GridDataSourceInterface
                 new GridColumn('id', 'ID', true, align: 'right', toggleable: false),
                 new GridColumn('host', 'Host', true),
                 new GridColumn('site_name', 'Site', true),
-                new GridColumn('is_primary', 'Primary', true, render: fn($v) => $v ? 'Yes' : 'No'),
+                new GridColumn('is_primary', 'Primary', true, render: static fn(mixed $value): string => $value ? 'Yes' : 'No'),
                 new GridColumn('actions', 'Actions', toggleable: false, render: fn(mixed $v, array $r): string => '<a href="' . htmlspecialchars($this->urls->url('site-domains/edit', ['id' => (int)$r['id']]), ENT_QUOTES, 'UTF-8') . '">Edit</a>')
             ],
             [

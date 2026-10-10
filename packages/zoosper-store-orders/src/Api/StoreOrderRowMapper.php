@@ -11,7 +11,10 @@ use Zoosper\ApiGrid\Mapping\ApiGridRowMapperInterface;
 
 final class StoreOrderRowMapper implements ApiGridRowMapperInterface
 {
-    /** @param array<string, mixed> $record */
+    /**
+     * @param array<string, mixed> $record
+     * @return array<string, mixed>
+     */
     #[\Override]
     public function map(array $record): array
     {
