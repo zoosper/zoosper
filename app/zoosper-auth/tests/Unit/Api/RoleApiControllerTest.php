@@ -103,7 +103,8 @@ it('lists roles with valid token and permission', function (): void {
     $body = json_decode($response->body(), true);
     expect($body['success'])->toBeTrue()
         ->and($body['data']['roles'])->toHaveCount(1)
-        ->and($body['data']['roles'][0]['code'])->toBe('super_admin');
+        ->and($body['data']['roles'][0]['code'])->toBe('super_admin')
+        ->and($body['data']['pagination'])->toBe(['page' => 1, 'page_size' => 20, 'page_count' => 1, 'total' => 1]);
 });
 
 it('rejects unauthenticated requests', function (): void {

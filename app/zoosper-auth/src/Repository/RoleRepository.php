@@ -7,6 +7,7 @@ namespace Zoosper\Auth\Repository;
 use PDO;
 use RuntimeException;
 use Throwable;
+use Zoosper\Pagination\{Pager, PaginationResult};
 
 /**
  * BUG FIX (independently flagged by two reviewer passes, both incorrectly
@@ -36,6 +37,30 @@ final readonly class RoleRepository
     public function allRoles(): array
     {
         return $this->pdo->query('SELECT * FROM admin_roles ORDER BY label ASC')->fetchAll();
+    }
+
+    /** @return PaginationResult<array<string, mixed>> */
+    public function pageForApi(Pager $requested): PaginationResult
+    {
+        $total = (int) $this->pdo->query('SELECT COUNT(*) FROM admin_roles')->fetchColumn();
+        $pageCount = max(1, (int) ceil($total / $requested->pageSize));
+        $pager = new Pager(min($requested->page, $pageCount), $requested->pageSize);
+        $statement = $this->pdo->prepare('SELECT id, code, label, created_at, updated_at FROM admin_roles ORDER BY label ASC, id ASC LIMIT :limit OFFSET :offset');
+        $statement->bindValue(':limit', $pager->pageSize, PDO::PARAM_INT);
+        $statement->bindValue(':offset', $pager->offset(), PDO::PARAM_INT);
+        $statement->execute();
+        /** @var list<array<string, mixed>> $roles */
+        $roles = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $roleIds = array_map(static fn (array $role): int => (int) $role['id'], $roles);
+        $permissionIds = $this->relationIdsByRole('admin_role_permissions', 'permission_id', $roleIds);
+        $userIds = $this->relationIdsByRole('admin_user_roles', 'user_id', $roleIds);
+        $items = array_map(static function (array $role) use ($permissionIds, $userIds): array {
+            $roleId = (int) $role['id'];
+            $role['permission_ids'] = $permissionIds[$roleId] ?? [];
+            $role['user_ids'] = $userIds[$roleId] ?? [];
+            return $role;
+        }, $roles);
+        return new PaginationResult($items, $total, $pager->page, $pager->pageSize);
     }
 
     /** @return list<array<string, mixed>> */
@@ -198,6 +223,37 @@ final readonly class RoleRepository
         foreach ($userIds as $userId) {
             $statement->execute(['user_id' => $userId, 'role_id' => $roleId]);
         }
+    }
+
+    /**
+     * @param list<int> $roleIds
+     * @return array<int, list<int>>
+     */
+    private function relationIdsByRole(string $table, string $valueColumn, array $roleIds): array
+    {
+        if ($roleIds === []) {
+            return [];
+        }
+        $placeholders = [];
+        foreach ($roleIds as $index => $roleId) {
+            $placeholders[':role_' . $index] = $roleId;
+        }
+        $statement = $this->pdo->prepare(sprintf(
+            'SELECT role_id, %s FROM %s WHERE role_id IN (%s) ORDER BY role_id ASC, %s ASC',
+            $valueColumn,
+            $table,
+            implode(', ', array_keys($placeholders)),
+            $valueColumn,
+        ));
+        foreach ($placeholders as $placeholder => $roleId) {
+            $statement->bindValue($placeholder, $roleId, PDO::PARAM_INT);
+        }
+        $statement->execute();
+        $grouped = [];
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $grouped[(int) $row['role_id']][] = (int) $row[$valueColumn];
+        }
+        return $grouped;
     }
 
     private function normaliseCode(string $code): string

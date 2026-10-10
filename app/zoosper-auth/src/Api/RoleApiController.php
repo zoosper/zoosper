@@ -12,6 +12,7 @@ use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
+use Zoosper\Pagination\{Pager, PaginationResult};
 
 final readonly class RoleApiController
 {
@@ -30,20 +31,13 @@ final readonly class RoleApiController
             return $principal;
         }
 
-        $roles = array_map(function (array $role): array {
-            $roleId = (int) $role['id'];
-            return [
-                'id' => $roleId,
-                'code' => (string) ($role['code'] ?? ''),
-                'label' => (string) ($role['label'] ?? ''),
-                'permission_ids' => $this->roles->permissionIdsForRole($roleId),
-                'user_ids' => $this->roles->userIdsForRole($roleId),
-                'created_at' => $role['created_at'] ?? null,
-                'updated_at' => $role['updated_at'] ?? null,
-            ];
-        }, $this->roles->allRoles());
+        $result = $this->roles->pageForApi(Pager::fromQuery([
+            'page' => $request->query('page', '1'),
+            'page_size' => $request->query('page_size', '20'),
+        ]));
+        $roles = array_map($this->normaliseRole(...), $result->items);
 
-        return $this->json->success(['roles' => $roles]);
+        return $this->json->success(['roles' => $roles, 'pagination' => $this->normalisePagination($result)]);
     }
 
     public function show(Request $request): Response
@@ -218,6 +212,26 @@ final readonly class RoleApiController
         );
 
         return $this->json->success(['deleted' => true, 'id' => $id]);
+    }
+
+    /** @param array<string, mixed> $role @return array<string, mixed> */
+    private function normaliseRole(array $role): array
+    {
+        return [
+            'id' => (int) $role['id'],
+            'code' => (string) ($role['code'] ?? ''),
+            'label' => (string) ($role['label'] ?? ''),
+            'permission_ids' => $role['permission_ids'] ?? [],
+            'user_ids' => $role['user_ids'] ?? [],
+            'created_at' => $role['created_at'] ?? null,
+            'updated_at' => $role['updated_at'] ?? null,
+        ];
+    }
+
+    /** @return array{page:int,page_size:int,page_count:int,total:int} */
+    private function normalisePagination(PaginationResult $result): array
+    {
+        return ['page' => $result->page, 'page_size' => $result->pageSize, 'page_count' => $result->totalPages(), 'total' => $result->total];
     }
 
     private function principal(Request $request, string $scope, bool $read = false): PersonalAccessTokenPrincipal|Response
