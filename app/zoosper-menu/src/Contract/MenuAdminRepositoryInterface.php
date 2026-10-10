@@ -2,8 +2,9 @@
 declare(strict_types=1);
 namespace Zoosper\Menu\Contract;
 use Zoosper\Menu\Model\{Menu,MenuItem};
+use Zoosper\Pagination\{Pager,PaginationResult};
 interface MenuAdminRepositoryInterface {
- /** @return list<Menu> */ public function all(): array;
+ /** @return PaginationResult<Menu> */ public function pageForSite(int $siteId, Pager $requested): PaginationResult;
  public function find(int $id): ?Menu;
  /** @return list<MenuItem> */ public function items(int $menuId): array;
  public function saveMenu(?int $id,int $siteId,string $code,string $label,string $status): int;

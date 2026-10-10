@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 namespace Zoosper\Menu\Repository;
-use PDO; use RuntimeException; use Zoosper\Menu\Contract\{MenuAdminRepositoryInterface,MenuItemRepositoryInterface}; use Zoosper\Menu\Model\{Menu,MenuItem};
+use PDO; use RuntimeException; use Zoosper\Menu\Contract\{MenuAdminRepositoryInterface,MenuItemRepositoryInterface}; use Zoosper\Menu\Model\{Menu,MenuItem}; use Zoosper\Pagination\{Pager,PaginationResult};
 final readonly class PdoMenuAdminRepository implements MenuAdminRepositoryInterface {
  public function __construct(private PDO $pdo,private MenuItemRepositoryInterface $treeRules){}
  #[\Override]
- public function all(): array{return array_map(fn(array $r)=>$this->menu($r),$this->pdo->query('SELECT * FROM menus ORDER BY site_id,label,id')->fetchAll(PDO::FETCH_ASSOC));}
+ public function pageForSite(int $siteId, Pager $requested): PaginationResult{$n=$this->pdo->prepare('SELECT COUNT(*) FROM menus WHERE site_id=:site');$n->execute(['site'=>$siteId]);$total=(int)$n->fetchColumn();$pageCount=max(1,(int)ceil($total/$requested->pageSize));$pager=new Pager(min($requested->page,$pageCount),$requested->pageSize);$s=$this->pdo->prepare('SELECT * FROM menus WHERE site_id=:site ORDER BY label ASC,id ASC LIMIT :limit OFFSET :offset');$s->bindValue(':site',$siteId,PDO::PARAM_INT);$s->bindValue(':limit',$pager->pageSize,PDO::PARAM_INT);$s->bindValue(':offset',$pager->offset(),PDO::PARAM_INT);$s->execute();$items=array_map(fn(array $r):Menu=>$this->menu($r),$s->fetchAll(PDO::FETCH_ASSOC));return new PaginationResult($items,$total,$pager->page,$pager->pageSize);}
  #[\Override]
  public function find(int $id): ?Menu{$s=$this->pdo->prepare('SELECT * FROM menus WHERE id=:id');$s->execute(['id'=>$id]);$r=$s->fetch(PDO::FETCH_ASSOC);return is_array($r)?$this->menu($r):null;}
  #[\Override]

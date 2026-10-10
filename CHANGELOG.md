@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Bounded the Site-scoped Menu collection API with repository-level pagination instead of loading and filtering every Menu.
 - Bounded the Site-scoped Page collection API with server-owned pagination, exact totals and last-page clamping.
 - Added repository-wide API response-data parity contracts requiring explicit field maps and rejecting credential, secret and private-storage response fields.
 - Added repository-wide API object-authorization parity contracts for request-Site isolation and explicitly permission-protected global management APIs.

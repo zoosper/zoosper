@@ -18,6 +18,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use Zoosper\Menu\Model\Menu;
 use Zoosper\Menu\Model\MenuItem;
+use Zoosper\Pagination\{Pager,PaginationResult};
 
 /** Stateless PAT adapter for request-Site Menu reads. */
 final readonly class MenuApiController
@@ -38,8 +39,8 @@ final readonly class MenuApiController
     {
         $principal=$this->principal($request); if($principal instanceof Response)return $principal;
         $siteId=$request->siteContext()?->siteId; if($siteId===null)return $this->json->error('site_not_found','No active site exists for this host.',404);
-        $menus=array_values(array_filter($this->menus->all(),static fn(Menu $menu):bool=>$menu->siteId===$siteId));
-        return $this->json->success(['menus'=>array_map($this->normaliseMenu(...),$menus)]);
+        $result=$this->menus->pageForSite($siteId,Pager::fromQuery(['page'=>$request->query('page','1'),'page_size'=>$request->query('page_size','20')]));
+        return $this->json->success(['menus'=>array_map($this->normaliseMenu(...),$result->items),'pagination'=>$this->normalisePagination($result)]);
     }
 
     public function show(Request $request): Response
@@ -117,6 +118,9 @@ final readonly class MenuApiController
         $menu=$this->menus->find((int)$request->routeParam('id','0'));
         return $menu!==null&&$menu->siteId===$request->siteContext()?->siteId?$menu:null;
     }
+
+    /** @return array{page:int,page_size:int,page_count:int,total:int} */
+    private function normalisePagination(PaginationResult $result): array{return ['page'=>$result->page,'page_size'=>$result->pageSize,'page_count'=>$result->totalPages(),'total'=>$result->total];}
 
     /** @return array<string,mixed> */
     private function normaliseMenu(Menu $menu): array{return ['id'=>$menu->id,'site_id'=>$menu->siteId,'code'=>$menu->code,'label'=>$menu->label,'status'=>$menu->status,'created_at'=>$menu->createdAt,'updated_at'=>$menu->updatedAt];}

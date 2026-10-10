@@ -8,7 +8,7 @@ use Zoosper\Menu\Model\{Menu,MenuItem};
 
 function menuUrlContractRepository(): MenuAdminRepositoryInterface
 {
-    return new class implements MenuAdminRepositoryInterface {
+    return new class implements MenuAdminRepositoryInterface {public function pageForSite(int $siteId, \Zoosper\Pagination\Pager $requested): \Zoosper\Pagination\PaginationResult{return new \Zoosper\Pagination\PaginationResult([],0,$requested->page,$requested->pageSize);}
         public ?string $url = null;
         public function all(): array{return [];} public function find(int $id): ?Menu{return null;} public function items(int $menuId): array{return [];}
         public function saveMenu(?int $id,int $siteId,string $code,string $label,string $status): int{return 1;}
