@@ -2211,9 +2211,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-site/src/Application/SiteMutationService.php">
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$d['host']]]></code>
-    </PossiblyUndefinedArrayOffset>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>

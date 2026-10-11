@@ -155,7 +155,10 @@ final readonly class Request
         return is_array($file) ? $file : [];
     }
 
-    /** @param array<array-key, mixed> $files @return array<string, mixed> */
+    /**
+     * @param array<array-key, mixed> $files
+     * @return array<string, mixed>
+     */
     private static function normaliseUploadedFiles(array $files): array
     {
         $normalised = [];
@@ -167,7 +170,10 @@ final readonly class Request
         return $normalised;
     }
 
-    /** @param array<array-key, mixed> $values @return array<string, mixed> */
+    /**
+     * @param array<array-key, mixed> $values
+     * @return array<string, mixed>
+     */
     private static function normaliseInputMap(array $values): array
     {
         $normalised = [];
