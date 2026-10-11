@@ -53,11 +53,16 @@ final readonly class SchemaForeignKeyInspector
             ksort($group['columns']);
             ksort($group['referenced']);
             $name = 'sqlite_fk_' . $table . '_' . $id;
+            $columns = array_values($group['columns']);
+            $referencedColumns = array_values($group['referenced']);
+            if ($columns === [] || $referencedColumns === []) {
+                throw new RuntimeException('SQLite returned an incomplete foreign-key definition for ' . $name . '.');
+            }
             $states[$name] = new SchemaForeignKeyState(
                 $name,
-                array_values($group['columns']),
+                $columns,
                 $group['table'],
-                array_values($group['referenced']),
+                $referencedColumns,
                 strtoupper($group['on_delete']),
                 strtoupper($group['on_update']),
             );

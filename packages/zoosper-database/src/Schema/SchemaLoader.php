@@ -119,6 +119,11 @@ final readonly class SchemaLoader
 
             $columns = array_values(array_map('strval', is_array($definition['columns'] ?? null) ? $definition['columns'] : []));
             $referencedColumns = array_values(array_map('strval', is_array($definition['referenced_columns'] ?? null) ? $definition['referenced_columns'] : []));
+            if ($columns === [] || $referencedColumns === []) {
+                throw new \InvalidArgumentException(
+                    'Foreign-key definition "' . (string) $name . '" must declare non-empty columns and referenced_columns lists.',
+                );
+            }
             $foreignKeys[(string) $name] = new SchemaForeignKey(
                 name: (string) $name,
                 columns: $columns,

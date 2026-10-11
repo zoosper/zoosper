@@ -75,14 +75,24 @@ test('throws when a table definition is not an array', function () {
     expect(fn () => $loader->tablesFromConfig(['tables' => ['widgets' => 'nope']]))
         ->toThrow(ZoosperException::class);
 });
-
-
-
-
-
-
-
-
-
-
-
+it('rejects foreign keys with empty local or referenced column lists', function (array $foreignKey): void {
+    expect(fn () => makeSchemaLoader()->tablesFromConfig([
+        'tables' => [
+            'children' => [
+                'columns' => ['id' => ['type' => 'integer', 'primary' => true]],
+                'foreign_keys' => ['fk_children_parent' => $foreignKey],
+            ],
+        ],
+    ]))->toThrow(\InvalidArgumentException::class, 'must declare non-empty columns and referenced_columns lists');
+})->with([
+    'empty local columns' => [[
+        'columns' => [],
+        'referenced_table' => 'parents',
+        'referenced_columns' => ['id'],
+    ]],
+    'empty referenced columns' => [[
+        'columns' => ['parent_id'],
+        'referenced_table' => 'parents',
+        'referenced_columns' => [],
+    ]],
+]);

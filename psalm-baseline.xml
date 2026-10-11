@@ -3055,11 +3055,6 @@
       <code><![CDATA[$columns === []]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="packages/zoosper-database/src/Schema/SchemaForeignKeyInspector.php">
-    <InvalidArgument>
-      <code><![CDATA[array_values($group['columns'])]]></code>
-    </InvalidArgument>
-  </file>
   <file src="packages/zoosper-database/src/Schema/SchemaForeignKeyReconciliationPlanner.php">
     <TypeDoesNotContainType>
       <code><![CDATA[$named !== null]]></code>
@@ -3074,12 +3069,6 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$name]]></code>
     </PossiblyUnusedProperty>
-  </file>
-  <file src="packages/zoosper-database/src/Schema/SchemaLoader.php">
-    <InvalidArgument>
-      <code><![CDATA[$columns]]></code>
-      <code><![CDATA[$referencedColumns]]></code>
-    </InvalidArgument>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaMigrator.php">
     <PossiblyUnusedReturnValue>
