@@ -79,3 +79,56 @@ it('preserves zero-like query values without truthy fallback', function (): void
         $_FILES = $files;
     }
 });
+
+it('preserves named form maps without changing query lists or captured form identity', function (): void {
+    $server = $_SERVER;
+    $post = $_POST;
+    $files = $_FILES;
+    try {
+        $_SERVER['REQUEST_URI'] = '/admin/settings?columns[]=title&columns[]=title';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST = ['settings' => ['mail.enabled' => '0', 'mail.sender' => ' a@example.test ', 'group' => ['name' => '0'], 'choices' => [' a ', 'a', ['b']]], 'nested' => ['one', ['two']]];
+        $_FILES = [];
+        $request = Request::fromGlobals();
+        $_POST = [];
+        expect($request->form()['settings'])->toBe(['mail.enabled' => '0', 'mail.sender' => ' a@example.test ', 'group' => ['name' => '0'], 'choices' => ['a', 'b']])
+            ->and($request->form()['nested'])->toBe(['one', 'two'])
+            ->and($request->queryList('columns'))->toBe(['title'])
+            ->and($request->withRouteParams(['id' => '1'])->form())->toBe($request->form());
+    } finally {
+        $_SERVER = $server;
+        $_POST = $post;
+        $_FILES = $files;
+    }
+});
+
+
+it('enforces the exact named form map nesting boundary', function (int $depth): void {
+    $server = $_SERVER;
+    $post = $_POST;
+    $files = $_FILES;
+
+    try {
+        $_SERVER['REQUEST_URI'] = '/admin/settings/save';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_FILES = [];
+        $form = ['value' => '0'];
+        for ($level = 0; $level < $depth; ++$level) {
+            $form = ['child' => $form];
+        }
+        $_POST = $form;
+
+        if ($depth === 33) {
+            expect(fn () => Request::fromGlobals())->toThrow(
+                \InvalidArgumentException::class,
+                'Form map nesting exceeds the supported depth.',
+            );
+        } else {
+            expect(Request::fromGlobals()->form())->toBe($form);
+        }
+    } finally {
+        $_SERVER = $server;
+        $_POST = $post;
+        $_FILES = $files;
+    }
+})->with(['maximum accepted depth' => [32], 'first rejected depth' => [33]]);

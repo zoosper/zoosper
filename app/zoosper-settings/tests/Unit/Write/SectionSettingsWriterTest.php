@@ -45,12 +45,28 @@ it('performs no writes when any editable field is invalid', function (): void {
     expect($repository->get('mail.enabled', ScopeContext::default()))->toBeNull();
 });
 
-
-
-
-
-
-
-
-
-
+it('writes named Settings values captured through the real globals boundary', function (): void {
+    $server = $_SERVER;
+    $post = $_POST;
+    $files = $_FILES;
+    try {
+        $_SERVER['REQUEST_URI'] = '/admin/settings/save';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST = ['settings' => ['mail.enabled' => '0', 'mail.sender' => 'a@example.test']];
+        $_FILES = [];
+        $request = \Zoosper\Core\Http\Request::fromGlobals();
+        [$writer, $repository] = sectionWriterFixture();
+        $section = new SettingsSection('mail.general', 'Mail', 'email', 'mail', [
+            new SettingDefinition('mail.enabled', 'Enabled', 'boolean'),
+            new SettingDefinition('mail.sender', 'Sender', 'email'),
+        ]);
+        $writer->write($section, ScopeType::Website, 'main', $request->form()['settings']);
+        $context = new ScopeContext(websiteCode: 'main');
+        expect($repository->get('mail.enabled', $context))->toBe('0')
+            ->and($repository->get('mail.sender', $context))->toBe('a@example.test');
+    } finally {
+        $_SERVER = $server;
+        $_POST = $post;
+        $_FILES = $files;
+    }
+});

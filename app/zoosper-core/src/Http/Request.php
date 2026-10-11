@@ -56,7 +56,7 @@ final readonly class Request
             query: self::normaliseInputMap($query),
             host: strtolower(is_string($host) && $host !== '' ? $host : 'localhost'),
             clientIp: TrustedProxyResolver::fromEnvironment()->clientIp($_SERVER),
-            form: self::normaliseInputMap($_POST),
+            form: self::normaliseFormMap($_POST),
             files: self::normaliseUploadedFiles($_FILES),
             queryString: $queryString,
         );
@@ -179,6 +179,37 @@ final readonly class Request
                 ? self::stringList($value)
                 : (is_scalar($value) ? (string) $value : '');
         }
+        return $normalised;
+    }
+
+    /**
+     * Preserve named form fields while retaining legacy list normalisation.
+     *
+     * @param array<array-key, mixed> $values
+     * @return array<string, mixed>
+     */
+    private static function normaliseFormMap(array $values, int $depth = 0): array
+    {
+        if ($depth > 32) {
+            throw new \InvalidArgumentException('Form map nesting exceeds the supported depth.');
+        }
+
+        $normalised = [];
+        foreach (array_keys($values) as $key) {
+            if (!is_string($key)) {
+                continue;
+            }
+            /** @var mixed $value */
+            $value = $values[$key];
+            if (is_array($value)) {
+                $normalised[$key] = array_is_list($value)
+                    ? self::stringList($value)
+                    : self::normaliseFormMap($value, $depth + 1);
+            } else {
+                $normalised[$key] = is_scalar($value) ? (string) $value : '';
+            }
+        }
+
         return $normalised;
     }
 
