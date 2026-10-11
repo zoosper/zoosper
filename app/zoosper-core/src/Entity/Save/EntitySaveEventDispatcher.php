@@ -16,11 +16,10 @@ final class EntitySaveEventDispatcher implements EntitySaveEventDispatcherInterf
     /** @var array<string, list<EntitySaveEventListenerInterface|callable(EntitySaveContext): void>> */
     private array $listeners = [];
 
-    public function listen(string $eventName, EntitySaveEventListenerInterface|callable $listener): self
+    #[\Override]
+    public function listen(string $eventName, EntitySaveEventListenerInterface|callable $listener): void
     {
         $this->listeners[$eventName][] = $listener;
-
-        return $this;
     }
 
     #[\Override]

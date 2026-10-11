@@ -9,6 +9,11 @@ namespace Zoosper\Core\Entity\Save;
  */
 interface EntitySaveEventDispatcherInterface
 {
+    public function listen(
+        string $eventName,
+        EntitySaveEventListenerInterface|callable $listener,
+    ): void;
+
     public function dispatch(string $eventName, EntitySaveContext $context): EntitySaveContext;
 }
 

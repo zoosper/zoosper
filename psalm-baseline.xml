@@ -898,12 +898,6 @@
       <code><![CDATA[fieldRegistry]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-core/src/Entity/Save/EntitySaveEventDispatcher.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[listen]]></code>
-      <code><![CDATA[listeners]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="app/zoosper-core/src/Entity/Save/EntitySaveEventDispatcherInterface.php">
     <PossiblyUnusedReturnValue>
       <code><![CDATA[EntitySaveContext]]></code>
@@ -940,9 +934,6 @@
     <DocblockTypeContradiction>
       <code><![CDATA[!is_string($event)]]></code>
     </DocblockTypeContradiction>
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[listen]]></code>
-    </UndefinedInterfaceMethod>
     <UnusedClass>
       <code><![CDATA[ModuleEntitySaveListenerLoader]]></code>
     </UnusedClass>
@@ -3484,6 +3475,11 @@
   <file src="packages/zoosper-store-orders/src/StoreOrderIntegrationGate.php">
     <UnusedClass>
       <code><![CDATA[StoreOrderIntegrationGate]]></code>
+    </UnusedClass>
+  </file>
+  <file src="app/zoosper-core/src/Entity/Save/EntitySaveEventDispatcher.php">
+    <UnusedClass>
+      <code><![CDATA[EntitySaveEventDispatcher]]></code>
     </UnusedClass>
   </file>
 </files>
