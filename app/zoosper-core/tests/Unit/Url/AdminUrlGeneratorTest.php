@@ -84,3 +84,12 @@ it('preserves mixed configuration arrays and isolates layout fallback type valid
             ->toThrow(\InvalidArgumentException::class, 'Configuration admin.base_path must be a string.');
     }
 });
+it('preserves list-valued Grid query parameters', function (): void {
+    $urls = new AdminUrlGenerator(ConfigRepository::fromArray(['admin' => ['base_path' => '/admin']]));
+
+    expect($urls->url('media', [
+        'page' => 2,
+        'status' => ['active', 'archived'],
+        'q' => 'product image',
+    ]))->toBe('/admin/media?page=2&status%5B0%5D=active&status%5B1%5D=archived&q=product%20image');
+});

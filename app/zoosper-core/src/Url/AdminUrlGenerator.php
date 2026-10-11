@@ -37,7 +37,7 @@ final readonly class AdminUrlGenerator
     /**
      * Build an admin URL and optionally append an encoded query string.
      *
-     * @param array<string, scalar|null> $query
+     * @param array<string, scalar|null|list<scalar|null>> $query
      */
     public function url(string $path = '', array $query = []): string
     {
