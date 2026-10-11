@@ -30,6 +30,21 @@ final readonly class TwoFactorChallengeResult
     {
         return new self(false, null, 'invalid_or_expired');
     }
+
+    /**
+     * Return the authenticated user identity only for a successful challenge.
+     *
+     * The result factories keep failure details available to callers, while this
+     * accessor makes the success-only identity invariant explicit and fail closed.
+     */
+    public function successfulAdminUserId(): int
+    {
+        if (!$this->passed || $this->adminUserId === null) {
+            throw new \LogicException('A failed two-factor challenge has no successful Admin User identity.');
+        }
+
+        return $this->adminUserId;
+    }
 }
 
 

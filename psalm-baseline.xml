@@ -2405,9 +2405,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Controller/AdminTwoFactorChallengeController.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$result->adminUserId]]></code>
-    </PossiblyNullArgument>
     <UnusedClass>
       <code><![CDATA[AdminTwoFactorChallengeController]]></code>
     </UnusedClass>

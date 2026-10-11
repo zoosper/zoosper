@@ -113,7 +113,7 @@ final readonly class AdminTwoFactorChallengeController
             return Response::html($this->page($this->challengeForm('Incorrect code. Please try again.')), 422);
         }
 
-        $user = $this->users->findById($result->adminUserId);
+        $user = $this->users->findById($result->successfulAdminUserId());
         if ($user === null || !$this->guard->completeTwoFactorChallenge($user)) {
             $this->abandon();
             return Response::redirect($this->path('/login'));
