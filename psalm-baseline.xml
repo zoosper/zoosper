@@ -1886,17 +1886,6 @@
       <code><![CDATA[$content]]></code>
     </UnusedVariable>
   </file>
-  <file src="app/zoosper-page/src/Content/BlockJsonValidator.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$errors]]></code>
-    </ArgumentTypeCoercion>
-    <InvalidOperand>
-      <code><![CDATA[$index]]></code>
-      <code><![CDATA[$index]]></code>
-      <code><![CDATA[$index + 1]]></code>
-      <code><![CDATA[$index + 1]]></code>
-    </InvalidOperand>
-  </file>
   <file src="app/zoosper-page/src/Content/DocumentNormalizer.php">
     <PossiblyNullArgument>
       <code><![CDATA[is_array($document['blocks'] ?? null) ? $document['blocks'] : []]]></code>

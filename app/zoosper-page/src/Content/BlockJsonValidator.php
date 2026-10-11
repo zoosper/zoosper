@@ -23,39 +23,38 @@ final readonly class BlockJsonValidator
     public function __construct(
         array $config = [],
         private ?EditorImageBlockValidatorInterface $imageValidator = null,
-    )
-    {
-        $configuredTypes = $config['allowed_types'] ?? ['paragraph', 'header', 'list', 'image'];
-        $types = is_array($configuredTypes)
-            ? array_values(array_filter(array_map('strval', $configuredTypes)))
-            : ['paragraph', 'header', 'list', 'image'];
+    ) {
+        $types = $this->stringList($config['allowed_types'] ?? null)
+            ?? ['paragraph', 'header', 'list', 'image'];
 
         if ($this->imageValidator !== null && !in_array('image', $types, true)) {
             $types[] = 'image';
         }
 
         $this->allowedTypes = array_values(array_unique($types));
-        $this->maxListDepth = max(1, (int) ($config['max_list_depth'] ?? 3));
+        $this->maxListDepth = $this->positiveInt($config['max_list_depth'] ?? null, 3);
     }
 
     /** @param array<string, mixed> $document */
     public function validate(array $document): BlockJsonValidationResult
     {
+        /** @var list<string> $errors */
         $errors = [];
         $blocks = $document['blocks'] ?? null;
 
-        if (!is_array($blocks)) {
-            return BlockJsonValidationResult::fail(["Editor's block JSON must contain a blocks array."]);
+        if (!is_array($blocks) || !array_is_list($blocks)) {
+            return BlockJsonValidationResult::fail(["Editor's block JSON must contain a blocks list."]);
         }
 
-        foreach ($blocks as $index => $block) {
-            if (!is_array($block)) {
+        for ($index = 0, $count = count($blocks); $index < $count; $index++) {
+            $block = $this->stringMap($blocks[$index]);
+            if ($block === null) {
                 $errors[] = 'Block ' . ($index + 1) . ' must be an object.';
                 continue;
             }
 
-            $type = (string) ($block['type'] ?? '');
-            $data = is_array($block['data'] ?? null) ? $block['data'] : [];
+            $type = $this->stringValue($block['type'] ?? null, '');
+            $data = $this->stringMap($block['data'] ?? null) ?? [];
 
             if (!in_array($type, $this->allowedTypes, true)) {
                 $errors[] = 'Block ' . ($index + 1) . ' has unsupported type: ' . $type . '.';
@@ -71,7 +70,9 @@ final readonly class BlockJsonValidator
             };
         }
 
-        return $errors === [] ? BlockJsonValidationResult::ok() : BlockJsonValidationResult::fail($errors);
+        return $errors === []
+            ? BlockJsonValidationResult::ok()
+            : BlockJsonValidationResult::fail($this->stringList($errors) ?? []);
     }
 
     /** @param array<string, mixed> $data @param list<string> $errors */
@@ -98,20 +99,21 @@ final readonly class BlockJsonValidator
     /** @param array<string, mixed> $data @param list<string> $errors */
     private function validateListBlock(array $data, int $index, array &$errors): void
     {
-        $style = (string) ($data['style'] ?? 'unordered');
+        $style = $this->stringValue($data['style'] ?? null, 'unordered');
         if (!in_array($style, ['ordered', 'unordered'], true)) {
             $errors[] = 'Block ' . ($index + 1) . ' list style must be ordered or unordered.';
         }
 
-        if (!is_array($data['items'] ?? null)) {
-            $errors[] = 'Block ' . ($index + 1) . ' list items must be an array.';
+        $items = $data['items'] ?? null;
+        if (!is_array($items) || !array_is_list($items)) {
+            $errors[] = 'Block ' . ($index + 1) . ' list items must be a list.';
             return;
         }
 
-        $this->validateListItems($data['items'], $index, 1, $errors);
+        $this->validateListItems($items, $index, 1, $errors);
     }
 
-    /** @param array<int, mixed> $items @param list<string> $errors */
+    /** @param list<mixed> $items @param list<string> $errors */
     private function validateListItems(array $items, int $blockIndex, int $depth, array &$errors): void
     {
         if ($depth > $this->maxListDepth) {
@@ -119,23 +121,26 @@ final readonly class BlockJsonValidator
             return;
         }
 
-        foreach ($items as $item) {
-            if (is_string($item)) {
+        for ($index = 0, $count = count($items); $index < $count; $index++) {
+            if (is_string($items[$index])) {
                 continue;
             }
-            if (!is_array($item)) {
+
+            $item = $this->stringMap($items[$index]);
+            if ($item === null) {
                 $errors[] = 'Block ' . ($blockIndex + 1) . ' list item must be a string or object.';
                 continue;
             }
             if (!is_string($item['content'] ?? null)) {
                 $errors[] = 'Block ' . ($blockIndex + 1) . ' list item content must be a string.';
             }
-            if (isset($item['items'])) {
-                if (!is_array($item['items'])) {
-                    $errors[] = 'Block ' . ($blockIndex + 1) . ' nested list items must be an array.';
+            if (array_key_exists('items', $item)) {
+                $nestedItems = $item['items'];
+                if (!is_array($nestedItems) || !array_is_list($nestedItems)) {
+                    $errors[] = 'Block ' . ($blockIndex + 1) . ' nested list items must be a list.';
                     continue;
                 }
-                $this->validateListItems($item['items'], $blockIndex, $depth + 1, $errors);
+                $this->validateListItems($nestedItems, $blockIndex, $depth + 1, $errors);
             }
         }
     }
@@ -151,5 +156,60 @@ final readonly class BlockJsonValidator
         foreach ($this->imageValidator->validate($data) as $error) {
             $errors[] = 'Block ' . ($index + 1) . ' ' . $error;
         }
+    }
+
+    /** @return list<string>|null */
+    private function stringList(mixed $value): ?array
+    {
+        if (!is_array($value) || !array_is_list($value)) {
+            return null;
+        }
+
+        $strings = [];
+        for ($index = 0, $count = count($value); $index < $count; $index++) {
+            if (!is_string($value[$index]) || trim($value[$index]) === '') {
+                return null;
+            }
+            $strings[] = $value[$index];
+        }
+
+        return $strings;
+    }
+
+    /** @return array<string, mixed>|null */
+    private function stringMap(mixed $value): ?array
+    {
+        if (!is_array($value)) {
+            return null;
+        }
+
+        $map = [];
+        foreach (array_keys($value) as $key) {
+            if (!is_string($key)) {
+                return null;
+            }
+            // Values remain intentionally mixed; only object keys are validated here.
+            /** @var mixed */
+            $map[$key] = $value[$key];
+        }
+
+        return $map;
+    }
+
+    private function stringValue(mixed $value, string $default): string
+    {
+        return is_string($value) ? $value : $default;
+    }
+
+    private function positiveInt(mixed $value, int $default): int
+    {
+        if (is_int($value)) {
+            return max(1, $value);
+        }
+        if (is_string($value) && preg_match('/^[0-9]+$/D', $value) === 1) {
+            return max(1, (int) $value);
+        }
+
+        return $default;
     }
 }

@@ -118,3 +118,43 @@ test('an unsupported block type fails', function () {
 
 
 
+
+it('rejects associative block collections instead of treating their keys as positions', function (): void {
+    $result = (new BlockJsonValidator())->validate([
+        'blocks' => [
+            'first' => ['type' => 'paragraph', 'data' => ['text' => 'Hello']],
+        ],
+    ]);
+
+    expect($result->valid)->toBeFalse()
+        ->and(implode(' ', $result->errors))->toContain('blocks list');
+});
+
+it('rejects associative top-level and nested list item collections', function (): void {
+    $validator = new BlockJsonValidator();
+    $topLevel = $validator->validate([
+        'blocks' => [[
+            'type' => 'list',
+            'data' => ['items' => ['first' => 'Item']],
+        ]],
+    ]);
+    $nested = $validator->validate([
+        'blocks' => [[
+            'type' => 'list',
+            'data' => ['items' => [['content' => 'Parent', 'items' => ['child' => 'Item']]]],
+        ]],
+    ]);
+
+    expect($topLevel->valid)->toBeFalse()
+        ->and(implode(' ', $topLevel->errors))->toContain('list items must be a list')
+        ->and($nested->valid)->toBeFalse()
+        ->and(implode(' ', $nested->errors))->toContain('nested list items must be a list');
+});
+
+it('falls back to the supported block types for malformed configured type lists', function (): void {
+    $result = (new BlockJsonValidator(['allowed_types' => ['paragraph', 42]]))->validate([
+        'blocks' => [['type' => 'paragraph', 'data' => ['text' => 'Hello']]],
+    ]);
+
+    expect($result->valid)->toBeTrue();
+});
