@@ -272,7 +272,10 @@ final readonly class AdminUserRepository
         );
     }
 
-    /** @param array<string, mixed> $row @param array<int, list<string>> $permissionsByUserId */
+    /**
+     * @param array<string, mixed> $row
+     * @param array<int, list<string>> $permissionsByUserId
+     */
     private function hydrateWithPermissionsMap(array $row, array $permissionsByUserId): AdminUser
     {
         $id = (int) $row['id'];
@@ -301,7 +304,10 @@ final readonly class AdminUserRepository
         );
     }
 
-    /** @param list<array<string, mixed>> $rows @return list<AdminUser> */
+    /**
+     * @param list<array<string, mixed>> $rows
+     * @return list<AdminUser>
+     */
     private function hydrateManyWithPermissions(array $rows): array
     {
         if ($rows === []) {
@@ -320,7 +326,10 @@ final readonly class AdminUserRepository
         return array_map(static fn (array $row): string => (string) $row['code'], $statement->fetchAll());
     }
 
-    /** @param list<int> $userIds @return array<int, list<string>> */
+    /**
+     * @param list<int> $userIds
+     * @return array<int, list<string>>
+     */
     private function permissionsForUserIds(array $userIds): array
     {
         $userIds = array_values(array_unique(array_map('intval', $userIds)));

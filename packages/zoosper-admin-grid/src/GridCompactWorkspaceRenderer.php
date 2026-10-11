@@ -86,7 +86,10 @@ final readonly class GridCompactWorkspaceRenderer
         return $html.'</select>';
     }
 
-    /** @param list<string> $visible @param list<string> $order */
+    /**
+     * @param list<string> $visible
+     * @param list<string> $order
+     */
     private function columns(GridDefinition $definition,array $visible,array $order):string
     {
         $map=[];foreach($definition->columns as $column){$map[$column->key]=$column;}
@@ -100,7 +103,10 @@ final readonly class GridCompactWorkspaceRenderer
             . '<button type="submit">Apply columns</button></div></div>';
     }
 
-    /** @param array<string,mixed> $filters @return array<string,scalar|list<scalar>> */
+    /**
+     * @param array<string, mixed> $filters
+     * @return array<string, list<string>>
+     */
     private function chipValues(GridDefinition $definition,array $filters):array
     {
         $out=[];foreach($definition->filters as $filter){$value=$filters[$filter->key]??null;if($value===null||$value===''||$value===[])continue;$labels=[];$options=[];foreach($filter->normalisedOptions() as $option){$options[$option->value]=$option->label;}foreach ($this->flatten($value) as $item) { $labels[] = $options[$item] ?? $item; }$out[$filter->key]=$labels;}

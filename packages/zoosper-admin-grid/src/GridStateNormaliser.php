@@ -10,7 +10,10 @@ use Zoosper\Grid\GridFilterValue;
 
 final readonly class GridStateNormaliser
 {
-    /** @param array<string, mixed> $state @return array<string, mixed> */
+    /**
+     * @param array<string, mixed> $state
+     * @return array{filters: array<string, string|list<string>>, sort_by: ?string, sort_dir: string, page: int, page_size: int, visible_columns: list<string>, column_order: list<string>}
+     */
     public function normalise(array $state, GridDefinition $definition): array
     {
         $filters = [];

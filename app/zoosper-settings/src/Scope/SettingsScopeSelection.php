@@ -25,6 +25,9 @@ final readonly class SettingsScopeSelection
         );
     }
 
+    /**
+     * @return array{context: ScopeContext, label: string, type: string, key: string, websites: list<string>, stores: list<string>, sites: list<\Zoosper\Site\Model\Site>}
+     */
     public function select(string $scope, string $scopeKey = ''): array
     {
         $type = strtolower(trim($scope));
@@ -68,7 +71,10 @@ final readonly class SettingsScopeSelection
         ];
     }
 
-    /** @param array<int, object> $sites @return list<string> */
+    /**
+     * @param array<int, object> $sites
+     * @return list<string>
+     */
     private function unique(array $sites, string $property): array
     {
         $values = [];

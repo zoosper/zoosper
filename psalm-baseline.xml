@@ -430,15 +430,11 @@
       <code><![CDATA[$statement->fetchAll()]]></code>
     </ArgumentTypeCoercion>
     <LessSpecificReturnStatement>
-      <code><![CDATA[$this->hydrateManyWithPermissions($statement->fetchAll())]]></code>
-      <code><![CDATA[$this->hydrateManyWithPermissions($statement->fetchAll())]]></code>
       <code><![CDATA[array_map(fn (array $row): AdminUser => $this->hydrateWithoutPermissions($row), $statement->fetchAll())]]></code>
       <code><![CDATA[array_map(static fn (array $row): int => (int) $row['role_id'], $statement->fetchAll())]]></code>
       <code><![CDATA[array_map(static fn (array $row): string => (string) $row['code'], $statement->fetchAll())]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[list<AdminUser>]]></code>
-      <code><![CDATA[list<AdminUser>]]></code>
       <code><![CDATA[list<AdminUser>]]></code>
       <code><![CDATA[list<int>]]></code>
       <code><![CDATA[list<string>]]></code>
@@ -2075,14 +2071,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-settings/src/Admin/SettingsMutationCoordinator.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$selection['key']]]></code>
-      <code><![CDATA[$selection['type']]]></code>
-    </PossiblyNullArgument>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$selection['key']]]></code>
-      <code><![CDATA[$selection['type']]]></code>
-    </PossiblyUndefinedArrayOffset>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -2706,11 +2694,6 @@
       <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
   </file>
-  <file src="packages/zoosper-admin-grid/src/GridStateNormaliser.php">
-    <InvalidOperand>
-      <code><![CDATA[$normalised['filters']]]></code>
-    </InvalidOperand>
-  </file>
   <file src="packages/zoosper-admin-grid/src/GridViewMutationService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -3130,12 +3113,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-grid/src/GridDefinition.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[array_map(static fn(GridFilter $f): string => $f->key, $this->filters)]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<string>]]></code>
-    </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[toggleableColumnKeys]]></code>
     </PossiblyUnusedMethod>

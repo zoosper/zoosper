@@ -3,7 +3,10 @@ declare(strict_types=1);
 namespace Zoosper\Grid;
 final readonly class GridDefinition
 {
-    /** @param list<GridColumn> $columns @param list<GridFilter> $filters */
+    /**
+     * @param list<GridColumn> $columns
+     * @param list<GridFilter> $filters
+     */
     public function __construct(
         public string $title,
         public array $columns,
