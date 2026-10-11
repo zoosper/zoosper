@@ -65,7 +65,9 @@ final readonly class DashboardWidgetPersonaliser
     {
         usort($preferences, static fn (DashboardRolePreference $a, DashboardRolePreference $b): int => $a->roleCode <=> $b->roleCode);
 
+        /** @var array<string, true>|null $hidden */
         $hidden = null;
+        /** @var array<string, true> $order */
         $order = [];
         foreach ($preferences as $preference) {
             $roleHidden = array_fill_keys($preference->hiddenWidgetCodes, true);

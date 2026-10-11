@@ -86,13 +86,15 @@ final readonly class DashboardPreferenceRepository
         if (!is_array($decoded) || !array_is_list($decoded)) {
             return null;
         }
+        $values = [];
         foreach ($decoded as $value) {
             if (!is_string($value)) {
                 return null;
             }
+            $values[] = $value;
         }
 
-        return array_values($decoded);
+        return $values;
     }
 }
 

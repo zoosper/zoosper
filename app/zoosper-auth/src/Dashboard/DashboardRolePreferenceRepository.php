@@ -125,11 +125,28 @@ final readonly class DashboardRolePreferenceRepository implements DashboardRoleP
         } catch (JsonException $exception) {
             throw new RuntimeException('Stored Dashboard role preference is invalid.', previous: $exception);
         }
-        if (!is_array($hidden) || !array_is_list($hidden) || !is_array($order) || !array_is_list($order)) {
+        $hidden = $this->stringList($hidden);
+        $order = $this->stringList($order);
+
+        return new DashboardRolePreference((int) $row['role_id'], (string) $row['role_code'], $hidden, $order);
+    }
+
+    /** @return list<string> */
+    private function stringList(mixed $value): array
+    {
+        if (!is_array($value) || !array_is_list($value)) {
             throw new RuntimeException('Stored Dashboard role preference is invalid.');
         }
 
-        return new DashboardRolePreference((int) $row['role_id'], (string) $row['role_code'], $hidden, $order);
+        $strings = [];
+        foreach ($value as $item) {
+            if (!is_string($item)) {
+                throw new RuntimeException('Stored Dashboard role preference is invalid.');
+            }
+            $strings[] = $item;
+        }
+
+        return $strings;
     }
 }
 

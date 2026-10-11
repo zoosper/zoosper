@@ -39,13 +39,15 @@ it('clears only the requested user and treats malformed stored state as defaults
     expect($repository->findForUser(10))->toBeNull()
         ->and($repository->findForUser(11))->toBeNull();
 });
+it('rejects non-string values in stored Dashboard preference lists', function (): void {
+    $pdo = dashboardPreferenceDatabase();
+    $statement = $pdo->prepare('INSERT INTO admin_dashboard_preferences (admin_user_id, hidden_widget_codes_json, widget_order_json, updated_at) VALUES (:user_id, :hidden, :ordering, :updated_at)');
+    $statement->execute([
+        'user_id' => 12,
+        'hidden' => '["one",2]',
+        'ordering' => '["one"]',
+        'updated_at' => '2026-10-11 00:00:00',
+    ]);
 
-
-
-
-
-
-
-
-
-
+    expect((new DashboardPreferenceRepository($pdo))->findForUser(12))->toBeNull();
+});

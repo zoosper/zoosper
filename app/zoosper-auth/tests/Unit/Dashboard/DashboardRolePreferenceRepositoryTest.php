@@ -50,13 +50,16 @@ it('rejects a role default write for a missing role', function (): void {
 
     expect(fn () => $repository->saveForRole(999, [], []))->toThrow(RuntimeException::class, 'Dashboard role does not exist.');
 });
+it('rejects non-string values in stored Dashboard role preference lists', function (): void {
+    $pdo = roleDashboardPreferencePdo();
+    $statement = $pdo->prepare('INSERT INTO admin_role_dashboard_preferences (role_id, hidden_widget_codes_json, widget_order_json, updated_at) VALUES (:role_id, :hidden, :ordering, :updated_at)');
+    $statement->execute([
+        'role_id' => 1,
+        'hidden' => '["one",2]',
+        'ordering' => '["one"]',
+        'updated_at' => '2026-10-11 00:00:00',
+    ]);
 
-
-
-
-
-
-
-
-
-
+    expect(fn () => (new DashboardRolePreferenceRepository($pdo))->findForRole(1))
+        ->toThrow(RuntimeException::class, 'Stored Dashboard role preference is invalid.');
+});
