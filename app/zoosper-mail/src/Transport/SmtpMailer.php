@@ -35,7 +35,8 @@ final class SmtpMailer implements MailerInterface
 
             if ($this->config->encryption() === 'tls') {
                 $this->command('STARTTLS', [220]);
-                if (!stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+                $socket = $this->connectedSocket();
+                if (stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT) !== true) {
                     throw new RuntimeException('Unable to enable SMTP TLS.');
                 }
                 $this->command('EHLO localhost', [250]);
@@ -70,13 +71,13 @@ final class SmtpMailer implements MailerInterface
         $target = $scheme . $this->config->host() . ':' . $this->config->port();
         $errno = 0;
         $errstr = '';
-        $this->socket = @stream_socket_client($target, $errno, $errstr, $this->config->timeoutSeconds());
-
-        if (!is_resource($this->socket)) {
+        $socket = @stream_socket_client($target, $errno, $errstr, $this->config->timeoutSeconds());
+        if (!is_resource($socket)) {
             throw new RuntimeException('Unable to connect to SMTP server.');
         }
 
-        stream_set_timeout($this->socket, $this->config->timeoutSeconds());
+        stream_set_timeout($socket, $this->config->timeoutSeconds());
+        $this->socket = $socket;
     }
 
     /**
@@ -84,11 +85,12 @@ final class SmtpMailer implements MailerInterface
      */
     private function disconnect(): void
     {
-        if (is_resource($this->socket)) {
-            fclose($this->socket);
-        }
-
+        $socket = $this->socket;
         $this->socket = null;
+
+        if (is_resource($socket)) {
+            fclose($socket);
+        }
     }
 
     /**
@@ -102,11 +104,12 @@ final class SmtpMailer implements MailerInterface
 
     private function write(string $line): void
     {
-        if (!is_resource($this->socket)) {
-            throw new RuntimeException('SMTP socket is not connected.');
+        $socket = $this->connectedSocket();
+        $payload = $line . "\r\n";
+        $written = fwrite($socket, $payload);
+        if ($written === false || $written !== strlen($payload)) {
+            throw new RuntimeException('Unable to write complete SMTP command.');
         }
-
-        fwrite($this->socket, $line . "\r\n");
     }
 
     /**
@@ -114,13 +117,11 @@ final class SmtpMailer implements MailerInterface
      */
     private function expect(array $expectedCodes): void
     {
-        if (!is_resource($this->socket)) {
-            throw new RuntimeException('SMTP socket is not connected.');
-        }
+        $socket = $this->connectedSocket();
 
         do {
-            $line = fgets($this->socket) ?: '';
-            if ($line === '') {
+            $line = fgets($socket);
+            if ($line === false || $line === '') {
                 throw new RuntimeException('Empty SMTP response.');
             }
         } while (isset($line[3]) && $line[3] === '-');
@@ -131,8 +132,17 @@ final class SmtpMailer implements MailerInterface
         }
     }
 
-    private function buildPayload(EmailMessage $message): string
+    /** @return resource */
+    private function connectedSocket()
     {
+        if (!is_resource($this->socket)) {
+            throw new RuntimeException('SMTP socket is not connected.');
+        }
+
+        return $this->socket;
+    }
+
+    private function buildPayload(EmailMessage $message): string    {
         $headers = [
             'From' => $message->from->headerValue(),
             'To' => implode(', ', array_map(static fn (EmailAddress $address): string => $address->headerValue(), $message->to)),

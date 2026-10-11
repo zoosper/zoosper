@@ -1473,22 +1473,9 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-mail/src/Transport/SmtpMailer.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->socket]]></code>
-    </InvalidPropertyAssignmentValue>
-    <PossiblyFalsePropertyAssignmentValue>
-      <code><![CDATA[@stream_socket_client($target, $errno, $errstr, $this->config->timeoutSeconds())]]></code>
-    </PossiblyFalsePropertyAssignmentValue>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->socket]]></code>
-    </PossiblyNullArgument>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[!stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)]]></code>
-      <code><![CDATA[fgets($this->socket)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-menu/src/Admin/Controller/MenuAdminController.php">
     <DocblockTypeContradiction>
