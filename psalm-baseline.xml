@@ -425,20 +425,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Repository/AdminUserRepository.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$statement->fetchAll()]]></code>
-      <code><![CDATA[$statement->fetchAll()]]></code>
-    </ArgumentTypeCoercion>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[array_map(fn (array $row): AdminUser => $this->hydrateWithoutPermissions($row), $statement->fetchAll())]]></code>
-      <code><![CDATA[array_map(static fn (array $row): int => (int) $row['role_id'], $statement->fetchAll())]]></code>
-      <code><![CDATA[array_map(static fn (array $row): string => (string) $row['code'], $statement->fetchAll())]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<AdminUser>]]></code>
-      <code><![CDATA[list<int>]]></code>
-      <code><![CDATA[list<string>]]></code>
-    </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[search]]></code>
@@ -447,23 +433,8 @@
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[is_int($id)]]></code>
     </RedundantConditionGivenDocblockType>
-    <UnusedDocblockParam>
-      <code><![CDATA[$row]]></code>
-    </UnusedDocblockParam>
   </file>
   <file src="app/zoosper-auth/src/Repository/RoleRepository.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->pdo->query('SELECT * FROM admin_permissions ORDER BY parent_code ASC, sort_order ASC, code ASC')->fetchAll()]]></code>
-      <code><![CDATA[$this->pdo->query('SELECT * FROM admin_roles ORDER BY label ASC')->fetchAll()]]></code>
-      <code><![CDATA[array_map(static fn (array $row): int => (int) $row['permission_id'], $statement->fetchAll())]]></code>
-      <code><![CDATA[array_map(static fn (array $row): int => (int) $row['user_id'], $statement->fetchAll())]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<array<string, mixed>>]]></code>
-      <code><![CDATA[list<array<string, mixed>>]]></code>
-      <code><![CDATA[list<int>]]></code>
-      <code><![CDATA[list<int>]]></code>
-    </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[findRoleByCode]]></code>

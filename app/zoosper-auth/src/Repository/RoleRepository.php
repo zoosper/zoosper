@@ -36,7 +36,7 @@ final readonly class RoleRepository
     /** @return list<array<string, mixed>> */
     public function allRoles(): array
     {
-        return $this->pdo->query('SELECT * FROM admin_roles ORDER BY label ASC')->fetchAll();
+        return $this->fetchRows($this->pdo->query('SELECT * FROM admin_roles ORDER BY label ASC'));
     }
 
     /** @return PaginationResult<array<string, mixed>> */
@@ -66,7 +66,7 @@ final readonly class RoleRepository
     /** @return list<array<string, mixed>> */
     public function allPermissions(): array
     {
-        return $this->pdo->query('SELECT * FROM admin_permissions ORDER BY parent_code ASC, sort_order ASC, code ASC')->fetchAll();
+        return $this->fetchRows($this->pdo->query('SELECT * FROM admin_permissions ORDER BY parent_code ASC, sort_order ASC, code ASC'));
     }
 
     /** @return array<string, mixed>|null */
@@ -74,7 +74,8 @@ final readonly class RoleRepository
     {
         $statement = $this->pdo->prepare('SELECT * FROM admin_roles WHERE id = :id LIMIT 1');
         $statement->execute(['id' => $id]);
-        $row = $statement->fetch();
+        /** @var array<string, mixed>|false $row */
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
         return is_array($row) ? $row : null;
     }
 
@@ -89,7 +90,8 @@ final readonly class RoleRepository
     {
         $statement = $this->pdo->prepare('SELECT * FROM admin_roles WHERE code = :code LIMIT 1');
         $statement->execute(['code' => $this->normaliseCode($code)]);
-        $row = $statement->fetch();
+        /** @var array<string, mixed>|false $row */
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
         return is_array($row) ? $row : null;
     }
 
@@ -101,7 +103,7 @@ final readonly class RoleRepository
     {
         $statement = $this->pdo->prepare('SELECT permission_id FROM admin_role_permissions WHERE role_id = :role_id ORDER BY permission_id');
         $statement->execute(['role_id' => $roleId]);
-        return array_map(static fn (array $row): int => (int) $row['permission_id'], $statement->fetchAll());
+        return array_map(static fn (array $row): int => (int) $row['permission_id'], $this->fetchRows($statement));
     }
 
     /** @return list<int> */
@@ -112,7 +114,7 @@ final readonly class RoleRepository
     {
         $statement = $this->pdo->prepare('SELECT user_id FROM admin_user_roles WHERE role_id = :role_id ORDER BY user_id');
         $statement->execute(['role_id' => $roleId]);
-        return array_map(static fn (array $row): int => (int) $row['user_id'], $statement->fetchAll());
+        return array_map(static fn (array $row): int => (int) $row['user_id'], $this->fetchRows($statement));
     }
 
     /**
@@ -261,6 +263,18 @@ final readonly class RoleRepository
         $code = strtolower(trim($code));
         $code = preg_replace('/[^a-z0-9_]+/', '_', $code) ?: '';
         return trim($code, '_');
+    }
+
+    /**
+     * Fetch column-named rows independently of the connection default.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function fetchRows(\PDOStatement $statement): array
+    {
+        /** @var list<array<string, mixed>> $rows */
+        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
     }
 }
 

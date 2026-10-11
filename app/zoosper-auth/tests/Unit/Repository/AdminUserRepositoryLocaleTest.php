@@ -93,12 +93,51 @@ test('updateUser can clear locale to null', function () {
     expect($repo->findById($id)->locale)->toBeNull();
 });
 
+// Explicit fetch modes must preserve identity and permission semantics.
+test('Auth repositories preserve reads with a numeric default fetch mode', function (): void {
+    $pdo = makeAuthPdo();
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_NUM);
+    $pdo->exec('ALTER TABLE admin_permissions ADD COLUMN parent_code TEXT');
+    $pdo->exec('ALTER TABLE admin_permissions ADD COLUMN sort_order INTEGER DEFAULT 0');
+    $pdo->exec("INSERT INTO admin_permissions (id, code, label, created_at) VALUES (1, 'page.edit', 'Edit', '2026-01-01')");
+    $pdo->exec('INSERT INTO admin_role_permissions (role_id, permission_id) VALUES (1, 1)');
+    $users = new AdminUserRepository($pdo);
+    $id = $users->createWithRoleIds('read@example.test', 'Read', 'hash', 'active', [1], 'en_AU');
+    expect($users->findById($id)?->email)->toBe('read@example.test')
+        ->and($users->findByEmail('read@example.test')?->locale)->toBe('en_AU')
+        ->and($users->findById(999))->toBeNull()
+        ->and($users->findByEmail('absent@example.test'))->toBeNull()
+        ->and($users->all()[0]->permissions)->toBe(['page.edit'])
+        ->and($users->search('read')[0]->permissions)->toBe(['page.edit'])
+        ->and($users->allForAssignment()[0]->permissions)->toBe([])
+        ->and($users->findForAssignmentWithSelected([$id], 'absent')[0]->id)->toBe($id)
+        ->and($users->roleIdsForUser($id))->toBe([1]);
+    $roles = new \Zoosper\Auth\Repository\RoleRepository($pdo);
+    $role = $roles->findRoleById(1);
+    expect($role)->toBeArray()
+        ->and($role['code'])->toBe('super_admin')
+        ->and(array_filter(array_keys($role), 'is_int'))->toBe([])
+        ->and($roles->findRoleByCode('super_admin')['code'])->toBe('super_admin')
+        ->and($roles->findRoleById(999))->toBeNull()
+        ->and($roles->findRoleByCode('absent'))->toBeNull()
+        ->and(array_is_list($roles->allRoles()))->toBeTrue()
+        ->and($roles->allRoles()[0]['code'])->toBe('super_admin')
+        ->and($roles->allPermissions()[0]['code'])->toBe('page.edit')
+        ->and($roles->permissionIdsForRole(1))->toBe([1])
+        ->and($roles->userIdsForRole(1))->toBe([$id]);
+});
 
-
-
-
-
-
-
-
-
+test('Auth repository collections retain empty list contracts', function (): void {
+    $pdo = makeAuthPdo();
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_NUM);
+    $pdo->exec('DELETE FROM admin_roles');
+    $users = new AdminUserRepository($pdo);
+    $roles = new \Zoosper\Auth\Repository\RoleRepository($pdo);
+    expect($users->all())->toBe([])
+        ->and($users->search('absent'))->toBe([])
+        ->and($users->allForAssignment())->toBe([])
+        ->and($users->roleIdsForUser(999))->toBe([])
+        ->and($roles->allRoles())->toBe([])
+        ->and($roles->permissionIdsForRole(999))->toBe([])
+        ->and($roles->userIdsForRole(999))->toBe([]);
+});

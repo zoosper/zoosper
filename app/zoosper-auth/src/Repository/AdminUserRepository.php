@@ -44,7 +44,7 @@ final readonly class AdminUserRepository
     public function all(): array
     {
         $statement = $this->pdo->query('SELECT * FROM admin_users ORDER BY id DESC');
-        return $this->hydrateManyWithPermissions($statement->fetchAll());
+        return $this->hydrateManyWithPermissions($this->fetchRows($statement));
     }
 
     /** @return list<AdminUser> */
@@ -63,7 +63,7 @@ final readonly class AdminUserRepository
             $statement->execute();
         }
 
-        return array_map(fn (array $row): AdminUser => $this->hydrateWithoutPermissions($row), $statement->fetchAll());
+        return array_map(fn (array $row): AdminUser => $this->hydrateWithoutPermissions($row), $this->fetchRows($statement));
     }
 
     /**
@@ -88,7 +88,7 @@ final readonly class AdminUserRepository
             $placeholders = implode(',', array_fill(0, count($missingSelected), '?'));
             $statement = $this->pdo->prepare("SELECT * FROM admin_users WHERE id IN ({$placeholders}) ORDER BY name ASC, email ASC");
             $statement->execute($missingSelected);
-            foreach ($statement->fetchAll() as $row) {
+            foreach ($this->fetchRows($statement) as $row) {
                 $user = $this->hydrateWithoutPermissions($row);
                 $userMap[$user->id] = $user;
             }
@@ -107,14 +107,15 @@ final readonly class AdminUserRepository
         $statement->bindValue('term', '%' . $term . '%');
         $statement->bindValue('limit', $limit, PDO::PARAM_INT);
         $statement->execute();
-        return $this->hydrateManyWithPermissions($statement->fetchAll());
+        return $this->hydrateManyWithPermissions($this->fetchRows($statement));
     }
 
     public function findByEmail(string $email): ?AdminUser
     {
         $statement = $this->pdo->prepare('SELECT * FROM admin_users WHERE email = :email LIMIT 1');
         $statement->execute(['email' => mb_strtolower($email)]);
-        $row = $statement->fetch();
+        /** @var array<string, mixed>|false $row */
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
         return is_array($row) ? $this->hydrate($row) : null;
     }
 
@@ -122,7 +123,8 @@ final readonly class AdminUserRepository
     {
         $statement = $this->pdo->prepare('SELECT * FROM admin_users WHERE id = :id LIMIT 1');
         $statement->execute(['id' => $id]);
-        $row = $statement->fetch();
+        /** @var array<string, mixed>|false $row */
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
         return is_array($row) ? $this->hydrate($row) : null;
     }
 
@@ -217,7 +219,7 @@ final readonly class AdminUserRepository
     {
         $statement = $this->pdo->prepare('SELECT role_id FROM admin_user_roles WHERE user_id = :user_id ORDER BY role_id');
         $statement->execute(['user_id' => $userId]);
-        return array_map(static fn (array $row): int => (int) $row['role_id'], $statement->fetchAll());
+        return array_map(static fn (array $row): int => (int) $row['role_id'], $this->fetchRows($statement));
     }
 
     /** @param list<int> $roleIds */
@@ -245,8 +247,6 @@ final readonly class AdminUserRepository
         return (int) $id;
     }
 
-    /** @param array<string, mixed> $row */
-
     public function updateStatus(int $id, string $status): void
     {
         if (!in_array($status, ['active', 'inactive'], true)) {
@@ -259,6 +259,7 @@ final readonly class AdminUserRepository
         }
     }
 
+    /** @param array<string, mixed> $row */
     private function hydrate(array $row): AdminUser
     {
         return new AdminUser(
@@ -323,7 +324,7 @@ final readonly class AdminUserRepository
     {
         $statement = $this->pdo->prepare('SELECT DISTINCT p.code FROM admin_permissions p INNER JOIN admin_role_permissions rp ON rp.permission_id = p.id INNER JOIN admin_user_roles ur ON ur.role_id = rp.role_id WHERE ur.user_id = :user_id ORDER BY p.code');
         $statement->execute(['user_id' => $userId]);
-        return array_map(static fn (array $row): string => (string) $row['code'], $statement->fetchAll());
+        return array_map(static fn (array $row): string => (string) $row['code'], $this->fetchRows($statement));
     }
 
     /**
@@ -352,7 +353,7 @@ final readonly class AdminUserRepository
         $statement = $this->pdo->prepare($sql);
         $statement->execute($params);
         $grouped = [];
-        foreach ($statement->fetchAll() as $row) {
+        foreach ($this->fetchRows($statement) as $row) {
             $grouped[(int) $row['user_id']][] = (string) $row['code'];
         }
         return $grouped;
@@ -372,6 +373,18 @@ final readonly class AdminUserRepository
         if ($statement->rowCount() !== 1) {
             throw new RuntimeException('Admin User deletion did not affect exactly one row.');
         }
+    }
+
+    /**
+     * Fetch column-named rows independently of the connection default.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function fetchRows(\PDOStatement $statement): array
+    {
+        /** @var list<array<string, mixed>> $rows */
+        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
     }
 }
 

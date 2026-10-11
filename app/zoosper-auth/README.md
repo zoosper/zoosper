@@ -194,3 +194,6 @@ Transport adapters must not construct a database rate-limit store, policy resolv
 
 ### Role Admin template boundary
 Role list, form, permission-tree and user-assignment views are Auth-owned templates rendered through the configured engine-independent template renderer. Controller-local PHP view execution is not supported; missing renderer configuration fails closed instead of falling back to `extract()` and `require`.
+
+### Repository read contracts
+Admin User and Role repository reads explicitly select associative PDO rows instead of relying on the connection default fetch mode. Collection helpers return sequential lists; missing single-row lookups remain null. User collection permission loading remains batched, and assignment reads remain permission-free. SQL, mutation transactions and permission ordering are unchanged. Numeric-default and empty-result regressions are included in `AdminUserRepositoryLocaleTest.php`; query-count regressions remain in `AdminUserRepositoryQueryCountTest.php`.
