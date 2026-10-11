@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.19.2@fa716e443b23e6fa35bf58907e67ca692ec3c00a">
   <file src="app/zoosper-admin/src/Asset/AdminAssetRegistry.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[!is_string($handle)]]></code>
-    </DocblockTypeContradiction>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>

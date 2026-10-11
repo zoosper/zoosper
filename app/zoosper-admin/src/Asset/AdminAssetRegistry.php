@@ -58,10 +58,6 @@ final readonly class AdminAssetRegistry
 
             $declarations = $this->assetDeclarations($config, $file);
             foreach ($declarations as $handle => $assetConfig) {
-                if (!is_string($handle) || !is_array($assetConfig)) {
-                    throw new RuntimeException('Invalid admin asset declaration in: ' . $file);
-                }
-
                 $asset = AdminAsset::fromConfig($handle, $assetConfig);
                 if ($asset->path === '') {
                     throw new RuntimeException('Admin asset path cannot be empty for handle: ' . $handle);
@@ -82,20 +78,31 @@ final readonly class AdminAssetRegistry
      * Accept the canonical wrapped manifest and the established flat module
      * manifest shape used by Settings and Auth.
      *
-     * @param array<string, mixed> $config
-     * @return array<string, mixed>
+     * @param array<array-key, mixed> $config
+     * @return array<string, array<string, mixed>>
      */
     private function assetDeclarations(array $config, string $file): array
     {
+        $declarations = $config;
         if (array_key_exists('assets', $config)) {
             if (!is_array($config['assets'])) {
                 throw new RuntimeException("Admin asset config key 'assets' must contain an array: " . $file);
             }
 
-            return $config['assets'];
+            $declarations = $config['assets'];
         }
 
-        return $config;
+        $normalised = [];
+        foreach ($declarations as $handle => $declaration) {
+            if (!is_string($handle) || $handle === '' || !is_array($declaration)) {
+                throw new RuntimeException('Invalid admin asset declaration in: ' . $file);
+            }
+
+            /** @var array<string, mixed> $declaration */
+            $normalised[$handle] = $declaration;
+        }
+
+        return $normalised;
     }
 
     /**

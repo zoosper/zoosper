@@ -10,7 +10,8 @@ it('supports wrapped and established flat module admin asset manifests', functio
 
     expect($registry)->toContain('$declarations = $this->assetDeclarations($config, $file)')
         ->toContain("array_key_exists('assets', \$config)")
-        ->toContain('return $config;')
+        ->toContain('$declarations = $config;')
+        ->toContain('return $normalised;')
         ->and($settings)->toHaveKeys([
             'zoosper-settings-workspace-style',
             'zoosper-settings-workspace-script',
