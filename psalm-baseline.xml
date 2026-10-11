@@ -33,9 +33,6 @@
     </UnusedParam>
   </file>
   <file src="app/zoosper-admin/src/Controller/LoginController.php">
-    <PossiblyNullReference>
-      <code><![CDATA[issue]]></code>
-    </PossiblyNullReference>
     <UnusedClass>
       <code><![CDATA[LoginController]]></code>
     </UnusedClass>

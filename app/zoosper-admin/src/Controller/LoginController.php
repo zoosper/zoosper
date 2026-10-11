@@ -74,9 +74,10 @@ final readonly class LoginController
         $this->csrf->rotate();
 
         // Enrolled users must pass a login-time 2FA challenge BEFORE the session is fully authenticated.
-        if ($this->requiresTwoFactorChallenge($user)) {
+        $twoFactorChallenge = $this->twoFactorChallenge;
+        if ($this->requiresTwoFactorChallenge($user) && $twoFactorChallenge !== null) {
             $this->guard->beginTwoFactorChallenge($user);
-            $_SESSION[self::CHALLENGE_TOKEN_KEY] = $this->twoFactorChallenge->issue($user->id);
+            $_SESSION[self::CHALLENGE_TOKEN_KEY] = $twoFactorChallenge->issue($user->id);
 
             $this->recordLoginEvent($request, $user->id, $user->email, 'password_ok_pending_2fa');
 
