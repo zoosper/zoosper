@@ -114,6 +114,9 @@ final readonly class ModuleRouteLoader
                 stateless: (bool) ($route['stateless'] ?? false),
             );
             $this->assertValid($definition);
+            if ($configFile === 'admin_routes.php') {
+                $definition->assertExplicitAdminAccess();
+            }
             $routes[] = $definition;
         }
 
