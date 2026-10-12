@@ -70,3 +70,6 @@ Zoosper_TwoFactor module for Zoosper CMS.
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
+## Production replay protection
+
+Every assembled `TwoFactorChallengeService` requires a replay-claim dependency. The production service manifest supplies `TotpReplayGuard`, which verifies the matching TOTP time-step and atomically claims a strictly newer per-user counter in `admin_totp_replay_state`. There is no nullable or verification-only production path. Recovery codes retain their separate single-use repository contract.

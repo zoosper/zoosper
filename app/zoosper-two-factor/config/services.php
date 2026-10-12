@@ -106,9 +106,9 @@ return [
             $services->get(TwoFactorChallengeRepository::class),
             static fn (string $secret, string $code): bool => $verifier->verify($secret, $code),
             static fn (int $adminUserId, string $code): bool => $recovery->redeem($adminUserId, $code),
+            static fn (int $adminUserId, string $secret, string $code): bool => $services->get(TotpReplayGuard::class)->claim($adminUserId, $secret, $code),
             (int) ($config['challenge_ttl'] ?? 300),
             null,
-            static fn (int $adminUserId, string $secret, string $code): bool => $services->get(TotpReplayGuard::class)->claim($adminUserId, $secret, $code),
         );
     },
     AdminTwoFactorLoginRedirectService::class => static function (ServiceContainer $services): AdminTwoFactorLoginRedirectService {

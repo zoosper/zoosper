@@ -44,6 +44,7 @@ it('issues a plaintext token and stores only its hash', function (): void {
         $repo,
         fn (string $secret, string $code): bool => $code === '123456',
         fn (int $uid, string $code): bool => false,
+        fn (int $uid, string $secret, string $code): bool => true,
         300,
         fixedNow(),
     );
@@ -58,12 +59,25 @@ it('issues a plaintext token and stores only its hash', function (): void {
         ->and($row['challenge_token_hash'])->not->toBe($token);
 });
 
+it('requires replay claiming for every TOTP challenge service', function (): void {
+    $constructor = new ReflectionMethod(TwoFactorChallengeService::class, '__construct');
+    $parameter = array_values(array_filter(
+        $constructor->getParameters(),
+        static fn (ReflectionParameter $parameter): bool => $parameter->getName() === 'claimTotpUse',
+    ))[0] ?? null;
+
+    expect($parameter)->not->toBeNull()
+        ->and($parameter?->isOptional())->toBeFalse()
+        ->and($parameter?->allowsNull())->toBeFalse();
+});
+
 it('passes only when the correct TOTP code is supplied', function (): void {
     $pdo = makeChallengePdo();
     $service = new TwoFactorChallengeService(
         new TwoFactorChallengeRepository($pdo),
         fn (string $secret, string $code): bool => $code === '654321',
         fn (int $uid, string $code): bool => false,
+        fn (int $uid, string $secret, string $code): bool => $code === '654321',
         300,
         fixedNow(),
     );
@@ -86,6 +100,7 @@ it('is single-use: a consumed challenge cannot be replayed', function (): void {
         new TwoFactorChallengeRepository($pdo),
         fn (string $secret, string $code): bool => true,
         fn (int $uid, string $code): bool => false,
+        fn (int $uid, string $secret, string $code): bool => true,
         300,
         fixedNow(),
     );
@@ -105,11 +120,11 @@ it('rejects an expired challenge', function (): void {
     $repo = new TwoFactorChallengeRepository($pdo);
 
     // Issue at 08:00 with a 300s TTL...
-    $issuer = new TwoFactorChallengeService($repo, fn () => true, fn () => false, 300, fixedNow('2026-07-25 08:00:00'));
+    $issuer = new TwoFactorChallengeService($repo, fn () => true, fn () => false, fn () => true, 300, fixedNow('2026-07-25 08:00:00'));
     $token = $issuer->issue(9);
 
     // ...verify at 08:10 (past expiry).
-    $verifier = new TwoFactorChallengeService($repo, fn () => true, fn () => false, 300, fixedNow('2026-07-25 08:10:00'));
+    $verifier = new TwoFactorChallengeService($repo, fn () => true, fn () => false, fn () => true, 300, fixedNow('2026-07-25 08:10:00'));
     $result = $verifier->verifyTotp($token, 'anything', 'SECRET');
 
     expect($result->passed)->toBeFalse()
@@ -122,6 +137,7 @@ it('rejects an unknown token', function (): void {
         new TwoFactorChallengeRepository($pdo),
         fn () => true,
         fn () => false,
+        fn (int $uid, string $secret, string $code): bool => true,
         300,
         fixedNow(),
     );
@@ -144,6 +160,7 @@ it('accepts a valid recovery code and consumes the challenge', function (): void
             }
             return false;
         },
+        fn (int $uid, string $secret, string $code): bool => true,
         300,
         fixedNow(),
     );
@@ -162,7 +179,7 @@ it('accepts a valid recovery code and consumes the challenge', function (): void
 it('issuing again clears prior pending challenges for the user', function (): void {
     $pdo = makeChallengePdo();
     $repo = new TwoFactorChallengeRepository($pdo);
-    $service = new TwoFactorChallengeService($repo, fn () => true, fn () => false, 300, fixedNow());
+    $service = new TwoFactorChallengeService($repo, fn () => true, fn () => false, fn () => true, 300, fixedNow());
 
     $service->issue(3);
     $service->issue(3);

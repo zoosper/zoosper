@@ -31,23 +31,24 @@ final readonly class TwoFactorChallengeService
 {
     private Closure $verifyTotp;
     private Closure $redeemRecoveryCode;
-    private ?Closure $claimTotpUse;
+    private Closure $claimTotpUse;
 
     /**
-     * @param callable(string $secret, string $code): bool   $verifyTotp
-     * @param callable(int $adminUserId, string $code): bool $redeemRecoveryCode
+     * @param callable(string, string): bool      $verifyTotp
+     * @param callable(int, string): bool         $redeemRecoveryCode
+     * @param callable(int, string, string): bool $claimTotpUse
      */
     public function __construct(
         private TwoFactorChallengeRepository $challenges,
         callable $verifyTotp,
         callable $redeemRecoveryCode,
+        callable $claimTotpUse,
         private int $ttlSeconds = 300,
         private ?\DateTimeImmutable $now = null,
-        ?callable $claimTotpUse = null,
     ) {
         $this->verifyTotp = Closure::fromCallable($verifyTotp);
         $this->redeemRecoveryCode = Closure::fromCallable($redeemRecoveryCode);
-        $this->claimTotpUse = $claimTotpUse !== null ? Closure::fromCallable($claimTotpUse) : null;
+        $this->claimTotpUse = Closure::fromCallable($claimTotpUse);
     }
 
     /**
@@ -89,7 +90,7 @@ final readonly class TwoFactorChallengeService
             return TwoFactorChallengeResult::wrongCode($challenge->adminUserId);
         }
 
-        if ($this->claimTotpUse !== null && !($this->claimTotpUse)($challenge->adminUserId, $secret, $code)) {
+        if (!($this->claimTotpUse)($challenge->adminUserId, $secret, $code)) {
             return TwoFactorChallengeResult::wrongCode($challenge->adminUserId);
         }
 
