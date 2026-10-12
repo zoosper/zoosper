@@ -20,7 +20,9 @@ use Zoosper\Media\Processing\MediaProcessingPolicy;
 use Zoosper\Media\Processing\MediaProcessorInterface;
 use Zoosper\Media\Processing\GdMediaProcessor;
 use Zoosper\Media\Processing\QueuedMediaProcessor;
+use Zoosper\Media\Console\MediaQueueStatusCommand;
 use Zoosper\Media\Console\ProcessMediaQueueCommand;
+use Zoosper\Media\Queue\MediaQueueStatusRepository;
 use Zoosper\Media\Processing\MediaUploadDerivativeDispatcher;
 use Zoosper\Media\Processing\MediaUploadDerivativePolicy;
 use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
@@ -90,6 +92,8 @@ return [
         references: $services->get(MediaReferenceInspector::class),
         audit: $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
     ),
+    MediaQueueStatusRepository::class => static fn (ServiceContainer $services): MediaQueueStatusRepository => new MediaQueueStatusRepository($services->get(PDO::class)),
+    MediaQueueStatusCommand::class => static fn (ServiceContainer $services): MediaQueueStatusCommand => new MediaQueueStatusCommand($services->get(MediaQueueStatusRepository::class)),
     ProcessMediaQueueCommand::class => static fn (ServiceContainer $services): ProcessMediaQueueCommand => new ProcessMediaQueueCommand(
         $services->get(PDO::class),
         $services->get(MediaAssetRepository::class),

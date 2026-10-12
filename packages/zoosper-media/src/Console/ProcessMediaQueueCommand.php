@@ -53,6 +53,7 @@ final readonly class ProcessMediaQueueCommand implements ConsoleCommandInterface
             return 0;
         }
 
+        $failures = 0;
         foreach ($tasks as $task) {
             $taskId = (int) $task['id'];
             $assetId = (int) $task['asset_id'];
@@ -60,7 +61,7 @@ final readonly class ProcessMediaQueueCommand implements ConsoleCommandInterface
             $output->writeln("Processing task #{$taskId} for asset #{$assetId}...");
 
             try {
-                $this->updateStatus($taskId, 'processing');
+                $this->updateStatus($taskId, 'processing', startedAt: gmdate('Y-m-d H:i:s'), clearError: true);
 
                 $asset = $this->assets->findById($assetId);
                 if ($asset === null) {
@@ -76,9 +77,10 @@ final readonly class ProcessMediaQueueCommand implements ConsoleCommandInterface
                 }
 
                 $this->derivatives->replaceForAsset($asset, $plan);
-                $this->updateStatus($taskId, 'completed');
+                $this->updateStatus($taskId, 'completed', completedAt: gmdate('Y-m-d H:i:s'), clearError: true);
                 $output->writeln("Successfully processed task #{$taskId}.");
             } catch (Throwable $e) {
+                ++$failures;
                 $attempts = (int) ($task['attempts'] ?? 0) + 1;
                 $status = $attempts >= 3 ? 'failed' : 'pending';
                 $this->updateStatus($taskId, $status, $attempts, $e->getMessage());
@@ -86,10 +88,18 @@ final readonly class ProcessMediaQueueCommand implements ConsoleCommandInterface
             }
         }
 
-        return 0;
+        return $failures === 0 ? 0 : 1;
     }
 
-    private function updateStatus(int $id, string $status, ?int $attempts = null, ?string $error = null): void
+    private function updateStatus(
+        int $id,
+        string $status,
+        ?int $attempts = null,
+        ?string $error = null,
+        ?string $startedAt = null,
+        ?string $completedAt = null,
+        bool $clearError = false,
+    ): void
     {
         $sql = 'UPDATE media_processing_queue SET status = :status, updated_at = :now';
         $params = ['status' => $status, 'now' => gmdate('Y-m-d H:i:s'), 'id' => $id];
@@ -102,6 +112,16 @@ final readonly class ProcessMediaQueueCommand implements ConsoleCommandInterface
         if ($error !== null) {
             $sql .= ', error_message = :error';
             $params['error'] = mb_substr($error, 0, 1000);
+        } elseif ($clearError) {
+            $sql .= ', error_message = NULL';
+        }
+        if ($startedAt !== null) {
+            $sql .= ', started_at = :started_at';
+            $params['started_at'] = $startedAt;
+        }
+        if ($completedAt !== null) {
+            $sql .= ', completed_at = :completed_at';
+            $params['completed_at'] = $completedAt;
         }
 
         $sql .= ' WHERE id = :id';

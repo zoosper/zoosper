@@ -124,6 +124,10 @@ A successful upload returns HTTP `201` with the public asset representation and 
 
 Archive, restore, and permanent deletion share `MediaLifecycleCoordinator` across Admin and the stateless PAT API. Admin routes are POST-only, require `media.manage`, and remain protected by central CSRF middleware. API archive, restore, and deletion require `media:delete` plus the token owner’s current `media.manage` permission; permanent deletion uses `DELETE /api/v1/media/{id}`.
 
+## Queue observability
+
+`php8.5 bin/zoosper media:queue:status` reports queue depth, pending retries, total attempts, failed jobs, oldest-pending age, queue wait, and processing latency. Add `--format=json` for monitoring automation. Output is read-only and excludes filenames, storage paths, derivative plans, and error messages. `media:process-queue` records explicit start and completion timestamps and exits non-zero when any task in its batch fails, allowing supervised workers to alert without exposing task errors through the status endpoint.
+
 Permanent deletion is archived-first and fails closed unless current Pages and restorable Page revisions can be inspected for the complete canonical public path. If Page storage is absent because Page is not installed, it contributes no blockers; partial or incompatible Page reference storage blocks deletion with an inspection error. Media reference inspection and derivative lookup are mandatory runtime dependencies. Metadata deletion is transactional, derivative rows cascade, and private/public original and derivative files are cleaned only after metadata commit through the conservative Media-owned cleanup service. Admin operators receive lifecycle success, blocker, and failure flash messages; the API returns HTTP `409` with structured blocker counts.
 
 ## Editor image-tool contribution

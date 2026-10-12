@@ -110,7 +110,7 @@ Require the compiled manifest to be fresh and every release check to pass. Ensur
 
 ## 9. Schedule maintenance and workers
 
-Schedule `php8.5 bin/zoosper rate-limit:prune` with overlap protection. If queued Media processing is enabled, run `php8.5 bin/zoosper media:process-queue` under a supervised worker and monitor failures. See the rate-limit pruning runbook for scheduler examples.
+Schedule `php8.5 bin/zoosper rate-limit:prune` with overlap protection. Run `php8.5 bin/zoosper media:process-queue` under a supervised worker and alert on a non-zero batch exit. Monitor `php8.5 bin/zoosper media:queue:status --format=json` for pending and processing depth, pending retries, failed jobs, oldest-pending age, queue wait, and processing latency. The status command is read-only and emits no filenames, paths, plans, or error text. See the rate-limit pruning runbook for scheduler examples.
 
 ## 10. Security disclosure and dependency monitoring
 
@@ -129,6 +129,6 @@ Verify:
 - API health and authenticated API access.
 - Home, About, Page rendering, Menus, Media delivery, and Admin Grid workflows.
 - Application and exception logs contain no secrets.
-- `module:manifest:check`, `schema:foreign-keys:status --format=json`, and `release:check` remain green.
+- `module:manifest:check`, `schema:foreign-keys:status --format=json`, `media:queue:status --format=json`, and `release:check` remain green; Media queue depth, retries, failures, and latency remain within deployment-owned alert thresholds.
 
 Keep the previous code, database backup, and uploaded-Media rollback point until the deployment is accepted.

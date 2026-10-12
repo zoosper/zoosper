@@ -48,11 +48,14 @@ return [
                 'status' => ['type' => 'string', 'length' => 32, 'nullable' => false, 'default' => 'pending'],
                 'attempts' => ['type' => 'integer', 'nullable' => false, 'default' => 0],
                 'error_message' => ['type' => 'text', 'nullable' => true],
+                'started_at' => ['type' => 'datetime', 'nullable' => true],
+                'completed_at' => ['type' => 'datetime', 'nullable' => true],
                 'created_at' => ['type' => 'datetime', 'nullable' => false],
                 'updated_at' => ['type' => 'datetime', 'nullable' => false],
             ],
             'indexes' => [
                 'idx_media_queue_status' => ['columns' => ['status']],
+                'idx_media_queue_status_created' => ['columns' => ['status', 'created_at']],
             ],
             'foreign_keys' => [
                 'fk_media_processing_queue_asset' => ['columns' => ['asset_id'], 'referenced_table' => 'media_assets', 'referenced_columns' => ['id'], 'on_delete' => 'CASCADE', 'on_update' => 'NO ACTION'],
