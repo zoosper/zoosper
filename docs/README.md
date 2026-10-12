@@ -24,3 +24,5 @@ Temporary planning, audit, migration and phase documentation must be merged into
 - [Troubleshooting](troubleshooting.md)
 - [Testing](testing.md)
 - [Current development line](releases/current-development.md)
+- [Release checklist and decision protocol](release-checklist.md)
+- [Release promotion](releases/release-promotion.md)

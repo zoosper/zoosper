@@ -41,10 +41,10 @@ it('records the current review priorities and does not overclaim media derivativ
     $roadmap = (string) file_get_contents($root . '/ROADMAP.md');
 
     expect($roadmap)
-        ->toContain('**Last updated:** 2026-10-09 (Sydney)')
+        ->toContain('**Last updated:** 2026-10-12 (Sydney)')
         ->toContain('## Required remaining work')
         ->toContain('## Explicitly not required for closure')
-        ->toContain('Current Psalm baseline: `1,016` entries')
+        ->toContain('Current Psalm baseline: `917` code entries')
         ->toContain('Media queue observability')
         ->not->toContain('External review response and public-launch priorities (2026-08-11)')
         ->not->toContain('Phase 10AR')

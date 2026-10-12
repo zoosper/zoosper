@@ -26,6 +26,10 @@ The 0.3.2 line is the beta-readiness public-alpha progression after the substant
 - Do not modify or retarget the immutable `v0.3.2-alpha.4` or `v0.3.2-alpha.3` tags.
 - Alpha.4 publication does not claim production deployment acceptance or final programme closure.
 
+## Current release judgement
+
+At development commit `9f3d4dd857f57357795bd3bd3fec582f9114c55a`, continue on `dev`. The verified post-alpha.4 correctness cohorts improve the development line, but C1-C5 closure and the source-confirmed security-assurance residuals in `ROADMAP.md` remain open. Do not create a new tag or promote `master` from this commit without a separately approved release-candidate rehearsal and the evidence required by `docs/release-checklist.md`.
+
 ## Beta-readiness Composer policy
 
 The 0.3.2 alpha development line removes first-party `dev-dev` dependency coupling. All 33 first-party path packages retain the explicit installable `0.3.2-alpha.4` Composer package version from the root repository map and continue to consume compatible first-party packages through `^0.3.1@alpha`. The published release keeps package compatibility independent of the Git branch name.

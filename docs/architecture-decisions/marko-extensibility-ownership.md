@@ -8,11 +8,11 @@ Every first-party package must directly declare each Marko package whose runtime
 
 Direct Marko package dependencies in a feature or platform module are permitted only where the Marko contract is deliberately part of that module's public boundary and no same-capability Zoosper bridge exists. Transitive availability is never treated as dependency ownership.
 
-The Phase 10BI-A compatibility proof established that installed Marko 0.8 Plugins can modify arguments before a call, modify results after a call and avoid wrapping services without plugins. That proof does not make `zoosper/core` the owner of Marko's container or plugin runtime. The direct `marko/core` requirement and Core-local compatibility fixture are therefore retired.
+The Phase 10BI-A compatibility proof established that the previously tested Marko plugin compatibility layer can modify arguments before a call, modify results after a call and avoid wrapping services without plugins. That proof does not make `zoosper/core` the owner of Marko's container or plugin runtime. The direct `marko/core` requirement and Core-local compatibility fixture are therefore retired.
 
 A future production need for Plugins, Preferences, container integration or Marko observers must first introduce or select a focused Zoosper bridge boundary. To avoid unnecessary package proliferation, the preferred initial boundary is `zoosper/extensibility`, provided it remains a thin adapter and does not duplicate Marko.
 
-The existing `Zoosper\\Core\\Plugin` subsystem has no production consumer or module plugin manifest in the Phase 10BI-B inventory. It remains frozen compatibility code until a dedicated removal change proves its complete test and documentation closure.
+The existing `Zoosper\\Core\\Plugin` subsystem has no production consumer or module plugin manifest in the Phase 10BI-B inventory. That unused Zoosper-native subsystem was subsequently removed after complete test and documentation closure; it is not frozen compatibility code and must not be reintroduced as a second interception runtime.
 
 Zoosper service decorators remain supported for explicit whole-service wrapping. Zoosper entity-save lifecycle remains separate because it owns ordered, abort-capable persistence orchestration and mutable save context. Zoosper general events remain authoritative because their tested continue-after-listener-failure behaviour differs from the captured Marko observer dispatcher.
 

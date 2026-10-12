@@ -22,6 +22,31 @@
 - Globally unique migration basenames and disposable release-upgrade rehearsal
 - Annotated immutable release tag
 
+## Release recommendation and approval protocol
+
+Every verified development cohort ends with one explicit release judgement recorded in the handoff or verification evidence:
+
+- **Continue on `dev`** when required closure work remains or the cohort is not a coherent release boundary.
+- **Prepare a release candidate rehearsal** when the accumulated line is coherent and documentation truth, upgrade/fresh-install evidence, static analysis, tests, quality, package readiness, and operational checks are ready to be rerun against one exact commit.
+- **Recommend an immutable tag** only after the exact candidate commit passes the complete release checklist, produces deterministic artifact and checksum evidence, has accurate release identity and documentation, and has no unresolved blocker for the proposed release channel.
+- **Recommend promotion to `master`** only after the annotated tag, public release metadata, artifact, and checksum resolve to the same approved commit and the ancestry checks in the release-promotion runbook pass.
+- **Hold release** whenever evidence is missing, conflicting, stale, or identifies a release blocker; record the blocker and the next bounded verification instead of guessing.
+
+The recommendation is advisory. Creating or moving a tag, publishing a release or artifact, promoting `master`, and deploying remain explicit release-owner approvals. Never retag an immutable release, promote an untagged development tip, or merge post-release `dev` work into `master` as part of promotion.
+
+### Evidence required for a tag recommendation
+
+- Clean worktree with local `HEAD` and `origin/dev` aligned on the exact candidate commit.
+- Release identity, changelog, roadmap, current-development page, Admin version, and API health aligned.
+- Blocking Psalm with stale-baseline rejection, complete Pest, strict quality, JavaScript gates, Composer validation/audit, and package-readiness checks green.
+- Fresh-install, latest-release upgrade, supported older-release upgrade, target-MySQL migration/foreign-key, documentation-build, and isolated locked-install evidence green where required by the release channel.
+- Two deterministic production-artifact builds with matching SHA-256, verified manifest, prohibited-path audit, and isolated extraction acceptance.
+- Security and operations review complete for the intended channel, including unresolved C1-C5 items explicitly classified as blocker, accepted prerelease limitation, or deferred non-release work.
+
+### Promotion recommendation
+
+A tag recommendation and a `master` promotion recommendation are separate decisions. Do not recommend promotion until the immutable tag and published release have been independently verified. Promote `master` only to the peeled release commit by the exact process in `docs/releases/release-promotion.md`; preserve later `dev` commits on `dev`.
+
 ## Starter experience
 - Run `php8.5 bin/zoosper starter:install` twice and verify the second run retains the Site and Pages.
 - Verify `/` and `/about` render through the default starter theme.
