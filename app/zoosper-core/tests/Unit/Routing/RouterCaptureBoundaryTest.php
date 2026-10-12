@@ -21,7 +21,6 @@ it('preserves string route captures and decodes exactly once', function (string 
     'plain' => ['alpha', 'alpha'],
     'space' => ['hello%20world', 'hello world'],
     'plus stays plus' => ['a+b', 'a+b'],
-    'encoded slash' => ['a%2Fb', 'a/b'],
     'single decoding' => ['%252F', '%2F'],
 ]);
 
@@ -41,4 +40,26 @@ it('isolates route captures across dispatches', function (): void {
     expect($router->dispatch(new Request('GET', '/capture/0'))->body())->toBe('0')
         ->and($router->dispatch(new Request('GET', '/capture/second'))->body())->toBe('second')
         ->and($router->dispatch(new Request('GET', '/static'))->body())->toBe('missing');
+});
+
+
+it('rejects decoded route values that introduce separators nulls or malformed escapes', function (string $encoded): void {
+    $router = new Router();
+    $router->get('/capture/{value}/end', static fn (): Response => Response::html('matched'));
+
+    expect($router->dispatch(new Request('GET', '/capture/' . $encoded . '/end'))->statusCode())->toBe(404);
+})->with([
+    'encoded slash' => 'a%2Fb',
+    'encoded backslash' => 'a%5Cb',
+    'encoded null' => 'a%00b',
+    'malformed escape' => 'a%2',
+]);
+
+
+it('preserves literal slashes captured by an explicit multi-segment constraint', function (): void {
+    $router = new Router();
+    $router->get('/asset/{path:.+}', static fn (Request $request): Response => Response::html($request->routeParam('path') ?? 'missing'));
+
+    expect($router->dispatch(new Request('GET', '/asset/js/vendor/lib.js'))->body())
+        ->toBe('js/vendor/lib.js');
 });

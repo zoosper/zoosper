@@ -1126,8 +1126,6 @@
   <file src="app/zoosper-core/src/Routing/Router.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$route['regex']]]></code>
-      <code><![CDATA[$route['regex']]]></code>
-      <code><![CDATA[$route['regex']]]></code>
     </ArgumentTypeCoercion>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$registered]]></code>

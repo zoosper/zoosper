@@ -28,3 +28,21 @@ it('allows the same path for different methods', function (): void {
 
     expect($router->allowedMethods('/admin/example'))->toBe(['GET', 'HEAD', 'POST']);
 });
+
+
+it('rejects overlapping parameter route shapes regardless of parameter names or constraints', function (): void {
+    $router = new Router();
+    $router->get('/api/items/{id:\d+}', static fn (): Response => Response::html('first'));
+
+    expect(fn () => $router->get('/api/items/{slug:[a-z]+}', static fn (): Response => Response::html('second')))
+        ->toThrow(InvalidArgumentException::class, 'Overlapping parameter route shape');
+});
+
+it('allows distinct parameter route shapes for the same method', function (): void {
+    $router = new Router();
+    $router->get('/api/items/{id:\d+}', static fn (): Response => Response::html('item'));
+    $router->get('/api/categories/{slug}', static fn (): Response => Response::html('category'));
+
+    expect($router->allowedMethods('/api/items/12'))->toContain('GET')
+        ->and($router->allowedMethods('/api/categories/books'))->toContain('GET');
+});

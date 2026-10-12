@@ -23,7 +23,7 @@ final class Router
     private array $routes = [];
 
     /**
-     * @var array<string, list<array{path: string, regex: string, params: list<string>, handler: callable(Request): Response}>>
+     * @var array<string, list<array{path: string, regex: string, shape: string, params: list<string>, handler: callable(Request): Response}>>
      */
     private array $parameterRoutes = [];
     /** @var array<string,bool> */
@@ -69,7 +69,16 @@ final class Router
             return;
         }
 
-        $this->parameterRoutes[$method][] = $this->compileParameterRoute($path, $handler);
+        $compiled = $this->compileParameterRoute($path, $handler);
+        foreach ($this->parameterRoutes[$method] ?? [] as $registered) {
+            if ($registered['shape'] === $compiled['shape']) {
+                throw new InvalidArgumentException(
+                    'Overlapping parameter route shape: ' . $method . ' ' . $path
+                    . ' conflicts with ' . $registered['path'],
+                );
+            }
+        }
+        $this->parameterRoutes[$method][] = $compiled;
     }
 
     public function fallback(callable $handler): void
@@ -107,7 +116,11 @@ final class Router
         if ($method === 'OPTIONS' && str_starts_with($path, '/api/') && $this->allowedMethods($path) !== []) return true;
         if ($method === 'HEAD' && in_array('GET', $this->allowedMethods($path), true)) $method = 'GET';
         if (array_key_exists($method . ' ' . $path, $this->statelessRoutes)) return $this->statelessRoutes[$method . ' ' . $path];
-        foreach ($this->parameterRoutes[$method] ?? [] as $route) if (preg_match($route['regex'], $path) === 1) return $this->statelessRoutes[$method . ' ' . $route['path']] ?? false;
+        foreach ($this->parameterRoutes[$method] ?? [] as $route) {
+            if ($this->matchParameterRoute($route, $path) !== false) {
+                return $this->statelessRoutes[$method . ' ' . $route['path']] ?? false;
+            }
+        }
 
         // Unmatched GET/HEAD requests are handled only by the public fallback
         // chain (URL rewrites, published Pages, then 404). Classify them before
@@ -122,7 +135,13 @@ final class Router
     {
         $path=$this->normalise($path);$methods=[];
         foreach(array_keys($this->routes) as $key){[$method,$registered]=explode(' ',$key,2);if($registered===$path)$methods[]=$method;}
-        foreach($this->parameterRoutes as $method=>$routes)foreach($routes as $route)if(preg_match($route['regex'],$path)===1)$methods[]=$method;
+        foreach ($this->parameterRoutes as $method => $routes) {
+            foreach ($routes as $route) {
+                if ($this->matchParameterRoute($route, $path) !== false) {
+                    $methods[] = $method;
+                }
+            }
+        }
         if(in_array('GET',$methods,true))$methods[]='HEAD';
         $methods=array_values(array_unique($methods));sort($methods);return $methods;
     }
@@ -130,9 +149,43 @@ final class Router
     private function match(string $method,string $path,Request $request):?array
     {
         $key=$method.' '.$path;if(isset($this->routes[$key]))return [$this->routes[$key],$request];
-        foreach($this->parameterRoutes[$method]??[] as $route){if(preg_match($route['regex'],$path,$matches)!==1)continue;$params=[];foreach($route['params'] as $name)$params[$name]=rawurldecode(($matches[$name]??''));return [$route['handler'],$request->withRouteParams($params)];}
+        foreach ($this->parameterRoutes[$method] ?? [] as $route) {
+            $params = $this->matchParameterRoute($route, $path);
+            if ($params !== false) {
+                return [$route['handler'], $request->withRouteParams($params)];
+            }
+        }
         return null;
     }
+
+    /**
+     * @param array{path: string, regex: string, shape: string, params: list<string>, handler: callable(Request): Response} $route
+     * @return array<string, string>|false
+     */
+    private function matchParameterRoute(array $route, string $path): array|false
+    {
+        if (preg_match($route['regex'], $path, $matches) !== 1) {
+            return false;
+        }
+
+        $params = [];
+        foreach ($route['params'] as $name) {
+            $encoded = $matches[$name] ?? '';
+            if (preg_match('/%(?![0-9A-Fa-f]{2})/', $encoded) === 1) {
+                return false;
+            }
+
+            $decoded = rawurldecode($encoded);
+            $introducedSlash = !str_contains($encoded, '/') && str_contains($decoded, '/');
+            if ($introducedSlash || str_contains($decoded, '\\') || str_contains($decoded, "\0")) {
+                return false;
+            }
+            $params[$name] = $decoded;
+        }
+
+        return $params;
+    }
+
     /**
      * @param callable(Request): Response $handler
      */
@@ -165,13 +218,14 @@ final class Router
 
     /**
      * @param callable(Request): Response $handler
-     * @return array{path: string, regex: string, params: list<string>, handler: callable(Request): Response}
+     * @return array{path: string, regex: string, shape: string, params: list<string>, handler: callable(Request): Response}
      */
     private function compileParameterRoute(string $path, callable $handler): array
     {
         $params = [];
         $segments = trim($path, '/') === '' ? [] : explode('/', trim($path, '/'));
         $regexParts = [];
+        $shapeParts = [];
 
         foreach ($segments as $segment) {
             if (preg_match('/^\{([A-Za-z_][A-Za-z0-9_]*)(?::(.+))?\}$/', $segment, $matches) === 1) {
@@ -184,6 +238,7 @@ final class Router
                 $constraint = str_replace('#', '\#', $constraint);
                 $params[] = $name;
                 $regexParts[] = '(?P<' . $name . '>' . $constraint . ')';
+                $shapeParts[] = '{}';
                 continue;
             }
 
@@ -192,6 +247,7 @@ final class Router
             }
 
             $regexParts[] = preg_quote($segment, '#');
+            $shapeParts[] = $segment;
         }
 
         $regex = '#^/' . implode('/', $regexParts) . '$#';
@@ -206,6 +262,7 @@ final class Router
         return [
             'path' => $path,
             'regex' => $regex,
+            'shape' => '/' . implode('/', $shapeParts),
             'params' => $params,
             'handler' => $handler,
         ];
