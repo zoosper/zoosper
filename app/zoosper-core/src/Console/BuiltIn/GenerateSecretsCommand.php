@@ -8,6 +8,7 @@ use Zoosper\Core\Console\ConsoleCommandInterface;
 use Zoosper\Core\Console\ConsoleOptions;
 use Zoosper\Core\Console\ConsoleOutput;
 use Zoosper\Core\Environment\SecureEnvFileEditor;
+use Zoosper\Core\Security\SecretStrengthPolicy;
 
 /**
  * Generates cryptographically secure secrets and keys for application security,
@@ -15,19 +16,6 @@ use Zoosper\Core\Environment\SecureEnvFileEditor;
  */
 final readonly class GenerateSecretsCommand implements ConsoleCommandInterface
 {
-    /** @var list<string> */
-    private const EXACT_PLACEHOLDERS = [
-        'change-me',
-        'change-me-before-production',
-        'secret',
-        'changeme',
-        'placeholder',
-        'default',
-        'password',
-        'test',
-        'null',
-    ];
-
     public function __construct(private string $basePath)
     {
     }
@@ -125,8 +113,11 @@ final readonly class GenerateSecretsCommand implements ConsoleCommandInterface
                 continue;
             }
 
-            if ($this->isPlaceholder($trimmed)) {
-                $output->writeln("  [FAIL] {$key}: Uses an insecure placeholder value");
+            if (!SecretStrengthPolicy::isStrong($trimmed)) {
+                $reason = SecretStrengthPolicy::isPlaceholder($trimmed)
+                    ? 'Uses an insecure placeholder value'
+                    : 'Does not meet the minimum 32-byte strength requirement';
+                $output->writeln("  [FAIL] {$key}: {$reason}");
                 $hasFailure = true;
                 continue;
             }
@@ -145,26 +136,6 @@ final readonly class GenerateSecretsCommand implements ConsoleCommandInterface
         return 0;
     }
 
-    private function isPlaceholder(string $value): bool
-    {
-        $lower = strtolower($value);
-        if (str_starts_with($lower, 'base64:')) {
-            $decoded = base64_decode(substr($value, 7), true);
-            if ($decoded !== false) {
-                $lowerDecoded = strtolower(trim($decoded));
-                if (in_array($lowerDecoded, self::EXACT_PLACEHOLDERS, true) || str_contains($lowerDecoded, 'change-me')) {
-                    return true;
-                }
-            }
-        }
-
-        if (in_array($lower, self::EXACT_PLACEHOLDERS, true)) {
-            return true;
-        }
-
-        return str_contains($lower, 'change-me') || str_contains($lower, 'placeholder');
-    }
-
     /**
      * @param array<string, string> $generated
      * @return array<string, string>
@@ -175,8 +146,7 @@ final readonly class GenerateSecretsCommand implements ConsoleCommandInterface
             $envFile,
             $generated,
             fn (string $currentValue): bool => $force
-                || $currentValue === ''
-                || $this->isPlaceholder($currentValue),
+                || !SecretStrengthPolicy::isStrong($currentValue),
         );
     }
 

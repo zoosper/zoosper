@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Core\Http;
 
 use RuntimeException;
+use Zoosper\Core\Security\SecretStrengthPolicy;
 
 /** Fail-closed public-environment defaults for session and authentication controls. */
 final class ProductionSecurityPolicy
@@ -55,26 +56,21 @@ final class ProductionSecurityPolicy
             throw new RuntimeException(ucfirst($environment) . ' requires RATE_LIMIT_MODE=enforce.');
         }
 
-        $placeholders = ['change-me', 'change-me-before-production', 'secret', 'changeme', 'placeholder'];
-
-        $salt = trim((string) $value('RATE_LIMIT_IDENTITY_SALT', ''));
-        if ($salt === '' || in_array(strtolower($salt), $placeholders, true)) {
-            throw new RuntimeException(ucfirst($environment) . ' requires a strong RATE_LIMIT_IDENTITY_SALT.');
-        }
-
-        $twoFactorKey = trim((string) $value('TWO_FACTOR_ENCRYPTION_KEY', ''));
-        if ($twoFactorKey === '' || in_array(strtolower($twoFactorKey), $placeholders, true)) {
-            throw new RuntimeException(ucfirst($environment) . ' requires a strong TWO_FACTOR_ENCRYPTION_KEY.');
-        }
-
-        $appKey = trim((string) $value('APP_KEY', ''));
-        if ($appKey !== '' && in_array(strtolower($appKey), $placeholders, true)) {
-            throw new RuntimeException(ucfirst($environment) . ' requires a strong APP_KEY.');
+        foreach ([
+            'RATE_LIMIT_IDENTITY_SALT',
+            'TWO_FACTOR_ENCRYPTION_KEY',
+            'APP_KEY',
+        ] as $secretKey) {
+            if (!SecretStrengthPolicy::isStrong((string) $value($secretKey, ''))) {
+                throw new RuntimeException(
+                    ucfirst($environment) . ' requires a strong ' . $secretKey . '.',
+                );
+            }
         }
         $cacheDriver = strtolower(trim((string) $value('CACHE_DRIVER', 'file')));
         if ($cacheDriver === 'redis') {
             $redisPassword = trim((string) $value('CACHE_REDIS_PASSWORD', ''));
-            if ($redisPassword === '' || in_array(strtolower($redisPassword), $placeholders, true)) {
+            if ($redisPassword === '' || SecretStrengthPolicy::isPlaceholder($redisPassword)) {
                 throw new RuntimeException(
                     ucfirst($environment) . ' requires authenticated Redis when CACHE_DRIVER=redis. '
                     . 'Set CACHE_REDIS_PASSWORD to a strong deployment secret.',
@@ -82,10 +78,7 @@ final class ProductionSecurityPolicy
             }
 
             $cacheEncryptionKey = trim((string) $value('CACHE_ENCRYPTION_KEY', ''));
-            if (
-                strlen($cacheEncryptionKey) < 32
-                || in_array(strtolower($cacheEncryptionKey), $placeholders, true)
-            ) {
+            if (!SecretStrengthPolicy::isStrong($cacheEncryptionKey)) {
                 throw new RuntimeException(
                     ucfirst($environment) . ' requires a strong CACHE_ENCRYPTION_KEY when CACHE_DRIVER=redis.',
                 );

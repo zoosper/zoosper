@@ -72,6 +72,10 @@ it('rejects each weakened public-environment control independently', function (s
     'placeholder identity salt' => ['RATE_LIMIT_IDENTITY_SALT', 'change-me'],
     'placeholder 2fa key' => ['TWO_FACTOR_ENCRYPTION_KEY', 'change-me'],
     'empty 2fa key' => ['TWO_FACTOR_ENCRYPTION_KEY', ''],
+    'short 2fa key' => ['TWO_FACTOR_ENCRYPTION_KEY', 'short-2fa-key'],
+    'empty app key' => ['APP_KEY', ''],
+    'short app key' => ['APP_KEY', 'short-app-key'],
+    'short identity salt' => ['RATE_LIMIT_IDENTITY_SALT', 'short-salt'],
     'placeholder app key' => ['APP_KEY', 'change-me'],
     'sqlite in production' => ['DB_DRIVER', 'sqlite'],
 ]);

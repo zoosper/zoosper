@@ -74,7 +74,7 @@ it('audits existing secrets and fails when placeholders are present', function (
     $tempDir = sys_get_temp_dir() . '/zoosper-secrets-test-' . bin2hex(random_bytes(6));
     @mkdir($tempDir, 0777, true);
     $envFile = $tempDir . '/.env';
-    file_put_contents($envFile, "APP_KEY=change-me\nTWO_FACTOR_ENCRYPTION_KEY=\nRATE_LIMIT_IDENTITY_SALT=secure-salt-12345678901234567890\nCACHE_ENCRYPTION_KEY=secure-key-12345678901234567890\n");
+    file_put_contents($envFile, "APP_KEY=change-me\nTWO_FACTOR_ENCRYPTION_KEY=\nRATE_LIMIT_IDENTITY_SALT=secure-salt-12345678901234567890\nCACHE_ENCRYPTION_KEY=secure-key-123456789012345678901\n");
 
     try {
         $command = new GenerateSecretsCommand($tempDir);
@@ -90,6 +90,19 @@ it('audits existing secrets and fails when placeholders are present', function (
         @unlink($envFile);
         @rmdir($tempDir);
     }
+});
+
+it('rejects short non-placeholder values during secret audit', function (): void {
+    $tempDir = sys_get_temp_dir() . '/zoosper-secrets-test-' . bin2hex(random_bytes(6));
+    @mkdir($tempDir, 0777, true);
+    $envFile = $tempDir . '/.env';
+    file_put_contents($envFile, "APP_KEY=short-app-key\nTWO_FACTOR_ENCRYPTION_KEY=short-2fa-key\nRATE_LIMIT_IDENTITY_SALT=short-salt\nCACHE_ENCRYPTION_KEY=short-cache-key\n");
+    try {
+        [$code, $output] = captureOutput(fn (ConsoleOutput $output): int => (new GenerateSecretsCommand($tempDir))->run(['--check'], $output));
+        expect($code)->toBe(1)
+            ->and(substr_count($output, 'Does not meet the minimum 32-byte strength requirement'))->toBe(4)
+            ->and($output)->not->toContain('short-app-key');
+    } finally { @unlink($envFile); @rmdir($tempDir); }
 });
 
 it('audits existing secrets and passes when all are strong', function (): void {
@@ -124,7 +137,7 @@ it('audits quoted and export-prefixed placeholders through the canonical parser 
     $tempDir = sys_get_temp_dir() . '/zoosper-secrets-test-' . bin2hex(random_bytes(6));
     @mkdir($tempDir, 0777, true);
     $envFile = $tempDir . '/.env';
-    file_put_contents($envFile, "export APP_KEY=\"change-me\" # rotate\nTWO_FACTOR_ENCRYPTION_KEY='placeholder-private-value'\nRATE_LIMIT_IDENTITY_SALT=secure-salt-12345678901234567890\nCACHE_ENCRYPTION_KEY=secure-key-12345678901234567890\n");
+    file_put_contents($envFile, "export APP_KEY=\"change-me\" # rotate\nTWO_FACTOR_ENCRYPTION_KEY='placeholder-private-value'\nRATE_LIMIT_IDENTITY_SALT=secure-salt-12345678901234567890\nCACHE_ENCRYPTION_KEY=secure-key-123456789012345678901\n");
 
     try {
         $command = new GenerateSecretsCommand($tempDir);

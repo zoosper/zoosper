@@ -9,9 +9,9 @@ it('fails closed for insecure production defaults', function (string $envVar, st
     putenv('SESSION_SECURE=true');
     putenv('RATE_LIMIT_ENABLED=true');
     putenv('RATE_LIMIT_MODE=enforce');
-    putenv('RATE_LIMIT_IDENTITY_SALT=strong-random-test-salt');
-    putenv('TWO_FACTOR_ENCRYPTION_KEY=strong-random-2fa-test-key');
-    putenv('APP_KEY=strong-random-test-key');
+    putenv('RATE_LIMIT_IDENTITY_SALT=' . str_repeat('a', 32));
+    putenv('TWO_FACTOR_ENCRYPTION_KEY=' . str_repeat('b', 32));
+    putenv('APP_KEY=' . str_repeat('c', 32));
     putenv('DB_DRIVER=mysql');
 
     // Trigger failure
@@ -34,6 +34,7 @@ it('fails closed for insecure production defaults', function (string $envVar, st
     ['TWO_FACTOR_ENCRYPTION_KEY', 'placeholder', 'Production requires a strong TWO_FACTOR_ENCRYPTION_KEY.'],
     ['APP_KEY', 'change-me', 'Production requires a strong APP_KEY.'],
     ['APP_KEY', 'placeholder', 'Production requires a strong APP_KEY.'],
+    ['APP_KEY', 'short-app-key', 'Production requires a strong APP_KEY.'],
     ['DB_DRIVER', 'sqlite', 'Production requires a production database driver'],
 ]);
 
