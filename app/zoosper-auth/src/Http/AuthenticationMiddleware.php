@@ -6,6 +6,7 @@ namespace Zoosper\Auth\Http;
 
 use Override;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Core\Http\Middleware\AdminAuthenticationMiddleware;
 use Zoosper\Core\Http\Middleware\RouteContext;
 use Zoosper\Core\Http\Middleware\RouteMiddleware;
 use Zoosper\Core\Http\Request;
@@ -21,7 +22,7 @@ use Zoosper\Core\Http\Response;
  *
  * Applied to admin routes only; the stateless API pipeline is not affected.
  */
-final readonly class AuthenticationMiddleware implements RouteMiddleware
+final readonly class AuthenticationMiddleware implements AdminAuthenticationMiddleware
 {
     public function __construct(
         private SessionGuard $guard,

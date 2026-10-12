@@ -24,9 +24,9 @@ return [
     ['method' => 'POST', 'path' => '/admin/users/{id:\d+}/unlock', 'controller' => UserAdminController::class, 'action' => 'unlock', 'permission' => 'user.manage'],
     ['method' => 'POST', 'path' => '/admin/users/{id:\d+}/delete', 'controller' => UserAdminController::class, 'action' => 'delete', 'permission' => 'user.manage'],
     ['method' => 'POST', 'path' => '/admin/roles/{id:\d+}/delete', 'controller' => RoleAdminController::class, 'action' => 'deletePermanently', 'permission' => 'role.manage'],
-    ['method' => 'GET', 'path' => '/admin/access-tokens', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'index'],
-    ['method' => 'POST', 'path' => '/admin/access-tokens/create', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'create'],
-    ['method' => 'POST', 'path' => '/admin/access-tokens/{id:\d+}/revoke', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'revoke'],
+    ['method' => 'GET', 'path' => '/admin/access-tokens', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'index', 'permission' => 'admin.access'],
+    ['method' => 'POST', 'path' => '/admin/access-tokens/create', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'create', 'permission' => 'admin.access'],
+    ['method' => 'POST', 'path' => '/admin/access-tokens/{id:\d+}/revoke', 'controller' => PersonalAccessTokenAdminController::class, 'action' => 'revoke', 'permission' => 'admin.access'],
 ];
 
 

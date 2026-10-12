@@ -17,6 +17,7 @@ use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Container\ServiceProviderLoader;
 use Zoosper\Database\ConnectionFactory;
 use Zoosper\Core\Http\Application;
+use Zoosper\Core\Http\Middleware\AdminAuthenticationMiddleware;
 use Zoosper\Core\Http\Middleware\ModuleAdminMiddlewareLoader;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -89,11 +90,15 @@ final class ApplicationFactory
         );
 
         $adminMiddleware = (new ModuleAdminMiddlewareLoader($modules, $services))->load();
-        if ($adminMiddleware === []) {
+        $hasAdminAuthentication = array_any(
+            $adminMiddleware,
+            static fn (object $middleware): bool => $middleware instanceof AdminAuthenticationMiddleware,
+        );
+        if (!$hasAdminAuthentication) {
             throw new \Zoosper\Errors\ZoosperException(
-                message: 'Admin middleware pipeline is empty.',
-                context: 'Admin routes are about to be registered without authentication, CSRF or other module-contributed middleware.',
-                suggestion: 'Enable the Auth module and ensure its config/admin_middleware.php manifest is discoverable before booting the application.',
+                message: 'Admin authentication middleware is missing.',
+                context: 'Admin routes are about to be registered without the mandatory authentication guard.',
+                suggestion: 'Enable the Auth module and ensure its AdminAuthenticationMiddleware implementation is discoverable before booting the application.',
                 docsUrl: 'docs/operations/troubleshooting-helpful-errors.md',
             );
         }

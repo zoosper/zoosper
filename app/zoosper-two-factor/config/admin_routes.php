@@ -18,12 +18,14 @@ return [
         'path' => '/admin/2fa/setup',
         'controller' => AdminTwoFactorSetupController::class,
         'action' => 'form',
+        'permission' => 'admin.access',
     ],
     [
         'method' => 'POST',
         'path' => '/admin/2fa/setup',
         'controller' => AdminTwoFactorSetupController::class,
         'action' => 'confirm',
+        'permission' => 'admin.access',
     ],
 
     /*

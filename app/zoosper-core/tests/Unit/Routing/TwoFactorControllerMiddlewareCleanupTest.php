@@ -41,7 +41,7 @@ test('two-factor setup routes remain authenticated admin routes', function () {
     foreach (['GET /admin/2fa/setup', 'POST /admin/2fa/setup'] as $route) {
         expect($map)->toHaveKey($route);
         expect($map[$route]['public'])->toBeFalse();
-        expect($map[$route]['permissions'])->toBe([]);
+        expect($map[$route]['permissions'])->toBe(['admin.access']);
     }
 });
 
