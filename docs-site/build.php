@@ -9,7 +9,7 @@ $outputRoot = $siteRoot . '/build';
 
 $navigation = [
     'Overview' => ['README'],
-    'Getting started' => ['getting-started', 'deployment', 'operations/production-operator-runbook', 'upgrade', 'troubleshooting'],
+    'Getting started' => ['getting-started', 'deployment', 'operations/production-operator-runbook', 'operations/production-acceptance-record', 'upgrade', 'troubleshooting'],
     'User guide' => ['user-guide'],
     'Developer guide' => ['developer-guide', 'architecture', 'modules', 'configuration', 'cli', 'api', 'admin', 'themes', 'testing'],
     'Project' => ['releases/current-development', 'releases/release-promotion', 'release-checklist'],
@@ -23,6 +23,7 @@ $labels = [
     'troubleshooting' => 'Troubleshooting', 'testing' => 'Testing',
     'releases/current-development' => 'Current Development', 'releases/release-promotion' => 'Release Promotion',
     'release-checklist' => 'Release Checklist',
+    'operations/production-acceptance-record' => 'Production Acceptance Record',
 ];
 
 function removeDirectory(string $directory): void
@@ -67,7 +68,7 @@ function cleanBuildDirectory(string $directory, array $preserveNames = ['.git', 
 function pageUrl(string $id): string { return $id === 'README' ? '/' : '/' . $id . '/'; }
 function escapeHtml(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 
-function inlineMarkdown(string $text): string
+function inlineMarkdown(string $text, string $currentPageId = 'README'): string
 {
     $tokens = [];
     $text = preg_replace_callback('/`([^`]+)`/', static function (array $match) use (&$tokens): string {
@@ -78,7 +79,7 @@ function inlineMarkdown(string $text): string
     $text = escapeHtml($text);
     $text = preg_replace_callback(
         '/\[([^\]]+)\]\(([^)]+)\)/',
-        static function (array $match): string {
+        static function (array $match) use ($currentPageId): string {
             $label = $match[1];
             $href = html_entity_decode($match[2], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
             if (!preg_match('~^(?:https?:|mailto:|#)~', $href)) {
@@ -87,6 +88,12 @@ function inlineMarkdown(string $text): string
                 $fragment = is_array($parts) && isset($parts['fragment']) ? '#' . $parts['fragment'] : '';
                 if (str_ends_with($path, '.md')) {
                     $id = trim((string) preg_replace('/\.md$/', '', $path), '/');
+                    if (!str_starts_with($path, '/')) {
+                        $directory = dirname($currentPageId);
+                        if ($directory !== '.') {
+                            $id = $directory . '/' . $id;
+                        }
+                    }
                     $href = pageUrl($id) . $fragment;
                 }
             }
@@ -99,7 +106,7 @@ function inlineMarkdown(string $text): string
     return strtr($text, $tokens);
 }
 
-function markdownToHtml(string $markdown): array
+function markdownToHtml(string $markdown, string $currentPageId = 'README'): array
 {
     $lines = preg_split('/\R/', $markdown) ?: [];
     $html = [];
@@ -110,8 +117,8 @@ function markdownToHtml(string $markdown): array
     $codeLanguage = '';
     $code = [];
 
-    $flushParagraph = static function () use (&$paragraph, &$html): void {
-        if ($paragraph !== []) { $html[] = '<p>' . inlineMarkdown(implode(' ', $paragraph)) . '</p>'; $paragraph = []; }
+    $flushParagraph = static function () use (&$paragraph, &$html, $currentPageId): void {
+        if ($paragraph !== []) { $html[] = '<p>' . inlineMarkdown(implode(' ', $paragraph), $currentPageId) . '</p>'; $paragraph = []; }
     };
     $closeList = static function () use (&$listType, &$html): void {
         if ($listType !== null) { $html[] = '</' . $listType . '>'; $listType = null; }
@@ -133,20 +140,20 @@ function markdownToHtml(string $markdown): array
         if (preg_match('/^(#{1,6})\s+(.+)$/', $line, $match)) {
             $flushParagraph(); $closeList();
             $level = strlen($match[1]); $heading = trim($match[2]);
-            if ($level === 1) { $title = trim(strip_tags(inlineMarkdown($heading))); }
+            if ($level === 1) { $title = trim(strip_tags(inlineMarkdown($heading, $currentPageId))); }
             $id = strtolower(trim(preg_replace('/[^a-z0-9]+/i', '-', strip_tags($heading)) ?? '', '-'));
-            $html[] = "<h{$level} id=\"" . escapeHtml($id) . "\">" . inlineMarkdown($heading) . "</h{$level}>";
+            $html[] = "<h{$level} id=\"" . escapeHtml($id) . "\">" . inlineMarkdown($heading, $currentPageId) . "</h{$level}>";
             continue;
         }
         if (preg_match('/^[-*]\s+(.+)$/', $line, $match)) {
             $flushParagraph(); if ($listType !== 'ul') { $closeList(); $listType = 'ul'; $html[] = '<ul>'; }
-            $html[] = '<li>' . inlineMarkdown($match[1]) . '</li>'; continue;
+            $html[] = '<li>' . inlineMarkdown($match[1], $currentPageId) . '</li>'; continue;
         }
         if (preg_match('/^\d+\.\s+(.+)$/', $line, $match)) {
             $flushParagraph(); if ($listType !== 'ol') { $closeList(); $listType = 'ol'; $html[] = '<ol>'; }
-            $html[] = '<li>' . inlineMarkdown($match[1]) . '</li>'; continue;
+            $html[] = '<li>' . inlineMarkdown($match[1], $currentPageId) . '</li>'; continue;
         }
-        if (str_starts_with($line, '> ')) { $flushParagraph(); $closeList(); $html[] = '<blockquote>' . inlineMarkdown(substr($line, 2)) . '</blockquote>'; continue; }
+        if (str_starts_with($line, '> ')) { $flushParagraph(); $closeList(); $html[] = '<blockquote>' . inlineMarkdown(substr($line, 2), $currentPageId) . '</blockquote>'; continue; }
         $paragraph[] = trim($line);
     }
     $flushParagraph(); $closeList();
@@ -230,7 +237,7 @@ foreach ($navigation as $ids) { foreach ($ids as $id) { $known[$id] = true; } }
 foreach (array_keys($known) as $id) {
     $source = $docsRoot . '/' . $id . '.md';
     if (!is_file($source)) { throw new RuntimeException("Missing canonical document: {$source}"); }
-    [$title, $content] = markdownToHtml((string) file_get_contents($source));
+    [$title, $content] = markdownToHtml((string) file_get_contents($source), $id);
     $directory = $id === 'README' ? $outputRoot : $outputRoot . '/' . $id;
     if (!is_dir($directory)) { mkdir($directory, 0775, true); }
     file_put_contents($directory . '/index.html', layout($title, $content, navigationHtml($navigation, $labels, $id), $logoFile, $faviconFile));

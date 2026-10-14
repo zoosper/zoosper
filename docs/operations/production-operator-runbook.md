@@ -1,6 +1,6 @@
 # Production operator runbook
 
-This runbook is the canonical pre-deployment and post-deployment checklist for a Zoosper staging or production installation. Run commands from the project root with PHP 8.5. Never paste secrets into logs, tickets, shell history, or public issue trackers.
+This runbook is the canonical pre-deployment and post-deployment checklist for a Zoosper staging or production installation. Run commands from the project root with PHP 8.5. Never paste secrets into logs, tickets, shell history, or public issue trackers. Record one exact target deployment using the [production acceptance record](production-acceptance-record.md); repository-local tests do not replace target-environment evidence.
 
 ## 1. Obtain and verify the release
 

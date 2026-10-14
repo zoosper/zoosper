@@ -20,6 +20,7 @@ Temporary planning, audit, migration and phase documentation must be merged into
 - [Themes](themes.md)
 - [Deployment](deployment.md)
 - [Production operator runbook](operations/production-operator-runbook.md)
+- [Production acceptance record](operations/production-acceptance-record.md)
 - [Upgrade](upgrade.md)
 - [Troubleshooting](troubleshooting.md)
 - [Testing](testing.md)
