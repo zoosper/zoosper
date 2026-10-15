@@ -28,3 +28,8 @@ it('reports queue depth retries failures and persisted latency', function (): vo
         ->and($status->averageProcessingSeconds)->toBe(30)
         ->and($status->maximumProcessingSeconds)->toBe(30);
 });
+
+it('aggregates persisted durations in SQL without loading every completed row', function (): void {
+    $source=(string)file_get_contents(dirname(__DIR__,3).'/src/Queue/MediaQueueStatusRepository.php');
+    expect($source)->toContain('AVG({$expression})')->toContain('MAX({$expression})')->not->toContain('SELECT {$startColumn} AS started, {$endColumn} AS ended');
+});

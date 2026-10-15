@@ -14,18 +14,15 @@ return new class implements MigrationInterface {
         if (!$inspector->tableExists('media_processing_queue')) {
             return;
         }
-        $columns = $inspector->columns('media_processing_queue');
         foreach (['started_at', 'completed_at'] as $column) {
-            if (isset($columns[$column])) {
+            if ($inspector->columnExists('media_processing_queue', $column)) {
                 continue;
             }
             $type = $driver === 'mysql' ? 'DATETIME' : 'TEXT';
             $pdo->exec("ALTER TABLE media_processing_queue ADD COLUMN {$column} {$type} NULL");
         }
-        if ($driver === 'mysql') {
+        if (!$inspector->indexExists('media_processing_queue', 'idx_media_queue_status_created')) {
             $pdo->exec('CREATE INDEX idx_media_queue_status_created ON media_processing_queue (status, created_at)');
-        } else {
-            $pdo->exec('CREATE INDEX IF NOT EXISTS idx_media_queue_status_created ON media_processing_queue(status, created_at)');
         }
     }
 };

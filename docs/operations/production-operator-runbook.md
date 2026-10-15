@@ -110,7 +110,7 @@ Require the compiled manifest to be fresh and every release check to pass. Ensur
 
 ## 9. Schedule maintenance and workers
 
-Schedule `php8.5 bin/zoosper rate-limit:prune` with overlap protection. Run `php8.5 bin/zoosper media:process-queue` under a supervised worker and alert on a non-zero batch exit. Monitor `php8.5 bin/zoosper media:queue:status --format=json` for pending and processing depth, pending retries, failed jobs, oldest-pending age, queue wait, and processing latency. The status command is read-only and emits no filenames, paths, plans, or error text. See the rate-limit pruning runbook for scheduler examples.
+Schedule `php8.5 bin/zoosper rate-limit:prune` with overlap protection. Run `php8.5 bin/zoosper media:process-queue` under a supervised worker and alert on a non-zero batch exit. Multiple workers may overlap safely because each task uses an atomic single-winner claim. A processing lease older than 15 minutes is recovered on the next worker run; investigate repeated expiry before increasing worker concurrency or changing the lease boundary. Monitor `php8.5 bin/zoosper media:queue:status --format=json` for pending and processing depth, pending retries, failed jobs, oldest-pending age, queue wait, and processing latency. The status command is read-only and emits no filenames, paths, plans, or error text. See the rate-limit pruning runbook for scheduler examples.
 
 ## 10. Security disclosure and dependency monitoring
 

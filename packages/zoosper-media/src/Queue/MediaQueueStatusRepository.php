@@ -63,18 +63,20 @@ final readonly class MediaQueueStatusRepository
     /** @return array{average: ?int, maximum: ?int} */
     private function durations(string $startColumn, string $endColumn, string $where): array
     {
-        $rows = $this->pdo->query(
-            "SELECT {$startColumn} AS started, {$endColumn} AS ended FROM media_processing_queue WHERE {$where}"
-        )->fetchAll(PDO::FETCH_ASSOC) ?: [];
-        $values = [];
-        foreach ($rows as $row) {
-            $started = new DateTimeImmutable((string) $row['started'], new DateTimeZone('UTC'));
-            $ended = new DateTimeImmutable((string) $row['ended'], new DateTimeZone('UTC'));
-            $values[] = max(0, $ended->getTimestamp() - $started->getTimestamp());
+        $driverAttribute = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if (!is_string($driverAttribute)) {
+            throw new \RuntimeException('PDO driver name must be a string.');
         }
-        if ($values === []) {
+        $driver = $driverAttribute;
+        $expression = $driver === 'mysql'
+            ? "TIMESTAMPDIFF(SECOND, {$startColumn}, {$endColumn})"
+            : "CAST(strftime('%s', {$endColumn}) - strftime('%s', {$startColumn}) AS INTEGER)";
+        $row = $this->pdo->query(
+            "SELECT ROUND(AVG({$expression})) AS average_seconds, MAX({$expression}) AS maximum_seconds FROM media_processing_queue WHERE {$where}"
+        )->fetch(PDO::FETCH_ASSOC);
+        if ($row === false || $row['average_seconds'] === null) {
             return ['average' => null, 'maximum' => null];
         }
-        return ['average' => (int) round(array_sum($values) / count($values)), 'maximum' => max($values)];
+        return ['average' => max(0, (int) $row['average_seconds']), 'maximum' => max(0, (int) $row['maximum_seconds'])];
     }
 }
