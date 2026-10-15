@@ -28,7 +28,7 @@ The 0.3.2 line is the beta-readiness public-alpha progression after the substant
 
 ## Current release judgement
 
-At development commit `9f3d4dd857f57357795bd3bd3fec582f9114c55a`, continue on `dev`. The verified post-alpha.4 correctness cohorts improve the development line, but C1-C5 closure and the source-confirmed security-assurance residuals in `ROADMAP.md` remain open. Do not create a new tag or promote `master` from this commit without a separately approved release-candidate rehearsal and the evidence required by `docs/release-checklist.md`.
+At development commit `674bb4b8c74d4951b38866715afece60b100588f`, continue on `dev`. The verified post-alpha.4 correctness cohorts improve the development line, but C1-C5 closure and the source-confirmed security-assurance residuals in `ROADMAP.md` remain open. Do not create a new tag or promote `master` from this commit without a separately approved release-candidate rehearsal and the evidence required by `docs/release-checklist.md`.
 
 ## Beta-readiness Composer policy
 

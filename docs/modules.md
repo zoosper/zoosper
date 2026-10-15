@@ -39,4 +39,6 @@ Public project summaries must be reconciled with detailed phase notes and curren
 
 First-party `zoosper/*` packages in the monorepo share the Zoosper release train. Root path repositories assign the current package candidate explicitly through Composer `options.versions`; package manifests use `^0.3.1@alpha` for compatible first-party dependencies instead of a branch constraint. This accepts compatible 0.3 public-alpha and later prerelease packages below 0.4 while keeping package installation independent of the Git `dev` branch name.
 
+The full supported consumer and update workflow is defined by the [distribution, compatibility and support contract](compatibility-and-support.md).
+
 The root project keeps `prefer-stable: true` and does not use `minimum-stability: dev`. Platform requirements such as `ext-pdo: *` and `ext-curl: *` remain valid capability declarations and are not package-version wildcards. New module scaffolders must emit the same bounded first-party constraint.

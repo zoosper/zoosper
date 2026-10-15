@@ -11,6 +11,7 @@ Temporary planning, audit, migration and phase documentation must be merged into
 - [Getting started](getting-started.md)
 - [User guide](user-guide.md)
 - [Developer guide](developer-guide.md)
+- [Distribution, compatibility and support](compatibility-and-support.md)
 - [Architecture](architecture.md)
 - [Modules](modules.md)
 - [Configuration](configuration.md)

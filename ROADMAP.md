@@ -12,7 +12,7 @@ This file tracks only work required to close the current Zoosper CMS programme w
 - Alpha.4 publication and public artifact checksum verification are complete. Production deployment acceptance and C1-C5 programme closure remain open.
 - No stable release has shipped.
 - PHP 8.5, blocking full-scope Psalm, complete Pest, JavaScript behaviour/syntax gates, dual SQLite/MySQL release evidence, deterministic production artifacts, upgrade proofs, security hardening, canonical documentation, and production operations guidance are already established.
-- Current Psalm baseline: `917` code entries at development commit `9f3d4dd857f57357795bd3bd3fec582f9114c55a`. It is stale-entry rejecting and cannot grow unnoticed; refresh this measured value whenever a verified cohort changes `psalm-baseline.xml`.
+- Current Psalm baseline: `915` code entries at development commit `674bb4b8c74d4951b38866715afece60b100588f`. It is stale-entry rejecting and cannot grow unnoticed; refresh this measured value whenever a verified cohort changes `psalm-baseline.xml`.
 
 ## Closure definition
 
@@ -35,13 +35,13 @@ Closure does not mean that every possible enhancement has been built. It means t
 
 ### C3. Stable distribution and compatibility contract
 
-- [ ] **C3.1 Distribution model.** Choose and document either published first-party Composer packages or a supported monorepo/path-package consumer model. Include the supported third-party module installation and update workflow.
-- [ ] **C3.2 Compatibility policy.** Define the stable public API, extension, configuration, database schema, deprecation, and semantic-versioning guarantees.
-- [ ] **C3.3 Upgrade and support policy.** Define supported release lines, security-fix policy, upgrade paths, rollback expectations, and minimum runtime/database requirements for the first non-alpha release.
+- [x] **C3.1 Distribution model.** The root project is the supported synchronised monorepo/path-package distribution; tagged checkouts and deterministic production artifacts are the deployment units. The third-party and local-module installation/update workflow is canonical in `docs/compatibility-and-support.md`.
+- [x] **C3.2 Compatibility policy.** Public API, extension, configuration, CLI, database, deprecation and semantic-versioning boundaries are defined in `docs/compatibility-and-support.md`, while preserving the current public-alpha status.
+- [x] **C3.3 Upgrade and support policy.** Supported public-alpha lines, private security reporting, evidence-backed upgrade origins, rollback expectations, and minimum PHP/database requirements are defined in `docs/compatibility-and-support.md`. A stable support lifetime must still be selected before a stable tag.
 
 ### C4. Operational closure
 
-- [ ] **C4.1 Media queue observability.** Provide operationally usable depth, failure, retry, and processing-latency visibility for the existing Media queue before claiming high-volume production readiness.
+- [x] **C4.1 Media queue observability.** `media:queue:status --format=json` provides secret-safe depth, retries, failures, oldest-pending age, queue wait and processing latency; the worker records start/completion timestamps and exits non-zero on batch failure. Deployment-owned alert thresholds remain part of C4.2 target acceptance.
 - [ ] **C4.2 Production acceptance record.** Execute and record the operator-runbook checks in the target environment, including enforcing CSP browser workflows, trusted proxies, selected cache backend, SMTP and `APP_URL`, secret policy, public-webroot isolation, MySQL migration and foreign-key integrity, queue workers, scheduled maintenance, and post-deploy health.
 - [~] **C4.3 External dependency and disclosure review.** The current development lock resolves `source-map-js` to patched version `1.2.2` after reviewing GHSA-68fv-2mgg-jv7q. Reconfirm clean locked Composer and npm audits and exercise the private security-reporting path for the release.
 - [x] **C4.4 Verified security-assurance residuals.** Source-confirmed residuals are closed with executable contracts: production Admin composition requires Authentication middleware; non-public Admin routes require explicit access classification; runtime and secret-audit strength rules share one policy; Store Orders is an optional integration included for compatibility testing but contributes no runtime surface unless a deployment explicitly opts in; every assembled TOTP challenge service requires atomic replay claiming; and parameter routes reject overlapping shapes plus unsafe decoded values while preserving explicit multi-segment captures. Host-only and independent-review claims remain governed by C1.2 and C4.2.

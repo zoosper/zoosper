@@ -11,13 +11,13 @@ $navigation = [
     'Overview' => ['README'],
     'Getting started' => ['getting-started', 'deployment', 'operations/production-operator-runbook', 'operations/production-acceptance-record', 'upgrade', 'troubleshooting'],
     'User guide' => ['user-guide'],
-    'Developer guide' => ['developer-guide', 'architecture', 'modules', 'configuration', 'cli', 'api', 'admin', 'themes', 'testing'],
+    'Developer guide' => ['developer-guide', 'compatibility-and-support', 'architecture', 'modules', 'configuration', 'cli', 'api', 'admin', 'themes', 'testing'],
     'Project' => ['releases/current-development', 'releases/release-promotion', 'release-checklist'],
 ];
 
 $labels = [
     'README' => 'Overview', 'getting-started' => 'Getting Started', 'user-guide' => 'User Guide',
-    'developer-guide' => 'Developer Guide', 'architecture' => 'Architecture', 'modules' => 'Modules',
+    'developer-guide' => 'Developer Guide', 'compatibility-and-support' => 'Compatibility and Support', 'architecture' => 'Architecture', 'modules' => 'Modules',
     'configuration' => 'Configuration', 'cli' => 'Command Line', 'api' => 'API', 'admin' => 'Admin',
     'themes' => 'Themes', 'deployment' => 'Deployment', 'upgrade' => 'Upgrade',
     'troubleshooting' => 'Troubleshooting', 'testing' => 'Testing',

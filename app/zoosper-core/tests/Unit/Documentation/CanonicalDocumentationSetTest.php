@@ -6,7 +6,7 @@ it('keeps a compact website-ready canonical documentation set', function (): voi
     $root = dirname(__DIR__, 5);
     $expected = [
         'README.md', 'getting-started.md', 'user-guide.md', 'developer-guide.md',
-        'architecture.md', 'modules.md', 'configuration.md', 'cli.md', 'api.md',
+        'compatibility-and-support.md', 'architecture.md', 'modules.md', 'configuration.md', 'cli.md', 'api.md',
         'admin.md', 'themes.md', 'deployment.md', 'upgrade.md',
         'troubleshooting.md', 'testing.md', 'release-checklist.md',
     ];
