@@ -132,3 +132,7 @@ Verify:
 - `module:manifest:check`, `schema:foreign-keys:status --format=json`, `media:queue:status --format=json`, and `release:check` remain green; Media queue depth, retries, failures, and latency remain within deployment-owned alert thresholds.
 
 Keep the previous code, database backup, and uploaded-Media rollback point until the deployment is accepted.
+
+### Authentication negative paths
+
+Protected first-party APIs return `401` for missing or invalid bearer credentials and `403` for an authenticated principal lacking the required PAT scope or current owner permission. Authorisation must precede object lookup. Two-factor enrolment setup material is single-attempt and a failed or repeated confirmation must start a fresh setup.

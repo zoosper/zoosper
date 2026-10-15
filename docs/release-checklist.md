@@ -75,3 +75,5 @@ NEXT_VERSION=<next-development-version>
 ## Production platform verification
 
 - Run `composer check-platform-reqs --no-dev` and confirm the production PHP runtime provides cURL, GD, mbstring, PDO and PDO MySQL.
+
+- [ ] Protected API negative paths preserve 401/403 semantics, authorisation-before-lookup, and single-attempt 2FA enrolment.

@@ -72,4 +72,6 @@ Zoosper_TwoFactor module for Zoosper CMS.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.
 ## Production replay protection
 
+The enrolment controller consumes session-held setup material before OTP verification, so a failed or repeated submission must begin a fresh setup.
+
 Every assembled `TwoFactorChallengeService` requires a replay-claim dependency. The production service manifest supplies `TotpReplayGuard`, which verifies the matching TOTP time-step and atomically claims a strictly newer per-user counter in `admin_totp_replay_state`. There is no nullable or verification-only production path. Recovery codes retain their separate single-use repository contract.

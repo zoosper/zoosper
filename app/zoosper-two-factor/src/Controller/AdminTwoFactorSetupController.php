@@ -66,12 +66,12 @@ final readonly class AdminTwoFactorSetupController
 
         $form = $request->form();
 $secret = (string) ($_SESSION['pending_2fa_secret'] ?? '');
+        unset($_SESSION['pending_2fa_secret']);
         $codes = $secret !== '' ? $this->enrolment->confirm($user->id, $secret, (string) ($form['otp'] ?? '')) : [];
         if ($codes === []) {
-            return Response::html($this->layout->render('Set up 2FA', '<p class="error">Invalid authenticator code.</p><p><a class="button secondary" href="' . $this->e($this->adminUrl('/2fa/setup')) . '">Try again</a></p>', $user, 'admin-users'), 422);
+            return Response::html($this->layout->render('Set up 2FA', '<p class="error">Invalid or already-used authenticator setup. Start setup again.</p><p><a class="button secondary" href="' . $this->e($this->adminUrl('/2fa/setup')) . '">Try again</a></p>', $user, 'admin-users'), 422);
         }
 
-        unset($_SESSION['pending_2fa_secret']);
         $items = implode('', array_map(fn (string $code): string => '<li><code>' . $this->e($code) . '</code></li>', $codes));
         $html = '<div class="card"><h2>2FA enabled</h2><p>Save these recovery codes now. They will not be shown again.</p><ul>' . $items . '</ul><p><a class="button" href="' . $this->e($this->adminUrl('')) . '">Continue</a></p></div>';
 
