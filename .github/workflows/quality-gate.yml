@@ -59,8 +59,10 @@ jobs:
           cache: npm
       - name: Install locked Node dependencies
         run: npm ci --include=dev --no-audit --no-fund
-      - name: Audit locked dependencies
+      - name: Audit locked PHP dependencies
         run: composer audit --locked --no-interaction
+      - name: Audit locked Node dependencies
+        run: npm audit --package-lock-only --include=dev --audit-level=high
       - name: Prepare CI runtime
         run: mkdir -p var && touch var/ci.sqlite
       - name: Validate shipped JavaScript syntax
