@@ -50,11 +50,6 @@ final readonly class SupportedLocaleProvider
         return $locales !== [] ? $locales : ['en_AU' => 'English (Australia)'];
     }
 
-    public function isSupportedAdminLocale(?string $locale): bool
-    {
-        return is_string($locale) && array_key_exists($locale, $this->adminLocales());
-    }
-
     private function isValidLocaleCode(string $locale): bool
     {
         return preg_match('/^[a-z]{2}_[A-Z]{2}$/', $locale) === 1;

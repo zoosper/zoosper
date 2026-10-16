@@ -446,7 +446,6 @@
   </file>
   <file src="app/zoosper-core/src/Cache/HttpCachePolicy.php">
     <PossiblyUnusedMethod>
-      <code><![CDATA[noStore]]></code>
       <code><![CDATA[privateFragment]]></code>
       <code><![CDATA[publicFragment]]></code>
     </PossiblyUnusedMethod>
@@ -654,7 +653,6 @@
       <code><![CDATA[is_object($service)]]></code>
     </DocblockTypeContradiction>
     <PossiblyUnusedMethod>
-      <code><![CDATA[alias]]></code>
       <code><![CDATA[all]]></code>
     </PossiblyUnusedMethod>
   </file>
@@ -732,9 +730,7 @@
   </file>
   <file src="app/zoosper-core/src/Entity/Save/EntityDataObject.php">
     <PossiblyUnusedMethod>
-      <code><![CDATA[getExtensionData]]></code>
       <code><![CDATA[only]]></code>
-      <code><![CDATA[setExtensionData]]></code>
     </PossiblyUnusedMethod>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[is_string($key)]]></code>
@@ -798,16 +794,6 @@
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
-  <file src="app/zoosper-core/src/Fragment/AjaxFragmentDefinition.php">
-    <UnusedClass>
-      <code><![CDATA[AjaxFragmentDefinition]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-core/src/Fragment/FragmentResponseMetadata.php">
-    <UnusedClass>
-      <code><![CDATA[FragmentResponseMetadata]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-core/src/Http/Middleware/ModuleAdminMiddlewareLoader.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[!($module->discovery['admin_middleware'] ?? is_file($module->configPath('admin_middleware.php')))]]></code>
@@ -842,11 +828,6 @@
   <file src="app/zoosper-core/src/I18n/LocaleResolverInterface.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[resolveSiteLocale]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-core/src/I18n/SupportedLocaleProvider.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[isSupportedAdminLocale]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/I18n/TranslationCatalogue.php">
@@ -886,7 +867,6 @@
   <file src="app/zoosper-core/src/Module/Module.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[moduleFile]]></code>
-      <code><![CDATA[resourcePath]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Module/ModuleDefinition.php">
@@ -1002,41 +982,6 @@
     <PossiblyFalseOperand>
       <code><![CDATA[json_encode($payload, JSON_UNESCAPED_SLASHES)]]></code>
     </PossiblyFalseOperand>
-  </file>
-  <file src="app/zoosper-core/src/Security/RateLimit/InMemoryRateLimitReportSink.php">
-    <UnusedClass>
-      <code><![CDATA[InMemoryRateLimitReportSink]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-core/src/Security/RateLimit/RateLimitEnforcer.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$policy->rule]]></code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="app/zoosper-core/src/Security/RateLimit/RateLimitMiddlewareIntegration.php">
-    <UnusedClass>
-      <code><![CDATA[RateLimitMiddlewareIntegration]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-core/src/Security/RateLimit/RateLimitReportOnlyMiddlewareFactory.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-core/src/Security/RateLimit/RateLimitRuntimeConfig.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[isEnforcing]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-core/src/Security/RateLimit/ReportOnlyRateLimitMiddleware.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[handle]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-core/src/Site/NullSiteContextProvider.php">
-    <UnusedClass>
-      <code><![CDATA[NullSiteContextProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Site/ResolvedSite.php">
     <PossiblyUnusedProperty>

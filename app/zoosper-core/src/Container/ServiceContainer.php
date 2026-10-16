@@ -64,11 +64,6 @@ final class ServiceContainer
         };
     }
 
-    public function alias(string $id, string $targetId): void
-    {
-        $this->factory($id, static fn (self $services): object => $services->get($targetId));
-    }
-
     /**
      * @template T of object
      * @param class-string<T>|string $id

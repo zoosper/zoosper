@@ -25,11 +25,6 @@ final readonly class Module
         return rtrim($this->path, '/\\') . '/config/' . ltrim($file, '/\\');
     }
 
-    public function resourcePath(string $path = ''): string
-    {
-        return rtrim($this->path, '/\\') . '/resources' . ($path !== '' ? '/' . ltrim($path, '/\\') : '');
-    }
-
     public function moduleFile(): string
     {
         return rtrim($this->path, '/\\') . '/module.php';

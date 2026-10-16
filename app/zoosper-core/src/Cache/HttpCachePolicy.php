@@ -54,18 +54,6 @@ final readonly class HttpCachePolicy
             'X-Zoosper-Cache-Policy' => 'private_fragment',
         ]);
     }
-
-    /**
-     * Fully non-cacheable response for sensitive content.
-     */
-    public static function noStore(): self
-    {
-        return new self('no_store', [
-            'Cache-Control' => 'no-store',
-            'Pragma' => 'no-cache',
-            'X-Zoosper-Cache-Policy' => 'no_store',
-        ]);
-    }
 }
 
 

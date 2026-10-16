@@ -12,7 +12,7 @@ This file tracks only work required to close the current Zoosper CMS programme w
 - Alpha.4 publication and public artifact checksum verification are complete. Production deployment acceptance and C1-C5 programme closure remain open.
 - No stable release has shipped.
 - PHP 8.5, blocking full-scope Psalm, complete Pest, JavaScript behaviour/syntax gates, dual SQLite/MySQL release evidence, deterministic production artifacts, upgrade proofs, security hardening, canonical documentation, and production operations guidance are already established.
-- Current Psalm baseline: `717` code entries measured by the executable-entry-point C2 bulk cohort. It is stale-entry rejecting and cannot grow unnoticed; refresh this measured value whenever a verified cohort changes `psalm-baseline.xml`.
+- Current Psalm baseline: `702` code entries measured by the genuine-dead-code C2 bulk cohort. It is stale-entry rejecting and cannot grow unnoticed; refresh this measured value whenever a verified cohort changes `psalm-baseline.xml`.
 
 ## Closure definition
 
@@ -29,7 +29,7 @@ Closure does not mean that every possible enhancement has been built. It means t
 
 ### C2. Static-analysis debt closure
 
-- [~] **C2.1 Psalm zero-baseline programme.** Reduce the current `717`-code-entry baseline issue-family by issue-family. Each removal requires source-boundary review, focused behavioural or architecture evidence, blocking full-scope Psalm, stale-entry rejection, the complete test suite, and strict quality. Refresh the measured count after each committed reduction instead of preserving a historical number.
+- [~] **C2.1 Psalm zero-baseline programme.** Reduce the current `702`-code-entry baseline issue-family by issue-family. Each removal requires source-boundary review, focused behavioural or architecture evidence, blocking full-scope Psalm, stale-entry rejection, the complete test suite, and strict quality. Refresh the measured count after each committed reduction instead of preserving a historical number.
 - [~] **C2.2 Behaviour-sensitive cast cohort.** PDO driver-name handling is complete. Continue with bounded request/form/configuration/URL scalar-normalisation cohorts before unrelated Media, persistence-ID, CSRF, and error-payload findings.
 - [ ] **C2.3 Zero-baseline acceptance.** Remove `psalm-baseline.xml` only when a clean blocking analysis passes without suppressing real defects or weakening runtime validation.
 

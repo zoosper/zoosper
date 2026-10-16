@@ -16,8 +16,6 @@ final class EntityDataObject
     /** @var array<string, mixed> */
     private array $data = [];
 
-    /** @var array<string, array<string, mixed>> */
-    private array $extensionData = [];
 
     public function setData(string $key, mixed $value): self
     {
@@ -63,29 +61,6 @@ final class EntityDataObject
         }
 
         return $selected;
-    }
-
-    public function setExtensionData(string $module, string $key, mixed $value): self
-    {
-        $module = trim($module);
-        $key = trim($key);
-        if ($module === '' || $key === '') {
-            return $this;
-        }
-
-        $this->extensionData[$module][$key] = $value;
-
-        return $this;
-    }
-
-    /** @return array<string, array<string, mixed>> */
-    public function getExtensionData(?string $module = null): array
-    {
-        if ($module === null) {
-            return $this->extensionData;
-        }
-
-        return $this->extensionData[$module] ?? [];
     }
 }
 

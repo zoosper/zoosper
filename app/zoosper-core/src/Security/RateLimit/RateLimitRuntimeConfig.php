@@ -52,11 +52,6 @@ final readonly class RateLimitRuntimeConfig
     {
         return $this->mode === 'report_only';
     }
-
-    public function isEnforcing(): bool
-    {
-        return $this->enabled && $this->mode === 'enforce';
-    }
 }
 
 
