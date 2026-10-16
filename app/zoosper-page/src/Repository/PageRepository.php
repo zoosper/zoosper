@@ -156,7 +156,7 @@ final readonly class PageRepository
     {
         $statement = $this->pdo->prepare('SELECT ' . $this->selectColumns() . ' FROM pages WHERE id = :id LIMIT 1');
         $statement->execute(['id' => $id]);
-        $row = $statement->fetch();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
 
         return is_array($row) ? $this->hydrate($row) : null;
     }
@@ -165,7 +165,7 @@ final readonly class PageRepository
     {
         $statement = $this->pdo->prepare('SELECT ' . $this->selectColumns() . ' FROM pages WHERE site_id = :site_id AND slug = :slug AND status = :status LIMIT 1');
         $statement->execute(['site_id' => $siteId, 'slug' => $slug, 'status' => 'published']);
-        $row = $statement->fetch();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
 
         return is_array($row) ? $this->hydrate($row) : null;
     }

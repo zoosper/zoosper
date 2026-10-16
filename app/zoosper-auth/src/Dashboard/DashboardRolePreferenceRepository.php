@@ -21,7 +21,7 @@ final readonly class DashboardRolePreferenceRepository implements DashboardRoleP
 
     public function roles(): array
     {
-        $rows = $this->pdo->query('SELECT id, code, label FROM admin_roles ORDER BY code ASC')->fetchAll();
+        $rows = $this->pdo->query('SELECT id, code, label FROM admin_roles ORDER BY code ASC')->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(
             static fn (array $row): DashboardRole => new DashboardRole((int) $row['id'], (string) $row['code'], (string) $row['label']),
@@ -39,7 +39,7 @@ final readonly class DashboardRolePreferenceRepository implements DashboardRoleP
             . 'WHERE r.id = :role_id LIMIT 1',
         );
         $statement->execute(['role_id' => $roleId]);
-        $row = $statement->fetch();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
         if (!is_array($row)) {
             return null;
         }

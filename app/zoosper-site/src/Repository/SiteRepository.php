@@ -22,7 +22,7 @@ final readonly class SiteRepository
     {
         $statement = $this->pdo->prepare('SELECT s.* FROM sites s INNER JOIN site_domains d ON d.site_id = s.id WHERE d.host = :host AND s.status = :status LIMIT 1');
         $statement->execute(['host' => strtolower($host), 'status' => 'active']);
-        $row = $statement->fetch();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
         return is_array($row) ? $this->hydrate($row) : null;
     }
 
@@ -30,7 +30,7 @@ final readonly class SiteRepository
     {
         $statement = $this->pdo->prepare('SELECT * FROM sites WHERE code = :code LIMIT 1');
         $statement->execute(['code' => $code]);
-        $row = $statement->fetch();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
         return is_array($row) ? $this->hydrate($row) : null;
     }
 
@@ -38,7 +38,7 @@ final readonly class SiteRepository
     {
         $statement = $this->pdo->prepare('SELECT * FROM sites WHERE id = :id LIMIT 1');
         $statement->execute(['id' => $id]);
-        $row = $statement->fetch();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
         return is_array($row) ? $this->hydrate($row) : null;
     }
 

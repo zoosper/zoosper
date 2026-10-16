@@ -34,7 +34,7 @@ final readonly class UrlRewriteRepository
             'request_path' => trim($requestPath, '/'),
         ]);
 
-        $row = $statement->fetch();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
         return is_array($row) ? $this->hydrate($row) : null;
     }
 

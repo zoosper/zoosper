@@ -26,7 +26,7 @@ final readonly class SiteDomainRepository
     {
         $statement = $this->pdo->prepare('SELECT * FROM site_domains WHERE id = :id LIMIT 1');
         $statement->execute(['id' => $id]);
-        $row = $statement->fetch();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
 
         return is_array($row) ? $this->hydrate($row) : null;
     }

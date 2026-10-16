@@ -341,14 +341,9 @@
   </file>
   <file src="app/zoosper-auth/src/Dashboard/DashboardRolePreferenceRepository.php">
     <LessSpecificReturnStatement>
-      <code><![CDATA[array_map(
-            static fn (array $row): DashboardRole => new DashboardRole((int) $row['id'], (string) $row['code'], (string) $row['label']),
-            $rows,
-        )]]></code>
       <code><![CDATA[array_map(fn (array $row): DashboardRolePreference => $this->hydrate($row), $statement->fetchAll())]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[array]]></code>
       <code><![CDATA[array]]></code>
     </MoreSpecificReturnType>
     <UnusedClass>
