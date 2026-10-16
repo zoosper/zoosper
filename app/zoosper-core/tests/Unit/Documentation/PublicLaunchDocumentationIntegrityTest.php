@@ -44,7 +44,7 @@ it('records the current review priorities and does not overclaim media derivativ
         ->toContain('**Last updated:** 2026-10-12 (Sydney)')
         ->toContain('## Required remaining work')
         ->toContain('## Explicitly not required for closure')
-        ->toContain('Current Psalm baseline: `906` code entries measured by the third bounded C2 correctness cohort')
+        ->toContain('Current Psalm baseline: `903` code entries measured by the fourth bounded C2 correctness cohort')
         ->toContain('Media queue observability')
         ->not->toContain('External review response and public-launch priorities (2026-08-11)')
         ->not->toContain('Phase 10AR')

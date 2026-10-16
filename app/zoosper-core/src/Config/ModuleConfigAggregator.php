@@ -39,8 +39,15 @@ final readonly class ModuleConfigAggregator
             if ($settings === null) {
                 // Fallback to live scan if discovery map is missing (e.g. not compiled)
                 $files = self::phpFiles($directory);
+            } elseif (is_array($settings)) {
+                $names = array_values(array_filter($settings, is_string(...)));
+                $files = array_map(
+                    static fn (string $name): string => $directory . '/' . $name . '.php',
+                    $names,
+                );
             } else {
-                $files = array_map(fn (string $name): string => $directory . '/' . $name . '.php', $settings);
+                // Compiled discovery metadata is untrusted input: malformed shapes contribute nothing.
+                $files = [];
             }
 
             foreach ($files as $file) {
@@ -48,6 +55,9 @@ final readonly class ModuleConfigAggregator
                     continue;
                 }
                 $key = basename($file, '.php');
+                /** @var mixed $value */
+                /** @var mixed $value */
+            /** @var mixed $value */
                 $value = require $file;
 
                 if (!is_array($value)) {
@@ -80,6 +90,7 @@ final readonly class ModuleConfigAggregator
      * @param list<string> $directoriesLowToHigh
      * @return array<string, mixed>
      */
+    /** @psalm-api */
     public static function fromDirectories(array $directoriesLowToHigh): array
     {
         $items = [];

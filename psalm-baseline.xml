@@ -621,9 +621,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Config/ModuleConfigAggregator.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[fromDirectories]]></code>
-    </PossiblyUnusedMethod>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
       <code><![CDATA[require $file]]></code>
@@ -2005,14 +2002,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-seo/src/Sitemap/SitemapAggregator.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[$e instanceof SitemapEntry]]></code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="app/zoosper-settings/src/Admin/SettingsAdminUrls.php">
     <PossiblyUnusedMethod>
