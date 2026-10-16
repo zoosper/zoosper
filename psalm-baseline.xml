@@ -856,6 +856,11 @@
       <code><![CDATA[fieldRegistry]]></code>
     </PossiblyUnusedMethod>
   </file>
+  <file src="app/zoosper-core/src/Entity/Save/EntitySaveEventDispatcher.php">
+    <UnusedClass>
+      <code><![CDATA[EntitySaveEventDispatcher]]></code>
+    </UnusedClass>
+  </file>
   <file src="app/zoosper-core/src/Entity/Save/EntitySaveEventDispatcherInterface.php">
     <PossiblyUnusedReturnValue>
       <code><![CDATA[EntitySaveContext]]></code>
@@ -979,15 +984,6 @@
     <RedundantFunctionCall>
       <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
-  </file>
-  <file src="app/zoosper-core/src/Http/Request.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[routeParams]]></code>
-      <code><![CDATA[withForm]]></code>
-    </PossiblyUnusedMethod>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[is_string($key)]]></code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="app/zoosper-core/src/I18n/AdminTranslatorResolver.php">
     <PossiblyUnusedMethod>
@@ -1222,17 +1218,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[resolve]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-core/src/Site/SiteContextResolver.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[default]]></code>
-    </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(string) ($prefix ?? '')]]></code>
-    </RedundantCast>
-    <RedundantCondition>
-      <code><![CDATA[$this->sites !== null]]></code>
-    </RedundantCondition>
   </file>
   <file src="app/zoosper-core/src/Site/SiteContextResolverFactory.php">
     <UnusedClass>
@@ -2576,16 +2561,9 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormUiConfigLoader.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[!($module->discovery['admin_ui'] ?? is_file($module->configPath('admin_ui.php')))]]></code>
-      <code><![CDATA[$hasUi]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
-    <UnusedClass>
-      <code><![CDATA[AdminFormUiConfigLoader]]></code>
-    </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminTagSelectorConfig.php">
     <UnusedClass>
@@ -3367,11 +3345,6 @@
   <file src="packages/zoosper-store-orders/src/StoreOrderIntegrationGate.php">
     <UnusedClass>
       <code><![CDATA[StoreOrderIntegrationGate]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-core/src/Entity/Save/EntitySaveEventDispatcher.php">
-    <UnusedClass>
-      <code><![CDATA[EntitySaveEventDispatcher]]></code>
     </UnusedClass>
   </file>
 </files>

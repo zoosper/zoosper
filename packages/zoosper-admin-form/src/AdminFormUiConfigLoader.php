@@ -15,6 +15,7 @@ use Zoosper\Core\Config\ConfigFileLayeredLoader;
 use RuntimeException;
 use Zoosper\Core\Module\ModuleRegistry;
 
+/** @psalm-api */
 final readonly class AdminFormUiConfigLoader
 {
     public function __construct(private ModuleRegistry $modules)
@@ -31,7 +32,9 @@ final readonly class AdminFormUiConfigLoader
         $removed = [];
 
         foreach ($this->modules->enabledModules() as $module) {
-            if (!($module->discovery['admin_ui'] ?? is_file($module->configPath('admin_ui.php')))) {
+            $discovered = $module->discovery['admin_ui'] ?? null;
+            $hasUi = is_bool($discovered) ? $discovered : is_file($module->configPath('admin_ui.php'));
+            if ($hasUi !== true) {
                 continue;
             }
 
@@ -99,8 +102,9 @@ final readonly class AdminFormUiConfigLoader
     {
         $handles = [];
         foreach ($this->modules->enabledModules() as $module) {
-            $hasUi = $module->discovery['admin_ui'] ?? is_file($module->configPath('admin_ui.php'));
-            if ($hasUi) {
+            $discovered = $module->discovery['admin_ui'] ?? null;
+            $hasUi = is_bool($discovered) ? $discovered : is_file($module->configPath('admin_ui.php'));
+            if ($hasUi === true) {
                 $file = $module->configPath('admin_ui.php');
                 if (!is_file($file)) {
                     continue;

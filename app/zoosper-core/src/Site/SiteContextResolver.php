@@ -36,7 +36,7 @@ final readonly class SiteContextResolver
         $host = $this->normaliseHost($host ?? '');
         $path = $this->normalisePath($path);
 
-        if ($this->sites !== null && $host !== '') {
+        if ($host !== '') {
             $site = $this->sites->findActiveByHost($host);
             if ($site !== null && $this->resolvedSiteMatchesPath($site, $path)) {
                 return $this->contextFromResolvedSite($site);
@@ -52,6 +52,7 @@ final readonly class SiteContextResolver
         return $this->contextFromStoreView($this->defaultStoreView());
     }
 
+    /** @psalm-api */
     public function default(): SiteContext
     {
         return $this->contextFromStoreView($this->defaultStoreView());
@@ -377,7 +378,7 @@ final readonly class SiteContextResolver
     }
     private function normaliseOptionalPrefix(?string $prefix): string
     {
-        $prefix = trim((string) ($prefix ?? ''));
+        $prefix = trim($prefix ?? '');
         if ($prefix === '') {
             return '';
         }

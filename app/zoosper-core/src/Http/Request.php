@@ -68,12 +68,15 @@ final readonly class Request
             $this->host, $this->clientIp, $siteContext, $this->routeParams, $this->form, $this->files, $this->queryString);
     }
 
-    /** @param array<string, scalar|null> $routeParams */
+    /**
+     * @psalm-api
+     * @param array<string, scalar|null> $routeParams
+     */
     public function withRouteParams(array $routeParams): self
     {
         $normalised = [];
         foreach ($routeParams as $key => $value) {
-            if (is_string($key) && $key !== '') {
+            if ($key !== '') {
                 $normalised[$key] = (string) $value;
             }
         }
@@ -81,7 +84,10 @@ final readonly class Request
             $this->host, $this->clientIp, $this->siteContext, $normalised, $this->form, $this->files, $this->queryString);
     }
 
-    /** @param array<string, mixed> $form */
+    /**
+     * @psalm-api
+     * @param array<string, mixed> $form
+     */
     public function withForm(array $form): self
     {
         return new self($this->method, $this->path, $this->headers, $this->body, $this->query,
@@ -130,7 +136,10 @@ final readonly class Request
         return $this->routeParams[$key] ?? $default;
     }
 
-    /** @return array<string, string> */
+    /**
+     * @psalm-api
+     * @return array<string, string>
+     */
     public function routeParams(): array { return $this->routeParams; }
 
     /** @return array<string, mixed> */
