@@ -22,6 +22,11 @@ use Zoosper\Page\Api\PageLifecycleApiResponder;
 use Zoosper\Pagination\Pager;
 use Zoosper\Pagination\PaginationResult;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class PageApiController
 {
     public function __construct(private JsonResponder $json, private PersonalAccessTokenAuthenticator $auth, private PageRepository $pages, private PageSaveCoordinator $saver, private DocumentNormalizer $documents, private PagePublicationCoordinator $publication, private PageRevisionService $revisions, private PageLifecycleCoordinator $lifecycle, private PageLifecycleApiResponder $lifecycleResponder, private ?AuditLoggerInterface $audit = null) {}

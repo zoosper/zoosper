@@ -11,6 +11,11 @@ use Zoosper\Media\EditorJs\MediaPickerReadRepository;
 use Zoosper\Media\EditorJs\MediaPickerResponder;
 
 /** Authenticated Admin adapter for selecting existing Media images in Editor.js. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class MediaEditorJsLibraryController
 {
     public function __construct(

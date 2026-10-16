@@ -19,6 +19,11 @@ use Zoosper\Core\Entity\Save\EntitySaveEventListenerInterface;
  *
  * PCI-aware: only reads CMS page fields; never touches or logs secrets/tokens.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final class PageSaveValidationListener implements EntitySaveEventListenerInterface
 {
     private const MIN_TITLE_LENGTH = 3;

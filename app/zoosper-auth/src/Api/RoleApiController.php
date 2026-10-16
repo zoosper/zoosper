@@ -14,6 +14,11 @@ use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Pagination\{Pager, PaginationResult};
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class RoleApiController
 {
     public function __construct(

@@ -12,6 +12,11 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Url\AdminUrlGenerator;
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class AuditLogController
 {
  public function __construct(private SessionGuard $guard,private AuditLogRepository $source,private AuditLogGridDefinition $definition,private OperationalGridPageBuilder $pages,private AdminLayout $layout,private ?AdminViewRenderer $views=null,private ?AdminUrlGenerator $adminUrls=null){}

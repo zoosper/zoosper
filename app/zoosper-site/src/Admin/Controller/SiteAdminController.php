@@ -27,6 +27,11 @@ use Zoosper\Site\Repository\SiteRepository;
  * owns authentication/permission checks, while the controller handles request
  * orchestration, validation, repository calls and safe admin HTML rendering.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class SiteAdminController
 {
     public function __construct(

@@ -16,6 +16,11 @@ use Zoosper\Core\Http\Response;
 use Zoosper\Core\Url\AdminUrlGenerator;
 
 /** Public, CSRF-protected Admin password-reset HTTP adapter. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class PasswordResetController
 {
     private const NEUTRAL_MESSAGE = 'If an active Admin account matches that email, a password reset link has been sent.';

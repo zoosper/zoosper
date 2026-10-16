@@ -36,6 +36,11 @@ use Zoosper\Media\Service\MediaUploadService;
  * MediaUploadService's current, correct behaviour — it exists purely as a
  * fail-loud guard against a future regression in that contract.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class MediaEditorJsUploadController
 {
 

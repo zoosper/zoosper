@@ -17,6 +17,11 @@ use Zoosper\Cache\Config\ObjectConfigAdapter;
 use Zoosper\Cache\Contract\CacheInterface;
 use Zoosper\Cache\Driver\MarkoCacheAdapter;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class CacheDriverFactory
 {
     public function __construct(

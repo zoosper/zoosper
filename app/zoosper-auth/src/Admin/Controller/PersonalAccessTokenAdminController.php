@@ -24,6 +24,11 @@ use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Core\Url\AdminUrlGenerator;
 
 /** Self-owned, session-authenticated Personal Access Token administration. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class PersonalAccessTokenAdminController
 {
     public function __construct(

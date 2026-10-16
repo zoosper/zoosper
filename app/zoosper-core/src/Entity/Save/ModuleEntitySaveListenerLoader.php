@@ -25,6 +25,11 @@ use Zoosper\Core\Module\ModuleRegistry;
  * PCI-aware: listeners handle CMS entity fields only; never place secrets/tokens
  * into listener config or logs.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class ModuleEntitySaveListenerLoader
 {
     public function __construct(private ModuleRegistry $modules, private ServiceContainer $services)

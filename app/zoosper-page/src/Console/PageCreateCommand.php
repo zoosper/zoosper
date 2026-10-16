@@ -19,6 +19,11 @@ use Zoosper\Site\Repository\SiteRepository;
  * (confirmed via Phase 1.40 composer.json audit), so this cross-module
  * dependency is legitimate and unchanged by this phase.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class PageCreateCommand implements ConsoleCommandInterface
 {
     public function __construct(

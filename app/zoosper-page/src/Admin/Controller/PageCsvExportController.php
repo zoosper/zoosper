@@ -14,6 +14,11 @@ use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Page\Admin\PageGridExportRequestCoordinator;
 
 /** Thin HTTP adapter for the already-built Pages export pipeline. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class PageCsvExportController
 {
     public function __construct(

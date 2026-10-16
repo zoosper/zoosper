@@ -19,6 +19,11 @@ use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\GlobalAnnouncements\Announcement\AdminAnnouncementRepository;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class AnnouncementAdminController
 {
     public function __construct(

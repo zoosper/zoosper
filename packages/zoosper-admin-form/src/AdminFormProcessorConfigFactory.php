@@ -13,6 +13,11 @@ use InvalidArgumentException;
  * see AdminFormSection.php for the full reasoning. Logic is completely
  * unchanged.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class AdminFormProcessorConfigFactory
 {
     /**

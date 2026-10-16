@@ -19,6 +19,11 @@ use Zoosper\Site\Repository\SiteRepository;
  * function loaded during bootstrap, reachable from any namespace via PHP's
  * function-fallback rule, so behaviour is unchanged.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class SiteCreateCommand implements ConsoleCommandInterface
 {
     public function __construct(private SiteRepository $sites)

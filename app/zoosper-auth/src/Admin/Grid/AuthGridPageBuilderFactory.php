@@ -18,6 +18,11 @@ use Zoosper\Core\Url\AdminUrlGenerator;
  * This factory owns no HTTP, authentication or write behaviour. Controllers will
  * continue to supply the authenticated administrator identity explicitly.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class AuthGridPageBuilderFactory
 {
     public function __construct(

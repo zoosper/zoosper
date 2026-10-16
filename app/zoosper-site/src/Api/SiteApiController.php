@@ -2,6 +2,11 @@
 declare(strict_types=1);
 namespace Zoosper\Site\Api;
 use Zoosper\Auth\Token\{PersonalAccessTokenAuthenticator,PersonalAccessTokenPrincipal};use Zoosper\Core\Http\{JsonResponder,Request,Response};use Zoosper\Site\Application\SiteMutationService;use Zoosper\Site\Lifecycle\SiteLifecycleCoordinator;use Zoosper\Site\Model\Site;use Zoosper\Site\Repository\SiteRepository;use Zoosper\Pagination\{Pager,PaginationResult};
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class SiteApiController{
  public function __construct(private JsonResponder $json,private PersonalAccessTokenAuthenticator $auth,private SiteRepository $sites,private SiteLifecycleCoordinator $lifecycle,private SiteMutationService $mutations){}
  public function index(Request $r):Response{$p=$this->principal($r,'sites:read');if($p instanceof Response)return$p;$result=$this->sites->pageForApi(Pager::fromQuery(['page'=>$r->query('page','1'),'page_size'=>$r->query('page_size','20')]));return$this->json->success(['sites'=>array_map($this->row(...),$result->items),'pagination'=>$this->pagination($result)]);}

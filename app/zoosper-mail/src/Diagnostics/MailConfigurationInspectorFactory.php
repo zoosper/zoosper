@@ -8,6 +8,11 @@ use Zoosper\ScopedConfig\ScopeContext;
 use Zoosper\Mail\Config\SmtpConfigFactory;
 
 /** Creates redacted Mail diagnostics for an explicitly supplied scope. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class MailConfigurationInspectorFactory
 {
     public function __construct(private SmtpConfigFactory $smtp)

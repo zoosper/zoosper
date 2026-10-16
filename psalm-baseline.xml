@@ -24,27 +24,18 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-admin/src/Controller/DashboardController.php">
-    <UnusedClass>
-      <code><![CDATA[DashboardController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-admin/src/Controller/LoginController.php">
-    <UnusedClass>
-      <code><![CDATA[LoginController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-admin/src/Controller/PasswordResetController.php">
-    <UnusedClass>
-      <code><![CDATA[PasswordResetController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
@@ -146,52 +137,30 @@
       <code><![CDATA[require $manifest]]></code>
     </UnresolvableInclude>
   </file>
-  <file src="app/zoosper-admin/src/UI/AdminComponentRenderer.php">
-    <UnusedClass>
-      <code><![CDATA[AdminComponentRenderer]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-admin/src/UI/AdminViewRenderer.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-api/src/Controller/AuthController.php">
-    <UnusedClass>
-      <code><![CDATA[AuthController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-api/src/Controller/HealthController.php">
-    <UnusedClass>
-      <code><![CDATA[HealthController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-api/src/Controller/HelloController.php">
-    <UnusedClass>
-      <code><![CDATA[HelloController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-api/src/Controller/MeController.php">
-    <UnusedClass>
-      <code><![CDATA[MeController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
-  </file>
-  <file src="app/zoosper-api/src/Controller/TokenMeController.php">
-    <UnusedClass>
-      <code><![CDATA[TokenMeController]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Access/InMemoryRoleProvider.php">
     <PossiblyUnusedMethod>
@@ -245,18 +214,10 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-auth/src/Admin/Controller/PersonalAccessTokenAdminController.php">
-    <UnusedClass>
-      <code><![CDATA[PersonalAccessTokenAdminController]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-auth/src/Admin/Controller/RoleAdminController.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$error]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedClass>
-      <code><![CDATA[RoleAdminController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
@@ -268,9 +229,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$error]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedClass>
-      <code><![CDATA[UserAdminController]]></code>
-    </UnusedClass>
     <UnusedClosureParam>
       <code><![CDATA[$c]]></code>
       <code><![CDATA[$c]]></code>
@@ -292,11 +250,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-auth/src/Admin/Grid/AuthGridPageBuilderFactory.php">
-    <UnusedClass>
-      <code><![CDATA[AuthGridPageBuilderFactory]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AuthGridPagePresenter.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -317,21 +270,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-auth/src/Api/RoleApiController.php">
-    <UnusedClass>
-      <code><![CDATA[RoleApiController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-auth/src/Console/AdminCreateCommand.php">
-    <UnusedClass>
-      <code><![CDATA[AdminCreateCommand]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-auth/src/Dashboard/AdminUserCountDashboardWidgetContributor.php">
-    <UnusedClass>
-      <code><![CDATA[AdminUserCountDashboardWidgetContributor]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-auth/src/Dashboard/DashboardRolePreferenceRepository.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[array_map(fn (array $row): DashboardRolePreference => $this->hydrate($row), $statement->fetchAll())]]></code>
@@ -346,21 +284,6 @@
   <file src="app/zoosper-auth/src/Entity/Save/AdminUserSavePipeline.php">
     <UnusedClass>
       <code><![CDATA[AdminUserSavePipeline]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-auth/src/Http/AuthenticationMiddleware.php">
-    <UnusedClass>
-      <code><![CDATA[AuthenticationMiddleware]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-auth/src/Http/CsrfMiddleware.php">
-    <UnusedClass>
-      <code><![CDATA[CsrfMiddleware]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-auth/src/Http/RateLimitReportOnlyAdminMiddleware.php">
-    <UnusedClass>
-      <code><![CDATA[RateLimitReportOnlyAdminMiddleware]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Lifecycle/AdminUserLifecycleCoordinator.php">
@@ -853,9 +776,6 @@
     <DocblockTypeContradiction>
       <code><![CDATA[!is_string($event)]]></code>
     </DocblockTypeContradiction>
-    <UnusedClass>
-      <code><![CDATA[ModuleEntitySaveListenerLoader]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Event/EventDispatcher.php">
     <PossiblyUnusedMethod>
@@ -877,9 +797,6 @@
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
-    <UnusedClass>
-      <code><![CDATA[ModuleEventListenerLoader]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Fragment/AjaxFragmentDefinition.php">
     <UnusedClass>
@@ -889,11 +806,6 @@
   <file src="app/zoosper-core/src/Fragment/FragmentResponseMetadata.php">
     <UnusedClass>
       <code><![CDATA[FragmentResponseMetadata]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-core/src/Html/HtmlSanitizerFactory.php">
-    <UnusedClass>
-      <code><![CDATA[HtmlSanitizerFactory]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Http/Middleware/ModuleAdminMiddlewareLoader.php">
@@ -921,11 +833,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[resolveLocale]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-core/src/I18n/I18nServiceProvider.php">
-    <UnusedClass>
-      <code><![CDATA[I18nServiceProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/I18n/LocaleResolution.php">
     <PossiblyUnusedProperty>
@@ -1021,11 +928,6 @@
     <UnresolvableInclude>
       <code><![CDATA[require $this->basePath . '/config/app.php']]></code>
     </UnresolvableInclude>
-  </file>
-  <file src="app/zoosper-core/src/Routing/CachingFallbackHandler.php">
-    <UnusedClass>
-      <code><![CDATA[CachingFallbackHandler]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Routing/ControllerProviderLoader.php">
     <LessSpecificReturnStatement>
@@ -1151,11 +1053,6 @@
       <code><![CDATA[resolve]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-core/src/Site/SiteContextResolverFactory.php">
-    <UnusedClass>
-      <code><![CDATA[SiteContextResolverFactory]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-core/src/Testing/TestCase.php">
     <UnusedClass>
       <code><![CDATA[TestCase]]></code>
@@ -1181,11 +1078,6 @@
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[basePath]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-core/src/Url/CdnUrlResolverFactory.php">
-    <UnusedClass>
-      <code><![CDATA[CdnUrlResolverFactory]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Url/CdnUrlType.php">
     <PossiblyUnusedMethod>
@@ -1222,9 +1114,6 @@
       <code><![CDATA[record]]></code>
       <code><![CDATA[record]]></code>
     </UndefinedInterfaceMethod>
-    <UnusedClass>
-      <code><![CDATA[AnnouncementAdminController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
@@ -1239,21 +1128,11 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-mail/src/Controller/EmailLogAdminController.php">
-    <UnusedClass>
-      <code><![CDATA[EmailLogAdminController]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-mail/src/Diagnostics/MailConfigurationInspector.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[summary]]></code>
       <code><![CDATA[warnings]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-mail/src/Diagnostics/MailConfigurationInspectorFactory.php">
-    <UnusedClass>
-      <code><![CDATA[MailConfigurationInspectorFactory]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-mail/src/Diagnostics/MailConfigurationSummary.php">
     <PossiblyUnusedMethod>
@@ -1303,9 +1182,6 @@
     <DocblockTypeContradiction>
       <code><![CDATA[$this->itemDeletion?->delete($menuId,$itemId)]]></code>
     </DocblockTypeContradiction>
-    <UnusedClass>
-      <code><![CDATA[MenuAdminController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$r]]></code>
     </UnusedParam>
@@ -1338,14 +1214,6 @@
       <code><![CDATA[$updated]]></code>
       <code><![CDATA[$updated]]></code>
     </PossiblyNullArgument>
-    <UnusedClass>
-      <code><![CDATA[MenuApiController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-menu/src/Api/MenuController.php">
-    <UnusedClass>
-      <code><![CDATA[MenuController]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Application/MenuAdminService.php">
     <PossiblyUnusedMethod>
@@ -1366,11 +1234,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[deleteMenu]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-menu/src/Frontend/MenuFrontendNavigationContributor.php">
-    <UnusedClass>
-      <code><![CDATA[MenuFrontendNavigationContributor]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Lifecycle/MenuLifecycleCoordinator.php">
     <PossiblyUnusedMethod>
@@ -1421,9 +1284,6 @@
     <MoreSpecificReturnType>
       <code><![CDATA[array]]></code>
     </MoreSpecificReturnType>
-    <UnusedClass>
-      <code><![CDATA[BreadcrumbProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-menu/src/Service/MenuProvider.php">
     <LessSpecificReturnStatement>
@@ -1432,50 +1292,14 @@
     <MoreSpecificReturnType>
       <code><![CDATA[array]]></code>
     </MoreSpecificReturnType>
-    <UnusedClass>
-      <code><![CDATA[MenuProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Controller/PageAdminController.php">
-    <UnusedClass>
-      <code><![CDATA[PageAdminController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
     <UnusedVariable>
       <code><![CDATA[$editorHtml]]></code>
     </UnusedVariable>
-  </file>
-  <file src="app/zoosper-page/src/Admin/Controller/PageBulkActionController.php">
-    <UnusedClass>
-      <code><![CDATA[PageBulkActionController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-page/src/Admin/Controller/PageCsvExportController.php">
-    <UnusedClass>
-      <code><![CDATA[PageCsvExportController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-page/src/Admin/Form/PageContentSectionProvider.php">
-    <UnusedClass>
-      <code><![CDATA[PageContentSectionProvider]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-page/src/Admin/Form/PageDetailsSectionProvider.php">
-    <UnusedClass>
-      <code><![CDATA[PageDetailsSectionProvider]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-page/src/Admin/Form/PagePublishingSectionProvider.php">
-    <UnusedClass>
-      <code><![CDATA[PagePublishingSectionProvider]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-page/src/Admin/Form/PageSeoSectionProvider.php">
-    <UnusedClass>
-      <code><![CDATA[PageSeoSectionProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/Lifecycle/PageLifecycleAdminResponder.php">
     <PossiblyUnusedMethod>
@@ -1649,14 +1473,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$site->homepageSlug]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedClass>
-      <code><![CDATA[ContentPageController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-page/src/Api/PageApiController.php">
-    <UnusedClass>
-      <code><![CDATA[PageApiController]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Api/PageLifecycleApiResponder.php">
     <PossiblyUnusedMethod>
@@ -1687,16 +1503,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[preg_replace('/[^a-z0-9]+/i', '-', $slug)]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="app/zoosper-page/src/Console/PageCreateCommand.php">
-    <UnusedClass>
-      <code><![CDATA[PageCreateCommand]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-page/src/Console/StarterSiteInstallCommand.php">
-    <UnusedClass>
-      <code><![CDATA[StarterSiteInstallCommand]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Content/BlockJsonToHtmlRenderer.php">
     <PossiblyUnusedMethod>
@@ -1730,9 +1536,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$site->homepageSlug]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedClass>
-      <code><![CDATA[PageController]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Event/PagePublishedEvent.php">
     <PossiblyUnusedProperty>
@@ -1791,11 +1594,6 @@
       <code><![CDATA[(int) $siteId]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="app/zoosper-page/src/Routing/PageFallbackHandler.php">
-    <UnusedClass>
-      <code><![CDATA[PageFallbackHandler]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-page/src/Routing/PageFallbackHandlerAdapter.php">
     <UnusedClass>
       <code><![CDATA[PageFallbackHandlerAdapter]]></code>
@@ -1812,18 +1610,10 @@
       <code><![CDATA[$tableExists]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="app/zoosper-page/src/Save/PageSaveValidationListener.php">
-    <UnusedClass>
-      <code><![CDATA[PageSaveValidationListener]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-page/src/Seo/PageSitemapContributor.php">
     <ParamNameMismatch>
       <code><![CDATA[$s]]></code>
     </ParamNameMismatch>
-    <UnusedClass>
-      <code><![CDATA[PageSitemapContributor]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Service/PageRenderer.php">
     <PossiblyUnusedMethod>
@@ -1846,11 +1636,6 @@
     </MoreSpecificReturnType>
     <UnusedClass>
       <code><![CDATA[SeoContributorRegistry]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-seo/src/Controller/SeoPublicController.php">
-    <UnusedClass>
-      <code><![CDATA[SeoPublicController]]></code>
     </UnusedClass>
   </file>
   <file src="app/zoosper-seo/src/Metadata/SeoMetadataManager.php">
@@ -1903,11 +1688,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[search]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-settings/src/Controller/SettingsCatalogueController.php">
-    <UnusedClass>
-      <code><![CDATA[SettingsCatalogueController]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-settings/src/Definition/SettingsGroup.php">
     <PossiblyUnusedProperty>
@@ -1964,9 +1744,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$error]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedClass>
-      <code><![CDATA[SiteAdminController]]></code>
-    </UnusedClass>
     <UnusedDocblockParam>
       <code><![CDATA[$submitted]]></code>
     </UnusedDocblockParam>
@@ -1975,9 +1752,6 @@
     </UnusedParam>
   </file>
   <file src="app/zoosper-site/src/Admin/Controller/SiteDomainAdminController.php">
-    <UnusedClass>
-      <code><![CDATA[SiteDomainAdminController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
@@ -2003,20 +1777,10 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-site/src/Api/SiteApiController.php">
-    <UnusedClass>
-      <code><![CDATA[SiteApiController]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-site/src/Application/SiteMutationService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-site/src/Console/SiteCreateCommand.php">
-    <UnusedClass>
-      <code><![CDATA[SiteCreateCommand]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-site/src/Infrastructure/DatabaseSiteLookup.php">
     <UnusedClass>
@@ -2075,17 +1839,9 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-theme/src/Admin/Controller/ThemeAdminController.php">
-    <UnusedClass>
-      <code><![CDATA[ThemeAdminController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
-  </file>
-  <file src="app/zoosper-theme/src/Api/ThemeApiController.php">
-    <UnusedClass>
-      <code><![CDATA[ThemeApiController]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-theme/src/Application/ThemeAssignmentService.php">
     <PossiblyUnusedMethod>
@@ -2159,17 +1915,11 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Controller/AdminTwoFactorChallengeController.php">
-    <UnusedClass>
-      <code><![CDATA[AdminTwoFactorChallengeController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-two-factor/src/Controller/AdminTwoFactorSetupController.php">
-    <UnusedClass>
-      <code><![CDATA[AdminTwoFactorSetupController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
@@ -2254,11 +2004,6 @@
       <code><![CDATA[TotpSetup]]></code>
     </UnusedClass>
   </file>
-  <file src="app/zoosper-url-rewrite/src/Api/UrlRewriteApiController.php">
-    <UnusedClass>
-      <code><![CDATA[UrlRewriteApiController]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-url-rewrite/src/Application/UrlRewriteMutationService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -2280,11 +2025,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-url-rewrite/src/Routing/UrlRewriteFallbackHandler.php">
-    <UnusedClass>
-      <code><![CDATA[UrlRewriteFallbackHandler]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-url-rewrite/src/Service/RedirectChainInspector.php">
     <PossiblyUnusedMethod>
@@ -2368,9 +2108,6 @@
     <MoreSpecificReturnType>
       <code><![CDATA[array<string, list<class-string<AdminFormProcessorInterface>>>]]></code>
     </MoreSpecificReturnType>
-    <UnusedClass>
-      <code><![CDATA[AdminFormProcessorConfigFactory]]></code>
-    </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormProviderRegistry.php">
     <PossiblyUnusedMethod>
@@ -2521,11 +2258,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-admin-grid/src/GridWorkspaceExportAuditorFactory.php">
-    <UnusedClass>
-      <code><![CDATA[GridWorkspaceExportAuditorFactory]]></code>
-    </UnusedClass>
-  </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceMutationContract.php">
     <UnusedConstructor>
       <code><![CDATA[__construct]]></code>
@@ -2658,11 +2390,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-audit/src/Admin/Grid/OperationalGridPageBuilderFactory.php">
-    <UnusedClass>
-      <code><![CDATA[OperationalGridPageBuilderFactory]]></code>
-    </UnusedClass>
-  </file>
   <file src="packages/zoosper-audit/src/Admin/Grid/OperationalGridQueryState.php">
     <UnusedConstructor>
       <code><![CDATA[__construct]]></code>
@@ -2673,26 +2400,15 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-audit/src/Console/PruneLogsCommand.php">
-    <UnusedClass>
-      <code><![CDATA[PruneLogsCommand]]></code>
-    </UnusedClass>
-  </file>
   <file src="packages/zoosper-audit/src/Controller/AuditLogController.php">
     <MissingReturnType>
       <code><![CDATA[currentAdminUser]]></code>
     </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[AuditLogController]]></code>
-    </UnusedClass>
   </file>
   <file src="packages/zoosper-audit/src/Controller/LoginHistoryController.php">
     <MissingReturnType>
       <code><![CDATA[currentAdminUser]]></code>
     </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[LoginHistoryController]]></code>
-    </UnusedClass>
   </file>
   <file src="packages/zoosper-audit/src/LoginHistoryRepository.php">
     <PossiblyUnusedMethod>
@@ -2714,9 +2430,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[get]]></code>
     </PossiblyUnusedMethod>
-    <UnusedClass>
-      <code><![CDATA[CacheDriverFactory]]></code>
-    </UnusedClass>
   </file>
   <file src="packages/zoosper-database/src/MigrationInterface.php">
     <UnusedClass>
@@ -2866,33 +2579,10 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-media/src/Api/MediaApiController.php">
-    <UnusedClass>
-      <code><![CDATA[MediaApiController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="packages/zoosper-media/src/Console/ProcessMediaQueueCommand.php">
-    <UnusedClass>
-      <code><![CDATA[ProcessMediaQueueCommand]]></code>
-    </UnusedClass>
-  </file>
   <file src="packages/zoosper-media/src/Controller/MediaAdminController.php">
-    <UnusedClass>
-      <code><![CDATA[MediaAdminController]]></code>
-    </UnusedClass>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
-  </file>
-  <file src="packages/zoosper-media/src/Controller/MediaEditorJsLibraryController.php">
-    <UnusedClass>
-      <code><![CDATA[MediaEditorJsLibraryController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="packages/zoosper-media/src/Controller/MediaEditorJsUploadController.php">
-    <UnusedClass>
-      <code><![CDATA[MediaEditorJsUploadController]]></code>
-    </UnusedClass>
   </file>
   <file src="packages/zoosper-media/src/EditorJs/EditorJsImageBlockSanitizer.php">
     <UnusedClass>
@@ -2991,11 +2681,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-media/src/Processing/QueuedMediaProcessor.php">
-    <UnusedClass>
-      <code><![CDATA[QueuedMediaProcessor]]></code>
-    </UnusedClass>
-  </file>
   <file src="packages/zoosper-media/src/Repository/MediaAssetRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -3057,18 +2742,10 @@
       <code><![CDATA[isset($site['id']) && $site['id'] !== null]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
-  <file src="packages/zoosper-store-orders/src/Admin/StoreOrderAdminController.php">
-    <UnusedClass>
-      <code><![CDATA[StoreOrderAdminController]]></code>
-    </UnusedClass>
-  </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderCsvExportController.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$result->items]]></code>
     </PossiblyInvalidArgument>
-    <UnusedClass>
-      <code><![CDATA[StoreOrderCsvExportController]]></code>
-    </UnusedClass>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderGridMutationCoordinator.php">
     <PossiblyUnusedMethod>

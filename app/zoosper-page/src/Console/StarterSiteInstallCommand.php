@@ -15,6 +15,11 @@ use Zoosper\Site\Repository\SiteRepository;
  * Installs the compact, idempotent starter content required by the 0.2 alpha.
  * Existing Sites and Pages are retained unchanged; only missing records are created.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class StarterSiteInstallCommand implements ConsoleCommandInterface
 {
     public function __construct(

@@ -13,6 +13,11 @@ use Zoosper\Core\Console\ConsoleOutput;
 /**
  * `admin:logs:prune` — prunes admin audit log and login history entries older than a given number of days.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class PruneLogsCommand implements ConsoleCommandInterface
 {
     public function __construct(

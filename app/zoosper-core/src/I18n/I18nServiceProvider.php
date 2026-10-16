@@ -15,6 +15,11 @@ use InvalidArgumentException;
  * `set`, `instance`) without coupling the i18n package to one concrete
  * container implementation too early.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class I18nServiceProvider
 {
     /** @param array<string, mixed> $i18nConfig */

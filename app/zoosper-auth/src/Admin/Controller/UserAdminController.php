@@ -37,6 +37,11 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorResetService;
  * of duties: role assignments require 'role.manage' permission specifically.
  * 2FA reset actions never log or expose credentials or secrets.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class UserAdminController
 {
     public function __construct(

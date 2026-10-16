@@ -20,6 +20,11 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorEnrollmentService;
  * plaintext to logs. The QR code is generated locally; external QR services
  * must not be used because the provisioning URI contains the TOTP secret.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class AdminTwoFactorSetupController
 {
     public function __construct(

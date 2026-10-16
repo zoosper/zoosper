@@ -5,6 +5,11 @@ use Zoosper\Menu\Admin\Lifecycle\MenuLifecycleAdminResponder;
 use Zoosper\Menu\Application\MenuItemDeletionService;
 use RuntimeException; use Throwable; use Zoosper\Auth\Model\AdminUser; use Zoosper\Auth\Service\SessionGuard; use Zoosper\Core\Http\{Request,Response}; use Zoosper\Core\Url\AdminUrlGenerator; use Zoosper\Menu\Admin\MenuAdminResponder; use Zoosper\Menu\Application\MenuAdminService; use Zoosper\Menu\Contract\MenuAdminRepositoryInterface;
 /** Thin HTTP adapter. Authentication, CSRF and permission checks are middleware-owned. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class MenuAdminController {
  public function __construct(private SessionGuard $guard,private MenuAdminResponder $views,private MenuAdminService $service,private MenuAdminRepositoryInterface $menus,private AdminUrlGenerator $urls,private ?MenuLifecycleAdminResponder $lifecycle=null,private ?MenuItemDeletionService $itemDeletion=null){}
  public function index(Request $r): Response{return $this->views->index($this->user(),$r);} public function create(Request $r): Response{return $this->views->create($this->user());} public function edit(Request $r): Response{return $this->views->edit($this->user(),$this->id($r,'id'));}

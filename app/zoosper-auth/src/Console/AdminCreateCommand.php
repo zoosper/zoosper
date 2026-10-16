@@ -21,6 +21,11 @@ use Zoosper\Core\Console\ConsoleOutput;
  * (config/console.php + config/services.php), the same mechanism any
  * third-party module would use.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class AdminCreateCommand implements ConsoleCommandInterface
 {
     public function __construct(

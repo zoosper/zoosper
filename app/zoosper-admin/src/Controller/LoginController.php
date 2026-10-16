@@ -27,6 +27,11 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorLoginRedirectService;
  * QR/provisioning URIs, recovery-code plaintext, reset tokens, SMTP passwords or
  * payment data.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class LoginController
 {
     private const CHALLENGE_TOKEN_KEY = 'pending_2fa_challenge_token';

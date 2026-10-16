@@ -21,6 +21,11 @@ use Zoosper\Menu\Model\MenuItem;
 use Zoosper\Pagination\{Pager,PaginationResult};
 
 /** Stateless PAT adapter for request-Site Menu reads. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class MenuApiController
 {
     public function __construct(

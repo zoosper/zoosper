@@ -19,6 +19,11 @@ use Zoosper\Site\Repository\SiteDomainRepository;
 use Zoosper\Site\Repository\SiteRepository;
 
 /** Launch-readiness admin CRUD for site domain mappings. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class SiteDomainAdminController
 {
     public function __construct(
@@ -151,17 +156,6 @@ final readonly class SiteDomainAdminController
         }
 
         return $html;
-    }
-
-    /** @return array<int, string> */
-    private function siteNames(): array
-    {
-        $names = [];
-        foreach ($this->sites->all() as $site) {
-            $names[$site->id] = $site->name;
-        }
-
-        return $names;
     }
 
     /** @param array<string, mixed> $form */

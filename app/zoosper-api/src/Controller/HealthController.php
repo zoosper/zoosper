@@ -9,6 +9,11 @@ use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class HealthController
 {
     public function __construct(

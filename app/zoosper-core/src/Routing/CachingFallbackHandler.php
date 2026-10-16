@@ -66,6 +66,11 @@ use Zoosper\Core\Site\SiteContext;
  *    (true today); would need real theme resolution if per-site theme
  *    switching for the same URL is ever introduced.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class CachingFallbackHandler implements FallbackHandlerInterface
 {
     public function __construct(

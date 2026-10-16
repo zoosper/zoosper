@@ -11,6 +11,11 @@ use Zoosper\Page\Content\DocumentNormalizer;
 use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Site\Repository\SiteRepository;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class ContentPageController
 {
     public function __construct(

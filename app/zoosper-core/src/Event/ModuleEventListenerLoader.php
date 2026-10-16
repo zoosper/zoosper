@@ -15,6 +15,11 @@ use Zoosper\Core\Module\ModuleRegistry;
  *
  *     return ['page.published' => [MyListener::class]];
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class ModuleEventListenerLoader
 {
     public function __construct(private ModuleRegistry $modules, private ServiceContainer $services)

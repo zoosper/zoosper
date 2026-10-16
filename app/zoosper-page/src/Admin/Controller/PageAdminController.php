@@ -38,6 +38,11 @@ use Zoosper\Site\Repository\SiteRepository;
  * intentionally package-owned until their complete cross-module migration is
  * performed as a dedicated compatibility phase.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class PageAdminController
 {
     public function __construct(

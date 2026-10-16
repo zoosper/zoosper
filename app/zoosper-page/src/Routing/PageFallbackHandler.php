@@ -9,6 +9,11 @@ use Zoosper\Core\Routing\FallbackHandlerInterface;
 /**
  * Page-module implementation of the core-owned fallback handler contract.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final class PageFallbackHandler implements FallbackHandlerInterface
 {
     public function __construct(

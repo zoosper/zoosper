@@ -19,6 +19,11 @@ use Zoosper\Media\Service\MediaUploadService;
 use Zoosper\Pagination\PaginationResult;
 
 /** Stateless PAT adapter for feature-owned Media reads, upload, archive and restore. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class MediaApiController
 {
     public function __construct(

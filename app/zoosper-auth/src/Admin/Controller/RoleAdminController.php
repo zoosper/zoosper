@@ -31,6 +31,11 @@ use Zoosper\Theme\Template\TemplateRenderer;
 /**
  * Admin CRUD controller for roles and permissions.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class RoleAdminController
 {
     public function __construct(
@@ -45,7 +50,6 @@ final readonly class RoleAdminController
         private ?AdminUrlGenerator $adminUrls = null,
         private ?RoleLifecycleAdminResponder $lifecycle = null,
         private ?TemplateRenderer $templates = null,
-        private ?AdminViewRendererInterface $views = null,
         private ?AdminFormRegistry $formRegistry = null,
         private ?AdminFormRenderer $formRenderer = null,
     ) {
@@ -387,10 +391,6 @@ final readonly class RoleAdminController
         );
     }
 
-private function e(string $value): string
-    {
-        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-    }
 }
 
 

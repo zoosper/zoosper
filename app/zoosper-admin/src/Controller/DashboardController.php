@@ -18,6 +18,11 @@ use Zoosper\Core\Http\Response;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Core\Url\AdminUrlGenerator;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class DashboardController
 {
     public function __construct(

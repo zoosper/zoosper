@@ -46,6 +46,11 @@ use Zoosper\Media\Admin\Grid\MediaVisualGridWorkspace;
  * (422 for validation failures, 500 for storage failures), matching the
  * status codes MediaUploadServiceResult already defines.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class MediaAdminController
 {
 

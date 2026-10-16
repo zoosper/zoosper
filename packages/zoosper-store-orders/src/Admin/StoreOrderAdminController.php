@@ -19,6 +19,11 @@ use Zoosper\Grid\DataSource\GridQuery;
 use Zoosper\Grid\GridHtmlRenderer;
 use Zoosper\StoreOrders\StoreOrderDataSourceFactory;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class StoreOrderAdminController
 {
     /** @param array<string, mixed> $config */

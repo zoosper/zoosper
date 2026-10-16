@@ -40,6 +40,11 @@ use Zoosper\Errors\ZoosperException;
  * deliberate two-step confirmation rather than one config line silently
  * accepting weaker sanitisation.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class HtmlSanitizerFactory
 {
     /**

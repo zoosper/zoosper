@@ -17,6 +17,11 @@ use Zoosper\Site\Repository\SiteRepository;
 use Zoosper\Theme\Application\ThemeAssignmentService;
 use Zoosper\Theme\Theme\ThemeRepository;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class ThemeAdminController
 {
     public function __construct(

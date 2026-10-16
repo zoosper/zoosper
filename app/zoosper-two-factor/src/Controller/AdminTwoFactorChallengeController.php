@@ -34,6 +34,11 @@ use Zoosper\TwoFactor\Service\AdminTwoFactorEnrollmentService;
  *
  * Never logs OTPs, TOTP secrets, recovery-code plaintext or challenge tokens.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class AdminTwoFactorChallengeController
 {
     private const TOKEN_KEY = 'pending_2fa_challenge_token';

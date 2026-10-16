@@ -17,6 +17,11 @@ use Zoosper\Core\Http\Response;
  * header on state-changing admin requests. Header support is required for async
  * JavaScript uploads such as the Editor.js Image Tool.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class CsrfMiddleware implements RouteMiddleware
 {
     /** @var list<string> */

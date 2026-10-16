@@ -12,6 +12,11 @@ use Zoosper\Page\Service\PageRenderer;
 use Zoosper\Site\Model\Site;
 use Zoosper\Site\Repository\SiteRepository;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class PageController
 {
     public function __construct(

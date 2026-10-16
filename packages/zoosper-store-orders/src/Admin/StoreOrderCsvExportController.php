@@ -15,6 +15,11 @@ use Zoosper\Grid\DataSource\GridQuery;
 use Zoosper\StoreOrders\StoreOrderDataSourceFactory;
 
 /** Server-side export of the current resolved Store Orders page. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class StoreOrderCsvExportController
 {
     /** @param array<string, mixed> $config */

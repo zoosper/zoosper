@@ -8,6 +8,11 @@ use Zoosper\AdminDashboard\Contract\DashboardWidgetContributorInterface;
 use Zoosper\AdminDashboard\DashboardWidget;
 use Zoosper\Auth\Repository\AdminUserRepository;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class AdminUserCountDashboardWidgetContributor implements DashboardWidgetContributorInterface
 {
     public function __construct(private AdminUserRepository $users)

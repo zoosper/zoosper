@@ -23,6 +23,11 @@ use Zoosper\Page\Admin\PageGridWorkspace;
 use Zoosper\Page\Repository\PageRepository;
 
 /** Protected HTTP endpoint for Page-owned server bulk actions. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class PageBulkActionController
 {
     public function __construct(

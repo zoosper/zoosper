@@ -6,6 +6,11 @@ namespace Zoosper\Admin\UI;
 
 use Zoosper\Theme\Template\TemplateRenderer;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class AdminComponentRenderer
 {
     public function __construct(private TemplateRenderer $templates)

@@ -3,6 +3,11 @@
 declare(strict_types=1);
 namespace Zoosper\UrlRewrite\Routing;
 use Zoosper\Core\Http\Request;use Zoosper\Core\Http\Response;use Zoosper\Core\Routing\FallbackHandlerInterface;use Zoosper\UrlRewrite\Service\UrlRewriteResolver;
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class UrlRewriteFallbackHandler implements FallbackHandlerInterface
 {
  public function __construct(private UrlRewriteResolver $resolver,private FallbackHandlerInterface $next){}

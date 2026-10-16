@@ -14,6 +14,11 @@ use Zoosper\AdminForm\AdminFormSectionProviderInterface;
  * AdminFormSectionProviderInterface now imported from Zoosper\AdminForm.
  * No logic changed.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class PageContentSectionProvider implements AdminFormSectionProviderInterface
 {
     #[\Override]

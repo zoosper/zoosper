@@ -10,6 +10,11 @@ use Zoosper\Menu\Contract\{BreadcrumbProviderInterface, MenuProviderInterface};
 use Zoosper\Page\Contract\FrontendNavigationContributorInterface;
 use Marko\View\ViewInterface;
 
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class MenuFrontendNavigationContributor implements FrontendNavigationContributorInterface
 {
     public function __construct(

@@ -13,6 +13,11 @@ use Zoosper\Core\Config\ConfigRepository;
  * the service container now and later replace it with a site/store-scoped
  * implementation without changing consumers.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class CdnUrlResolverFactory
 {
     public function __construct(private ConfigRepository $config)

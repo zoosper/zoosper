@@ -13,6 +13,11 @@ use Zoosper\Settings\Admin\SettingsCatalogueResponder;
 use Zoosper\Settings\Admin\SettingsMutationCoordinator;
 
 /** Thin authenticated HTTP adapter for the Settings Admin workspace. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class SettingsCatalogueController
 {
     public function __construct(

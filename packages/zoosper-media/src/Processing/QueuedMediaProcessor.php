@@ -14,6 +14,11 @@ use Zoosper\Media\Model\MediaAsset;
  * processing intent, allowing the HTTP request to complete without waiting
  * for expensive GD operations.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class QueuedMediaProcessor implements MediaProcessorInterface
 {
     public function __construct(private PDO $pdo)

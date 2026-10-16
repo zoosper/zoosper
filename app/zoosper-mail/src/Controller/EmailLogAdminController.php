@@ -25,6 +25,11 @@ use Zoosper\Mail\Log\EmailLogRepository;
  * secrets, recovery-code plaintext, provisioning URIs, reset tokens, SMTP
  * passwords or payment data.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class EmailLogAdminController
 {
     public function __construct(

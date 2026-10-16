@@ -17,6 +17,11 @@ use Zoosper\Core\Http\Response;
  * Policy resolution, identity hashing, persistence, report-only diagnostics and
  * enforcement decisions belong exclusively to AdminAuthenticationRateLimiter.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class RateLimitReportOnlyAdminMiddleware implements RouteMiddleware
 {
     public function __construct(

@@ -15,6 +15,11 @@ use Zoosper\Core\Site\NullSiteLookup;
  * table becomes the primary source of truth. config/sites.php remains as a
  * bootstrap fallback when the DB/site module is not available or no host matches.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class SiteContextResolverFactory
 {
     

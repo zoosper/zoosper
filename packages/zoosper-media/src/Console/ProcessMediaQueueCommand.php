@@ -11,6 +11,11 @@ use Zoosper\Media\Processing\MediaDerivativePlan;
 use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Repository\MediaDerivativeRepository;
 /** Background worker for database-backed Media derivative processing. */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class ProcessMediaQueueCommand implements ConsoleCommandInterface
 {
     private const BATCH_SIZE = 50;
@@ -58,14 +63,14 @@ final readonly class ProcessMediaQueueCommand implements ConsoleCommandInterface
         $statement->execute(['now' => $now, 'id' => $id]);
         return $statement->rowCount() === 1;
     }
-    private function recoverStaleClaims(string $now): int
+    private function recoverStaleClaims(string $now): void
     {
         $cutoff = (new \DateTimeImmutable($now, new \DateTimeZone('UTC')))
             ->modify('-' . self::STALE_AFTER_SECONDS . ' seconds')
             ->format('Y-m-d H:i:s');
         $statement = $this->pdo->prepare("UPDATE media_processing_queue SET status = CASE WHEN attempts + 1 >= :max_attempts THEN 'failed' ELSE 'pending' END, attempts = attempts + 1, error_message = 'Worker lease expired before completion.', started_at = NULL, completed_at = NULL, updated_at = :now WHERE status = 'processing' AND updated_at < :cutoff");
         $statement->execute(['max_attempts' => self::MAX_ATTEMPTS, 'now' => $now, 'cutoff' => $cutoff]);
-        return $statement->rowCount();
+        $statement->rowCount();
     }
     private function finish(int $id, string $status, ?string $error = null, ?string $completedAt = null): void
     {

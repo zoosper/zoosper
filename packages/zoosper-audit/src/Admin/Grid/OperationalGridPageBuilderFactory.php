@@ -5,6 +5,11 @@ use Zoosper\AdminGrid\GridCompactWorkspaceRenderer;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Grid\GridColumnOrderer;
 use Zoosper\Grid\GridHtmlRenderer;
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class OperationalGridPageBuilderFactory
 {
     public function __construct(private GridViewStateResolver $stateResolver,private ?GridColumnOrderer $columnOrderer=null,private ?GridCompactWorkspaceRenderer $workspaceRenderer=null,private ?GridHtmlRenderer $gridRenderer=null){}

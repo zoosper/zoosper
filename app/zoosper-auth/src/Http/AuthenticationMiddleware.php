@@ -22,6 +22,11 @@ use Zoosper\Core\Http\Response;
  *
  * Applied to admin routes only; the stateless API pipeline is not affected.
  */
+/**
+ * Declarative runtime entry point discovered through module configuration.
+ *
+ * @psalm-api
+ */
 final readonly class AuthenticationMiddleware implements AdminAuthenticationMiddleware
 {
     public function __construct(
