@@ -8,6 +8,11 @@ use Zoosper\AdminGrid\GridViewState;
 use Zoosper\Pagination\PaginationResult;
 
 /** Complete, framework-neutral view model for an Auth admin Grid page. */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class AuthGridPage
 {
     /** @param PaginationResult<array<string, mixed>> $pagination */

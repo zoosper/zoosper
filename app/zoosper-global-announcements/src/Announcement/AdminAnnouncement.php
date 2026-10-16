@@ -6,6 +6,11 @@ namespace Zoosper\GlobalAnnouncements\Announcement;
 
 use DateTimeImmutable;
 
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class AdminAnnouncement
 {
     public function __construct(

@@ -26,6 +26,11 @@ use Zoosper\Auth\Model\AdminUser;
  * DatabaseRateLimitStore::recordAttempt()) and now also applied to
  * RoleRepository in this same phase.
  */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class AdminUserRepository
 {
     public function __construct(private PDO $pdo)

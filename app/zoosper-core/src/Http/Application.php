@@ -11,6 +11,11 @@ use Zoosper\Core\Site\SiteContextResolver;
 use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Error\ErrorHandler;
 
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class Application
 {
     public function __construct(

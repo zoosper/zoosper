@@ -13,6 +13,11 @@ namespace Zoosper\Core\Cache;
  * plaintext, reset tokens, SMTP passwords, payment data or customer-private
  * values.
  */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class CacheKeyBuilder
 {
     public function __construct(private string $prefix = 'zoosper', private string $version = 'v1')

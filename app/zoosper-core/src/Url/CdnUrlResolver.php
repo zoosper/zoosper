@@ -17,6 +17,11 @@ use Zoosper\Core\Site\SiteContext;
  * embed credentials, OTPs, TOTP secrets, recovery-code plaintext, reset tokens,
  * payment data or customer-private values in URL paths.
  */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class CdnUrlResolver
 {
     /**

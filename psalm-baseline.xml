@@ -292,13 +292,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-auth/src/Admin/Grid/AuthGridPage.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$pagination]]></code>
-      <code><![CDATA[$state]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AuthGridPageBuilderFactory.php">
     <UnusedClass>
       <code><![CDATA[AuthGridPageBuilderFactory]]></code>
@@ -420,11 +413,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-auth/src/Repository/AdminUserRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[search]]></code>
-      <code><![CDATA[updateLocale]]></code>
-    </PossiblyUnusedMethod>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[is_int($id)]]></code>
     </RedundantConditionGivenDocblockType>
@@ -465,11 +453,6 @@
     <PossiblyFalseArgument>
       <code><![CDATA[session_name()]]></code>
     </PossiblyFalseArgument>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[hasPendingTwoFactorChallenge]]></code>
-      <code><![CDATA[reset]]></code>
-    </PossiblyUnusedMethod>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[ini_get('session.use_cookies')]]></code>
     </RiskyTruthyFalsyComparison>
@@ -536,14 +519,6 @@
   <file src="app/zoosper-core/src/Cache/CacheContext.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[toArray]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-core/src/Cache/CacheKeyBuilder.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[block]]></code>
-      <code><![CDATA[privateFragment]]></code>
-      <code><![CDATA[publicFragment]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Cache/HttpCachePolicy.php">
@@ -887,15 +862,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-core/src/Event/EventDispatcherInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[listeners]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[object]]></code>
-      <code><![CDATA[self]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
   <file src="app/zoosper-core/src/Event/GenericEvent.php">
     <UnusedClass>
       <code><![CDATA[GenericEvent]]></code>
@@ -915,14 +881,6 @@
       <code><![CDATA[ModuleEventListenerLoader]]></code>
     </UnusedClass>
   </file>
-  <file src="app/zoosper-core/src/Filesystem/ProjectPathResolver.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[absolute]]></code>
-      <code><![CDATA[configPath]]></code>
-      <code><![CDATA[publicPath]]></code>
-      <code><![CDATA[storagePath]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="app/zoosper-core/src/Fragment/AjaxFragmentDefinition.php">
     <UnusedClass>
       <code><![CDATA[AjaxFragmentDefinition]]></code>
@@ -937,13 +895,6 @@
     <UnusedClass>
       <code><![CDATA[HtmlSanitizerFactory]]></code>
     </UnusedClass>
-  </file>
-  <file src="app/zoosper-core/src/Http/Application.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[handle]]></code>
-      <code><![CDATA[isStatelessPublicPath]]></code>
-      <code><![CDATA[services]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Http/Middleware/ModuleAdminMiddlewareLoader.php">
     <RiskyTruthyFalsyComparison>
@@ -1205,13 +1156,6 @@
       <code><![CDATA[SiteContextResolverFactory]]></code>
     </UnusedClass>
   </file>
-  <file src="app/zoosper-core/src/Site/SiteLookupInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[findByCode]]></code>
-      <code><![CDATA[findByHost]]></code>
-      <code><![CDATA[findDefault]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="app/zoosper-core/src/Testing/TestCase.php">
     <UnusedClass>
       <code><![CDATA[TestCase]]></code>
@@ -1238,13 +1182,6 @@
       <code><![CDATA[basePath]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-core/src/Url/CdnUrlResolver.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[dynamicForContext]]></code>
-      <code><![CDATA[isEnabled]]></code>
-      <code><![CDATA[resolve]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="app/zoosper-core/src/Url/CdnUrlResolverFactory.php">
     <UnusedClass>
       <code><![CDATA[CdnUrlResolverFactory]]></code>
@@ -1261,10 +1198,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-editor/src/Config/ContentEditorRuntimeConfig.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[fallback]]></code>
-      <code><![CDATA[preferred]]></code>
-    </PossiblyUnusedMethod>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(string) ($this->scoped->get(
             $path,
@@ -1273,20 +1206,6 @@
         ) ?? $projectValue)]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="app/zoosper-editor/src/Config/ContentEditorRuntimeConfigFactory.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[forDefaultScope]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-editor/src/ContentEditorRegistry.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[all]]></code>
-      <code><![CDATA[codes]]></code>
-      <code><![CDATA[preferred]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="app/zoosper-editor/src/EditorJsContentEditor.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -1294,25 +1213,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[json_encode($this->imageToolConfig->toArray($this->csrf->token()), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="app/zoosper-global-announcements/src/Announcement/AdminAnnouncement.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[isArchived]]></code>
-      <code><![CDATA[isDraft]]></code>
-      <code><![CDATA[isPublished]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$createdAt]]></code>
-      <code><![CDATA[$createdByUserId]]></code>
-      <code><![CDATA[$updatedAt]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="app/zoosper-global-announcements/src/Announcement/AdminAnnouncementRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[findLatestPublished]]></code>
-      <code><![CDATA[isAcknowledged]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-global-announcements/src/Controller/AnnouncementAdminController.php">
     <UndefinedInterfaceMethod>
@@ -1882,15 +1782,6 @@
       <code><![CDATA[tableExists]]></code>
     </UnusedMethod>
   </file>
-  <file src="app/zoosper-page/src/Repository/PageRevisionRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[int]]></code>
-      <code><![CDATA[int]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
   <file src="app/zoosper-page/src/Repository/PageSiteAssignmentRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -1938,15 +1829,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-page/src/Service/PageRevisionService.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[history]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[int]]></code>
-    </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-page/src/Service/PageStoreViewAssignmentService.php">
     <UnusedClass>
@@ -2271,15 +2153,6 @@
       <code><![CDATA[$tokenHash]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="app/zoosper-two-factor/src/Challenge/TwoFactorChallengeRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[deleteExpired]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[int]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
   <file src="app/zoosper-two-factor/src/Challenge/TwoFactorChallengeService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -2582,11 +2455,6 @@
     <MoreSpecificReturnType>
       <code><![CDATA[array{visible_columns: list<string>, column_order: list<string>}|null]]></code>
     </MoreSpecificReturnType>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[findVisibleColumns]]></code>
-      <code><![CDATA[saveVisibleColumns]]></code>
-    </PossiblyUnusedMethod>
     <RedundantFunctionCall>
       <code><![CDATA[array_values]]></code>
       <code><![CDATA[array_values]]></code>
@@ -2790,13 +2658,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-audit/src/Admin/Grid/OperationalGridPage.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$pagination]]></code>
-      <code><![CDATA[$state]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="packages/zoosper-audit/src/Admin/Grid/OperationalGridPageBuilderFactory.php">
     <UnusedClass>
       <code><![CDATA[OperationalGridPageBuilderFactory]]></code>
@@ -2806,12 +2667,6 @@
     <UnusedConstructor>
       <code><![CDATA[__construct]]></code>
     </UnusedConstructor>
-  </file>
-  <file src="packages/zoosper-audit/src/AuditLogRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[latest]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-audit/src/AuditLogger.php">
     <PossiblyUnusedMethod>

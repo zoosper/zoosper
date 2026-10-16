@@ -3,6 +3,11 @@ declare(strict_types=1);
 namespace Zoosper\Audit\Admin\Grid;
 use Zoosper\AdminGrid\GridViewState;
 use Zoosper\Pagination\PaginationResult;
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class OperationalGridPage
 {
     /** @param PaginationResult<array<string,mixed>> $pagination */

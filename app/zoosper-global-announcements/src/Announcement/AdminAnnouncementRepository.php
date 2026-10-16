@@ -8,6 +8,11 @@ use DateTimeImmutable;
 use PDO;
 use Zoosper\Core\Announcement\AdminAnnouncementProviderInterface;
 
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class AdminAnnouncementRepository implements AdminAnnouncementProviderInterface
 {
     public function __construct(private PDO $pdo)

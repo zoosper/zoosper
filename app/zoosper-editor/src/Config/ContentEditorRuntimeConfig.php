@@ -9,6 +9,11 @@ use Zoosper\ScopedConfig\ScopeConfigRepository;
 use Zoosper\ScopedConfig\ScopeContext;
 
 /** Resolves editor selection with scoped database precedence. */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class ContentEditorRuntimeConfig
 {
     public function __construct(

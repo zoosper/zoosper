@@ -8,6 +8,11 @@ namespace Zoosper\Core\Site;
  * Core-owned lookup contract for resolving site data without importing the
  * Site module's repository or model classes.
  */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 interface SiteLookupInterface
 {
     public function findByHost(string $host): ?ResolvedSite;

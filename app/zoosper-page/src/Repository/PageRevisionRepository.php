@@ -5,6 +5,11 @@ namespace Zoosper\Page\Repository;
 use PDO;
 use RuntimeException;
 use Zoosper\Page\Model\PageRevision;
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class PageRevisionRepository
 {
     public function __construct(private PDO $pdo) {}

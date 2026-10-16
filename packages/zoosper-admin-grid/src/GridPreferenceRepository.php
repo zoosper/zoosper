@@ -7,6 +7,11 @@ namespace Zoosper\AdminGrid;
 use JsonException;
 use PDO;
 
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class GridPreferenceRepository
 {
     public function __construct(private PDO $pdo)

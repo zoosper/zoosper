@@ -21,6 +21,11 @@ use PDO;
  * Assumed columns (per zoosper-two-factor/config/db_schema.php):
  *   id, admin_user_id, challenge_token_hash, expires_at, consumed_at, created_at
  */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class TwoFactorChallengeRepository
 {
     public function __construct(

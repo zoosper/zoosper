@@ -8,6 +8,11 @@ namespace Zoosper\Core\Filesystem;
  * Resolves project paths safely so runtime/generated files do not drift into
  * public/ because of PHP's current working directory.
  */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class ProjectPathResolver
 {
     public function __construct(private string $basePath)

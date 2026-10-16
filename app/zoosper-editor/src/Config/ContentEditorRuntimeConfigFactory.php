@@ -9,6 +9,11 @@ use Zoosper\ScopedConfig\ScopeConfigRepository;
 use Zoosper\ScopedConfig\ScopeContext;
 
 /** Creates immutable content-editor runtime configuration for an explicit scope. */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class ContentEditorRuntimeConfigFactory
 {
     public function __construct(

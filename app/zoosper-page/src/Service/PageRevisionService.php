@@ -11,6 +11,11 @@ use Zoosper\Page\Repository\PageRepository;
 use Zoosper\Page\Repository\PageRevisionRepository;
 
 /** Owns complete Page snapshots, retention and safely scoped restoration. */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class PageRevisionService
 {
     public function __construct(

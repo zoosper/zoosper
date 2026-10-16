@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Event;
 
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 interface EventDispatcherInterface
 {
     public function listen(string $eventName, callable|EventListenerInterface $listener): self;

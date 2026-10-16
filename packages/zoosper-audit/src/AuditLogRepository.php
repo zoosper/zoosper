@@ -15,6 +15,11 @@ use Zoosper\Pagination\PaginationResult;
  * Implements GridDataSourceInterface for paginated, filterable admin grid display
  * and supports retention pruning.
  */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final readonly class AuditLogRepository implements GridDataSourceInterface
 {
     /**

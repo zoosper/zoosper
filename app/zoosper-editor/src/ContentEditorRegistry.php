@@ -15,6 +15,11 @@ use Zoosper\Errors\ZoosperException;
  * failing. Third-party editor modules register themselves at runtime by
  * contributing a different default editor through config/services.php.
  */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final class ContentEditorRegistry
 {
     /** @var array<string, ContentEditorInterface> */

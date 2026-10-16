@@ -13,6 +13,11 @@ use Zoosper\Auth\Repository\AdminUserRepository;
  * Provides per-request user caching, idle/absolute lifetime enforcement,
  * password change invalidation, and pending-2FA challenge state handling.
  */
+/**
+ * Runtime service API constructed through module registration.
+ *
+ * @psalm-api
+ */
 final class SessionGuard
 {
     private const SESSION_USER_KEY = 'admin_user_id';
