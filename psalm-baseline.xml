@@ -1251,16 +1251,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-page/src/Admin/PageAdminDashboardFactsGuard.php">
-    <UnusedClass>
-      <code><![CDATA[PageAdminDashboardFactsGuard]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-page/src/Admin/PageAdminDashboardStatusPresenter.php">
-    <UnusedClass>
-      <code><![CDATA[PageAdminDashboardStatusPresenter]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-page/src/Admin/PageAdminGridResponder.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -1472,9 +1462,7 @@
   </file>
   <file src="app/zoosper-page/src/Content/PageContentDocument.php">
     <PossiblyUnusedMethod>
-      <code><![CDATA[fromRow]]></code>
       <code><![CDATA[html]]></code>
-      <code><![CDATA[toRowValues]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Controller/PageController.php">
@@ -1494,11 +1482,6 @@
       <code><![CDATA[$pageId]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="app/zoosper-page/src/Form/PageStoreViewOptionsProvider.php">
-    <UnusedClass>
-      <code><![CDATA[PageStoreViewOptionsProvider]]></code>
-    </UnusedClass>
-  </file>
   <file src="app/zoosper-page/src/Lifecycle/PageLifecycleCoordinator.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -1515,13 +1498,6 @@
       <code><![CDATA[$updatedBy]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="app/zoosper-page/src/Model/PageSiteAssignment.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$pageId]]></code>
-      <code><![CDATA[$siteId]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="app/zoosper-page/src/Repository/PageRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -1530,30 +1506,10 @@
       <code><![CDATA[tableExists]]></code>
     </UnusedMethod>
   </file>
-  <file src="app/zoosper-page/src/Repository/PageSiteAssignmentRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[assignmentsForPage]]></code>
-    </PossiblyUnusedMethod>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $siteId]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="app/zoosper-page/src/Routing/PageFallbackHandlerAdapter.php">
     <UnusedClass>
       <code><![CDATA[PageFallbackHandlerAdapter]]></code>
     </UnusedClass>
-  </file>
-  <file src="app/zoosper-page/src/Sanitization/PageContentSanitizationAuditor.php">
-    <UnusedClass>
-      <code><![CDATA[PageContentSanitizationAuditor]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-page/src/Sanitization/PageContentSanitizationResult.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$table]]></code>
-      <code><![CDATA[$tableExists]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-page/src/Seo/PageSitemapContributor.php">
     <ParamNameMismatch>
@@ -1564,11 +1520,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-page/src/Service/PageStoreViewAssignmentService.php">
-    <UnusedClass>
-      <code><![CDATA[PageStoreViewAssignmentService]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-seo/src/Contribution/SeoContributorRegistry.php">
     <LessSpecificReturnStatement>

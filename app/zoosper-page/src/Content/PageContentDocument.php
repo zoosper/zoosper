@@ -9,6 +9,8 @@ namespace Zoosper\Page\Content;
  *
  * HTML remains the compatibility and recovery representation. Structured content
  * is present only for a validated block_json document.
+ *
+ * @psalm-suppress PossiblyUnusedProperty HTML is the public compatibility and recovery representation.
  */
 final readonly class PageContentDocument
 {
@@ -40,24 +42,5 @@ final readonly class PageContentDocument
     public function toApiValue(): ?array
     {
         return $this->structured;
-    }
-
-    /** @param array<string, mixed> $row */
-    public static function fromRow(array $row): self
-    {
-        return new self(
-            format: ContentFormat::fromNullable(isset($row['content_format']) ? (string) $row['content_format'] : null),
-            html: (string) ($row['content'] ?? ''),
-        );
-    }
-
-    /** @return array<string, mixed> */
-    public function toRowValues(?string $json = null): array
-    {
-        return [
-            'content_format' => $this->format->value,
-            'content' => $this->html,
-            'content_json' => $json,
-        ];
     }
 }

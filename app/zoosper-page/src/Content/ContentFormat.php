@@ -13,14 +13,6 @@ enum ContentFormat: string
     case BlockJson = 'block_json';
     case Markdown = 'markdown';
 
-    public static function fromNullable(?string $format): self
-    {
-        return match ($format) {
-            self::BlockJson->value => self::BlockJson,
-            self::Markdown->value => self::Markdown,
-            default => self::Html,
-        };
-    }
 }
 
 
