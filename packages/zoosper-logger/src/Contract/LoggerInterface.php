@@ -2,6 +2,9 @@
 declare(strict_types=1);
 namespace Zoosper\Logger\Contract;
 use Throwable;
+/** Public logging contract implemented by runtime logger adapters.
+ * @psalm-api
+ */
 interface LoggerInterface
 {
     public function emergency(string $message, array $context = []): void;

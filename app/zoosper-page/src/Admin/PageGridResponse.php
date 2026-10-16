@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Admin;
 
-/** Framework-neutral response payload for thin Page controller adapters. */
+/**
+ * Framework-neutral response payload for thin Page controller adapters.
+ *
+ * @psalm-api Public adapter boundary between Page application and HTTP controllers.
+ */
 final readonly class PageGridResponse
 {
     /** @param array<string, string> $headers */

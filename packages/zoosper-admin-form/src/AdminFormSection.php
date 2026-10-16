@@ -7,6 +7,8 @@ namespace Zoosper\AdminForm;
 /**
  * Immutable admin form section rendered by one core or third-party provider.
  *
+ * @psalm-api Public third-party Admin Form extension value.
+ *
  * Section keys are stable extension points. Modules can add new sections by
  * registering additional providers for the same form handle without changing a
  * controller or overriding the whole page form.

@@ -7,6 +7,8 @@ namespace Zoosper\Core\Entity\Save;
 /**
  * Declarative definition of a submitted/admin form field.
  *
+ * @psalm-api Public module extension value used by field-definition registries.
+ *
  * Field definitions are how core and third-party modules describe what a field
  * means, where it should be stored, and whether it is allowed in the core SQL
  * write map. This keeps controllers clean and prevents unknown POST fields from

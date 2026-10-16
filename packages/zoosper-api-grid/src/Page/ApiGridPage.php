@@ -9,6 +9,7 @@ use Zoosper\Grid\DataSource\GridDataSourceCapabilities;
 use Zoosper\Grid\DataSource\GridQuery;
 use Zoosper\Grid\DataSource\GridResult;
 
+/** @psalm-api Public composed API Grid page value. */
 final readonly class ApiGridPage
 {
     public function __construct(

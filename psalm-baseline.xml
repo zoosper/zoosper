@@ -868,17 +868,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-core/src/Entity/Save/FieldDefinition.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[extension]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$normaliserService]]></code>
-      <code><![CDATA[$required]]></code>
-      <code><![CDATA[$validatorService]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="app/zoosper-core/src/Entity/Save/FieldDefinitionRegistry.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[all]]></code>
@@ -1706,17 +1695,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-page/src/Admin/PageGridResponse.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[html]]></code>
-      <code><![CDATA[redirect]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$body]]></code>
-      <code><![CDATA[$headers]]></code>
-      <code><![CDATA[$status]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="app/zoosper-page/src/Admin/PageGridSiteFilter.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -2536,14 +2514,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-admin-form/src/AdminFormSection.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$html]]></code>
-      <code><![CDATA[$modifierClass]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="packages/zoosper-admin-form/src/AdminFormUiConfigLoader.php">
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
@@ -2777,14 +2747,6 @@
       <code><![CDATA[$siteId]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="packages/zoosper-api-grid/src/Page/ApiGridPage.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$capabilities]]></code>
-      <code><![CDATA[$definition]]></code>
-      <code><![CDATA[$query]]></code>
-      <code><![CDATA[$result]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="packages/zoosper-api-grid/src/Page/ApiGridPageBuilder.php">
     <UnusedClass>
       <code><![CDATA[ApiGridPageBuilder]]></code>
@@ -2887,20 +2849,6 @@
     <ParamNameMismatch>
       <code><![CDATA[$default]]></code>
     </ParamNameMismatch>
-  </file>
-  <file src="packages/zoosper-cache/src/Contract/CacheInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[clear]]></code>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[deleteMultiple]]></code>
-      <code><![CDATA[getMultiple]]></code>
-      <code><![CDATA[has]]></code>
-      <code><![CDATA[increment]]></code>
-      <code><![CDATA[setMultiple]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[bool]]></code>
-    </PossiblyUnusedReturnValue>
   </file>
   <file src="packages/zoosper-cache/src/Driver/MarkoCacheAdapter.php">
     <PossiblyUnusedMethod>
@@ -3025,16 +2973,6 @@
       <code><![CDATA[$search]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="packages/zoosper-grid/src/DataSource/GridResult.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[totalPages]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$nextCursor]]></code>
-      <code><![CDATA[$paginationMode]]></code>
-      <code><![CDATA[$previousCursor]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="packages/zoosper-grid/src/GridColumnRegistry.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -3054,16 +2992,6 @@
     <UnusedClass>
       <code><![CDATA[GridMultiselectRenderer]]></code>
     </UnusedClass>
-  </file>
-  <file src="packages/zoosper-logger/src/Contract/LoggerInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[alert]]></code>
-      <code><![CDATA[debug]]></code>
-      <code><![CDATA[emergency]]></code>
-      <code><![CDATA[info]]></code>
-      <code><![CDATA[notice]]></code>
-      <code><![CDATA[warning]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Admin/Grid/MediaGridSource.php">
     <ParamNameMismatch>
@@ -3145,14 +3073,6 @@
       <code><![CDATA[deletePermanently]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-media/src/Lifecycle/MediaLifecycleResult.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$mediaId]]></code>
-      <code><![CDATA[$newStatus]]></code>
-      <code><![CDATA[$operation]]></code>
-      <code><![CDATA[$previousStatus]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="packages/zoosper-media/src/Lifecycle/MediaReferenceInspector.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -3204,14 +3124,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[codes]]></code>
       <code><![CDATA[isEmpty]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="packages/zoosper-media/src/Processing/MediaProcessingPolicy.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[derivativeStoragePrefix]]></code>
-      <code><![CDATA[originalsAreImmutable]]></code>
-      <code><![CDATA[publicDerivativePrefix]]></code>
-      <code><![CDATA[queueRecommended]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Processing/MediaProcessingResult.php">

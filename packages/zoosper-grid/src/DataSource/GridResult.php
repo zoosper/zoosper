@@ -9,6 +9,8 @@ use InvalidArgumentException;
 /**
  * Transport-neutral collection result.
  *
+ * @psalm-api Public data-source result contract shared by Grid consumers.
+ *
  * @template TItem
  */
 final readonly class GridResult

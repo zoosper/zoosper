@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Media\Lifecycle;
 
+/** @psalm-api Public Media lifecycle operation result. */
 final readonly class MediaLifecycleResult
 {
     /** @param array<string, int> $blockers */

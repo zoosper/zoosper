@@ -7,6 +7,8 @@ namespace Zoosper\Media\Processing;
 /**
  * Central media derivative policy.
  *
+ * @psalm-api Public processing policy consumed by Media processor implementations.
+ *
  * Phase 1.37n deliberately defines the contract and policy only. Actual GD,
  * Imagick, storage-driver or queue-backed workers should be introduced behind
  * MediaProcessorInterface in a later phase.

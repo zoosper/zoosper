@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 namespace Zoosper\Cache\Contract;
+/** Public cache-driver contract implemented and consumed across module boundaries.
+ * @psalm-api
+ */
 interface CacheInterface
 {
     public function get(string $key, mixed $default = null): mixed;
