@@ -110,6 +110,7 @@ final readonly class ModuleRouteLoader
                 stateless: (bool) ($route['stateless'] ?? false),
                 apiAuth: isset($route['auth']) ? (string) $route['auth'] : null,
                 apiScope: isset($route['scope']) && $route['scope'] !== '' ? (string) $route['scope'] : null,
+                apiCsrf: isset($route['csrf']) ? (string) $route['csrf'] : null,
             );
             $this->assertValid($definition);
             if ($configFile === 'admin_routes.php') {
@@ -147,7 +148,7 @@ final readonly class ModuleRouteLoader
             return [$controller, $action];
         }
 
-        $context = new RouteContext($route->method, $route->path, $route->public, $route->permissions, $route->stateless, $route->apiAuth, $route->apiScope);
+        $context = new RouteContext($route->method, $route->path, $route->public, $route->permissions, $route->stateless, $route->apiAuth, $route->apiScope, $route->apiCsrf);
         $pipeline = new MiddlewarePipeline($middleware);
 
         return static fn (Request $request): Response => $pipeline->handle(

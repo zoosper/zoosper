@@ -25,6 +25,7 @@ final readonly class RouteContext
         public bool $stateless = false,
         public ?string $apiAuth = null,
         public ?string $apiScope = null,
+        public ?string $apiCsrf = null,
     ) {
         $this->permissions = self::normalise($permission);
     }

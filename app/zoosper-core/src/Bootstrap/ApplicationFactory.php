@@ -21,6 +21,7 @@ use Zoosper\Core\Http\Middleware\AdminAuthenticationMiddleware;
 use Zoosper\Core\Http\Middleware\ModuleAdminMiddlewareLoader;
 use Zoosper\Core\Http\Middleware\ModuleApiMiddlewareLoader;
 use Zoosper\Core\Http\Middleware\ApiAuthenticationMiddleware;
+use Zoosper\Core\Http\Middleware\ApiSessionAuthenticationMiddleware;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Core\Error\ErrorHandler;
@@ -107,7 +108,10 @@ final class ApplicationFactory
         $routeLoader->registerAdminRoutes($router, $adminMiddleware, $basePath);
         $apiMiddleware = (new ModuleApiMiddlewareLoader($modules, $services))->load();
         if (!array_any($apiMiddleware, static fn (object $middleware): bool => $middleware instanceof ApiAuthenticationMiddleware)) {
-            throw new \Zoosper\Errors\ZoosperException('API authentication middleware is missing.');
+            throw new \Zoosper\Errors\ZoosperException('API bearer authentication middleware is missing.');
+        }
+        if (!array_any($apiMiddleware, static fn (object $middleware): bool => $middleware instanceof ApiSessionAuthenticationMiddleware)) {
+            throw new \Zoosper\Errors\ZoosperException('API session authentication middleware is missing.');
         }
         $routeLoader->registerApiRoutes($router, $apiMiddleware, $basePath);
 

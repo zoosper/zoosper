@@ -7,6 +7,8 @@ it('fails closed before registering API routes unless mandatory authentication m
     expect($source)
         ->toContain('new ModuleApiMiddlewareLoader($modules, $services)')
         ->toContain('instanceof ApiAuthenticationMiddleware')
-        ->toContain('API authentication middleware is missing.')
+        ->toContain('API bearer authentication middleware is missing.')
+        ->toContain('instanceof ApiSessionAuthenticationMiddleware')
+        ->toContain('API session authentication middleware is missing.')
         ->toContain('registerApiRoutes($router, $apiMiddleware, $basePath)');
 });

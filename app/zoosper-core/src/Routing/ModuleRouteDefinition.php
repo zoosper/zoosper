@@ -17,6 +17,7 @@ final readonly class ModuleRouteDefinition
         public bool $stateless = false,
         public ?string $apiAuth = null,
         public ?string $apiScope = null,
+        public ?string $apiCsrf = null,
     ) {
     }
 
@@ -60,6 +61,16 @@ final readonly class ModuleRouteDefinition
         }
         if ($this->apiAuth !== 'bearer' && ($this->apiScope !== null || $this->permissions !== [])) {
             throw new \Zoosper\Errors\ZoosperException('Only bearer API routes may declare scope or permission metadata: ' . $this->method . ' ' . $this->path);
+        }
+        if ($this->apiAuth === 'session') {
+            if (!in_array($this->apiCsrf, ['none', 'enforce'], true)) {
+                throw new \Zoosper\Errors\ZoosperException('Session API route must declare csrf as none or enforce: ' . $this->method . ' ' . $this->path);
+            }
+            if (in_array($this->method, ['POST', 'PUT', 'PATCH', 'DELETE'], true) && $this->apiCsrf !== 'enforce') {
+                throw new \Zoosper\Errors\ZoosperException('State-changing session API route must enforce CSRF: ' . $this->method . ' ' . $this->path);
+            }
+        } elseif ($this->apiCsrf !== null) {
+            throw new \Zoosper\Errors\ZoosperException('Only session API routes may declare CSRF policy: ' . $this->method . ' ' . $this->path);
         }
     }
 
