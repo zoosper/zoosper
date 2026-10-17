@@ -17,7 +17,7 @@ it('owns canonical upload through a request-carried stateless PAT boundary', fun
 
     expect($matches)->toHaveCount(1)
         ->and($matches[0]['action'] ?? null)->toBe('upload')
-        ->and($matches[0]['public'] ?? null)->toBeTrue()
+        ->and($matches[0]['public'] ?? null)->toBeFalse()->and($matches[0]['auth'] ?? null)->toBe('bearer')
         ->and($matches[0]['stateless'] ?? null)->toBeTrue()
         ->and($controller)->toContain('private MediaUploadService $uploads')
         ->toContain("can('media.manage')");

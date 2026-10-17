@@ -2,23 +2,98 @@
 
 declare(strict_types=1);
 
-use Zoosper\Auth\Api\RoleApiController;
-
-return [
-    ['method' => 'GET', 'path' => '/api/v1/roles', 'controller' => RoleApiController::class, 'action' => 'index', 'public' => true, 'stateless' => true],
-    ['method' => 'GET', 'path' => '/api/v1/roles/{id:\d+}', 'controller' => RoleApiController::class, 'action' => 'show', 'public' => true, 'stateless' => true],
-    ['method' => 'GET', 'path' => '/api/v1/permissions', 'controller' => RoleApiController::class, 'action' => 'permissions', 'public' => true, 'stateless' => true],
-    ['method' => 'POST', 'path' => '/api/v1/roles', 'controller' => RoleApiController::class, 'action' => 'create', 'public' => true, 'stateless' => true],
-    ['method' => 'PATCH', 'path' => '/api/v1/roles/{id:\d+}', 'controller' => RoleApiController::class, 'action' => 'update', 'public' => true, 'stateless' => true],
-    ['method' => 'DELETE', 'path' => '/api/v1/roles/{id:\d+}', 'controller' => RoleApiController::class, 'action' => 'delete', 'public' => true, 'stateless' => true],
-];
-
-
-
-
-
-
-
-
-
-
+return array (
+  0 =>
+  array (
+    'method' => 'GET',
+    'path' => '/api/v1/roles',
+    'controller' => 'Zoosper\\Auth\\Api\\RoleApiController',
+    'action' => 'index',
+    'public' => false,
+    'stateless' => true,
+    'auth' => 'bearer',
+    'scope' => 'roles:read',
+    'permission' =>
+    array (
+      0 => 'role.view',
+      1 => 'role.manage',
+    ),
+  ),
+  1 =>
+  array (
+    'method' => 'GET',
+    'path' => '/api/v1/roles/{id:\\d+}',
+    'controller' => 'Zoosper\\Auth\\Api\\RoleApiController',
+    'action' => 'show',
+    'public' => false,
+    'stateless' => true,
+    'auth' => 'bearer',
+    'scope' => 'roles:read',
+    'permission' =>
+    array (
+      0 => 'role.view',
+      1 => 'role.manage',
+    ),
+  ),
+  2 =>
+  array (
+    'method' => 'GET',
+    'path' => '/api/v1/permissions',
+    'controller' => 'Zoosper\\Auth\\Api\\RoleApiController',
+    'action' => 'permissions',
+    'public' => false,
+    'stateless' => true,
+    'auth' => 'bearer',
+    'scope' => 'roles:read',
+    'permission' =>
+    array (
+      0 => 'role.view',
+      1 => 'role.manage',
+    ),
+  ),
+  3 =>
+  array (
+    'method' => 'POST',
+    'path' => '/api/v1/roles',
+    'controller' => 'Zoosper\\Auth\\Api\\RoleApiController',
+    'action' => 'create',
+    'public' => false,
+    'stateless' => true,
+    'auth' => 'bearer',
+    'scope' => 'roles:write',
+    'permission' =>
+    array (
+      0 => 'role.manage',
+    ),
+  ),
+  4 =>
+  array (
+    'method' => 'PATCH',
+    'path' => '/api/v1/roles/{id:\\d+}',
+    'controller' => 'Zoosper\\Auth\\Api\\RoleApiController',
+    'action' => 'update',
+    'public' => false,
+    'stateless' => true,
+    'auth' => 'bearer',
+    'scope' => 'roles:write',
+    'permission' =>
+    array (
+      0 => 'role.manage',
+    ),
+  ),
+  5 =>
+  array (
+    'method' => 'DELETE',
+    'path' => '/api/v1/roles/{id:\\d+}',
+    'controller' => 'Zoosper\\Auth\\Api\\RoleApiController',
+    'action' => 'delete',
+    'public' => false,
+    'stateless' => true,
+    'auth' => 'bearer',
+    'scope' => 'roles:write',
+    'permission' =>
+    array (
+      0 => 'role.manage',
+    ),
+  ),
+);

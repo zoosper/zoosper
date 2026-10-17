@@ -23,6 +23,8 @@ final readonly class RouteContext
         public bool $isPublic = false,
         string|array|null $permission = null,
         public bool $stateless = false,
+        public ?string $apiAuth = null,
+        public ?string $apiScope = null,
     ) {
         $this->permissions = self::normalise($permission);
     }

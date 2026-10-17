@@ -15,6 +15,8 @@ final readonly class ModuleRouteDefinition
         public array $permissions = [],
         public bool $public = false,
         public bool $stateless = false,
+        public ?string $apiAuth = null,
+        public ?string $apiScope = null,
     ) {
     }
 
@@ -42,6 +44,22 @@ final readonly class ModuleRouteDefinition
                     'permissions' => $this->permissions,
                 ],
             );
+        }
+    }
+
+    public function assertExplicitApiAccess(): void
+    {
+        if (!in_array($this->apiAuth, ['anonymous', 'session', 'bearer'], true)) {
+            throw new \Zoosper\Errors\ZoosperException('API route must declare auth as anonymous, session or bearer: ' . $this->method . ' ' . $this->path);
+        }
+        if ($this->public !== ($this->apiAuth === 'anonymous')) {
+            throw new \Zoosper\Errors\ZoosperException('API public flag contradicts auth classification: ' . $this->method . ' ' . $this->path);
+        }
+        if ($this->apiAuth === 'bearer' && !$this->stateless) {
+            throw new \Zoosper\Errors\ZoosperException('Bearer API route must be stateless: ' . $this->method . ' ' . $this->path);
+        }
+        if ($this->apiAuth !== 'bearer' && ($this->apiScope !== null || $this->permissions !== [])) {
+            throw new \Zoosper\Errors\ZoosperException('Only bearer API routes may declare scope or permission metadata: ' . $this->method . ' ' . $this->path);
         }
     }
 

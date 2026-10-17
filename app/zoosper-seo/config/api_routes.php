@@ -1,14 +1,26 @@
 <?php
+
 declare(strict_types=1);
-use Zoosper\Seo\Controller\SeoPublicController;
-return [['method'=>'GET','path'=>'/sitemap.xml','controller'=>SeoPublicController::class,'action'=>'sitemap','public'=>true,'stateless'=>true],['method'=>'GET','path'=>'/robots.txt','controller'=>SeoPublicController::class,'action'=>'robots','public'=>true,'stateless'=>true]];
 
-
-
-
-
-
-
-
-
-
+return array (
+  0 =>
+  array (
+    'method' => 'GET',
+    'path' => '/sitemap.xml',
+    'controller' => 'Zoosper\\Seo\\Controller\\SeoPublicController',
+    'action' => 'sitemap',
+    'public' => true,
+    'stateless' => true,
+    'auth' => 'anonymous',
+  ),
+  1 =>
+  array (
+    'method' => 'GET',
+    'path' => '/robots.txt',
+    'controller' => 'Zoosper\\Seo\\Controller\\SeoPublicController',
+    'action' => 'robots',
+    'public' => true,
+    'stateless' => true,
+    'auth' => 'anonymous',
+  ),
+);

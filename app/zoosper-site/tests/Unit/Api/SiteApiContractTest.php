@@ -1,11 +1,1 @@
-<?php declare(strict_types=1);it('owns PAT Site reads and guarded lifecycle',function(){ $r=(string)file_get_contents(dirname(__DIR__,3).'/config/api_routes.php');expect($r)->toContain('/api/v1/sites')->toContain("'action'=>'disable'")->toContain("'action'=>'deletePermanently'");});
-
-
-
-
-
-
-
-
-
-
+<?php declare(strict_types=1);it('owns bearer-protected Site reads and guarded lifecycle',function(){ $routes=require dirname(__DIR__,3).'/config/api_routes.php';$actions=array_column($routes,'action');expect(array_column($routes,'path'))->toContain('/api/v1/sites')->and($actions)->toContain('disable')->toContain('deletePermanently');foreach($routes as $route)expect($route['auth'])->toBe('bearer')->and($route['public'])->toBeFalse()->and($route['stateless'])->toBeTrue();});

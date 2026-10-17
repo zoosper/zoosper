@@ -26,7 +26,7 @@ it('leaves API route declarations outside admin path expansion', function (): vo
     $routes = (string) file_get_contents($root . '/app/zoosper-core/src/Routing/ModuleRouteLoader.php');
 
     expect($routes)->toContain("\$configFile === 'admin_routes.php'")
-        ->toContain("registerRoutesFromConfig(\$router, 'api_routes.php', [])");
+        ->toContain("registerRoutesFromConfig(\$router, 'api_routes.php', \$middleware, \$basePath)");
 });
 
 

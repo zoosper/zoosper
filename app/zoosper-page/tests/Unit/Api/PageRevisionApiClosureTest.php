@@ -9,7 +9,7 @@ it('registers a stateless Site-scoped Page revision detail route', function (): 
         ->and($matches[0]['method'])->toBe('GET')
         ->and($matches[0]['path'])->toBe('/api/v1/pages/{id:\d+}/revisions/{revisionId:\d+}')
         ->and($matches[0]['controller'])->toBe(PageApiController::class)
-        ->and($matches[0]['public'])->toBeTrue()
+        ->and($matches[0]['public'])->toBeFalse()->and($matches[0]['auth'])->toBe('bearer')
         ->and($matches[0]['stateless'])->toBeTrue();
 });
 it('keeps revision detail inside the existing PAT permission and Page ownership boundary', function (): void {

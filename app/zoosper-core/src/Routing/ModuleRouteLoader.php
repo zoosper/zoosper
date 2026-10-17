@@ -36,14 +36,10 @@ final readonly class ModuleRouteLoader
         $this->registerRoutesFromConfig($router, 'admin_routes.php', $middleware, $basePath);
     }
 
-    public function registerApiRoutes(Router $router, ?string $basePath = null): void
+    /** @param list<RouteMiddleware> $middleware */
+    public function registerApiRoutes(Router $router, array $middleware = [], ?string $basePath = null): void
     {
-        if ($basePath === null) {
-            $this->registerRoutesFromConfig($router, 'api_routes.php', []);
-            return;
-        }
-
-        $this->registerRoutesFromConfig($router, 'api_routes.php', [], $basePath);
+        $this->registerRoutesFromConfig($router, 'api_routes.php', $middleware, $basePath);
     }
 
     /** @param list<RouteMiddleware> $middleware */
@@ -112,10 +108,14 @@ final readonly class ModuleRouteLoader
                 permissions: ModuleRouteDefinition::normalisePermissions($route['permission'] ?? null),
                 public: (bool) ($route['public'] ?? false),
                 stateless: (bool) ($route['stateless'] ?? false),
+                apiAuth: isset($route['auth']) ? (string) $route['auth'] : null,
+                apiScope: isset($route['scope']) && $route['scope'] !== '' ? (string) $route['scope'] : null,
             );
             $this->assertValid($definition);
             if ($configFile === 'admin_routes.php') {
                 $definition->assertExplicitAdminAccess();
+            } else {
+                $definition->assertExplicitApiAccess();
             }
             $routes[] = $definition;
         }
@@ -147,7 +147,7 @@ final readonly class ModuleRouteLoader
             return [$controller, $action];
         }
 
-        $context = new RouteContext($route->method, $route->path, $route->public, $route->permissions, $route->stateless);
+        $context = new RouteContext($route->method, $route->path, $route->public, $route->permissions, $route->stateless, $route->apiAuth, $route->apiScope);
         $pipeline = new MiddlewarePipeline($middleware);
 
         return static fn (Request $request): Response => $pipeline->handle(

@@ -2,19 +2,31 @@
 
 declare(strict_types=1);
 
-it('exposes stateless PAT Menu list detail and tree reads with Site isolation',function():void{
- $root=dirname(__DIR__,5);$routes=(string)file_get_contents($root.'/app/zoosper-menu/config/api_routes.php');$controller=(string)file_get_contents($root.'/app/zoosper-menu/src/Api/MenuApiController.php');$wiring=(string)file_get_contents($root.'/app/zoosper-menu/config/controllers.php');
- foreach(['/api/v1/menus','/api/v1/menus/{id:\d+}','/api/v1/menus/{id:\d+}/tree'] as $path)expect($routes)->toContain($path);
- expect($controller)->toContain("allows('menus:read')")->toContain("can('menu.manage')")->toContain('$request->siteContext()?->siteId')->toContain('MenuProviderInterface')->not->toContain('SessionGuard')
-  ->and($wiring)->toContain('MenuAdminRepositoryInterface::class')->toContain('MenuProviderInterface::class');
+use Zoosper\Menu\Api\MenuApiController;
+
+it('exposes bearer-protected stateless Menu reads with Site isolation', function (): void {
+    $root = dirname(__DIR__, 5);
+    $routes = require $root . '/app/zoosper-menu/config/api_routes.php';
+    $protected = array_values(array_filter(
+        $routes,
+        static fn (array $route): bool => ($route['controller'] ?? null) === MenuApiController::class
+            && in_array($route['action'] ?? '', ['index', 'show', 'tree'], true),
+    ));
+    expect(array_column($protected, 'path'))->toEqualCanonicalizing([
+        '/api/v1/menus',
+        '/api/v1/menus/{id:\d+}',
+        '/api/v1/menus/{id:\d+}/tree',
+    ]);
+    foreach ($protected as $route) {
+        expect($route['auth'])->toBe('bearer')
+            ->and($route['public'])->toBeFalse()
+            ->and($route['stateless'])->toBeTrue()
+            ->and($route['scope'])->toBe('menus:read');
+    }
+    $controller = (string) file_get_contents($root . '/app/zoosper-menu/src/Api/MenuApiController.php');
+    expect($controller)->toContain("allows('menus:read')")
+        ->toContain("can('menu.manage')")
+        ->toContain('$request->siteContext()?->siteId')
+        ->toContain('MenuProviderInterface')
+        ->not->toContain('SessionGuard');
 });
-
-
-
-
-
-
-
-
-
-

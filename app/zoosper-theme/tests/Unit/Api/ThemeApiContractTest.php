@@ -1,11 +1,1 @@
-<?php declare(strict_types=1);it('owns safe Theme catalogue and Site assignment APIs without filesystem paths',function(){ $root=dirname(__DIR__,3);$r=(string)file_get_contents($root.'/config/api_routes.php');$c=(string)file_get_contents($root.'/src/Api/ThemeApiController.php');expect($r)->toContain('/api/v1/themes')->toContain('/api/v1/sites/{id:\d+}/theme')->and($c)->not->toContain("'path'=>")->toContain('ThemeAssignmentService');});
-
-
-
-
-
-
-
-
-
-
+<?php declare(strict_types=1);it('owns safe bearer-protected Theme catalogue and Site assignment APIs',function(){ $root=dirname(__DIR__,3);$routes=require $root.'/config/api_routes.php';expect(array_column($routes,'path'))->toContain('/api/v1/themes')->toContain('/api/v1/sites/{id:\d+}/theme');foreach($routes as $route)expect($route['auth'])->toBe('bearer')->and($route['public'])->toBeFalse();$c=(string)file_get_contents($root.'/src/Api/ThemeApiController.php');expect($c)->not->toContain("'path'=>")->toContain('ThemeAssignmentService');});

@@ -11,6 +11,7 @@ use Zoosper\Auth\Contract\SecondFactorRequirementInterface;
 use Zoosper\Auth\Service\RequireSecondFactorByDefault;
 use Zoosper\Auth\Console\AdminCreateCommand;
 use Zoosper\Auth\Http\AuthenticationMiddleware;
+use Zoosper\Auth\Http\ApiBearerAuthenticationMiddleware;
 use Zoosper\Auth\Http\CsrfMiddleware;
 use Zoosper\Auth\Http\RateLimitReportOnlyAdminMiddleware;
 use Zoosper\Auth\Repository\AdminUserRepository;
@@ -109,6 +110,7 @@ return [
     PersonalAccessTokenRepository::class => static fn (ServiceContainer $services): PersonalAccessTokenRepository => new PersonalAccessTokenRepository($services->get(PDO::class)),
     PersonalAccessTokenService::class => static fn (ServiceContainer $services): PersonalAccessTokenService => new PersonalAccessTokenService($services->get(PersonalAccessTokenRepository::class)),
     PersonalAccessTokenAuthenticator::class => static fn (ServiceContainer $services): PersonalAccessTokenAuthenticator => new PersonalAccessTokenAuthenticator($services->get(PersonalAccessTokenRepository::class), $services->get(AdminUserRepository::class)),
+    ApiBearerAuthenticationMiddleware::class => static fn (ServiceContainer $services): ApiBearerAuthenticationMiddleware => new ApiBearerAuthenticationMiddleware($services->get(PersonalAccessTokenAuthenticator::class), $services->get(\Zoosper\Core\Http\JsonResponder::class)),
 ];
 
 

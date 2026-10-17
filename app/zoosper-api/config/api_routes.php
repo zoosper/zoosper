@@ -2,26 +2,68 @@
 
 declare(strict_types=1);
 
-use Zoosper\Api\Controller\AuthController;
-use Zoosper\Api\Controller\HealthController;
-use Zoosper\Api\Controller\HelloController;
-use Zoosper\Api\Controller\MeController;
-
-return [
-    ['method' => 'GET', 'path' => '/api/v1/health', 'controller' => HealthController::class, 'action' => 'show', 'public' => true, 'stateless' => true],
-    ['method' => 'GET', 'path' => '/api/v1/hello', 'controller' => HelloController::class, 'action' => 'show', 'public' => true, 'stateless' => true],
-    ['method' => 'POST', 'path' => '/api/v1/auth/login', 'controller' => AuthController::class, 'action' => 'login', 'public' => true],
-    ['method' => 'POST', 'path' => '/api/v1/auth/logout', 'controller' => AuthController::class, 'action' => 'logout'],
-    ['method' => 'GET', 'path' => '/api/v1/me', 'controller' => MeController::class, 'action' => 'show'],
-    ['method' => 'GET', 'path' => '/api/v1/token/me', 'controller' => \Zoosper\Api\Controller\TokenMeController::class, 'action' => 'show', 'public' => true, 'stateless' => true],
-];
-
-
-
-
-
-
-
-
-
-
+return array (
+  0 =>
+  array (
+    'method' => 'GET',
+    'path' => '/api/v1/health',
+    'controller' => 'Zoosper\\Api\\Controller\\HealthController',
+    'action' => 'show',
+    'public' => true,
+    'stateless' => true,
+    'auth' => 'anonymous',
+  ),
+  1 =>
+  array (
+    'method' => 'GET',
+    'path' => '/api/v1/hello',
+    'controller' => 'Zoosper\\Api\\Controller\\HelloController',
+    'action' => 'show',
+    'public' => true,
+    'stateless' => true,
+    'auth' => 'anonymous',
+  ),
+  2 =>
+  array (
+    'method' => 'POST',
+    'path' => '/api/v1/auth/login',
+    'controller' => 'Zoosper\\Api\\Controller\\AuthController',
+    'action' => 'login',
+    'public' => true,
+    'auth' => 'anonymous',
+  ),
+  3 =>
+  array (
+    'method' => 'POST',
+    'path' => '/api/v1/auth/logout',
+    'controller' => 'Zoosper\\Api\\Controller\\AuthController',
+    'action' => 'logout',
+    'auth' => 'session',
+    'public' => false,
+    'stateless' => false,
+  ),
+  4 =>
+  array (
+    'method' => 'GET',
+    'path' => '/api/v1/me',
+    'controller' => 'Zoosper\\Api\\Controller\\MeController',
+    'action' => 'show',
+    'auth' => 'session',
+    'public' => false,
+    'stateless' => false,
+  ),
+  5 =>
+  array (
+    'method' => 'GET',
+    'path' => '/api/v1/token/me',
+    'controller' => 'Zoosper\\Api\\Controller\\TokenMeController',
+    'action' => 'show',
+    'public' => false,
+    'stateless' => true,
+    'auth' => 'bearer',
+    'scope' => NULL,
+    'permission' =>
+    array (
+    ),
+  ),
+);

@@ -1,11 +1,1 @@
-<?php declare(strict_types=1);it('owns PAT Site-scoped URL Rewrite reads writes and reversible lifecycle',function(){ $r=(string)file_get_contents(dirname(__DIR__,3).'/config/api_routes.php');expect($r)->toContain('/api/v1/url-rewrites')->toContain("'action'=>'create'")->toContain("'action'=>'restore'")->toContain("'method'=>'DELETE'");});
-
-
-
-
-
-
-
-
-
-
+<?php declare(strict_types=1);it('owns bearer-protected Site-scoped URL Rewrite lifecycle',function(){ $routes=require dirname(__DIR__,3).'/config/api_routes.php';expect(array_column($routes,'path'))->toContain('/api/v1/url-rewrites')->and(array_column($routes,'action'))->toContain('create')->toContain('restore');$delete=array_values(array_filter($routes,fn(array $r):bool=>($r['method']??'')==='DELETE'));expect($delete)->not->toBeEmpty();foreach($routes as $route)expect($route['auth'])->toBe('bearer')->and($route['public'])->toBeFalse();});
