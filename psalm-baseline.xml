@@ -1846,7 +1846,6 @@
   <file src="app/zoosper-two-factor/src/Repository/AdminTwoFactorResetRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
-      <code><![CDATA[missingTables]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Service/AdminSecondFactorRequirement.php">
@@ -1862,23 +1861,12 @@
   <file src="app/zoosper-two-factor/src/Service/AdminTwoFactorLoginRedirectService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
-      <code><![CDATA[requiresSetup]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-two-factor/src/Service/AdminTwoFactorResetService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-two-factor/src/Service/AdminTwoFactorSetupNotificationService.php">
-    <UnusedClass>
-      <code><![CDATA[AdminTwoFactorSetupNotificationService]]></code>
-    </UnusedClass>
-  </file>
-  <file src="app/zoosper-two-factor/src/Service/TotpProvisioningUriGenerator.php">
-    <UnusedClass>
-      <code><![CDATA[TotpProvisioningUriGenerator]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-two-factor/src/Totp/Base32.php">
     <InvalidArrayOffset>
@@ -1894,11 +1882,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-two-factor/src/Value/TotpSetup.php">
-    <UnusedClass>
-      <code><![CDATA[TotpSetup]]></code>
-    </UnusedClass>
   </file>
   <file src="app/zoosper-url-rewrite/src/Application/UrlRewriteMutationService.php">
     <PossiblyUnusedMethod>

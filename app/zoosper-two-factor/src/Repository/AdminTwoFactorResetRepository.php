@@ -55,21 +55,6 @@ final readonly class AdminTwoFactorResetRepository
     }
 
     /**
-     * Return missing 2FA tables for diagnostics.
-     *
-     * @return list<string>
-     */
-    public function missingTables(): array
-    {
-        return array_values(array_filter([
-            'admin_user_two_factor',
-            'admin_user_recovery_codes',
-            'admin_two_factor_challenges',
-            'admin_totp_replay_state',
-        ], fn (string $table): bool => !$this->tableExists($table)));
-    }
-
-    /**
      * Determine whether a table exists in the active database.
      */
     private function tableExists(string $table): bool

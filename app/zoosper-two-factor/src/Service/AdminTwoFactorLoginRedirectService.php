@@ -36,14 +36,6 @@ final readonly class AdminTwoFactorLoginRedirectService
     }
 
     /**
-     * Return true when the user should be sent to the 2FA setup page.
-     */
-    public function requiresSetup(AdminUser $adminUser): bool
-    {
-        return $this->enrolment->requiresEnrollment($adminUser->id);
-    }
-
-    /**
      * Build an admin URL from the configured admin base path.
      */
     private function adminUrl(string $path): string
