@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\Auth\Http\ApiBearerAuthenticationMiddleware;
 use Zoosper\Auth\Repository\AdminUserRepository;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
@@ -27,7 +28,7 @@ function routerBearerRuntime(): array
     $p->exec('CREATE TABLE personal_access_tokens(id INTEGER PRIMARY KEY AUTOINCREMENT,public_id TEXT,admin_user_id INTEGER,name TEXT,token_hash TEXT,scopes_json TEXT,expires_at TEXT,last_used_at TEXT,revoked_at TEXT,created_at TEXT,updated_at TEXT)');
     $p->exec("INSERT INTO admin_users VALUES(1,'Router User','router@test','x','active')");
     $users = new AdminUserRepository($p); $tokens = new PersonalAccessTokenRepository($p);
-    return [new ApiBearerAuthenticationMiddleware(new PersonalAccessTokenAuthenticator($tokens, $users), new JsonResponder()), new PersonalAccessTokenService($tokens)];
+    return [new ApiBearerAuthenticationMiddleware(new PersonalAccessTokenAuthenticator($tokens, $users), new JsonResponder(), new BearerPrincipalContext()), new PersonalAccessTokenService($tokens)];
 }
 
 /** @return array<string,mixed> */

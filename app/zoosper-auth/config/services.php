@@ -21,6 +21,7 @@ use Zoosper\Auth\Repository\RoleRepository;
 use Zoosper\AdminDashboard\Contract\DashboardRolePreferenceRepositoryInterface;
 use Zoosper\Auth\Dashboard\AdminUserCountDashboardWidgetContributor;
 use Zoosper\Auth\Dashboard\DashboardRolePreferenceRepository;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
@@ -112,7 +113,12 @@ return [
     PersonalAccessTokenRepository::class => static fn (ServiceContainer $services): PersonalAccessTokenRepository => new PersonalAccessTokenRepository($services->get(PDO::class)),
     PersonalAccessTokenService::class => static fn (ServiceContainer $services): PersonalAccessTokenService => new PersonalAccessTokenService($services->get(PersonalAccessTokenRepository::class)),
     PersonalAccessTokenAuthenticator::class => static fn (ServiceContainer $services): PersonalAccessTokenAuthenticator => new PersonalAccessTokenAuthenticator($services->get(PersonalAccessTokenRepository::class), $services->get(AdminUserRepository::class)),
-    ApiBearerAuthenticationMiddleware::class => static fn (ServiceContainer $services): ApiBearerAuthenticationMiddleware => new ApiBearerAuthenticationMiddleware($services->get(PersonalAccessTokenAuthenticator::class), $services->get(\Zoosper\Core\Http\JsonResponder::class)),
+    BearerPrincipalContext::class => static fn (ServiceContainer $services): BearerPrincipalContext => new BearerPrincipalContext(),
+    ApiBearerAuthenticationMiddleware::class => static fn (ServiceContainer $services): ApiBearerAuthenticationMiddleware => new ApiBearerAuthenticationMiddleware(
+        $services->get(PersonalAccessTokenAuthenticator::class),
+        $services->get(\Zoosper\Core\Http\JsonResponder::class),
+        $services->get(BearerPrincipalContext::class),
+    ),
     ApiSessionMiddleware::class => static fn (ServiceContainer $services): ApiSessionMiddleware => new ApiSessionMiddleware($services->get(SessionGuard::class), $services->get(\Zoosper\Core\Http\JsonResponder::class)),
     ApiCsrfMiddleware::class => static fn (ServiceContainer $services): ApiCsrfMiddleware => new ApiCsrfMiddleware($services->get(CsrfTokenManager::class), $services->get(\Zoosper\Core\Http\JsonResponder::class)),
 ];

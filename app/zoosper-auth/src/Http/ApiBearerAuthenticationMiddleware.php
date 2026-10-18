@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Auth\Http;
 
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Middleware\ApiAuthenticationMiddleware;
@@ -14,7 +15,11 @@ use Zoosper\Core\Http\Response;
 /** @psalm-api Discovered through config/api_middleware.php and the service manifest. */
 final readonly class ApiBearerAuthenticationMiddleware implements ApiAuthenticationMiddleware
 {
-    public function __construct(private PersonalAccessTokenAuthenticator $auth, private JsonResponder $json) {}
+    public function __construct(
+        private PersonalAccessTokenAuthenticator $auth,
+        private JsonResponder $json,
+        private BearerPrincipalContext $principals,
+    ) {}
 
     #[\Override]
     public function process(Request $request, RouteContext $context, callable $next): Response
@@ -32,6 +37,11 @@ final readonly class ApiBearerAuthenticationMiddleware implements ApiAuthenticat
         if ($context->permissions !== [] && !array_any($context->permissions, $principal->user->can(...))) {
             return $this->json->error('insufficient_permission', 'The authenticated user cannot perform this operation.', 403);
         }
-        return $next($request);
+        $this->principals->establish($request, $principal);
+        try {
+            return $next($request);
+        } finally {
+            $this->principals->clear($request);
+        }
     }
 }

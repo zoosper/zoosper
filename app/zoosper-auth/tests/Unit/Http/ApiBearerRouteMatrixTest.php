@@ -7,6 +7,7 @@ namespace Zoosper\Auth\Tests\Unit\Http;
 use PDO;
 use Zoosper\Auth\Http\ApiBearerAuthenticationMiddleware;
 use Zoosper\Auth\Repository\AdminUserRepository;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
@@ -61,7 +62,7 @@ function bearerMatrixRuntime(): array
     $pdo = bearerMatrixPdo();
     $users = new AdminUserRepository($pdo);
     $tokens = new PersonalAccessTokenRepository($pdo);
-    return [new ApiBearerAuthenticationMiddleware(new PersonalAccessTokenAuthenticator($tokens, $users), new JsonResponder()), new PersonalAccessTokenService($tokens)];
+    return [new ApiBearerAuthenticationMiddleware(new PersonalAccessTokenAuthenticator($tokens, $users), new JsonResponder(), new BearerPrincipalContext()), new PersonalAccessTokenService($tokens)];
 }
 
 function bearerMatrixContext(array $route): RouteContext
