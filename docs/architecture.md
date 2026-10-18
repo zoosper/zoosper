@@ -75,6 +75,10 @@ Production application composition refuses to register Admin routes when the mod
 
 ## API authorization ownership
 
+API route manifests are the authority for anonymous, session and bearer access classification. Bearer middleware authenticates the PAT, intersects the declared scope with the token owner’s current permissions, and publishes an immutable principal keyed to the exact `Request`. Every production bearer controller consumes `BearerPrincipalContext`; no controller parses `Authorization`, depends on `PersonalAccessTokenAuthenticator`, or emits middleware-owned invalid-token and insufficient-scope responses. Controllers retain feature policy such as request-Site isolation, authorisation-before-object-lookup, object-existence concealment, audit actors, upload ownership and guarded lifecycle transitions.
+
+Session-authenticated API routes declare CSRF policy explicitly. The read-only identity route uses `csrf: none`; logout uses `csrf: enforce`, returns JSON `419` for missing or invalid tokens, and never reaches downstream logout on failure. TOTP enrolment consumes pending setup material before verification, while login-time TOTP requires an atomic strictly-newer counter claim and single-use challenge consumption.
+
 API routes remain stateless and feature-owned. The route-level `public` flag means they bypass the Admin session middleware; it does not by itself mean anonymous access. A repository-wide parity contract allow-lists the reviewed anonymous endpoints and requires every other API controller to retain either the session guard or Personal Access Token authenticator as its authorization owner.
 
 ## API object authorization

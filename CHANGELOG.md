@@ -1,5 +1,8 @@
 # Changelog
 
+
+- Centralised all production bearer API authentication, scope and current-owner permission enforcement in middleware and route metadata. Controllers now consume request-bound `BearerPrincipalContext` while preserving Site isolation, object concealment, audit actors, upload ownership and lifecycle policy. Repository-wide route-matrix tests cover all 53 bearer routes, session APIs retain explicit CSRF policy with JSON `401`/`419` behaviour, and TOTP enrolment and challenge replay protections remain executable.
+
 ## [Unreleased]
 - Bounded the Site-scoped URL Rewrite collection API with canonical pagination and exact totals.
 - Bounded the Site collection API with canonical pagination while preserving complete Site lists for internal selectors and scope tooling.

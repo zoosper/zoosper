@@ -9,6 +9,11 @@ API responses must not expose development stack traces or secrets, even when web
 
 ## Authentication and CSRF model
 
+## Authorisation ownership
+
+Every API route declares one coherent access class: reviewed anonymous, session-authenticated, or bearer-authenticated. Bearer routes are stateless and declare scope and current-owner permission metadata. `ApiBearerAuthenticationMiddleware` returns `401` for a missing or invalid bearer credential and `403` for a valid principal that lacks the declared scope or every declared owner permission. It establishes the authorised principal only for downstream execution and clears it afterwards, including exceptional exits. Feature controllers retrieve that request-bound principal through `BearerPrincipalContext` before object lookup or mutation; they do not parse bearer headers or duplicate transport-level error responses. Site-scoped repositories and lifecycle services remain responsible for object concealment, ownership and domain policy.
+
+
 Zoosper API endpoints support two distinct authentication contexts with explicit CSRF security policies:
 
 1. **Stateless Token Authentication (Bearer / Personal Access Tokens):**
@@ -18,7 +23,7 @@ Zoosper API endpoints support two distinct authentication contexts with explicit
 2. **Stateful Session-Based API Interactions:**
    - Any stateful `/api/*` mutations invoked within an authenticated web session (such as AJAX calls or browser-based admin extensions relying on session cookies) must include a valid CSRF token.
    - The CSRF token can be provided either in the `X-CSRF-Token` request header or within the POST payload as `csrf_token`.
-   - Requests without a valid CSRF token in session-authenticated contexts are rejected with a 403 Forbidden status (`csrf_invalid`).
+   - Requests without a valid CSRF token in an enforcing session-authenticated context are rejected with HTTP `419` and a JSON `csrf_invalid` error. Read-only session routes must declare `csrf: none` explicitly.
 
 
 ## Page publication and revisions

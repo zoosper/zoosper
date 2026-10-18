@@ -21,7 +21,7 @@ Controllers are thin HTTP adapters. Business rules belong in services. Persisten
 
 A first-party package must declare the owning Composer package for every Marko namespace used by its runtime source. A root or sibling transitive dependency is not sufficient; direct imports and direct requirements must remain aligned.
 
-Declare each route method and path only once across enabled modules. The Router rejects duplicate normalised method-and-path registrations; use a distinct method or path rather than relying on module order or silent replacement. Authenticated-only Admin routes and controller-authorised PAT API routes remain valid current patterns until a separate route-metadata decision changes them.
+Declare each route method and path only once across enabled modules. The Router rejects duplicate normalised method-and-path registrations; use a distinct method or path rather than relying on module order or silent replacement. Authenticated-only Admin routes remain middleware-protected, while PAT API routes declare bearer scope and current-owner permission metadata that the central API middleware enforces before a request-bound principal reaches the controller.
 
 ## API Grid generator
 
@@ -43,7 +43,7 @@ At least one Admin middleware manifest must be discoverable in production applic
 
 ## API authorization parity
 
-When adding an API route, classify it explicitly as reviewed anonymous, session-authenticated, or bearer-authenticated. Feature-owned bearer controllers must retain `PersonalAccessTokenAuthenticator` and enforce the required token scope and current user permission before reading or mutating protected resources. Update the central parity allow-list only for endpoints intentionally designed for anonymous access.
+When adding an API route, classify it explicitly as reviewed anonymous, session-authenticated, or bearer-authenticated. Bearer route manifests declare the required PAT scope and current-owner permission. `ApiBearerAuthenticationMiddleware` authenticates once, enforces that route metadata before downstream execution, and establishes the authorised principal in `BearerPrincipalContext`; feature controllers require that exact request-bound principal before object lookup or mutation and must not parse bearer headers or recreate `401`/`403` policy. Update the central route matrix and anonymous allow-list whenever API access metadata changes.
 
 ## API object authorization
 
