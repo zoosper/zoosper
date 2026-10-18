@@ -8,6 +8,8 @@ it('keeps migrated bearer controllers on middleware-established principal owners
         'app/zoosper-api/src/Controller/TokenMeController.php',
         'app/zoosper-auth/src/Api/RoleApiController.php',
         'app/zoosper-theme/src/Api/ThemeApiController.php',
+        'app/zoosper-menu/src/Api/MenuApiController.php',
+        'app/zoosper-page/src/Api/PageApiController.php',
     ] as $relative) {
         $source = (string) file_get_contents($root . '/' . $relative);
         expect($source, $relative)

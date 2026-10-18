@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Menu\Api;
 
-use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Auth\Token\PersonalAccessTokenPrincipal;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
@@ -30,7 +30,7 @@ final readonly class MenuApiController
 {
     public function __construct(
         private JsonResponder $json,
-        private PersonalAccessTokenAuthenticator $auth,
+        private BearerPrincipalContext $principals,
         private MenuAdminRepositoryInterface $menus,
         private MenuProviderInterface $provider,
         private MenuAdminService $mutations,
@@ -42,7 +42,7 @@ final readonly class MenuApiController
 
     public function index(Request $request): Response
     {
-        $principal=$this->principal($request); if($principal instanceof Response)return $principal;
+        $this->principals->require($request);
         $siteId=$request->siteContext()?->siteId; if($siteId===null)return $this->json->error('site_not_found','No active site exists for this host.',404);
         $result=$this->menus->pageForSite($siteId,Pager::fromQuery(['page'=>$request->query('page','1'),'page_size'=>$request->query('page_size','20')]));
         return $this->json->success(['menus'=>array_map($this->normaliseMenu(...),$result->items),'pagination'=>$this->normalisePagination($result)]);
@@ -50,14 +50,14 @@ final readonly class MenuApiController
 
     public function show(Request $request): Response
     {
-        $principal=$this->principal($request); if($principal instanceof Response)return $principal;
+        $this->principals->require($request);
         $menu=$this->siteMenu($request); if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);
         return $this->json->success(['menu'=>$this->normaliseMenu($menu),'items'=>array_map($this->normaliseItem(...),$this->menus->items($menu->id))]);
     }
 
     public function tree(Request $request): Response
     {
-        $principal=$this->principal($request); if($principal instanceof Response)return $principal;
+        $this->principals->require($request);
         $menu=$this->siteMenu($request); if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);
         if($menu->status!=='active')return $this->json->error('menu_not_active','Only active Menus have a resolved frontend tree.',409);
         $path=(string)$request->query('current_path','/');
@@ -66,14 +66,14 @@ final readonly class MenuApiController
 
     public function create(Request $request): Response
     {
-        $principal=$this->writePrincipal($request);if($principal instanceof Response)return $principal;$siteId=$request->siteContext()?->siteId;if($siteId===null)return $this->json->error('site_not_found','No active site exists for this host.',404);
+        $principal=$this->principals->require($request);$siteId=$request->siteContext()?->siteId;if($siteId===null)return $this->json->error('site_not_found','No active site exists for this host.',404);
         $input=$request->json();$input['site_id']=$siteId;
         try{$id=$this->mutations->saveMenu($input);}catch(InvalidArgumentException $e){return $this->json->error('menu_validation_failed',$e->getMessage(),422);}
         $menu=$this->guard->siteMenu($id,$siteId);$this->audit($principal,'menu.api_created',$menu,['code','label','status']);return $this->json->success(['menu'=>$this->normaliseMenu($menu)],201);
     }
     public function update(Request $request): Response
     {
-        $principal=$this->writePrincipal($request);if($principal instanceof Response)return $principal;$menu=$this->siteMenu($request);if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);
+        $principal=$this->principals->require($request);$menu=$this->siteMenu($request);if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);
         $input=$request->json();$input['site_id']=$menu->siteId;$input['code']=$input['code']??$menu->code;$input['label']=$input['label']??$menu->label;$input['status']=$input['status']??$menu->status;
         try{$this->mutations->saveMenu($input,$menu->id);}catch(InvalidArgumentException $e){return $this->json->error('menu_validation_failed',$e->getMessage(),422);}
         $updated=$this->menus->find($menu->id);$this->audit($principal,'menu.api_updated',$updated,array_keys($request->json()));return $this->json->success(['menu'=>$this->normaliseMenu($updated)]);
@@ -82,7 +82,7 @@ final readonly class MenuApiController
     public function updateItem(Request $request): Response{return $this->saveItem($request,(int)$request->routeParam('itemId','0'));}
     public function deleteItem(Request $request): Response
     {
-        $principal=$this->writePrincipal($request);if($principal instanceof Response)return $principal;$menu=$this->siteMenu($request);if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);$itemId=(int)$request->routeParam('itemId','0');
+        $principal=$this->principals->require($request);$menu=$this->siteMenu($request);if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);$itemId=(int)$request->routeParam('itemId','0');
         try{$this->deletion->delete($menu->id,$itemId);}catch(RuntimeException $e){return $this->json->error('menu_item_delete_blocked',$e->getMessage(),409);}
         $this->audit($principal,'menu.api_item_deleted',$menu,['item_id']);return $this->json->success(['deleted'=>true,'item_id'=>$itemId]);
     }
@@ -91,32 +91,20 @@ final readonly class MenuApiController
     public function deletePermanently(Request $request): Response{return $this->lifecycle($request,'delete');}
     private function saveItem(Request $request,?int $itemId): Response
     {
-        $principal=$this->writePrincipal($request);if($principal instanceof Response)return $principal;$menu=$this->siteMenu($request);if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);
+        $principal=$this->principals->require($request);$menu=$this->siteMenu($request);if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);
         try{$input=$this->guard->itemInput($menu->id,$menu->siteId,$request->json(),$itemId);$id=$this->mutations->saveItem($menu->id,$input,$itemId);}catch(InvalidArgumentException $e){return $this->json->error('menu_item_validation_failed',$e->getMessage(),422);}catch(RuntimeException $e){return $this->json->error('menu_item_conflict',$e->getMessage(),409);}
         $item=null;foreach($this->menus->items($menu->id) as $candidate){if($candidate->id===$id){$item=$candidate;break;}}if($item===null)return $this->json->error('menu_item_not_found','Menu item could not be reloaded.',404);
         $this->audit($principal,$itemId===null?'menu.api_item_created':'menu.api_item_updated',$menu,array_keys($request->json()));return $this->json->success(['item'=>$this->normaliseItem($item)],$itemId===null?201:200);
     }
     private function lifecycle(Request $request,string $operation): Response
     {
-        $principal=$this->writePrincipal($request);if($principal instanceof Response)return $principal;$menu=$this->siteMenu($request);if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);
+        $principal=$this->principals->require($request);$menu=$this->siteMenu($request);if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);
         $result=match($operation){'disable'=>$this->lifecycle->disable($menu,$principal->user->id,$principal->user->email),'restore'=>$this->lifecycle->restore($menu,$principal->user->id,$principal->user->email),'delete'=>$this->lifecycle->deletePermanently($menu,$principal->user->id,$principal->user->email),default=>throw new RuntimeException('Unsupported Menu lifecycle operation.')};
         if(!$result->successful)return $this->json->error('menu_lifecycle_blocked',$result->message??'Menu lifecycle operation was blocked.',409,['blockers'=>$result->blockers]);
         if($operation==='delete')return $this->json->success(['deleted'=>true,'menu_id'=>$menu->id]);$updated=$this->menus->find($menu->id);return $this->json->success(['menu'=>$this->normaliseMenu($updated)]);
     }
-    private function writePrincipal(Request $request): PersonalAccessTokenPrincipal|Response
-    {
-        $principal=$this->auth->authenticate($request->header('authorization'));if($principal===null)return $this->json->error('invalid_bearer_token','A valid bearer token is required.',401);if(!$principal->allows('menus:write')||!$principal->user->can('menu.manage'))return $this->json->error('insufficient_scope','The bearer token cannot perform this Menu mutation.',403);return $principal;
-    }
     /** @param list<string> $changed */
     private function audit(PersonalAccessTokenPrincipal $principal,string $action,Menu $menu,array $changed):void{$this->audit?->logAction($principal->user->id,$principal->user->email,$action,'menu',(string)$menu->id,$action,['menu_id'=>$menu->id,'site_id'=>$menu->siteId,'token_id'=>$principal->token->id,'token_public_id'=>$principal->token->publicId,'changed_fields'=>$changed,'status'=>$menu->status]);}
-
-    private function principal(Request $request): PersonalAccessTokenPrincipal|Response
-    {
-        $principal=$this->auth->authenticate($request->header('authorization'));
-        if($principal===null)return $this->json->error('invalid_bearer_token','A valid bearer token is required.',401);
-        if(!$principal->allows('menus:read')||!$principal->user->can('menu.manage'))return $this->json->error('insufficient_scope','The bearer token cannot perform this Menu operation.',403);
-        return $principal;
-    }
 
     private function siteMenu(Request $request): ?Menu
     {

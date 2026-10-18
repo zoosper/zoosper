@@ -63,8 +63,9 @@ it('makes a cross-Site existing Page indistinguishable from an absent Page', fun
     $pdo->exec('CREATE TABLE pages(id INTEGER PRIMARY KEY AUTOINCREMENT,site_id INTEGER,title TEXT,slug TEXT,content TEXT,status TEXT,created_by INTEGER,updated_by INTEGER,created_at TEXT,updated_at TEXT,published_at TEXT)');
     $pages = new PageRepository($pdo);
     $foreignPageId = $pages->create(2,'Foreign','foreign','body','draft',1);
+    $principals = new BearerPrincipalContext();
     $controller = new PageApiController(
-        new JsonResponder(), $fixture['auth'], $pages,
+        new JsonResponder(), $principals, $pages,
         unusedObject(PageSaveCoordinator::class), new DocumentNormalizer(new DocumentValidator()),
         unusedObject(PagePublicationCoordinator::class), unusedObject(PageRevisionService::class),
         unusedObject(PageLifecycleCoordinator::class), new PageLifecycleApiResponder(new JsonResponder()),
@@ -72,8 +73,12 @@ it('makes a cross-Site existing Page indistinguishable from an absent Page', fun
     $issued = $fixture['service']->issue(1,'page parity',['pages:read']);
     $request = static fn (int $id): Request => (new Request('GET','/api/v1/pages/'.$id,headers:['authorization'=>'Bearer '.$issued['token']]))
         ->withSiteContext(paritySiteContext(1))->withRouteParams(['id'=>(string)$id]);
-    $foreign = $controller->show($request($foreignPageId));
-    $missing = $controller->show($request(999999));
+    $foreignRequest = $request($foreignPageId);
+    $principals->establish($foreignRequest, $fixture['auth']->authenticate($foreignRequest->header('authorization')) ?? throw new RuntimeException('Fixture authentication failed.'));
+    $foreign = $controller->show($foreignRequest);
+    $missingRequest = $request(999999);
+    $principals->establish($missingRequest, $fixture['auth']->authenticate($missingRequest->header('authorization')) ?? throw new RuntimeException('Fixture authentication failed.'));
+    $missing = $controller->show($missingRequest);
     expect($foreign->statusCode())->toBe(404)
         ->and($missing->statusCode())->toBe(404)
         ->and($foreign->body())->toBe($missing->body())

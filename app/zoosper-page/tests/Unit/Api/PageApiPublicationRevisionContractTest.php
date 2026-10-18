@@ -25,7 +25,7 @@ it('exposes bearer-protected Page publication and revision routes', function ():
             ->and($route['stateless'])->toBeTrue();
     }
     $controller = (string) file_get_contents($root . '/app/zoosper-page/src/Api/PageApiController.php');
-    expect($controller)->toContain("principal(\$request, 'pages:publish')")
+    expect($controller)->toContain('$this->principals->require($request)')
         ->toContain('capturePage($page')
         ->toContain('page.api_revision_restored')
         ->not->toContain('SessionGuard');

@@ -24,8 +24,8 @@ it('exposes bearer-protected stateless Menu reads with Site isolation', function
             ->and($route['scope'])->toBe('menus:read');
     }
     $controller = (string) file_get_contents($root . '/app/zoosper-menu/src/Api/MenuApiController.php');
-    expect($controller)->toContain("allows('menus:read')")
-        ->toContain("can('menu.manage')")
+    expect($controller)->toContain('BearerPrincipalContext')
+        ->toContain('$this->principals->require($request)')
         ->toContain('$request->siteContext()?->siteId')
         ->toContain('MenuProviderInterface')
         ->not->toContain('SessionGuard');

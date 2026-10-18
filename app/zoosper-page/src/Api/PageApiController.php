@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Api;
 
-use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Auth\Token\PersonalAccessTokenPrincipal;
 use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\JsonResponder;
@@ -29,14 +29,11 @@ use Zoosper\Pagination\PaginationResult;
  */
 final readonly class PageApiController
 {
-    public function __construct(private JsonResponder $json, private PersonalAccessTokenAuthenticator $auth, private PageRepository $pages, private PageSaveCoordinator $saver, private DocumentNormalizer $documents, private PagePublicationCoordinator $publication, private PageRevisionService $revisions, private PageLifecycleCoordinator $lifecycle, private PageLifecycleApiResponder $lifecycleResponder, private ?AuditLoggerInterface $audit = null) {}
+    public function __construct(private JsonResponder $json, private BearerPrincipalContext $principals, private PageRepository $pages, private PageSaveCoordinator $saver, private DocumentNormalizer $documents, private PagePublicationCoordinator $publication, private PageRevisionService $revisions, private PageLifecycleCoordinator $lifecycle, private PageLifecycleApiResponder $lifecycleResponder, private ?AuditLoggerInterface $audit = null) {}
 
     public function index(Request $request): Response
     {
-        $principal = $this->principal($request, 'pages:read', true);
-        if ($principal instanceof Response) {
-            return $principal;
-        }
+        $this->principals->require($request);
         $siteId = $request->siteContext()?->siteId;
         if ($siteId === null) {
             return $this->json->error('site_not_found', 'No active site exists for this host.', 404);
@@ -54,11 +51,11 @@ final readonly class PageApiController
             'pagination' => $this->normalisePagination($result),
         ]);
     }
-    public function show(Request $request): Response { $p=$this->principal($request,'pages:read',true);if($p instanceof Response)return $p;$page=$this->sitePage($request);return $page===null?$this->json->error('page_not_found','Page does not exist for this Site.',404):$this->json->success(['page'=>$this->normalise($page)]); }
+    public function show(Request $request): Response { $this->principals->require($request);$page=$this->sitePage($request);return $page===null?$this->json->error('page_not_found','Page does not exist for this Site.',404):$this->json->success(['page'=>$this->normalise($page)]); }
 
     public function create(Request $request): Response
     {
-        $p=$this->principal($request,'pages:write');if($p instanceof Response)return $p;$site=$request->siteContext()?->siteId;if($site===null)return $this->json->error('site_not_found','No active site exists for this host.',404);
+        $p=$this->principals->require($request);$site=$request->siteContext()?->siteId;if($site===null)return $this->json->error('site_not_found','No active site exists for this host.',404);
         $form=$this->mutationForm($request->json(),$site,null);if($form instanceof Response)return $form;
         $result=$this->saver->create($form,$p->user);if(!$result->successful)return $this->json->error('page_validation_failed',$result->error??'Page validation failed.',422);
         $page=$this->pages->findById((int)$result->pageId);if($page===null)return $this->json->error('page_not_found','Created Page could not be reloaded.',500);
@@ -67,7 +64,7 @@ final readonly class PageApiController
 
     public function update(Request $request): Response
     {
-        $p=$this->principal($request,'pages:write');if($p instanceof Response)return $p;$page=$this->sitePage($request);if($page===null)return $this->json->error('page_not_found','Page does not exist for this Site.',404);
+        $p=$this->principals->require($request);$page=$this->sitePage($request);if($page===null)return $this->json->error('page_not_found','Page does not exist for this Site.',404);
         $form=$this->mutationForm($request->json(),$page->siteId,$page);if($form instanceof Response)return $form;
         $result=$this->saver->update($form,$page,$p->user);if(!$result->successful)return $this->json->error('page_validation_failed',$result->error??'Page validation failed.',422);
         $updated=$this->pages->findById($page->id);if($updated===null)return $this->json->error('page_not_found','Updated Page could not be reloaded.',500);
@@ -76,8 +73,7 @@ final readonly class PageApiController
 
     public function archive(Request $request): Response
     {
-        $principal = $this->principal($request, 'pages:archive');
-        if ($principal instanceof Response) return $principal;
+        $principal = $this->principals->require($request);
         $page = $this->sitePage($request);
         if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
         $result = $this->lifecycle->archive($page, $principal->user->id, $principal->user->email);
@@ -85,8 +81,7 @@ final readonly class PageApiController
     }
     public function restoreArchived(Request $request): Response
     {
-        $principal = $this->principal($request, 'pages:archive');
-        if ($principal instanceof Response) return $principal;
+        $principal = $this->principals->require($request);
         $page = $this->sitePage($request);
         if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
         $result = $this->lifecycle->restore($page, $principal->user->id, $principal->user->email);
@@ -94,8 +89,7 @@ final readonly class PageApiController
     }
     public function deletePermanently(Request $request): Response
     {
-        $principal = $this->principal($request, 'pages:delete');
-        if ($principal instanceof Response) return $principal;
+        $principal = $this->principals->require($request);
         $page = $this->sitePage($request);
         if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
         $result = $this->lifecycle->deletePermanently($page, $principal->user->id, $principal->user->email);
@@ -113,10 +107,7 @@ final readonly class PageApiController
 
     public function revision(Request $request): Response
     {
-        $principal = $this->principal($request, 'pages:read', true);
-        if ($principal instanceof Response) {
-            return $principal;
-        }
+        $this->principals->require($request);
         $page = $this->sitePage($request);
         if ($page === null) {
             return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
@@ -131,8 +122,7 @@ final readonly class PageApiController
     }
     public function revisions(Request $request): Response
     {
-        $principal = $this->principal($request, 'pages:read', true);
-        if ($principal instanceof Response) return $principal;
+        $this->principals->require($request);
         $page = $this->sitePage($request);
         if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
         $requested = filter_var($request->query('page', '1'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) ?: 1;
@@ -150,8 +140,7 @@ final readonly class PageApiController
 
     public function restoreRevision(Request $request): Response
     {
-        $principal = $this->principal($request, 'pages:write');
-        if ($principal instanceof Response) return $principal;
+        $principal = $this->principals->require($request);
         $page = $this->sitePage($request);
         if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
         $revisionId = (int) $request->routeParam('revisionId', '0');
@@ -168,8 +157,7 @@ final readonly class PageApiController
 
     private function publicationMutation(Request $request, bool $publish): Response
     {
-        $principal = $this->principal($request, 'pages:publish');
-        if ($principal instanceof Response) return $principal;
+        $principal = $this->principals->require($request);
         $page = $this->sitePage($request);
         if ($page === null) return $this->json->error('page_not_found', 'Page does not exist for this Site.', 404);
         if ($page->status === 'archived') return $this->json->error('page_state_conflict', 'Archived Pages cannot be published or unpublished.', 409);
@@ -206,8 +194,6 @@ final readonly class PageApiController
             'created_at' => $revision->createdAt,
         ];
     }
-    private function principal(Request $request,string $scope,bool $read=false): PersonalAccessTokenPrincipal|Response
-    { $p=$this->auth->authenticate($request->header('authorization'));if($p===null)return $this->json->error('invalid_bearer_token','A valid bearer token is required.',401);$allowed=$read?($p->user->can('page.view')||$p->user->can('page.manage')):$p->user->can('page.manage');if(!$p->allows($scope)||!$allowed)return $this->json->error('insufficient_scope','The bearer token cannot perform this Page operation.',403);return $p; }
     private function sitePage(Request $request): ?Page { $page=$this->pages->findById((int)$request->routeParam('id','0'));return $page!==null&&$page->siteId===$request->siteContext()?->siteId?$page:null; }
 
     /** @param array<string,mixed> $body @return array<string,mixed>|Response */

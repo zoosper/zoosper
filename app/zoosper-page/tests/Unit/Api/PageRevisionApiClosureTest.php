@@ -16,7 +16,7 @@ it('keeps revision detail inside the existing PAT permission and Page ownership 
     $root = dirname(__DIR__, 5);
     $source = (string) file_get_contents($root . '/app/zoosper-page/src/Api/PageApiController.php');
     expect($source)->toContain("public function revision(Request \$request): Response")
-        ->toContain("principal(\$request, 'pages:read', true)")
+        ->toContain('$this->principals->require($request)')
         ->toContain('$this->revisions->revision($page->id, $revisionId)')
         ->toContain("'revision_not_found'")
         ->not->toContain('tokenHash');
