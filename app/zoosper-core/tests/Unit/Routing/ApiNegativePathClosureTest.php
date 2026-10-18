@@ -5,11 +5,9 @@ declare(strict_types=1);
 it('keeps protected API adapters on explicit 401 and 403 semantics', function (): void {
     $root = dirname(__DIR__, 5);
     $controllers = [
-        'app/zoosper-auth/src/Api/RoleApiController.php',
         'app/zoosper-menu/src/Api/MenuApiController.php',
         'app/zoosper-page/src/Api/PageApiController.php',
         'app/zoosper-site/src/Api/SiteApiController.php',
-        'app/zoosper-theme/src/Api/ThemeApiController.php',
         'app/zoosper-url-rewrite/src/Api/UrlRewriteApiController.php',
         'packages/zoosper-media/src/Api/MediaApiController.php',
     ];

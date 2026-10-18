@@ -7,7 +7,7 @@ use Zoosper\Api\Controller\HealthController;
 use Zoosper\Api\Controller\HelloController;
 use Zoosper\Api\Controller\MeController;
 use Zoosper\Api\Controller\TokenMeController;
-use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Auth\Contract\SecondFactorRequirementInterface;
 use Zoosper\Auth\RateLimit\AdminAuthenticationRateLimiterInterface;
 use Zoosper\Auth\Service\AuthService;
@@ -39,7 +39,7 @@ return [
         $services->get(SessionGuard::class),
     ),
 
-    TokenMeController::class => static fn (ServiceContainer $services): TokenMeController => new TokenMeController($services->get(JsonResponder::class), $services->get(PersonalAccessTokenAuthenticator::class)),
+    TokenMeController::class => static fn (ServiceContainer $services): TokenMeController => new TokenMeController($services->get(JsonResponder::class), $services->get(BearerPrincipalContext::class)),
 ];
 
 

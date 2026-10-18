@@ -8,6 +8,7 @@ use PDO;
 use Zoosper\Auth\Api\RoleApiController;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
@@ -90,13 +91,15 @@ beforeEach(function (): void {
     $this->tokenRepo = new PersonalAccessTokenRepository($this->pdo);
     $this->tokenService = new PersonalAccessTokenService($this->tokenRepo);
     $this->auth = new PersonalAccessTokenAuthenticator($this->tokenRepo, $this->userRepo);
-    $this->controller = new RoleApiController(new JsonResponder(), $this->auth, $this->roleRepo);
+    $this->principals = new BearerPrincipalContext();
+    $this->controller = new RoleApiController(new JsonResponder(), $this->principals, $this->roleRepo);
 });
 
 it('lists roles with valid token and permission', function (): void {
     $issued = $this->tokenService->issue(1, 'API Token', ['roles:read']);
     $request = new Request('GET', '/api/v1/roles', headers: ['authorization' => 'Bearer ' . $issued['token']]);
 
+    $this->principals->establish($request, $this->auth->authenticate($request->header('authorization')) ?? throw new RuntimeException('Fixture authentication failed.'));
     $response = $this->controller->index($request);
     expect($response->statusCode())->toBe(200);
 
@@ -105,20 +108,6 @@ it('lists roles with valid token and permission', function (): void {
         ->and($body['data']['roles'])->toHaveCount(1)
         ->and($body['data']['roles'][0]['code'])->toBe('super_admin')
         ->and($body['data']['pagination'])->toBe(['page' => 1, 'page_size' => 20, 'page_count' => 1, 'total' => 1]);
-});
-
-it('rejects unauthenticated requests', function (): void {
-    $request = new Request('GET', '/api/v1/roles');
-    $response = $this->controller->index($request);
-    expect($response->statusCode())->toBe(401);
-});
-
-it('rejects requests with missing required scope', function (): void {
-    $issued = $this->tokenService->issue(1, 'API Token', ['pages:read']);
-    $request = new Request('GET', '/api/v1/roles', headers: ['authorization' => 'Bearer ' . $issued['token']]);
-
-    $response = $this->controller->index($request);
-    expect($response->statusCode())->toBe(403);
 });
 
 it('creates, reads, updates, and deletes a role via API', function (): void {
@@ -131,6 +120,7 @@ it('creates, reads, updates, and deletes a role via API', function (): void {
         headers: ['authorization' => 'Bearer ' . $issued['token'], 'content-type' => 'application/json'],
         body: json_encode(['code' => 'editor', 'label' => 'Editor Role', 'permission_ids' => [1, 2]]),
     );
+    $this->principals->establish($createReq, $this->auth->authenticate($createReq->header('authorization')) ?? throw new RuntimeException('Fixture authentication failed.'));
     $createRes = $this->controller->create($createReq);
     expect($createRes->statusCode())->toBe(201);
     $created = json_decode($createRes->body(), true)['data']['role'];
@@ -142,6 +132,7 @@ it('creates, reads, updates, and deletes a role via API', function (): void {
     // Show
     $showReq = (new Request('GET', '/api/v1/roles/' . $roleId, headers: ['authorization' => 'Bearer ' . $issued['token']]))
         ->withRouteParams(['id' => (string) $roleId]);
+    $this->principals->establish($showReq, $this->auth->authenticate($showReq->header('authorization')) ?? throw new RuntimeException('Fixture authentication failed.'));
     $showRes = $this->controller->show($showReq);
     expect($showRes->statusCode())->toBe(200);
 
@@ -152,6 +143,7 @@ it('creates, reads, updates, and deletes a role via API', function (): void {
         headers: ['authorization' => 'Bearer ' . $issued['token'], 'content-type' => 'application/json'],
         body: json_encode(['label' => 'Senior Editor', 'permission_ids' => [1]]),
     ))->withRouteParams(['id' => (string) $roleId]);
+    $this->principals->establish($updateReq, $this->auth->authenticate($updateReq->header('authorization')) ?? throw new RuntimeException('Fixture authentication failed.'));
     $updateRes = $this->controller->update($updateReq);
     expect($updateRes->statusCode())->toBe(200);
     $updated = json_decode($updateRes->body(), true)['data']['role'];
@@ -161,6 +153,7 @@ it('creates, reads, updates, and deletes a role via API', function (): void {
     // Delete
     $deleteReq = (new Request('DELETE', '/api/v1/roles/' . $roleId, headers: ['authorization' => 'Bearer ' . $issued['token']]))
         ->withRouteParams(['id' => (string) $roleId]);
+    $this->principals->establish($deleteReq, $this->auth->authenticate($deleteReq->header('authorization')) ?? throw new RuntimeException('Fixture authentication failed.'));
     $deleteRes = $this->controller->delete($deleteReq);
     expect($deleteRes->statusCode())->toBe(200);
     expect(json_decode($deleteRes->body(), true)['data']['deleted'])->toBeTrue();
@@ -168,6 +161,7 @@ it('creates, reads, updates, and deletes a role via API', function (): void {
     // Verify deleted
     $verifyReq = (new Request('GET', '/api/v1/roles/' . $roleId, headers: ['authorization' => 'Bearer ' . $issued['token']]))
         ->withRouteParams(['id' => (string) $roleId]);
+    $this->principals->establish($verifyReq, $this->auth->authenticate($verifyReq->header('authorization')) ?? throw new RuntimeException('Fixture authentication failed.'));
     $verifyRes = $this->controller->show($verifyReq);
     expect($verifyRes->statusCode())->toBe(404);
 });

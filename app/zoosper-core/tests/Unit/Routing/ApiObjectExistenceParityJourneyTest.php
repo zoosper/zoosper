@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Zoosper\Auth\Api\RoleApiController;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Repository\RoleRepository;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
@@ -86,11 +87,16 @@ it('documents authorised global Role existence semantics without applying Site c
     $fixture = objectParityAuthFixture(['role.view']);
     $pdo = $fixture['pdo'];
     $pdo->exec("UPDATE admin_roles SET created_at='2026-01-01',updated_at='2026-01-01' WHERE id=1");
-    $controller = new RoleApiController(new JsonResponder(),$fixture['auth'],new RoleRepository($pdo));
+    $principals = new BearerPrincipalContext();
+    $controller = new RoleApiController(new JsonResponder(),$principals,new RoleRepository($pdo));
     $issued = $fixture['service']->issue(1,'role semantics',['roles:read']);
     $request = static fn (int $id): Request => (new Request('GET','/api/v1/roles/'.$id,headers:['authorization'=>'Bearer '.$issued['token']]))->withRouteParams(['id'=>(string)$id]);
-    $existing = $controller->show($request(1));
-    $missing = $controller->show($request(999999));
+    $existingRequest = $request(1);
+    $principals->establish($existingRequest, $fixture['auth']->authenticate($existingRequest->header('authorization')) ?? throw new RuntimeException('Fixture authentication failed.'));
+    $existing = $controller->show($existingRequest);
+    $missingRequest = $request(999999);
+    $principals->establish($missingRequest, $fixture['auth']->authenticate($missingRequest->header('authorization')) ?? throw new RuntimeException('Fixture authentication failed.'));
+    $missing = $controller->show($missingRequest);
     expect($existing->statusCode())->toBe(200)
         ->and(json_decode($existing->body(),true)['data']['role']['id'])->toBe(1)
         ->and($missing->statusCode())->toBe(404)

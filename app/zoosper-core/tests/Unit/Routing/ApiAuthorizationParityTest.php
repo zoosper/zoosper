@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
 
 it('keeps every non-anonymous API controller behind session or bearer authorization', function (): void {
@@ -65,7 +66,7 @@ it('keeps every non-anonymous API controller behind session or bearer authorizat
                 continue;
             }
             if ($identity === $bearerIdentity || str_contains($path, '/api/v1/')) {
-                if (!in_array(PersonalAccessTokenAuthenticator::class, $dependencies, true)) {
+                if (!in_array(PersonalAccessTokenAuthenticator::class, $dependencies, true) && !in_array(BearerPrincipalContext::class, $dependencies, true)) {
                     $failures[] = $identity . ': missing bearer authorization owner';
                 }
                 continue;

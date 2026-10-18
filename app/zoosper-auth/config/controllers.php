@@ -34,7 +34,7 @@ use Zoosper\Auth\Admin\Controller\UserAdminController;
 use Zoosper\Auth\Admin\Controller\PersonalAccessTokenAdminController;
 use Zoosper\Auth\Admin\PersonalAccessTokenScopePresenter;
 use Zoosper\Auth\Api\RoleApiController;
-use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Auth\Token\PersonalAccessTokenRepository;
 use Zoosper\Auth\Token\PersonalAccessTokenService;
 use Zoosper\Auth\UI\AdminViewRendererInterface;
@@ -92,7 +92,7 @@ return [
     PersonalAccessTokenAdminController::class => static fn (ServiceContainer $services): PersonalAccessTokenAdminController => new PersonalAccessTokenAdminController($services->get(SessionGuard::class), $services->get(CsrfTokenManager::class), $services->get(PersonalAccessTokenRepository::class), $services->get(PersonalAccessTokenService::class), $services->get(AdminViewRendererInterface::class), $services->get(AdminUrlGenerator::class), $services->get(AuditLoggerInterface::class), new PersonalAccessTokenScopePresenter(), $services->has(FlashMessageStoreInterface::class) ? $services->get(FlashMessageStoreInterface::class) : null, new AdminCollectionGrid($services->get(GridViewStateResolver::class)), $services->get(PDO::class)),
     RoleApiController::class => static fn (ServiceContainer $services): RoleApiController => new RoleApiController(
         $services->get(JsonResponder::class),
-        $services->get(PersonalAccessTokenAuthenticator::class),
+        $services->get(BearerPrincipalContext::class),
         $services->get(RoleRepository::class),
         $services->has(AuditLoggerInterface::class) ? $services->get(AuditLoggerInterface::class) : null,
     ),

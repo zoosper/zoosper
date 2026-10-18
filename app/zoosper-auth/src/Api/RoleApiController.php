@@ -6,8 +6,7 @@ namespace Zoosper\Auth\Api;
 
 use RuntimeException;
 use Zoosper\Auth\Repository\RoleRepository;
-use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
-use Zoosper\Auth\Token\PersonalAccessTokenPrincipal;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
@@ -23,7 +22,7 @@ final readonly class RoleApiController
 {
     public function __construct(
         private JsonResponder $json,
-        private PersonalAccessTokenAuthenticator $auth,
+        private BearerPrincipalContext $principals,
         private RoleRepository $roles,
         private ?AuditLoggerInterface $audit = null,
     ) {
@@ -31,11 +30,7 @@ final readonly class RoleApiController
 
     public function index(Request $request): Response
     {
-        $principal = $this->principal($request, 'roles:read', true);
-        if ($principal instanceof Response) {
-            return $principal;
-        }
-
+        $this->principals->require($request);
         $result = $this->roles->pageForApi(Pager::fromQuery([
             'page' => $request->query('page', '1'),
             'page_size' => $request->query('page_size', '20'),
@@ -47,11 +42,7 @@ final readonly class RoleApiController
 
     public function show(Request $request): Response
     {
-        $principal = $this->principal($request, 'roles:read', true);
-        if ($principal instanceof Response) {
-            return $principal;
-        }
-
+        $this->principals->require($request);
         $id = (int) $request->routeParam('id', '0');
         $role = $this->roles->findRoleById($id);
         if ($role === null) {
@@ -73,11 +64,7 @@ final readonly class RoleApiController
 
     public function permissions(Request $request): Response
     {
-        $principal = $this->principal($request, 'roles:read', true);
-        if ($principal instanceof Response) {
-            return $principal;
-        }
-
+        $this->principals->require($request);
         return $this->json->success([
             'permissions' => $this->roles->allPermissions(),
         ]);
@@ -85,11 +72,7 @@ final readonly class RoleApiController
 
     public function create(Request $request): Response
     {
-        $principal = $this->principal($request, 'roles:write');
-        if ($principal instanceof Response) {
-            return $principal;
-        }
-
+        $principal = $this->principals->require($request);
         $body = $request->json();
         $code = trim((string) ($body['code'] ?? ''));
         $label = trim((string) ($body['label'] ?? ''));
@@ -133,11 +116,7 @@ final readonly class RoleApiController
 
     public function update(Request $request): Response
     {
-        $principal = $this->principal($request, 'roles:write');
-        if ($principal instanceof Response) {
-            return $principal;
-        }
-
+        $principal = $this->principals->require($request);
         $id = (int) $request->routeParam('id', '0');
         $role = $this->roles->findRoleById($id);
         if ($role === null) {
@@ -190,11 +169,7 @@ final readonly class RoleApiController
 
     public function delete(Request $request): Response
     {
-        $principal = $this->principal($request, 'roles:write');
-        if ($principal instanceof Response) {
-            return $principal;
-        }
-
+        $principal = $this->principals->require($request);
         $id = (int) $request->routeParam('id', '0');
         $role = $this->roles->findRoleById($id);
         if ($role === null) {
@@ -239,20 +214,7 @@ final readonly class RoleApiController
         return ['page' => $result->page, 'page_size' => $result->pageSize, 'page_count' => $result->totalPages(), 'total' => $result->total];
     }
 
-    private function principal(Request $request, string $scope, bool $read = false): PersonalAccessTokenPrincipal|Response
-    {
-        $p = $this->auth->authenticate($request->header('authorization'));
-        if ($p === null) {
-            return $this->json->error('invalid_bearer_token', 'A valid bearer token is required.', 401);
-        }
 
-        $allowed = $read ? ($p->user->can('role.view') || $p->user->can('role.manage')) : $p->user->can('role.manage');
-        if (!$p->allows($scope) || !$allowed) {
-            return $this->json->error('insufficient_scope', 'The bearer token cannot perform this Role operation.', 403);
-        }
-
-        return $p;
-    }
 }
 
 
