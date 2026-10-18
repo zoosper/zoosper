@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Zoosper\AdminForm\AdminFormRegistry;
 use Zoosper\AdminForm\AdminFormRenderer;
 use Zoosper\Auth\Service\CsrfTokenManager;
-use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
@@ -29,7 +29,7 @@ use Zoosper\Media\Lifecycle\MediaLifecycleCoordinator;
 return [
     MediaApiController::class => static fn (ServiceContainer $services): MediaApiController => new MediaApiController(
         json: $services->get(JsonResponder::class),
-        auth: $services->get(PersonalAccessTokenAuthenticator::class),
+        principals: $services->get(BearerPrincipalContext::class),
         assets: $services->get(MediaAssetRepository::class),
         derivatives: $services->get(MediaDerivativeRepository::class),
         uploads: $services->get(MediaUploadService::class),

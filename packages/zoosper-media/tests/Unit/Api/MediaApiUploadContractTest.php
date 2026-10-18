@@ -20,7 +20,7 @@ it('owns canonical upload through a request-carried stateless PAT boundary', fun
         ->and($matches[0]['public'] ?? null)->toBeFalse()->and($matches[0]['auth'] ?? null)->toBe('bearer')
         ->and($matches[0]['stateless'] ?? null)->toBeTrue()
         ->and($controller)->toContain('private MediaUploadService $uploads')
-        ->toContain("can('media.manage')");
+        ->toContain('BearerPrincipalContext');
 
     $uploadStart = strpos($controller, 'public function upload(Request $request): Response');
     $archiveStart = strpos($controller, 'public function archive(Request $request): Response');
@@ -28,7 +28,7 @@ it('owns canonical upload through a request-carried stateless PAT boundary', fun
 
     $upload = substr($controller, (int) $uploadStart, (int) $archiveStart - (int) $uploadStart);
     expect($upload)
-        ->toContain("'media:upload'")
+        ->toContain('$this->principals->require($request)')
         ->toContain("\$request->uploadedFile('file')")
         ->toContain('$this->uploads->upload($file, $principal->user)')
         ->toContain("'media_upload_failed'")

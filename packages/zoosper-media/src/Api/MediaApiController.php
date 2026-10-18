@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Media\Api;
 
-use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
-use Zoosper\Auth\Token\PersonalAccessTokenPrincipal;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Core\Http\Request;
@@ -28,7 +27,7 @@ final readonly class MediaApiController
 {
     public function __construct(
         private JsonResponder $json,
-        private PersonalAccessTokenAuthenticator $auth,
+        private BearerPrincipalContext $principals,
         private MediaAssetRepository $assets,
         private MediaDerivativeRepository $derivatives,
         private MediaUploadService $uploads,
@@ -39,10 +38,7 @@ final readonly class MediaApiController
 
     public function index(Request $request): Response
     {
-        $principal = $this->principal($request, 'media:read');
-        if ($principal instanceof Response) {
-            return $principal;
-        }
+        $this->principals->require($request);
 
         $result = $this->assets->paginate(MediaApiReadQuery::fromRequest($request));
 
@@ -54,10 +50,7 @@ final readonly class MediaApiController
 
     public function show(Request $request): Response
     {
-        $principal = $this->principal($request, 'media:read');
-        if ($principal instanceof Response) {
-            return $principal;
-        }
+        $this->principals->require($request);
         $asset = $this->asset($request);
         if ($asset === null) {
             return $this->json->error('media_not_found', 'Media asset does not exist.', 404);
@@ -68,10 +61,7 @@ final readonly class MediaApiController
 
     public function derivatives(Request $request): Response
     {
-        $principal = $this->principal($request, 'media:read');
-        if ($principal instanceof Response) {
-            return $principal;
-        }
+        $this->principals->require($request);
         $asset = $this->asset($request);
         if ($asset === null) {
             return $this->json->error('media_not_found', 'Media asset does not exist.', 404);
@@ -85,10 +75,7 @@ final readonly class MediaApiController
 
     public function upload(Request $request): Response
     {
-        $principal = $this->principal($request, 'media:upload');
-        if ($principal instanceof Response) {
-            return $principal;
-        }
+        $principal = $this->principals->require($request);
         $file = $request->uploadedFile('file');
         $result = $this->uploads->upload($file, $principal->user);
         if (!$result->successful) {
@@ -126,10 +113,7 @@ final readonly class MediaApiController
 
     public function deletePermanently(Request $request): Response
     {
-        $principal = $this->principal($request, 'media:delete');
-        if ($principal instanceof Response) {
-            return $principal;
-        }
+        $principal = $this->principals->require($request);
         $asset = $this->asset($request);
         if ($asset === null) {
             return $this->json->error('media_not_found', 'Media asset does not exist.', 404);
@@ -144,10 +128,7 @@ final readonly class MediaApiController
 
     private function lifecycle(Request $request, string $operation): Response
     {
-        $principal = $this->principal($request, 'media:delete');
-        if ($principal instanceof Response) {
-            return $principal;
-        }
+        $principal = $this->principals->require($request);
         $asset = $this->asset($request);
         if ($asset === null) {
             return $this->json->error('media_not_found', 'Media asset does not exist.', 404);
@@ -161,19 +142,6 @@ final readonly class MediaApiController
         $updated = $this->assets->findById($asset->id);
 
         return $this->json->success(['media' => $this->normaliseAsset($updated ?? $asset)]);
-    }
-
-    private function principal(Request $request, string $scope): PersonalAccessTokenPrincipal|Response
-    {
-        $principal = $this->auth->authenticate($request->header('authorization'));
-        if ($principal === null) {
-            return $this->json->error('invalid_bearer_token', 'A valid bearer token is required.', 401);
-        }
-        if (!$principal->allows($scope) || !$principal->user->can('media.manage')) {
-            return $this->json->error('insufficient_scope', 'The bearer token cannot perform this Media operation.', 403);
-        }
-
-        return $principal;
     }
 
     private function asset(Request $request): ?MediaAsset

@@ -19,12 +19,12 @@ use Zoosper\Site\Lifecycle\SiteLifecycleCoordinator;
 use Zoosper\Site\Lifecycle\SiteReferenceInspector;
 use Zoosper\Core\Message\FlashMessageStoreInterface;
 use Zoosper\Audit\Contract\AuditLoggerInterface;
-use Zoosper\Auth\Token\PersonalAccessTokenAuthenticator;
+use Zoosper\Auth\Token\BearerPrincipalContext;
 use Zoosper\Core\Http\JsonResponder;
 use Zoosper\Site\Api\SiteApiController;
 use Zoosper\Site\Application\SiteMutationService;
 return [
-    SiteApiController::class => static fn (ServiceContainer $s): SiteApiController => new SiteApiController($s->get(JsonResponder::class),$s->get(PersonalAccessTokenAuthenticator::class),$s->get(SiteRepository::class),$s->get(SiteLifecycleCoordinator::class),$s->get(SiteMutationService::class)),
+    SiteApiController::class => static fn (ServiceContainer $s): SiteApiController => new SiteApiController($s->get(JsonResponder::class),$s->get(BearerPrincipalContext::class),$s->get(SiteRepository::class),$s->get(SiteLifecycleCoordinator::class),$s->get(SiteMutationService::class)),
 
     SiteAdminController::class => static fn (ServiceContainer $services): SiteAdminController => new SiteAdminController(
         $services->get(SessionGuard::class),

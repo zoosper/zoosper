@@ -2,17 +2,27 @@
 
 declare(strict_types=1);
 
-it('keeps migrated bearer controllers on middleware-established principal ownership', function (): void {
+it('keeps every production bearer controller on middleware-established principal ownership', function (): void {
     $root = dirname(__DIR__, 5);
-    foreach ([
-        'app/zoosper-api/src/Controller/TokenMeController.php',
-        'app/zoosper-auth/src/Api/RoleApiController.php',
-        'app/zoosper-theme/src/Api/ThemeApiController.php',
-        'app/zoosper-menu/src/Api/MenuApiController.php',
-        'app/zoosper-page/src/Api/PageApiController.php',
-    ] as $relative) {
-        $source = (string) file_get_contents($root . '/' . $relative);
-        expect($source, $relative)
+    $routeFiles = array_merge(
+        glob($root . '/app/*/config/api_routes.php') ?: [],
+        glob($root . '/packages/*/config/api_routes.php') ?: [],
+    );
+    $controllers = [];
+    foreach ($routeFiles as $routeFile) {
+        foreach (require $routeFile as $route) {
+            if (($route['auth'] ?? null) !== 'bearer') continue;
+            $controller = $route['controller'] ?? null;
+            if (is_string($controller)) $controllers[$controller] = true;
+        }
+    }
+    expect($controllers)->not->toBe([]);
+    foreach (array_keys($controllers) as $controller) {
+        $reflection = new ReflectionClass($controller);
+        $file = $reflection->getFileName();
+        expect($file, $controller)->toBeString();
+        $source = (string) file_get_contents((string) $file);
+        expect($source, $controller)
             ->toContain('BearerPrincipalContext')
             ->toContain('->require(')
             ->not->toContain('PersonalAccessTokenAuthenticator')
