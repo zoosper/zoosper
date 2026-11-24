@@ -210,6 +210,21 @@ it('ScopeContext::fromSiteArray() treats missing/empty fields as absent', functi
         ->and($context->websiteCode)->toBeNull();
 });
 
+it('preserves site array scalar boundaries', function (array $site, ?int $id, ?string $store, ?string $website): void {
+    $context = ScopeContext::fromSiteArray($site);
+
+    expect($context->siteId)->toBe($id)
+        ->and($context->storeCode)->toBe($store)
+        ->and($context->websiteCode)->toBe($website);
+})->with([
+    'missing' => [[], null, null, null],
+    'null' => [['id' => null, 'storeCode' => null, 'websiteCode' => null], null, null, null],
+    'empty codes' => [['id' => 0, 'storeCode' => '', 'websiteCode' => ''], 0, null, null],
+    'zero strings' => [['id' => '0', 'storeCode' => '0', 'websiteCode' => '0'], 0, '0', '0'],
+    'numeric string' => [['id' => '42', 'storeCode' => 'store', 'websiteCode' => 'website'], 42, 'store', 'website'],
+    'non-numeric string' => [['id' => 'abc'], 0, null, null],
+]);
+
 
 
 

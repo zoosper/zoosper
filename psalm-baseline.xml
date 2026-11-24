@@ -2540,10 +2540,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[fromSiteArray]]></code>
     </PossiblyUnusedMethod>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[$site['id'] !== null]]></code>
-      <code><![CDATA[isset($site['id']) && $site['id'] !== null]]></code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderGridMutationCoordinator.php">
     <PossiblyUnusedMethod>

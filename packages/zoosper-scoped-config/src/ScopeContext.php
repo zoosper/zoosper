@@ -48,7 +48,7 @@ final readonly class ScopeContext
      */
     public static function fromSiteArray(array $site): self
     {
-        $siteId = isset($site['id']) && $site['id'] !== null ? (int) $site['id'] : null;
+        $siteId = isset($site['id']) ? (int) $site['id'] : null;
         $storeCode = isset($site['storeCode']) && $site['storeCode'] !== '' ? $site['storeCode'] : null;
         $websiteCode = isset($site['websiteCode']) && $site['websiteCode'] !== '' ? $site['websiteCode'] : null;
 
