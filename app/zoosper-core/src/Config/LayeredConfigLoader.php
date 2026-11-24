@@ -10,7 +10,7 @@ namespace Zoosper\Core\Config;
 final class LayeredConfigLoader
 {
     /**
-     * @param list<array{source:string, config:array<string,mixed>}> $layers
+     * @param list<array{source?:string|int|float|bool|\Stringable|null, config?:mixed}> $layers
      */
     public function load(array $layers): LayeredConfigResult
     {

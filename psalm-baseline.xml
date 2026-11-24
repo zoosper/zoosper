@@ -498,14 +498,6 @@
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
-  <file src="app/zoosper-core/src/Config/LayeredConfigLoader.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[is_array($config)]]></code>
-    </DocblockTypeContradiction>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) ($layer['source'] ?? 'unknown')]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="app/zoosper-core/src/Config/LayeredConfigResult.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$config]]></code>
