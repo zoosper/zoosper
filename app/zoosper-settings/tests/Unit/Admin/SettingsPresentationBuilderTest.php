@@ -65,6 +65,21 @@ it('keeps numeric category keys as string first-category values', function (): v
     expect($data['firstCategory'])->toBe('0');
 });
 
+it('chooses the first sorted category while preserving numeric string spelling', function (array $categories, string $expected): void {
+    $sections = [];
+    foreach ($categories as $index => $category) {
+        $sections[] = new SettingsSection('example.section' . $index, 'Example', $category, 'example', []);
+    }
+
+    $data = (new SettingsPresentationBuilder())->build($sections, [], [], [], []);
+    expect($data['firstCategory'])->toBe($expected);
+})->with([
+    [['advanced', 'general', 'communication'], 'general'],
+    [['123', '02', '0'], '0'],
+    [['123', '02'], '02'],
+    [['zebra', 'alpha'], 'alpha'],
+]);
+
 
 
 

@@ -73,12 +73,13 @@ final readonly class SettingsPresentationBuilder
                 <=> [is_int($rightIndex) ? $rightIndex : 999, $right];
         });
         ksort($modules);
+        $firstGroup = reset($categories);
 
         return [
             'categories' => $categories,
             'categoryLabels' => self::CATEGORY_LABELS,
             'categoryDescriptions' => self::CATEGORY_DESCRIPTIONS,
-            'firstCategory' => (string) (array_key_first($categories) ?? 'advanced'),
+            'firstCategory' => $firstGroup === false ? 'advanced' : $firstGroup[0]->category,
             'settingsModules' => $modules,
             'sectionPresentation' => $sectionPresentation,
             'fieldPresentation' => $fieldPresentation,

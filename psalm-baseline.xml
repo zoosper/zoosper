@@ -1456,11 +1456,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-settings/src/Admin/SettingsPresentationBuilder.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) (array_key_first($categories) ?? 'advanced')]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="app/zoosper-settings/src/Audit/SettingsAuditLogger.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
