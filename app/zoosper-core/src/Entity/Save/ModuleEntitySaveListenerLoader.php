@@ -68,7 +68,7 @@ final readonly class ModuleEntitySaveListenerLoader
      * This is the pure, testable core of the loader. It does not touch the module
      * registry, so it can be exercised directly in unit tests.
      *
-     * @param array<string, mixed> $config
+     * @param array<array-key, mixed> $config
      */
     public function attachFromConfig(
         EntitySaveEventDispatcherInterface $dispatcher,

@@ -50,7 +50,7 @@ final readonly class ModuleEventListenerLoader
         }
     }
 
-    /** @param array<string, mixed> $config */
+    /** @param array<array-key, mixed> $config */
     public function attachFromConfig(
         EventDispatcherInterface $dispatcher,
         array $config,

@@ -744,11 +744,6 @@
       <code><![CDATA[get]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-core/src/Entity/Save/ModuleEntitySaveListenerLoader.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[!is_string($event)]]></code>
-    </DocblockTypeContradiction>
-  </file>
   <file src="app/zoosper-core/src/Event/EventDispatcher.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -760,9 +755,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Event/ModuleEventListenerLoader.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[!is_string($eventName)]]></code>
-    </DocblockTypeContradiction>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>

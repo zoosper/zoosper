@@ -134,6 +134,14 @@ test('throws when the listeners value is not a list', function () {
     ]))->toThrow(ZoosperException::class);
 });
 
+test('rejects invalid entity save event keys before attaching listeners', function (int|string $key) {
+    $loader = makeListenerLoader(new ServiceContainer());
+    $dispatcher = new EntitySaveEventDispatcher();
+
+    expect(fn () => $loader->attachFromConfig($dispatcher, [$key => []]))
+        ->toThrow(ZoosperException::class, 'Entity save listener config has an invalid event key.');
+})->with([0, '123', '']);
+
 
 
 

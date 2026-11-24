@@ -69,6 +69,14 @@ test('throws when listener list is not iterable', function () {
         ->toThrow(ZoosperException::class);
 });
 
+test('rejects invalid event keys before attaching listeners', function (int|string $key) {
+    $dispatcher = new EventDispatcher();
+    $loader = makeEventLoader(new ServiceContainer());
+
+    expect(fn () => $loader->attachFromConfig($dispatcher, [$key => []]))
+        ->toThrow(ZoosperException::class, 'Event listener config has an invalid event key.');
+})->with([0, '123', '']);
+
 
 
 
