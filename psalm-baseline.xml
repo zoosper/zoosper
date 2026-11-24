@@ -900,9 +900,6 @@
     </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-core/src/Routing/ModuleRouteLoader.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[!($module->discovery[$discoveryKey] ?? is_file($module->configPath($configFile)))]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>

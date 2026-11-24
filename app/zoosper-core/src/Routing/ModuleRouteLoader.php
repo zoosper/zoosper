@@ -66,7 +66,7 @@ final readonly class ModuleRouteLoader
         $discoveryKey = $configFile === 'admin_routes.php' ? 'routes_admin' : 'routes_api';
 
         foreach ($this->modules->enabledModules() as $module) {
-            if (!($module->discovery[$discoveryKey] ?? is_file($module->configPath($configFile)))) {
+            if (!(bool) ($module->discovery[$discoveryKey] ?? is_file($module->configPath($configFile)))) {
                 continue;
             }
 
