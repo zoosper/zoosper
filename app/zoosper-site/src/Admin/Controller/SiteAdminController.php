@@ -173,7 +173,7 @@ final readonly class SiteAdminController
                 values: $values,
                 action: $action,
                 method: 'POST',
-                errors: $error ? ['_form' => $error] : [],
+                errors: $error !== null && $error !== '' && $error !== '0' ? ['_form' => $error] : [],
                 cancelUrl: $this->adminUrl('sites'),
                 csrfToken: $this->csrf->token()
             );

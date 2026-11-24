@@ -1569,9 +1569,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Admin/Controller/SiteAdminController.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$error]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnusedDocblockParam>
       <code><![CDATA[$submitted]]></code>
     </UnusedDocblockParam>
