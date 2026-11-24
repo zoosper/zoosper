@@ -796,9 +796,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/I18n/TranslationFileAggregator.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[glob($pattern)]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>

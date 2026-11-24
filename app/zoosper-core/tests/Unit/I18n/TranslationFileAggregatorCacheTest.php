@@ -29,6 +29,28 @@ it('memoizes merged translation catalogues per locale and fallback', function ()
     }
 });
 
+it('handles missing translation files and merges fallback and locale files', function (): void {
+    $tempDir = sys_get_temp_dir() . '/zoosper_i18n_test_' . bin2hex(random_bytes(4));
+    $i18nDir = $tempDir . '/config/i18n';
+    mkdir($i18nDir, 0777, true);
+    file_put_contents($i18nDir . '/en_AU.php', "<?php\nreturn ['shared' => 'fallback', 'only_fallback' => 'default'];\n");
+    file_put_contents($i18nDir . '/fr_FR.php', "<?php\nreturn ['shared' => 'translated'];\n");
+
+    try {
+        $aggregator = new TranslationFileAggregator($tempDir);
+        $catalogue = $aggregator->catalogue('fr_FR', 'en_AU');
+        expect($catalogue->get('shared'))->toBe('translated')
+            ->and($catalogue->get('only_fallback'))->toBe('default')
+            ->and($aggregator->catalogue('missing', 'missing')->messages())->toBe([]);
+    } finally {
+        unlink($i18nDir . '/en_AU.php');
+        unlink($i18nDir . '/fr_FR.php');
+        rmdir($i18nDir);
+        rmdir($tempDir . '/config');
+        rmdir($tempDir);
+    }
+});
+
 
 
 
