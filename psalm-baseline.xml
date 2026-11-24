@@ -640,10 +640,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Container/ServiceProviderLoader.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[!($module->discovery['service_decorators'] ?? is_file($module->configPath('service_decorators.php')))]]></code>
-      <code><![CDATA[!($module->discovery['services'] ?? is_file($module->configPath('services.php')))]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
       <code><![CDATA[require $file]]></code>

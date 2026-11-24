@@ -29,7 +29,7 @@ final readonly class ServiceProviderLoader
         }
 
         foreach ($this->modules->enabledModules() as $module) {
-            if (!($module->discovery['services'] ?? is_file($module->configPath('services.php')))) {
+            if (!(bool) ($module->discovery['services'] ?? is_file($module->configPath('services.php')))) {
                 continue;
             }
 
@@ -39,7 +39,7 @@ final readonly class ServiceProviderLoader
         }
 
         foreach ($this->modules->enabledModules() as $module) {
-            if (!($module->discovery['service_decorators'] ?? is_file($module->configPath('service_decorators.php')))) {
+            if (!(bool) ($module->discovery['service_decorators'] ?? is_file($module->configPath('service_decorators.php')))) {
                 continue;
             }
 
