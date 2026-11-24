@@ -37,3 +37,15 @@ it('discovers and merges form configuration without losing empty handles', funct
         rmdir($root);
     }
 });
+
+it('preserves non-empty class names without validating or instantiating them', function (): void {
+    $aggregator = new AdminFormConfigAggregator(sys_get_temp_dir() . '/missing_admin_forms_' . bin2hex(random_bytes(6)));
+
+    expect($aggregator->aggregate([
+        'forms' => ['example' => ['Not a class', '0', '', false]],
+        'processors' => ['example' => ['MissingProcessor', 'MissingProcessor']],
+    ]))->toBe([
+        'forms' => ['example' => ['Not a class', '0']],
+        'processors' => ['example' => ['MissingProcessor']],
+    ]);
+});

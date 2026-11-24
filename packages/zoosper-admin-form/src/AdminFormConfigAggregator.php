@@ -31,8 +31,8 @@ final readonly class AdminFormConfigAggregator
      *                                         by ConfigRepository, if available.
      *
      * @return array{
-     *     forms: array<string, list<class-string<AdminFormSectionProviderInterface>>>,
-     *     processors: array<string, list<class-string<AdminFormProcessorInterface>>>
+     *     forms: array<string, list<non-empty-string>>,
+     *     processors: array<string, list<non-empty-string>>
      * }
      */
     public function aggregate(array $rootConfig = []): array
@@ -91,10 +91,10 @@ final readonly class AdminFormConfigAggregator
     }
 
     /**
-     * @param array<string, list<class-string>> $current
+     * @param array<string, list<non-empty-string>> $current
      * @param mixed $incoming
      *
-     * @return array<string, list<class-string>>
+     * @return array<string, list<non-empty-string>>
      */
     private function mergeGroupedClasses(array $current, mixed $incoming): array
     {

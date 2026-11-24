@@ -1812,20 +1812,6 @@
     </DocblockTypeContradiction>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormConfigAggregator.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$current]]></code>
-      <code><![CDATA[[
-            'forms' => $forms,
-            'processors' => $processors,
-        ]]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array<string, list<class-string>>]]></code>
-      <code><![CDATA[array{
-     *     forms: array<string, list<class-string<AdminFormSectionProviderInterface>>>,
-     *     processors: array<string, list<class-string<AdminFormProcessorInterface>>>
-     * }]]></code>
-    </MoreSpecificReturnType>
     <RedundantCondition>
       <code><![CDATA[is_array($config)]]></code>
     </RedundantCondition>
