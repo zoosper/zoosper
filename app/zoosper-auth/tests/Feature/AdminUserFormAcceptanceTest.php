@@ -73,6 +73,7 @@ class AdminUserFormAcceptanceTest extends TestCase
         $this->assertStringContainsString('Identity', $html);
         $this->assertStringContainsString('Admin preferences', $html);
         $this->assertStringContainsString('Assigned roles', $html);
+        $this->assertStringNotContainsString('Danger Zone', $html);
         
         // Verify CSRF token
         $this->assertStringContainsString('name="_csrf_token"', $html);
@@ -143,6 +144,12 @@ class AdminUserFormAcceptanceTest extends TestCase
         $this->assertStringContainsString('Danger Zone', $html);
         $this->assertStringContainsString('Delete admin user', $html);
         $this->assertStringContainsString('/admin/users/2/delete', $html);
+        $this->assertStringContainsString('name="_csrf_token"', $html);
+
+        $selfRequest = $request->withRouteParams(['id' => 1]);
+        $selfHtml = $controller->editForm($selfRequest)->body();
+        $this->assertStringNotContainsString('Danger Zone', $selfHtml);
+        $this->assertStringNotContainsString('/admin/users/1/delete', $selfHtml);
     }
 }
 

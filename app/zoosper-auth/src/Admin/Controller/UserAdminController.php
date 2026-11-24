@@ -481,7 +481,7 @@ final readonly class UserAdminController
             $errorHtml = $error !== null ? '<div class="admin-alert admin-alert--danger" role="alert">' . htmlspecialchars($error, ENT_QUOTES) . '</div>' : '';
 
             $dangerZoneHtml = '';
-            if ($isEdit && $this->guard->user()?->id !== $user->id) {
+            if ($user !== null && $deleteUrl !== null && $this->guard->user()?->id !== $user->id) {
                 $dangerZoneHtml = '
                 <section class="card admin-user-card admin-user-danger" aria-labelledby="admin-user-delete-title">
                     <div class="card__header"><div><h2 class="card__title" id="admin-user-delete-title">Danger Zone</h2><p class="muted">Irreversible account actions.</p></div></div>

@@ -214,9 +214,6 @@
     </UnusedParam>
   </file>
   <file src="app/zoosper-auth/src/Admin/Controller/UserAdminController.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$deleteUrl]]></code>
-    </PossiblyNullArgument>
     <UnusedClosureParam>
       <code><![CDATA[$c]]></code>
       <code><![CDATA[$c]]></code>
