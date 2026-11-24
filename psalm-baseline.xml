@@ -1034,15 +1034,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-editor/src/Config/ContentEditorRuntimeConfig.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string) ($this->scoped->get(
-            $path,
-            $this->scope ?? ScopeContext::default(),
-            $projectValue,
-        ) ?? $projectValue)]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="app/zoosper-editor/src/EditorJsContentEditor.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -2620,11 +2611,6 @@
       <code><![CDATA[$site['id'] !== null]]></code>
       <code><![CDATA[isset($site['id']) && $site['id'] !== null]]></code>
     </RedundantConditionGivenDocblockType>
-  </file>
-  <file src="packages/zoosper-store-orders/src/Admin/StoreOrderCsvExportController.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$result->items]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderGridMutationCoordinator.php">
     <PossiblyUnusedMethod>

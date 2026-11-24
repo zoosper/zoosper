@@ -51,6 +51,22 @@ it('falls back from empty values without restricting custom registered codes', f
         ->and($config->fallback())->toBe('textarea');
 });
 
+it('normalises scoped editor values and preserves zero as an editor code', function (): void {
+    $scoped = editorModuleRuntimeScopeRepository();
+    $scoped->set('editor.default_editor', ScopeType::Default, null, '  0  ');
+    $scoped->set('editor.fallback_editor', ScopeType::Default, null, '   ');
+    $config = new ContentEditorRuntimeConfig(
+        ConfigRepository::fromArray(['editor' => ['default_editor' => 'project', 'fallback_editor' => ' custom ']]),
+        $scoped,
+    );
+
+    expect($config->preferred())->toBe('0')
+        ->and($config->fallback())->toBe('custom');
+
+    $scoped->clear('editor.default_editor', ScopeType::Default, null);
+    expect($config->preferred())->toBe('project');
+});
+
 
 
 

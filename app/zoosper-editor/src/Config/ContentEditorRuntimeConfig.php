@@ -44,11 +44,11 @@ final readonly class ContentEditorRuntimeConfig
             return $projectValue;
         }
 
-        $value = trim((string) ($this->scoped->get(
+        $value = trim($this->scoped->get(
             $path,
             $this->scope ?? ScopeContext::default(),
             $projectValue,
-        ) ?? $projectValue));
+        ) ?? $projectValue);
 
         return $value !== '' ? $value : $projectValue;
     }
