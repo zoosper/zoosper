@@ -37,7 +37,7 @@ final readonly class RouteContext
     }
 
     /**
-     * @param string|list<string>|null $permission
+     * @param string|array<array-key, mixed>|null $permission
      * @return list<string>
      */
     private static function normalise(string|array|null $permission): array
@@ -57,7 +57,7 @@ final readonly class RouteContext
             }
         }
 
-        return array_values($result);
+        return $result;
     }
 }
 

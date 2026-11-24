@@ -24,8 +24,8 @@ test('an array permission is preserved as an OR list', function () {
 });
 
 test('empty and non-string array entries are filtered out', function () {
-    expect((new RouteContext('POST', '/admin/x', false, ['role.manage', '', 'user.manage']))->requiresAnyPermission())
-        ->toBe(['role.manage', 'user.manage']);
+    expect((new RouteContext('POST', '/admin/x', false, ['first' => 'role.manage', false, null, [], '', '0', 'user.manage']))->requiresAnyPermission())
+        ->toBe(['role.manage', '0', 'user.manage']);
 });
 
 test('public flag and path are retained alongside permissions', function () {

@@ -794,12 +794,6 @@
       <code><![CDATA[$path]]></code>
       <code><![CDATA[$stateless]]></code>
     </PossiblyUnusedProperty>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[is_string($value)]]></code>
-    </RedundantConditionGivenDocblockType>
-    <RedundantFunctionCall>
-      <code><![CDATA[array_values]]></code>
-    </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-core/src/I18n/AdminTranslatorResolver.php">
     <PossiblyUnusedMethod>
