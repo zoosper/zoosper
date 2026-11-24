@@ -1809,12 +1809,6 @@
     </DocblockTypeContradiction>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormConfigAggregator.php">
-    <RedundantCondition>
-      <code><![CDATA[is_array($config)]]></code>
-    </RedundantCondition>
-    <TypeDoesNotContainType>
-      <code><![CDATA[[]]]></code>
-    </TypeDoesNotContainType>
     <UnusedClass>
       <code><![CDATA[AdminFormConfigAggregator]]></code>
     </UnusedClass>

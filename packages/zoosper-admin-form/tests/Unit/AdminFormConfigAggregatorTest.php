@@ -25,6 +25,9 @@ it('discovers and merges form configuration without losing empty handles', funct
             'processors' => ['example' => ['ProcessorA', 'ProcessorB']],
         ]);
 
+        file_put_contents($file, '<?php return false;');
+        expect(fn () => $aggregator->aggregate())->toThrow(UnexpectedValueException::class);
+
         unlink($file);
         expect($aggregator->aggregate())->toBe(['forms' => [], 'processors' => []]);
     } finally {
