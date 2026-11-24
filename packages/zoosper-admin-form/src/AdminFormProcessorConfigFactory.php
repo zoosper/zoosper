@@ -51,7 +51,7 @@ final readonly class AdminFormProcessorConfigFactory
     /**
      * @param array<string, mixed> $config
      *
-     * @return array<string, list<class-string<AdminFormProcessorInterface>>>
+     * @return array<string, list<non-empty-string>>
      */
     private function normalise(array $config): array
     {
@@ -75,7 +75,7 @@ final readonly class AdminFormProcessorConfigFactory
         return $normalised;
     }
 
-    /** @param class-string<AdminFormProcessorInterface> $processorClass */
+    /** @param non-empty-string $processorClass */
     private function instantiateProcessor(string $processorClass): AdminFormProcessorInterface
     {
         if (!class_exists($processorClass)) {

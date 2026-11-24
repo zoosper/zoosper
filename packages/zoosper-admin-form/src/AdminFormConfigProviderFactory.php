@@ -51,7 +51,7 @@ final readonly class AdminFormConfigProviderFactory
     /**
      * @param array<string, mixed> $config
      *
-     * @return array<string, list<class-string<AdminFormSectionProviderInterface>>>
+     * @return array<string, list<non-empty-string>>
      */
     private function normalise(array $config): array
     {
@@ -75,7 +75,7 @@ final readonly class AdminFormConfigProviderFactory
         return $normalised;
     }
 
-    /** @param class-string<AdminFormSectionProviderInterface> $providerClass */
+    /** @param non-empty-string $providerClass */
     private function instantiateProvider(string $providerClass): AdminFormSectionProviderInterface
     {
         if (!class_exists($providerClass)) {

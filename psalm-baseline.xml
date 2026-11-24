@@ -1939,12 +1939,6 @@
     </UnusedClass>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormConfigProviderFactory.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$normalised]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array<string, list<class-string<AdminFormSectionProviderInterface>>>]]></code>
-    </MoreSpecificReturnType>
     <UnusedClass>
       <code><![CDATA[AdminFormConfigProviderFactory]]></code>
     </UnusedClass>
@@ -1956,14 +1950,6 @@
     <RedundantFunctionCall>
       <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
-  </file>
-  <file src="packages/zoosper-admin-form/src/AdminFormProcessorConfigFactory.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$normalised]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array<string, list<class-string<AdminFormProcessorInterface>>>]]></code>
-    </MoreSpecificReturnType>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormProviderRegistry.php">
     <PossiblyUnusedMethod>
