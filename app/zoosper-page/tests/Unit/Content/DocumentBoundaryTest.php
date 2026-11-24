@@ -37,6 +37,19 @@ it('tolerates malformed historical JSON without accepting it as a document', fun
     expect(phase13B4DocumentNormalizer()->tolerant('{bad'))->toBeNull();
 });
 
+it('normalizes missing and non-array blocks to an empty list', function (array $input): void {
+    expect(phase13B4DocumentNormalizer()->fromArray($input)->structured['blocks'])->toBe([]);
+})->with([[[]], [['blocks' => null]], [['blocks' => '0']], [['blocks' => false]]]);
+
+it('reindexes block arrays while retaining validation of their contents', function (): void {
+    $block = ['type' => 'paragraph', 'data' => ['text' => 'Hello']];
+
+    expect(phase13B4DocumentNormalizer()->fromArray(['blocks' => ['first' => $block]])->structured['blocks'])
+        ->toBe([$block]);
+    expect(fn () => phase13B4DocumentNormalizer()->fromArray(['blocks' => ['bad' => 'invalid']]))
+        ->toThrow(RuntimeException::class, 'Invalid Editor.js JSON payload:');
+});
+
 
 it('retains configured schema versions and rejects mismatches through the Page boundary', function (): void {
     $config = \Zoosper\Core\Config\ConfigRepository::fromArray([

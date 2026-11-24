@@ -38,7 +38,8 @@ final readonly class DocumentNormalizer
     public function fromArray(array $document, string $html = ''): PageContentDocument
     {
         $document['schema_version'] = (int) ($document['schema_version'] ?? $this->validator->schemaVersion());
-        $document['blocks'] = array_values(is_array($document['blocks'] ?? null) ? $document['blocks'] : []);
+        $blocks = $document['blocks'] ?? null;
+        $document['blocks'] = array_values(is_array($blocks) ? $blocks : []);
         $this->validator->validate($document);
 
         return PageContentDocument::structured($document, $html);

@@ -1383,14 +1383,6 @@
       <code><![CDATA[$content]]></code>
     </UnusedVariable>
   </file>
-  <file src="app/zoosper-page/src/Content/DocumentNormalizer.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[is_array($document['blocks'] ?? null) ? $document['blocks'] : []]]></code>
-    </PossiblyNullArgument>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$document['blocks']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
   <file src="app/zoosper-page/src/Content/DocumentRenderer.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
