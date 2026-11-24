@@ -470,7 +470,7 @@ final readonly class UserAdminController
                 'role_ids' => $user !== null ? array_map('strval', $this->users->roleIdsForUser($user->id)) : [],
             ];
 
-            $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : [], null, $this->csrf->token());
+            $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error !== null && $error !== '' ? ['_form' => $error] : [], null, $this->csrf->token());
 
             $backUrl = $this->adminUrl('users');
             $deleteUrl = $user !== null ? $this->adminUrl('users/' . $user->id . '/delete') : null;

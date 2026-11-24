@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Auth\Tests\Feature;
 
 use Zoosper\Core\Bootstrap\ApplicationFactory;
+use Zoosper\Auth\Admin\Controller\RoleAdminController;
 use Zoosper\Auth\Admin\Controller\UserAdminController;
 use Zoosper\Core\Testing\TestCase;
 use Zoosper\Database\Migrator;
@@ -80,6 +81,32 @@ class AdminUserFormAcceptanceTest extends TestCase
         $this->assertStringContainsString('class="checkbox-list"', $html);
     }
     
+    public function testDynamicIdentityFormsForwardZeroLikeErrorsSafely(): void
+    {
+        $basePath = dirname(__DIR__, 4);
+        $container = $this->bootApp()->services();
+        (new Migrator($container->get(\PDO::class), $basePath, $container->get(ModuleRegistry::class)))->migrate();
+
+        $roleController = $container->get(RoleAdminController::class);
+        $userController = $container->get(UserAdminController::class);
+        $roleForm = new \ReflectionMethod(RoleAdminController::class, 'form');
+        $userForm = new \ReflectionMethod(UserAdminController::class, 'renderUserForm');
+
+        foreach ([null, '', '0', '<unsafe>'] as $error) {
+            $roleHtml = $roleForm->invoke($roleController, '/admin/roles/create', null, $error);
+            $userHtml = $userForm->invoke($userController, 'Create User', '/admin/users/create', null, [], 422, $error)->body();
+            $formAlert = '<div class="admin-alert admin-alert--danger">' . htmlspecialchars($error ?? '', ENT_QUOTES) . '</div>';
+
+            foreach ([$roleHtml, $userHtml] as $html) {
+                if ($error === null || $error === '') {
+                    $this->assertStringNotContainsString($formAlert, $html);
+                } else {
+                    $this->assertStringContainsString($formAlert, $html);
+                }
+            }
+        }
+    }
+
     public function testAdminUserEditFormRendersDangerZone(): void
     {
         $basePath = dirname(__DIR__, 4);

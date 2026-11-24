@@ -215,9 +215,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Admin/Controller/RoleAdminController.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$error]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
@@ -226,9 +223,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$deleteUrl]]></code>
     </PossiblyNullArgument>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$error]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnusedClosureParam>
       <code><![CDATA[$c]]></code>
       <code><![CDATA[$c]]></code>

@@ -206,7 +206,7 @@ final readonly class RoleAdminController
                 'label' => (string) ($role['label'] ?? ''),
             ];
 
-            $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error ? ['_form' => $error] : [], null, $this->csrf->token());
+            $formHtml = $this->formRenderer->render($dynamicFormDef, $values, $action, 'POST', $error !== null && $error !== '' ? ['_form' => $error] : [], null, $this->csrf->token());
 
             $lifecycleHtml = $roleId !== null && $this->lifecycle !== null
                 ? $this->lifecycle->actionsHtml($roleId, (string) ($role['code'] ?? ''))
