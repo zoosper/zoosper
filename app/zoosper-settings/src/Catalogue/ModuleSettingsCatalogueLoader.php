@@ -108,7 +108,10 @@ final readonly class ModuleSettingsCatalogueLoader
         );
     }
 
-    /** @param array<int, mixed> $rawSettings @return list<SettingDefinition> */
+    /**
+     * @param array<array-key, mixed> $rawSettings
+     * @return list<SettingDefinition>
+     */
     private function settings(array $rawSettings, string $file): array
     {
         $settings = [];

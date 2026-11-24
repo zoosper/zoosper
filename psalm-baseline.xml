@@ -1543,10 +1543,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-settings/src/Catalogue/ModuleSettingsCatalogueLoader.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$this->settings((array) ($raw['settings'] ?? []), $file)]]></code>
-      <code><![CDATA[$this->settings((array) ($raw['settings'] ?? []), $file)]]></code>
-    </ArgumentTypeCoercion>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>

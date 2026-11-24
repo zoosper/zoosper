@@ -14,14 +14,22 @@ it('discovers module-owned admin settings metadata', function (): void {
 <?php
 return [[
     'id' => 'acme.general', 'label' => 'Acme', 'category' => 'general',
-    'settings' => [['path' => 'acme.enabled', 'label' => 'Enabled', 'type' => 'boolean']],
+    'settings' => ['enabled' => ['path' => 'acme.enabled', 'label' => 'Enabled', 'type' => 'boolean']],
+], [
+    'id' => 'acme.grouped', 'label' => 'Grouped',
+    'groups' => [['id' => 'main', 'label' => 'Main', 'settings' => [
+        'second' => ['path' => 'acme.second', 'label' => 'Second', 'sort_order' => 20],
+        'first' => ['path' => 'acme.first', 'label' => 'First', 'sort_order' => 10],
+    ]]],
 ]];
 PHP);
 
     $catalogue = (new ModuleSettingsCatalogueLoader(new ModuleRegistry($root)))->load();
-    expect($catalogue->all())->toHaveCount(1)
+    expect($catalogue->all())->toHaveCount(2)
         ->and($catalogue->all()[0]->module)->toBe('acme-settings')
-        ->and($catalogue->all()[0]->settings[0]->type)->toBe('boolean');
+        ->and($catalogue->all()[1]->settings[0]->type)->toBe('boolean')
+        ->and(array_map(static fn ($setting) => $setting->path, $catalogue->all()[0]->settings))
+        ->toBe(['acme.first', 'acme.second']);
     exec('rm -rf ' . escapeshellarg($root));
 });
 
