@@ -149,7 +149,10 @@ final readonly class GridPreferenceRepository
         $statement->execute(['uid' => $adminUserId, 'grid' => $gridKey]);
     }
 
-    /** @param array<mixed> $values @return list<string> */
+    /**
+     * @param array<mixed> $values
+     * @return list<string>
+     */
     private function stringList(array $values): array
     {
         $result = [];

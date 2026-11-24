@@ -48,6 +48,27 @@ test('legacy visibility-only rows remain readable and have no saved order', func
     expect($repository->findColumnOrder(10, 'admin.pages'))->toBeNull();
 });
 
+test('preference rows normalize strings and reject malformed shapes', function (): void {
+    $pdo = preferenceDatabase();
+    $insert = $pdo->prepare('INSERT INTO admin_grid_preferences (admin_user_id, grid_key, visible_columns_json, updated_at) VALUES (10, :grid, :json, :updated)');
+    foreach ([
+        'legacy' => '[" id ","id","0"," ",42,null]',
+        'current' => '{"visible_columns":{"first":" title ","second":"title","third":false},"column_order":[" 0 ","id","id",3]}',
+        'malformed' => '{"visible_columns":[],"column_order":null}',
+        'invalid' => '{',
+    ] as $grid => $json) {
+        $insert->execute(['grid' => $grid, 'json' => $json, 'updated' => '2026-08-29 00:00:00']);
+    }
+    $repository = new GridPreferenceRepository($pdo);
+
+    expect($repository->findColumnPreferences(10, 'legacy'))->toBe([
+        'visible_columns' => ['id', '0'], 'column_order' => [],
+    ])->and($repository->findColumnPreferences(10, 'current'))->toBe([
+        'visible_columns' => ['title'], 'column_order' => ['0', 'id'],
+    ])->and($repository->findColumnPreferences(10, 'malformed'))->toBeNull()
+        ->and($repository->findColumnPreferences(10, 'invalid'))->toBeNull();
+});
+
 test('visible columns update and clear without duplicate rows', function (): void {
     $pdo = preferenceDatabase();
     $repository = new GridPreferenceRepository($pdo);

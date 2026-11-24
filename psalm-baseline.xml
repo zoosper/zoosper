@@ -2049,19 +2049,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridPreferenceRepository.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[[
-                'visible_columns' => $this->stringList($decoded),
-                'column_order' => [],
-            ]]]></code>
-      <code><![CDATA[[
-            'visible_columns' => $this->stringList($decoded['visible_columns']),
-            'column_order' => $this->stringList($decoded['column_order']),
-        ]]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array{visible_columns: list<string>, column_order: list<string>}|null]]></code>
-    </MoreSpecificReturnType>
     <RedundantFunctionCall>
       <code><![CDATA[array_values]]></code>
       <code><![CDATA[array_values]]></code>
