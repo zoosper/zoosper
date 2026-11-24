@@ -30,6 +30,22 @@ test('local derivative resolver rejects unsafe paths and profiles', function () 
     expect(fn () => $resolver->resolve('storage/media/original/example.png', '../bad'))->toThrow(InvalidArgumentException::class);
 });
 
+test('local derivative resolver preserves extension fallback and normalization', function (?string $extension, string $expected) {
+    $resolver = new LocalMediaDerivativePathResolver('/var/example');
+    $path = $resolver->resolve('storage/media/original/example.png', 'admin_thumb', $extension);
+
+    expect($path->relativePath)->toEndWith('.' . $expected)
+        ->and($path->absolutePath)->toBe('/var/example/' . $path->relativePath)
+        ->and($path->publicPath)->toBe('/' . substr($path->relativePath, strlen('storage/')));
+})->with([[null, 'png'], ['', 'png'], ['0', 'png'], [' .JpEg ', 'jpeg']]);
+
+test('local derivative resolver rejects invalid and missing extensions', function () {
+    $resolver = new LocalMediaDerivativePathResolver('/var/example');
+
+    expect(fn () => $resolver->resolve('original/example.png', 'thumb', '../bad'))->toThrow(InvalidArgumentException::class)
+        ->and(fn () => $resolver->resolve('original/example', 'thumb'))->toThrow(InvalidArgumentException::class);
+});
+
 test('local derivative writer creates directories and writes derivative bytes', function () {
     $root = sys_get_temp_dir() . '/zoosper-derivative-' . bin2hex(random_bytes(4));
     $path = (new LocalMediaDerivativePathResolver($root))->resolve('storage/media/original/example.png', 'admin_thumb');

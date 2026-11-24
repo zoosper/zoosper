@@ -23,7 +23,10 @@ final readonly class LocalMediaDerivativePathResolver
     {
         $storagePath = $this->normaliseStoragePath($storagePath);
         $profile = $this->normaliseProfile($profile);
-        $extension = $this->normaliseExtension($extension ?: pathinfo($storagePath, PATHINFO_EXTENSION));
+        if ($extension === null || $extension === '' || $extension === '0') {
+            $extension = pathinfo($storagePath, PATHINFO_EXTENSION);
+        }
+        $extension = $this->normaliseExtension($extension);
 
         $hash = substr(hash('sha256', $storagePath . '|' . $profile), 0, 16);
         $relative = 'storage/media/derivatives/' . $profile . '/' . substr($hash, 0, 2) . '/' . substr($hash, 2, 2) . '/' . $hash . '.' . $extension;

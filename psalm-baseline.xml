@@ -2429,11 +2429,6 @@
       <code><![CDATA[LocalCopyMediaProcessor]]></code>
     </UnusedClass>
   </file>
-  <file src="packages/zoosper-media/src/Processing/LocalMediaDerivativePathResolver.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$extension]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="packages/zoosper-media/src/Processing/MediaDerivativePlan.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[codes]]></code>
