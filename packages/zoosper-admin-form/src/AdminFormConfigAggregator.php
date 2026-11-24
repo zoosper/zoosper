@@ -68,7 +68,8 @@ final readonly class AdminFormConfigAggregator
 
         $files = [];
         foreach ($patterns as $pattern) {
-            foreach (glob($pattern) ?: [] as $file) {
+            $matches = glob($pattern);
+            foreach ($matches === false ? [] : $matches as $file) {
                 if (is_file($file)) {
                     $files[] = $file;
                 }

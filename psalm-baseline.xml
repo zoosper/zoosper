@@ -1834,9 +1834,6 @@
     <RedundantCondition>
       <code><![CDATA[is_array($config)]]></code>
     </RedundantCondition>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[glob($pattern)]]></code>
-    </RiskyTruthyFalsyComparison>
     <TypeDoesNotContainType>
       <code><![CDATA[[]]]></code>
     </TypeDoesNotContainType>
