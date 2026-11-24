@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Core\Html\BasicHtmlSanitizer;
 use Zoosper\Page\Application\Save\PageSaveCoordinator;
+use Zoosper\Page\Application\Save\PageSaveInput;
 use Zoosper\Page\Repository\PageRepository;
 
 function phase9fnPagesPdo(): PDO
@@ -52,8 +53,21 @@ it('normalises and persists Page create and update through one coordinator', fun
         'content' => 'Updated body', 'publish' => '1',
     ], $page, $user);
     expect($updated->successful)->toBeTrue()
-        ->and($repo->findById((int) $created->pageId)?->status)->toBe('published');
+        ->and($repo->findById((int) $created->pageId)?->status)->toBe('published')
+        ->and($repo->findById((int) $created->pageId)?->slug)->toBe('new-slug');
 });
+
+it('preserves slug normalization boundaries', function (array $form, string $expected): void {
+    expect(PageSaveInput::fromForm($form, new BasicHtmlSanitizer())->slug)->toBe($expected);
+})->with([
+    'missing' => [[], ''],
+    'empty' => [['slug' => ''], ''],
+    'string zero' => [['slug' => '0'], ''],
+    'integer zero' => [['slug' => 0], ''],
+    'surrounded zero' => [['slug' => '-0-'], '0'],
+    'punctuation' => [['slug' => '!!!'], ''],
+    'mixed case' => [['slug' => ' Hello World! '], 'hello-world'],
+]);
 
 it('returns invalid Editor.js JSON as a typed failure', function (): void {
     $service = new PageSaveCoordinator(new PageRepository(phase9fnPagesPdo()), new BasicHtmlSanitizer());

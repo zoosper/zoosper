@@ -1399,11 +1399,6 @@
       <code><![CDATA[$context]]></code>
     </UnusedClosureParam>
   </file>
-  <file src="app/zoosper-page/src/Application/Save/PageSaveInput.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[preg_replace('/[^a-z0-9]+/i', '-', $slug)]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="app/zoosper-page/src/Content/BlockJsonToHtmlRenderer.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>

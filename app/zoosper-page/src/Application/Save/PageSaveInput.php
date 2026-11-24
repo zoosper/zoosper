@@ -37,7 +37,10 @@ final readonly class PageSaveInput
         ?DocumentNormalizer $documents = null,
     ): self {
         $slug = strtolower(trim((string) ($form['slug'] ?? '')));
-        $slug = preg_replace('/[^a-z0-9]+/i', '-', $slug) ?: '';
+        $slug = preg_replace('/[^a-z0-9]+/i', '-', $slug);
+        if ($slug === null || $slug === '0') {
+            $slug = '';
+        }
 
         $rawContent = (string) ($form['content'] ?? '');
         $sanitized = $sanitizer->sanitise($rawContent);
