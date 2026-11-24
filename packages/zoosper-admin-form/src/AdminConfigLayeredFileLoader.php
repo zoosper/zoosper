@@ -36,7 +36,7 @@ final class AdminConfigLayeredFileLoader
      * ]);
      * ```
      *
-     * @param array<string, string>|list<string> $sources Map of source name to file path, or list of file paths.
+     * @param array<array-key, mixed> $sources Source names or numeric keys mapped to non-empty file paths.
      * @return array<string, mixed>
      */
     public function load(array $sources): array

@@ -1811,11 +1811,6 @@
       <code><![CDATA[!is_string($code)]]></code>
     </DocblockTypeContradiction>
   </file>
-  <file src="packages/zoosper-admin-form/src/AdminConfigLayeredFileLoader.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[!is_string($path)]]></code>
-    </DocblockTypeContradiction>
-  </file>
   <file src="packages/zoosper-admin-form/src/AdminFormConfigAggregator.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[$current]]></code>
