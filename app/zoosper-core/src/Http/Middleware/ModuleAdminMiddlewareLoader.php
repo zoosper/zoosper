@@ -28,7 +28,7 @@ final readonly class ModuleAdminMiddlewareLoader
         $middleware = [];
 
         foreach ($this->modules->enabledModules() as $module) {
-            if (!($module->discovery['admin_middleware'] ?? is_file($module->configPath('admin_middleware.php')))) {
+            if (!(bool) ($module->discovery['admin_middleware'] ?? is_file($module->configPath('admin_middleware.php')))) {
                 continue;
             }
 

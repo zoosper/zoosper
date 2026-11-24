@@ -29,7 +29,7 @@ final readonly class ModuleEventListenerLoader
     public function attach(EventDispatcherInterface $dispatcher): void
     {
         foreach ($this->modules->enabledModules() as $module) {
-            if (!($module->discovery['events'] ?? is_file($module->configPath('events.php')))) {
+            if (!(bool) ($module->discovery['events'] ?? is_file($module->configPath('events.php')))) {
                 continue;
             }
 

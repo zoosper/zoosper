@@ -621,9 +621,6 @@
     </UnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Console/ModuleConsoleCommandLoader.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[!($module->discovery['console'] ?? is_file($module->configPath('console.php')))]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
@@ -766,17 +763,11 @@
     <DocblockTypeContradiction>
       <code><![CDATA[!is_string($eventName)]]></code>
     </DocblockTypeContradiction>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[!($module->discovery['events'] ?? is_file($module->configPath('events.php')))]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Http/Middleware/ModuleAdminMiddlewareLoader.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[!($module->discovery['admin_middleware'] ?? is_file($module->configPath('admin_middleware.php')))]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
