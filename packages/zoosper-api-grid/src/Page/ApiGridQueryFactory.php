@@ -17,7 +17,8 @@ final class ApiGridQueryFactory
         ApiGridDefinition $definition,
         GridDataSourceCapabilities $capabilities,
     ): GridQuery {
-        $page = max(1, filter_var($values['page'] ?? 1, FILTER_VALIDATE_INT) ?: 1);
+        $requestedPage = filter_var($values['page'] ?? 1, FILTER_VALIDATE_INT);
+        $page = max(1, $requestedPage === false ? 1 : $requestedPage);
         $requestedSize = filter_var($values['page_size'] ?? $definition->pageSizes[0], FILTER_VALIDATE_INT);
         $pageSize = in_array($requestedSize, $definition->pageSizes, true)
             ? $requestedSize

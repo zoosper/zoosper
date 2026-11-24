@@ -78,6 +78,26 @@ it('rejects duplicate registrations and invalid data-source services', function 
     expect(fn () => $builder->build('sample.records', []))->toThrow(InvalidArgumentException::class, 'GridDataSourceInterface');
 });
 
+it('normalises pagination inputs without relaxing the page size allow-list', function (): void {
+    $factory = new ApiGridQueryFactory();
+    $definition = apiGridDefinitionForPageTest();
+    $capabilities = new GridDataSourceCapabilities();
+
+    foreach ([
+        [[], 1, 5],
+        [['page' => '0', 'page_size' => '0'], 1, 5],
+        [['page' => '-3', 'page_size' => '10'], 1, 5],
+        [['page' => '2x', 'page_size' => '20x'], 1, 5],
+        [['page' => [], 'page_size' => []], 1, 5],
+        [['page' => '999999999999999999999999', 'page_size' => false], 1, 5],
+        [['page' => true, 'page_size' => 20.0], 1, 20],
+        [['page' => '3', 'page_size' => '50'], 3, 50],
+    ] as [$values, $page, $pageSize]) {
+        $query = $factory->fromValues($values, $definition, $capabilities);
+        expect($query->page)->toBe($page)->and($query->pageSize)->toBe($pageSize);
+    }
+});
+
 
 
 

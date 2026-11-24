@@ -2222,11 +2222,6 @@
       <code><![CDATA[ApiGridPageBuilder]]></code>
     </UnusedClass>
   </file>
-  <file src="packages/zoosper-api-grid/src/Page/ApiGridQueryFactory.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[filter_var($values['page'] ?? 1, FILTER_VALIDATE_INT)]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="packages/zoosper-api-grid/src/Transport/ApiReliabilityPolicy.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$maximumSafeGetRetries]]></code>
