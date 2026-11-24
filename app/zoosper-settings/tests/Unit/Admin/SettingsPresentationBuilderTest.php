@@ -41,6 +41,30 @@ it('redacts secrets and prepares multiselect and numeric input metadata', functi
         ->and($data['fieldPresentation']['tax.rate']['step'])->toBe('any');
 });
 
+it('encodes scope options safely and falls back when JSON encoding fails', function (): void {
+    $builder = new SettingsPresentationBuilder();
+    $data = $builder->build([], [], ['<main>&"\''], [], [(object) ['id' => 1, 'name' => '<Site>']]);
+
+    expect($data['firstCategory'])->toBe('advanced')
+        ->and($data['scopeOptionsJson'])->not->toContain('<', '>', '&')
+        ->and($data['scopeOptionsJson'])->toContain('\\u0022', '\\u0027')
+        ->and(json_decode($data['scopeOptionsJson'], true))->toBe([
+            'website' => ['<main>&"\'' => '<main>&"\''],
+            'store' => [],
+            'site' => [1 => '<Site>'],
+        ]);
+
+    $invalid = $builder->build([], [], ["\xFF"], [], []);
+    expect($invalid['scopeOptionsJson'])->toBe('{}');
+});
+
+it('keeps numeric category keys as string first-category values', function (): void {
+    $section = new SettingsSection('example.section', 'Example', '0', 'example', []);
+    $data = (new SettingsPresentationBuilder())->build([$section], [], [], [], []);
+
+    expect($data['firstCategory'])->toBe('0');
+});
+
 
 
 

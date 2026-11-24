@@ -141,11 +141,13 @@ final readonly class SettingsPresentationBuilder
         foreach ($sites as $site) {
             $siteOptions[(string) $site->id] = $site->name;
         }
-        return json_encode([
+        $json = json_encode([
             'website' => array_combine($websites, $websites) ?: [],
             'store' => array_combine($stores, $stores) ?: [],
             'site' => $siteOptions,
-        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?: '{}';
+        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+
+        return $json === false ? '{}' : $json;
     }
 }
 

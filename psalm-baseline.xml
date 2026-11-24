@@ -1494,13 +1494,6 @@
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(string) (array_key_first($categories) ?? 'advanced')]]></code>
     </RedundantCastGivenDocblockType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[json_encode([
-            'website' => array_combine($websites, $websites) ?: [],
-            'store' => array_combine($stores, $stores) ?: [],
-            'site' => $siteOptions,
-        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-settings/src/Audit/SettingsAuditLogger.php">
     <PossiblyUnusedMethod>
