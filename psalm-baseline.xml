@@ -1938,11 +1938,6 @@
       <code><![CDATA[$viewLabel]]></code>
     </UnusedParam>
   </file>
-  <file src="packages/zoosper-admin-grid/src/GridCompactWorkspaceRenderer.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string)$value]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="packages/zoosper-admin-grid/src/GridFeatureAcceptance.php">
     <UnusedClass>
       <code><![CDATA[GridFeatureAcceptance]]></code>

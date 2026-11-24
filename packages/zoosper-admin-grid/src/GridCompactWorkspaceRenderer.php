@@ -27,7 +27,12 @@ final readonly class GridCompactWorkspaceRenderer
     ): string
     {
         $filters=$state->criteria->filters;
-        $active=0; foreach($filters as $value){if(is_array($value)?$value!==[]:trim((string)$value)!==''){$active++;}}
+        $active = 0;
+        foreach ($filters as $value) {
+            if ($this->isActiveFilter($value)) {
+                $active++;
+            }
+        }
         $label='Default view';
         foreach($state->bookmarks as $bookmark){if($bookmark['id']===$state->activeBookmarkId){$label=$bookmark['name'];break;}}
         $html='<section data-grid-workspace data-grid-current-page-filename="'.$this->e($this->currentPageFilename($formAction)).'">';
@@ -49,6 +54,11 @@ final readonly class GridCompactWorkspaceRenderer
         if($state->criteria->sortBy!==null){$html.='<input type="hidden" name="sort" value="'.$this->e($state->criteria->sortBy).'"><input type="hidden" name="dir" value="'.$this->e($state->criteria->sortDir).'">';}
         $html.='</form>'.$this->chips->render($this->chipValues($state->definition,$filters)).'</section>';
         return $html;
+    }
+
+    private function isActiveFilter(mixed $value): bool
+    {
+        return is_array($value) ? $value !== [] : trim((string) $value) !== '';
     }
 
     /** @param array<string,mixed> $values */
