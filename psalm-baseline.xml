@@ -1308,29 +1308,9 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Admin/PageSiteFilterOptions.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[is_array($site)]]></code>
-      <code><![CDATA[is_array($site)]]></code>
-    </DocblockTypeContradiction>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(int) (is_array($site) ? ($site['id'] ?? 0) : ($site->id ?? 0))]]></code>
-      <code><![CDATA[(string) (is_array($site) ? ($site['name'] ?? '') : ($site->name ?? ''))]]></code>
-    </RedundantCast>
-    <RedundantCondition>
-      <code><![CDATA[$site->id]]></code>
-      <code><![CDATA[$site->name]]></code>
-    </RedundantCondition>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[$site->id ?? 0]]></code>
-      <code><![CDATA[$site->name ?? '']]></code>
-    </RedundantConditionGivenDocblockType>
-    <TypeDoesNotContainType>
-      <code><![CDATA['']]></code>
-      <code><![CDATA[0]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="app/zoosper-page/src/Admin/PageSiteFilterSql.php">
     <UnusedClass>
