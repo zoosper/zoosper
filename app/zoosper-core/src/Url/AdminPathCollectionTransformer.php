@@ -20,8 +20,8 @@ final readonly class AdminPathCollectionTransformer
     }
 
     /**
-     * @param list<array<string, mixed>> $routes
-     * @return list<array<string, mixed>>
+     * @param array<array-key, mixed> $routes
+     * @return list<array<array-key, mixed>>
      */
     public function routes(array $routes): array
     {
@@ -29,8 +29,8 @@ final readonly class AdminPathCollectionTransformer
     }
 
     /**
-     * @param list<array<string, mixed>> $items
-     * @return list<array<string, mixed>>
+     * @param array<array-key, mixed> $items
+     * @return list<array<array-key, mixed>>
      */
     public function menu(array $items): array
     {
@@ -38,13 +38,16 @@ final readonly class AdminPathCollectionTransformer
     }
 
     /**
-     * @param list<array<string, mixed>> $rows
-     * @return list<array<string, mixed>>
+     * @param array<array-key, mixed> $rows
+     * @return list<array<array-key, mixed>>
      */
     private function transform(array $rows, string $field, string $kind): array
     {
         $result = [];
         foreach ($rows as $index => $row) {
+            if (!is_array($row)) {
+                continue;
+            }
             if (!array_key_exists($field, $row)) {
                 $result[] = $row;
                 continue;

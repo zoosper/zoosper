@@ -52,6 +52,15 @@ it('passes declarations without the target field through for loader validation',
     expect(adminPathTransformer()->routes([['method' => 'GET']]))->toBe([['method' => 'GET']]);
 });
 
+it('skips malformed rows while transforming associative declarations', function (string $method, string $field): void {
+    $rows = ['invalid' => false, 'valid' => [$field => '/admin/pages'], 'empty' => null];
+
+    expect(adminPathTransformer()->{$method}($rows))->toBe([[$field => '/control-centre/pages']]);
+})->with([
+    'routes' => ['routes', 'path'],
+    'menu' => ['menu', 'url'],
+]);
+
 it('rejects non-absolute route and menu paths', function (array $rows, string $method): void {
     expect(fn () => adminPathTransformer()->{$method}($rows))
         ->toThrow(\InvalidArgumentException::class);

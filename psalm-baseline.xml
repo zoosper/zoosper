@@ -103,9 +103,6 @@
     </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-admin/src/Navigation/AdminMenuLoader.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$config]]></code>
-    </ArgumentTypeCoercion>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -903,9 +900,6 @@
     </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-core/src/Routing/ModuleRouteLoader.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$config]]></code>
-    </ArgumentTypeCoercion>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[!($module->discovery[$discoveryKey] ?? is_file($module->configPath($configFile)))]]></code>
     </RiskyTruthyFalsyComparison>
