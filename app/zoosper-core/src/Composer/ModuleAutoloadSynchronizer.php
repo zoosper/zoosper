@@ -93,25 +93,26 @@ final readonly class ModuleAutoloadSynchronizer
     {
         $changed = false;
         foreach (['autoload', 'autoload-dev'] as $section) {
-            $composer[$section] ??= [];
-            if (!is_array($composer[$section])) {
-                $composer[$section] = [];
+            $sectionConfig = $composer[$section] ?? [];
+            if (!is_array($sectionConfig)) {
+                $sectionConfig = [];
                 $changed = true;
             }
-            $composer[$section]['psr-4'] ??= [];
-            if (!is_array($composer[$section]['psr-4'])) {
-                $composer[$section]['psr-4'] = [];
+            $sectionConfig['psr-4'] ??= [];
+            if (!is_array($sectionConfig['psr-4'])) {
+                $sectionConfig['psr-4'] = [];
                 $changed = true;
             }
 
             foreach ($mappings[$section] as $namespace => $path) {
-                if (($composer[$section]['psr-4'][$namespace] ?? null) !== $path) {
-                    $composer[$section]['psr-4'][$namespace] = $path;
+                if (($sectionConfig['psr-4'][$namespace] ?? null) !== $path) {
+                    $sectionConfig['psr-4'][$namespace] = $path;
                     $changed = true;
                 }
             }
 
-            ksort($composer[$section]['psr-4']);
+            ksort($sectionConfig['psr-4']);
+            $composer[$section] = $sectionConfig;
         }
 
         return $changed;
@@ -129,7 +130,8 @@ final readonly class ModuleAutoloadSynchronizer
 
         $files = [];
         foreach ($patterns as $pattern) {
-            foreach (glob($pattern) ?: [] as $file) {
+            $matches = glob($pattern);
+            foreach ($matches === false ? [] : $matches as $file) {
                 $files[] = $file;
             }
         }

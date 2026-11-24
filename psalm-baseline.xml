@@ -442,13 +442,6 @@
     <PossiblyFalseOperand>
       <code><![CDATA[json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)]]></code>
     </PossiblyFalseOperand>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$composer[$section]]]></code>
-      <code><![CDATA[$composer[$section]]]></code>
-    </PossiblyUndefinedArrayOffset>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[glob($pattern)]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $moduleFile]]></code>
     </UnresolvableInclude>

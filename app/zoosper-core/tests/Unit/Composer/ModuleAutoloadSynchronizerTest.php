@@ -52,6 +52,31 @@ test('sync updates composer json without replacing existing mappings', function 
     expect($updated['autoload']['psr-4']['Zoosper\Page\\'])->toBe('app/zoosper-page/src/');
 });
 
+test('sync normalises malformed sections and remains idempotent', function () {
+    $root = autoloadSyncFixture();
+    file_put_contents($root . '/composer.json', json_encode([
+        'autoload' => 'invalid',
+        'autoload-dev' => ['psr-4' => false, 'files' => ['bootstrap.php']],
+    ]));
+    $synchronizer = new ModuleAutoloadSynchronizer($root);
+
+    expect($synchronizer->sync()['changed'])->toBeTrue();
+    $updated = json_decode((string) file_get_contents($root . '/composer.json'), true);
+    expect($updated['autoload']['psr-4']['Zoosper\Page\\'])->toBe('app/zoosper-page/src/')
+        ->and($updated['autoload-dev']['files'])->toBe(['bootstrap.php'])
+        ->and($updated['autoload-dev']['psr-4']['Zoosper\Media\Tests\\'])->toBe('app/zoosper-media/tests/')
+        ->and($synchronizer->sync()['changed'])->toBeFalse();
+});
+
+test('discovery returns empty mappings when no module files exist', function () {
+    $root = autoloadSyncFixture();
+    unlink($root . '/app/zoosper-media/module.php');
+    unlink($root . '/app/zoosper-page/module.php');
+
+    expect((new ModuleAutoloadSynchronizer($root))->discoverMappings())
+        ->toBe(['autoload' => [], 'autoload-dev' => []]);
+});
+
 
 
 
