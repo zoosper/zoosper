@@ -65,7 +65,13 @@ final readonly class PageController
 
         $slug = trim($path, '/');
 
-        return $slug !== '' ? $slug : ($site->homepageSlug ?: 'home');
+        if ($slug !== '') {
+            return $slug;
+        }
+
+        $homepageSlug = $site->homepageSlug;
+
+        return $homepageSlug === null || $homepageSlug === '' || $homepageSlug === '0' ? 'home' : $homepageSlug;
     }
 
     private function normaliseOptionalPrefix(string $prefix): string

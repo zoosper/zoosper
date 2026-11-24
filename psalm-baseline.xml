@@ -1316,11 +1316,6 @@
       <code><![CDATA[PdoPageGridExportRepository]]></code>
     </UnusedClass>
   </file>
-  <file src="app/zoosper-page/src/Api/ContentPageController.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$site->homepageSlug]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="app/zoosper-page/src/Api/PageLifecycleApiResponder.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -1363,11 +1358,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[html]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-page/src/Controller/PageController.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$site->homepageSlug]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-page/src/Event/PagePublishedEvent.php">
     <PossiblyUnusedProperty>

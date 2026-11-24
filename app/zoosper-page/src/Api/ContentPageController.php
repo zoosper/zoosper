@@ -38,7 +38,9 @@ final readonly class ContentPageController
             return $this->json->error('site_not_found', 'No active site exists for this host.', 404);
         }
 
-        $slug = $request->query('slug', $site->homepageSlug ?: 'home');
+        $homepageSlug = $site->homepageSlug;
+        $defaultSlug = $homepageSlug === null || $homepageSlug === '' || $homepageSlug === '0' ? 'home' : $homepageSlug;
+        $slug = $request->query('slug', $defaultSlug);
         $page = $this->pages->findPublishedBySlug($site->id, (string) $slug);
 
         if ($page === null) {
