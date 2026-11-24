@@ -72,9 +72,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(string) ($release['version'] ?? 'unknown')]]></code>
-    </RedundantCast>
   </file>
   <file src="app/zoosper-admin/src/Message/SessionFlashMessageStore.php">
     <UnusedClass>

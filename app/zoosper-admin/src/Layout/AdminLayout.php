@@ -56,7 +56,7 @@ final readonly class AdminLayout implements AdminLayoutRendererInterface
             ? $this->announcements->findUnacknowledgedForUser($user->id)
             : null;
         $release = require dirname(__DIR__, 4) . '/config/version.php';
-        $fallbackVersion = (string) ($release['version'] ?? 'unknown');
+        $fallbackVersion = $release['version'] ?? 'unknown';
         $version = 'Zoosper CMS ' . (string) (
             $this->config?->get('app.version', $fallbackVersion)
             ?? $fallbackVersion
