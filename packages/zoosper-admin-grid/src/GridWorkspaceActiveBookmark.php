@@ -15,19 +15,31 @@ final readonly class GridWorkspaceActiveBookmark
         }
 
         foreach ($state->bookmarks as $bookmark) {
-            if ((int) ($bookmark['id'] ?? 0) !== $state->activeBookmarkId) {
-                continue;
+            $active = $this->normalise($bookmark, $state->activeBookmarkId);
+            if ($active !== null) {
+                return $active;
             }
-
-            return [
-                'id' => $state->activeBookmarkId,
-                'name' => (string) ($bookmark['name'] ?? 'Saved view'),
-                'state' => is_array($bookmark['state'] ?? null) ? $bookmark['state'] : [],
-                'is_default' => (bool) ($bookmark['is_default'] ?? false),
-            ];
         }
 
         return null;
+    }
+
+    /**
+     * @param array<string, mixed> $bookmark
+     * @return array{id: int, name: string, state: array<string, mixed>, is_default: bool}|null
+     */
+    private function normalise(array $bookmark, int $activeId): ?array
+    {
+        if ((int) ($bookmark['id'] ?? 0) !== $activeId) {
+            return null;
+        }
+
+        return [
+            'id' => $activeId,
+            'name' => (string) ($bookmark['name'] ?? 'Saved view'),
+            'state' => is_array($bookmark['state'] ?? null) ? $bookmark['state'] : [],
+            'is_default' => (bool) ($bookmark['is_default'] ?? false),
+        ];
     }
 }
 

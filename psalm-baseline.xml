@@ -1897,13 +1897,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-admin-grid/src/GridWorkspaceActiveBookmark.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(bool) ($bookmark['is_default'] ?? false)]]></code>
-      <code><![CDATA[(int) ($bookmark['id'] ?? 0)]]></code>
-      <code><![CDATA[(string) ($bookmark['name'] ?? 'Saved view')]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="packages/zoosper-admin-grid/src/GridWorkspaceAuditedCsvExportService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
