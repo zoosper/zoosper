@@ -297,19 +297,11 @@
       <code><![CDATA[AdminAuthenticationRateLimiter]]></code>
     </UnusedClass>
   </file>
-  <file src="app/zoosper-auth/src/Repository/AdminUserRepository.php">
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[is_int($id)]]></code>
-    </RedundantConditionGivenDocblockType>
-  </file>
   <file src="app/zoosper-auth/src/Repository/RoleRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[findRoleByCode]]></code>
     </PossiblyUnusedMethod>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[preg_replace('/[^a-z0-9_]+/', '_', $code)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-auth/src/Security/PasswordPolicy.php">
     <PossiblyUnusedMethod>
@@ -1136,9 +1128,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <TypeDoesNotContainType>
-      <code><![CDATA[$action === GridWorkspaceMutationContract::SET_DEFAULT_VIEW]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridNavigationBuilder.php">
     <UnusedClass>
@@ -1255,9 +1244,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <UnusedMethod>
-      <code><![CDATA[tableExists]]></code>
-    </UnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Routing/PageFallbackHandlerAdapter.php">
     <UnusedClass>

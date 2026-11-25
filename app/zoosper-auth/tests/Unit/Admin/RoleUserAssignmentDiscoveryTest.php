@@ -79,6 +79,14 @@ it('always preserves selected users even when search excludes them', function ()
         ->and($users)->toHaveCount(3);
 });
 
+it('ignores invalid selected user IDs without coercing them', function (): void {
+    $repo = new AdminUserRepository(authAssignmentPdo());
+
+    $users = $repo->findForAssignmentWithSelected([2, '3', 0, -1, null, 2], 'absent');
+
+    expect(array_map(static fn (AdminUser $user): int => $user->id, $users))->toBe([2]);
+});
+
 it('declares assigned-user runtime and style assets with defer semantics', function (): void {
     $assets = require dirname(__DIR__, 3) . '/config/admin_assets.php';
 

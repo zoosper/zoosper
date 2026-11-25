@@ -72,7 +72,7 @@ final readonly class AdminUserRepository
     }
 
     /**
-     * @param list<int> $selectedIds
+     * @param array<array-key, mixed> $selectedIds
      * @return list<AdminUser>
      */
     public function findForAssignmentWithSelected(array $selectedIds, ?string $term = null, int $limit = 500): array

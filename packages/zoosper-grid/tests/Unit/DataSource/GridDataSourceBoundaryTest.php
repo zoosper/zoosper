@@ -43,6 +43,12 @@ it('supports a transport-neutral numbered collection source', function (): void 
 });
 
 it('represents cursor pagination without pretending it is numbered', function (): void {
+    $capabilities = new GridDataSourceCapabilities(
+        paginationMode: GridPaginationMode::Cursor,
+        searchable: true,
+        exportable: true,
+    );
+    $query = new GridQuery(search: 'term', cursor: 'current-token');
     $result = new GridResult(
         items: [['id' => 10]],
         total: 1,
@@ -52,7 +58,12 @@ it('represents cursor pagination without pretending it is numbered', function ()
         nextCursor: 'next-token',
     );
 
-    expect($result->paginationMode)->toBe(GridPaginationMode::Cursor)
+    expect($capabilities->paginationMode)->toBe(GridPaginationMode::Cursor)
+        ->and($capabilities->searchable)->toBeTrue()
+        ->and($capabilities->exportable)->toBeTrue()
+        ->and($query->search)->toBe('term')
+        ->and($query->cursor)->toBe('current-token')
+        ->and($result->paginationMode)->toBe(GridPaginationMode::Cursor)
         ->and($result->nextCursor)->toBe('next-token');
 });
 

@@ -14,7 +14,9 @@ test('complete compact workspace satisfies the closure contract', function (): v
 
     $report = (new GridFeatureAcceptance())->evaluate('admin.pages', $html);
 
-    expect($report->isComplete())->toBeTrue();
+    expect($report->gridKey)->toBe('admin.pages')
+        ->and($report->passed)->toContain('workspace', 'legacy_hidden_page_size_removed')
+        ->and($report->isComplete())->toBeTrue();
     expect($report->failed)->toBe([]);
 });
 

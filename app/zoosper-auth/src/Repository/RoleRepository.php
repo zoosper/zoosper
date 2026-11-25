@@ -261,7 +261,10 @@ final readonly class RoleRepository
     private function normaliseCode(string $code): string
     {
         $code = strtolower(trim($code));
-        $code = preg_replace('/[^a-z0-9_]+/', '_', $code) ?: '';
+        $code = preg_replace('/[^a-z0-9_]+/', '_', $code);
+        if ($code === null || $code === '0') {
+            $code = '';
+        }
         return trim($code, '_');
     }
 

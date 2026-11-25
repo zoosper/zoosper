@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Grid\BulkAction\GridBulkActionDefinition;
+use Zoosper\Grid\BulkAction\GridBulkActionExecutionResult;
 use Zoosper\Grid\BulkAction\GridBulkActionRegistry;
 use Zoosper\Grid\BulkAction\GridBulkConfirmationPolicy;
 use Zoosper\Grid\BulkAction\GridBulkExecutionType;
@@ -28,6 +29,14 @@ it('rejects duplicate action IDs inside one Grid', function (): void {
     $action = new GridBulkActionDefinition('export.selected', 'Export selected', GridBulkSelectionScope::CURRENT_PAGE, GridBulkExecutionType::CLIENT_DOWNLOAD);
     $registry->register('admin.pages', $action);
     expect(fn () => $registry->register('admin.pages', $action))->toThrow(InvalidArgumentException::class, 'already registered');
+});
+
+it('preserves failure details from feature executors', function (): void {
+    $result = GridBulkActionExecutionResult::failure('Rejected', ['id' => 42, 'retryable' => false]);
+
+    expect($result->successful)->toBeFalse()
+        ->and($result->message)->toBe('Rejected')
+        ->and($result->context)->toBe(['id' => 42, 'retryable' => false]);
 });
 
 it('requires confirmation for server and remote mutations', function (GridBulkExecutionType $type): void {

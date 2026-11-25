@@ -25,6 +25,7 @@ final readonly class PageGridMutationHandler
     public function handle(int $adminUserId, string $action, array $post): void
     {
         $definition = $this->definition->build();
+        $isDefaultView = $action === GridWorkspaceMutationContract::SET_DEFAULT_VIEW;
 
         match ($action) {
             GridWorkspaceMutationContract::SAVE_COLUMNS => $this->mutations->saveColumnPreferences(
@@ -45,7 +46,7 @@ final readonly class PageGridMutationHandler
                 $definition,
                 (string) ($post['view_name'] ?? ''),
                 self::submittedState($post),
-                $action === GridWorkspaceMutationContract::SET_DEFAULT_VIEW,
+                $isDefaultView,
             ),
             GridWorkspaceMutationContract::DELETE_VIEW => $this->mutations->deleteBookmark(
                 $adminUserId,

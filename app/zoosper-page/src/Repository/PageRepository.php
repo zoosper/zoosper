@@ -407,29 +407,6 @@ final readonly class PageRepository
         return array_map(static fn (mixed $v): string => (string) $v, $statement->fetchAll(PDO::FETCH_COLUMN));
     }
 
-    /**
-     * Driver-aware table existence check.
-     */
-    private function tableExists(string $table): bool
-    {
-        if ($this->isSqlite()) {
-            $statement = $this->pdo->prepare(
-                "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = :table"
-            );
-            $statement->execute(['table' => $table]);
-
-            return (int) $statement->fetchColumn() > 0;
-        }
-
-        $statement = $this->pdo->prepare(
-            'SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES '
-            . 'WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table'
-        );
-        $statement->execute(['table' => $table]);
-
-        return (int) $statement->fetchColumn() > 0;
-    }
-
     private function isSqlite(): bool
     {
         return \Zoosper\Core\Database\PdoDriverName::from($this->pdo) === 'sqlite';
