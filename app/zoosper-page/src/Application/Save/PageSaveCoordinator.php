@@ -70,7 +70,7 @@ final readonly class PageSaveCoordinator
                 new FieldDefinitionRegistry(),
                 $pageId,
             );
-            $persist = function (EntitySaveContext $context) use ($action, $input, $page, $user, &$pageId): void {
+            $persist = function () use ($action, $input, $page, $user, &$pageId): void {
                 if ($action === 'create') {
                     $pageId = $this->pages->create(
                         siteId: $input->siteId,
@@ -86,11 +86,14 @@ final readonly class PageSaveCoordinator
                         metaKeywords: $input->metaKeywords,
                         canonicalUrl: $input->canonicalUrl,
                     );
-                    if ($this->revisions !== null && $pageId !== null) {
+                    if ($this->revisions !== null) {
                         $created = $this->pages->findById($pageId);
                         if ($created !== null) { $this->revisions->capturePage($created, $user->id); }
                     }
                     return;
+                }
+                if ($pageId === null) {
+                    throw new RuntimeException('Page persistence requires a Page ID.');
                 }
                 if ($this->revisions !== null && $page !== null) {
                     $this->revisions->capturePage($page, $user->id);

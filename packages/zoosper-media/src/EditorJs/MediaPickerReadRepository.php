@@ -47,9 +47,7 @@ final readonly class MediaPickerReadRepository
 
         $items = [];
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) ?: [] as $row) {
-            if (is_array($row)) {
-                $items[] = $this->hydrate($row);
-            }
+            $items[] = $this->hydrate($row);
         }
 
         return new PaginationResult($items, $total, $pager->page, $pager->pageSize);

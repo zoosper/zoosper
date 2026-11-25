@@ -24,6 +24,15 @@ test('local copy processor keeps a transitional storage path helper for package 
     expect(method_exists(LocalCopyMediaProcessor::class, 'processStoragePath'))->toBeTrue();
 });
 
+test('local copy processor validates an asset storage path before reading it', function () {
+    $asset = new MediaAsset(1, 'uuid', 'image.png', 'image.png', 'image/png', 'png', 1, '../image.png', null, 'active');
+
+    $result = (new LocalCopyMediaProcessor(sys_get_temp_dir()))->process($asset, new MediaDerivativePlan());
+
+    expect($result->successful)->toBeFalse()
+        ->and($result->errors)->toContain('Unsafe source media storage path.');
+});
+
 
 
 

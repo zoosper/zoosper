@@ -18,7 +18,7 @@ final readonly class LayoutUpdate
     ) {
     }
 
-    /** @param list<array<string, mixed>> $updates */
+    /** @param list<mixed> $updates */
     public static function merge(array $updates): self
     {
         $remove = [];

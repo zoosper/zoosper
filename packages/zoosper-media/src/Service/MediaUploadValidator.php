@@ -47,7 +47,7 @@ final readonly class MediaUploadValidator
             $errors[] = 'Unsupported media file extension.';
         }
 
-        $size = (int) ($file['size'] ?? filesize($tmpName) ?: 0);
+        $size = (int) ($file['size'] ?? filesize($tmpName));
         if ($size <= 0) {
             $errors[] = 'Uploaded file is empty.';
         }

@@ -28,6 +28,24 @@ test('accepts a small valid png upload', function () {
     expect($result->mimeType)->toBe('image/png');
 });
 
+test('uses the actual size when omitted but rejects an explicitly empty upload', function () {
+    $path = mediaTestPng();
+    try {
+        $file = ['name' => 'pixel.png', 'tmp_name' => $path, 'error' => UPLOAD_ERR_OK];
+        $validator = new MediaUploadValidator();
+        $fallback = $validator->validate($file);
+        $empty = $validator->validate($file + ['size' => 0]);
+        $oversized = $validator->validate($file + ['size' => 5_242_881]);
+
+        expect($fallback->valid)->toBeTrue()
+            ->and($fallback->sizeBytes)->toBe(filesize($path))
+            ->and($empty->errors)->toContain('Uploaded file is empty.')
+            ->and($oversized->errors)->toContain('Uploaded file exceeds the 5 MB limit.');
+    } finally {
+        unlink($path);
+    }
+});
+
 test('rejects unsupported extensions before storage', function () {
     $path = tempnam(sys_get_temp_dir(), 'zoosper-media-');
     file_put_contents($path, '<?php echo "bad";');

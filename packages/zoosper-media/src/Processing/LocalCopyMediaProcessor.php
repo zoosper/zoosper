@@ -42,7 +42,7 @@ final readonly class LocalCopyMediaProcessor implements MediaProcessorInterface
     #[\Override]
     public function process(MediaAsset $asset, MediaDerivativePlan $plan): MediaProcessingResult
     {
-        return $this->processStoragePath($this->storagePathFromAsset($asset), $plan);
+        return $this->processStoragePath($asset->storagePath, $plan);
     }
 
     /**
@@ -136,21 +136,6 @@ final readonly class LocalCopyMediaProcessor implements MediaProcessorInterface
         }
     }
 
-    private function storagePathFromAsset(MediaAsset $asset): string
-    {
-        if (isset($asset->storagePath) && is_string($asset->storagePath)) {
-            return $asset->storagePath;
-        }
-
-        if (method_exists($asset, 'storagePath')) {
-            $storagePath = $asset->storagePath();
-            if (is_string($storagePath)) {
-                return $storagePath;
-            }
-        }
-
-        throw new RuntimeException('Media asset does not expose a storagePath value.');
-    }
 
     private function absoluteOriginalPath(string $storagePath, MediaProcessingPolicy $policy): string
     {

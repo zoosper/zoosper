@@ -25,7 +25,7 @@ final readonly class SchemaForeignKeyReconciliationPlanner
         $plans = [];
         foreach ($table->foreignKeys as $expected) {
             $named = $actual[$expected->name] ?? null;
-            if ($named?->matches($expected)) {
+            if ($named !== null && $named->matches($expected)) {
                 $plans[] = new SchemaForeignKeyReconciliation($table->name, $expected, SchemaForeignKeyReconciliation::PRESENT);
                 continue;
             }

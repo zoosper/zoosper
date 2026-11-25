@@ -15,7 +15,7 @@ namespace Zoosper\Media\EditorJs;
 final readonly class EditorJsImageUploadResponseFactory
 {
     /**
-     * @param array<string, scalar|null> $extra
+     * @param array<array-key, scalar|null> $extra
      * @return array{success: int, file: array<string, scalar|null>}
      */
     public function success(string $url, array $extra = []): array

@@ -1249,19 +1249,9 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-page/src/Application/Save/PageSaveCoordinator.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$pageId]]></code>
-    </PossiblyNullArgument>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCondition>
-      <code><![CDATA[$pageId !== null]]></code>
-      <code><![CDATA[$this->revisions !== null && $pageId !== null]]></code>
-    </RedundantCondition>
-    <UnusedClosureParam>
-      <code><![CDATA[$context]]></code>
-    </UnusedClosureParam>
   </file>
   <file src="app/zoosper-page/src/Content/BlockJsonToHtmlRenderer.php">
     <PossiblyUnusedMethod>
@@ -1531,9 +1521,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-theme/src/Layout/LayoutUpdate.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[is_array($update)]]></code>
-    </DocblockTypeContradiction>
     <PossiblyUnusedMethod>
       <code><![CDATA[replacementFor]]></code>
     </PossiblyUnusedMethod>
@@ -1573,9 +1560,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[glob(rtrim($this->themesPath, '/') . '/*/theme.php')]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
@@ -2023,11 +2007,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-database/src/Schema/SchemaForeignKeyReconciliationPlanner.php">
-    <TypeDoesNotContainType>
-      <code><![CDATA[$named !== null]]></code>
-    </TypeDoesNotContainType>
-  </file>
   <file src="packages/zoosper-database/src/Schema/SchemaForeignKeyReconciliationService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -2145,18 +2124,10 @@
       <code><![CDATA[EditorJsImageToolConfig]]></code>
     </UnusedClass>
   </file>
-  <file src="packages/zoosper-media/src/EditorJs/EditorJsImageUploadResponseFactory.php">
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[is_string($key)]]></code>
-    </RedundantConditionGivenDocblockType>
-  </file>
   <file src="packages/zoosper-media/src/EditorJs/MediaPickerReadRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCondition>
-      <code><![CDATA[is_array($row)]]></code>
-    </RedundantCondition>
   </file>
   <file src="packages/zoosper-media/src/EditorJs/MediaPickerResponder.php">
     <PossiblyUnusedMethod>
@@ -2202,11 +2173,6 @@
     </UnusedVariable>
   </file>
   <file src="packages/zoosper-media/src/Processing/LocalCopyMediaProcessor.php">
-    <RedundantCondition>
-      <code><![CDATA[is_string($asset->storagePath)]]></code>
-      <code><![CDATA[isset($asset->storagePath)]]></code>
-      <code><![CDATA[isset($asset->storagePath) && is_string($asset->storagePath)]]></code>
-    </RedundantCondition>
     <UnusedClass>
       <code><![CDATA[LocalCopyMediaProcessor]]></code>
     </UnusedClass>
@@ -2267,11 +2233,6 @@
     <UnusedProperty>
       <code><![CDATA[$basePath]]></code>
     </UnusedProperty>
-  </file>
-  <file src="packages/zoosper-media/src/Service/MediaUploadValidator.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$file['size'] ?? filesize($tmpName)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="packages/zoosper-scoped-config/src/ScopeConfigRepository.php">
     <PossiblyUnusedMethod>

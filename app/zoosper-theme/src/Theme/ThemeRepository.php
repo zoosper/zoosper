@@ -14,7 +14,8 @@ final readonly class ThemeRepository
     public function all(): array
     {
         $themes = [];
-        foreach (glob(rtrim($this->themesPath, '/') . '/*/theme.php') ?: [] as $file) {
+        $files = glob(rtrim($this->themesPath, '/') . '/*/theme.php');
+        foreach ($files === false ? [] : $files as $file) {
             $config = require $file;
             if (!is_array($config)) {
                 continue;

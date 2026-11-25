@@ -62,6 +62,32 @@ it('returns an explicit rebuild-required diagnostic for a missing sqlite constra
         ->and($plans[0]->sql)->toBeNull();
 });
 
+it('distinguishes a named mismatch from an equivalent constraint under another name', function (): void {
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->exec('CREATE TABLE parents (id INTEGER PRIMARY KEY)');
+    $pdo->exec('CREATE TABLE children (parent_id INTEGER, other_id INTEGER, FOREIGN KEY (parent_id) REFERENCES parents (id) ON DELETE CASCADE ON UPDATE RESTRICT, FOREIGN KEY (other_id) REFERENCES parents (id))');
+    $states = (new SchemaForeignKeyInspector($pdo, 'sqlite'))->forTable('children');
+    $mismatchedName = array_key_first(array_filter($states, fn ($state) => $state->columns === ['other_id']));
+    $matchingName = array_key_first(array_filter($states, fn ($state) => $state->columns === ['parent_id']));
+
+    $expected = new SchemaForeignKey($matchingName, ['parent_id'], 'parents', ['id'], onDelete: 'CASCADE');
+    $table = new SchemaTable('children', ['parent_id' => [], 'other_id' => []], foreignKeys: [$matchingName => $expected]);
+    $plans = (new SchemaForeignKeyReconciliationPlanner($pdo, 'sqlite'))->plan($table);
+    expect($plans[0]->status)->toBe(SchemaForeignKeyReconciliation::PRESENT);
+
+    $expected = new SchemaForeignKey($mismatchedName, ['parent_id'], 'parents', ['id'], onDelete: 'CASCADE');
+    $table = new SchemaTable('children', ['parent_id' => [], 'other_id' => []], foreignKeys: [$mismatchedName => $expected]);
+    $plans = (new SchemaForeignKeyReconciliationPlanner($pdo, 'sqlite'))->plan($table);
+    expect($plans[0]->status)->toBe(SchemaForeignKeyReconciliation::PRESENT);
+
+    $expected = new SchemaForeignKey($mismatchedName, ['parent_id'], 'parents', ['id'], onDelete: 'SET NULL');
+    $table = new SchemaTable('children', ['parent_id' => [], 'other_id' => []], foreignKeys: [$mismatchedName => $expected]);
+    $plans = (new SchemaForeignKeyReconciliationPlanner($pdo, 'sqlite'))->plan($table);
+    expect($plans[0]->status)->toBe(SchemaForeignKeyReconciliation::MISMATCH)
+        ->and($plans[0]->diagnostic)->toContain('expected name')
+        ->and($plans[0]->sql)->toBeNull();
+});
+
 it('builds safe mysql alter-table SQL and refuses sqlite alteration', function (): void {
     $foreignKey = reconciliationTable()->foreignKeys['fk_children_parent'];
     $sql = (new SchemaSqlBuilder('mysql'))->addForeignKeySql('children', $foreignKey);

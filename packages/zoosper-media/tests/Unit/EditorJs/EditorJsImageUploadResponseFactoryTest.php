@@ -26,6 +26,16 @@ test('builds Editor.js image upload failure payload', function () {
     ]);
 });
 
+test('ignores numeric and empty extra keys while preserving string keys', function () {
+    $payload = (new EditorJsImageUploadResponseFactory())->success('/media/example.png', [
+        0 => 'ignored',
+        '' => 'ignored',
+        'name' => 'example.png',
+    ]);
+
+    expect($payload['file'])->toBe(['url' => '/media/example.png', 'name' => 'example.png']);
+});
+
 
 
 
