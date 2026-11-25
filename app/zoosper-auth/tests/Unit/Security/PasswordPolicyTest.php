@@ -59,6 +59,16 @@ it('rejects an empty password', function (): void {
     expect($policy->isValid(''))->toBeFalse();
 });
 
+it('counts each character class once', function (): void {
+    $policy = new PasswordPolicy(minLength: 0, minCharacterClasses: 4);
+
+    expect($policy->isValid('abcABC123!'))->toBeTrue()
+        ->and($policy->isValid('abcABC123'))->toBeFalse()
+        ->and($policy->isValid('abc123!'))->toBeFalse()
+        ->and($policy->isValid('ABC123!'))->toBeFalse()
+        ->and($policy->isValid('abcABC!'))->toBeFalse();
+});
+
 
 
 

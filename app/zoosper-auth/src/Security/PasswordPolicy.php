@@ -63,7 +63,7 @@ final class PasswordPolicy
     }
 
     /**
-     * @return list<string> regex patterns, one per character class
+     * @return list<non-empty-string> regex patterns, one per character class
      */
     private function characterClassPatterns(): array
     {

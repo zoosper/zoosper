@@ -66,7 +66,12 @@ final readonly class DashboardRolePreferenceRepository implements DashboardRoleP
         );
         $statement->execute(['user_id' => $adminUserId]);
 
-        return array_map(fn (array $row): DashboardRolePreference => $this->hydrate($row), $statement->fetchAll());
+        $preferences = [];
+        while (($row = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+            $preferences[] = $this->hydrate($row);
+        }
+
+        return $preferences;
     }
 
     #[\Override]

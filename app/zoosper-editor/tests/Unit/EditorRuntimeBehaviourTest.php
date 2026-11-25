@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Zoosper\Editor\Tests\Unit;
 
+use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Core\Editor\ContentEditorInterface;
+use Zoosper\Core\Editor\EditorImageToolConfigInterface;
 use Zoosper\Editor\ContentEditorRegistry;
 use Zoosper\Editor\EditorJsContentEditor;
 use Zoosper\Editor\TextareaContentEditor;
@@ -45,6 +47,35 @@ it('selects a module-registered custom editor code without changing the registry
 
     expect($registry->preferred('custom-blocks', 'textarea'))->toBe($custom)
         ->and($custom->render('content', ''))->toBe('custom:content');
+});
+
+it('escapes image tool configuration and omits it when JSON encoding fails', function (): void {
+    $previousSession = $_SESSION ?? null;
+    $_SESSION = ['_csrf_token' => 'token"<unsafe>'];
+
+    try {
+        $config = new class implements EditorImageToolConfigInterface {
+            public bool $invalid = false;
+
+            public function toArray(string $csrfToken): array
+            {
+                return ['token' => $csrfToken, 'value' => $this->invalid ? "\xB1" : '<image>'];
+            }
+        };
+        $editor = new EditorJsContentEditor(new TextareaContentEditor(), $config, new CsrfTokenManager());
+        $html = $editor->render('content', '');
+
+        expect($html)->toContain('data-zoosper-image-tool="{&quot;token&quot;:&quot;token\\&quot;&lt;unsafe&gt;&quot;,&quot;value&quot;:&quot;&lt;image&gt;&quot;}"');
+
+        $config->invalid = true;
+        expect($editor->render('content', ''))->not->toContain('data-zoosper-image-tool=');
+    } finally {
+        if ($previousSession === null) {
+            unset($_SESSION);
+        } else {
+            $_SESSION = $previousSession;
+        }
+    }
 });
 
 

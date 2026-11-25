@@ -33,6 +33,21 @@ it('stores role defaults and loads assigned configured roles by deterministic ro
         ->and($repository->roles())->toHaveCount(2);
 });
 
+it('loads user preferences independently of the connection fetch mode', function (): void {
+    $pdo = roleDashboardPreferencePdo();
+    $repository = new DashboardRolePreferenceRepository($pdo);
+    $repository->saveForRole(1, ['secret'], ['visible']);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_NUM);
+
+    $preferences = $repository->findForUser(1);
+
+    expect($preferences)->toHaveCount(1)
+        ->and($preferences[0]->roleCode)->toBe('finance')
+        ->and($preferences[0]->hiddenWidgetCodes)->toBe(['secret'])
+        ->and($preferences[0]->widgetOrder)->toBe(['visible'])
+        ->and($repository->findForUser(0))->toBe([]);
+});
+
 it('clears defaults independently and cascades stored defaults when a role is deleted', function (): void {
     $pdo = roleDashboardPreferencePdo();
     $repository = new DashboardRolePreferenceRepository($pdo);

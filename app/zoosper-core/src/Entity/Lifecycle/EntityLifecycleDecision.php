@@ -20,7 +20,7 @@ final readonly class EntityLifecycleDecision
         return new self($subject, $operation, []);
     }
 
-    /** @param list<EntityLifecycleBlocker> $blockers */
+    /** @param array<array-key, EntityLifecycleBlocker> $blockers */
     public static function deny(EntityLifecycleSubject $subject, EntityLifecycleOperation $operation, array $blockers): self
     {
         if ($blockers === []) {

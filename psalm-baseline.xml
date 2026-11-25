@@ -241,12 +241,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-auth/src/Dashboard/DashboardRolePreferenceRepository.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[array_map(fn (array $row): DashboardRolePreference => $this->hydrate($row), $statement->fetchAll())]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array]]></code>
-    </MoreSpecificReturnType>
     <UnusedClass>
       <code><![CDATA[DashboardRolePreferenceRepository]]></code>
     </UnusedClass>
@@ -320,9 +314,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-auth/src/Security/PasswordPolicy.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$pattern]]></code>
-    </ArgumentTypeCoercion>
     <PossiblyUnusedMethod>
       <code><![CDATA[isValid]]></code>
     </PossiblyUnusedMethod>
@@ -624,9 +615,6 @@
       <code><![CDATA[allow]]></code>
       <code><![CDATA[deny]]></code>
     </PossiblyUnusedMethod>
-    <RedundantFunctionCall>
-      <code><![CDATA[array_values]]></code>
-    </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-core/src/Entity/Lifecycle/EntityLifecycleDeniedException.php">
     <PossiblyUnusedProperty>
@@ -894,9 +882,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[json_encode($this->imageToolConfig->toArray($this->csrf->token()), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-global-announcements/src/Controller/AnnouncementAdminController.php">
     <UndefinedInterfaceMethod>

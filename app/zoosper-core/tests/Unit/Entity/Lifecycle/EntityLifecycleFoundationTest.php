@@ -82,6 +82,19 @@ it('validates lifecycle value objects and denied decisions', function (): void {
         ))->toThrow(InvalidArgumentException::class, 'at least one blocker');
 });
 
+it('reindexes keyed blockers while preserving their order', function (): void {
+    $first = new EntityLifecycleBlocker('first', 'First blocker');
+    $second = new EntityLifecycleBlocker('second', 'Second blocker');
+    $decision = EntityLifecycleDecision::deny(
+        new EntityLifecycleSubject('page', 1),
+        EntityLifecycleOperation::Delete,
+        ['first' => $first, 42 => $second],
+    );
+
+    expect($decision->blockers)->toBe([$first, $second])
+        ->and($decision->isAllowed())->toBeFalse();
+});
+
 
 
 
