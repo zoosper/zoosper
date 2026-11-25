@@ -124,6 +124,22 @@ test('stores values per module and entity independently', function () {
     expect($seo)->not->toHaveKey('reading_time');
 });
 
+test('reads null and malformed JSON without changing decoding behavior', function () {
+    if (!in_array('sqlite', PDO::getAvailableDrivers(), true)) {
+        $this->markTestSkipped('pdo_sqlite not available');
+    }
+
+    $pdo = makeExtensionPdo();
+    $insert = $pdo->prepare('INSERT INTO entity_extension_values (entity_type, entity_id, module, field_name, value_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    $insert->execute(['page', 1, 'blog', 'nullable', null, 'now', 'now']);
+    $repository = new EntityExtensionValueRepository($pdo);
+
+    expect($repository->findForModule('page', 1, 'blog'))->toBe(['nullable' => null]);
+
+    $insert->execute(['page', 1, 'blog', 'broken', '{', 'now', 'now']);
+    expect(fn () => $repository->findForModule('page', 1, 'blog'))->toThrow(\JsonException::class);
+});
+
 
 
 

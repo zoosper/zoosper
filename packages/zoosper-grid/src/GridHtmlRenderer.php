@@ -93,7 +93,7 @@ final class GridHtmlRenderer
     {
         $parameters = [];
         foreach ($criteria->filters as $key => $value) {
-            if ($value === null || $value === '' || $value === []) {
+            if ($value === '' || $value === []) {
                 continue;
             }
             $parameters[$key] = $this->normaliseQueryValue($value);

@@ -65,6 +65,22 @@ it('declares the Marko contract dependency in the owning Composer package', func
     expect($composer['require']['marko/admin'] ?? null)->toBe('^0.11');
 });
 
+it('normalises keyed children without changing the original item', function (): void {
+    $item = new AdminMenuItem('pages', 'Pages', '/admin/pages', 'page.manage', 'content', 20, 'Content', 'pages');
+    $first = new AdminMenuItem('edit', 'Edit', '/admin/pages/edit');
+    $second = new AdminMenuItem('delete', 'Delete', '/admin/pages/delete');
+
+    $copy = $item->withChildren(['edit' => $first, 42 => $second]);
+
+    expect($copy->getChildren())->toBe([$first, $second])
+        ->and($item->getChildren())->toBe([])
+        ->and($copy->code)->toBe($item->code)
+        ->and($copy->permission)->toBe($item->permission)
+        ->and($copy->parent)->toBe($item->parent)
+        ->and($copy->group)->toBe($item->group)
+        ->and($copy->icon)->toBe($item->icon);
+});
+
 
 
 

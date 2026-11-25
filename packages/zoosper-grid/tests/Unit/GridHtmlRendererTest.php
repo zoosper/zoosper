@@ -131,6 +131,27 @@ it('shows an accurate "showing X-Y of Z" summary', function (): void {
     expect($html)->toContain('Showing 21&ndash;40 of 45');
 });
 
+it('preserves nonempty filter values and omits empty values from grid links', function (): void {
+    $definition = rendererDefinition(withFilters: false);
+    $criteria = new GridCriteria(new Pager(2, 20), null, 'asc', [
+        'null_value' => null,
+        'empty' => '',
+        'empty_list' => [],
+        'zero' => '0',
+        'tags' => ['a&b', '', 'a&b', 'c'],
+    ]);
+    $result = new PaginationResult(items: [['created_at' => 'x']], total: 45, page: 2, pageSize: 20);
+
+    $html = (new GridHtmlRenderer())->renderBody($definition, $result, $criteria, '/admin/sample');
+
+    expect($html)->not->toContain('null_value=')
+        ->not->toContain('empty=')
+        ->not->toContain('empty_list')
+        ->toContain('zero=0')
+        ->toContain('tags%5B0%5D=a%26b')
+        ->toContain('tags%5B1%5D=c');
+});
+
 it('uses allow-listed classes for cell alignment without inline styles', function (): void {
     $definition = new GridDefinition(
         title: 'Alignment',

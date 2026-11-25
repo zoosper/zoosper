@@ -111,7 +111,7 @@ final readonly class EmailLogRepository
             'to_emails' => implode(', ', array_map(static fn (EmailAddress $address): string => $address->email, $message->to)),
             'subject' => mb_substr($this->sanitizeContent($message->subject), 0, 255),
             'text_body' => $this->sanitizeContent($message->textBody),
-            'html_body' => $this->sanitizeContent($message->htmlBody),
+            'html_body' => $message->htmlBody !== null ? $this->sanitizeContent($message->htmlBody) : null,
             'error_class' => $errorClass,
             'error_message' => $errorMessage !== null ? $this->sanitizeContent($errorMessage) : null,
             'sent_at' => $status === 'sent' ? date('Y-m-d H:i:s') : null,
@@ -119,9 +119,9 @@ final readonly class EmailLogRepository
         ]);
     }
 
-    private function sanitizeContent(?string $content): ?string
+    private function sanitizeContent(string $content): string
     {
-        if ($content === null || $content === '') {
+        if ($content === '') {
             return $content;
         }
 

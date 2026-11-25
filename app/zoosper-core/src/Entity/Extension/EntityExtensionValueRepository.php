@@ -124,7 +124,8 @@ SQL);
 
         $values = [];
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) ?: [] as $row) {
-            $json = is_string($row['value_json'] ?? null) ? $row['value_json'] : 'null';
+            $rawJson = $row['value_json'] ?? null;
+            $json = is_string($rawJson) ? $rawJson : 'null';
             $values[(string) $row['field_name']] = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         }
 

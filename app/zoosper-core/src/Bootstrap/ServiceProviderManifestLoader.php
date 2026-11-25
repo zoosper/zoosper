@@ -60,6 +60,7 @@ final readonly class ServiceProviderManifestLoader
         return array_values(array_unique(array_filter($providers, 'is_string')));
     }
 
+    /** @param class-string $providerClass */
     private function instantiateProvider(string $providerClass): object
     {
         $reflection = new ReflectionClass($providerClass);

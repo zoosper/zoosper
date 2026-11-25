@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.19.2@fa716e443b23e6fa35bf58907e67ca692ec3c00a">
+<files psalm-version="6.21.4@72023213487628df0bc5b2e02d68cbac614b7ef5">
   <file src="app/zoosper-admin/src/Asset/AdminAssetRegistry.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -86,9 +86,6 @@
       <code><![CDATA[getParent]]></code>
       <code><![CDATA[isAllowed]]></code>
     </PossiblyUnusedMethod>
-    <RedundantFunctionCall>
-      <code><![CDATA[array_values]]></code>
-    </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-admin/src/Navigation/AdminMenuLoader.php">
     <PossiblyUnusedMethod>
@@ -405,9 +402,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Bootstrap/ServiceProviderManifestLoader.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$providerClass]]></code>
-    </ArgumentTypeCoercion>
     <PossiblyUnusedReturnValue>
       <code><![CDATA[int]]></code>
     </PossiblyUnusedReturnValue>
@@ -609,12 +603,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Entity/Extension/EntityExtensionValueRepository.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$json]]></code>
-    </ArgumentTypeCoercion>
-    <PossiblyNullArgument>
-      <code><![CDATA[$json]]></code>
-    </PossiblyNullArgument>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[findForModule]]></code>
@@ -954,9 +942,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-mail/src/Log/EmailLogRepository.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->sanitizeContent($message->subject)]]></code>
-    </PossiblyNullArgument>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[search]]></code>
@@ -1411,9 +1396,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Admin/Controller/SiteAdminController.php">
-    <UnusedDocblockParam>
-      <code><![CDATA[$submitted]]></code>
-    </UnusedDocblockParam>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
@@ -2081,11 +2063,6 @@
       <code><![CDATA[toggleableColumnKeys]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-grid/src/GridHtmlRenderer.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[$value === null]]></code>
-    </DocblockTypeContradiction>
-  </file>
   <file src="packages/zoosper-grid/src/GridMultiselectRenderer.php">
     <UnusedClass>
       <code><![CDATA[GridMultiselectRenderer]]></code>
@@ -2146,31 +2123,12 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-media/src/Processing/GdMediaProcessor.php">
-    <InvalidOperand>
-      <code><![CDATA[$sourceHeight * $scale]]></code>
-      <code><![CDATA[$sourceHeight * $targetRatio]]></code>
-      <code><![CDATA[$sourceHeight * ($targetWidth / $sourceWidth)]]></code>
-      <code><![CDATA[$sourceWidth * $scale]]></code>
-      <code><![CDATA[$sourceWidth / $targetRatio]]></code>
-    </InvalidOperand>
-    <PossiblyFalseArgument>
-      <code><![CDATA[$transparent]]></code>
-      <code><![CDATA[$white]]></code>
-    </PossiblyFalseArgument>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(int) ($dimensions[0] ?? 0)]]></code>
-      <code><![CDATA[(int) ($dimensions[1] ?? 0)]]></code>
-    </RedundantCast>
     <TypeDoesNotContainType>
       <code><![CDATA[!imagecopyresampled($canvas, $source, 0, 0, $sourceX, $sourceY, $targetWidth, $targetHeight, $copyWidth, $copyHeight)]]></code>
     </TypeDoesNotContainType>
-    <UnusedVariable>
-      <code><![CDATA[$height]]></code>
-      <code><![CDATA[$width]]></code>
-    </UnusedVariable>
   </file>
   <file src="packages/zoosper-media/src/Processing/LocalCopyMediaProcessor.php">
     <UnusedClass>

@@ -94,7 +94,7 @@ final readonly class AdminMenuItem implements MenuItemInterface
     }
 
     /**
-     * @param list<AdminMenuItem|MenuItemInterface> $children
+     * @param array<array-key, AdminMenuItem|MenuItemInterface> $children
      */
     public function withChildren(array $children): self
     {

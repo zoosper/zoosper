@@ -135,7 +135,6 @@ final readonly class SiteAdminController
         }
     }
 
-    /** @param array<string, mixed> $submitted */
     public function disable(Request $request): Response { return $this->lifecycleOperation($request, 'disable'); }
     public function restore(Request $request): Response { return $this->lifecycleOperation($request, 'restore'); }
     public function deletePermanently(Request $request): Response { return $this->lifecycleOperation($request, 'delete'); }
@@ -147,6 +146,7 @@ final readonly class SiteAdminController
         return match ($operation) { 'disable' => $this->lifecycle->disable($site, $user), 'restore' => $this->lifecycle->restore($site, $user), 'delete' => $this->lifecycle->delete($site, $user), default => Response::redirect($this->adminUrl('sites'), 303) };
     }
 
+    /** @param array<string, mixed> $submitted */
     private function form(string $action, ?Site $site = null, ?string $error = null, array $submitted = []): string
     {
         if ($this->formRegistry !== null && $this->formRenderer !== null) {

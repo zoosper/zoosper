@@ -42,7 +42,7 @@ final readonly class GdMediaProcessor implements MediaProcessorInterface
             try {
                 foreach ($plan->profiles as $profile) {
                     $target = $paths->resolve($storagePath, $profile->code, $profile->format);
-                    [$canvas, $width, $height] = $this->transform($source, $sourceWidth, $sourceHeight, $profile);
+                    [$canvas] = $this->transform($source, $sourceWidth, $sourceHeight, $profile);
                     try {
                         $this->writeAtomically($canvas, $target->absolutePath, $profile);
                         $publicAbsolute = $this->publicAbsolutePath($target->publicPath);
@@ -96,8 +96,8 @@ final readonly class GdMediaProcessor implements MediaProcessorInterface
             throw new RuntimeException('Derivative source is not a valid raster image.');
         }
 
-        $width = (int) ($dimensions[0] ?? 0);
-        $height = (int) ($dimensions[1] ?? 0);
+        $width = $dimensions[0] ?? 0;
+        $height = $dimensions[1] ?? 0;
         if ($width <= 0 || $height <= 0 || $width > 8192 || $height > 8192) {
             throw new RuntimeException('Image dimensions exceed processing limits (8192x8192).');
         }
@@ -124,7 +124,7 @@ final readonly class GdMediaProcessor implements MediaProcessorInterface
 
         if ($profile->fit === 'width') {
             $targetWidth = min($profile->width, $sourceWidth);
-            $targetHeight = max(1, (int) round($sourceHeight * ($targetWidth / $sourceWidth)));
+            $targetHeight = max(1, (int) round((float) $sourceHeight * (float) ($targetWidth / $sourceWidth)));
             return [$this->resample($source, $sourceWidth, $sourceHeight, $targetWidth, $targetHeight, 0, 0, $sourceWidth, $sourceHeight, $profile), $targetWidth, $targetHeight];
         }
 
@@ -132,24 +132,24 @@ final readonly class GdMediaProcessor implements MediaProcessorInterface
             $targetWidth = $profile->width;
             $targetHeight = $profile->height;
             $sourceRatio = $sourceWidth / $sourceHeight;
-            $targetRatio = $targetWidth / $targetHeight;
+            $targetRatio = (float) ($targetWidth / $targetHeight);
             if ($sourceRatio > $targetRatio) {
                 $cropHeight = $sourceHeight;
-                $cropWidth = (int) round($sourceHeight * $targetRatio);
+                $cropWidth = (int) round((float) $sourceHeight * $targetRatio);
                 $sourceX = (int) floor(($sourceWidth - $cropWidth) / 2);
                 $sourceY = 0;
             } else {
                 $cropWidth = $sourceWidth;
-                $cropHeight = (int) round($sourceWidth / $targetRatio);
+                $cropHeight = (int) round((float) $sourceWidth / $targetRatio);
                 $sourceX = 0;
                 $sourceY = (int) floor(($sourceHeight - $cropHeight) / 2);
             }
             return [$this->resample($source, $sourceWidth, $sourceHeight, $targetWidth, $targetHeight, $sourceX, $sourceY, $cropWidth, $cropHeight, $profile), $targetWidth, $targetHeight];
         }
 
-        $scale = min($targetWidth / $sourceWidth, $targetHeight / $sourceHeight, 1);
-        $targetWidth = max(1, (int) round($sourceWidth * $scale));
-        $targetHeight = max(1, (int) round($sourceHeight * $scale));
+        $scale = (float) min($targetWidth / $sourceWidth, $targetHeight / $sourceHeight, 1);
+        $targetWidth = max(1, (int) round((float) $sourceWidth * $scale));
+        $targetHeight = max(1, (int) round((float) $sourceHeight * $scale));
         return [$this->resample($source, $sourceWidth, $sourceHeight, $targetWidth, $targetHeight, 0, 0, $sourceWidth, $sourceHeight, $profile), $targetWidth, $targetHeight];
     }
 
@@ -163,9 +163,15 @@ final readonly class GdMediaProcessor implements MediaProcessorInterface
             imagealphablending($canvas, false);
             imagesavealpha($canvas, true);
             $transparent = imagecolorallocatealpha($canvas, 0, 0, 0, 127);
+            if ($transparent === false) {
+                throw new RuntimeException('Unable to allocate derivative background color.');
+            }
             imagefill($canvas, 0, 0, $transparent);
         } else {
             $white = imagecolorallocate($canvas, 255, 255, 255);
+            if ($white === false) {
+                throw new RuntimeException('Unable to allocate derivative background color.');
+            }
             imagefill($canvas, 0, 0, $white);
         }
         if (!imagecopyresampled($canvas, $source, 0, 0, $sourceX, $sourceY, $targetWidth, $targetHeight, $copyWidth, $copyHeight)) {
