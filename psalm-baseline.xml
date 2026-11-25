@@ -675,9 +675,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[only]]></code>
     </PossiblyUnusedMethod>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[is_string($key)]]></code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="app/zoosper-core/src/Entity/Save/EntitySaveContext.php">
     <PossiblyUnusedMethod>

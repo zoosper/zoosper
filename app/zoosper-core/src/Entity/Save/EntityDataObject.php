@@ -38,7 +38,7 @@ final class EntityDataObject
         return array_key_exists($key, $this->data);
     }
 
-    /** @param array<string, mixed> $values */
+    /** @param array<array-key, mixed> $values */
     public function addData(array $values): self
     {
         foreach ($values as $key => $value) {
