@@ -1838,11 +1838,6 @@
       <code><![CDATA[__construct]]></code>
     </UnusedConstructor>
   </file>
-  <file src="packages/zoosper-admin-grid/src/BulkAction/GridBulkPermissionChecker.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(bool) ($this->checker)($permission)]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="packages/zoosper-admin-grid/src/GridBookmarkRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>

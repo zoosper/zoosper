@@ -26,6 +26,27 @@ it('adapts authenticated permission checks', function (): void {
         ->and($checker->isAllowed(''))->toBeFalse();
 });
 
+it('short circuits empty permissions and preserves callback truthiness', function (): void {
+    $calls = 0;
+    $checker = new GridBulkPermissionChecker(static function (string $permission) use (&$calls): mixed {
+        $calls++;
+        return match ($permission) {
+            'zero' => '0',
+            'empty' => [],
+            'truthy' => 'false',
+            default => 1,
+        };
+    });
+
+    expect($checker->isAllowed(''))->toBeFalse()
+        ->and($calls)->toBe(0)
+        ->and($checker->isAllowed('zero'))->toBeFalse()
+        ->and($checker->isAllowed('empty'))->toBeFalse()
+        ->and($checker->isAllowed('truthy'))->toBeTrue()
+        ->and($checker->isAllowed('one'))->toBeTrue()
+        ->and($calls)->toBe(4);
+});
+
 it('fails closed when required audit infrastructure is unavailable', function (): void {
     $definition = new GridBulkActionDefinition(
         'page.publish', 'Publish', GridBulkSelectionScope::EXPLICIT_IDENTITIES,
