@@ -995,11 +995,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$this->sanitizeContent($message->subject)]]></code>
     </PossiblyNullArgument>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$filters['email']]]></code>
-      <code><![CDATA[$filters['status']]]></code>
-      <code><![CDATA[$filters['subject']]]></code>
-    </PossiblyUndefinedArrayOffset>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[search]]></code>

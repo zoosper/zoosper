@@ -51,19 +51,22 @@ final readonly class EmailLogRepository
         $where = [];
         $params = [];
 
-        if (($filters['status'] ?? '') !== '') {
+        $status = $filters['status'] ?? '';
+        if ($status !== '') {
             $where[] = 'status = :status';
-            $params['status'] = $filters['status'];
+            $params['status'] = $status;
         }
 
-        if (($filters['email'] ?? '') !== '') {
+        $email = $filters['email'] ?? '';
+        if ($email !== '') {
             $where[] = '(from_email LIKE :email OR to_emails LIKE :email)';
-            $params['email'] = '%' . $filters['email'] . '%';
+            $params['email'] = '%' . $email . '%';
         }
 
-        if (($filters['subject'] ?? '') !== '') {
+        $subject = $filters['subject'] ?? '';
+        if ($subject !== '') {
             $where[] = 'subject LIKE :subject';
-            $params['subject'] = '%' . $filters['subject'] . '%';
+            $params['subject'] = '%' . $subject . '%';
         }
 
         $sql = 'SELECT * FROM smtp_email_log';
