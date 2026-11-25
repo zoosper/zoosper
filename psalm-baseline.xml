@@ -97,9 +97,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantFunctionCall>
-      <code><![CDATA[array_values]]></code>
-    </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-admin/src/Navigation/AdminSectionMetadataLoader.php">
     <PossiblyUnusedMethod>

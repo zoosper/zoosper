@@ -64,6 +64,7 @@ it('filters permissions for multi-layer hierarchy before rendering', function ()
     file_put_contents(
         $moduleDir . '/config/admin_menu.php',
         '<?php return [
+            ["code" => "", "label" => "Invalid"],
             ["code" => "users", "label" => "Users", "url" => "/admin/users", "permission" => "user.manage", "group" => "Users", "sort_order" => 10, "icon" => "users"],
             ["code" => "users-create", "label" => "Add User", "url" => "/admin/users/create", "permission" => "user.create", "parent" => "users", "group" => "Users", "sort_order" => 10],
             ["code" => "users-export", "label" => "Export Users", "url" => "/admin/users/export", "permission" => "user.export", "parent" => "users", "group" => "Users", "sort_order" => 20],
@@ -74,6 +75,11 @@ it('filters permissions for multi-layer hierarchy before rendering', function ()
         $registry = new ModuleRegistry($baseDir);
         $loader = new AdminMenuLoader($registry);
         $menu = new AdminMenu($loader);
+
+        $items = $loader->load();
+        expect(array_is_list($items))->toBeTrue()
+            ->and(array_map(static fn (MenuItemInterface $item): string => $item->getId(), $items))
+            ->toBe(['users-create', 'users', 'users-export']);
 
         // User with user.manage and user.create permissions
         $user = new AdminUser(

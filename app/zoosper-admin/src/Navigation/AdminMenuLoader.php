@@ -54,7 +54,7 @@ final readonly class AdminMenuLoader
             static fn (AdminMenuItem $a, AdminMenuItem $b): int => [$a->group, $a->sortOrder, $a->label] <=> [$b->group, $b->sortOrder, $b->label],
         );
 
-        return array_values($items);
+        return $items;
     }
 
     /**
