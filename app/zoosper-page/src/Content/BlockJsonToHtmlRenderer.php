@@ -197,7 +197,6 @@ final readonly class BlockJsonToHtmlRenderer
     {
         $html = [];
         foreach ($items as $item) {
-            $content = '';
             $nestedHtml = '';
 
             if (is_string($item)) {

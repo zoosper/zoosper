@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Zoosper\Theme\Tests\Unit\Template;
 
+use ReflectionMethod;
+use RuntimeException;
+use Zoosper\Theme\Layout\LayoutUpdateRepository;
+use Zoosper\Theme\Template\TemplateRenderer;
+use Zoosper\Theme\Theme\ThemeResolver;
+
 it('validates every template identifier before candidate construction', function (): void {
     $source = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Template/TemplateRenderer.php');
 
@@ -62,4 +68,28 @@ SOURCE);
         ->and($candidateConstruction)->not->toBeFalse()
         ->and($validation)->toBeLessThan($moduleResolution)
         ->and($validation)->toBeLessThan($candidateConstruction);
+});
+
+it('resolves module templates while rejecting traversal before looking up files', function (): void {
+    $resolver = new ThemeResolver(dirname(__DIR__, 5) . '/themes');
+    $renderer = new TemplateRenderer($resolver);
+    $resolve = new ReflectionMethod(TemplateRenderer::class, 'resolveTemplatePath');
+    $theme = $resolver->resolve();
+
+    expect($resolve->invoke($renderer, $theme, 'zoosper-page::page/view.php'))
+        ->toEndWith('/templates/modules/zoosper-page/page/view.php');
+
+    expect(fn () => $resolve->invoke($renderer, $theme, 'zoosper-page::../layout.php'))
+        ->toThrow(RuntimeException::class, 'without traversal segments');
+});
+
+it('preserves template replacement, removal, and the no-update fallback', function (): void {
+    $resolver = new ThemeResolver(dirname(__DIR__, 2) . '/Fixtures/themes');
+    $plain = new TemplateRenderer($resolver);
+    $withUpdates = new TemplateRenderer($resolver, layoutUpdates: new LayoutUpdateRepository());
+
+    expect($plain->render('original.php', handle: 'test'))->toBe('original')
+        ->and($withUpdates->render('original.php', handle: 'test'))->toBe('replacement')
+        ->and($withUpdates->render('original.php', handle: 'other'))->toBe('original')
+        ->and($withUpdates->render('removed.php', handle: 'test'))->toBe('');
 });

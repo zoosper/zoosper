@@ -69,6 +69,19 @@ test('ignores unsupported blocks and empty fragments', function () {
     expect($html)->toBe('');
 });
 
+test('renders nested list items safely and skips invalid and empty items', function (): void {
+    $html = (new BlockJsonToHtmlRenderer())->render([
+        'blocks' => [['type' => 'list', 'data' => ['items' => [
+            ' <b>text</b> ',
+            ['content' => '', 'items' => [['content' => '<script>']]],
+            ['content' => ''],
+            42,
+        ]]]],
+    ]);
+
+    expect($html)->toBe('<ul><li>&lt;b&gt;text&lt;/b&gt;</li><li><ul><li>&lt;script&gt;</li></ul></li></ul>');
+});
+
 
 
 

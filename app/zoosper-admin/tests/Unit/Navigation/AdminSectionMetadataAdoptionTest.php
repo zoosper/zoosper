@@ -30,6 +30,22 @@ it('keeps undeclared extension groups visible with deterministic fallback metada
         ->and($sections[0]->getSortOrder())->toBe(1000);
 });
 
+it('groups items and preserves empty, missing and known parent relationships', function (): void {
+    $sections = (new AdminSectionBuilder())->build([
+        new AdminMenuItem('root', 'Root', '/root', parent: '', group: 'Custom Reports'),
+        new AdminMenuItem('child', 'Child', '/child', parent: 'root', group: 'Custom Reports'),
+        new AdminMenuItem('orphan', 'Orphan', '/orphan', parent: 'missing', group: 'Custom Reports'),
+        new AdminMenuItem('other', 'Other', '/other', group: 'Other'),
+    ]);
+
+    expect($sections)->toHaveCount(2)
+        ->and($sections[0]->getId())->toBe('custom-reports');
+    $items = $sections[0]->getMenuItems();
+    expect(array_map(static fn ($item): string => $item->getId(), $items))->toBe(['orphan', 'root'])
+        ->and($items[1]->getChildren()[0]->getId())->toBe('child')
+        ->and($sections[1]->getId())->toBe('other');
+});
+
 it('publishes documented module-owned metadata and explicit service wiring', function (): void {
     $root = dirname(__DIR__, 5);
     $services = (string) file_get_contents($root . '/app/zoosper-admin/config/services.php');

@@ -22,7 +22,7 @@ final readonly class AdminTranslatorResolver
 
     public function resolve(): TranslatorInterface
     {
-        $locale = (new ConfiguredLocaleResolver($this->i18nConfig))->resolveAdminLocale();
+        $locale = $this->resolveLocale();
 
         return (new TranslationResolver($this->basePath))->forResolution($locale);
     }

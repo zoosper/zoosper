@@ -51,12 +51,13 @@ final readonly class TemplateRenderer
     {
         $update = $this->layoutUpdates?->forTheme($theme, $handle);
         $template = ltrim($template, '/');
+        $replacement = $update?->replacementFor($template);
 
         if ($update?->isRemoved($template)) {
             return '';
         }
 
-        $template = $update?->replacementFor($template) ?? $template;
+        $template = $replacement ?? $template;
         $path = $this->resolveTemplatePath($theme, $template);
 
         $siteContext = $request?->siteContext();
@@ -153,7 +154,11 @@ final readonly class TemplateRenderer
 
     private function resolveModuleTemplatePath(Theme $theme, string $template): string
     {
-        [$moduleName, $templatePath] = explode('::', $template, 2);
+        $parts = explode('::', $template, 2);
+        if (count($parts) !== 2) {
+            throw new RuntimeException('Invalid module template identifier: ' . $template);
+        }
+        [$moduleName, $templatePath] = $parts;
         $templatePath = ltrim($templatePath, '/');
 
         $candidates = [];

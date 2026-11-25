@@ -52,6 +52,43 @@ test('media upload service cleans stored files when repository persistence fails
     expect(mediaUploadFixtureFiles($root . '/public/media'))->toBe([]);
 });
 
+test('media upload preserves the persisted id and sanitised original filename', function () {
+    $root = sys_get_temp_dir() . '/zoosper-media-upload-success-' . bin2hex(random_bytes(4));
+    mkdir($root, 0775, true);
+    $tmpFile = $root . '/upload.png';
+    $image = imagecreatetruecolor(2, 2);
+    imagepng($image, $tmpFile);
+    unset($image);
+
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec('CREATE TABLE media_assets (id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT NOT NULL, filename TEXT NOT NULL, original_filename TEXT NOT NULL, mime_type TEXT NOT NULL, extension TEXT NOT NULL, size_bytes INTEGER NOT NULL, storage_path TEXT NOT NULL, public_path TEXT NULL, status TEXT NOT NULL, created_by INTEGER NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)');
+    $assets = new MediaAssetRepository($pdo);
+    $service = new MediaUploadService($assets, new MediaUploadValidator(), new MediaStorage($root), $root);
+
+    $result = $service->upload([
+        'name' => '../A strange\\picture.png',
+        'tmp_name' => $tmpFile,
+        'error' => UPLOAD_ERR_OK,
+        'size' => filesize($tmpFile),
+    ], mediaUploadTestAdminUser());
+
+    expect($result->successful)->toBeTrue()
+        ->and($result->assetId)->toBe(1)
+        ->and($result->metadata['id'])->toBe(1)
+        ->and($assets->findById(1)->originalFilename)->toBe('..-A-strange-picture.png');
+});
+
+test('original filename normalisation preserves falsey and length boundaries', function () {
+    $service = (new ReflectionClass(MediaUploadService::class))->newInstanceWithoutConstructor();
+    $normalise = new \ReflectionMethod(MediaUploadService::class, 'normaliseOriginalFilename');
+
+    expect($normalise->invoke($service, ''))->toBe('upload')
+        ->and($normalise->invoke($service, '0'))->toBe('upload')
+        ->and($normalise->invoke($service, ' /a\\b ?.png '))->toBe('-a-b-.png')
+        ->and($normalise->invoke($service, str_repeat('a', 256)))->toBe(str_repeat('a', 255));
+});
+
 /** @return list<string> */
 function mediaUploadFixtureFiles(string $directory): array
 {

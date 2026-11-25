@@ -25,7 +25,7 @@ final readonly class AdminSectionBuilder
         /** @var array<string, string> $fallbackLabels */
         $fallbackLabels = [];
         foreach ($items as $item) {
-            $label = $item instanceof AdminMenuItem ? $item->group : 'Main';
+            $label = $item instanceof AdminMenuItem ? $item->getGroup() : 'Main';
             $id = $this->normaliseId($label);
             $id = $id !== '' ? $id : 'main';
             $groups[$id][] = $item;
@@ -79,8 +79,9 @@ final readonly class AdminSectionBuilder
         foreach ($items as $item) {
             if ($item instanceof AdminMenuItem) {
                 $itemsByCode[$item->code] = $item;
-                if ($item->parent !== null && $item->parent !== '') {
-                    $childrenByParent[$item->parent][] = $item;
+                $parent = $item->getParent();
+                if ($parent !== null && $parent !== '') {
+                    $childrenByParent[$parent][] = $item;
                 } else {
                     $rootItems[] = $item;
                 }

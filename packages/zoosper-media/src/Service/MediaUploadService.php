@@ -26,7 +26,7 @@ final readonly class MediaUploadService
         private MediaAssetRepository $assets,
         private MediaUploadValidator $validator,
         private MediaStorage $storage,
-        private string $basePath,
+        string $basePath,
         private ?ErrorHandler $errorHandler = null,
         ?MediaStoredFileCleanupService $cleanup = null,
     
@@ -60,7 +60,7 @@ final readonly class MediaUploadService
                 createdBy: $user->id,
             );
 
-            $asset = $this->assets->findById((int) $assetId);
+            $asset = $this->assets->findById($assetId);
             if ($asset === null) {
                 throw new \RuntimeException('Persisted Media asset could not be reloaded.');
             }
@@ -69,8 +69,8 @@ final readonly class MediaUploadService
                 throw new \RuntimeException(implode(' ', $derivativeResult->errors));
             }
         } catch (Throwable $exception) {
-            if ($assetId !== null && $this->assets->findById((int) $assetId) !== null) {
-                $this->assets->deletePermanently((int) $assetId);
+            if ($assetId !== null && $this->assets->findById($assetId) !== null) {
+                $this->assets->deletePermanently($assetId);
             }
             $cleanupResult = null;
             if (is_object($stored)) {
@@ -100,7 +100,10 @@ final readonly class MediaUploadService
     private function normaliseOriginalFilename(string $filename): string
     {
         $filename = trim(str_replace(['\\', '/'], '-', $filename));
-        $filename = preg_replace('/[^A-Za-z0-9._-]+/', '-', $filename) ?: 'upload';
+        $filename = preg_replace('/[^A-Za-z0-9._-]+/', '-', $filename);
+        if ($filename === null || $filename === '' || $filename === '0') {
+            $filename = 'upload';
+        }
 
         return mb_substr($filename, 0, 255);
     }
