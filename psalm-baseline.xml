@@ -1786,9 +1786,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[failure]]></code>
     </PossiblyUnusedMethod>
-    <RedundantFunctionCall>
-      <code><![CDATA[array_values]]></code>
-    </RedundantFunctionCall>
   </file>
   <file src="packages/zoosper-admin-form/src/AdminFormProviderRegistry.php">
     <PossiblyUnusedMethod>

@@ -14,7 +14,7 @@ namespace Zoosper\AdminForm;
 final readonly class AdminFormProcessingResult
 {
     /**
-     * @param list<string> $errors
+     * @param array<array-key, string> $errors
      * @param array<string, mixed> $payload
      */
     public function __construct(
