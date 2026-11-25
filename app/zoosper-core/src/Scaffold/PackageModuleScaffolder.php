@@ -62,7 +62,7 @@ final readonly class PackageModuleScaffolder
         }
 
         $vendor = $this->studly($parts[0]);
-        $moduleParts = array_values(array_map('strval', array_slice($parts, 1)));
+        $moduleParts = array_map('strval', array_slice($parts, 1));
         $module = implode('', array_map(fn (string $part): string => $this->studly($part), $moduleParts));
         $vendorPackage = $this->kebab($parts[0]);
         $modulePackage = implode('-', array_map(fn (string $part): string => $this->kebab($part), $moduleParts));

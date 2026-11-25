@@ -40,6 +40,20 @@ test('rejects invalid package module names', function () {
         ->toThrow(RuntimeException::class);
 });
 
+test('preserves multi-part package identities', function (): void {
+    $root = sys_get_temp_dir() . '/zoosper-package-scaffold-' . bin2hex(random_bytes(4));
+    mkdir($root . '/packages', 0775, true);
+
+    $result = (new PackageModuleScaffolder($root))->scaffold('Acme/Media/Tools');
+    $composer = json_decode((string) file_get_contents($result->packagePath . '/composer.json'), true);
+
+    expect($result->packageName)->toBe('acme/media-tools')
+        ->and($result->moduleName)->toBe('Acme_MediaTools')
+        ->and($result->namespace)->toBe('Acme\\MediaTools\\')
+        ->and($result->packagePath)->toEndWith('/packages/acme-media-tools')
+        ->and($composer['autoload']['psr-4'])->toHaveKey('Acme\\MediaTools\\');
+});
+
 test('bin zoosper exposes package module scaffolding command', function () {
     $root = dirname(__DIR__, 5);
     $source = (string) file_get_contents($root . '/bin/zoosper');
