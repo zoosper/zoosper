@@ -174,10 +174,7 @@ final readonly class GdMediaProcessor implements MediaProcessorInterface
             }
             imagefill($canvas, 0, 0, $white);
         }
-        if (!imagecopyresampled($canvas, $source, 0, 0, $sourceX, $sourceY, $targetWidth, $targetHeight, $copyWidth, $copyHeight)) {
-            unset($canvas);
-            throw new RuntimeException('Unable to resample media derivative.');
-        }
+        imagecopyresampled($canvas, $source, 0, 0, $sourceX, $sourceY, $targetWidth, $targetHeight, $copyWidth, $copyHeight);
         return $canvas;
     }
 

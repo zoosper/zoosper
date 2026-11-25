@@ -205,14 +205,6 @@
       <code><![CDATA[$request]]></code>
     </UnusedParam>
   </file>
-  <file src="app/zoosper-auth/src/Admin/Grid/AccessToken/AccessTokenGrid.php">
-    <UnusedParam>
-      <code><![CDATA[$row]]></code>
-      <code><![CDATA[$row]]></code>
-      <code><![CDATA[$row]]></code>
-      <code><![CDATA[$row]]></code>
-    </UnusedParam>
-  </file>
   <file src="app/zoosper-auth/src/Admin/Grid/AdminUserGridIndex.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -1145,9 +1137,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-page/src/Admin/PageGridRepository.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$statement->fetchAll()]]></code>
-    </ArgumentTypeCoercion>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -2060,9 +2049,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <TypeDoesNotContainType>
-      <code><![CDATA[!imagecopyresampled($canvas, $source, 0, 0, $sourceX, $sourceY, $targetWidth, $targetHeight, $copyWidth, $copyHeight)]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="packages/zoosper-media/src/Processing/LocalCopyMediaProcessor.php">
     <UnusedClass>

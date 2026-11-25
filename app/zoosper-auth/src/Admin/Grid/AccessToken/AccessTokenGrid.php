@@ -127,16 +127,14 @@ final readonly class AccessTokenGrid implements GridDataSourceInterface
         );
     }
 
-    /** @param array<string, mixed> $row */
-    private function renderName(mixed $value, array $row): string
+    private function renderName(mixed $value): string
     {
         $name = trim((string) $value);
         return '<span class="pat-token-name" title="' . $this->escape($name) . '">'
             . $this->escape($name) . '</span>';
     }
 
-    /** @param array<string, mixed> $row */
-    private function renderScopes(mixed $value, array $row): string
+    private function renderScopes(mixed $value): string
     {
         $scopes = array_values(array_filter(array_map('trim', explode(',', (string) $value))));
         if ($scopes === []) {
@@ -150,8 +148,7 @@ final readonly class AccessTokenGrid implements GridDataSourceInterface
         return $html . '</span>';
     }
 
-    /** @param array<string, mixed> $row */
-    private function renderDate(mixed $value, array $row): string
+    private function renderDate(mixed $value): string
     {
         $date = trim((string) $value);
         if ($date === '') {
@@ -162,8 +159,7 @@ final readonly class AccessTokenGrid implements GridDataSourceInterface
             . $this->escape($date) . '</time>';
     }
 
-    /** @param array<string, mixed> $row */
-    private function renderStatus(mixed $value, array $row): string
+    private function renderStatus(mixed $value): string
     {
         $status = (string) $value;
         $modifier = match ($status) {

@@ -92,3 +92,21 @@ it('keeps Page list and export search placeholders distinct', function (): void 
         ->toContain('LIKE :export_search_slug')
         ->not->toContain('LIKE :export_search OR');
 });
+
+it('returns associative grid rows even when the connection defaults to numeric rows', function (): void {
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_NUM);
+    $pdo->exec('CREATE TABLE sites (id INTEGER PRIMARY KEY, name TEXT NOT NULL)');
+    $pdo->exec('CREATE TABLE pages (id INTEGER PRIMARY KEY, site_id INTEGER, title TEXT, slug TEXT, status TEXT, updated_at TEXT)');
+    $pdo->exec("INSERT INTO sites VALUES (1, 'Main')");
+    $pdo->exec("INSERT INTO pages VALUES (1, 1, 'Home', 'home', 'published', '2026-01-01')");
+
+    $result = (new PageGridRepository($pdo))->paginate(new PageGridCriteria(
+        pager: new Pager(1, 20), query: '', status: '', siteId: null, sortBy: 'id', sortDir: 'asc',
+    ));
+
+    expect($result->items)->toHaveCount(1)
+        ->and($result->items[0]['title'])->toBe('Home')
+        ->and($result->items[0]['site_name'])->toBe('Main')
+        ->and($result->items[0])->not->toHaveKey(0);
+});

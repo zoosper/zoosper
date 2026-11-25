@@ -14,6 +14,13 @@ it('avoids deprecated GD destruction and warning-prone missing-file unlink calls
         ->toContain('$this->unlinkIfPresent($publicPath)');
 });
 
+it('uses the PHP 8.5 GD resampling return contract', function (): void {
+    $returnType = (new ReflectionFunction('imagecopyresampled'))->getReturnType();
+
+    expect($returnType)->toBeInstanceOf(ReflectionNamedType::class)
+        ->and($returnType->getName())->toBe('true');
+});
+
 
 
 

@@ -24,7 +24,7 @@ final readonly class PageGridRepository
         $statement->bindValue(':limit',$criteria->pager->pageSize,PDO::PARAM_INT);
         $statement->bindValue(':offset',$criteria->pager->offset(),PDO::PARAM_INT);
         $statement->execute();
-        return new PaginationResult(items:$statement->fetchAll(),total:$total,page:$criteria->pager->page,pageSize:$criteria->pager->pageSize);
+        return new PaginationResult(items:$statement->fetchAll(PDO::FETCH_ASSOC),total:$total,page:$criteria->pager->page,pageSize:$criteria->pager->pageSize);
     }
 
     private function orderBy(PageGridCriteria $criteria): string
