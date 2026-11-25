@@ -35,7 +35,9 @@ final readonly class ModulePackageIdentity
         }
 
         if (preg_match('/^[A-Za-z][A-Za-z0-9]*_[A-Za-z][A-Za-z0-9]*$/', $name) === 1) {
-            [$vendor, $module] = explode('_', $name, 2);
+            $parts = explode('_', $name, 2);
+            $vendor = $parts[0];
+            $module = $parts[1] ?? '';
 
             return new self(
                 moduleName: self::studly($vendor) . '_' . self::studly($module),
@@ -55,7 +57,7 @@ final readonly class ModulePackageIdentity
 
         $parts = explode('-', $source);
         $vendor = array_shift($parts);
-        if ($vendor === null || $parts === []) {
+        if ($parts === []) {
             return null;
         }
 

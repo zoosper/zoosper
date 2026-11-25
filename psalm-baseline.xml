@@ -454,14 +454,6 @@
       <code><![CDATA[ModuleComposerManifestGenerator]]></code>
     </UnusedClass>
   </file>
-  <file src="app/zoosper-core/src/Composer/ModulePackageIdentity.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[$vendor === null]]></code>
-    </DocblockTypeContradiction>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$module]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
   <file src="app/zoosper-core/src/Config/ConfigRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[fromPath]]></code>
