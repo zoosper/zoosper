@@ -12,6 +12,22 @@ use Zoosper\Admin\Navigation\AdminSectionBuilder;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Core\Module\ModuleRegistry;
 
+it('returns a list of Marko sections, including for an empty menu', function (): void {
+    $builder = new AdminSectionBuilder();
+    expect($builder->build([]))->toBe([]);
+
+    $sections = $builder->build([
+        new AdminMenuItem('pages', 'Pages', '/admin/pages', 'page.manage', group: 'Content'),
+        new AdminMenuItem('settings', 'Settings', '/admin/settings', 'settings.manage', group: 'System'),
+    ]);
+
+    expect(array_is_list($sections))->toBeTrue()
+        ->and($sections)->toHaveCount(2);
+    foreach ($sections as $section) {
+        expect($section)->toBeInstanceOf(AdminSectionInterface::class);
+    }
+});
+
 it('discovers and structures nested menu items into multi-tier sections', function (): void {
     $items = [
         new AdminMenuItem('dashboard', 'Dashboard', '/admin', 'admin.access', sortOrder: 10, group: 'Content', icon: 'dashboard'),

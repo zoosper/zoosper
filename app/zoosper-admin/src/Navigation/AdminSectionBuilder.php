@@ -14,7 +14,10 @@ final readonly class AdminSectionBuilder
     {
     }
 
-    /** @param list<MenuItemInterface> $items @return list<AdminSectionInterface> */
+    /**
+     * @param list<MenuItemInterface> $items
+     * @return list<AdminSectionInterface>
+     */
     public function build(array $items, ?array $sectionMetadata = null): array
     {
         /** @var array<string, list<MenuItemInterface>> $groups */

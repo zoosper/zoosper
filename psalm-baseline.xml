@@ -79,12 +79,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-admin/src/Navigation/AdminMenu.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->sections->build($this->itemsFor($user))]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<AdminSectionInterface>]]></code>
-    </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
