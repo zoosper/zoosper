@@ -35,6 +35,19 @@ it('rejects duplicate role Dashboard preference codes', function (): void {
         ->toThrow(InvalidArgumentException::class);
 });
 
+it('validates both preference lists without changing accepted codes', function (): void {
+    foreach ([[null], [0], [[]], [''], ['  '], ['one', 'one']] as $invalid) {
+        expect(fn (): DashboardRolePreference => new DashboardRolePreference(1, 'finance', $invalid, []))
+            ->toThrow(InvalidArgumentException::class)
+            ->and(fn (): DashboardRolePreference => new DashboardRolePreference(1, 'finance', [], $invalid))
+            ->toThrow(InvalidArgumentException::class);
+    }
+
+    $preference = new DashboardRolePreference(1, 'finance', ['  one  ', 'one'], ['0', 'two']);
+    expect($preference->hiddenWidgetCodes)->toBe(['  one  ', 'one'])
+        ->and($preference->widgetOrder)->toBe(['0', 'two']);
+});
+
 
 
 

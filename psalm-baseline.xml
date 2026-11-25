@@ -1767,11 +1767,6 @@
       <code><![CDATA[$label]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="packages/zoosper-admin-dashboard/src/DashboardRolePreference.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[!is_string($code)]]></code>
-    </DocblockTypeContradiction>
-  </file>
   <file src="packages/zoosper-admin-form/src/AdminFormConfigAggregator.php">
     <UnusedClass>
       <code><![CDATA[AdminFormConfigAggregator]]></code>

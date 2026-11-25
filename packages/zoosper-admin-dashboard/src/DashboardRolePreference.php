@@ -26,7 +26,7 @@ final readonly class DashboardRolePreference
         $this->assertUniqueCodes($widgetOrder);
     }
 
-    /** @param list<string> $codes */
+    /** @param array<array-key, mixed> $codes */
     private function assertUniqueCodes(array $codes): void
     {
         $seen = [];
