@@ -65,7 +65,8 @@ final readonly class ModuleDashboardWidgetLoader
 
                     $candidateWidgets = [];
                     foreach ($contributor->widgets() as $widget) {
-                        if (!$widget instanceof DashboardWidget || isset($widgets[$widget->code]) || isset($candidateWidgets[$widget->code])) {
+                        $widget = $this->validateWidget($widget);
+                        if (isset($widgets[$widget->code]) || isset($candidateWidgets[$widget->code])) {
                             throw new \RuntimeException('Dashboard contributors must yield uniquely coded DashboardWidget values.');
                         }
                         $candidateWidgets[$widget->code] = $widget;
@@ -81,6 +82,15 @@ final readonly class ModuleDashboardWidgetLoader
         usort($widgets, static fn (DashboardWidget $a, DashboardWidget $b): int => [$a->sortOrder, $a->title, $a->code] <=> [$b->sortOrder, $b->title, $b->code]);
 
         return new DashboardWidgetCollection($widgets, $failures);
+    }
+
+    private function validateWidget(mixed $widget): DashboardWidget
+    {
+        if (!$widget instanceof DashboardWidget) {
+            throw new \RuntimeException('Dashboard contributors must yield uniquely coded DashboardWidget values.');
+        }
+
+        return $widget;
     }
 }
 

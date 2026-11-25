@@ -77,6 +77,48 @@ it('rejects malformed declarations and duplicate widget codes without breaking h
     expect($result->widgets)->toBe([])->and($result->failureCount)->toBe(2);
 });
 
+it('discards all widgets from a contributor yielding an invalid value', function (): void {
+    $root = dashboardModuleRoot("<?php return [
+['service' => 'invalid.widget', 'permission' => 'reports.view'],
+['service' => 'healthy.widget', 'permission' => 'reports.view'],
+];");
+    $services = new ServiceContainer();
+    $services->set('invalid.widget', new class implements DashboardWidgetContributorInterface {
+        public function widgets(): iterable {
+            yield new DashboardWidget('example.discarded', 'Discarded', '1', 'Discarded');
+            yield 'invalid';
+        }
+    });
+    $services->set('healthy.widget', new class implements DashboardWidgetContributorInterface {
+        public function widgets(): iterable { yield new DashboardWidget('example.healthy', 'Healthy', '1', 'Healthy'); }
+    });
+
+    $result = (new ModuleDashboardWidgetLoader(new ModuleRegistry($root), $services))->forUser(dashboardTestUser(['reports.view']));
+    expect(array_map(static fn (DashboardWidget $widget): string => $widget->code, $result->widgets))
+        ->toBe(['example.healthy'])->and($result->failureCount)->toBe(1);
+});
+
+it('discards a contributor that duplicates a previously accepted code', function (): void {
+    $root = dashboardModuleRoot("<?php return [
+['service' => 'first.widget', 'permission' => 'reports.view'],
+['service' => 'duplicate.widget', 'permission' => 'reports.view'],
+];");
+    $services = new ServiceContainer();
+    $services->set('first.widget', new class implements DashboardWidgetContributorInterface {
+        public function widgets(): iterable { yield new DashboardWidget('example.shared', 'First', '1', 'First'); }
+    });
+    $services->set('duplicate.widget', new class implements DashboardWidgetContributorInterface {
+        public function widgets(): iterable {
+            yield new DashboardWidget('example.discarded', 'Discarded', '1', 'Discarded');
+            yield new DashboardWidget('example.shared', 'Duplicate', '2', 'Duplicate');
+        }
+    });
+
+    $result = (new ModuleDashboardWidgetLoader(new ModuleRegistry($root), $services))->forUser(dashboardTestUser(['reports.view']));
+    expect(array_map(static fn (DashboardWidget $widget): string => $widget->code, $result->widgets))
+        ->toBe(['example.shared'])->and($result->failureCount)->toBe(1);
+});
+
 
 
 

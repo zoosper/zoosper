@@ -51,9 +51,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-admin/src/Dashboard/ModuleDashboardWidgetLoader.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[!$widget instanceof DashboardWidget]]></code>
-    </DocblockTypeContradiction>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
