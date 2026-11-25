@@ -879,10 +879,6 @@
     <RedundantFunctionCall>
       <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[preg_replace('/(?<!^)[A-Z]/', '-$0', $value)]]></code>
-      <code><![CDATA[preg_replace('/[^A-Za-z0-9]+/', '-', $value)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="app/zoosper-core/src/Security/RateLimit/FileRateLimitReportSink.php">
     <PossiblyFalseOperand>

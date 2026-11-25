@@ -96,8 +96,10 @@ final readonly class PackageModuleScaffolder
 
     private function kebab(string $value): string
     {
-        $value = preg_replace('/(?<!^)[A-Z]/', '-$0', $value) ?: $value;
-        $value = preg_replace('/[^A-Za-z0-9]+/', '-', $value) ?: $value;
+        $replaced = preg_replace('/(?<!^)[A-Z]/', '-$0', $value);
+        $value = $replaced !== null && $replaced !== '' && $replaced !== '0' ? $replaced : $value;
+        $replaced = preg_replace('/[^A-Za-z0-9]+/', '-', $value);
+        $value = $replaced !== null && $replaced !== '' && $replaced !== '0' ? $replaced : $value;
 
         return trim(strtolower($value), '-');
     }
