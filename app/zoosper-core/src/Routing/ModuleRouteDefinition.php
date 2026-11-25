@@ -98,7 +98,7 @@ final readonly class ModuleRouteDefinition
                 }
             }
 
-            return array_values($result);
+            return $result;
         }
 
         return [];

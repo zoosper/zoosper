@@ -843,11 +843,6 @@
       <code><![CDATA[array<class-string, object>]]></code>
     </MoreSpecificReturnType>
   </file>
-  <file src="app/zoosper-core/src/Routing/ModuleRouteDefinition.php">
-    <RedundantFunctionCall>
-      <code><![CDATA[array_values]]></code>
-    </RedundantFunctionCall>
-  </file>
   <file src="app/zoosper-core/src/Routing/ModuleRouteLoader.php">
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
