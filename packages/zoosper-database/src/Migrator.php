@@ -102,7 +102,10 @@ final class Migrator
      */
     private function collectMigrationFiles(): array
     {
-        $files = glob($this->migrationsPath . '/*.php') ?: [];
+        $files = glob($this->migrationsPath . '/*.php');
+        if ($files === false) {
+            $files = [];
+        }
 
         foreach ($this->moduleRegistry()->discoverModulesLive() as $module) {
             $moduleMigrationsPath = rtrim($module->path, '/\\') . '/database/migrations';
@@ -110,7 +113,8 @@ final class Migrator
                 continue;
             }
 
-            foreach (glob($moduleMigrationsPath . '/*.php') ?: [] as $moduleFile) {
+            $moduleFiles = glob($moduleMigrationsPath . '/*.php');
+            foreach ($moduleFiles === false ? [] : $moduleFiles as $moduleFile) {
                 $files[] = $moduleFile;
             }
         }
@@ -326,11 +330,11 @@ final class Migrator
     {
         if ($this->driver() === 'sqlite') {
             $rows = $this->pdo->query('PRAGMA table_info(' . $this->quoteIdentifier($table) . ')')->fetchAll(PDO::FETCH_ASSOC);
-            return array_values(array_map(static fn (array $row): string => (string) $row['name'], $rows));
+            return array_map(static fn (array $row): string => (string) $row['name'], $rows);
         }
 
         $rows = $this->pdo->query('SHOW COLUMNS FROM ' . $this->quoteIdentifier($table))->fetchAll(PDO::FETCH_ASSOC);
-        return array_values(array_map(static fn (array $row): string => (string) $row['Field'], $rows));
+        return array_map(static fn (array $row): string => (string) $row['Field'], $rows);
     }
 
     /**

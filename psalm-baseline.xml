@@ -1333,14 +1333,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-seo/src/Contribution/SeoContributorRegistry.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->collect('metadata',SeoMetadataContributorInterface::class)]]></code>
-      <code><![CDATA[$this->collect('sitemap',SitemapContributorInterface::class)]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<SeoMetadataContributorInterface>]]></code>
-      <code><![CDATA[list<SitemapContributorInterface>]]></code>
-    </MoreSpecificReturnType>
     <UnusedClass>
       <code><![CDATA[SeoContributorRegistry]]></code>
     </UnusedClass>
@@ -2022,14 +2014,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantFunctionCall>
-      <code><![CDATA[array_values]]></code>
-      <code><![CDATA[array_values]]></code>
-    </RedundantFunctionCall>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[glob($moduleMigrationsPath . '/*.php')]]></code>
-      <code><![CDATA[glob($this->migrationsPath . '/*.php')]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
@@ -2038,12 +2022,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="packages/zoosper-database/src/Schema/SchemaForeignKey.php">
-    <TypeDoesNotContainType>
-      <code><![CDATA[$columns === []]]></code>
-      <code><![CDATA[$columns === []]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="packages/zoosper-database/src/Schema/SchemaForeignKeyReconciliationPlanner.php">
     <TypeDoesNotContainType>

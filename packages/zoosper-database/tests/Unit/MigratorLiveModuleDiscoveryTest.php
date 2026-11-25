@@ -70,6 +70,24 @@ test('migrations discover a newly installed module despite a stale compiled mani
     )->fetchColumn())->toBe(1);
 });
 
+test('migration discovery sorts root and module files by filename and handles empty directories', function (): void {
+    $root = staleCompiledMigrationFixture();
+    $registry = new ModuleRegistry($root);
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    file_put_contents($root . '/database/migrations/209901010001_create_order.php', "<?php return 'CREATE TABLE migration_order (value INTEGER)';");
+    file_put_contents($root . '/app/acme-fresh/database/migrations/209901010002_insert_order.php', "<?php return 'INSERT INTO migration_order VALUES (1)';");
+    file_put_contents($root . '/database/migrations/209901010003_insert_order.php', "<?php return 'INSERT INTO migration_order VALUES (2)';");
+
+    (new Migrator($pdo, $root, $registry))->migrate();
+    expect($pdo->query('SELECT value FROM migration_order ORDER BY rowid')->fetchAll(PDO::FETCH_COLUMN))->toBe([1, 2]);
+
+    $emptyRoot = $root . '/empty';
+    mkdir($emptyRoot . '/database/migrations', 0775, true);
+    (new Migrator(new PDO('sqlite::memory:'), $emptyRoot, new ModuleRegistry($emptyRoot)))->migrate();
+});
+
 
 
 

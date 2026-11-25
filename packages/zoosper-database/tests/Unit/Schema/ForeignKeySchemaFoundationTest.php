@@ -100,6 +100,17 @@ it('rejects missing tables columns and unsafe set-null definitions', function ()
         ->toThrow(\InvalidArgumentException::class, 'Unsupported foreign-key action');
 });
 
+it('rejects empty or unequal foreign-key column lists', function (): void {
+    foreach ([[[], []], [[], ['id']], [['parent_id'], []], [['a', 'b'], ['id']]] as [$columns, $referencedColumns]) {
+        expect(fn () => new SchemaForeignKey('fk', $columns, 'parents', $referencedColumns))
+            ->toThrow(\InvalidArgumentException::class, 'Foreign-key local and referenced columns must be non-empty and have equal cardinality.');
+    }
+
+    $foreignKey = new SchemaForeignKey('fk', ['a', 'b'], 'parents', ['x', 'y']);
+    expect($foreignKey->columns)->toBe(['a', 'b'])
+        ->and($foreignKey->referencedColumns)->toBe(['x', 'y']);
+});
+
 it('uses nullable flag truthiness for set-null foreign keys', function (): void {
     foreach ([null, false, 0, '0', '', true, 1, '1', 'false'] as $nullable) {
         $registry = new SchemaRegistry();

@@ -15,8 +15,8 @@ final readonly class SchemaForeignKey
     public const ACTION_NO_ACTION = 'NO ACTION';
 
     /**
-     * @param non-empty-list<string> $columns
-     * @param non-empty-list<string> $referencedColumns
+     * @param list<string> $columns
+     * @param list<string> $referencedColumns
      */
     public function __construct(
         public string $name,
