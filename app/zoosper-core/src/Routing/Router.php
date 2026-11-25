@@ -23,7 +23,7 @@ final class Router
     private array $routes = [];
 
     /**
-     * @var array<string, list<array{path: string, regex: string, shape: string, params: list<string>, handler: callable(Request): Response}>>
+     * @var array<string, list<array{path: string, regex: non-empty-string, shape: string, params: list<string>, handler: callable(Request): Response}>>
      */
     private array $parameterRoutes = [];
     /** @var array<string,bool> */
@@ -134,7 +134,10 @@ final class Router
     public function allowedMethods(string $path): array
     {
         $path=$this->normalise($path);$methods=[];
-        foreach(array_keys($this->routes) as $key){[$method,$registered]=explode(' ',$key,2);if($registered===$path)$methods[]=$method;}
+        foreach (array_keys($this->routes) as $key) {
+            [$method, $registered] = array_pad(explode(' ', $key, 2), 2, '');
+            if ($registered === $path) $methods[] = $method;
+        }
         foreach ($this->parameterRoutes as $method => $routes) {
             foreach ($routes as $route) {
                 if ($this->matchParameterRoute($route, $path) !== false) {
@@ -159,7 +162,7 @@ final class Router
     }
 
     /**
-     * @param array{path: string, regex: string, shape: string, params: list<string>, handler: callable(Request): Response} $route
+     * @param array{path: string, regex: non-empty-string, shape: string, params: list<string>, handler: callable(Request): Response} $route
      * @return array<string, string>|false
      */
     private function matchParameterRoute(array $route, string $path): array|false
@@ -218,7 +221,7 @@ final class Router
 
     /**
      * @param callable(Request): Response $handler
-     * @return array{path: string, regex: string, shape: string, params: list<string>, handler: callable(Request): Response}
+     * @return array{path: string, regex: non-empty-string, shape: string, params: list<string>, handler: callable(Request): Response}
      */
     private function compileParameterRoute(string $path, callable $handler): array
     {

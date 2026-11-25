@@ -72,7 +72,7 @@ final readonly class ComposerModuleDiscovery
     }
 
     /**
-     * @param array<string, mixed> $installed
+     * @param array<array-key, mixed> $installed
      * @return list<array<string, mixed>>
      */
     private function packagesFromInstalledJson(array $installed): array
@@ -124,7 +124,11 @@ final readonly class ComposerModuleDiscovery
                 $path = $this->basePath . '/vendor/composer/' . $path;
             }
 
-            return realpath($path) ?: $this->normalisePath($path);
+            $resolvedPath = realpath($path);
+
+            return $resolvedPath === false || $resolvedPath === '0' || $resolvedPath === ''
+                ? $this->normalisePath($path)
+                : $resolvedPath;
         }
 
         $name = $package['name'] ?? null;

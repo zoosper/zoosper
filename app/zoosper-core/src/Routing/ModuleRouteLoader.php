@@ -16,7 +16,7 @@ use Zoosper\Core\Url\AdminPathCollectionTransformer;
 
 final readonly class ModuleRouteLoader
 {
-    /** @param array<class-string, object> $controllers */
+    /** @param array<string, object> $controllers */
     public function __construct(
         private ModuleRegistry $modules,
         private array $controllers = [],

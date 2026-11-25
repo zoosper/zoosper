@@ -771,12 +771,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Module/ComposerModuleDiscovery.php">
-    <InvalidArrayOffset>
-      <code><![CDATA[$installed[0]]]></code>
-    </InvalidArrayOffset>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[realpath($path)]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnusedClass>
       <code><![CDATA[ComposerModuleDiscovery]]></code>
     </UnusedClass>
@@ -826,26 +820,12 @@
       <code><![CDATA[require $this->basePath . '/config/app.php']]></code>
     </UnresolvableInclude>
   </file>
-  <file src="app/zoosper-core/src/Routing/ControllerProviderLoader.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$controllers]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array<class-string, object>]]></code>
-    </MoreSpecificReturnType>
-  </file>
   <file src="app/zoosper-core/src/Routing/ModuleRouteLoader.php">
     <UnresolvableInclude>
       <code><![CDATA[require $file]]></code>
     </UnresolvableInclude>
   </file>
   <file src="app/zoosper-core/src/Routing/Router.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$route['regex']]]></code>
-    </ArgumentTypeCoercion>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$registered]]></code>
-    </PossiblyUndefinedArrayOffset>
     <PossiblyUnusedMethod>
       <code><![CDATA[get]]></code>
       <code><![CDATA[post]]></code>
@@ -1814,12 +1794,6 @@
       <code><![CDATA[$gridKey]]></code>
       <code><![CDATA[$passed]]></code>
     </PossiblyUnusedProperty>
-  </file>
-  <file src="packages/zoosper-admin-grid/src/GridPreferenceRepository.php">
-    <RedundantFunctionCall>
-      <code><![CDATA[array_values]]></code>
-      <code><![CDATA[array_values]]></code>
-    </RedundantFunctionCall>
   </file>
   <file src="packages/zoosper-admin-grid/src/GridViewMutationService.php">
     <PossiblyUnusedMethod>

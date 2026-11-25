@@ -15,7 +15,7 @@ final readonly class ControllerProviderLoader
     {
     }
 
-    /** @return array<class-string, object> */
+    /** @return array<string, object> */
     public function load(): array
     {
         $controllers = [];

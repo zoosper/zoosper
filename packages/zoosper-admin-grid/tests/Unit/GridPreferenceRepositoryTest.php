@@ -39,6 +39,21 @@ test('complete column preferences round-trip without changing the existing schem
     ]);
 });
 
+test('preference writes normalize sparse and named keys to JSON lists', function (): void {
+    $pdo = preferenceDatabase();
+    $repository = new GridPreferenceRepository($pdo);
+    $repository->saveColumnPreferences(10, 'admin.pages', [4 => 'id', 'label' => 'title'], [8 => 'title', 2 => 'id']);
+
+    $json = $pdo->query('SELECT visible_columns_json FROM admin_grid_preferences')->fetchColumn();
+    expect(json_decode($json, true))->toBe([
+        'visible_columns' => ['id', 'title'],
+        'column_order' => ['title', 'id'],
+    ])->and($repository->findColumnPreferences(10, 'admin.pages'))->toBe([
+        'visible_columns' => ['id', 'title'],
+        'column_order' => ['title', 'id'],
+    ]);
+});
+
 test('legacy visibility-only rows remain readable and have no saved order', function (): void {
     $pdo = preferenceDatabase();
     $pdo->exec("INSERT INTO admin_grid_preferences (admin_user_id, grid_key, visible_columns_json, updated_at) VALUES (10, 'admin.pages', '[\"id\",\"title\"]', '2026-08-29 00:00:00')");

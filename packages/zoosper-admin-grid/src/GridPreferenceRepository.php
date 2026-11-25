@@ -80,8 +80,8 @@ final readonly class GridPreferenceRepository
     }
 
     /**
-     * @param list<string> $visibleColumnKeys
-     * @param list<string> $columnOrder
+     * @param array<array-key, string> $visibleColumnKeys
+     * @param array<array-key, string> $columnOrder
      */
     public function saveColumnPreferences(
         int $adminUserId,
@@ -126,7 +126,7 @@ final readonly class GridPreferenceRepository
     /**
      * Backwards-compatible visibility-only writer for existing integrations.
      *
-     * @param list<string> $visibleColumnKeys
+     * @param array<array-key, string> $visibleColumnKeys
      */
     public function saveVisibleColumns(
         int $adminUserId,
