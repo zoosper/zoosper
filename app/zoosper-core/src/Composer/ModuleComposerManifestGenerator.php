@@ -62,7 +62,7 @@ final readonly class ModuleComposerManifestGenerator
                 continue;
             }
 
-            file_put_contents($target, json_encode($this->manifest($identity, $moduleDir), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
+            file_put_contents($target, json_encode($this->manifest($identity, $moduleDir), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . PHP_EOL);
             $written[] = $this->relativePath($target);
         }
 

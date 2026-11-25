@@ -21,7 +21,6 @@ final readonly class ScopedSettingValueResolver
     public function resolve(SettingDefinition $definition, ScopeContext $context): SettingValue
     {
         $resolved = $this->scoped->resolve($definition->path, $context);
-        /** @var ScopeType|null $resolvedScope */
         $resolvedScope = $resolved['resolvedScope'];
         if ($resolvedScope === null) {
             return $this->fallback->resolve($definition);

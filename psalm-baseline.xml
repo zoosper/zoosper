@@ -427,9 +427,6 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="app/zoosper-core/src/Composer/ModuleAutoloadSynchronizer.php">
-    <PossiblyFalseOperand>
-      <code><![CDATA[json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)]]></code>
-    </PossiblyFalseOperand>
     <UnresolvableInclude>
       <code><![CDATA[require $moduleFile]]></code>
     </UnresolvableInclude>
@@ -438,9 +435,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-core/src/Composer/ModuleComposerManifestGenerator.php">
-    <PossiblyFalseOperand>
-      <code><![CDATA[json_encode($this->manifest($identity, $moduleDir), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)]]></code>
-    </PossiblyFalseOperand>
     <UnresolvableInclude>
       <code><![CDATA[require $moduleFile]]></code>
     </UnresolvableInclude>
@@ -1411,9 +1405,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <UnnecessaryVarAnnotation>
-      <code><![CDATA[ScopeType|null]]></code>
-    </UnnecessaryVarAnnotation>
   </file>
   <file src="app/zoosper-settings/src/Value/SettingValue.php">
     <PossiblyUnusedProperty>

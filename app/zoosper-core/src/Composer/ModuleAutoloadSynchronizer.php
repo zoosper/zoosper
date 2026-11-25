@@ -40,7 +40,7 @@ final readonly class ModuleAutoloadSynchronizer
         $changed = $this->applyMappings($json, $mappings);
 
         if ($changed) {
-            file_put_contents($path, json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
+            file_put_contents($path, json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . PHP_EOL);
         }
 
         return $mappings + ['changed' => $changed];

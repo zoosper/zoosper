@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Core\Tests\Unit\Composer;
 
+use JsonException;
 use Zoosper\Core\Composer\ModuleAutoloadSynchronizer;
 
 function autoloadSyncFixture(): string
@@ -75,6 +76,17 @@ test('discovery returns empty mappings when no module files exist', function () 
 
     expect((new ModuleAutoloadSynchronizer($root))->discoverMappings())
         ->toBe(['autoload' => [], 'autoload-dev' => []]);
+});
+
+test('sync does not corrupt composer json when a module path cannot be encoded', function (): void {
+    $root = sys_get_temp_dir() . '/zoosper-autoload-utf8-' . bin2hex(random_bytes(4));
+    $module = $root . '/app/invalid-' . "\xFF";
+    mkdir($module . '/src', 0775, true);
+    file_put_contents($module . '/module.php', "<?php return ['name' => 'Acme_Module'];");
+    file_put_contents($root . '/composer.json', '{}');
+
+    expect(fn () => (new ModuleAutoloadSynchronizer($root))->sync())->toThrow(JsonException::class)
+        ->and(file_get_contents($root . '/composer.json'))->toBe('{}');
 });
 
 
