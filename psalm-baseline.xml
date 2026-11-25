@@ -2127,10 +2127,6 @@
       <code><![CDATA[is_array($definition)]]></code>
       <code><![CDATA[is_array($definition)]]></code>
     </DocblockTypeContradiction>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$definition['nullable'] ?? false]]></code>
-      <code><![CDATA[$definition['primary'] ?? false]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="packages/zoosper-errors/src/ConsoleExceptionFormatter.php">
     <RiskyTruthyFalsyComparison>

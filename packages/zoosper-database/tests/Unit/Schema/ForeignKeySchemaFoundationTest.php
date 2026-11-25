@@ -100,6 +100,20 @@ it('rejects missing tables columns and unsafe set-null definitions', function ()
         ->toThrow(\InvalidArgumentException::class, 'Unsupported foreign-key action');
 });
 
+it('uses nullable flag truthiness for set-null foreign keys', function (): void {
+    foreach ([null, false, 0, '0', '', true, 1, '1', 'false'] as $nullable) {
+        $registry = new SchemaRegistry();
+        $registry->addTable(new SchemaTable('parents', ['id' => []]));
+        $registry->addTable(new SchemaTable('children', ['parent_id' => ['nullable' => $nullable]], foreignKeys: [
+            'fk_parent' => new SchemaForeignKey('fk_parent', ['parent_id'], 'parents', ['id'], SchemaForeignKey::ACTION_SET_NULL),
+        ]));
+
+        expect((new SchemaValidator())->validate($registry)->errors)->toBe((bool) $nullable
+            ? []
+            : ['Table children foreign key fk_parent uses SET NULL but local column parent_id is not nullable.']);
+    }
+});
+
 it('merges module-owned foreign keys for the same declarative table', function (): void {
     $registry = new SchemaRegistry();
     $registry->addTable(new SchemaTable('children', ['id' => ['type' => 'integer']], foreignKeys: [

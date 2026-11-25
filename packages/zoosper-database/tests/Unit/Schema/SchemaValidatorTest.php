@@ -70,6 +70,25 @@ test('rejects a nullable primary column', function () {
     expect((new SchemaValidator())->validate($registry)->isValid())->toBeFalse();
 });
 
+test('preserves primary and nullable flag truthiness', function (): void {
+    $values = [null, false, 0, '0', '', true, 1, '1', 'false'];
+    foreach ($values as $primary) {
+        foreach ($values as $nullable) {
+            $registry = registryWith(new SchemaTable('items', [
+                'id' => ['primary' => $primary, 'nullable' => $nullable],
+            ]));
+            $errors = (new SchemaValidator())->validate($registry)->errors;
+            expect($errors)->toBe((bool) $primary && (bool) $nullable
+                ? ['Primary column items.id cannot be nullable.']
+                : []);
+        }
+    }
+
+    expect((new SchemaValidator())->validate(registryWith(new SchemaTable('items', [
+        'id' => [],
+    ])))->errors)->toBe([]);
+});
+
 test('rejects an index referencing a missing column', function () {
     $registry = registryWith(new SchemaTable(
         name: 'ghost_index',

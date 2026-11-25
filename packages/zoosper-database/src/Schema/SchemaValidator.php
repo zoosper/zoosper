@@ -28,7 +28,7 @@ final readonly class SchemaValidator
                 if (!in_array($type, $supportedTypes, true)) {
                     $errors[] = 'Column ' . $table->name . '.' . $columnName . ' uses unsupported type: ' . $type;
                 }
-                if (($definition['primary'] ?? false) && ($definition['nullable'] ?? false)) {
+                if ((bool) ($definition['primary'] ?? false) && (bool) ($definition['nullable'] ?? false)) {
                     $errors[] = 'Primary column ' . $table->name . '.' . $columnName . ' cannot be nullable.';
                 }
             }
