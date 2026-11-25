@@ -35,7 +35,9 @@ final readonly class ModuleName
             );
         }
 
-        [$vendor, $module] = explode('_', $input, 2);
+        $parts = explode('_', $input, 2);
+        $vendor = $parts[0];
+        $module = $parts[1] ?? '';
         $vendor = self::studly($vendor);
         $module = self::studly($module);
 

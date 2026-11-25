@@ -862,11 +862,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-core/src/Scaffold/ModuleName.php">
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$module]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
   <file src="app/zoosper-core/src/Scaffold/ModuleScaffolder.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
