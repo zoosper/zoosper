@@ -70,6 +70,23 @@ test('rejects a nullable primary column', function () {
     expect((new SchemaValidator())->validate($registry)->isValid())->toBeFalse();
 });
 
+test('reports malformed column and index definitions without discarding other errors', function (): void {
+    $registry = registryWith(new SchemaTable('items', [
+        'broken' => null,
+        'id' => ['type' => 'geometry'],
+    ], [
+        'broken_index' => false,
+        'missing_columns' => ['columns' => []],
+    ]));
+
+    expect((new SchemaValidator())->validate($registry)->errors)->toBe([
+        'Column items.broken must be an array.',
+        'Column items.id uses unsupported type: geometry',
+        'Index items.broken_index must be an array.',
+        'Index items.missing_columns must declare columns.',
+    ]);
+});
+
 test('preserves primary and nullable flag truthiness', function (): void {
     $values = [null, false, 0, '0', '', true, 1, '1', 'false'];
     foreach ($values as $primary) {

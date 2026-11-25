@@ -9,8 +9,6 @@ final readonly class SchemaValidator
     public function validate(SchemaRegistry $registry): SchemaValidationResult
     {
         $errors = [];
-        $supportedTypes = ['integer', 'int', 'bigint', 'string', 'text', 'longtext', 'datetime', 'boolean', 'bool', 'json'];
-
         foreach ($registry->tables() as $table) {
             if ($table->name === '') {
                 $errors[] = 'Table name cannot be empty.';
@@ -19,36 +17,8 @@ final readonly class SchemaValidator
                 $errors[] = 'Table ' . $table->name . ' must declare at least one column.';
             }
 
-            foreach ($table->columns as $columnName => $definition) {
-                if (!is_array($definition)) {
-                    $errors[] = 'Column ' . $table->name . '.' . $columnName . ' must be an array.';
-                    continue;
-                }
-                $type = (string) ($definition['type'] ?? 'string');
-                if (!in_array($type, $supportedTypes, true)) {
-                    $errors[] = 'Column ' . $table->name . '.' . $columnName . ' uses unsupported type: ' . $type;
-                }
-                if ((bool) ($definition['primary'] ?? false) && (bool) ($definition['nullable'] ?? false)) {
-                    $errors[] = 'Primary column ' . $table->name . '.' . $columnName . ' cannot be nullable.';
-                }
-            }
-
-            foreach ($table->indexes as $indexName => $definition) {
-                if (!is_array($definition)) {
-                    $errors[] = 'Index ' . $table->name . '.' . $indexName . ' must be an array.';
-                    continue;
-                }
-                $columns = $definition['columns'] ?? [];
-                if (!is_array($columns) || $columns === []) {
-                    $errors[] = 'Index ' . $table->name . '.' . $indexName . ' must declare columns.';
-                    continue;
-                }
-                foreach ($columns as $column) {
-                    if (!array_key_exists((string) $column, $table->columns)) {
-                        $errors[] = 'Index ' . $table->name . '.' . $indexName . ' references missing column: ' . (string) $column;
-                    }
-                }
-            }
+            array_push($errors, ...$this->validateColumns($table->name, $table->columns));
+            array_push($errors, ...$this->validateIndexes($table->name, $table->columns, $table->indexes));
         }
         foreach ($registry->tables() as $table) {
             foreach ($table->foreignKeys as $name => $foreignKey) {
@@ -82,6 +52,57 @@ final readonly class SchemaValidator
 
 
         return new SchemaValidationResult($errors);
+    }
+
+    /**
+     * @param array<string, mixed> $columns
+     * @return list<string>
+     */
+    private function validateColumns(string $table, array $columns): array
+    {
+        $errors = [];
+        $supportedTypes = ['integer', 'int', 'bigint', 'string', 'text', 'longtext', 'datetime', 'boolean', 'bool', 'json'];
+        foreach ($columns as $columnName => $definition) {
+            if (!is_array($definition)) {
+                $errors[] = 'Column ' . $table . '.' . $columnName . ' must be an array.';
+                continue;
+            }
+            $type = (string) ($definition['type'] ?? 'string');
+            if (!in_array($type, $supportedTypes, true)) {
+                $errors[] = 'Column ' . $table . '.' . $columnName . ' uses unsupported type: ' . $type;
+            }
+            if ((bool) ($definition['primary'] ?? false) && (bool) ($definition['nullable'] ?? false)) {
+                $errors[] = 'Primary column ' . $table . '.' . $columnName . ' cannot be nullable.';
+            }
+        }
+        return $errors;
+    }
+
+    /**
+     * @param array<string, mixed> $columns
+     * @param array<string, mixed> $indexes
+     * @return list<string>
+     */
+    private function validateIndexes(string $table, array $columns, array $indexes): array
+    {
+        $errors = [];
+        foreach ($indexes as $indexName => $definition) {
+            if (!is_array($definition)) {
+                $errors[] = 'Index ' . $table . '.' . $indexName . ' must be an array.';
+                continue;
+            }
+            $indexColumns = $definition['columns'] ?? [];
+            if (!is_array($indexColumns) || $indexColumns === []) {
+                $errors[] = 'Index ' . $table . '.' . $indexName . ' must declare columns.';
+                continue;
+            }
+            foreach ($indexColumns as $column) {
+                if (!array_key_exists((string) $column, $columns)) {
+                    $errors[] = 'Index ' . $table . '.' . $indexName . ' references missing column: ' . (string) $column;
+                }
+            }
+        }
+        return $errors;
     }
 }
 

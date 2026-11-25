@@ -58,9 +58,7 @@ final readonly class MediaAssetRepository
         $statement = $this->pdo->query('SELECT * FROM media_assets ORDER BY id DESC LIMIT ' . max(1, min(500, $limit)));
         $items = [];
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) ?: [] as $row) {
-            if (is_array($row)) {
-                $items[] = $this->hydrate($row);
-            }
+            $items[] = $this->hydrate($row);
         }
 
         return $items;
@@ -111,9 +109,7 @@ final readonly class MediaAssetRepository
 
         $items = [];
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) ?: [] as $row) {
-            if (is_array($row)) {
-                $items[] = $this->hydrate($row);
-            }
+            $items[] = $this->hydrate($row);
         }
 
         return new PaginationResult($items, $total, $pager->page, $pager->pageSize);

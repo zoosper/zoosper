@@ -575,9 +575,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$class]]></code>
     </ArgumentTypeCoercion>
-    <DocblockTypeContradiction>
-      <code><![CDATA[is_object($service)]]></code>
-    </DocblockTypeContradiction>
     <PossiblyUnusedMethod>
       <code><![CDATA[all]]></code>
     </PossiblyUnusedMethod>
@@ -821,11 +818,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-core/src/Security/RateLimit/FileRateLimitReportSink.php">
-    <PossiblyFalseOperand>
-      <code><![CDATA[json_encode($payload, JSON_UNESCAPED_SLASHES)]]></code>
-    </PossiblyFalseOperand>
   </file>
   <file src="app/zoosper-core/src/Site/ResolvedSite.php">
     <PossiblyUnusedProperty>
@@ -1994,12 +1986,6 @@
       <code><![CDATA[latest]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-database/src/Schema/SchemaValidator.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[is_array($definition)]]></code>
-      <code><![CDATA[is_array($definition)]]></code>
-    </DocblockTypeContradiction>
-  </file>
   <file src="packages/zoosper-errors/src/ConsoleExceptionFormatter.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]]></code>
@@ -2141,10 +2127,6 @@
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[latest]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCondition>
-      <code><![CDATA[is_array($row)]]></code>
-      <code><![CDATA[is_array($row)]]></code>
-    </RedundantCondition>
   </file>
   <file src="packages/zoosper-media/src/Repository/MediaDerivativeRepository.php">
     <PossiblyUnusedMethod>

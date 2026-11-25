@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Core\Container\ServiceContainer;
+use Zoosper\Errors\ZoosperException;
 
 test('it decorates registered instances and factories without invoking an absent factory', function (): void {
     $services = new ServiceContainer();
@@ -41,6 +42,22 @@ test('it instantiates constructor-free classes through the validated reflection 
     expect($services->get(ServiceContainerCorrectnessFixture::class))
         ->toBeInstanceOf(ServiceContainerCorrectnessFixture::class)
         ->toBe($services->get(ServiceContainerCorrectnessFixture::class));
+});
+
+test('it rejects non-object factory results and can resolve a replacement afterwards', function (): void {
+    $services = new ServiceContainer();
+    $services->factory('invalid', static fn (): array => []);
+
+    try {
+        $services->get('invalid');
+        test()->fail('A non-object factory result must be rejected.');
+    } catch (ZoosperException $exception) {
+        expect($exception->getMessage())->toContain('Service factory did not return an object for: invalid');
+    }
+
+    $replacement = new stdClass();
+    $services->factory('invalid', static fn (): object => $replacement);
+    expect($services->get('invalid'))->toBe($replacement);
 });
 
 final class ServiceContainerCorrectnessFixture

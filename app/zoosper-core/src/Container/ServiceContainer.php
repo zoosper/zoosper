@@ -20,7 +20,7 @@ final class ServiceContainer
     /** @var array<string, object> */
     private array $services = [];
 
-    /** @var array<string, callable(self): object> */
+    /** @var array<string, callable(self): mixed> */
     private array $factories = [];
 
     /** @var array<string, bool> */
@@ -32,7 +32,7 @@ final class ServiceContainer
         unset($this->factories[$id]);
     }
 
-    /** @param callable(self): object $factory */
+    /** @param callable(self): mixed $factory */
     public function factory(string $id, callable $factory): void
     {
         if (isset($this->services[$id])) {

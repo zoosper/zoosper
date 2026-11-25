@@ -36,7 +36,7 @@ final class FileRateLimitReportSink implements RateLimitReportSinkInterface
             'now' => $event->now,
         ];
 
-        file_put_contents($this->path, json_encode($payload, JSON_UNESCAPED_SLASHES) . PHP_EOL, FILE_APPEND | LOCK_EX);
+        file_put_contents($this->path, (string) json_encode($payload, JSON_UNESCAPED_SLASHES) . PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 
     private function rotateIfNeeded(): void
