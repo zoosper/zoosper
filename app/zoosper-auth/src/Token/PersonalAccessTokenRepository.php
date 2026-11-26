@@ -6,7 +6,7 @@ use PDO;
 final readonly class PersonalAccessTokenRepository
 {
     public function __construct(private PDO $pdo){}
-    /** @param list<string> $scopes */
+    /** @param array<array-key, string> $scopes */
     public function create(int $userId,string $publicId,string $name,string $hash,array $scopes,?string $expiresAt,string $now):int
     {
         $s=$this->pdo->prepare('INSERT INTO personal_access_tokens (public_id,admin_user_id,name,token_hash,scopes_json,expires_at,last_used_at,revoked_at,created_at,updated_at) VALUES (:public_id,:admin_user_id,:name,:token_hash,:scopes_json,:expires_at,NULL,NULL,:created_at,:updated_at)');

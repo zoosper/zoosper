@@ -7,8 +7,27 @@ use PDO; use Zoosper\Menu\Contract\{MenuProviderInterface,MenuRepositoryInterfac
  *
  * @psalm-api
  */
-final readonly class MenuProvider implements MenuProviderInterface { public function __construct(private MenuRepositoryInterface $menus,private MenuItemRepositoryInterface $items,private MenuTreeBuilder $trees,private PDO $pdo){} #[\Override]
- public function tree(int $siteId,string $code,string $currentPath='/'): array{$menu=$this->menus->findActiveBySiteAndCode($siteId,$code);if($menu===null)return [];$items=$this->items->activeForMenu($menu->id);$ids=array_values(array_unique(array_filter(array_map(static fn($i)=>$i->pageId,$items))));$urls=[];if($ids!==[]){$marks=implode(',',array_fill(0,count($ids),'?'));$s=$this->pdo->prepare("SELECT id,slug FROM pages WHERE id IN ($marks) AND site_id=? AND status='published'");$s->execute([...$ids,$siteId]);foreach($s->fetchAll(PDO::FETCH_ASSOC) as $r)$urls[(int)$r['id']]='/'.trim((string)$r['slug'],'/');}return $this->trees->build($items,$urls,$currentPath);} }
+final readonly class MenuProvider implements MenuProviderInterface
+{
+ public function __construct(private MenuRepositoryInterface $menus, private MenuItemRepositoryInterface $items, private MenuTreeBuilder $trees, private PDO $pdo){}
+
+ #[\Override]
+ public function tree(int $siteId, string $code, string $currentPath='/'): array
+ {
+  $menu=$this->menus->findActiveBySiteAndCode($siteId,$code);
+  if($menu===null) return [];
+  $items=$this->items->activeForMenu($menu->id);
+  $ids=array_values(array_unique(array_filter(array_map(static fn($i)=>$i->pageId,$items))));
+  $urls=[];
+  if($ids!==[]){
+   $marks=implode(',',array_fill(0,count($ids),'?'));
+   $statement=$this->pdo->prepare("SELECT id,slug FROM pages WHERE id IN ($marks) AND site_id=? AND status='published'");
+   $statement->execute([...$ids,$siteId]);
+   foreach($statement->fetchAll(PDO::FETCH_ASSOC) as $row) $urls[(int)$row['id']]='/'.trim((string)$row['slug'],'/');
+  }
+  return $this->trees->build($items,$urls,$currentPath);
+ }
+}
 
 
 

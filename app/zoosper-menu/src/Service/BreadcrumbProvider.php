@@ -7,8 +7,32 @@ use Zoosper\Menu\Contract\{BreadcrumbProviderInterface,MenuProviderInterface}; u
  *
  * @psalm-api
  */
-final readonly class BreadcrumbProvider implements BreadcrumbProviderInterface { public function __construct(private MenuProviderInterface $menus){} #[\Override]
- public function breadcrumbs(int $siteId,string $menuCode,string $currentPath): array{$find=function(array $nodes,array $trail=[])use(&$find):array{foreach($nodes as $node){$next=[...$trail,['label'=>$node->item->label,'href'=>$node->href]];if($node->active)return $next;$found=$find($node->children,$next);if($found!==[])return $found;}return [];};return $find($this->menus->tree($siteId,$menuCode,$currentPath));} }
+final readonly class BreadcrumbProvider implements BreadcrumbProviderInterface
+{
+ public function __construct(private MenuProviderInterface $menus){}
+
+ #[\Override]
+ public function breadcrumbs(int $siteId,string $menuCode,string $currentPath): array
+ {
+  return $this->find($this->menus->tree($siteId,$menuCode,$currentPath), []);
+ }
+
+ /**
+  * @param list<MenuNode> $nodes
+  * @param list<array{label:string,href:string}> $trail
+  * @return list<array{label:string,href:string}>
+  */
+ private function find(array $nodes, array $trail): array
+ {
+  foreach($nodes as $node){
+   $next=[...$trail, ['label'=>$node->item->label, 'href'=>$node->href]];
+   if($node->active) return $next;
+   $found=$this->find($node->children, $next);
+   if($found!==[]) return $found;
+  }
+  return [];
+ }
+}
 
 
 

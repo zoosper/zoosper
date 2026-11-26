@@ -326,9 +326,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <RedundantFunctionCall>
-      <code><![CDATA[array_values]]></code>
-    </RedundantFunctionCall>
   </file>
   <file src="app/zoosper-auth/src/Token/PersonalAccessTokenService.php">
     <PossiblyUnusedMethod>
@@ -994,22 +991,6 @@
     <UnusedClass>
       <code><![CDATA[PdoMenuRepository]]></code>
     </UnusedClass>
-  </file>
-  <file src="app/zoosper-menu/src/Service/BreadcrumbProvider.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$find($this->menus->tree($siteId,$menuCode,$currentPath))]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array]]></code>
-    </MoreSpecificReturnType>
-  </file>
-  <file src="app/zoosper-menu/src/Service/MenuProvider.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->trees->build($items,$urls,$currentPath)]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array]]></code>
-    </MoreSpecificReturnType>
   </file>
   <file src="app/zoosper-page/src/Admin/Controller/PageAdminController.php">
     <UnusedParam>
