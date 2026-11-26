@@ -19,6 +19,16 @@ final readonly class StoreOrderGridMutationHandler
     public function handle(int $adminUserId, string $action, array $post): void
     {
         $definition = StoreOrderGrid::definition()->grid;
+        if ($action === GridWorkspaceMutationContract::SAVE_VIEW || $action === GridWorkspaceMutationContract::SET_DEFAULT_VIEW) {
+            $this->mutations->saveBookmark(
+                $adminUserId, StoreOrderGridWorkspace::GRID_KEY, $definition,
+                (string) ($post['view_name'] ?? ''),
+                GridWorkspacePostState::fromPost($post),
+                $action === GridWorkspaceMutationContract::SET_DEFAULT_VIEW,
+            );
+            return;
+        }
+
         match ($action) {
             GridWorkspaceMutationContract::SAVE_COLUMNS => $this->mutations->saveColumnPreferences(
                 $adminUserId, StoreOrderGridWorkspace::GRID_KEY, $definition,
@@ -27,13 +37,6 @@ final readonly class StoreOrderGridMutationHandler
             ),
             GridWorkspaceMutationContract::RESET_COLUMNS => $this->mutations->resetVisibleColumns(
                 $adminUserId, StoreOrderGridWorkspace::GRID_KEY,
-            ),
-            GridWorkspaceMutationContract::SAVE_VIEW,
-            GridWorkspaceMutationContract::SET_DEFAULT_VIEW => $this->mutations->saveBookmark(
-                $adminUserId, StoreOrderGridWorkspace::GRID_KEY, $definition,
-                (string) ($post['view_name'] ?? ''),
-                GridWorkspacePostState::fromPost($post),
-                $action === GridWorkspaceMutationContract::SET_DEFAULT_VIEW,
             ),
             GridWorkspaceMutationContract::DELETE_VIEW => $this->mutations->deleteBookmark(
                 $adminUserId, StoreOrderGridWorkspace::GRID_KEY, (int) ($post['bookmark_id'] ?? 0),

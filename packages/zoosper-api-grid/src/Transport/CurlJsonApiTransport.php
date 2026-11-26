@@ -46,10 +46,9 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
             $headers[] = $name . ': ' . $value;
         }
 
-        $body = '';
+        $bodyBuffer = new ResponseBodyBuffer($policy->maximumResponseBytes);
         /** @var array<string, string> $responseHeaders */
         $responseHeaders = [];
-        $responseTooLarge = false;
         curl_setopt_array($handle, [
             CURLOPT_RETURNTRANSFER => false,
             CURLOPT_FOLLOWLOCATION => false,
@@ -89,20 +88,13 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
                 }
                 return $length;
             },
-            CURLOPT_WRITEFUNCTION => static function (\CurlHandle $handle, string $chunk) use (&$body, &$responseTooLarge, $policy): int {
-                if (strlen($body) + strlen($chunk) > $policy->maximumResponseBytes) {
-                    $responseTooLarge = true;
-                    return 0;
-                }
-                $body .= $chunk;
-                return strlen($chunk);
-            },
+            CURLOPT_WRITEFUNCTION => static fn (\CurlHandle $handle, string $chunk): int => $bodyBuffer->append($chunk),
         ]);
 
         $success = curl_exec($handle);
         $status = (int) curl_getinfo($handle, CURLINFO_RESPONSE_CODE);
         if ($success === false) {
-            if ($responseTooLarge) {
+            if ($bodyBuffer->isTooLarge()) {
                 throw new ApiTransportException(
                     'External Grid response exceeded the configured size limit.',
                     category: ApiTransportException::RESPONSE_TOO_LARGE,
@@ -128,6 +120,7 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
             );
         }
 
+        $body = $bodyBuffer->body();
         try {
             $decoded = $body === '' ? [] : json_decode($body, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $exception) {

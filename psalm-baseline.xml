@@ -296,11 +296,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-auth/src/Service/CsrfTokenManager.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[string]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
   <file src="app/zoosper-auth/src/Service/RequireSecondFactorByDefault.php">
     <UnusedClass>
       <code><![CDATA[RequireSecondFactorByDefault]]></code>
@@ -1768,12 +1763,6 @@
       <code><![CDATA[$statusCode]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="packages/zoosper-api-grid/src/Transport/CurlJsonApiTransport.php">
-    <TypeDoesNotContainType>
-      <code><![CDATA[$responseTooLarge]]></code>
-      <code><![CDATA[$responseTooLarge]]></code>
-    </TypeDoesNotContainType>
-  </file>
   <file src="packages/zoosper-audit/src/Admin/Grid/AuditLogGridDefinition.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -2044,9 +2033,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <TypeDoesNotContainType>
-      <code><![CDATA[$action === GridWorkspaceMutationContract::SET_DEFAULT_VIEW]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="packages/zoosper-store-orders/src/Admin/StoreOrderGridQueryState.php">
     <UnusedConstructor>

@@ -33,6 +33,25 @@ it('does not accept null or an unrelated token', function (): void {
         ->and($csrf->isValid(str_repeat('0', 64)))->toBeFalse();
 });
 
+it('replaces empty session tokens and keeps the generated token stable until rotation', function (): void {
+    $csrf = new CsrfTokenManager();
+
+    foreach ([null, '', '0', false] as $emptyToken) {
+        $_SESSION['_csrf_token'] = $emptyToken;
+        $token = $csrf->token();
+
+        expect($token)->toMatch('/\A[0-9a-f]{64}\z/')
+            ->and($_SESSION['_csrf_token'])->toBe($token)
+            ->and($csrf->token())->toBe($token)
+            ->and($csrf->isValid($token))->toBeTrue();
+
+        $rotated = $csrf->rotate();
+        expect($_SESSION['_csrf_token'])->toBe($rotated)
+            ->and($csrf->isValid($token))->toBeFalse()
+            ->and($csrf->isValid($rotated))->toBeTrue();
+    }
+});
+
 
 
 

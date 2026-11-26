@@ -32,3 +32,13 @@ test('store order views are made default only when requested and belong to the a
     expect($defaults)->toBe(['Default' => true, 'Ordinary' => false])
         ->and($bookmarks->allForUser(11, StoreOrderGridWorkspace::GRID_KEY))->toBe([]);
 });
+
+test('unsupported store order mutations are rejected', function (): void {
+    $pdo = new PDO('sqlite::memory:');
+    $handler = new StoreOrderGridMutationHandler(
+        new GridViewMutationService(new GridPreferenceRepository($pdo), new GridBookmarkRepository($pdo), new GridStateNormaliser()),
+    );
+
+    expect(fn () => $handler->handle(10, 'unknown', []))
+        ->toThrow(\InvalidArgumentException::class, 'Unsupported Store Orders grid action: unknown');
+});

@@ -9,7 +9,7 @@ final readonly class CsrfTokenManager
     public function token(): string
     {
         if (empty($_SESSION['_csrf_token'])) {
-            $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+            return $this->rotate();
         }
 
         return $_SESSION['_csrf_token'];
