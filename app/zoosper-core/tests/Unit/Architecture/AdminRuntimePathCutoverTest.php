@@ -13,7 +13,7 @@ it('wires canonical admin path expansion atomically into routes and menus', func
     expect($routes)->toContain("\$configFile === 'admin_routes.php'")
         ->toContain('$this->adminPaths->routes($config)')
         ->toContain('private ?AdminPathCollectionTransformer $adminPaths = null')
-        ->and($factory)->toContain('$services->get(AdminPathCollectionTransformer::class)')
+        ->and($factory)->toContain('self::getTypedService($services, AdminPathCollectionTransformer::class)')
         ->and($coreServices)->toContain('AdminUrlGenerator::class =>')
         ->toContain('AdminPathCollectionTransformer::class =>')
         ->and($menu)->toContain('$this->adminPaths?->menu($config) ?? $config')

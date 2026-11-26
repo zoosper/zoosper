@@ -8,6 +8,7 @@ use Zoosper\Audit\Admin\Grid\OperationalGridPageBuilder;
 use Zoosper\Audit\Admin\Grid\OperationalGridQueryState;
 use Zoosper\Admin\Layout\AdminLayout;
 use Zoosper\Admin\UI\AdminViewRenderer;
+use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
@@ -29,7 +30,7 @@ final readonly class LoginHistoryController
   if($this->views!==null)return Response::html($this->views->render(title:'Login History',template:'zoosper-audit::login-history/index',data:['workspaceHtml'=>$page->workspaceHtml,'gridHtml'=>$page->gridHtml],user:$user,active:'login-history',shellTitle:''));
   return Response::html($this->layout->render('Login History',$html,$user,'login-history',shellTitle:''));
  }
- private function currentAdminUser()
+ private function currentAdminUser():AdminUser
  {
   $user=$this->guard->user();
   if($user===null)throw new RuntimeException('Authenticated admin user required after middleware guard.');

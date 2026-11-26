@@ -60,6 +60,19 @@ test('it rejects non-object factory results and can resolve a replacement afterw
     expect($services->get('invalid'))->toBe($replacement);
 });
 
+test('direct autowiring preserves reflection errors for unknown classes and rejects abstract classes', function (): void {
+    $services = new ServiceContainer();
+
+    expect(fn () => $services->autowire('MissingServiceContainerClass'))
+        ->toThrow(ReflectionException::class)
+        ->and(fn () => $services->autowire(ServiceContainerAbstractFixture::class))
+        ->toThrow(ZoosperException::class, 'Cannot autowire non-instantiable class');
+});
+
 final class ServiceContainerCorrectnessFixture
+{
+}
+
+abstract class ServiceContainerAbstractFixture
 {
 }

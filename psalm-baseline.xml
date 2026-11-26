@@ -339,12 +339,6 @@
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-core/src/Bootstrap/ApplicationFactory.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$services->get(AdminPathCollectionTransformer::class)]]></code>
-      <code><![CDATA[$services->get(ConfigRepository::class)]]></code>
-      <code><![CDATA[$services->get(\Zoosper\Core\Site\SiteContextResolver::class)]]></code>
-      <code><![CDATA[$sessionHandler]]></code>
-    </ArgumentTypeCoercion>
     <UnusedClass>
       <code><![CDATA[ApplicationFactory]]></code>
     </UnusedClass>
@@ -877,9 +871,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-menu/src/Admin/Controller/MenuAdminController.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[$this->itemDeletion?->delete($menuId,$itemId)]]></code>
-    </DocblockTypeContradiction>
     <UnusedParam>
       <code><![CDATA[$r]]></code>
     </UnusedParam>
@@ -906,12 +897,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-menu/src/Api/MenuApiController.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$updated]]></code>
-      <code><![CDATA[$updated]]></code>
-    </PossiblyNullArgument>
   </file>
   <file src="app/zoosper-menu/src/Application/MenuAdminService.php">
     <PossiblyUnusedMethod>
@@ -1762,16 +1747,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="packages/zoosper-audit/src/Controller/AuditLogController.php">
-    <MissingReturnType>
-      <code><![CDATA[currentAdminUser]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="packages/zoosper-audit/src/Controller/LoginHistoryController.php">
-    <MissingReturnType>
-      <code><![CDATA[currentAdminUser]]></code>
-    </MissingReturnType>
   </file>
   <file src="packages/zoosper-audit/src/LoginHistoryRepository.php">
     <PossiblyUnusedMethod>

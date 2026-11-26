@@ -68,7 +68,7 @@ final class ApplicationFactory
         $services->set(ConfigRepository::class, $config);
         $services->set(MarkoConfigRepositoryAdapter::contract(), $markoConfig);
         $services->set(ModuleRegistry::class, $modules);
-        $services->factory(PDO::class, static fn (ServiceContainer $services): PDO => (new ConnectionFactory($services->get(ConfigRepository::class), $basePath))->create());
+        $services->factory(PDO::class, static fn (ServiceContainer $services): PDO => (new ConnectionFactory(self::getTypedService($services, ConfigRepository::class), $basePath))->create());
         $services->set(LogManager::class, $logManager);
         $services->set(ErrorHandler::class, $errorHandler);
         $services->set('logger.default', $logManager->default());
@@ -81,7 +81,7 @@ final class ApplicationFactory
         (new ServiceProviderManifestLoader($basePath))->load($services);
 
         $sessionHandler = $services->has(\SessionHandlerInterface::class)
-            ? $services->get(\SessionHandlerInterface::class)
+            ? self::getTypedService($services, \SessionHandlerInterface::class)
             : null;
         $controllers = (new ControllerProviderLoader($modules, $services))->load();
 
@@ -89,7 +89,7 @@ final class ApplicationFactory
         $routeLoader = new ModuleRouteLoader(
             $modules,
             $controllers,
-            $services->get(AdminPathCollectionTransformer::class),
+            self::getTypedService($services, AdminPathCollectionTransformer::class),
         );
 
         $adminMiddleware = (new ModuleAdminMiddlewareLoader($modules, $services))->load();
@@ -154,10 +154,25 @@ final class ApplicationFactory
             $router,
             new SecurityHeaders($config->array('security.headers'), $config->array('security.csp'), $config->array('security.hsts')),
             $services,
-            $services->get(\Zoosper\Core\Site\SiteContextResolver::class),
+            self::getTypedService($services, \Zoosper\Core\Site\SiteContextResolver::class),
             $errorHandler,
             $sessionHandler,
         );
+    }
+
+    /**
+     * @template T of object
+     * @param class-string<T> $id
+     * @return T
+     */
+    private static function getTypedService(ServiceContainer $services, string $id): object
+    {
+        $service = $services->get($id);
+        if (!$service instanceof $id) {
+            throw new \TypeError('Service ' . $id . ' must be an instance of ' . $id . '; got ' . $service::class);
+        }
+
+        return $service;
     }
 }
 

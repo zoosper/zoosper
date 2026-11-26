@@ -76,7 +76,7 @@ final readonly class MenuApiController
         $principal=$this->principals->require($request);$menu=$this->siteMenu($request);if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);
         $input=$request->json();$input['site_id']=$menu->siteId;$input['code']=$input['code']??$menu->code;$input['label']=$input['label']??$menu->label;$input['status']=$input['status']??$menu->status;
         try{$this->mutations->saveMenu($input,$menu->id);}catch(InvalidArgumentException $e){return $this->json->error('menu_validation_failed',$e->getMessage(),422);}
-        $updated=$this->menus->find($menu->id);$this->audit($principal,'menu.api_updated',$updated,array_keys($request->json()));return $this->json->success(['menu'=>$this->normaliseMenu($updated)]);
+        $updated=$this->menus->find($menu->id);if($updated===null||$updated->siteId!==$menu->siteId)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);$this->audit($principal,'menu.api_updated',$updated,array_keys($request->json()));return $this->json->success(['menu'=>$this->normaliseMenu($updated)]);
     }
     public function createItem(Request $request): Response{return $this->saveItem($request,null);}
     public function updateItem(Request $request): Response{return $this->saveItem($request,(int)$request->routeParam('itemId','0'));}
@@ -101,7 +101,7 @@ final readonly class MenuApiController
         $principal=$this->principals->require($request);$menu=$this->siteMenu($request);if($menu===null)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);
         $result=match($operation){'disable'=>$this->lifecycle->disable($menu,$principal->user->id,$principal->user->email),'restore'=>$this->lifecycle->restore($menu,$principal->user->id,$principal->user->email),'delete'=>$this->lifecycle->deletePermanently($menu,$principal->user->id,$principal->user->email),default=>throw new RuntimeException('Unsupported Menu lifecycle operation.')};
         if(!$result->successful)return $this->json->error('menu_lifecycle_blocked',$result->message??'Menu lifecycle operation was blocked.',409,['blockers'=>$result->blockers]);
-        if($operation==='delete')return $this->json->success(['deleted'=>true,'menu_id'=>$menu->id]);$updated=$this->menus->find($menu->id);return $this->json->success(['menu'=>$this->normaliseMenu($updated)]);
+        if($operation==='delete')return $this->json->success(['deleted'=>true,'menu_id'=>$menu->id]);$updated=$this->menus->find($menu->id);if($updated===null||$updated->siteId!==$menu->siteId)return $this->json->error('menu_not_found','Menu does not exist for this Site.',404);return $this->json->success(['menu'=>$this->normaliseMenu($updated)]);
     }
     /** @param list<string> $changed */
     private function audit(PersonalAccessTokenPrincipal $principal,string $action,Menu $menu,array $changed):void{$this->audit?->logAction($principal->user->id,$principal->user->email,$action,'menu',(string)$menu->id,$action,['menu_id'=>$menu->id,'site_id'=>$menu->siteId,'token_id'=>$principal->token->id,'token_public_id'=>$principal->token->publicId,'changed_fields'=>$changed,'status'=>$menu->status]);}
