@@ -14,6 +14,7 @@ use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Service\CsrfTokenManager;
 use Zoosper\Auth\Service\SessionGuard;
+use Zoosper\Audit\Contract\AuditLoggerInterface;
 use Zoosper\Core\Config\ConfigRepository;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
@@ -68,12 +69,21 @@ beforeEach(function (): void {
     $config = ConfigRepository::fromArray(['admin' => ['base_path' => '/admin']]);
     $urls = new AdminUrlGenerator($config);
 
+    $this->audit = new class implements AuditLoggerInterface {
+        public array $events = [];
+
+        public function logAction(?int $actorAdminUserId, ?string $actorEmail, string $action, string $entityType, ?string $entityId, string $summary, array $metadata = []): void
+        {
+            $this->events[] = compact('actorAdminUserId', 'actorEmail', 'action', 'entityType', 'entityId', 'summary', 'metadata');
+        }
+    };
     $this->controller = new AnnouncementAdminController(
         guard: $guard,
         announcements: $this->repository,
         csrf: $csrf,
         layout: $layout,
         urls: $urls,
+        audit: $this->audit,
     );
 });
 
@@ -117,6 +127,27 @@ it('processes asynchronous acknowledgment posts', function (): void {
         ->and($payload['announcement_id'])->toBe($announcement->id);
 
     expect($this->repository->isAcknowledged($announcement->id, 7))->toBeTrue();
+});
+
+it('audits all announcement mutations through the audit contract', function (): void {
+    $form = ['title' => 'Title', 'body' => 'Body', 'status' => 'draft'];
+    $this->controller->save((new Request('POST', '/admin/announcements/save'))->withForm($form));
+    $id = $this->repository->all()[0]->id;
+    $this->controller->save((new Request('POST', '/admin/announcements/save'))->withForm(['id' => $id] + $form));
+    foreach (['publish', 'unpublish', 'archive'] as $action) {
+        $this->controller->$action((new Request('POST', '/admin/announcements/' . $action))->withForm(['id' => $id]));
+    }
+
+    expect(array_column($this->audit->events, 'action'))->toBe([
+        'announcement.created', 'announcement.updated', 'announcement.published', 'announcement.unpublished', 'announcement.archived',
+    ]);
+    foreach ($this->audit->events as $event) {
+        expect($event['actorAdminUserId'])->toBe(7)
+            ->and($event['actorEmail'])->toBe('admin@zoosper.test')
+            ->and($event['entityType'])->toBe('admin_announcement')
+            ->and($event['entityId'])->toBe((string) $id);
+    }
+    expect($this->audit->events[0]['metadata'])->toBe(['title' => 'Title', 'status' => 'draft']);
 });
 
 

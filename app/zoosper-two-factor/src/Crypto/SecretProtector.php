@@ -33,10 +33,6 @@ final readonly class SecretProtector
         $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
         $ciphertext = sodium_crypto_secretbox($secret, $nonce, $key);
 
-        if ($ciphertext === false) {
-            throw new RuntimeException('Unable to protect two-factor secret.');
-        }
-
         return base64_encode($nonce . $ciphertext);
     }
 

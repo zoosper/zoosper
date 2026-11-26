@@ -825,13 +825,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-global-announcements/src/Controller/AnnouncementAdminController.php">
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[record]]></code>
-      <code><![CDATA[record]]></code>
-      <code><![CDATA[record]]></code>
-      <code><![CDATA[record]]></code>
-      <code><![CDATA[record]]></code>
-    </UndefinedInterfaceMethod>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
@@ -1425,9 +1418,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-    <TypeDoesNotContainType>
-      <code><![CDATA[$ciphertext === false]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="app/zoosper-two-factor/src/Qr/TotpQrCodeSvgRenderer.php">
     <PossiblyUnusedMethod>
@@ -1468,16 +1458,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="app/zoosper-two-factor/src/Totp/Base32.php">
-    <InvalidArrayOffset>
-      <code><![CDATA[self::ALPHABET[bindec(str_pad($chunk, 5, '0'))]]]></code>
-    </InvalidArrayOffset>
-  </file>
-  <file src="app/zoosper-two-factor/src/Totp/TotpSecretGenerator.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$bytes]]></code>
-    </ArgumentTypeCoercion>
   </file>
   <file src="app/zoosper-two-factor/src/Totp/TotpVerifier.php">
     <PossiblyUnusedMethod>

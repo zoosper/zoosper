@@ -112,6 +112,15 @@ it('still works correctly with no key rotation at all (no regression for the com
     expect($protector->needsReprotection($protected))->toBeFalse();
 });
 
+it('rejects tampered encrypted secrets', function (): void {
+    $protector = new SecretProtector('current-key');
+    $payload = base64_decode($protector->protect('secret'), true);
+    $payload[SODIUM_CRYPTO_SECRETBOX_NONCEBYTES] = chr(ord($payload[SODIUM_CRYPTO_SECRETBOX_NONCEBYTES]) ^ 1);
+
+    expect(fn () => $protector->reveal(base64_encode($payload)))
+        ->toThrow(RuntimeException::class, 'Unable to reveal protected two-factor secret');
+});
+
 
 
 

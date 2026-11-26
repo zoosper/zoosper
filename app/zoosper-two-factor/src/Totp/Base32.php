@@ -23,7 +23,7 @@ final class Base32
 
         $encoded = '';
         foreach (str_split($bits, 5) as $chunk) {
-            $encoded .= self::ALPHABET[bindec(str_pad($chunk, 5, '0'))];
+            $encoded .= self::ALPHABET[(int) bindec(str_pad($chunk, 5, '0'))];
         }
 
         return $encoded;

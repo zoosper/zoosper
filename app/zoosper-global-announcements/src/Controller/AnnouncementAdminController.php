@@ -94,11 +94,11 @@ final readonly class AnnouncementAdminController
 
         if ($id > 0) {
             $this->announcements->update($id, $title, $body, $status);
-            $this->audit?->record($actor, 'announcement.updated', 'admin_announcement', (string) $id, 'Updated Global Announcement', ['title' => $title, 'status' => $status], $request);
+            $this->audit?->logAction($actor->id, $actor->email, 'announcement.updated', 'admin_announcement', (string) $id, 'Updated Global Announcement', ['title' => $title, 'status' => $status]);
             $this->flash?->success('Global Announcement updated.', 'admin.announcements');
         } else {
             $created = $this->announcements->create($title, $body, $status, $actor->id);
-            $this->audit?->record($actor, 'announcement.created', 'admin_announcement', (string) $created->id, 'Created Global Announcement', ['title' => $title, 'status' => $status], $request);
+            $this->audit?->logAction($actor->id, $actor->email, 'announcement.created', 'admin_announcement', (string) $created->id, 'Created Global Announcement', ['title' => $title, 'status' => $status]);
             $this->flash?->success('Global Announcement created.', 'admin.announcements');
         }
 
@@ -112,7 +112,7 @@ final readonly class AnnouncementAdminController
 
         if ($id > 0) {
             $this->announcements->publish($id);
-            $this->audit?->record($actor, 'announcement.published', 'admin_announcement', (string) $id, 'Published Global Announcement', [], $request);
+            $this->audit?->logAction($actor->id, $actor->email, 'announcement.published', 'admin_announcement', (string) $id, 'Published Global Announcement');
             $this->flash?->success('Global Announcement published.', 'admin.announcements');
         }
 
@@ -126,7 +126,7 @@ final readonly class AnnouncementAdminController
 
         if ($id > 0) {
             $this->announcements->unpublish($id);
-            $this->audit?->record($actor, 'announcement.unpublished', 'admin_announcement', (string) $id, 'Unpublished Global Announcement', [], $request);
+            $this->audit?->logAction($actor->id, $actor->email, 'announcement.unpublished', 'admin_announcement', (string) $id, 'Unpublished Global Announcement');
             $this->flash?->success('Global Announcement unpublished.', 'admin.announcements');
         }
 
@@ -140,7 +140,7 @@ final readonly class AnnouncementAdminController
 
         if ($id > 0) {
             $this->announcements->archive($id);
-            $this->audit?->record($actor, 'announcement.archived', 'admin_announcement', (string) $id, 'Archived Global Announcement', [], $request);
+            $this->audit?->logAction($actor->id, $actor->email, 'announcement.archived', 'admin_announcement', (string) $id, 'Archived Global Announcement');
             $this->flash?->success('Global Announcement archived.', 'admin.announcements');
         }
 
