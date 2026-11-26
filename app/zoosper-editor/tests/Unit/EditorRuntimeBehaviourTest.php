@@ -5,11 +5,33 @@ declare(strict_types=1);
 namespace Zoosper\Editor\Tests\Unit;
 
 use Zoosper\Auth\Service\CsrfTokenManager;
+use Zoosper\Core\Container\ServiceContainer;
 use Zoosper\Core\Editor\ContentEditorInterface;
 use Zoosper\Core\Editor\EditorImageToolConfigInterface;
 use Zoosper\Editor\ContentEditorRegistry;
 use Zoosper\Editor\EditorJsContentEditor;
 use Zoosper\Editor\TextareaContentEditor;
+
+it('constructs the configured editor with its optional image service', function (bool $withImageService): void {
+    $services = new ServiceContainer();
+    $definitions = require dirname(__DIR__, 2) . '/config/services.php';
+    foreach ($definitions as $id => $factory) {
+        $services->factory($id, $factory);
+    }
+    $services->set(CsrfTokenManager::class, new CsrfTokenManager());
+    if ($withImageService) {
+        $services->set(EditorImageToolConfigInterface::class, new class implements EditorImageToolConfigInterface {
+            public function toArray(string $csrfToken): array { return ['endpoint' => '/upload']; }
+        });
+    }
+
+    $editor = $services->get(EditorJsContentEditor::class);
+    $html = $editor->render('content', '<p>Saved</p>');
+
+    expect($editor)->toBeInstanceOf(EditorJsContentEditor::class)
+        ->and($html)->toContain('&lt;p&gt;Saved&lt;/p&gt;')
+        ->and(str_contains($html, 'data-zoosper-image-tool='))->toBe($withImageService);
+})->with([false, true]);
 
 it('selects Editor.js while retaining the submitted textarea fallback', function (): void {
     $textarea = new TextareaContentEditor();

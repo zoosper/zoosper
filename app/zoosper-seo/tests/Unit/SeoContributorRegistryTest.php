@@ -9,6 +9,9 @@ use Zoosper\Seo\Contract\SeoMetadataContributorInterface;
 use Zoosper\Seo\Contract\SitemapContributorInterface;
 use Zoosper\Seo\Contribution\SeoContributorRegistry;
 use Zoosper\Seo\Metadata\SeoMetadata;
+use Zoosper\Seo\Metadata\SeoMetadataManager;
+use Zoosper\Seo\Sitemap\SitemapAggregator;
+use Zoosper\Seo\Sitemap\SitemapEntry;
 use Zoosper\Site\Model\Site;
 
 function withSeoRegistryFixture(array $configs, callable $test): void
@@ -39,6 +42,33 @@ function withSeoRegistryFixture(array $configs, callable $test): void
         rmdir($base);
     }
 }
+
+it('constructs the configured SEO services using registered contributors', function (): void {
+    $metadata = new class implements SeoMetadataContributorInterface {
+        public int $calls = 0;
+        public function contribute(object $resource, Site $site, ?Request $request = null): ?SeoMetadata { $this->calls++; return null; }
+    };
+    $sitemap = new class implements SitemapContributorInterface {
+        public function entries(Site $site): iterable { return [new SitemapEntry('https://example.test/page')]; }
+    };
+    withSeoRegistryFixture(['example' => ['metadata' => ['metadata'], 'sitemap' => ['sitemap']]], function (ModuleRegistry $modules) use ($metadata, $sitemap): void {
+        $services = new ServiceContainer();
+        $services->set(ModuleRegistry::class, $modules);
+        $services->set('metadata', $metadata);
+        $services->set('sitemap', $sitemap);
+        foreach (require dirname(__DIR__, 2) . '/config/services.php' as $id => $factory) {
+            $services->factory($id, $factory);
+        }
+
+        $registry = $services->get(SeoContributorRegistry::class);
+        expect($registry)->toBeInstanceOf(SeoContributorRegistry::class)
+            ->and($registry->metadata())->toBe([$metadata])
+            ->and($registry->sitemap())->toBe([$sitemap])
+            ->and($services->get(SeoMetadataManager::class)->for(new stdClass(), new Site(1, 'main', 'Main', 'active')))->toBeNull()
+            ->and($metadata->calls)->toBe(1)
+            ->and($services->get(SitemapAggregator::class)->xml(new Site(1, 'main', 'Main', 'active')))->toContain('https://example.test/page');
+    });
+});
 
 it('collects each group in module and declaration order, retaining duplicates and skipping invalid ids', function (): void {
     $metadata = new class implements SeoMetadataContributorInterface {
