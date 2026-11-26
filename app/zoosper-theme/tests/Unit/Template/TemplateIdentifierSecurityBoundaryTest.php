@@ -8,6 +8,7 @@ use ReflectionMethod;
 use RuntimeException;
 use Zoosper\Theme\Layout\LayoutUpdateRepository;
 use Zoosper\Theme\Template\TemplateRenderer;
+use Zoosper\Theme\Theme\Theme;
 use Zoosper\Theme\Theme\ThemeResolver;
 
 it('validates every template identifier before candidate construction', function (): void {
@@ -92,4 +93,17 @@ it('preserves template replacement, removal, and the no-update fallback', functi
         ->and($withUpdates->render('original.php', handle: 'test'))->toBe('replacement')
         ->and($withUpdates->render('original.php', handle: 'other'))->toBe('original')
         ->and($withUpdates->render('removed.php', handle: 'test'))->toBe('');
+});
+
+it('uses normalized theme paths for ordinary and module templates', function (): void {
+    $root = dirname(__DIR__, 5) . '/themes';
+    $resolver = new ThemeResolver($root);
+    $renderer = new TemplateRenderer($resolver);
+    $theme = new Theme('default', $root . '/default/');
+    $resolve = new ReflectionMethod(TemplateRenderer::class, 'resolveTemplatePath');
+
+    expect($theme->templatePath('/layout.php'))->toBe($root . '/default/templates/layout.php')
+        ->and($resolve->invoke($renderer, $theme, 'layout.php'))->toBe($theme->templatePath('layout.php'))
+        ->and($resolve->invoke($renderer, $theme, 'zoosper-page::page/view.php'))
+        ->toBe($theme->templatePath('modules/zoosper-page/page/view.php'));
 });

@@ -110,7 +110,7 @@ final readonly class TemplateRenderer
         $candidates = [];
         foreach ($this->templateVariants($template) as $variant) {
             $candidates[] = rtrim($theme->path, '/') . '/templates/overrides/' . $variant;
-            $candidates[] = rtrim($theme->path, '/') . '/templates/' . $variant;
+            $candidates[] = $theme->templatePath($variant);
         }
 
         if ($theme->code !== 'default') {
@@ -163,7 +163,7 @@ final readonly class TemplateRenderer
 
         $candidates = [];
         foreach ($this->templateVariants($templatePath) as $variant) {
-            $candidates[] = rtrim($theme->path, '/') . '/templates/modules/' . $moduleName . '/' . $variant;
+            $candidates[] = $theme->templatePath('modules/' . $moduleName . '/' . $variant);
         }
 
         if ($theme->code !== 'default') {

@@ -18,7 +18,9 @@ it('creates scope-aware redacted diagnostics without exposing password plaintext
     $summary = $factory->forScope(new ScopeContext(siteId: 42))->summary();
 
     expect($summary->passwordConfigured)->toBeTrue()
-        ->and(json_encode($summary, JSON_THROW_ON_ERROR))->not->toContain('site-secret');
+        ->and(json_encode($summary, JSON_THROW_ON_ERROR))->not->toContain('site-secret')
+        ->and($summary->toArray()['password_configured'])->toBeTrue()
+        ->and(json_encode($summary->toArray(), JSON_THROW_ON_ERROR))->not->toContain('site-secret');
 });
 
 

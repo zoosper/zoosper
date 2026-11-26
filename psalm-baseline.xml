@@ -246,11 +246,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="app/zoosper-auth/src/Lifecycle/RoleLifecycleResult.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$assignmentCount]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="app/zoosper-auth/src/PasswordReset/AdminPasswordResetIssue.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$adminUserId]]></code>
@@ -1365,7 +1360,6 @@
   <file src="app/zoosper-site/src/Repository/SiteRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
-      <code><![CDATA[findActiveByHost]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Site/SiteContextProviderAdapter.php">
@@ -1402,11 +1396,6 @@
     <UnusedClass>
       <code><![CDATA[MarkoViewAdapter]]></code>
     </UnusedClass>
-  </file>
-  <file src="app/zoosper-theme/src/Theme/Theme.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[templatePath]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-theme/src/Theme/ThemeRepository.php">
     <PossiblyUnusedMethod>

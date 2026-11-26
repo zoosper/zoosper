@@ -15,7 +15,9 @@ it('sorts sections deterministically and searches section and field metadata', f
     expect(array_map(static fn ($section) => $section->id, $catalogue->all()))
         ->toBe(['system.admin', 'system.mail'])
         ->and($catalogue->search('sender'))->toHaveCount(1)
-        ->and($catalogue->search('MAIL'))->toHaveCount(1);
+        ->and($catalogue->search('MAIL'))->toHaveCount(1)
+        ->and($catalogue->search('  '))->toBe($catalogue->all())
+        ->and($catalogue->search('missing'))->toBe([]);
 });
 
 it('rejects unsupported field types and unmarked secrets', function (): void {

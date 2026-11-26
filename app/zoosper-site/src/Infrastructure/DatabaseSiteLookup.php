@@ -8,12 +8,7 @@ use Zoosper\Core\Site\ResolvedSite;
 use Zoosper\Core\Site\SiteLookupInterface;
 use Zoosper\Site\Repository\SiteRepository;
 
-/**
- * Site-module adapter that keeps SiteRepository usage outside zoosper-core.
- *
- * The adapter is intentionally defensive about repository method names so it can
- * support the current SiteRepository shape while the runtime cutover is prepared.
- */
+/** Site-module adapter that keeps SiteRepository usage outside zoosper-core. */
 final class DatabaseSiteLookup implements SiteLookupInterface
 {
     public function __construct(
@@ -25,51 +20,27 @@ final class DatabaseSiteLookup implements SiteLookupInterface
 
     public function findByHost(string $host): ?ResolvedSite
     {
-        foreach (['findByHost', 'findByDomain', 'findActiveByHost'] as $method) {
-            if (method_exists($this->sites, $method)) {
-                return $this->toResolvedSite($this->sites->{$method}($host));
-            }
-        }
-
-        return null;
+        return $this->toResolvedSite($this->sites->findActiveByHost($host));
     }
 
     #[\Override]
 
     public function findActiveByHost(string $host): ?ResolvedSite
     {
-        foreach (['findActiveByHost', 'findByHost', 'findByDomain'] as $method) {
-            if (method_exists($this->sites, $method)) {
-                return $this->toResolvedSite($this->sites->{$method}($host));
-            }
-        }
-
-        return null;
+        return $this->toResolvedSite($this->sites->findActiveByHost($host));
     }
 
     #[\Override]
 
     public function findByCode(string $code): ?ResolvedSite
     {
-        foreach (['findByCode', 'findOneByCode'] as $method) {
-            if (method_exists($this->sites, $method)) {
-                return $this->toResolvedSite($this->sites->{$method}($code));
-            }
-        }
-
-        return null;
+        return $this->toResolvedSite($this->sites->findByCode($code));
     }
 
     #[\Override]
 
     public function findDefault(): ?ResolvedSite
     {
-        foreach (['findDefault', 'getDefault', 'default'] as $method) {
-            if (method_exists($this->sites, $method)) {
-                return $this->toResolvedSite($this->sites->{$method}());
-            }
-        }
-
         return null;
     }
 

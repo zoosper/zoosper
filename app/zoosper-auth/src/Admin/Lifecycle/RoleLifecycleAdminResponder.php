@@ -30,7 +30,11 @@ final readonly class RoleLifecycleAdminResponder
     public function delete(int $roleId, string $roleCode, AdminUser $actor): Response
     {
         $result = $this->lifecycle->deletePermanently($roleId, $roleCode, $actor);
-        $result->successful ? $this->flash?->success($result->message, 'admin.role.lifecycle') : $this->flash?->error($result->message, 'admin.role.lifecycle');
+        $message = $result->message;
+        if (!$result->successful && $result->assignmentCount > 0) {
+            $message .= " This Role is assigned to {$result->assignmentCount} Admin User(s).";
+        }
+        $result->successful ? $this->flash?->success($message, 'admin.role.lifecycle') : $this->flash?->error($message, 'admin.role.lifecycle');
         return Response::redirect($result->successful ? $this->url('roles') : $this->url("roles/edit?id={$roleId}"), 303);
     }
     private function url(string $path): string { return $this->urls?->url($path) ?? '/admin/'.ltrim($path, '/'); }
