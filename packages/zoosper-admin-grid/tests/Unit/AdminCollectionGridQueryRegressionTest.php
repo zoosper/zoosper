@@ -10,6 +10,7 @@ use Zoosper\AdminGrid\GridBookmarkRepository;
 use Zoosper\AdminGrid\GridPreferenceRepository;
 use Zoosper\AdminGrid\GridStateNormaliser;
 use Zoosper\AdminGrid\GridViewStateResolver;
+use Zoosper\AdminGrid\GridWorkspaceQuery;
 use Zoosper\Core\Http\Request;
 use Zoosper\Grid\GridColumn;
 use Zoosper\Grid\GridColumnOrderer;
@@ -100,6 +101,30 @@ it('replaces complete query lists instead of retaining bookmark list tails', fun
     expect($state->visibleColumns)->toBe(['title', 'id', 'actions'])
         ->and($state->visibleColumns)->not->toContain('status', 'created_at')
         ->and($state->columnOrder)->toBe(['title', 'id', 'actions', 'status', 'created_at']);
+});
+
+it('round trips a selected non-default bookmark through workspace navigation', function (): void {
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec('CREATE TABLE admin_grid_preferences (id INTEGER PRIMARY KEY, admin_user_id INTEGER, grid_key TEXT, visible_columns_json TEXT, updated_at TEXT)');
+    $pdo->exec('CREATE TABLE admin_grid_bookmarks (id INTEGER PRIMARY KEY, admin_user_id INTEGER, grid_key TEXT, name TEXT, state_json TEXT, is_default INTEGER, created_at TEXT, updated_at TEXT)');
+    $bookmarks = new GridBookmarkRepository($pdo);
+    $bookmarks->save(10, 'admin.media', 'Default', ['filters' => ['q' => 'default']], true);
+    $bookmarks->save(10, 'admin.media', 'Other', ['filters' => ['q' => 'other']]);
+    $resolver = new GridViewStateResolver(new GridPreferenceRepository($pdo), $bookmarks, new GridStateNormaliser(), new GridColumnOrderer());
+    $selected = $resolver->resolve(10, 'admin.media', queryRegressionDefinition(), bookmarkId: 2);
+    parse_str(http_build_query((new GridWorkspaceQuery())->parameters($selected, 2)), $parameters);
+    $request = new Request('GET', '/admin/media', query: $parameters);
+    $resolved = $resolver->resolve(10, 'admin.media', queryRegressionDefinition(), AdminCollectionGridQuery::values($request, queryRegressionDefinition()), AdminCollectionGridQuery::bookmark($request));
+
+    expect($resolved->activeBookmarkId)->toBe(2)
+        ->and($resolved->criteria->filters['q'])->toBe('other');
+});
+
+it('accepts legacy bookmark selectors and rejects malformed canonical selectors', function (): void {
+    expect(AdminCollectionGridQuery::bookmark(new Request('GET', '/', query: ['bookmark' => '3'])))->toBe(3)
+        ->and(AdminCollectionGridQuery::bookmark(new Request('GET', '/', query: ['bookmark_id' => '4', 'bookmark' => '3'])))->toBe(4)
+        ->and(AdminCollectionGridQuery::bookmark(new Request('GET', '/', query: ['bookmark_id' => ['4'], 'bookmark' => '3'])))->toBeNull();
 });
 
 

@@ -136,6 +136,8 @@ Permanent deletion is archived-first and fails closed unless current Pages and r
 
 Media implements the Core-owned `EditorImageToolConfigInterface` and binds it to the existing Editor.js upload configuration. This preserves the authenticated, CSRF-protected upload flow while keeping the Editor package independent of concrete Media classes.
 
+Editor image URLs must be unencoded local `/media/` paths with nonempty ASCII filename segments; dot segments, backslashes, query strings and fragments are rejected.
+
 ## Editor.js Media picker read endpoint
 
 `GET /admin/media/editorjs/library` is an authenticated Admin JSON endpoint available to either `media.manage` or `page.manage`. It returns only active image assets with canonical public paths, bounded filename search and pagination, and a `thumb` derivative URL with safe original-path fallback. Picker responses exclude private storage paths, creator identity, UUIDs, archived assets, non-image files, and unpublished assets. The Media-owned Page-screen browser flow provides an accessible search and pagination dialog, loading, empty, error, and insertion feedback, focus restoration, and managed image selection through the Editor-owned wrapper-scoped insertion bridge without owning a global Editor.js instance. Integrated acceptance coverage boots the real application container and proves the controller JSON representation plus rendered Page-form asset inclusion and dependency order.

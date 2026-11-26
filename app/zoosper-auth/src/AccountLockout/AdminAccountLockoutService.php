@@ -26,11 +26,12 @@ final readonly class AdminAccountLockoutService
         if ($state === null) {
             return false;
         }
-        if (!$state->isLockedAt($this->now()) && $state->lockedUntil !== null) {
-            $this->repository->clear($adminUserId);
-            return false;
+        $now = $this->now();
+        if (!$state->isLockedAt($now) && $state->lockedUntil !== null) {
+            $this->repository->clearExpired($adminUserId, gmdate('Y-m-d H:i:s', $now));
+            $state = $this->repository->find($adminUserId);
         }
-        return $state->isLockedAt($this->now());
+        return $state?->isLockedAt($now) ?? false;
     }
 
     public function recordFailure(int $adminUserId): AdminAccountLockoutState

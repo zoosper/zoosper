@@ -64,4 +64,12 @@ final readonly class AdminAccountLockoutRepository
         $statement = $this->pdo->prepare('DELETE FROM admin_account_lockouts WHERE admin_user_id = :admin_user_id');
         $statement->execute(['admin_user_id' => $adminUserId]);
     }
+
+    public function clearExpired(int $adminUserId, string $now): void
+    {
+        $statement = $this->pdo->prepare(
+            'DELETE FROM admin_account_lockouts WHERE admin_user_id = :admin_user_id AND locked_until IS NOT NULL AND locked_until <= :now',
+        );
+        $statement->execute(['admin_user_id' => $adminUserId, 'now' => $now]);
+    }
 }

@@ -63,3 +63,17 @@ it('does not extend an active lockout after later failed attempts', function ():
         ->and($later->lockedUntil)->toBe('2027-01-15 08:10:00')
         ->and($laterClock->isLocked(15))->toBeTrue();
 });
+
+it('preserves a new lockout installed while an expired lockout is being checked', function (): void {
+    $pdo = c2LockoutPdo();
+    $repository = new AdminAccountLockoutRepository($pdo);
+    $repository->recordFailure(17, 1, '2027-01-15 08:00:00', '2027-01-15 08:01:00');
+    $service = new AdminAccountLockoutService($repository, 1, 60, static function () use ($repository): int {
+        $repository->clear(17);
+        $repository->recordFailure(17, 1, '2027-01-15 08:02:00', '2027-01-15 08:03:00');
+        return 1_800_000_120;
+    });
+
+    expect($service->isLocked(17))->toBeTrue()
+        ->and($repository->find(17)?->lockedUntil)->toBe('2027-01-15 08:03:00');
+});

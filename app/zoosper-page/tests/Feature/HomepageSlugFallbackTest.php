@@ -10,7 +10,10 @@ use Zoosper\Page\Content\DocumentNormalizer;
 use Zoosper\Page\Content\DocumentValidator;
 use Zoosper\Page\Controller\PageController;
 use Zoosper\Page\Repository\PageRepository;
+use Zoosper\Page\Seo\PageSeoContributor;
+use Zoosper\Page\Seo\PageSitemapContributor;
 use Zoosper\Page\Service\PageRenderer;
+use Zoosper\Site\Model\Site;
 use Zoosper\Site\Repository\SiteRepository;
 
 function homepageSlugFixture(?string $homepageSlug): array
@@ -81,3 +84,25 @@ it('resolves frontend root and explicit paths independently of the homepage sett
     ['0', '/shop', '/shop', 'Home marker'],
     ['landing', '/shop/other', '/shop', 'Other marker'],
 ]);
+
+it('uses the frontend homepage fallback for canonical and sitemap URLs', function (?string $configured, string $homepage): void {
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->exec('CREATE TABLE pages (id INTEGER PRIMARY KEY, site_id INTEGER, title TEXT, slug TEXT, content TEXT, status TEXT, created_by INTEGER, updated_by INTEGER, created_at TEXT, updated_at TEXT, published_at TEXT)');
+    $pages = new PageRepository($pdo);
+    foreach (['home', 'landing', '0'] as $slug) {
+        $pages->create(1, $slug, $slug, '', 'published');
+    }
+    $site = new Site(1, 'main', 'Main', 'active', $configured, baseUrl: 'https://example.com');
+    $seo = new PageSeoContributor();
+    $urls = array_map(static fn ($entry): string => $entry->url, iterator_to_array((new PageSitemapContributor($pages))->entries($site)));
+    $expectedUrls = array_map(static fn (string $slug): string => 'https://example.com/' . ($slug === $homepage ? '' : $slug), ['home', 'landing', '0']);
+    sort($urls);
+    sort($expectedUrls);
+    expect($urls)->toBe($expectedUrls);
+
+    foreach (['home', 'landing', '0'] as $slug) {
+        $expected = 'https://example.com/' . ($slug === $homepage ? '' : $slug);
+        $page = $pages->findPublishedBySlug(1, $slug);
+        expect($seo->contribute($page, $site, homepageSlugRequest('/'))->canonicalUrl)->toBe($expected);
+    }
+})->with([[null, 'home'], ['', 'home'], ['0', 'home'], ['landing', 'landing']]);

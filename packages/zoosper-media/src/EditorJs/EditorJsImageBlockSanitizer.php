@@ -43,7 +43,17 @@ final readonly class EditorJsImageBlockSanitizer implements EditorImageBlockSani
 
     private function isAllowedUrl(string $url): bool
     {
-        return str_starts_with($url, '/media/');
+        if (preg_match('~\A/media/[A-Za-z0-9._/-]+\z~D', $url) !== 1) {
+            return false;
+        }
+
+        foreach (explode('/', substr($url, 7)) as $segment) {
+            if ($segment === '' || $segment === '.' || $segment === '..') {
+                return false;
+            }
+        }
+
+        return true;
     }
     /** @return list<string> */
     #[\Override]
@@ -56,7 +66,7 @@ final readonly class EditorJsImageBlockSanitizer implements EditorImageBlockSani
         }
 
         $url = trim((string) ($file['url'] ?? ''));
-        if ($url === '' || !str_starts_with($url, '/media/')) {
+        if ($url === '' || !$this->isAllowedUrl($url)) {
             $errors[] = 'image URL must use managed /media/ storage.';
         }
         if (isset($data['caption']) && !is_string($data['caption'])) {

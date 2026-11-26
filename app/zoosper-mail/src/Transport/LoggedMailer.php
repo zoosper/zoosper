@@ -29,11 +29,15 @@ final readonly class LoggedMailer implements MailerInterface
 
         try {
             $this->inner->send($message);
-            $this->logs->recordSuccess($messageUuid, $message);
         } catch (Throwable $exception) {
-            $this->logs->recordFailure($messageUuid, $message, $exception);
+            try {
+                $this->logs->recordFailure($messageUuid, $message, $exception);
+            } catch (Throwable) {
+                error_log('Unable to record failed mail delivery.');
+            }
             throw $exception;
         }
+        $this->logs->recordSuccess($messageUuid, $message);
     }
 }
 

@@ -35,6 +35,29 @@ test('rejects non media urls from image block data', function () {
     expect($data)->toBeNull();
 });
 
+test('rejects media urls that escape the media directory', function (string $url) {
+    $sanitizer = new EditorJsImageBlockSanitizer();
+    $data = ['file' => ['url' => $url]];
+
+    expect($sanitizer->sanitise($data))->toBeNull();
+    expect($sanitizer->validate($data))->not->toBeEmpty();
+})->with([
+    '/media/../admin',
+    '/media/%2e%2e/admin',
+    '/media/..\\admin',
+    '/media/folder/../../admin',
+    '/media/%252e%252e%252fadmin',
+    '/media/folder//asset.png',
+]);
+
+test('accepts nested canonical media paths', function () {
+    $sanitizer = new EditorJsImageBlockSanitizer();
+    $data = ['file' => ['url' => '/media/2026/11/asset-thumb.webp']];
+
+    expect($sanitizer->sanitise($data)['url'])->toBe($data['file']['url']);
+    expect($sanitizer->validate($data))->toBeEmpty();
+});
+
 
 
 

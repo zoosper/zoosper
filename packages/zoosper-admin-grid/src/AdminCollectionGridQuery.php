@@ -57,7 +57,8 @@ final class AdminCollectionGridQuery
 
     public static function bookmark(Request $request): ?int
     {
-        $value = $request->query('bookmark');
+        $key = array_key_exists('bookmark_id', $request->queryParams()) ? 'bookmark_id' : 'bookmark';
+        $value = $request->query($key);
 
         return is_string($value) && preg_match('/^[1-9][0-9]*$/', $value) === 1
             ? (int) $value
