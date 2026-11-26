@@ -17,11 +17,13 @@ it('builds bound Admin User search and status filters', function (): void {
         sortDir: 'asc',
     ));
 
-    expect($plan->whereSql)->toContain(':grid_query')
+    expect($plan->whereSql)->toContain(':grid_query_name')
+        ->toContain(':grid_query_email')
         ->toContain(':grid_status')
         ->and($plan->orderSql)->toBe('u.email ASC, u.id DESC')
         ->and($plan->parameters)->toBe([
-            'grid_query' => '%admin@example.test%',
+            'grid_query_name' => '%admin@example.test%',
+            'grid_query_email' => '%admin@example.test%',
             'grid_status' => 'active',
         ]);
 });

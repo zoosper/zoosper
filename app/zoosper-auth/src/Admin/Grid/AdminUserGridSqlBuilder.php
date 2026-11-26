@@ -21,8 +21,9 @@ final readonly class AdminUserGridSqlBuilder
         $parameters = [];
 
         if ($criteria->query !== '') {
-            $conditions[] = '(u.name LIKE :grid_query OR u.email LIKE :grid_query)';
-            $parameters['grid_query'] = '%' . $criteria->query . '%';
+            $conditions[] = '(u.name LIKE :grid_query_name OR u.email LIKE :grid_query_email)';
+            $parameters['grid_query_name'] = '%' . $criteria->query . '%';
+            $parameters['grid_query_email'] = '%' . $criteria->query . '%';
         }
 
         if ($criteria->status !== '') {

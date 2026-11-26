@@ -69,14 +69,26 @@ final readonly class MediaUploadService
                 throw new \RuntimeException(implode(' ', $derivativeResult->errors));
             }
         } catch (Throwable $exception) {
-            if ($assetId !== null && $this->assets->findById($assetId) !== null) {
-                $this->assets->deletePermanently($assetId);
+            $cleanupException = null;
+            try {
+                if ($assetId !== null && $this->assets->findById($assetId) !== null) {
+                    $this->assets->deletePermanently($assetId);
+                }
+            } catch (Throwable $failure) {
+                $cleanupException = $failure;
             }
             $cleanupResult = null;
             if (is_object($stored)) {
                 $cleanupResult = $this->cleanup->cleanup($stored);
             }
 
+            if ($cleanupException !== null) {
+                $this->errorHandler?->logException($cleanupException, [
+                    'service' => 'MediaUploadService',
+                    'action' => 'delete_failed_upload_asset',
+                    'asset_id' => $assetId,
+                ]);
+            }
             $this->errorHandler?->logException($exception, [
                 'service' => 'MediaUploadService',
                 'action' => 'upload',

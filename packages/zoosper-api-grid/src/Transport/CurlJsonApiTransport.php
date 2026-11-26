@@ -56,12 +56,17 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
             CURLOPT_TIMEOUT_MS => $policy->requestTimeoutMilliseconds,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_CUSTOMREQUEST => $request->method,
+            CURLOPT_NOBODY => $request->method === 'HEAD',
             CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_REDIR_PROTOCOLS => 0,
             CURLOPT_HEADERFUNCTION => static function (\CurlHandle $handle, string $line) use (&$responseHeaders): int {
                 $length = strlen($line);
                 $trimmed = trim($line);
-                if ($trimmed === '' || str_starts_with($trimmed, 'HTTP/')) {
+                if (str_starts_with($trimmed, 'HTTP/')) {
+                    $responseHeaders = [];
+                    return $length;
+                }
+                if ($trimmed === '') {
                     return $length;
                 }
                 $separator = strpos($trimmed, ':');

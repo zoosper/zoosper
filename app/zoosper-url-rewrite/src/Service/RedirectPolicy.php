@@ -50,6 +50,9 @@ final readonly class RedirectPolicy
         if ($target === '') {
             throw new InvalidArgumentException('Redirect target is required.');
         }
+        if (str_contains($target, '\\')) {
+            throw new InvalidArgumentException('Redirect target must not contain backslashes.');
+        }
 
         $parsedScheme = parse_url($target, PHP_URL_SCHEME);
         if ($parsedScheme === false) {

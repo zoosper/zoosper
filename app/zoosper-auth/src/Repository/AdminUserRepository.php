@@ -58,8 +58,9 @@ final readonly class AdminUserRepository
         $sanitizedLimit = max(1, min($limit, 5000));
 
         if ($term !== null && trim($term) !== '') {
-            $statement = $this->pdo->prepare('SELECT * FROM admin_users WHERE email LIKE :term OR name LIKE :term ORDER BY name ASC, email ASC LIMIT :limit');
-            $statement->bindValue('term', '%' . trim($term) . '%');
+            $statement = $this->pdo->prepare('SELECT * FROM admin_users WHERE email LIKE :term_email OR name LIKE :term_name ORDER BY name ASC, email ASC LIMIT :limit');
+            $statement->bindValue('term_email', '%' . trim($term) . '%');
+            $statement->bindValue('term_name', '%' . trim($term) . '%');
             $statement->bindValue('limit', $sanitizedLimit, PDO::PARAM_INT);
             $statement->execute();
         } else {
@@ -108,8 +109,9 @@ final readonly class AdminUserRepository
     /** @return list<AdminUser> */
     public function search(string $term, int $limit = 50): array
     {
-        $statement = $this->pdo->prepare('SELECT * FROM admin_users WHERE email LIKE :term OR name LIKE :term ORDER BY name ASC, email ASC LIMIT :limit');
-        $statement->bindValue('term', '%' . $term . '%');
+        $statement = $this->pdo->prepare('SELECT * FROM admin_users WHERE email LIKE :term_email OR name LIKE :term_name ORDER BY name ASC, email ASC LIMIT :limit');
+        $statement->bindValue('term_email', '%' . $term . '%');
+        $statement->bindValue('term_name', '%' . $term . '%');
         $statement->bindValue('limit', $limit, PDO::PARAM_INT);
         $statement->execute();
         return $this->hydrateManyWithPermissions($this->fetchRows($statement));

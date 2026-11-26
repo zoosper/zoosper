@@ -9,6 +9,9 @@ use ReflectionClass;
 use ReflectionNamedType;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Media\Repository\MediaAssetRepository;
+use Zoosper\Media\Processing\MediaUploadDerivativeDispatcher;
+use Zoosper\Media\Processing\MediaUploadDerivativePolicy;
+use Zoosper\Media\Processing\QueuedMediaProcessor;
 use Zoosper\Media\Service\MediaStorage;
 use Zoosper\Media\Service\MediaStoredFileCleanupService;
 use Zoosper\Media\Service\MediaUploadService;
@@ -77,6 +80,32 @@ test('media upload preserves the persisted id and sanitised original filename', 
         ->and($result->assetId)->toBe(1)
         ->and($result->metadata['id'])->toBe(1)
         ->and($assets->findById(1)->originalFilename)->toBe('..-A-strange-picture.png');
+});
+
+test('upload removes files even when database rollback fails', function () {
+    $root = sys_get_temp_dir() . '/zoosper-media-upload-delete-failure-' . bin2hex(random_bytes(4));
+    mkdir($root, 0775, true);
+    $tmpFile = $root . '/upload.png';
+    $image = imagecreatetruecolor(2, 2);
+    imagepng($image, $tmpFile);
+    unset($image);
+
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec('CREATE TABLE media_assets (id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT NOT NULL, filename TEXT NOT NULL, original_filename TEXT NOT NULL, mime_type TEXT NOT NULL, extension TEXT NOT NULL, size_bytes INTEGER NOT NULL, storage_path TEXT NOT NULL, public_path TEXT NULL, status TEXT NOT NULL, created_by INTEGER NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)');
+    $pdo->exec("CREATE TRIGGER prevent_media_delete BEFORE DELETE ON media_assets BEGIN SELECT RAISE(FAIL, 'delete failed'); END");
+    $dispatcher = new MediaUploadDerivativeDispatcher(new QueuedMediaProcessor($pdo), new MediaUploadDerivativePolicy(true));
+    $service = new MediaUploadService(new MediaAssetRepository($pdo), new MediaUploadValidator(), new MediaStorage($root), $root, derivatives: $dispatcher);
+
+    $result = $service->upload([
+        'name' => 'upload.png', 'tmp_name' => $tmpFile,
+        'error' => UPLOAD_ERR_OK, 'size' => filesize($tmpFile),
+    ], mediaUploadTestAdminUser());
+
+    expect($result->successful)->toBeFalse()
+        ->and($result->statusCode)->toBe(500)
+        ->and(mediaUploadFixtureFiles($root . '/storage/media'))->toBe([])
+        ->and(mediaUploadFixtureFiles($root . '/public/media'))->toBe([]);
 });
 
 test('original filename normalisation preserves falsey and length boundaries', function () {

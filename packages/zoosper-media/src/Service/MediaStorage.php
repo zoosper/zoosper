@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Media\Service;
 
 use RuntimeException;
+use Throwable;
 
 /**
  * Stores validated media uploads outside public/ and publishes a controlled copy.
@@ -38,7 +39,7 @@ final readonly class MediaStorage
 
         try {
             ($this->canonicalizer ?? new GdMediaCanonicalizer())->canonicalize($tmpName, $storagePath, $extension);
-        } catch (RuntimeException $exception) {
+        } catch (Throwable $exception) {
             @unlink($storagePath);
             throw $exception;
         }

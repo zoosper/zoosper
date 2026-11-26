@@ -18,6 +18,38 @@ it('returns lifecycle details without losing the deletion blocker', function ():
         ->and($disabled->active)->toBeFalse();
 });
 
+it('blocks restoring a rewrite that would create a cycle', function (): void {
+    $r = new UrlRewriteRepository(rewriteLifeDb());
+    $id = $r->save(null, 1, 'a', '/b', 301, false);
+    $r->save(null, 1, 'b', '/a', 301);
+
+    $result = (new UrlRewriteLifecycleCoordinator($r))->restore($r->findByIdForSite($id, 1), 1, 'a');
+
+    expect($result->successful)->toBeFalse()
+        ->and($r->findByIdForSite($id, 1)->isActive)->toBeFalse();
+});
+
+it('restores a safe rewrite independently of other sites', function (): void {
+    $r = new UrlRewriteRepository(rewriteLifeDb());
+    $id = $r->save(null, 1, 'a', '/b', 301, false);
+    $r->save(null, 2, 'b', '/a', 301);
+
+    $result = (new UrlRewriteLifecycleCoordinator($r))->restore($r->findByIdForSite($id, 1), 1, 'a');
+
+    expect($result->successful)->toBeTrue()
+        ->and($r->findByIdForSite($id, 1)->isActive)->toBeTrue();
+});
+
+it('blocks restoring a previously stored unsafe target', function (): void {
+    $r = new UrlRewriteRepository(rewriteLifeDb());
+    $id = $r->save(null, 1, 'a', '/\\evil.example', 301, false);
+
+    $result = (new UrlRewriteLifecycleCoordinator($r))->restore($r->findByIdForSite($id, 1), 1, 'a');
+
+    expect($result->successful)->toBeFalse()
+        ->and($r->findByIdForSite($id, 1)->isActive)->toBeFalse();
+});
+
 
 
 

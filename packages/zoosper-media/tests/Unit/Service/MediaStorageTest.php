@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Media\Tests\Unit\Service;
 
 use RuntimeException;
+use Zoosper\Media\Service\MediaCanonicalizerInterface;
 use Zoosper\Media\Service\MediaStorage;
 
 test('stores validated media outside public and publishes controlled copy', function () {
@@ -30,6 +31,26 @@ test('rejects private storage paths under public', function () {
 
     expect(fn () => $storage->absolutePath('public/media/file.png'))
         ->toThrow(RuntimeException::class);
+});
+
+test('removes partial canonical output when the encoder throws an error', function () {
+    $root = sys_get_temp_dir() . '/zoosper-media-storage-error-' . bin2hex(random_bytes(4));
+    mkdir($root, 0775, true);
+    $canonicalizer = new class implements MediaCanonicalizerInterface {
+        public function canonicalize(string $sourcePath, string $destinationPath, string $extension): void
+        {
+            file_put_contents($destinationPath, 'partial output');
+            throw new \Error('encoder failed');
+        }
+    };
+
+    expect(fn () => (new MediaStorage($root, $canonicalizer))->store(['tmp_name' => 'unused'], 'png'))
+        ->toThrow(\Error::class, 'encoder failed');
+
+    $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS));
+    foreach ($files as $file) {
+        expect($file->isFile())->toBeFalse();
+    }
 });
 
 test('rejects path traversal', function () {

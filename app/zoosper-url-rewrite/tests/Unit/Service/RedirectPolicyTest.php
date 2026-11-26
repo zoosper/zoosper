@@ -22,3 +22,8 @@ it('fails closed for malformed or pathless redirect inputs',function(string $sou
  ['/safe','http://[::1'],
  ['/safe','?query-only'],
 ]);
+
+it('rejects browser-interpreted external redirects disguised with backslashes', function (string $target): void {
+    expect(fn () => (new RedirectPolicy())->validate('/old', $target, 301))
+        ->toThrow(InvalidArgumentException::class);
+})->with(['\\evil.example/path', '/\\evil.example/path']);

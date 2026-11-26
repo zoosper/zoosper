@@ -1472,9 +1472,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-url-rewrite/src/Service/RedirectChainInspector.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
     <PossiblyUnusedReturnValue>
       <code><![CDATA[list<string>]]></code>
     </PossiblyUnusedReturnValue>

@@ -59,8 +59,9 @@ final readonly class EmailLogRepository
 
         $email = $filters['email'] ?? '';
         if ($email !== '') {
-            $where[] = '(from_email LIKE :email OR to_emails LIKE :email)';
-            $params['email'] = '%' . $email . '%';
+            $where[] = '(from_email LIKE :from_email OR to_emails LIKE :to_email)';
+            $params['from_email'] = '%' . $email . '%';
+            $params['to_email'] = '%' . $email . '%';
         }
 
         $subject = $filters['subject'] ?? '';
