@@ -23,7 +23,8 @@ final readonly class MediaUploadDerivativeDispatcher
     ) {
     }
 
-    public function processAfterUpload(MediaAsset|string $assetOrStoragePath): MediaProcessingResult
+    /** @param null|callable(MediaProcessingResult, MediaDerivativePlan): void $onGenerated */
+    public function processAfterUpload(MediaAsset|string $assetOrStoragePath, ?callable $onGenerated = null): MediaProcessingResult
     {
         $policy = $this->policy ?? new MediaUploadDerivativePolicy(false);
         if (!$policy->enabled()) {
@@ -34,6 +35,9 @@ final readonly class MediaUploadDerivativeDispatcher
             $plan = $this->plan ?? (new MediaProcessingPolicy())->defaultPlan();
             $result = $this->processor->process($assetOrStoragePath, $plan);
             if ($result->successful && !$result->queued) {
+                if ($onGenerated !== null) {
+                    $onGenerated($result, $plan);
+                }
                 $this->derivatives?->replaceForAsset($assetOrStoragePath, $plan);
             }
             return $result;

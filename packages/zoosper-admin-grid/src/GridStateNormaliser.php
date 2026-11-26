@@ -7,6 +7,7 @@ namespace Zoosper\AdminGrid;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDefinition;
 use Zoosper\Grid\GridFilterValue;
+use Zoosper\Pagination\Pager;
 
 final readonly class GridStateNormaliser
 {
@@ -78,13 +79,18 @@ final readonly class GridStateNormaliser
     public function criteria(array $state, GridDefinition $definition): GridCriteria
     {
         $normalised = $this->normalise($state, $definition);
-        return GridCriteria::fromValues([
-            ...$normalised['filters'],
-            'sort' => $normalised['sort_by'],
-            'dir' => $normalised['sort_dir'],
+        $pager = Pager::fromQuery([
             'page' => $normalised['page'],
             'page_size' => $normalised['page_size'],
-        ], $definition);
+        ], maxPageSize: 200);
+
+        return new GridCriteria(
+            $pager,
+            $normalised['sort_by'],
+            $normalised['sort_by'] !== null && $definition->isSortable($normalised['sort_by'])
+                ? $normalised['sort_dir'] : $definition->defaultSortDir,
+            $normalised['filters'],
+        );
     }
 }
 

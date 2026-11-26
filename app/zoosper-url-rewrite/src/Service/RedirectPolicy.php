@@ -46,9 +46,15 @@ final readonly class RedirectPolicy
 
     public function target(string $target): string
     {
+        if (preg_match('/[\x00-\x1f\x7f]/', $target) === 1) {
+            throw new InvalidArgumentException('Redirect target must not contain control characters.');
+        }
         $target = trim($target);
         if ($target === '') {
             throw new InvalidArgumentException('Redirect target is required.');
+        }
+        if (str_starts_with($target, '//')) {
+            throw new InvalidArgumentException('Redirect target must not be protocol-relative.');
         }
         if (str_contains($target, '\\')) {
             throw new InvalidArgumentException('Redirect target must not contain backslashes.');

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Zoosper\Media\Service;
 
 use Zoosper\Media\Processing\MediaUploadDerivativeDispatcher;
+use Zoosper\Media\Processing\LocalMediaDerivativePathResolver;
+use Zoosper\Media\Processing\MediaDerivativePlan;
+use Zoosper\Media\Processing\MediaProcessingResult;
 use Throwable;
 use Zoosper\Auth\Model\AdminUser;
 use Zoosper\Core\Error\ErrorHandler;
@@ -26,7 +29,7 @@ final readonly class MediaUploadService
         private MediaAssetRepository $assets,
         private MediaUploadValidator $validator,
         private MediaStorage $storage,
-        string $basePath,
+        private string $basePath,
         private ?ErrorHandler $errorHandler = null,
         ?MediaStoredFileCleanupService $cleanup = null,
     
@@ -46,6 +49,7 @@ final readonly class MediaUploadService
 
         $stored = null;
         $assetId = null;
+        $generated = [];
         try {
             $stored = $this->storage->store($file, (string) $validation->extension);
             $assetId = $this->assets->create(
@@ -64,7 +68,15 @@ final readonly class MediaUploadService
             if ($asset === null) {
                 throw new \RuntimeException('Persisted Media asset could not be reloaded.');
             }
-            $derivativeResult = $this->derivatives?->processAfterUpload($asset);
+            $derivativeResult = $this->derivatives?->processAfterUpload($asset, function (MediaProcessingResult $result, MediaDerivativePlan $plan) use ($asset, &$generated): void {
+                $paths = new LocalMediaDerivativePathResolver($this->basePath);
+                foreach ($plan->profiles as $profile) {
+                    $path = $paths->resolve($asset->storagePath, $profile->code, $profile->format);
+                    if (($result->derivatives[$profile->code] ?? null) === $path->publicPath) {
+                        $generated[] = $path;
+                    }
+                }
+            });
             if ($derivativeResult !== null && !$derivativeResult->successful) {
                 throw new \RuntimeException(implode(' ', $derivativeResult->errors));
             }
@@ -80,6 +92,13 @@ final readonly class MediaUploadService
             $cleanupResult = null;
             if (is_object($stored)) {
                 $cleanupResult = $this->cleanup->cleanup($stored);
+            }
+            foreach ($generated as $path) {
+                $result = $this->cleanup->cleanup((object) ['storagePath' => $path->relativePath, 'publicPath' => $path->publicPath]);
+                $cleanupResult = new MediaStoredFileCleanupResult(
+                    array_merge($cleanupResult?->deleted ?? [], $result->deleted),
+                    array_merge($cleanupResult?->skipped ?? [], $result->skipped),
+                );
             }
 
             if ($cleanupException !== null) {

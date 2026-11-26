@@ -12,6 +12,13 @@ use Zoosper\Media\Repository\MediaAssetRepository;
 use Zoosper\Media\Processing\MediaUploadDerivativeDispatcher;
 use Zoosper\Media\Processing\MediaUploadDerivativePolicy;
 use Zoosper\Media\Processing\QueuedMediaProcessor;
+use Zoosper\Media\Processing\GdMediaProcessor;
+use Zoosper\Media\Processing\MediaDerivativePlan;
+use Zoosper\Media\Processing\MediaDerivativeProfile;
+use Zoosper\Media\Processing\MediaProcessingResult;
+use Zoosper\Media\Processing\MediaProcessorInterface;
+use Zoosper\Media\Model\MediaAsset;
+use Zoosper\Media\Repository\MediaDerivativeRepository;
 use Zoosper\Media\Service\MediaStorage;
 use Zoosper\Media\Service\MediaStoredFileCleanupService;
 use Zoosper\Media\Service\MediaUploadService;
@@ -106,6 +113,105 @@ test('upload removes files even when database rollback fails', function () {
         ->and($result->statusCode)->toBe(500)
         ->and(mediaUploadFixtureFiles($root . '/storage/media'))->toBe([])
         ->and(mediaUploadFixtureFiles($root . '/public/media'))->toBe([]);
+});
+
+test('upload removes generated derivatives when metadata persistence fails', function () {
+    $root = sys_get_temp_dir() . '/zoosper-media-derivative-db-failure-' . bin2hex(random_bytes(4));
+    mkdir($root, 0775, true);
+    $tmpFile = $root . '/upload.png';
+    $image = imagecreatetruecolor(2, 2);
+    imagepng($image, $tmpFile);
+
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec('CREATE TABLE media_assets (id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT NOT NULL, filename TEXT NOT NULL, original_filename TEXT NOT NULL, mime_type TEXT NOT NULL, extension TEXT NOT NULL, size_bytes INTEGER NOT NULL, storage_path TEXT NOT NULL, public_path TEXT NULL, status TEXT NOT NULL, created_by INTEGER NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)');
+    $pdo->exec('CREATE TABLE media_derivatives (id INTEGER PRIMARY KEY, media_asset_id INTEGER, profile TEXT, format TEXT, width INTEGER, height INTEGER, size_bytes INTEGER, storage_path TEXT, public_path TEXT, created_at TEXT, updated_at TEXT)');
+    $pdo->exec("CREATE TRIGGER fail_second_derivative BEFORE INSERT ON media_derivatives WHEN NEW.profile = 'large' BEGIN SELECT RAISE(FAIL, 'metadata failure'); END");
+    $plan = new MediaDerivativePlan(
+        new MediaDerivativeProfile('thumb', 2, 2, 'png', 82, 'contain'),
+        new MediaDerivativeProfile('large', 2, 2, 'png', 82, 'contain'),
+    );
+    $dispatcher = new MediaUploadDerivativeDispatcher(new GdMediaProcessor($root), new MediaUploadDerivativePolicy(true), $plan, new MediaDerivativeRepository($pdo, $root));
+    $service = new MediaUploadService(new MediaAssetRepository($pdo), new MediaUploadValidator(), new MediaStorage($root), $root, derivatives: $dispatcher);
+
+    $result = $service->upload([
+        'name' => 'upload.png', 'tmp_name' => $tmpFile,
+        'error' => UPLOAD_ERR_OK, 'size' => filesize($tmpFile),
+    ], mediaUploadTestAdminUser());
+
+    expect($result->successful)->toBeFalse()
+        ->and($result->statusCode)->toBe(500)
+        ->and((int) $pdo->query('SELECT COUNT(*) FROM media_assets')->fetchColumn())->toBe(0)
+        ->and((int) $pdo->query('SELECT COUNT(*) FROM media_derivatives')->fetchColumn())->toBe(0)
+        ->and(mediaUploadFixtureFiles($root . '/storage/media'))->toBe([])
+        ->and(mediaUploadFixtureFiles($root . '/public/media'))->toBe([]);
+});
+
+test('successful synchronous uploads retain generated derivatives and metadata', function () {
+    $root = sys_get_temp_dir() . '/zoosper-media-derivative-success-' . bin2hex(random_bytes(4));
+    mkdir($root, 0775, true);
+    $tmpFile = $root . '/upload.png';
+    $image = imagecreatetruecolor(2, 2);
+    imagepng($image, $tmpFile);
+
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec('CREATE TABLE media_assets (id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT NOT NULL, filename TEXT NOT NULL, original_filename TEXT NOT NULL, mime_type TEXT NOT NULL, extension TEXT NOT NULL, size_bytes INTEGER NOT NULL, storage_path TEXT NOT NULL, public_path TEXT NULL, status TEXT NOT NULL, created_by INTEGER NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)');
+    $pdo->exec('CREATE TABLE media_derivatives (id INTEGER PRIMARY KEY, media_asset_id INTEGER, profile TEXT, format TEXT, width INTEGER, height INTEGER, size_bytes INTEGER, storage_path TEXT, public_path TEXT, created_at TEXT, updated_at TEXT)');
+    $plan = new MediaDerivativePlan(new MediaDerivativeProfile('thumb', 2, 2, 'png', 82, 'contain'));
+    $repository = new MediaDerivativeRepository($pdo, $root);
+    $dispatcher = new MediaUploadDerivativeDispatcher(new GdMediaProcessor($root), new MediaUploadDerivativePolicy(true), $plan, $repository);
+    $service = new MediaUploadService(new MediaAssetRepository($pdo), new MediaUploadValidator(), new MediaStorage($root), $root, derivatives: $dispatcher);
+
+    $result = $service->upload([
+        'name' => 'upload.png', 'tmp_name' => $tmpFile,
+        'error' => UPLOAD_ERR_OK, 'size' => filesize($tmpFile),
+    ], mediaUploadTestAdminUser());
+
+    expect($result->successful)->toBeTrue();
+    $derivatives = $repository->forAsset($result->assetId);
+    expect($derivatives)->toHaveCount(1)
+        ->and(is_file($root . '/' . $derivatives[0]->storagePath))->toBeTrue()
+        ->and(is_file($root . '/public' . $derivatives[0]->publicPath))->toBeTrue();
+});
+
+test('failed uploads do not delete arbitrary paths reported by a processor', function () {
+    $root = sys_get_temp_dir() . '/zoosper-media-derivative-unrelated-' . bin2hex(random_bytes(4));
+    mkdir($root . '/public/media/derivatives', 0775, true);
+    $unrelated = $root . '/public/media/derivatives/unrelated.png';
+    file_put_contents($unrelated, 'unrelated');
+    $tmpFile = $root . '/upload.png';
+    $image = imagecreatetruecolor(2, 2);
+    imagepng($image, $tmpFile);
+
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec('CREATE TABLE media_assets (id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT NOT NULL, filename TEXT NOT NULL, original_filename TEXT NOT NULL, mime_type TEXT NOT NULL, extension TEXT NOT NULL, size_bytes INTEGER NOT NULL, storage_path TEXT NOT NULL, public_path TEXT NULL, status TEXT NOT NULL, created_by INTEGER NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)');
+    $processor = new class($root) implements MediaProcessorInterface {
+        public function __construct(private string $root)
+        {
+        }
+
+        public function process(MediaAsset $asset, MediaDerivativePlan $plan): MediaProcessingResult
+        {
+            $result = (new GdMediaProcessor($this->root))->process($asset, $plan);
+            if (!$result->successful) {
+                return $result;
+            }
+            return MediaProcessingResult::success(['thumb' => '/media/derivatives/unrelated.png']);
+        }
+    };
+    $plan = new MediaDerivativePlan(new MediaDerivativeProfile('thumb', 2, 2, 'png', 82, 'contain'));
+    $dispatcher = new MediaUploadDerivativeDispatcher($processor, new MediaUploadDerivativePolicy(true), $plan, new MediaDerivativeRepository($pdo, $root));
+    $service = new MediaUploadService(new MediaAssetRepository($pdo), new MediaUploadValidator(), new MediaStorage($root), $root, derivatives: $dispatcher);
+
+    $result = $service->upload([
+        'name' => 'upload.png', 'tmp_name' => $tmpFile,
+        'error' => UPLOAD_ERR_OK, 'size' => filesize($tmpFile),
+    ], mediaUploadTestAdminUser());
+
+    expect($result->successful)->toBeFalse()
+        ->and(file_get_contents($unrelated))->toBe('unrelated');
 });
 
 test('original filename normalisation preserves falsey and length boundaries', function () {

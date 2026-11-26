@@ -1929,11 +1929,6 @@
       <code><![CDATA[isEmpty]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="packages/zoosper-media/src/Processing/MediaProcessingResult.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$derivatives]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="packages/zoosper-media/src/Processing/MediaUploadDerivativeDispatcher.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>

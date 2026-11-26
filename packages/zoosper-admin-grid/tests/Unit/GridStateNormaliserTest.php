@@ -50,6 +50,33 @@ test('page size has a minimum and non-toggleable columns remain visible', functi
         ->and($state['visible_columns'])->toBe(['id','actions']);
 });
 
+test('criteria preserves the supported 200 row page size and bounds the page', function (): void {
+    $criteria = (new GridStateNormaliser())->criteria([
+        'page' => 999999, 'page_size' => 200,
+    ], normaliserDefinition());
+
+    expect($criteria->pager->pageSize)->toBe(200)
+        ->and($criteria->pager->page)->toBe(100000);
+});
+
+test('criteria preserves filters whose keys match grid controls', function (): void {
+    $definition = new GridDefinition(
+        title: 'Records',
+        columns: [new GridColumn('id', 'ID', sortable: true)],
+        filters: [new GridFilter('page', 'Page filter'), new GridFilter('sort', 'Sort filter')],
+        defaultSort: 'id',
+    );
+    $criteria = (new GridStateNormaliser())->criteria([
+        'filters' => ['page' => 'landing', 'sort' => 'featured'],
+        'page' => 3,
+        'sort_by' => 'id',
+    ], $definition);
+
+    expect($criteria->filters)->toBe(['page' => 'landing', 'sort' => 'featured'])
+        ->and($criteria->pager->page)->toBe(3)
+        ->and($criteria->sortBy)->toBe('id');
+});
+
 
 
 

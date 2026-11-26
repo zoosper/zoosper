@@ -18,6 +18,7 @@ it('locks the first high-signal Psalm correctness cohort', function (): void {
         ->toContain('$page?->status ?? $result->newStatus')
         ->not->toContain('$result->currentStatus')
         ->and($rewrites)
-        ->toContain('$siteContext=$request->siteContext();if($siteContext===null||$siteContext->siteId===null)')
-        ->toContain('$this->resolver->resolve($siteContext->siteId,$request->path())');
+        ->toContain('$siteContext = $request->siteContext();')
+        ->toContain('if ($siteContext === null || $siteContext->siteId === null)')
+        ->toContain('$this->resolver->resolve($siteContext->siteId, $request->path())');
 });

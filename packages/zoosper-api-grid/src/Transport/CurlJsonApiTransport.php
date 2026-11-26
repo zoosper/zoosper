@@ -9,6 +9,8 @@ use JsonException;
 /** Bounded read-only JSON transport for API-backed Grids. */
 final readonly class CurlJsonApiTransport implements ApiTransportInterface
 {
+    private const MAXIMUM_METADATA_VALUE_BYTES = 8192;
+
     public function __construct(private string $baseUrl)
     {
         if (!filter_var($baseUrl, FILTER_VALIDATE_URL)) {
@@ -87,6 +89,13 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
                     );
                 }
                 if (in_array($name, ['link', 'retry-after'], true)) {
+                    $existingLength = isset($responseHeaders[$name]) ? strlen($responseHeaders[$name]) + 2 : 0;
+                    if ($existingLength + strlen($value) > self::MAXIMUM_METADATA_VALUE_BYTES) {
+                        throw new ApiTransportException(
+                            'External Grid response metadata was invalid.',
+                            category: ApiTransportException::INVALID_RESPONSE_METADATA,
+                        );
+                    }
                     $responseHeaders[$name] = isset($responseHeaders[$name])
                         ? $responseHeaders[$name] . ', ' . $value
                         : $value;

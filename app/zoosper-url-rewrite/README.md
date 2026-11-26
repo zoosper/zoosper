@@ -58,4 +58,4 @@ PAT-scoped, request-Site isolated URL Rewrite reads, policy-backed create/update
 
 ### Shared mutation lifecycle
 Create/update use one policy-backed application service. Disable, restore and disabled-first permanent deletion use a feature-owned lifecycle coordinator with safe audit metadata.
-Targets containing backslashes are rejected to prevent browser interpretation as external URLs. Restoring a rewrite revalidates its policy and is blocked if its active Site-scoped chain contains a cycle or exceeds the depth limit. Existing active rewrites should be reviewed for unsafe targets.
+Targets containing backslashes, control characters, or protocol-relative URLs are rejected. Restoring a rewrite revalidates its policy and is blocked if its active Site-scoped chain contains a cycle or exceeds the depth limit. At runtime, invalid stored rewrites fall through to the next handler rather than emitting a redirect; review and correct legacy records as needed.
