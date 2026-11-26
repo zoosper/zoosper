@@ -6,6 +6,22 @@ use Zoosper\Auth\Repository\AdminUserRepository;
 use Zoosper\Auth\Service\AuthService;
 use Zoosper\Auth\Service\PasswordHasher;
 
+final class AuthRacePdo extends PDO
+{
+    public ?Closure $beforeWrite = null;
+
+    public function prepare(string $query, array $options = []): PDOStatement|false
+    {
+        if ($this->beforeWrite !== null && str_starts_with($query, 'UPDATE admin_users SET')) {
+            $callback = $this->beforeWrite;
+            $this->beforeWrite = null;
+            $callback($this);
+        }
+
+        return parent::prepare($query, $options);
+    }
+}
+
 /*
  * Phase E1 behavioural tests for AuthService's rehash-on-login upgrade path.
  * Uses a real in-memory SQLite AdminUserRepository (same fixture shape as the
@@ -15,7 +31,7 @@ use Zoosper\Auth\Service\PasswordHasher;
 
 function makeAuthRehashPdo(): PDO
 {
-    $pdo = new PDO('sqlite::memory:');
+    $pdo = new AuthRacePdo('sqlite::memory:');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->exec(
         'CREATE TABLE admin_users (
@@ -110,6 +126,40 @@ it('does not rehash an inactive user even with the correct password', function (
 
     $unchangedHash = (string) $pdo->query("SELECT password_hash FROM admin_users WHERE email = 'dave@example.test'")->fetchColumn();
     expect($unchangedHash)->toBe($weakHash);
+});
+
+it('does not overwrite a concurrent password change during rehash', function (): void {
+    $pdo = makeAuthRehashPdo();
+    $hasher = new PasswordHasher();
+    $oldHash = password_hash('OldPassword123!', PASSWORD_BCRYPT, ['cost' => 4]);
+    $newHash = $hasher->hash('NewPassword123!');
+    $pdo->prepare('INSERT INTO admin_users (email, name, password_hash, status) VALUES (?,?,?,?)')
+        ->execute(['race@example.test', 'Race', $oldHash, 'active']);
+    $pdo->beforeWrite = static function (PDO $pdo) use ($newHash): void {
+        $pdo->prepare('UPDATE admin_users SET password_hash = ? WHERE id = 1')->execute([$newHash]);
+    };
+
+    $result = (new AuthService(new AdminUserRepository($pdo), $hasher))->authenticate('race@example.test', 'OldPassword123!');
+
+    expect($result)->toBeNull()
+        ->and($pdo->query('SELECT password_hash FROM admin_users WHERE id = 1')->fetchColumn())->toBe($newHash);
+});
+
+it('does not authenticate after the verified password changes before login completes', function (): void {
+    $pdo = makeAuthRehashPdo();
+    $hasher = new PasswordHasher();
+    $oldHash = $hasher->hash('OldPassword123!');
+    $newHash = $hasher->hash('NewPassword123!');
+    $pdo->prepare('INSERT INTO admin_users (email, name, password_hash, status) VALUES (?,?,?,?)')
+        ->execute(['race@example.test', 'Race', $oldHash, 'active']);
+    $pdo->beforeWrite = static function (PDO $pdo) use ($newHash): void {
+        $pdo->prepare('UPDATE admin_users SET password_hash = ? WHERE id = 1')->execute([$newHash]);
+    };
+
+    $result = (new AuthService(new AdminUserRepository($pdo), $hasher))->authenticate('race@example.test', 'OldPassword123!');
+
+    expect($result)->toBeNull()
+        ->and($pdo->query('SELECT password_hash FROM admin_users WHERE id = 1')->fetchColumn())->toBe($newHash);
 });
 
 

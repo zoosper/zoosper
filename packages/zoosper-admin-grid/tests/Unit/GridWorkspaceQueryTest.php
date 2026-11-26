@@ -78,6 +78,13 @@ test('query URL rejects external paths and never emits identity selectors', func
         ->toThrow(\InvalidArgumentException::class, 'application-local');
 });
 
+test('query URL rejects browser interpreted external paths', function (): void {
+    foreach (['//evil.example/path', '/\\evil.example/path', "/\t/evil.example/path"] as $path) {
+        expect(fn () => (new GridWorkspaceQuery())->url($path, queryState()))
+            ->toThrow(\InvalidArgumentException::class);
+    }
+});
+
 
 
 

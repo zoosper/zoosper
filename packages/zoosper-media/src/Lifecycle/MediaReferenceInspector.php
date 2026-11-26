@@ -46,13 +46,16 @@ final readonly class MediaReferenceInspector
     {
         $columns = $this->columns($table);
         $conditions = [];
+        $unmatchedConditions = [];
         $params = [];
         if (in_array('content', $columns, true)) {
             $conditions[] = 'content LIKE :content_reference';
+            $unmatchedConditions[] = "COALESCE(content, '') LIKE :content_reference";
             $params['content_reference'] = '%' . $publicPath . '%';
         }
         if (in_array('content_json', $columns, true)) {
             $conditions[] = 'content_json LIKE :json_reference';
+            $unmatchedConditions[] = "COALESCE(content_json, '') LIKE :json_reference";
             $params['json_reference'] = '%' . $publicPath . '%';
         }
         if ($conditions === []) {
@@ -66,7 +69,38 @@ final readonly class MediaReferenceInspector
         );
         $statement->execute($params);
 
-        return (int) $statement->fetchColumn();
+        $count = (int) $statement->fetchColumn();
+        if (!in_array('content_json', $columns, true)) {
+            return $count;
+        }
+
+        $statement = $this->pdo->prepare(
+            'SELECT content_json FROM ' . $table . ' WHERE content_json IS NOT NULL AND NOT (' . implode(' OR ', $unmatchedConditions) . ')'
+        );
+        $statement->execute($params);
+        while (($json = $statement->fetchColumn()) !== false) {
+            if ($this->containsReference(json_decode((string) $json, true), $publicPath)) {
+                ++$count;
+            }
+        }
+
+        return $count;
+    }
+
+    private function containsReference(mixed $value, string $publicPath): bool
+    {
+        if (is_string($value)) {
+            return str_contains($value, $publicPath);
+        }
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                if ($this->containsReference($item, $publicPath)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /** @return list<string> */

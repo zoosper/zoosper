@@ -95,3 +95,19 @@ test('page size resets pagination and submits the canonical filter form', async 
     assert.equal(form.querySelector('[name="page_size"]').value, '50');
     assert.equal(submitted, 1);
 });
+
+test('selected CSV neutralises spreadsheet formulas in headers and cells', async () => {
+    const dom = await boot(`<table class="grid-has-selection"><thead><tr><th>Select</th><th>=Header</th><th>Title</th></tr></thead>
+        <tbody><tr class="is-selected"><td></td><td>=1+1</td><td>normal, "quoted"</td></tr>
+        <tr class="is-selected"><td></td><td> +SUM(A1)</td><td>@cmd</td></tr>
+        <tr class="is-selected"><td></td><td>-1</td><td>plain</td></tr></tbody></table>
+        <div data-grid-selection-bar><select aria-label="Bulk actions"><option value="export.selected">Export</option></select></div>`, []);
+    let csv;
+    dom.window.Blob = class { constructor(parts) { csv = parts.join(''); } };
+    dom.window.URL.createObjectURL = () => 'blob:test';
+    dom.window.URL.revokeObjectURL = () => {};
+    dom.window.HTMLAnchorElement.prototype.click = () => {};
+    dom.window.eval(await script('grid-export-selected.js'));
+    dom.window.document.querySelector('select').dispatchEvent(new dom.window.Event('change'));
+    assert.equal(csv, '\uFEFF"\'=Header","Title"\r\n"\'=1+1","normal, ""quoted"""\r\n"\'+SUM(A1)","\'@cmd"\r\n"\'-1","plain"');
+});

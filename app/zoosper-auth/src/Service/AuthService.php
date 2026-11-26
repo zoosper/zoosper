@@ -70,13 +70,23 @@ final class AuthService
         // attacker would need VALID credentials to ever observe this timing,
         // at which point enumeration is moot. This is the same standard
         // pattern used by Laravel, Symfony and WordPress.
+        $verifiedHash = $user->passwordHash;
         if ($this->hasher->needsRehash($user->passwordHash)) {
-            $this->users->updatePassword($user->id, $this->hasher->hash($password));
+            $newHash = $this->hasher->hash($password);
+            if (!$this->users->updatePasswordIfUnchanged($user->id, $verifiedHash, $newHash)) {
+                return null;
+            }
+            $verifiedHash = $newHash;
         }
 
         $this->users->updateLastLogin($user->id);
 
-        return $this->users->findById($user->id);
+        $current = $this->users->findById($user->id);
+        if ($current === null || !$current->isActive() || !hash_equals($verifiedHash, $current->passwordHash)) {
+            return null;
+        }
+
+        return $current;
     }
 
     /**

@@ -68,7 +68,7 @@ final readonly class GridWorkspaceQuery
 
     private function assertLocalPath(string $path): void
     {
-        if ($path === '' || $path[0] !== '/' || str_contains($path, '://')) {
+        if (!GridLocalPath::isValid($path)) {
             throw new \InvalidArgumentException(
                 'Grid workspace URLs must use an application-local path.',
             );

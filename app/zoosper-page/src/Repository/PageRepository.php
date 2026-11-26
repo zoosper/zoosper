@@ -242,8 +242,8 @@ final readonly class PageRepository
     }
     public function deletePermanently(int $id): void
     {
-        $statement = $this->pdo->prepare('DELETE FROM pages WHERE id=:id');
-        $statement->execute(['id'=>$id]);
+        $statement = $this->pdo->prepare('DELETE FROM pages WHERE id=:id AND status=:status');
+        $statement->execute(['id'=>$id, 'status'=>'archived']);
         if ($statement->rowCount() !== 1) { throw new \RuntimeException('Page was not deleted.'); }
     }
     public function unpublish(int $id, ?int $userId = null): void
@@ -311,9 +311,11 @@ final readonly class PageRepository
             metaKeywords: $revision->metaKeywords,
             canonicalUrl: $revision->canonicalUrl,
         );
-        $revision->status === 'published'
-            ? $this->publish($revision->pageId, $userId)
-            : $this->unpublish($revision->pageId, $userId);
+        match ($revision->status) {
+            'published' => $this->publish($revision->pageId, $userId),
+            'archived' => $this->archive($revision->pageId, $userId),
+            default => $this->unpublish($revision->pageId, $userId),
+        };
     }
 
     /** @param list<string> $columns @param array<string, mixed> $params */

@@ -158,7 +158,7 @@ final readonly class GridWorkspaceMutationFormsRenderer
 
     private function assertLocalPath(string $path): void
     {
-        if ($path === '' || $path[0] !== '/' || str_contains($path, '://')) {
+        if (!GridLocalPath::isValid($path)) {
             throw new \InvalidArgumentException(
                 'Grid workspace form action must use an application-local path.',
             );

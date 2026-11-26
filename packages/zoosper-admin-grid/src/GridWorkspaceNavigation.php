@@ -20,7 +20,7 @@ final readonly class GridWorkspaceNavigation
             $this->exportUrl,
             ...array_values($this->sortUrls),
         ]) as $url) {
-            if ($url[0] !== '/' || str_contains($url, '://')) {
+            if (!GridLocalPath::isValid($url)) {
                 throw new \InvalidArgumentException(
                     'Grid navigation URLs must use application-local paths.',
                 );

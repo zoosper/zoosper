@@ -25,7 +25,7 @@ final readonly class PageRevisionRepository
     public function pageForPage(int $pageId, int $page, int $pageSize): array
     {
         $page = max(1, $page);
-        $pageSize = max(1, min(50, $pageSize));
+        $pageSize = max(1, min(100, $pageSize));
         $offset = ($page - 1) * $pageSize;
         $statement = $this->pdo->prepare(
             "SELECT * FROM page_revisions WHERE page_id = :page_id ORDER BY id DESC LIMIT {$pageSize} OFFSET {$offset}"

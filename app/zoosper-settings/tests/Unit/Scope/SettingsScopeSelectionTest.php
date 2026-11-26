@@ -31,6 +31,21 @@ it('rejects unsupported types and unknown keys', function (): void {
         ->and(fn () => $selector->select('site', '999'))->toThrow(\InvalidArgumentException::class);
 });
 
+it('uses the canonical site ID for writes, reads and resets', function (): void {
+    $selector = new SettingsScopeSelection(selectorRepository());
+    $selection = $selector->select('site', '0042');
+    $pdo = new \PDO('sqlite::memory:');
+    $pdo->exec('CREATE TABLE config_scope_values (id INTEGER PRIMARY KEY AUTOINCREMENT, scope_type TEXT NOT NULL, scope_key TEXT NULL, config_path TEXT NOT NULL, config_value TEXT NULL, updated_at TEXT NOT NULL)');
+    $repository = new \Zoosper\ScopedConfig\ScopeConfigRepository($pdo);
+    $repository->set('example.value', \Zoosper\ScopedConfig\ScopeType::Site, $selection['key'], 'saved');
+
+    expect($selection['key'])->toBe('42')
+        ->and($repository->get('example.value', $selection['context']))->toBe('saved');
+
+    $repository->clear('example.value', \Zoosper\ScopedConfig\ScopeType::Site, $selector->select('site', '42')['key']);
+    expect($repository->allForPath('example.value'))->toBe([]);
+});
+
 it('keeps Request query parsing behind the HTTP adapter', function (): void {
     $source = file_get_contents(dirname(__DIR__, 5) . '/app/zoosper-settings/src/Scope/SettingsScopeSelection.php');
 

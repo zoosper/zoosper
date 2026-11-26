@@ -12,7 +12,7 @@ final readonly class GridWorkspaceMutationResult
         public string $message,
         public string $redirectPath,
     ) {
-        if ($redirectPath === '' || $redirectPath[0] !== '/') {
+        if (!GridLocalPath::isValid($redirectPath)) {
             throw new \InvalidArgumentException(
                 'Grid workspace redirects must use an absolute application path.',
             );

@@ -85,6 +85,13 @@ test('mutation forms reject missing CSRF data and external form actions', functi
         ->toThrow(\InvalidArgumentException::class, 'application-local');
 });
 
+test('mutation forms reject browser interpreted external actions', function (): void {
+    foreach (['//evil.example', '/\\evil.example', "/\t/evil.example"] as $path) {
+        expect(fn () => (new GridWorkspaceMutationFormsRenderer())->render(mutationFormState(), $path, '_csrf', 'token'))
+            ->toThrow(\InvalidArgumentException::class);
+    }
+});
+
 
 
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\AdminGrid\BulkAction;
 
 use InvalidArgumentException;
+use Zoosper\AdminGrid\GridLocalPath;
 use Zoosper\Grid\BulkAction\GridBulkActionExecutionResult;
 
 /** Converts a framework-neutral execution result into a safe HTTP outcome. */
@@ -15,11 +16,11 @@ final readonly class GridBulkExecutionResultAdapter
         string $successRedirectPath,
     ): GridBulkHttpResult {
         $redirectPath = trim($successRedirectPath);
-        if ($redirectPath === '' || !str_starts_with($redirectPath, '/')) {
-            throw new InvalidArgumentException('Grid bulk-action redirect path must be application-relative.');
-        }
         if (str_starts_with($redirectPath, '//')) {
             throw new InvalidArgumentException('Grid bulk-action redirect path cannot be protocol-relative.');
+        }
+        if (!GridLocalPath::isValid($redirectPath)) {
+            throw new InvalidArgumentException('Grid bulk-action redirect path must be application-relative.');
         }
 
         return $result->successful

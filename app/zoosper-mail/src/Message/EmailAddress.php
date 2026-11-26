@@ -31,6 +31,7 @@ final readonly class EmailAddress
         }
 
         $safeName = str_replace(['"', "\r", "\n"], ['', '', ''], $this->name);
+        $safeName = str_replace('\\', '\\\\', $safeName);
 
         return '"' . $safeName . '" <' . $this->email . '>';
     }

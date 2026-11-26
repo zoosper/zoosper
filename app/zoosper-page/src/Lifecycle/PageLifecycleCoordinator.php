@@ -60,8 +60,8 @@ final readonly class PageLifecycleCoordinator
         $started = !$this->pdo->inTransaction();
         if ($started) { $this->pdo->beginTransaction(); }
         try {
-            $this->revisionRows->deleteForPage($page->id);
             $this->pages->deletePermanently($page->id);
+            $this->revisionRows->deleteForPage($page->id);
             if ($started) { $this->pdo->commit(); }
         } catch (Throwable $exception) {
             if ($started && $this->pdo->inTransaction()) { $this->pdo->rollBack(); }

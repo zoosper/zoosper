@@ -45,6 +45,18 @@ it('performs no writes when any editable field is invalid', function (): void {
     expect($repository->get('mail.enabled', ScopeContext::default()))->toBeNull();
 });
 
+it('saves an empty multiselect when the browser omits its unselected field', function (): void {
+    [$writer, $repository] = sectionWriterFixture();
+    $section = new SettingsSection('example.general', 'Example', 'general', 'example', [
+        new SettingDefinition('example.choices', 'Choices', 'multiselect', options: ['one', 'two']),
+        new SettingDefinition('example.name', 'Name'),
+    ]);
+    $writer->write($section, ScopeType::Default, null, ['example.name' => 'Example']);
+
+    expect($repository->get('example.choices', ScopeContext::default()))->toBe('[]')
+        ->and($repository->get('example.name', ScopeContext::default()))->toBe('Example');
+});
+
 it('writes named Settings values captured through the real globals boundary', function (): void {
     $server = $_SERVER;
     $post = $_POST;

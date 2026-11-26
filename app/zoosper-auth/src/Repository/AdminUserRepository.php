@@ -214,6 +214,14 @@ final readonly class AdminUserRepository
         $statement->execute(['id' => $id, 'password_hash' => $hash, 'updated_at' => gmdate('Y-m-d H:i:s')]);
     }
 
+    public function updatePasswordIfUnchanged(int $id, string $oldHash, string $newHash): bool
+    {
+        $statement = $this->pdo->prepare('UPDATE admin_users SET password_hash = :password_hash, updated_at = :updated_at WHERE id = :id AND password_hash = :old_hash AND status = :status');
+        $statement->execute(['id' => $id, 'password_hash' => $newHash, 'old_hash' => $oldHash, 'status' => 'active', 'updated_at' => gmdate('Y-m-d H:i:s')]);
+
+        return $statement->rowCount() === 1;
+    }
+
     public function updateLastLogin(int $id): void
     {
         $now = gmdate('Y-m-d H:i:s');

@@ -72,7 +72,7 @@ it('rejects unsafe success redirects', function (string $path): void {
     expect(fn () => (new GridBulkExecutionResultAdapter())->adapt(
         GridBulkActionExecutionResult::success('Done.'), $path,
     ))->toThrow(InvalidArgumentException::class, 'redirect path');
-})->with(['https://example.test/admin', '//example.test/admin', 'admin/pages', '']);
+})->with(['https://example.test/admin', '//example.test/admin', '/\\example.test/admin', "/\t/example.test/admin", 'admin/pages', '']);
 
 
 

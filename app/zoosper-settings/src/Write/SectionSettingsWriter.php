@@ -26,12 +26,13 @@ final readonly class SectionSettingsWriter
             if ($definition->readOnly || $definition->secret) {
                 continue;
             }
-            if (!array_key_exists($definition->path, $submitted)) {
+            if (!array_key_exists($definition->path, $submitted) && $definition->type !== 'multiselect') {
                 $errors[$definition->path] = 'A value is required.';
                 continue;
             }
             try {
-                $normalised[$definition->path] = $this->normaliser->normalise($definition, $submitted[$definition->path]);
+                $input = array_key_exists($definition->path, $submitted) ? $submitted[$definition->path] : [];
+                $normalised[$definition->path] = $this->normaliser->normalise($definition, $input);
             } catch (SettingValidationException $exception) {
                 $errors += $exception->errors;
             }

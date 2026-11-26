@@ -1,7 +1,11 @@
 (() => {
     'use strict';
 
-    const quoteCsv = (value) => `"${String(value).replaceAll('"', '""')}"`;
+    const quoteCsv = (value) => {
+        const text = String(value);
+        const safe = /^[\s]*[=+\-@]/.test(text) || /^[\t\r\n]/.test(text) ? `'${text}` : text;
+        return `"${safe.replaceAll('"', '""')}"`;
+    };
     const safeFilePart = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80) || 'grid';
 
     const bind = () => {

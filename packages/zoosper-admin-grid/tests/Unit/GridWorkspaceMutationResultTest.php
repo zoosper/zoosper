@@ -32,6 +32,13 @@ test('every stable mutation action has a success message', function (): void {
     }
 });
 
+test('mutation redirects reject browser interpreted external paths', function (): void {
+    foreach (['//evil.example/path', '/\\evil.example/path', "/\t/evil.example/path"] as $path) {
+        expect(fn () => new GridWorkspaceMutationResult('save_view', 'Saved', $path))
+            ->toThrow(\InvalidArgumentException::class);
+    }
+});
+
 
 
 

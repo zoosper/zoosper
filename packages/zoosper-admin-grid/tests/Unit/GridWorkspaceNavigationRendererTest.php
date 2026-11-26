@@ -38,6 +38,15 @@ test('navigation omits unavailable page links and rejects external URLs', functi
     ))->toThrow(\InvalidArgumentException::class, 'application-local');
 });
 
+test('navigation rejects browser interpreted external paths in every link', function (): void {
+    foreach (['//evil.example', '/\\evil.example', "/\t/evil.example"] as $path) {
+        expect(fn () => new GridWorkspaceNavigation($path, null, [], '/admin/export'))->toThrow(\InvalidArgumentException::class);
+        expect(fn () => new GridWorkspaceNavigation(null, $path, [], '/admin/export'))->toThrow(\InvalidArgumentException::class);
+        expect(fn () => new GridWorkspaceNavigation(null, null, ['id' => $path], '/admin/export'))->toThrow(\InvalidArgumentException::class);
+        expect(fn () => new GridWorkspaceNavigation(null, null, [], $path))->toThrow(\InvalidArgumentException::class);
+    }
+});
+
 
 
 

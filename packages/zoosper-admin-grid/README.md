@@ -61,6 +61,7 @@ The package-owned column-order runtime synchronises the live visibility and orde
 
 - Preserve public interfaces, route permissions, configuration keys, and service identifiers when extending or replacing behaviour.
 - Feature modules continue to authenticate, authorise and validate CSRF before calling the mutation service. Admin user IDs and stable grid keys remain server-derived rather than client-controlled.
+- Workspace links, form actions and redirects require local paths; protocol-relative paths, backslashes and control characters are rejected. Selected-row CSV exports prefix spreadsheet formula-like headers and cells with an apostrophe.
 
 ## Testing
 

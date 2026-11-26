@@ -65,6 +65,7 @@ final readonly class SettingsScopeSelection
         if (!ctype_digit($key) || (int) $key <= 0 || ($site = $this->sites->findById((int) $key)) === null) {
             throw new InvalidArgumentException("Unknown site scope: {$key}");
         }
+        $key = (string) $site->id;
         return compact('type', 'key', 'sites', 'websites', 'stores') + [
             'context' => new ScopeContext(siteId: $site->id, storeCode: $site->storeCode, websiteCode: $site->websiteCode),
             'label' => "Site: {$site->name}",

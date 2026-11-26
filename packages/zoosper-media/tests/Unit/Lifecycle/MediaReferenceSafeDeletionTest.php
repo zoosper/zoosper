@@ -46,6 +46,36 @@ it('blocks referenced deletion and permits archived unreferenced deletion', func
     expect($deleted->successful)->toBeTrue()->and($repository->findById(7))->toBeNull();
 });
 
+it('blocks deletion for JSON-escaped references in pages and revisions', function (): void {
+    $pdo = mediaReferenceDb();
+    $asset = mediaReferenceAsset();
+    $pdo->prepare('INSERT INTO media_assets VALUES (:id,:uuid,:filename,:original,:mime,:extension,:size,:storage,:public,:status,NULL,:created,:updated)')->execute(['id'=>$asset->id,'uuid'=>$asset->uuid,'filename'=>$asset->filename,'original'=>$asset->originalFilename,'mime'=>$asset->mimeType,'extension'=>$asset->extension,'size'=>$asset->sizeBytes,'storage'=>$asset->storagePath,'public'=>$asset->publicPath,'status'=>$asset->status,'created'=>'2026-01-01','updated'=>'2026-01-01']);
+    $json = json_encode(['file' => ['url' => $asset->publicPath]], JSON_THROW_ON_ERROR);
+    foreach (['pages', 'page_revisions'] as $table) {
+        $pdo->prepare("INSERT INTO $table VALUES (1, '', :json)")->execute(['json' => $json]);
+    }
+    $repository = new MediaAssetRepository($pdo);
+    $lifecycle = new MediaLifecycleCoordinator($pdo, $repository, new MediaStoredFileCleanupService(sys_get_temp_dir()), new MediaDerivativeRepository($pdo, sys_get_temp_dir()), new MediaReferenceInspector($pdo));
+
+    $result = $lifecycle->deletePermanentlyGuarded($asset, 1, 'admin@example.test');
+
+    expect($result->successful)->toBeFalse()
+        ->and($result->blockers)->toBe(['pages' => 1, 'page_revisions' => 1])
+        ->and($repository->findById(7))->not->toBeNull();
+});
+
+it('counts escaped JSON references once per row including unicode escapes', function (): void {
+    $pdo = mediaReferenceDb();
+    $asset = mediaReferenceAsset();
+    $insert = $pdo->prepare('INSERT INTO pages VALUES (:id, :content, :json)');
+    $escaped = json_encode(['url' => $asset->publicPath], JSON_THROW_ON_ERROR);
+    $insert->execute(['id' => 1, 'content' => $asset->publicPath, 'json' => $escaped]);
+    $insert->execute(['id' => 2, 'content' => '', 'json' => '{"url":"\u002fmedia\u002f2026\u002f08\u002fasset.png"}']);
+    $insert->execute(['id' => 3, 'content' => '', 'json' => '{"url":"/media/other.png"}']);
+
+    expect((new MediaReferenceInspector($pdo))->counts($asset))->toBe(['pages' => 2, 'page_revisions' => 0]);
+});
+
 
 
 

@@ -26,7 +26,7 @@ it('keeps automatic password rehash in the established authentication runtime', 
     $hasher = (string) file_get_contents($root . '/src/Service/PasswordHasher.php');
 
     expect($auth)->toContain('$this->hasher->needsRehash($user->passwordHash)')
-        ->toContain('$this->users->updatePassword(')
+        ->toContain('$this->users->updatePasswordIfUnchanged(')
         ->and($hasher)->toContain('password_needs_rehash($hash, PASSWORD_DEFAULT)');
 });
 
