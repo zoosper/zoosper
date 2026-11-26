@@ -315,14 +315,6 @@
       <code><![CDATA[RequireSecondFactorByDefault]]></code>
     </UnusedClass>
   </file>
-  <file src="app/zoosper-auth/src/Service/SessionGuard.php">
-    <PossiblyFalseArgument>
-      <code><![CDATA[session_name()]]></code>
-    </PossiblyFalseArgument>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[ini_get('session.use_cookies')]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="app/zoosper-auth/src/Token/PersonalAccessToken.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$createdAt]]></code>
@@ -862,11 +854,6 @@
     </UndefinedInterfaceMethod>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
-    </UnusedParam>
-  </file>
-  <file src="app/zoosper-mail/src/Admin/EmailLogGrid.php">
-    <UnusedParam>
-      <code><![CDATA[$row]]></code>
     </UnusedParam>
   </file>
   <file src="app/zoosper-mail/src/Config/SmtpConfigFactory.php">
@@ -1445,9 +1432,6 @@
     </UnusedClass>
   </file>
   <file src="app/zoosper-theme/src/Template/Engine/LatteTemplateEngine.php">
-    <DeprecatedMethod>
-      <code><![CDATA[setTempDirectory]]></code>
-    </DeprecatedMethod>
     <UnusedClass>
       <code><![CDATA[LatteTemplateEngine]]></code>
     </UnusedClass>

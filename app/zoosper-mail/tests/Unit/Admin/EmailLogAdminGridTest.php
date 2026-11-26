@@ -31,6 +31,16 @@ test('Email Log detail bounds escaped message source and Mail owns its asset', f
         ->and($css)->toContain('white-space: pre-wrap')->toContain('overflow-wrap: anywhere')->toContain('max-width: 100%');
 });
 
+test('Email Log status callback renders known and unknown statuses', function (): void {
+    $grid = new EmailLogGrid(new PDO('sqlite::memory:'));
+    $columns = $grid->definition()->columns;
+    $status = $columns[1];
+
+    expect($status->renderValue('sent', ['id' => 1]))->toBe('<span class="badge badge-sent">sent</span>')
+        ->and($status->renderValue('failed', ['id' => 2]))->toBe('<span class="badge badge-failed">failed</span>')
+        ->and($status->renderValue('<script>', ['id' => 3]))->toBe('<span class="badge badge-unknown">unknown</span>');
+});
+
 test('Email Logs composes native pagination nodes into one feature-owned footer', function (): void {
     $root = dirname(__DIR__, 5);
     $css = file_get_contents($root . '/app/zoosper-mail/resources/admin/css/email-log.css');

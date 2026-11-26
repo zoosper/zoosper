@@ -42,7 +42,7 @@ final class LatteTemplateEngine implements TemplateEngineInterface
         }
 
         $this->latte = new LatteEngine();
-        $this->latte->setTempDirectory($this->cacheDirectory);
+        $this->latte->setCacheDirectory($this->cacheDirectory);
     }
 
     /** @return list<string> */

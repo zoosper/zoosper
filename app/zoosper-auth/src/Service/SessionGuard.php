@@ -72,9 +72,11 @@ final class SessionGuard
         $_SESSION = [];
 
         if (session_status() === PHP_SESSION_ACTIVE) {
-            if (ini_get('session.use_cookies')) {
+            $useCookies = ini_get('session.use_cookies');
+            $sessionName = $useCookies !== false && $useCookies !== '' && $useCookies !== '0' ? session_name() : false;
+            if ($sessionName !== false && $sessionName !== '') {
                 $params = session_get_cookie_params();
-                setcookie(session_name(), '', [
+                setcookie($sessionName, '', [
                     'expires' => time() - 42000,
                     'path' => $params['path'],
                     'domain' => $params['domain'],

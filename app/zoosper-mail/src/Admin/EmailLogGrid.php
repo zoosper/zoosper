@@ -117,8 +117,7 @@ final readonly class EmailLogGrid implements GridDataSourceInterface
         }
     }
 
-    /** @param array<string,mixed> $row */
-    private function status(mixed $value, array $row): string
+    private function status(mixed $value): string
     {
         $status = in_array((string) $value, ['sent', 'failed'], true) ? (string) $value : 'unknown';
         return '<span class="badge badge-' . $this->escape($status) . '">' . $this->escape($status) . '</span>';
