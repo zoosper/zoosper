@@ -32,6 +32,16 @@ it('is disabled and unconfigured by default', function (): void {
     ]);
 });
 
+it('keeps configuration-discovered routes and navigation disabled by default', function (): void {
+    replaceStoreOrderEnvironment([]);
+    $config = dirname(__DIR__, 2) . '/config/';
+
+    expect(require $config . 'admin_routes.php')->toBe([])
+        ->and(require $config . 'admin_menu.php')->toBe([])
+        ->and(require $config . 'services.php')->toBe([])
+        ->and(require $config . 'controllers.php')->toBe([]);
+});
+
 it('fails closed when enabled without complete trusted scope', function (): void {
     replaceStoreOrderEnvironment(['STORE_ORDERS_ENABLED' => 'true']);
     expect(fn () => StoreOrderIntegrationGate::configuration())

@@ -72,6 +72,7 @@ it('composes a registered page using only source-supported controls', function (
 it('rejects duplicate registrations and invalid data-source services', function (): void {
     $definition = apiGridDefinitionForPageTest();
     $registry = new ApiGridRegistry([$definition]);
+    expect($registry->all())->toBe([$definition]);
     expect(fn () => $registry->register($definition))->toThrow(InvalidArgumentException::class, 'Duplicate');
 
     $builder = new ApiGridPageBuilder($registry, new ApiGridQueryFactory(), static fn (): object => new \stdClass());

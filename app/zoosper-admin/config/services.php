@@ -15,7 +15,6 @@ use Zoosper\Admin\Asset\AdminAssetRegistry;
 use Zoosper\Admin\Asset\AdminAssetTemplateRenderer;
 use Zoosper\Admin\Asset\AdminAssetViewDataProvider;
 use Zoosper\Admin\Asset\AssetPathResolver;
-use Zoosper\Admin\Console\PruneLogsCommand;
 use Zoosper\AdminGrid\GridViewStateResolver;
 use Zoosper\Core\Editor\ContentEditorInterface;
 use Zoosper\Admin\Editor\ContentEditorRegistry;
@@ -61,10 +60,6 @@ use Zoosper\Core\Url\AdminUrlGenerator;
 use Zoosper\Media\EditorJs\EditorJsImageToolConfig;
 
 return [
-    PruneLogsCommand::class => static fn(ServiceContainer $services): PruneLogsCommand => new PruneLogsCommand(
-        $services->get(\Zoosper\Audit\AuditLogRepository::class),
-        $services->get(\Zoosper\Audit\LoginHistoryRepository::class),
-    ),
     AdminFormRegistry::class => static function (ServiceContainer $services): AdminFormRegistry {
         $registry = new AdminFormRegistry();
         if ($services->has(AdminFormUiConfigLoader::class)) {
