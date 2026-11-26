@@ -54,8 +54,9 @@ final readonly class MenuGrid implements GridDataSourceInterface
         $p = [];
         $q = trim(self::scalarFilter($c->filters['q'] ?? null));
         if ($q !== '') {
-            $w[] = '(m.label LIKE :q OR m.code LIKE :q)';
-            $p['q'] = '%' . $q . '%';
+            $w[] = '(m.label LIKE :q_label OR m.code LIKE :q_code)';
+            $p['q_label'] = '%' . $q . '%';
+            $p['q_code'] = '%' . $q . '%';
         }
         $v = self::scalarFilter($c->filters['status'] ?? null);
         if (in_array($v, ['active', 'inactive'], true)) {
@@ -65,7 +66,7 @@ final readonly class MenuGrid implements GridDataSourceInterface
         $base = ' FROM menus m JOIN sites s ON s.id=m.site_id WHERE ' . implode(' AND ', $w);
         $n = $this->pdo->prepare('SELECT COUNT(*)' . $base);
         $n->execute($p);
-        $sort = ['id' => 'm.id', 'label' => 'm.label', 'code' => 'code', 'site_name' => 's.name', 'status' => 'm.status', 'updated_at' => 'm.updated_at'][$c->sortBy ?? 'label'] ?? 'm.label';
+        $sort = ['id' => 'm.id', 'label' => 'm.label', 'code' => 'm.code', 'site_name' => 's.name', 'status' => 'm.status', 'updated_at' => 'm.updated_at'][$c->sortBy ?? 'label'] ?? 'm.label';
         $d = $c->sortDir === 'desc' ? 'DESC' : 'ASC';
         $st = $this->pdo->prepare('SELECT m.id, m.label, m.code, m.status, m.updated_at, s.name AS site_name' . $base . " ORDER BY $sort $d, m.id ASC LIMIT :limit OFFSET :offset");
         foreach ($p as $k => $x) {

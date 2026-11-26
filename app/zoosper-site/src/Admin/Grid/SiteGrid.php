@@ -61,8 +61,9 @@ final readonly class SiteGrid implements GridDataSourceInterface
         $q = trim(self::scalarFilter($c->filters['q'] ?? null));
 
         if ($q !== '') {
-            $w[] = '(name LIKE :q OR code LIKE :q)';
-            $p['q'] = '%' . $q . '%';
+            $w[] = '(name LIKE :q_name OR code LIKE :q_code)';
+            $p['q_name'] = '%' . $q . '%';
+            $p['q_code'] = '%' . $q . '%';
         }
 
         $v = self::scalarFilter($c->filters['status'] ?? null);

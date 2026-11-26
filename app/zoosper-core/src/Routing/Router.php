@@ -61,24 +61,22 @@ final class Router
             throw new InvalidArgumentException('Duplicate route registration: ' . $routeKey);
         }
 
-        $this->registeredRoutes[$routeKey] = true;
-        $this->statelessRoutes[$routeKey] = $stateless;
-
         if (!$this->hasPathParameter($path)) {
             $this->routes[$method . ' ' . $path] = $handler;
-            return;
-        }
-
-        $compiled = $this->compileParameterRoute($path, $handler);
-        foreach ($this->parameterRoutes[$method] ?? [] as $registered) {
-            if ($registered['shape'] === $compiled['shape']) {
-                throw new InvalidArgumentException(
-                    'Overlapping parameter route shape: ' . $method . ' ' . $path
-                    . ' conflicts with ' . $registered['path'],
-                );
+        } else {
+            $compiled = $this->compileParameterRoute($path, $handler);
+            foreach ($this->parameterRoutes[$method] ?? [] as $registered) {
+                if ($registered['shape'] === $compiled['shape']) {
+                    throw new InvalidArgumentException(
+                        'Overlapping parameter route shape: ' . $method . ' ' . $path
+                        . ' conflicts with ' . $registered['path'],
+                    );
+                }
             }
+            $this->parameterRoutes[$method][] = $compiled;
         }
-        $this->parameterRoutes[$method][] = $compiled;
+        $this->registeredRoutes[$routeKey] = true;
+        $this->statelessRoutes[$routeKey] = $stateless;
     }
 
     public function fallback(callable $handler): void
@@ -96,7 +94,7 @@ final class Router
             $headers = ['Allow' => implode(', ', $allowed)];
             return Response::raw('', 204, array_merge($headers, $this->cors->headersFor((string) $origin, true)));
         }
-        $dispatchMethod = $method === 'HEAD' && in_array('GET', $allowed, true) ? 'GET' : $method;
+        $dispatchMethod = $method === 'HEAD' && $this->match('HEAD', $path, $request) === null && in_array('GET', $allowed, true) ? 'GET' : $method;
         $match = $this->match($dispatchMethod, $path, $request);
         if ($match !== null) {
             $response = $this->call($match[0], $match[1]);
@@ -106,15 +104,17 @@ final class Router
         if ($allowed !== []) {
             return Response::raw('', 405, ['Allow' => implode(', ', $allowed)]);
         }
-        if ($this->fallback !== null) return $this->call($this->fallback, $request);
-        return Response::html('<h1>404</h1>', 404);
+        $response = $this->fallback !== null
+            ? $this->call($this->fallback, $request)
+            : Response::html('<h1>404</h1>', 404);
+        return $method === 'HEAD' ? $response->withoutBody() : $response;
     }
     public function isStateless(Request $request): bool
     {
         $method = strtoupper($request->method());
         $path = $this->normalise($request->path());
         if ($method === 'OPTIONS' && str_starts_with($path, '/api/') && $this->allowedMethods($path) !== []) return true;
-        if ($method === 'HEAD' && in_array('GET', $this->allowedMethods($path), true)) $method = 'GET';
+        if ($method === 'HEAD' && $this->match('HEAD', $path, $request) === null && in_array('GET', $this->allowedMethods($path), true)) $method = 'GET';
         if (array_key_exists($method . ' ' . $path, $this->statelessRoutes)) return $this->statelessRoutes[$method . ' ' . $path];
         foreach ($this->parameterRoutes[$method] ?? [] as $route) {
             if ($this->matchParameterRoute($route, $path) !== false) {

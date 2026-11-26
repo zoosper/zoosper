@@ -18,7 +18,13 @@ final class OperationalGridQueryState
     public static function bookmarkId(Request $request):?int
     {
         $raw=$request->query('bookmark');
-        return is_string($raw)&&preg_match('/^[1-9][0-9]*$/',$raw)===1?(int)$raw:null;
+        if (!is_string($raw) || preg_match('/^[1-9][0-9]*$/', $raw) !== 1) {
+            return null;
+        }
+
+        $id = (int) $raw;
+
+        return (string) $id === $raw ? $id : null;
     }
     private function __construct(){}
 }

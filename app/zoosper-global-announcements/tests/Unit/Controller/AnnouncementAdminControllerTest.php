@@ -109,6 +109,25 @@ it('returns active announcement JSON for authenticated users', function (): void
         ->and($payload['announcement']['title'])->toBe('Immediate Action Required');
 });
 
+it('uses the authenticated user rather than a request-supplied user for active announcements', function (): void {
+    $announcement = $this->repository->create('Notice', 'Body', 'published');
+    $this->repository->acknowledge($announcement->id, 7);
+
+    $request = new Request('GET', '/admin/announcements/active', query: ['user_id' => '8']);
+    $response = $this->controller->active(request: $request);
+
+    expect(json_decode($response->body(), true))->toBe([
+        'active' => false,
+        'announcement' => null,
+    ]);
+});
+
+it('requires an authenticated user for active announcements', function (): void {
+    $_SESSION = [];
+
+    $this->controller->active(request: new Request('GET', '/admin/announcements/active'));
+})->throws(\RuntimeException::class, 'Admin user is not authenticated.');
+
 it('processes asynchronous acknowledgment posts', function (): void {
     $announcement = $this->repository->create(
         title: 'Scheduled Maintenance',
