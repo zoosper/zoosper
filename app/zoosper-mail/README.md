@@ -60,6 +60,8 @@ Zoosper_Mail module for Zoosper CMS.
 
 ## Operational notes
 
+- SMTP delivery succeeds once the server accepts DATA; a subsequent QUIT failure does not change that result. A connection loss before the acceptance response leaves delivery uncertain and is reported as a failure.
+- SMTP encryption must be empty (plaintext), `tls` (STARTTLS), or `ssl` (implicit TLS); unrecognized values are rejected before connecting.
 - Run commands from the repository root with PHP 8.5 or the `zcomposer` wrapper.
 - Keep this README current when routes, configuration manifests, dependencies, migrations, public contracts, or operational behaviour change.
 - Canonical cross-module documentation remains under `docs/`; this README is the package-level technical reference.

@@ -50,6 +50,29 @@ it('blocks restoring a previously stored unsafe target', function (): void {
         ->and($r->findByIdForSite($id, 1)->isActive)->toBeFalse();
 });
 
+it('does not delete a rewrite restored after it was loaded', function (): void {
+    $r = new UrlRewriteRepository(rewriteLifeDb());
+    $id = $r->save(null, 1, 'old', '/new', 301, false);
+    $stale = $r->findByIdForSite($id, 1);
+    $r->changeStatus($id, 1, true);
+
+    $result = (new UrlRewriteLifecycleCoordinator($r))->deletePermanently($stale, 1, 'a');
+
+    expect($result->successful)->toBeFalse()
+        ->and($r->findByIdForSite($id, 1)->isActive)->toBeTrue();
+});
+
+it('does not report a successful deletion for a missing rewrite', function (): void {
+    $r = new UrlRewriteRepository(rewriteLifeDb());
+    $id = $r->save(null, 1, 'old', '/new', 301, false);
+    $stale = $r->findByIdForSite($id, 1);
+    $r->deletePermanently($id, 1);
+
+    $result = (new UrlRewriteLifecycleCoordinator($r))->deletePermanently($stale, 1, 'a');
+
+    expect($result->successful)->toBeFalse();
+});
+
 
 
 

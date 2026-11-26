@@ -28,7 +28,9 @@ final readonly class UrlRewriteLifecycleCoordinator
         if ($r->isActive) {
             return new UrlRewriteLifecycleResult(false, 'delete', $r->id, true, ['status' => 1], 'Disable the URL Rewrite before permanent deletion.');
         }
-        $this->rewrites->deletePermanently($r->id, $r->siteId);
+        if (!$this->rewrites->deleteIfInactive($r->id, $r->siteId)) {
+            return new UrlRewriteLifecycleResult(false, 'delete', $r->id, null, message: 'URL Rewrite no longer exists or is not disabled.');
+        }
         $this->log($actorId, $email, 'url_rewrite.deleted_permanently', $r, null);
         return new UrlRewriteLifecycleResult(true, 'delete', $r->id, null);
     }

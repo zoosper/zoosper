@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zoosper\Mail\Transport;
 
 use RuntimeException;
+use Throwable;
 use Zoosper\Mail\Config\SmtpConfig;
 use Zoosper\Mail\Message\EmailAddress;
 use Zoosper\Mail\Message\EmailMessage;
@@ -56,7 +57,11 @@ final class SmtpMailer implements MailerInterface
             $this->command('DATA', [354]);
             $this->write($this->buildPayload($message) . "\r\n.");
             $this->expect([250]);
-            $this->command('QUIT', [221]);
+            try {
+                $this->command('QUIT', [221]);
+            } catch (Throwable) {
+                // DATA was accepted; a shutdown failure cannot undo delivery.
+            }
         } finally {
             $this->disconnect();
         }
@@ -67,6 +72,10 @@ final class SmtpMailer implements MailerInterface
      */
     private function connect(): void
     {
+        if (!in_array($this->config->encryption(), ['', 'tls', 'ssl'], true)) {
+            throw new RuntimeException('Unsupported SMTP encryption.');
+        }
+
         $scheme = $this->config->encryption() === 'ssl' ? 'ssl://' : '';
         $target = $scheme . $this->config->host() . ':' . $this->config->port();
         $errno = 0;
