@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Zoosper\Site\Repository\SiteRepository;
+use Zoosper\Site\Repository\SiteDomainRepository;
 
 function makeSitesSqlitePdo(): PDO
 {
@@ -68,6 +69,32 @@ it('excludes inactive sites from allActive', function (): void {
         ->execute(['s' => 'inactive', 'id' => $id]);
 
     expect($repo->allActive())->toBe([]);
+});
+
+it('lists sites and domains in order with hydrated values', function (): void {
+    $pdo = makeSitesSqlitePdo();
+    $sites = new SiteRepository($pdo);
+    $domains = new SiteDomainRepository($pdo);
+
+    expect($sites->all())->toBe([])
+        ->and($sites->allActive())->toBe([])
+        ->and($domains->all())->toBe([]);
+
+    $zebra = $sites->create(code: 'zebra', name: 'Zebra', host: 'zebra.test');
+    $alpha = $sites->create(code: 'alpha', name: 'Alpha', host: 'alpha.test');
+    $pdo->prepare('UPDATE sites SET status = :status WHERE id = :id')
+        ->execute(['status' => 'inactive', 'id' => $zebra]);
+
+    $all = $sites->all();
+    $active = $sites->allActive();
+    $hosts = $domains->all();
+    expect(array_is_list($all))->toBeTrue()
+        ->and(array_map(static fn ($site) => $site->code, $all))->toBe(['alpha', 'zebra'])
+        ->and(array_is_list($active))->toBeTrue()
+        ->and(array_map(static fn ($site) => $site->id, $active))->toBe([$alpha])
+        ->and(array_is_list($hosts))->toBeTrue()
+        ->and(array_map(static fn ($domain) => $domain->host, $hosts))->toBe(['alpha.test', 'zebra.test'])
+        ->and($hosts[0]->siteId)->toBe($alpha);
 });
 
 it('finds a site by id via findById', function (): void {

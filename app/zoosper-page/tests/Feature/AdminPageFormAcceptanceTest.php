@@ -71,6 +71,7 @@ class AdminPageFormAcceptanceTest extends TestCase
         $this->assertStringContainsString('class="card admin-form-section"', $html);
         $this->assertStringContainsString('Page details', $html);
         $this->assertStringContainsString('Content', $html);
+        $this->assertStringContainsString('name="content"', $html);
         $this->assertStringContainsString('Search engine optimisation', $html);
         $this->assertStringContainsString('Publishing', $html);
         

@@ -19,7 +19,7 @@ final readonly class SiteDomainRepository
     {
         $statement = $this->pdo->query('SELECT * FROM site_domains ORDER BY host ASC');
 
-        return array_map(fn (array $row): SiteDomain => $this->hydrate($row), $statement->fetchAll());
+        return array_values(array_map(fn (array $row): SiteDomain => $this->hydrate($row), $statement->fetchAll()));
     }
 
     public function findById(int $id): ?SiteDomain

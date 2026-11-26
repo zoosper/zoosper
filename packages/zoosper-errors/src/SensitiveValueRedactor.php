@@ -32,25 +32,24 @@ final readonly class SensitiveValueRedactor
     /**
      * Redact a diagnostic array recursively.
      *
-     * @param array<string, mixed> $data
-     * @return array<string, mixed>
+     * @param array<array-key, mixed> $data
+     * @return array<array-key, mixed>
      */
     public function redactArray(array $data): array
     {
         $redacted = [];
         foreach ($data as $key => $value) {
-            $keyString = $key;
-            if ($this->isSensitiveKey($keyString)) {
-                $redacted[$keyString] = '[redacted]';
+            if ($this->isSensitiveKey((string) $key)) {
+                $redacted[$key] = '[redacted]';
                 continue;
             }
 
             if (is_array($value)) {
-                $redacted[$keyString] = $this->redactArray($value);
+                $redacted[$key] = $this->redactArray($value);
                 continue;
             }
 
-            $redacted[$keyString] = $value;
+            $redacted[$key] = $value;
         }
 
         return $redacted;

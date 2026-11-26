@@ -13,6 +13,9 @@ use Zoosper\Auth\Service\SessionGuard;
 use Zoosper\Database\Migrator;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Module\ModuleRegistry;
+use Zoosper\Core\Entity\Save\EntitySaveEventDispatcher;
+use Zoosper\Core\Entity\Save\EntitySaveLifecycle;
+use Zoosper\Core\Entity\Save\EntitySaveLifecycleRunner;
 
 /**
  * SECURITY REGRESSION TEST — confirms and closes a real privilege-escalation
@@ -85,7 +88,7 @@ function privescTestFakeViewRenderer(): AdminViewRenderer
     return (new ReflectionClass(AdminViewRenderer::class))->newInstanceWithoutConstructor();
 }
 
-function privescTestController(PDO $pdo, AdminUser $actor): UserAdminController
+function privescTestController(PDO $pdo, AdminUser $actor, ?EntitySaveLifecycleRunner $runner = null): UserAdminController
 {
     $guard = new SessionGuard(new AdminUserRepository($pdo));
     if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -100,6 +103,7 @@ function privescTestController(PDO $pdo, AdminUser $actor): UserAdminController
         roles: new RoleRepository($pdo),
         passwordHasher: new PasswordHasher(),
         views: privescTestFakeViewRenderer(),
+        saveLifecycle: $runner,
     );
 }
 
@@ -203,6 +207,31 @@ it('still allows a role.manage admin to assign roles normally via update() (no r
     $users = new AdminUserRepository($pdo);
     expect($users->roleIdsForUser($target->id))->toBe([$roleIds['superAdminRoleId']]);
 });
+
+it('persists create and update with or without the save lifecycle', function (bool $useLifecycle): void {
+    $pdo = privescTestDatabase();
+    $roleIds = privescTestSeedRoles($pdo);
+    $actor = privescTestCreateAdmin($pdo, $roleIds['superAdminRoleId'], 'save-actor');
+    $dispatcher = new EntitySaveEventDispatcher();
+    $events = [];
+    $dispatcher->listen(EntitySaveLifecycle::SAVE_AFTER, function ($context) use (&$events): void {
+        $events[] = [$context->entityType(), $context->entityId()];
+    });
+    $controller = privescTestController($pdo, $actor, $useLifecycle ? new EntitySaveLifecycleRunner($dispatcher) : null);
+    $email = 'save-' . bin2hex(random_bytes(4)) . '@example.test';
+    $form = ['email' => $email, 'name' => 'Created', 'password' => 'ChangeMe123!ForSure', 'status' => 'active', 'role_ids' => [(string) $roleIds['userManageRoleId']]];
+
+    expect($controller->create(new Request(method: 'POST', path: '/admin/users/create', form: $form))->statusCode())->toBe(302);
+    $users = new AdminUserRepository($pdo);
+    $created = $users->findByEmail($email);
+    expect($created)->not->toBeNull();
+    $form['name'] = 'Updated';
+    $form['password'] = '';
+    expect($controller->update(new Request(method: 'POST', path: '/admin/users/edit', query: ['id' => (string) $created->id], form: $form))->statusCode())->toBe(302)
+        ->and($users->findById($created->id)->name)->toBe('Updated')
+        ->and($users->roleIdsForUser($created->id))->toBe([$roleIds['userManageRoleId']])
+        ->and($events)->toBe($useLifecycle ? [['admin_user', null], ['admin_user', $created->id]] : []);
+})->with([false, true]);
 
 it('still allows a role.manage admin to create a new user with a chosen role (no regression)', function (): void {
     $pdo = privescTestDatabase();

@@ -62,7 +62,7 @@ final readonly class SiteRepository
     public function all(): array
     {
         $statement = $this->pdo->query('SELECT * FROM sites ORDER BY name ASC');
-        return array_map(fn (array $row): Site => $this->hydrate($row), $statement->fetchAll());
+        return array_values(array_map(fn (array $row): Site => $this->hydrate($row), $statement->fetchAll()));
     }
 
     /** @return list<Site> */
@@ -70,7 +70,7 @@ final readonly class SiteRepository
     {
         $statement = $this->pdo->prepare('SELECT * FROM sites WHERE status = :status ORDER BY name ASC');
         $statement->execute(['status' => 'active']);
-        return array_map(fn (array $row): Site => $this->hydrate($row), $statement->fetchAll());
+        return array_values(array_map(fn (array $row): Site => $this->hydrate($row), $statement->fetchAll()));
     }
 
     public function create(

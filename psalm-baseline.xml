@@ -197,10 +197,6 @@
     </UnusedParam>
   </file>
   <file src="app/zoosper-auth/src/Admin/Controller/UserAdminController.php">
-    <UnusedClosureParam>
-      <code><![CDATA[$c]]></code>
-      <code><![CDATA[$c]]></code>
-    </UnusedClosureParam>
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
@@ -520,9 +516,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-core/src/Console/ConsoleKernel.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$container->get(\Zoosper\Core\Module\ModuleRegistry::class)]]></code>
-    </ArgumentTypeCoercion>
     <UnusedClass>
       <code><![CDATA[ConsoleKernel]]></code>
     </UnusedClass>
@@ -1022,9 +1015,6 @@
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
-    <UnusedVariable>
-      <code><![CDATA[$editorHtml]]></code>
-    </UnusedVariable>
   </file>
   <file src="app/zoosper-page/src/Admin/Lifecycle/PageLifecycleAdminResponder.php">
     <PossiblyUnusedMethod>
@@ -1383,12 +1373,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="app/zoosper-site/src/Repository/SiteDomainRepository.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[array_map(fn (array $row): SiteDomain => $this->hydrate($row), $statement->fetchAll())]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<SiteDomain>]]></code>
-    </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[all]]></code>
@@ -1398,14 +1382,6 @@
     </PossiblyUnusedReturnValue>
   </file>
   <file src="app/zoosper-site/src/Repository/SiteRepository.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[array_map(fn (array $row): Site => $this->hydrate($row), $statement->fetchAll())]]></code>
-      <code><![CDATA[array_map(fn (array $row): Site => $this->hydrate($row), $statement->fetchAll())]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<Site>]]></code>
-      <code><![CDATA[list<Site>]]></code>
-    </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[findActiveByHost]]></code>
@@ -1923,9 +1899,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="packages/zoosper-errors/src/ConsoleExceptionFormatter.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]]></code>
-    </RiskyTruthyFalsyComparison>
     <UnusedClass>
       <code><![CDATA[ConsoleExceptionFormatter]]></code>
     </UnusedClass>

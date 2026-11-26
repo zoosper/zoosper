@@ -78,7 +78,8 @@ final readonly class ConsoleExceptionFormatter
             return (string) $value;
         }
 
-        return json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '[unprintable]';
+        $encoded = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return $encoded === false || $encoded === '0' ? '[unprintable]' : $encoded;
     }
 }
 

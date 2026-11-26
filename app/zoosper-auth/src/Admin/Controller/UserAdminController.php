@@ -120,7 +120,7 @@ final readonly class UserAdminController
             }
 
             $createdId = null;
-            $context = $this->runEntitySave('admin_user', $form, null, function (EntitySaveContext $c) use ($form, $password, &$createdId): void {
+            $context = $this->runEntitySave('admin_user', $form, null, function () use ($form, $password, &$createdId): void {
                 $createdId = $this->users->createWithRoleIds(
                     email: trim((string) ($form['email'] ?? '')),
                     name: trim((string) ($form['name'] ?? '')),
@@ -186,7 +186,7 @@ final readonly class UserAdminController
                 ? $this->roleIdsFromForm($form)
                 : $this->users->roleIdsForUser($user->id);
 
-            $context = $this->runEntitySave('admin_user', $form, $user->id, function (EntitySaveContext $c) use ($form, $user, $password, $roleIds, $actor): void {
+            $context = $this->runEntitySave('admin_user', $form, $user->id, function () use ($form, $user, $password, $roleIds, $actor): void {
                 $this->users->updateUser(
                     id: $user->id,
                     email: trim((string) ($form['email'] ?? '')),

@@ -143,7 +143,6 @@ final readonly class PageAdminController
         $content = (string) ($submitted['content'] ?? $page?->content ?? '');
         $contentJson = (string) ($submitted['content_json'] ?? $page?->contentJson ?? '');
 
-        $editorHtml = '';
         if ($this->contentEditor !== null) {
             $editorHtml = $this->contentEditor->render('content', $content, [
                 'label' => 'Content', 'rows' => 14, 'required' => true,
