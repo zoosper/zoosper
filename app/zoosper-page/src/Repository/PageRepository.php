@@ -221,14 +221,18 @@ final readonly class PageRepository
 
     public function publish(int $id, ?int $userId = null): void
     {
-        $statement = $this->pdo->prepare('UPDATE pages SET status = :status, published_at = :published_at, updated_by = :updated_by, updated_at = :updated_at WHERE id = :id');
+        $statement = $this->pdo->prepare('UPDATE pages SET status = :status, published_at = :published_at, updated_by = :updated_by, updated_at = :updated_at WHERE id = :id AND status <> :archived');
         $statement->execute([
             'id' => $id,
             'status' => 'published',
+            'archived' => 'archived',
             'published_at' => gmdate('Y-m-d H:i:s'),
             'updated_by' => $userId,
             'updated_at' => gmdate('Y-m-d H:i:s'),
         ]);
+        if ($statement->rowCount() === 0) {
+            $this->rejectArchived($id);
+        }
     }
 
     public function archive(int $id, ?int $userId = null): void
@@ -249,13 +253,28 @@ final readonly class PageRepository
     }
     public function unpublish(int $id, ?int $userId = null): void
     {
-        $statement = $this->pdo->prepare('UPDATE pages SET status = :status, published_at = NULL, updated_by = :updated_by, updated_at = :updated_at WHERE id = :id');
+        $statement = $this->pdo->prepare('UPDATE pages SET status = :status, published_at = NULL, updated_by = :updated_by, updated_at = :updated_at WHERE id = :id AND status <> :archived');
         $statement->execute([
             'id' => $id,
             'status' => 'draft',
+            'archived' => 'archived',
             'updated_by' => $userId,
             'updated_at' => gmdate('Y-m-d H:i:s'),
         ]);
+        if ($statement->rowCount() === 0) {
+            $this->rejectArchived($id);
+        }
+    }
+
+    private function rejectArchived(int $id): void
+    {
+        // MySQL reports zero changed rows for an idempotent update; use a current read.
+        $sql = 'SELECT status FROM pages WHERE id = :id' . ($this->isSqlite() ? '' : ' FOR UPDATE');
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['id' => $id]);
+        if ($statement->fetchColumn() === 'archived') {
+            throw new \RuntimeException('Archived Pages must be restored before changing publication status.');
+        }
     }
 
     /** @param array<string, mixed> $row */

@@ -75,7 +75,7 @@ final class StoreOrderIntegrationGate
     {
         $host = strtolower((string) parse_url($url, PHP_URL_HOST));
 
-        return in_array($host, ['localhost', '127.0.0.1', '::1'], true);
+        return in_array($host, ['localhost', '127.0.0.1', '[::1]'], true);
     }
 
     private static function optionalPositiveInteger(mixed $value): ?int

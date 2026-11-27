@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Zoosper\TwoFactor\Challenge\AdminTotpReplayRepository;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeRepository;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeService;
 use Zoosper\TwoFactor\Repository\AdminRecoveryCodeRepository;
@@ -114,6 +115,68 @@ it('is single-use: a consumed challenge cannot be replayed', function (): void {
     $replay = $service->verifyTotp($token, 'anything', 'SECRET');
     expect($replay->passed)->toBeFalse()
         ->and($replay->reason)->toBe('invalid_or_expired');
+});
+
+it('rolls back a TOTP claim if challenge consumption fails', function (string $change, bool $existing): void {
+    $pdo = makeChallengePdo();
+    $pdo->exec('CREATE TABLE admin_totp_replay_state (admin_user_id INTEGER PRIMARY KEY, last_counter INTEGER NOT NULL, updated_at TEXT NOT NULL)');
+    if ($existing) {
+        $pdo->exec("INSERT INTO admin_totp_replay_state VALUES (1, 99, '2026-07-25 08:00:00')");
+    }
+    $event = $existing ? 'UPDATE' : 'INSERT';
+    $pdo->exec('CREATE TRIGGER challenge_race AFTER ' . $event . ' ON admin_totp_replay_state BEGIN UPDATE admin_two_factor_challenges SET ' . $change . '; END');
+    $replay = new AdminTotpReplayRepository($pdo);
+    $service = new TwoFactorChallengeService(new TwoFactorChallengeRepository($pdo), fn () => true, fn () => false, fn (int $id) => $replay->claimIfNewer($id, 100, '2026-07-25 08:00:00'), 300, fixedNow());
+    $token = $service->issue(1);
+
+    expect($service->verifyTotp($token, '123456', 'SECRET')->reason)->toBe('invalid_or_expired')
+        ->and($pdo->query('SELECT last_counter FROM admin_totp_replay_state WHERE admin_user_id = 1')->fetchColumn())->toBe($existing ? 99 : false);
+})->with([
+    'expiry on initial claim' => ["expires_at = '2026-07-25 08:00:00'", false],
+    'consumption on later claim' => ["consumed_at = '2026-07-25 08:00:00'", true],
+]);
+
+it('keeps TOTP claims and challenge consumption inside the caller transaction', function (): void {
+    $pdo = makeChallengePdo();
+    $pdo->exec('CREATE TABLE admin_totp_replay_state (admin_user_id INTEGER PRIMARY KEY, last_counter INTEGER NOT NULL, updated_at TEXT NOT NULL)');
+    $repo = new TwoFactorChallengeRepository($pdo);
+    $replay = new AdminTotpReplayRepository($pdo);
+    $service = new TwoFactorChallengeService($repo, fn () => true, fn () => false, fn (int $id) => $replay->claimIfNewer($id, 100, '2026-07-25 08:00:00'), 300, fixedNow());
+    $token = $service->issue(1);
+
+    $pdo->beginTransaction();
+    expect($service->verifyTotp($token, '123456', 'SECRET')->passed)->toBeTrue()
+        ->and($pdo->inTransaction())->toBeTrue();
+    $pdo->rollBack();
+
+    expect($pdo->query('SELECT COUNT(*) FROM admin_totp_replay_state')->fetchColumn())->toBe(0)
+        ->and($repo->findByTokenHash(hash('sha256', $token))->consumedAt)->toBeNull();
+});
+
+it('rejects a claimed TOTP counter on a new challenge', function (): void {
+    $pdo = makeChallengePdo();
+    $pdo->exec('CREATE TABLE admin_totp_replay_state (admin_user_id INTEGER PRIMARY KEY, last_counter INTEGER NOT NULL, updated_at TEXT NOT NULL)');
+    $repo = new TwoFactorChallengeRepository($pdo);
+    $replay = new AdminTotpReplayRepository($pdo);
+    $service = new TwoFactorChallengeService($repo, fn () => true, fn () => false, fn (int $id) => $replay->claimIfNewer($id, 100, '2026-07-25 08:00:00'), 300, fixedNow());
+
+    expect($service->verifyTotp($service->issue(1), '123456', 'SECRET')->passed)->toBeTrue();
+    $token = $service->issue(1);
+    expect($service->verifyTotp($token, '123456', 'SECRET')->reason)->toBe('wrong_code')
+        ->and($repo->findByTokenHash(hash('sha256', $token))->consumedAt)->toBeNull();
+});
+
+it('rolls back a TOTP claim when challenge consumption throws', function (): void {
+    $pdo = makeChallengePdo();
+    $pdo->exec('CREATE TABLE admin_totp_replay_state (admin_user_id INTEGER PRIMARY KEY, last_counter INTEGER NOT NULL, updated_at TEXT NOT NULL)');
+    $pdo->exec("CREATE TRIGGER fail_consumption BEFORE UPDATE OF consumed_at ON admin_two_factor_challenges BEGIN SELECT RAISE(ABORT, 'consumption failed'); END");
+    $replay = new AdminTotpReplayRepository($pdo);
+    $service = new TwoFactorChallengeService(new TwoFactorChallengeRepository($pdo), fn () => true, fn () => false, fn (int $id) => $replay->claimIfNewer($id, 100, '2026-07-25 08:00:00'), 300, fixedNow());
+    $token = $service->issue(1);
+
+    expect(fn () => $service->verifyTotp($token, '123456', 'SECRET'))->toThrow(PDOException::class, 'consumption failed');
+    expect($pdo->inTransaction())->toBeFalse()
+        ->and($pdo->query('SELECT COUNT(*) FROM admin_totp_replay_state')->fetchColumn())->toBe(0);
 });
 
 it('rejects an expired challenge', function (): void {

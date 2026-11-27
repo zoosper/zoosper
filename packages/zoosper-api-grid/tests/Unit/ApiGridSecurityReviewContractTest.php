@@ -15,11 +15,17 @@ it('requires credential-free HTTPS origins outside explicit loopback development
     'embedded user info' => 'https://user:secret@api.example.test',
     'base query' => 'https://api.example.test?token=secret',
     'base fragment' => 'https://api.example.test#secret',
+    'other ipv6' => 'http://[::2]:3000',
+    'ipv6 mapped ipv4' => 'http://[::ffff:127.0.0.1]:3000',
+    'ipv6 with user info' => 'http://user:secret@[::1]:3000',
+    'ipv6 with query' => 'http://[::1]:3000?token=secret',
+    'ipv6 with fragment' => 'http://[::1]:3000#secret',
 ]);
 it('retains HTTPS and loopback-only HTTP compatibility', function (): void {
     expect(new CurlJsonApiTransport('https://api.example.test'))->toBeInstanceOf(CurlJsonApiTransport::class)
         ->and(new CurlJsonApiTransport('http://127.0.0.1:3000'))->toBeInstanceOf(CurlJsonApiTransport::class)
-        ->and(new CurlJsonApiTransport('http://localhost:3000'))->toBeInstanceOf(CurlJsonApiTransport::class);
+        ->and(new CurlJsonApiTransport('http://localhost:3000'))->toBeInstanceOf(CurlJsonApiTransport::class)
+        ->and(new CurlJsonApiTransport('http://[::1]:3000'))->toBeInstanceOf(CurlJsonApiTransport::class);
 });
 it('keeps the reviewed transport boundary fail closed and secret safe', function (): void {
     $root = dirname(__DIR__, 4);

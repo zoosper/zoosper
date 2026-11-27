@@ -29,6 +29,29 @@ it('allows explicitly opted-in loopback http for local integration tests', funct
     });
 });
 
+it('permits only opted-in ipv6 loopback http', function (string $url, string $optIn, bool $allowed): void {
+    StoreOrdersTestEnvironment::with([
+        'STORE_ORDERS_ENABLED' => 'true',
+        'STORE_ORDERS_API_BASE_URL' => $url,
+        'STORE_ORDERS_API_TOKEN' => 'safe-token',
+        'STORE_ORDERS_ALLOW_INSECURE_HTTP' => $optIn,
+        'STORE_ORDERS_STORE_CODE' => '3',
+        'STORE_ORDERS_KIOSK_WEBSITE_ID' => '55',
+    ], static function () use ($allowed): void {
+        if ($allowed) {
+            expect(StoreOrderIntegrationGate::configuration()['enabled'])->toBeTrue();
+        } else {
+            expect(fn () => StoreOrderIntegrationGate::configuration())
+                ->toThrow(InvalidArgumentException::class, 'requires HTTPS');
+        }
+    });
+})->with([
+    'loopback opted in' => ['http://[::1]:3000', 'true', true],
+    'loopback without opt-in' => ['http://[::1]:3000', 'false', false],
+    'other ipv6' => ['http://[::2]:3000', 'true', false],
+    'mapped ipv4' => ['http://[::ffff:127.0.0.1]:3000', 'true', false],
+]);
+
 it('requires a header-safe Store Orders token', function (string $token): void {
     StoreOrdersTestEnvironment::with([
         'STORE_ORDERS_ENABLED' => 'true',

@@ -19,7 +19,7 @@ final readonly class CurlJsonApiTransport implements ApiTransportInterface
         $parts = parse_url($baseUrl);
         $scheme = strtolower($parts['scheme'] ?? '');
         $host = strtolower($parts['host'] ?? '');
-        $loopback = in_array($host, ['localhost', '127.0.0.1', '::1'], true);
+        $loopback = in_array($host, ['localhost', '127.0.0.1', '[::1]'], true);
         if (!is_array($parts) || !in_array($scheme, ['http', 'https'], true) || $host === ''
             || isset($parts['user']) || isset($parts['pass']) || isset($parts['query']) || isset($parts['fragment'])
             || ($scheme !== 'https' && !$loopback)) {

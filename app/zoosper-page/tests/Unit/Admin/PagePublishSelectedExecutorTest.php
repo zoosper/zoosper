@@ -115,6 +115,42 @@ it('rejects single-page publication transitions for archived Pages', function (b
     expect($repository->findById($id)?->status)->toBe('archived');
 })->with([true, false]);
 
+it('rejects publication transitions when the Page was archived after it was read', function (bool $publish): void {
+    $repository = new PageRepository(publishExecutorPdo());
+    $id = $repository->create(1, 'Page', 'page', 'Content', $publish ? 'draft' : 'published');
+    $stale = $repository->findById($id);
+    $repository->archive($id, 9);
+    $service = new PagePublicationCoordinator($repository);
+
+    expect(fn () => $publish ? $service->publish($stale, 7) : $service->unpublish($stale, 7))
+        ->toThrow(\RuntimeException::class, 'Archived');
+    expect($repository->findById($id)?->status)->toBe('archived')
+        ->and($repository->findById($id)?->updatedBy)->toBe(9);
+})->with([true, false]);
+
+it('does not publish or emit effects for a Page archived after bulk preflight', function (): void {
+    $repository = new PageRepository(publishExecutorPdo());
+    $first = $repository->create(1, 'First', 'first', 'Content');
+    $second = $repository->create(1, 'Second', 'second', 'Content');
+    $effects = new class($repository, $second) implements PagePublishSideEffectsInterface {
+        public array $pageIds = [];
+        public function __construct(private PageRepository $pages, private int $second) {}
+        public function afterPublished(Page $page, GridBulkExecutionContext $context, int $selectedCount): void
+        {
+            $this->pageIds[] = $page->id;
+            $this->pages->archive($this->second, 9);
+        }
+    };
+
+    expect(fn () => (new PagePublishSelectedExecutor($repository, $effects))->execute(
+        publishDefinition(), new GridBulkSelection([$first, $second], 100),
+        new GridBulkExecutionContext(new GridBulkActor(7)),
+    ))->toThrow(\RuntimeException::class, 'Archived');
+    expect($repository->findById($first)?->status)->toBe('published')
+        ->and($repository->findById($second)?->status)->toBe('archived')
+        ->and($effects->pageIds)->toBe([$first]);
+});
+
 it('does not republish or emit side effects for already-published Pages', function (): void {
     $pdo = publishExecutorPdo();
     $repository = new PageRepository($pdo);

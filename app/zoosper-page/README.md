@@ -106,6 +106,9 @@ Zoosper_Page module for Zoosper CMS.
 ### Lifecycle
 - `PageLifecycleCoordinator` owns archive, restore-to-draft, and guarded permanent deletion.
 - Archive and restore capture complete safety revisions before mutation.
+- Publication and unpublication use a conditional database update that cannot change an archived Page; restore it to draft first. A concurrent archive after a Page was read can therefore cause the operation to fail.
+- This guard is not a transaction for the whole workflow: form saves and revision restores may already have written content or revisions when publication fails, and a bulk action may have published earlier Pages. Lifecycle snapshots, audit/events, already-published bulk skips, deletion reference checks and direct database writes are not protected against all concurrent changes. Retry after reloading the Page; do not assume failed multi-step operations rolled back.
+- A zero-row status update is checked separately to preserve idempotent updates on MySQL; an intervening restore or deletion can change what that follow-up read observes. Missing IDs retain the repository's existing no-op behavior.
 - Permanent deletion requires an archived Page and refuses Menu-item or Page URL-rewrite references.
 - Revision and Page deletion run in one transaction. Declarative schema repeats the migration-owned `pages.id`, `page_revisions.id`, and `page_revisions.page_id` identity columns so the merged schema can validate the `ON DELETE CASCADE` relationship without relying on live-database introspection.
 - HTTP routes and destructive Admin presentation remain a following adoption slice; this phase establishes the tested domain and integrity boundary first.

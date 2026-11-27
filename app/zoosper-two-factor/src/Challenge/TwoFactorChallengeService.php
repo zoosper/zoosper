@@ -90,11 +90,17 @@ final readonly class TwoFactorChallengeService
             return TwoFactorChallengeResult::wrongCode($challenge->adminUserId);
         }
 
-        if (!($this->claimTotpUse)($challenge->adminUserId, $secret, $code)) {
-            return TwoFactorChallengeResult::wrongCode($challenge->adminUserId);
-        }
+        $result = TwoFactorChallengeResult::wrongCode($challenge->adminUserId);
+        $this->challenges->recoveryAttempt(function () use ($challenge, $secret, $code, &$result): bool {
+            if (!($this->claimTotpUse)($challenge->adminUserId, $secret, $code)) {
+                return false;
+            }
 
-        return $this->consume($challenge);
+            $result = $this->consume($challenge);
+            return $result->passed;
+        });
+
+        return $result;
     }
 
     /**

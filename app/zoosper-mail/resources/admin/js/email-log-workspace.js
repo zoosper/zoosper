@@ -13,8 +13,8 @@
     workspace.classList.add('email-logs-index__workspace');
     table.classList.add('email-logs-index__table');
 
-    const previous = page.querySelector('[rel="prev"]');
-    const next = page.querySelector('[rel="next"]');
+    const previous = page.querySelector('a.grid-pagination__prev, a[rel="prev"]');
+    const next = page.querySelector('a.grid-pagination__next, a[rel="next"]');
     const legacy = page.querySelector('.grid-pagination');
     const footer = document.createElement('nav');
     footer.className = 'email-logs-index__pagination';

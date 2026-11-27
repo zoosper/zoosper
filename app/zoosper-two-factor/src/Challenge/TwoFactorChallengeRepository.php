@@ -88,7 +88,7 @@ final readonly class TwoFactorChallengeRepository
         return $statement->rowCount() === 1;
     }
 
-    /** Run a recovery attempt atomically, rolling back when it fails. */
+    /** Run a challenge attempt atomically, rolling back when it fails. */
     public function recoveryAttempt(callable $attempt): bool
     {
         $nested = $this->pdo->inTransaction();

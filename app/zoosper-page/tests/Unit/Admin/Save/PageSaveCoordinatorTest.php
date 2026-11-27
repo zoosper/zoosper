@@ -75,6 +75,22 @@ it('does not publish an archived Page through the save form', function (): void 
         ->and($repo->findById($id)?->title)->toBe('Archived');
 });
 
+it('does not publish a Page archived after the save form loaded it', function (): void {
+    $repo = new PageRepository(phase9fnPagesPdo());
+    $id = $repo->create(1, 'Original', 'original', 'Original');
+    $stale = $repo->findById($id);
+    $repo->archive($id, 9);
+    $service = new PageSaveCoordinator($repo, new BasicHtmlSanitizer());
+
+    $result = $service->update([
+        'site_id' => 1, 'title' => 'Changed', 'slug' => 'changed',
+        'content' => 'Changed', 'publish' => '1',
+    ], $stale, phase9fnUser());
+
+    expect($result->successful)->toBeFalse()
+        ->and($repo->findById($id)?->status)->toBe('archived');
+});
+
 it('captures created and pre-update revisions with direct and lifecycle persistence', function (bool $useLifecycle): void {
     $pdo = phase9fnPagesPdo();
     $pdo->exec('CREATE TABLE page_revisions (id INTEGER PRIMARY KEY AUTOINCREMENT, page_id INTEGER, title TEXT, slug TEXT, content TEXT, status TEXT, content_format TEXT, content_json TEXT, meta_title TEXT, meta_description TEXT, meta_keywords TEXT, canonical_url TEXT, created_by INTEGER, created_at TEXT)');
