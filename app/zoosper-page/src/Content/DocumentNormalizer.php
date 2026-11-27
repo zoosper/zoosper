@@ -39,7 +39,9 @@ final readonly class DocumentNormalizer
     {
         $document['schema_version'] = (int) ($document['schema_version'] ?? $this->validator->schemaVersion());
         $blocks = $document['blocks'] ?? null;
-        $document['blocks'] = array_values(is_array($blocks) ? $blocks : []);
+        if (is_array($blocks)) {
+            $document['blocks'] = array_values($blocks);
+        }
         $this->validator->validate($document);
 
         return PageContentDocument::structured($document, $html);

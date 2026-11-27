@@ -42,6 +42,9 @@ final readonly class SettingsMutationCoordinator
             (string) ($form['scope_key'] ?? ''),
         );
         $section = $this->findSection((string) ($form['section'] ?? ''));
+        if (!$actor->can($section->permission)) {
+            return Response::html('Forbidden', 403);
+        }
         $settings = is_array($form['settings'] ?? null) ? $form['settings'] : [];
 
         foreach ($section->settings as $definition) {
@@ -80,6 +83,9 @@ final readonly class SettingsMutationCoordinator
             (string) ($form['scope_key'] ?? ''),
         );
         $section = $this->findSection((string) ($form['section'] ?? ''));
+        if (!$actor->can($section->permission)) {
+            return Response::html('Forbidden', 403);
+        }
         [$scopeType, $resolvedKey] = self::writeScope($selection['type'], $selection['key']);
 
         try {

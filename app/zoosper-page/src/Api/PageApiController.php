@@ -206,8 +206,14 @@ final readonly class PageApiController
         }
 
         $document = $body['content_json'] ?? $this->documents->tolerant($page?->contentJson, $page?->content ?? '')?->toApiValue();
-        if ($format === 'block_json' && !is_array($document)) {
+        if (($format === 'block_json' && !is_array($document)) || ($document !== null && !is_array($document))) {
             return $this->json->error('invalid_content_document', 'content_json must be an object containing blocks.', 422);
+        }
+
+        try {
+            $encodedDocument = $document === null ? '' : $this->documents->encode($this->documents->fromArray($document, (string) ($body['content_html'] ?? $page?->content ?? '')));
+        } catch (\RuntimeException $exception) {
+            return $this->json->error('invalid_content_document', $exception->getMessage(), 422);
         }
 
         return [
@@ -216,7 +222,7 @@ final readonly class PageApiController
             'slug' => $body['slug'] ?? $page?->slug ?? '',
             'content' => (string) ($body['content_html'] ?? $page?->content ?? ''),
             'content_format' => $format,
-            'content_json' => $document === null ? '' : $this->documents->encode($this->documents->fromArray($document, (string) ($body['content_html'] ?? $page?->content ?? ''))),
+            'content_json' => $encodedDocument,
             'meta_title' => $seo['meta_title'] ?? $page?->metaTitle,
             'meta_description' => $seo['meta_description'] ?? $page?->metaDescription,
             'meta_keywords' => $seo['meta_keywords'] ?? $page?->metaKeywords,

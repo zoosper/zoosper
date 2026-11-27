@@ -83,6 +83,7 @@ Zoosper_Auth module for Zoosper CMS.
 
 - Preserve public interfaces, route permissions, configuration keys, and service identifiers when extending or replacing behaviour.
 - Admin routes remain subject to authentication, ACL, and central stateful middleware such as CSRF protection.
+- Pending two-factor challenges are invalidated if the password hash changes or the account is inactive at completion. Challenges started before credential fingerprints were recorded must restart login.
 
 ## Testing
 

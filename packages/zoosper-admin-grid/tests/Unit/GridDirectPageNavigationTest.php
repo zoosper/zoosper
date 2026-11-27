@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 it('publishes a shared direct page navigation control', function (): void {
     $root=dirname(__DIR__,4);$assets=require $root.'/packages/zoosper-admin-grid/config/admin_assets.php';
-    expect($assets['assets'])->toHaveKeys(['zoosper-admin-grid-page-jump-style','zoosper-admin-grid-page-jump-script']);
+    $script = file_get_contents($root.'/packages/zoosper-admin-grid/resources/admin/js/grid-page-jump.js');
+    $hash = substr(hash('sha256', (string) preg_replace('~\r\n?~', "\n", (string) $script)), 0, 12);
+    expect($assets['assets'])->toHaveKeys(['zoosper-admin-grid-page-jump-style','zoosper-admin-grid-page-jump-script'])
+        ->and($assets['assets']['zoosper-admin-grid-page-jump-script']['path'])
+        ->toBe('/asset/zoosper-admin-grid/js/grid-page-jump.js?v='.$hash);
 });
 
 it('preserves Grid query state and validates direct page entry', function (): void {

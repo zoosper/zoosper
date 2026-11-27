@@ -96,6 +96,23 @@ test('page size resets pagination and submits the canonical filter form', async 
     assert.equal(submitted, 1);
 });
 
+test('page jump reads pagination status without modifying matching row content', async () => {
+    const dom = await boot(`<section data-grid-workspace><label>Per page <select data-grid-page-size><option>20</option></select></label></section>
+        <table class="grid-table"><tbody><tr><td>Page 1 of 5</td></tr></tbody></table>
+        <nav class="grid-pagination"><span class="grid-pagination__status">Page 2 of 12</span></nav>`, ['grid-page-jump.js']);
+    const {document} = dom.window;
+    assert.equal(document.querySelector('td').textContent, 'Page 1 of 5');
+    const input = document.querySelector('.grid-pagination [data-grid-page-jump] input[name="page"]');
+    assert.equal(input.value, '2');
+    assert.equal(input.max, '12');
+});
+
+test('page jump leaves matching content alone when pagination is absent', async () => {
+    const dom = await boot('<section data-grid-workspace></section><p>Page 1 of 5</p>', ['grid-page-jump.js']);
+    assert.equal(dom.window.document.querySelector('p').textContent, 'Page 1 of 5');
+    assert.equal(dom.window.document.querySelector('[data-grid-page-jump]'), null);
+});
+
 test('selected CSV neutralises spreadsheet formulas in headers and cells', async () => {
     const dom = await boot(`<table class="grid-has-selection"><thead><tr><th>Select</th><th>=Header</th><th>Title</th></tr></thead>
         <tbody><tr class="is-selected"><td></td><td>=1+1</td><td>normal, "quoted"</td></tr>

@@ -37,9 +37,14 @@ it('tolerates malformed historical JSON without accepting it as a document', fun
     expect(phase13B4DocumentNormalizer()->tolerant('{bad'))->toBeNull();
 });
 
-it('normalizes missing and non-array blocks to an empty list', function (array $input): void {
-    expect(phase13B4DocumentNormalizer()->fromArray($input)->structured['blocks'])->toBe([]);
+it('rejects missing and non-array blocks rather than discarding content', function (array $input): void {
+    expect(fn () => phase13B4DocumentNormalizer()->fromArray($input))
+        ->toThrow(RuntimeException::class, 'blocks list');
 })->with([[[]], [['blocks' => null]], [['blocks' => '0']], [['blocks' => false]]]);
+
+it('falls back to saved HTML for historical documents with invalid blocks', function (): void {
+    expect(phase13B4DocumentNormalizer()->tolerant('{"blocks":null}', '<p>Saved</p>'))->toBeNull();
+});
 
 it('reindexes block arrays while retaining validation of their contents', function (): void {
     $block = ['type' => 'paragraph', 'data' => ['text' => 'Hello']];

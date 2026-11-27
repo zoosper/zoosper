@@ -184,7 +184,7 @@ return array (
     'zoosper-admin-grid-page-jump-script' => 
     array (
       'type' => 'script',
-      'path' => '/asset/zoosper-admin-grid/js/grid-page-jump.js?v=2adfc6b4205e',
+      'path' => '/asset/zoosper-admin-grid/js/grid-page-jump.js?v=b1ab71fa7c44',
       'sort_order' => 90,
       'attributes' => 
       array (

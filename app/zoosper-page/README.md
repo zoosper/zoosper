@@ -148,6 +148,8 @@ Zoosper_Page module for Zoosper CMS.
 
 Page owns its stateless Page and public content API routes, adapters, controller factories, tests, and application-service integration. Removing the Page module removes those routes without edits to `zoosper-api`.
 
+Structured documents must include an array of `blocks` (an empty array is valid). Missing or non-array blocks are rejected rather than replaced with an empty document; invalid stored documents use the saved HTML fallback. The Page mutation API returns `422` for invalid structured documents.
+
 ### Page revision API closure
 - `GET /api/v1/pages/{id}/revisions/{revisionId}` returns one Page-scoped revision through the existing `pages:read` and current-owner permission contract.
 - Revision detail, list and restore remain stateless and request-Site isolated; a revision belonging to another Page is returned as not found.

@@ -46,6 +46,45 @@ test('uses the actual size when omitted but rejects an explicitly empty upload',
     }
 });
 
+test('enforces the size limit against the temporary file even when its reported size is smaller', function () {
+    $path = mediaTestPng();
+    try {
+        $handle = fopen($path, 'ab');
+        ftruncate($handle, 5_242_881);
+        fclose($handle);
+        clearstatcache(true, $path);
+
+        $result = (new MediaUploadValidator())->validate([
+            'name' => 'pixel.png',
+            'tmp_name' => $path,
+            'size' => 1,
+            'error' => UPLOAD_ERR_OK,
+        ]);
+
+        expect($result->valid)->toBeFalse()
+            ->and($result->errors)->toContain('Uploaded file exceeds the 5 MB limit.');
+    } finally {
+        unlink($path);
+    }
+});
+
+test('records the actual temporary file size when reported metadata is inaccurate', function () {
+    $path = mediaTestPng();
+    try {
+        $result = (new MediaUploadValidator())->validate([
+            'name' => 'pixel.png',
+            'tmp_name' => $path,
+            'size' => 1,
+            'error' => UPLOAD_ERR_OK,
+        ]);
+
+        expect($result->valid)->toBeTrue()
+            ->and($result->sizeBytes)->toBe(filesize($path));
+    } finally {
+        unlink($path);
+    }
+});
+
 test('rejects unsupported extensions before storage', function () {
     $path = tempnam(sys_get_temp_dir(), 'zoosper-media-');
     file_put_contents($path, '<?php echo "bad";');

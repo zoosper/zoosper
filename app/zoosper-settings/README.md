@@ -55,6 +55,8 @@ Module-owned settings catalogue and configuration management for Zoosper CMS.
 
 - Preserve public interfaces, route permissions, configuration keys, and service identifiers when extending or replacing behaviour.
 - Admin routes remain subject to authentication, ACL, and central stateful middleware such as CSRF protection.
+- Catalogue sections require their declared `permission` (default `settings.manage`) in addition to the route permission. Sections without that permission are hidden and their save and clear requests are rejected.
+- Setting paths must be unique across the catalogue; duplicate paths cause catalogue loading to fail rather than allowing access through another section.
 
 ## Testing
 

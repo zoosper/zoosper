@@ -21,6 +21,7 @@ final readonly class ModuleSettingsCatalogueLoader
     {
         $sections = [];
         $ids = [];
+        $paths = [];
         foreach ($this->modules->enabledModules() as $module) {
             $file = $module->configPath('admin_settings.php');
             if (!is_file($file)) {
@@ -36,6 +37,12 @@ final readonly class ModuleSettingsCatalogueLoader
                     throw new RuntimeException("Duplicate admin settings section id '{$definition->id}' in {$file}");
                 }
                 $ids[$definition->id] = true;
+                foreach ($definition->settings as $setting) {
+                    if (isset($paths[$setting->path])) {
+                        throw new RuntimeException("Duplicate setting path '{$setting->path}' in sections '{$paths[$setting->path]}' and '{$definition->id}'");
+                    }
+                    $paths[$setting->path] = $definition->id;
+                }
                 $sections[] = $definition;
             }
         }

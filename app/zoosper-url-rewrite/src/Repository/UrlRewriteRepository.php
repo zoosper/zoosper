@@ -74,6 +74,33 @@ final readonly class UrlRewriteRepository
         $s=$this->pdo->prepare('UPDATE url_rewrites SET is_active=:active,updated_at=:updated WHERE id=:id AND site_id=:site');$s->execute(['active'=>$active?1:0,'updated'=>gmdate('Y-m-d H:i:s'),'id'=>$id,'site'=>$siteId]);
     }
 
+    public function changeStatusIfUnchanged(UrlRewrite $rewrite, bool $active): bool
+    {
+        $entityIdCondition = $rewrite->entityId === null ? 'entity_id IS NULL' : 'entity_id = :entity_id';
+        $statement = $this->pdo->prepare(
+            'UPDATE url_rewrites SET is_active = :active, updated_at = :updated'
+            . ' WHERE id = :id AND site_id = :site_id AND request_path = :request_path'
+            . ' AND target_path = :target_path AND redirect_type = :redirect_type'
+            . ' AND entity_type = :entity_type AND ' . $entityIdCondition . ' AND is_active = :old_active'
+        );
+        $parameters = [
+            'active' => $active ? 1 : 0,
+            'updated' => gmdate('Y-m-d H:i:s'),
+            'id' => $rewrite->id,
+            'site_id' => $rewrite->siteId,
+            'request_path' => $rewrite->requestPath,
+            'target_path' => $rewrite->targetPath,
+            'redirect_type' => $rewrite->redirectType,
+            'entity_type' => $rewrite->entityType,
+            'old_active' => $rewrite->isActive ? 1 : 0,
+        ];
+        if ($rewrite->entityId !== null) {
+            $parameters['entity_id'] = $rewrite->entityId;
+        }
+        $statement->execute($parameters);
+        return $statement->rowCount() === 1;
+    }
+
     /** @psalm-api */
     public function deletePermanently(int $id, int $siteId): void
     {

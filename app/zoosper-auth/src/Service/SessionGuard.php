@@ -168,6 +168,7 @@ final class SessionGuard
         }
         unset($_SESSION[self::SESSION_USER_KEY]);
         $_SESSION[self::SESSION_PENDING_2FA_KEY] = $user->id;
+        $_SESSION[self::SESSION_PASSWORD_HASH_KEY] = hash('sha256', $user->passwordHash);
         if (!isset($_SESSION[self::SESSION_CREATED_AT_KEY])) {
             $_SESSION[self::SESSION_CREATED_AT_KEY] = $this->now();
         }
@@ -208,6 +209,13 @@ final class SessionGuard
             return false;
         }
 
+        $fingerprint = $_SESSION[self::SESSION_PASSWORD_HASH_KEY] ?? null;
+        if (!$user->isActive() || !is_string($fingerprint)
+            || !hash_equals($fingerprint, hash('sha256', $user->passwordHash))) {
+            $this->clearAuthenticationState();
+            return false;
+        }
+
         $this->login($user);
 
         return true;
@@ -217,7 +225,7 @@ final class SessionGuard
     {
         unset($_SESSION[self::SESSION_PENDING_2FA_KEY]);
         if (!isset($_SESSION[self::SESSION_USER_KEY])) {
-            unset($_SESSION[self::SESSION_LAST_ACTIVITY_KEY], $_SESSION[self::SESSION_CREATED_AT_KEY]);
+            unset($_SESSION[self::SESSION_PASSWORD_HASH_KEY], $_SESSION[self::SESSION_LAST_ACTIVITY_KEY], $_SESSION[self::SESSION_CREATED_AT_KEY]);
         }
     }
 

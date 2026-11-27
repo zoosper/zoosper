@@ -4,31 +4,15 @@
     const workspace = document.querySelector('[data-grid-workspace]');
     if (!workspace) return;
 
-    const pagePattern = /Page\s+(\d+)\s+of\s+(\d+)/i;
-    const walker = document.createTreeWalker(
-        document.body,
-        NodeFilter.SHOW_TEXT,
-        {
-            acceptNode(node) {
-                if (!node.parentElement || node.parentElement.closest('[data-grid-page-jump]')) {
-                    return NodeFilter.FILTER_REJECT;
-                }
-                return pagePattern.test(node.textContent ?? '')
-                    ? NodeFilter.FILTER_ACCEPT
-                    : NodeFilter.FILTER_REJECT;
-            },
-        },
-    );
-    const pageText = walker.nextNode();
-    if (!pageText?.parentElement) return;
+    const host = document.querySelector('.grid-pagination .grid-pagination__status');
+    if (!host || host.querySelector('[data-grid-page-jump]')) return;
 
-    const match = (pageText.textContent ?? '').match(pagePattern);
+    const match = (host.textContent ?? '').trim().match(/^Page\s+(\d+)\s+of\s+(\d+)$/i);
     if (!match) return;
     const currentPage = Number.parseInt(match[1], 10);
     const totalPages = Number.parseInt(match[2], 10);
     if (!Number.isInteger(currentPage) || !Number.isInteger(totalPages) || totalPages < 1) return;
 
-    const host = pageText.parentElement;
     const form = document.createElement('form');
     form.method = 'get';
     form.action = window.location.pathname;
@@ -76,9 +60,8 @@
     });
     input.addEventListener('input', () => input.setCustomValidity(''));
 
-    pageText.textContent = (pageText.textContent ?? '').replace(pagePattern, '');
     host.classList.add('grid-pagination-controls');
-    host.insertBefore(form, pageText.nextSibling);
+    host.replaceChildren(form);
 
     const pageSize = workspace.querySelector('[data-grid-page-size]');
     const pageSizeLabel = pageSize?.closest('label');

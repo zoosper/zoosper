@@ -37,8 +37,12 @@ final readonly class UrlRewriteLifecycleCoordinator
 
     private function status(UrlRewrite $r, bool $active, int $actorId, string $email): UrlRewriteLifecycleResult
     {
+        $operation = $active ? 'restore' : 'disable';
+        if ($this->rewrites->findByIdForSite($r->id, $r->siteId) != $r) {
+            return new UrlRewriteLifecycleResult(false, $operation, $r->id, null, message: 'URL Rewrite no longer exists or has changed.');
+        }
         if ($r->isActive === $active) {
-            return new UrlRewriteLifecycleResult(true, $active ? 'restore' : 'disable', $r->id, $active, message: 'URL Rewrite already has the requested status.');
+            return new UrlRewriteLifecycleResult(true, $operation, $r->id, $active, message: 'URL Rewrite already has the requested status.');
         }
         if ($active) {
             try {
@@ -48,7 +52,9 @@ final readonly class UrlRewriteLifecycleCoordinator
                 return new UrlRewriteLifecycleResult(false, 'restore', $r->id, false, message: $exception->getMessage());
             }
         }
-        $this->rewrites->changeStatus($r->id, $r->siteId, $active);
+        if (!$this->rewrites->changeStatusIfUnchanged($r, $active)) {
+            return new UrlRewriteLifecycleResult(false, $operation, $r->id, null, message: 'URL Rewrite no longer exists or has changed.');
+        }
         $this->log($actorId, $email, $active ? 'url_rewrite.restored' : 'url_rewrite.disabled', $r, $active);
         return new UrlRewriteLifecycleResult(true, $active ? 'restore' : 'disable', $r->id, $active);
     }

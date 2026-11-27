@@ -40,6 +40,31 @@ it('restores a safe rewrite independently of other sites', function (): void {
         ->and($r->findByIdForSite($id, 1)->isActive)->toBeTrue();
 });
 
+it('rejects stale and missing records during status changes', function (): void {
+    $r = new UrlRewriteRepository(rewriteLifeDb());
+    $id = $r->save(null, 1, 'old', '/new', 301, false);
+    $stale = $r->findByIdForSite($id, 1);
+    $r->changeStatus($id, 1, true);
+    $life = new UrlRewriteLifecycleCoordinator($r);
+
+    expect($life->disable($stale, 1, 'a')->successful)->toBeFalse()
+        ->and($r->findByIdForSite($id, 1)->isActive)->toBeTrue();
+
+    $r->deletePermanently($id, 1);
+    expect($life->restore($stale, 1, 'a')->successful)->toBeFalse();
+});
+
+it('does not transition a rewrite changed after it was read', function (): void {
+    $r = new UrlRewriteRepository(rewriteLifeDb());
+    $id = $r->save(null, 1, 'old', '/new', 301, false);
+    $stale = $r->findByIdForSite($id, 1);
+    $r->save($id, 1, 'old', '/other', 301, false);
+
+    expect((new UrlRewriteLifecycleCoordinator($r))->restore($stale, 1, 'a')->successful)->toBeFalse()
+        ->and($r->changeStatusIfUnchanged($stale, true))->toBeFalse()
+        ->and($r->findByIdForSite($id, 1)->isActive)->toBeFalse();
+});
+
 it('blocks restoring a previously stored unsafe target', function (): void {
     $r = new UrlRewriteRepository(rewriteLifeDb());
     $id = $r->save(null, 1, 'a', '/\\evil.example', 301, false);

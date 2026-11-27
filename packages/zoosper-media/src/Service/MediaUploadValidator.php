@@ -47,11 +47,17 @@ final readonly class MediaUploadValidator
             $errors[] = 'Unsupported media file extension.';
         }
 
-        $size = (int) ($file['size'] ?? filesize($tmpName));
-        if ($size <= 0) {
+        clearstatcache(true, $tmpName);
+        $size = @filesize($tmpName);
+        if ($size === false) {
+            return MediaUploadValidationResult::fail(['Unable to determine uploaded file size.']);
+        }
+
+        $reportedSize = (int) ($file['size'] ?? $size);
+        if ($size <= 0 || $reportedSize <= 0) {
             $errors[] = 'Uploaded file is empty.';
         }
-        if ($size > self::MAX_BYTES) {
+        if ($size > self::MAX_BYTES || $reportedSize > self::MAX_BYTES) {
             $errors[] = 'Uploaded file exceeds the 5 MB limit.';
         }
 

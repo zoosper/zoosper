@@ -10,6 +10,7 @@ use Zoosper\Auth\UI\AdminViewRendererInterface;
 use Zoosper\Core\Http\Request;
 use Zoosper\Core\Http\Response;
 use Zoosper\Settings\Catalogue\ModuleSettingsCatalogueLoader;
+use Zoosper\Settings\Definition\SettingsSection;
 use Zoosper\Settings\Scope\SettingsScopeSelection;
 use Zoosper\Settings\Value\ScopedSettingValueResolver;
 
@@ -30,7 +31,10 @@ final readonly class SettingsCatalogueResponder
     public function respond(Request $request, AdminUser $user): Response
     {
         $selection = $this->scopeSelection->fromRequest($request);
-        $sections = $this->catalogue->load()->all();
+        $sections = array_values(array_filter(
+            $this->catalogue->load()->all(),
+            static fn (SettingsSection $section): bool => $user->can($section->permission),
+        ));
         $effectiveValues = [];
         foreach ($sections as $section) {
             foreach ($section->settings as $setting) {
