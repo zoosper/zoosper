@@ -24,6 +24,18 @@ final class RateLimitIdentityHasher
             throw new \InvalidArgumentException('At least one non-empty rate limit identity part is required.');
         }
 
+        $components = [$salt, ...$normalised];
+        foreach ($components as $component) {
+            if (str_contains($component, '|') || str_contains($component, "\0")) {
+                $encoded = "\0zoosper-rate-limit-v2:";
+                foreach ($components as $value) {
+                    $encoded .= strlen($value) . ':' . $value;
+                }
+
+                return hash('sha256', $encoded);
+            }
+        }
+
         return hash('sha256', $salt . '|' . implode('|', $normalised));
     }
 }

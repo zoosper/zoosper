@@ -110,3 +110,11 @@ Zoosper Core depends only on native `SessionHandlerInterface`. The `zoosper/sess
 Use `php8.5 bin/zoosper rate-limit:prune` from scheduled operations to remove expired database buckets. Request-time rate-limit contracts remain separate from the maintenance contract.
 
 See `docs/operations/rate-limit-pruning.md` for scheduler-agnostic cron and systemd deployment examples, overlap protection, monitoring, and idempotency guidance.
+
+#### Identity hash compatibility
+
+The hasher trims identity parts and discards empty parts, as before. Inputs without `|` or NUL in the salt or normalised parts retain their existing hashes and active buckets. Other inputs use a NUL-prefixed, length-framed encoding; output remains a 64-character hexadecimal SHA-256 hash.
+
+Previously ambiguous buckets cannot be safely assigned to one identity. Affected identities start a fresh window on upgrade; old buckets expire and can be pruned normally. A preserved legacy bucket may still contain attempts from an identity that collided with it before upgrade, until its window ends. Deploy all workers together: mixed versions use different buckets for affected inputs, and older workers remain vulnerable to collisions. Rollback similarly starts a separate window for those inputs.
+
+Trimming and discarding empty parts intentionally remain compatible. This change does not validate caller input or change salt management; changing the salt resets all identities.

@@ -88,6 +88,42 @@ final readonly class TwoFactorChallengeRepository
         return $statement->rowCount() === 1;
     }
 
+    /** Run a recovery attempt atomically, rolling back when it fails. */
+    public function recoveryAttempt(callable $attempt): bool
+    {
+        $nested = $this->pdo->inTransaction();
+        $savepoint = 'two_factor_' . bin2hex(random_bytes(8));
+        if ($nested) {
+            $this->pdo->exec('SAVEPOINT ' . $savepoint);
+        } else {
+            $this->pdo->beginTransaction();
+        }
+
+        try {
+            $success = $attempt();
+            if ($nested) {
+                if (!$success) {
+                    $this->pdo->exec('ROLLBACK TO SAVEPOINT ' . $savepoint);
+                }
+                $this->pdo->exec('RELEASE SAVEPOINT ' . $savepoint);
+            } elseif ($success) {
+                $this->pdo->commit();
+            } else {
+                $this->pdo->rollBack();
+            }
+
+            return $success;
+        } catch (\Throwable $exception) {
+            if ($nested) {
+                $this->pdo->exec('ROLLBACK TO SAVEPOINT ' . $savepoint);
+                $this->pdo->exec('RELEASE SAVEPOINT ' . $savepoint);
+            } elseif ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+            throw $exception;
+        }
+    }
+
     /**
      * Delete all challenges for a user (e.g. on successful auth or logout).
      */

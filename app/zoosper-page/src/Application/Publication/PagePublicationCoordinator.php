@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zoosper\Page\Application\Publication;
 
+use RuntimeException;
 use Zoosper\Core\Event\EventDispatcherInterface;
 use Zoosper\Page\Event\PageEvents;
 use Zoosper\Page\Event\PagePublishedEvent;
@@ -22,14 +23,23 @@ final readonly class PagePublicationCoordinator
 
     public function publish(Page $page, int $adminUserId): void
     {
+        $this->requireRestored($page);
         $this->pages->publish($page->id, $adminUserId);
         $this->events?->dispatch(PageEvents::PUBLISHED, new PagePublishedEvent($page->id, $adminUserId));
     }
 
     public function unpublish(Page $page, int $adminUserId): void
     {
+        $this->requireRestored($page);
         $this->pages->unpublish($page->id, $adminUserId);
         $this->events?->dispatch(PageEvents::UNPUBLISHED, new PageUnpublishedEvent($page->id, $adminUserId));
+    }
+
+    private function requireRestored(Page $page): void
+    {
+        if ($page->status === 'archived') {
+            throw new RuntimeException('Archived Pages must be restored before changing publication status.');
+        }
     }
 }
 

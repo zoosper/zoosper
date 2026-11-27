@@ -51,8 +51,8 @@ final readonly class PageRepository
         ?string $metaKeywords = null,
         ?string $canonicalUrl = null,
     ): int {
-        $columns = ['site_id', 'title', 'slug', 'content', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'];
-        $values = [':site_id', ':title', ':slug', ':content', ':status', ':created_by', ':updated_by', ':created_at', ':updated_at'];
+        $columns = ['site_id', 'title', 'slug', 'content', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at', 'published_at'];
+        $values = [':site_id', ':title', ':slug', ':content', ':status', ':created_by', ':updated_by', ':created_at', ':updated_at', ':published_at'];
         $params = [
             'site_id' => $siteId,
             'title' => $title,
@@ -63,6 +63,7 @@ final readonly class PageRepository
             'updated_by' => $userId,
             'created_at' => gmdate('Y-m-d H:i:s'),
             'updated_at' => gmdate('Y-m-d H:i:s'),
+            'published_at' => $status === 'published' ? gmdate('Y-m-d H:i:s') : null,
         ];
 
         $this->addOptionalCreateColumn($columns, $values, $params, 'content_format', $contentFormat, $this->hasContentFormat);

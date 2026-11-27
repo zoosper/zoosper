@@ -108,11 +108,17 @@ final readonly class TwoFactorChallengeService
             return TwoFactorChallengeResult::invalidOrExpired();
         }
 
-        if (!($this->redeemRecoveryCode)($challenge->adminUserId, $code)) {
-            return TwoFactorChallengeResult::wrongCode($challenge->adminUserId);
-        }
+        $result = TwoFactorChallengeResult::wrongCode($challenge->adminUserId);
+        $this->challenges->recoveryAttempt(function () use ($challenge, $code, &$result): bool {
+            if (!($this->redeemRecoveryCode)($challenge->adminUserId, $code)) {
+                return false;
+            }
 
-        return $this->consume($challenge);
+            $result = $this->consume($challenge);
+            return $result->passed;
+        });
+
+        return $result;
     }
 
     /**

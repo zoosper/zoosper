@@ -14,6 +14,7 @@ use Zoosper\Grid\BulkAction\GridBulkSelection;
 use Zoosper\Grid\BulkAction\GridBulkSelectionScope;
 use Zoosper\Page\Admin\BulkAction\PagePublishSelectedExecutor;
 use Zoosper\Page\Admin\BulkAction\PagePublishSideEffectsInterface;
+use Zoosper\Page\Application\Publication\PagePublicationCoordinator;
 use Zoosper\Page\Model\Page;
 use Zoosper\Page\Repository\PageRepository;
 
@@ -75,6 +76,44 @@ it('rejects a missing Page before mutating any selected Page', function (): void
     ))->toThrow(\InvalidArgumentException::class, 'not found');
     expect($repository->findById($draft)?->isPublished())->toBeFalse()->and($effects->calls)->toBe(0);
 });
+
+it('rejects archived Pages before publishing any selection', function (): void {
+    $repository = new PageRepository(publishExecutorPdo());
+    $draft = $repository->create(1, 'Draft', 'draft', 'Content');
+    $archived = $repository->create(1, 'Archived', 'archived', 'Content', 'archived');
+    $effects = new class implements PagePublishSideEffectsInterface {
+        public int $calls = 0;
+        public function afterPublished(Page $page, GridBulkExecutionContext $context, int $selectedCount): void { $this->calls++; }
+    };
+
+    expect(fn () => (new PagePublishSelectedExecutor($repository, $effects))->execute(
+        publishDefinition(), new GridBulkSelection([$draft, $archived], 100),
+        new GridBulkExecutionContext(new GridBulkActor(7)),
+    ))->toThrow(\InvalidArgumentException::class, 'archived');
+    expect($repository->findById($draft)?->status)->toBe('draft')
+        ->and($repository->findById($archived)?->status)->toBe('archived')
+        ->and($effects->calls)->toBe(0);
+});
+
+it('records a publication time when a Page is created published', function (): void {
+    $repository = new PageRepository(publishExecutorPdo());
+    $published = $repository->createPublished(1, 'Live', 'live', 'Content');
+    $draft = $repository->create(1, 'Draft', 'draft', 'Content');
+
+    expect($repository->findById($published)?->publishedAt)->not->toBeNull()
+        ->and($repository->findById($draft)?->publishedAt)->toBeNull();
+});
+
+it('rejects single-page publication transitions for archived Pages', function (bool $publish): void {
+    $repository = new PageRepository(publishExecutorPdo());
+    $id = $repository->create(1, 'Archived', 'archived', 'Content', 'archived');
+    $page = $repository->findById($id);
+    $service = new PagePublicationCoordinator($repository);
+
+    expect(fn () => $publish ? $service->publish($page, 7) : $service->unpublish($page, 7))
+        ->toThrow(\RuntimeException::class, 'Archived');
+    expect($repository->findById($id)?->status)->toBe('archived');
+})->with([true, false]);
 
 it('does not republish or emit side effects for already-published Pages', function (): void {
     $pdo = publishExecutorPdo();

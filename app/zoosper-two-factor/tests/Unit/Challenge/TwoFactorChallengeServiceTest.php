@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeRepository;
 use Zoosper\TwoFactor\Challenge\TwoFactorChallengeService;
+use Zoosper\TwoFactor\Repository\AdminRecoveryCodeRepository;
 
 /*
  * Phase 1.104 behavioural tests for the login-time 2FA challenge core.
@@ -184,6 +185,64 @@ it('accepts a valid recovery code and consumes the challenge', function (): void
     expect($ok->passed)->toBeTrue()
         ->and($ok->adminUserId)->toBe(5)
         ->and($redeemed)->toBe([5]);
+});
+
+it('does not spend a recovery code when the challenge becomes unavailable during redemption', function (string $change): void {
+    $pdo = makeChallengePdo();
+    $pdo->exec('CREATE TABLE admin_user_recovery_codes (id INTEGER PRIMARY KEY, admin_user_id INTEGER NOT NULL, code_hash TEXT NOT NULL, used_at TEXT, created_at TEXT NOT NULL)');
+    $insert = $pdo->prepare('INSERT INTO admin_user_recovery_codes (admin_user_id, code_hash, created_at) VALUES (?, ?, ?)');
+    $insert->execute([5, password_hash('RECOVERY', PASSWORD_DEFAULT), '2026-07-25 08:00:00']);
+    $pdo->exec('CREATE TRIGGER challenge_race AFTER UPDATE OF used_at ON admin_user_recovery_codes BEGIN UPDATE admin_two_factor_challenges SET ' . $change . '; END');
+    $repo = new TwoFactorChallengeRepository($pdo);
+    $recovery = new AdminRecoveryCodeRepository($pdo);
+    $service = new TwoFactorChallengeService($repo, fn () => false, $recovery->redeem(...), fn () => true, 300, fixedNow());
+    $token = $service->issue(5);
+
+    $result = $service->verifyRecoveryCode($token, 'RECOVERY');
+
+    expect($result->reason)->toBe('invalid_or_expired')
+        ->and($pdo->query('SELECT used_at FROM admin_user_recovery_codes')->fetchColumn())->toBeNull();
+})->with([
+    'expired at consumption' => ["expires_at = '2026-07-25 08:00:00'"],
+    'consumed by another request' => ["consumed_at = '2026-07-25 08:00:00'"],
+]);
+
+it('keeps recovery redemption inside the caller transaction', function (): void {
+    $pdo = makeChallengePdo();
+    $pdo->exec('CREATE TABLE admin_user_recovery_codes (id INTEGER PRIMARY KEY, admin_user_id INTEGER NOT NULL, code_hash TEXT NOT NULL, used_at TEXT, created_at TEXT NOT NULL)');
+    $insert = $pdo->prepare('INSERT INTO admin_user_recovery_codes (admin_user_id, code_hash, created_at) VALUES (?, ?, ?)');
+    $insert->execute([5, password_hash('RECOVERY', PASSWORD_DEFAULT), '2026-07-25 08:00:00']);
+    $repo = new TwoFactorChallengeRepository($pdo);
+    $recovery = new AdminRecoveryCodeRepository($pdo);
+    $service = new TwoFactorChallengeService($repo, fn () => false, $recovery->redeem(...), fn () => true, 300, fixedNow());
+    $token = $service->issue(5);
+
+    $pdo->beginTransaction();
+    expect($service->verifyRecoveryCode($token, 'WRONG')->reason)->toBe('wrong_code')
+        ->and($pdo->inTransaction())->toBeTrue()
+        ->and($service->verifyRecoveryCode($token, 'RECOVERY')->passed)->toBeTrue()
+        ->and($pdo->inTransaction())->toBeTrue();
+    $pdo->rollBack();
+
+    expect($pdo->query('SELECT used_at FROM admin_user_recovery_codes')->fetchColumn())->toBeNull()
+        ->and($repo->findByTokenHash(hash('sha256', $token))->consumedAt)->toBeNull();
+});
+
+it('rolls back redemption when the callback throws', function (): void {
+    $pdo = makeChallengePdo();
+    $pdo->exec('CREATE TABLE admin_user_recovery_codes (id INTEGER PRIMARY KEY, admin_user_id INTEGER NOT NULL, code_hash TEXT NOT NULL, used_at TEXT, created_at TEXT NOT NULL)');
+    $insert = $pdo->prepare('INSERT INTO admin_user_recovery_codes (admin_user_id, code_hash, created_at) VALUES (?, ?, ?)');
+    $insert->execute([5, password_hash('RECOVERY', PASSWORD_DEFAULT), '2026-07-25 08:00:00']);
+    $recovery = new AdminRecoveryCodeRepository($pdo);
+    $service = new TwoFactorChallengeService(new TwoFactorChallengeRepository($pdo), fn () => false, function (int $id, string $code) use ($recovery): bool {
+        $recovery->redeem($id, $code);
+        throw new RuntimeException('failure');
+    }, fn () => true, 300, fixedNow());
+    $token = $service->issue(5);
+
+    expect(fn () => $service->verifyRecoveryCode($token, 'RECOVERY'))->toThrow(RuntimeException::class, 'failure');
+    expect($pdo->inTransaction())->toBeFalse()
+        ->and($pdo->query('SELECT used_at FROM admin_user_recovery_codes')->fetchColumn())->toBeNull();
 });
 
 it('issuing again clears prior pending challenges for the user', function (): void {

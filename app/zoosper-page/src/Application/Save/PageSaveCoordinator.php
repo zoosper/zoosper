@@ -63,6 +63,9 @@ final readonly class PageSaveCoordinator
 
         try {
             $input = PageSaveInput::fromForm($this->prepareDocument($form), $this->sanitizer, $this->config, $this->documents);
+            if ($page?->status === 'archived' && $input->publish) {
+                return PageSaveResult::failure('Archived Pages must be restored before publication.');
+            }
             $pageId = $page?->id;
             $context = new EntitySaveContext(
                 'page',

@@ -98,3 +98,22 @@ it('classifies invalid remote record fields as schema drift without retaining pa
             ->and($exception->getMessage())->not->toContain('not-a-date');
     }
 });
+
+it('rejects malformed remote totals instead of displaying fabricated amounts', function (mixed $total): void {
+    expect(fn () => (new StoreOrderResponseMapper())->map(
+        new ApiResponse(200, [
+            'records' => [['order_id' => 'ORDER-1', 'orderDate' => '2026-07-31', 'totalPaid_fx' => $total]],
+            'total' => 1,
+        ], 100),
+        new GridQuery(),
+    ))->toThrow(ApiGridResponseMappingException::class);
+})->with(['invalid', '12USD', [[]], true, '1e999']);
+
+it('rejects impossible remote dates rather than normalising them', function (string $field): void {
+    $record = ['order_id' => 'ORDER-1', 'orderDate' => '2026-07-31'];
+    $record[$field] = '2026-02-31';
+    expect(fn () => (new StoreOrderResponseMapper())->map(
+        new ApiResponse(200, ['records' => [$record], 'total' => 1], 100),
+        new GridQuery(),
+    ))->toThrow(ApiGridResponseMappingException::class);
+})->with(['orderDate', 'picked_up_at', 'packed_at']);

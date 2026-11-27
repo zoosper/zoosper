@@ -327,6 +327,9 @@ final readonly class PageAdminController
         if ($page === null) {
             return $this->html($this->t('Page not found'), '<p>' . $this->e($this->t('Page not found.')) . '</p>', 404);
         }
+        if ($page->status === 'archived') {
+            return $this->html($this->t('Page archived'), '<p>' . $this->e($this->t('Restore this page before changing its publication status.')) . '</p>', 409);
+        }
         if ($this->publication === null) {
             throw new RuntimeException('Page publication coordinator is unavailable.');
         }

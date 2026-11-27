@@ -90,6 +90,9 @@ final readonly class PagePublishSelectedExecutor implements GridBulkActionExecut
             if ($page === null) {
                 throw new InvalidArgumentException(sprintf('Selected Page %d was not found.', (int) $value));
             }
+            if ($page->status === 'archived') {
+                throw new InvalidArgumentException(sprintf('Selected Page %d is archived and must be restored before publication.', $page->id));
+            }
             $pages[] = $page;
         }
 
