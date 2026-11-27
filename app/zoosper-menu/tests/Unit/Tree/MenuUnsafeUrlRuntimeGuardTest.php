@@ -35,3 +35,8 @@ it('fails closed for malformed hostless and unsupported persisted URLs',function
  $tree=(new MenuTreeBuilder())->build([$item],[],'/');
  expect($tree[0]->href)->toBe('#');
 })->with(['https:///path-only','mailto:test@example.test','//example.test/path']);
+
+it('fails closed for browser-normalised cross-host relative URLs',function(string $url){
+ $item=new MenuItem(1,1,null,null,'Unsafe',$url,'_self',0,'active');
+ expect((new MenuTreeBuilder())->build([$item],[])[0]->href)->toBe('#');
+})->with(['/\\evil.example/path', "/\t/evil.example/path", '/&#92;evil.example/path']);

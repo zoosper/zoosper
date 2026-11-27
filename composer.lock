@@ -1423,10 +1423,11 @@
             "dist": {
                 "type": "path",
                 "url": "packages/zoosper-audit",
-                "reference": "d310aa68dff72b73c7e7a2175b9d15b26773ea0d"
+                "reference": "062fb3a044e40bcbcca2740ac2de547c4f42ee5b"
             },
             "require": {
                 "php": ">=8.5",
+                "zoosper/errors": "^0.3.1@alpha",
                 "zoosper/grid": "^0.3.1@alpha",
                 "zoosper/pagination": "^0.3.1@alpha"
             },

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Zoosper\Audit;
 
 use PDO;
+use stdClass;
+use Zoosper\Errors\SensitiveValueRedactor;
 use Zoosper\Grid\GridCriteria;
 use Zoosper\Grid\GridDataSourceInterface;
 use Zoosper\Pagination\PaginationResult;
@@ -51,11 +53,33 @@ final readonly class AuditLogRepository implements GridDataSourceInterface
             'entity_type' => $entityType,
             'entity_id' => $entityId,
             'summary' => $summary,
-            'metadata_json' => json_encode($metadata, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
+            'metadata_json' => $this->redactMetadata($metadata),
             'ip_address' => $ipAddress,
             'user_agent' => $userAgent !== null ? mb_substr($userAgent, 0, 500) : null,
             'created_at' => gmdate('Y-m-d H:i:s'),
         ]);
+    }
+
+    /** @param array<string, mixed> $metadata */
+    private function redactMetadata(array $metadata): string
+    {
+        $json = json_encode($metadata, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+        $value = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
+        $redactor = new SensitiveValueRedactor();
+        $redact = static function (mixed $value) use (&$redact, $redactor): mixed {
+            if ($value instanceof stdClass) {
+                foreach (get_object_vars($value) as $key => $item) {
+                    $value->{$key} = $redactor->isSensitiveKey($key) ? '[redacted]' : $redact($item);
+                }
+            } elseif (is_array($value)) {
+                foreach ($value as $key => $item) {
+                    $value[$key] = $redact($item);
+                }
+            }
+            return $value;
+        };
+
+        return json_encode($redact($value), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
     }
 
     /**

@@ -55,12 +55,15 @@ final readonly class AdminTwoFactorEnrollmentRepository
     /**
      * Update the stored ciphertext for an admin's existing TOTP enrolment during key rotation re-protection.
      */
-    public function updateProtectedSecret(int $adminUserId, string $protectedSecret): void
+    public function updateProtectedSecret(int $adminUserId, string $protectedSecret, string $previousSecret): void
     {
+        $comparison = \Zoosper\Core\Database\PdoDriverName::from($this->pdo) === 'sqlite'
+            ? 'secret_ciphertext = :previous COLLATE BINARY'
+            : 'BINARY secret_ciphertext = BINARY :previous';
         $statement = $this->pdo->prepare(
-            'UPDATE admin_user_two_factor SET secret_ciphertext = :secret, updated_at = NOW() WHERE admin_user_id = :id AND enabled = 1'
+            'UPDATE admin_user_two_factor SET secret_ciphertext = :secret, updated_at = NOW() WHERE admin_user_id = :id AND enabled = 1 AND ' . $comparison
         );
-        $statement->execute(['id' => $adminUserId, 'secret' => $protectedSecret]);
+        $statement->execute(['id' => $adminUserId, 'secret' => $protectedSecret, 'previous' => $previousSecret]);
     }
 }
 

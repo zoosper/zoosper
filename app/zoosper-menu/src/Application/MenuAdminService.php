@@ -24,7 +24,7 @@ final readonly class MenuAdminService {
  {
   $value=trim(html_entity_decode($value,ENT_QUOTES|ENT_HTML5,'UTF-8'));
   if($value==='') return null;
-  if(str_contains($value,'<')||str_contains($value,'>')||str_contains($value,'"')||str_contains($value,chr(39))||str_contains($value,'`')||str_contains($value,',')){
+  if(str_contains($value,'\\')||preg_match('/[\x00-\x1f\x7f]/',$value)||str_contains($value,'<')||str_contains($value,'>')||str_contains($value,'"')||str_contains($value,chr(39))||str_contains($value,'`')||str_contains($value,',')){
    throw new InvalidArgumentException('External URL must be plain text, not HTML or rich-text markup.');
   }
   if(str_starts_with($value,'/')){

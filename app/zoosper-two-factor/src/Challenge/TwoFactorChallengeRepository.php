@@ -81,9 +81,9 @@ final readonly class TwoFactorChallengeRepository
         $statement = $this->pdo->prepare(
             'UPDATE ' . $this->table
             . ' SET consumed_at = :consumed_at'
-            . ' WHERE id = :id AND consumed_at IS NULL'
+            . ' WHERE id = :id AND consumed_at IS NULL AND expires_at > :checked_at'
         );
-        $statement->execute(['id' => $id, 'consumed_at' => $consumedAt]);
+        $statement->execute(['id' => $id, 'consumed_at' => $consumedAt, 'checked_at' => $consumedAt]);
 
         return $statement->rowCount() === 1;
     }

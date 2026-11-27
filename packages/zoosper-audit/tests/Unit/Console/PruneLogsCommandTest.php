@@ -63,3 +63,14 @@ it('prunes audit logs and login history older than given days', function (): voi
     expect($auditRemaining)->toBe(1)
         ->and($loginRemaining)->toBe(1);
 });
+
+it('rejects malformed retention values without deleting either log', function (string $argument): void {
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->exec("CREATE TABLE admin_activity_log (created_at TEXT); CREATE TABLE admin_login_history (created_at TEXT);");
+    $pdo->exec("INSERT INTO admin_activity_log VALUES ('2000-01-01 00:00:00'); INSERT INTO admin_login_history VALUES ('2000-01-01 00:00:00');");
+    $command = new PruneLogsCommand(new AuditLogRepository($pdo), new LoginHistoryRepository($pdo));
+
+    expect($command->run([$argument], new ConsoleOutput()))->toBe(1)
+        ->and((int) $pdo->query('SELECT COUNT(*) FROM admin_activity_log')->fetchColumn())->toBe(1)
+        ->and((int) $pdo->query('SELECT COUNT(*) FROM admin_login_history')->fetchColumn())->toBe(1);
+})->with(['--days=1oops', '--days=1.5', '--days=999999999999999999999999', '--days=999999999', '--days', '--days=0']);

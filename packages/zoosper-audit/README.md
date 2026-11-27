@@ -9,12 +9,12 @@ This package is responsible for:
 - Implementing the `AuditLogger` service for recording admin activities.
 - Persisting audit logs and login history to the database via repositories.
 - Providing Admin Grid definitions for viewing audit trails and login history.
-- Ensuring that sensitive data (passwords, tokens) is redacted from audit logs.
+- Redacting sensitive metadata keys before audit records are stored.
 - Exposing the audit trail to the rest of the application via decoupled interfaces.
 
 ## Architecture
 
-The Audit package is designed as a standalone module that depends only on Core and Database. It provides high-level logging services that other modules can consume without knowing the underlying persistence details.
+The Audit package provides high-level logging services that other modules can consume without knowing the underlying persistence details.
 
 ## Usage
 
@@ -23,12 +23,13 @@ Other modules should type-hint against `Zoosper\Audit\Contract\AuditLoggerInterf
 ## Dependencies
 
 This package depends on:
+- `zoosper/errors` (for sensitive-key redaction)
 - `zoosper/grid` (for admin view definitions)
 - `zoosper/pagination` (for result listing)
 
 ## Redaction
 
-The `AuditLogger` uses a redaction policy to ensure that sensitive values like `password`, `token`, and `secret` are never stored in the audit database. This matches the security standards of the broader Zoosper CMS project.
+Audit metadata is recursively redacted by key using the `zoosper/errors` sensitive-value policy before storage, including nested JSON objects. This is not content inspection: callers must not put secrets in summaries, other fields, or metadata under non-sensitive keys. Existing records are not retroactively redacted.
 
 ## Testing
 
@@ -39,4 +40,4 @@ The Audit package includes unit tests for its repositories and logging services.
 
 ## Operational notes
 
-Audit logs can grow quickly in busy systems. It is recommended to use the `admin:prune-logs` command periodically to remove old entries and maintain database performance.
+Audit logs can grow quickly in busy systems. Use `admin:logs:prune --days=90` periodically to remove old entries; `--days` must be a positive integer and defaults to 90 when omitted.

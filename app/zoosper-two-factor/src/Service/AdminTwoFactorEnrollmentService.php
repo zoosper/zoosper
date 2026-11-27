@@ -65,7 +65,7 @@ final readonly class AdminTwoFactorEnrollmentService
         if ($this->protector->needsReprotection($protected)) {
             try {
                 $reprotected = $this->protector->protect($secret);
-                $this->repository->updateProtectedSecret($adminUserId, $reprotected);
+                $this->repository->updateProtectedSecret($adminUserId, $reprotected, $protected);
             } catch (\Throwable) {
                 // Deliberately swallowed: a failed opportunistic
                 // re-encryption must not turn an otherwise-successful

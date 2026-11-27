@@ -42,13 +42,16 @@ final readonly class PruneLogsCommand implements ConsoleCommandInterface
     public function run(array $args, ConsoleOutput $output): int
     {
         $options = ConsoleOptions::parse($args);
-        $days = (int) ($options['days'] ?? 90);
-        if ($days <= 0) {
+        $rawDays = $options['days'] ?? '90';
+        $now = time();
+        $maxDays = intdiv($now + 62135596800, 86400);
+        $days = filter_var($rawDays, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => $maxDays]]);
+        if (in_array('--days', $args, true) || !ctype_digit($rawDays) || $days === false) {
             $output->errorln('Retention days must be a positive integer.');
             return 1;
         }
 
-        $cutoff = gmdate('Y-m-d H:i:s', time() - ($days * 86400));
+        $cutoff = gmdate('Y-m-d H:i:s', $now - ($days * 86400));
         $output->writeln("Pruning activity logs and login history older than {$cutoff} ({$days} days)...");
 
         $auditDeleted = $this->auditLogs->deleteOlderThan($cutoff);

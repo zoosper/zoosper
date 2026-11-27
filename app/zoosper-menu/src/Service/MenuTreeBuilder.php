@@ -23,7 +23,7 @@ final class MenuTreeBuilder {
   */
  private function walk(int $parent, int $depth, array $trail, array $byParent, array $pageUrls, string $currentPath, int $maxDepth): array
  {
-  if($depth>$maxDepth) throw new RuntimeException('Menu tree exceeds maximum depth.');
+  if($depth>$maxDepth&&($byParent[$parent]??[])!==[]) throw new RuntimeException('Menu tree exceeds maximum depth.');
   $nodes=[];
   foreach($byParent[$parent]??[] as $item){
    if(isset($trail[$item->id])) throw new RuntimeException('Menu tree contains a cycle.');
@@ -39,7 +39,7 @@ final class MenuTreeBuilder {
  {
   if($url===null) return '#';
   $url=trim(html_entity_decode($url,ENT_QUOTES|ENT_HTML5,'UTF-8'));
-  if($url===''||str_contains($url,'<')||str_contains($url,'>')||str_contains($url,'"')||str_contains($url,chr(39))||str_contains($url,'`')||str_contains($url,',')) return '#';
+  if($url===''||str_contains($url,'\\')||preg_match('/[\x00-\x1f\x7f]/',$url)||str_contains($url,'<')||str_contains($url,'>')||str_contains($url,'"')||str_contains($url,chr(39))||str_contains($url,'`')||str_contains($url,',')) return '#';
   if(str_starts_with($url,'/')) return str_starts_with($url,'//')?'#':$url;
   $parts=parse_url($url);
   $scheme=is_array($parts)?($parts['scheme']??null):null;

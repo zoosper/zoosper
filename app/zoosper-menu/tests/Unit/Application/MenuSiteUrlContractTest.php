@@ -47,3 +47,8 @@ it('rejects absolute menu URLs with missing hosts or unsupported schemes',functi
  $service=new MenuAdminService(menuUrlContractRepository());
  expect(fn()=>$service->saveItem(1,['label'=>'Unsafe','url'=>$url]))->toThrow(InvalidArgumentException::class);
 })->with(['https:///path-only','mailto:test@example.test','//example.test/path']);
+
+it('rejects browser-normalised cross-host relative URLs',function(string $url){
+ $service=new MenuAdminService(menuUrlContractRepository());
+ expect(fn()=>$service->saveItem(1,['label'=>'Unsafe','url'=>$url]))->toThrow(InvalidArgumentException::class);
+})->with(['/\\evil.example/path', "/\t/evil.example/path", '/&#92;evil.example/path']);

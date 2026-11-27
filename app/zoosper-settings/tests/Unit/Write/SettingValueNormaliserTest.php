@@ -21,6 +21,21 @@ it('rejects invalid, secret and read-only input', function (): void {
         ->and(fn () => $normaliser->normalise(new SettingDefinition('x.locked', 'Locked', readOnly: true), 'x'))->toThrow(SettingValidationException::class);
 });
 
+it('preserves decimal precision', function (): void {
+    $normaliser = new SettingValueNormaliser();
+    $definition = new SettingDefinition('tax.rate', 'Rate', 'decimal');
+
+    expect($normaliser->normalise($definition, '0.12345678901234567'))->toBe('0.12345678901234567');
+});
+
+it('rejects decimal floating point overflow', function (): void {
+    $normaliser = new SettingValueNormaliser();
+    $definition = new SettingDefinition('tax.rate', 'Rate', 'decimal');
+
+    expect(fn () => $normaliser->normalise($definition, '1e999'))->toThrow(SettingValidationException::class)
+        ->and(fn () => $normaliser->normalise($definition, '-1e999'))->toThrow(SettingValidationException::class);
+});
+
 
 
 

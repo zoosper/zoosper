@@ -27,8 +27,8 @@ final readonly class SettingValueNormaliser
                 ? $value : throw new SettingValidationException([$definition->path => 'Enter a valid absolute URL.']),
             'integer' => filter_var($value, FILTER_VALIDATE_INT) !== false
                 ? (string) (int) $value : throw new SettingValidationException([$definition->path => 'Enter a whole number.']),
-            'decimal' => is_numeric($value)
-                ? (string) (float) $value : throw new SettingValidationException([$definition->path => 'Enter a number.']),
+            'decimal' => is_numeric($value) && is_finite((float) $value)
+                ? $value : throw new SettingValidationException([$definition->path => 'Enter a number.']),
             'boolean' => $this->boolean($definition, $value),
             'select' => $this->option($definition, $value),
             'multiselect' => $this->multiple($definition, $input),

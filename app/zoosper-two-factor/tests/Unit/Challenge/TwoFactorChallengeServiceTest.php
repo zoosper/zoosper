@@ -131,6 +131,16 @@ it('rejects an expired challenge', function (): void {
         ->and($result->reason)->toBe('invalid_or_expired');
 });
 
+it('does not consume a challenge at or after its expiry', function (): void {
+    $pdo = makeChallengePdo();
+    $repo = new TwoFactorChallengeRepository($pdo);
+    $id = $repo->insert(9, hash('sha256', 'token'), '2026-07-25 08:05:00', '2026-07-25 08:00:00');
+
+    expect($repo->markConsumed($id, '2026-07-25 08:05:00'))->toBeFalse()
+        ->and($repo->markConsumed($id, '2026-07-25 08:06:00'))->toBeFalse()
+        ->and($repo->findByTokenHash(hash('sha256', 'token'))->consumedAt)->toBeNull();
+});
+
 it('rejects an unknown token', function (): void {
     $pdo = makeChallengePdo();
     $service = new TwoFactorChallengeService(
